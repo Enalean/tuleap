@@ -19,35 +19,63 @@
 
 export type ArtifactIdFieldIdentifier = "aid";
 export type ArtifactIdInTrackerFieldIdentifier = "atid";
+export type ArtifactLinkFieldIdentifier = "art_link";
+export type CheckBoxFieldIdentifier = "cb";
+export type ColumnIdentifier = "column";
 export type ComputedFieldIdentifier = "computed";
+export type CrossReferenceFieldIdentifier = "cross";
 export type DateFieldIdentifier = "date";
 export type FieldSetIdentifier = "fieldset";
 export type FileFieldIdentifier = "file";
 export type FloatFieldIdentifier = "float";
 export type IntFieldIdentifier = "int";
+export type LastUpdateDateFieldIdentifier = "lud";
+export type LastUpdateByFieldIdentifier = "luby";
+export type MultiSelectBoxFieldIdentifier = "msb";
+export type OpenListFieldIdentifier = "tbl";
+export type PermissionFieldIdentifier = "perm";
+export type PriorityFieldIdentifier = "priority";
+export type RadioButtonFieldIdentifier = "rb";
 export type SelectBoxFieldIdentifier = "sb";
+export type StringFieldIdentifier = "string";
+export type SubmissionDateFieldIdentifier = "subon";
+export type SubmittedByFieldIdentifier = "subby";
 export type TextFieldIdentifier = "text";
 
 export const ARTIFACT_ID_FIELD: ArtifactIdFieldIdentifier = "aid";
 export const ARTIFACT_ID_IN_TRACKER_FIELD: ArtifactIdInTrackerFieldIdentifier = "atid";
+export const ARTIFACT_LINK_FIELD: ArtifactLinkFieldIdentifier = "art_link";
+export const CHECKBOX_FIELD: CheckBoxFieldIdentifier = "cb";
 export const COMPUTED_FIELD: ComputedFieldIdentifier = "computed";
+export const CONTAINER_COLUMN: ColumnIdentifier = "column";
 export const CONTAINER_FIELDSET: FieldSetIdentifier = "fieldset";
+export const CROSS_REFERENCE_FIELD: CrossReferenceFieldIdentifier = "cross";
 export const DATE_FIELD: DateFieldIdentifier = "date";
 export const FILE_FIELD: FileFieldIdentifier = "file";
 export const FLOAT_FIELD: FloatFieldIdentifier = "float";
 export const INT_FIELD: IntFieldIdentifier = "int";
+export const LAST_UPDATED_BY_FIELD: LastUpdateByFieldIdentifier = "luby";
+export const LAST_UPDATE_DATE_FIELD: LastUpdateDateFieldIdentifier = "lud";
+export const MULTI_SELECTBOX_FIELD: MultiSelectBoxFieldIdentifier = "msb";
+export const OPEN_LIST_FIELD: OpenListFieldIdentifier = "tbl";
+export const PERMISSION_FIELD: PermissionFieldIdentifier = "perm";
+export const PRIORITY_FIELD: PriorityFieldIdentifier = "priority";
+export const RADIO_BUTTON_FIELD: RadioButtonFieldIdentifier = "rb";
 export const SELECTBOX_FIELD: SelectBoxFieldIdentifier = "sb";
+export const STRING_FIELD: StringFieldIdentifier = "string";
+export const SUBMISSION_DATE_FIELD: SubmissionDateFieldIdentifier = "subon";
+export const SUBMITTED_BY_FIELD: SubmittedByFieldIdentifier = "subby";
 export const TEXT_FIELD: TextFieldIdentifier = "text";
 
 export type StructuralFieldIdentifier =
-    | "column"
+    | ColumnIdentifier
     | FieldSetIdentifier
     | "linebreak"
     | "separator"
     | "staticrichtext";
 
-export const STRUCTURAL_FIELDS: StructuralFieldIdentifier[] = [
-    "column",
+export const STRUCTURAL_FIELDS: ReadonlyArray<StructuralFieldIdentifier> = [
+    CONTAINER_COLUMN,
     CONTAINER_FIELDSET,
     "linebreak",
     "separator",
@@ -58,39 +86,46 @@ export type ReadOnlyFieldIdentifier =
     | ArtifactIdFieldIdentifier
     | ArtifactIdInTrackerFieldIdentifier
     | "burndown"
-    | "cross"
-    | "luby"
-    | "lud"
-    | "priority"
-    | "subby"
-    | "subon";
+    | CrossReferenceFieldIdentifier
+    | LastUpdateDateFieldIdentifier
+    | LastUpdateByFieldIdentifier
+    | PriorityFieldIdentifier
+    | SubmissionDateFieldIdentifier
+    | SubmittedByFieldIdentifier;
 
-export const READ_ONLY_FIELDS: ReadOnlyFieldIdentifier[] = [
+export const READ_ONLY_FIELDS: ReadonlyArray<ReadOnlyFieldIdentifier> = [
     ARTIFACT_ID_FIELD,
     ARTIFACT_ID_IN_TRACKER_FIELD,
     "burndown",
-    "cross",
-    "luby",
-    "lud",
-    "priority",
-    "subby",
-    "subon",
+    CROSS_REFERENCE_FIELD,
+    LAST_UPDATED_BY_FIELD,
+    LAST_UPDATE_DATE_FIELD,
+    PRIORITY_FIELD,
+    SUBMISSION_DATE_FIELD,
+    SUBMITTED_BY_FIELD,
 ];
 
 export type FieldTypeIdentifier =
     | StructuralFieldIdentifier
     | ReadOnlyFieldIdentifier
+    | CheckBoxFieldIdentifier
     | ComputedFieldIdentifier
-    | SelectBoxFieldIdentifier
     | DateFieldIdentifier
-    | IntFieldIdentifier
+    | FileFieldIdentifier
     | FloatFieldIdentifier
-    | TextFieldIdentifier
-    | FileFieldIdentifier;
+    | IntFieldIdentifier
+    | MultiSelectBoxFieldIdentifier
+    | OpenListFieldIdentifier
+    | PermissionFieldIdentifier
+    | RadioButtonFieldIdentifier
+    | SelectBoxFieldIdentifier
+    | StringFieldIdentifier
+    | TextFieldIdentifier;
 
 export type StaticBindIdentifier = "static";
 export type UserGroupsBindIdentifier = "ugroups";
 export type UsersBindIdentifier = "users";
+export type ListBindType = StaticBindIdentifier | UserGroupsBindIdentifier | UsersBindIdentifier;
 
 export const LIST_BIND_STATIC: StaticBindIdentifier = "static";
 export const LIST_BIND_UGROUPS: UserGroupsBindIdentifier = "ugroups";
