@@ -86,7 +86,7 @@ export interface RestFolder extends Omit<Folder, "properties"> {
 export interface PostRestItemFile {
     readonly title: string;
     readonly description?: string;
-    readonly metadata?: Array<Property>;
+    readonly metadata?: Array<Property> | null;
     readonly file_properties?: {
         readonly file_name: string;
         readonly file_size: number;

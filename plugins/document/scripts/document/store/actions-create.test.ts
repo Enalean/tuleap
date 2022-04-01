@@ -18,12 +18,12 @@
  */
 
 import * as rest_querier from "../api/rest-querier";
-import { createNewItem } from "./actions-create";
+import { addNewUploadFile, createNewItem } from "./actions-create";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_FILE } from "../constants";
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
-import type { CreatedItem, FakeItem, Folder, Item, RootState } from "../type";
+import type { CreatedItem, FakeItem, Folder, Item, ItemFile, RootState } from "../type";
 import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
 
@@ -358,6 +358,115 @@ describe("actions-create", () => {
                 "toggleCollapsedFolderHasUploadingContent",
                 [extended_folder_of_created_item, false]
             );
+        });
+    });
+
+    describe("addNewUploadFile", () => {
+        it("Creates a fake item with created item reference", async () => {
+            context.state.folder_content = [{ id: 45 } as Folder];
+            const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" } as File;
+            const parent = { id: 42 } as Folder;
+
+            const created_item_reference = { id: 66 } as CreatedItem;
+            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+                Promise.resolve(created_item_reference)
+            );
+            const uploader = {} as Upload;
+            jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+
+            const expected_fake_item_with_uploader = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 42,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0,
+                uploader,
+                upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
+            };
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                expected_fake_item_with_uploader
+            );
+        });
+        it("Starts upload", async () => {
+            context.state.folder_content = [{ id: 45 } as Folder];
+            const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" } as File;
+            const parent = { id: 42 } as Folder;
+
+            const created_item_reference = { id: 66 } as CreatedItem;
+            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+                Promise.resolve(created_item_reference)
+            );
+            const uploader = {} as Upload;
+            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
+
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+
+            const expected_fake_item = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 42,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0,
+                uploader,
+                upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
+            };
+            expect(uploadFile).toHaveBeenCalledWith(
+                context,
+                dropped_file,
+                expected_fake_item,
+                created_item_reference,
+                parent
+            );
+        });
+        it("Does not start upload nor create fake item if item reference already exist in the store", async () => {
+            context.state.folder_content = [{ id: 45 } as Folder, { id: 66 } as ItemFile];
+            const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" } as File;
+            const parent = { id: 42 } as Folder;
+
+            const created_item_reference = { id: 66 } as CreatedItem;
+            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+                Promise.resolve(created_item_reference)
+            );
+            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
+
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+
+            expect(context.commit).not.toHaveBeenCalled();
+            expect(uploadFile).not.toHaveBeenCalled();
+        });
+        it("does not start upload if file is empty", async () => {
+            context.state.folder_content = [{ id: 45 } as Folder];
+            const dropped_file = { name: "empty-file.txt", size: 0, type: "text/plain" } as File;
+            const parent = { id: 42 } as Folder;
+
+            const created_item_reference = { id: 66 } as CreatedItem;
+            jest.spyOn(rest_querier, "addNewFile").mockReturnValue(
+                Promise.resolve(created_item_reference)
+            );
+
+            const created_item = { id: 66, parent_id: 42, type: "file" } as ItemFile;
+            jest.spyOn(rest_querier, "getItem").mockResolvedValue(created_item);
+
+            const uploadFile = jest.spyOn(upload_file, "uploadFile").mockImplementation();
+
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                created_item
+            );
+            expect(uploadFile).not.toHaveBeenCalled();
         });
     });
 });
