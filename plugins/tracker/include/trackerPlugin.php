@@ -24,7 +24,8 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
@@ -227,10 +228,8 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../include/manual_autoload.php';
 
-/**
- * trackerPlugin
- */
-class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class trackerPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
@@ -338,8 +337,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
-
-        $this->addHook(GetConfigKeys::NAME);
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
@@ -2353,7 +2350,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
-    public function getConfigKeys(GetConfigKeys $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ListPickerIncluder::class);
         $event->addConfigClass(Tracker_Report::class);

@@ -29,9 +29,10 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -123,7 +124,8 @@ use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const TRUNCATED_SERVICE_NAME = 'Documents';
     public const SYSTEM_NATURE_NAME     = 'document';
@@ -221,8 +223,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
-
-        $this->addHook(GetConfigKeys::NAME);
 
         $this->addHook(CollectRoutesEvent::NAME);
 
@@ -1575,7 +1575,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $cleaner->deleteDanglingVersionToUpload(new \DateTimeImmutable());
     }
 
-    public function getConfigKeys(GetConfigKeys $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);
     }

@@ -20,6 +20,7 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Config\PluginWithConfigKeys;
 
 final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -371,6 +372,34 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $plugin->services_allowed_for_project($params);
 
         $this->assertEquals([], $services);
+    }
+
+    public function testImplementingPluginWithConfigKeysIsEnoughToListenToGetConfigKeysEvent(): void
+    {
+        $plugin = new class extends \Plugin implements PluginWithConfigKeys {
+            public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+            {
+            }
+        };
+
+        self::assertArrayHasKey('getConfigKeys', $plugin->getHooksAndCallbacks()->toArray());
+    }
+
+    public function testImplementingPluginWithConfigKeysAndListeningToEventManuallyDoesntRaiseException(): void
+    {
+        $plugin = new class extends \Plugin implements PluginWithConfigKeys {
+            public function getHooksAndCallbacks()
+            {
+                $this->addHook(\Tuleap\Config\GetConfigKeys::NAME);
+                return parent::getHooksAndCallbacks();
+            }
+
+            public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+            {
+            }
+        };
+
+        self::assertArrayHasKey('getConfigKeys', $plugin->getHooksAndCallbacks()->toArray());
     }
 
     private function getFakePluginToTestHooks(): Plugin

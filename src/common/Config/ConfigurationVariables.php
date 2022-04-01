@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Config;
 
 /**
- * This class will holds the configuration variables transfered from local.inc.dist until they find an appropriate location
+ * This class will hold the configuration variables transferred from local.inc.dist until they find an appropriate location
  *
  * You will smile when you will annotate this file to see there was still a hope in 2022 that someday this will be done.
  */

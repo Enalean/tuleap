@@ -29,26 +29,25 @@ final class ConstantWithConfigAttributesBuilder
      * @param class-string ...$class_names
      *
      * @return \Generator<\ReflectionClassConstant>
+     * @throws \ReflectionException
      */
     public static function get(...$class_names): iterable
     {
         foreach ($class_names as $class) {
-            try {
-                $reflected_class = new \ReflectionClass($class);
-                foreach ($reflected_class->getReflectionConstants() as $constant) {
-                    $constant_value = $constant->getValue();
-                    if (! is_string($constant_value)) {
-                        continue;
-                    }
+            $reflected_class = new \ReflectionClass($class);
+            foreach ($reflected_class->getReflectionConstants() as $constant) {
+                $constant_value = $constant->getValue();
 
-                    $attributes = $constant->getAttributes(ConfigKey::class);
-                    if (count($attributes) !== 1) {
-                        continue;
-                    }
-
-                    yield $constant;
+                if (! is_string($constant_value)) {
+                    continue;
                 }
-            } catch (\ReflectionException) {
+
+                $attributes = $constant->getAttributes();
+                foreach ($attributes as $attribute) {
+                    if ($attribute->getName() === ConfigKey::class || $attribute->getName() === FeatureFlagConfigKey::class) {
+                        yield $constant;
+                    }
+                }
             }
         }
     }

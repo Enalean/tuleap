@@ -20,7 +20,8 @@
 
 declare(strict_types=1);
 
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DocumentGeneration\CrossReport\CrossReportExportPropertiesFetcher;
 use Tuleap\DocumentGeneration\FeatureFlagCrossTrackerReportAction;
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
@@ -35,7 +36,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class document_generationPlugin extends Plugin
+class document_generationPlugin extends Plugin implements PluginWithConfigKeys
 {
     public function __construct(?int $id)
     {
@@ -60,12 +61,11 @@ class document_generationPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(GetExportOptionsMenuItemsEvent::NAME);
-        $this->addHook(GetConfigKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
 
-    public function getConfigKeys(GetConfigKeys $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(FeatureFlagCrossTrackerReportAction::class);
     }

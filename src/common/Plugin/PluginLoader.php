@@ -26,6 +26,7 @@ use EventManager;
 use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\VarExporter\VarExporter;
+use Tuleap\Config\PluginWithConfigKeys;
 use Webimpress\SafeWriter\Exception\ExceptionInterface;
 use Webimpress\SafeWriter\FileWriter;
 
@@ -74,6 +75,7 @@ class PluginLoader
                 );
             }
         }
+        \ForgeConfig::loadPluginsDefaultValues($proxy->getDefaultVariables());
     }
 
     public static function invalidateCache()
@@ -118,12 +120,15 @@ class PluginLoader
         }
     }
 
-    private function getHooksOfAvailablePlugins()
+    private function getHooksOfAvailablePlugins(): SerializedPluginProxy
     {
         $proxy = new SerializedPluginProxy(new EventPluginCache());
         foreach ($this->plugin_factory->getAvailablePlugins() as $plugin) {
             foreach ($plugin->getHooksAndCallbacks()->iterator() as $hook) {
                 $proxy->addListener($this->plugin_factory, $hook['hook'], $plugin, $hook);
+            }
+            if ($plugin instanceof PluginWithConfigKeys) {
+                $plugin->getConfigKeys($proxy);
             }
         }
         return $proxy;

@@ -21,33 +21,42 @@
 
 namespace Tuleap\Plugin;
 
-class SerializedPluginProxy
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
+
+class SerializedPluginProxy implements ConfigClassProvider
 {
     /**
      * @var EventPluginCacheInfo[][]
      */
-    private $event_plugin_map;
+    private array $event_plugin_map;
     /**
      * @var PluginCacheInfo[]
      */
-    private $plugin_map;
+    private array $plugin_map;
     /**
      * @var \Plugin[]
      */
-    private $plugins = [];
+    private array $plugins = [];
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $default_variables;
 
     public function __construct(EventPluginCache $cache)
     {
-        $this->plugin_map       = $cache->plugin_map;
-        $this->event_plugin_map = $cache->event_plugin_map;
+        $this->plugin_map        = $cache->plugin_map;
+        $this->event_plugin_map  = $cache->event_plugin_map;
+        $this->default_variables = $cache->default_variables;
     }
 
-    public function getSerializablePluginCache()
+    public function getSerializablePluginCache(): EventPluginCache
     {
-        return new EventPluginCache($this->plugin_map, $this->event_plugin_map);
+        return new EventPluginCache($this->plugin_map, $this->event_plugin_map, $this->default_variables);
     }
 
-    public function isPluginAvailableById($plugin_id)
+    public function isPluginAvailableById($plugin_id): bool
     {
         return isset($this->plugin_map[$plugin_id]);
     }
@@ -55,7 +64,7 @@ class SerializedPluginProxy
     /**
      * @return EventPluginCacheInfo[][]
      */
-    public function getEvents()
+    public function getEvents(): array
     {
         return $this->event_plugin_map;
     }
@@ -75,6 +84,24 @@ class SerializedPluginProxy
             $hook['callback'],
             $hook['recallHook']
         );
+    }
+
+    /**
+     * @param class-string $class_name
+     * @throws \ReflectionException
+     */
+    public function addConfigClass(string $class_name): void
+    {
+        $default_values_provider = new ConfigValueDefaultValueAttributeProvider($class_name);
+        $this->default_variables = array_merge($this->default_variables, $default_values_provider->getVariables());
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDefaultVariables(): array
+    {
+        return $this->default_variables;
     }
 
     private function loadPluginFiles($path)

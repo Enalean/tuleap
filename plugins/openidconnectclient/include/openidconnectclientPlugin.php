@@ -26,7 +26,8 @@ use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\Client\Authentication\BasicAuth;
@@ -89,7 +90,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 /**
  * @psalm-import-type AcceptableIssuerClaimValidator from IDTokenVerifier
  */
-class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const SESSION_LINK_ID_KEY = 'tuleap_oidc_link_id';
 
@@ -112,7 +114,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook(RegistrationGuardEvent::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
-        $this->addHook(GetConfigKeys::NAME);
         $this->addHook(UserAuthenticationSucceeded::NAME);
     }
 
@@ -532,7 +533,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return $storage;
     }
 
-    public function getConfigKeys(GetConfigKeys $config_keys): void
+    public function getConfigKeys(ConfigClassProvider $config_keys): void
     {
         $config_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);
     }

@@ -43,7 +43,7 @@ use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
 
-final class GetConfigKeys implements Dispatchable
+final class GetConfigKeys implements Dispatchable, ConfigClassProvider
 {
     public const NAME = 'getConfigKeys';
 

@@ -28,9 +28,10 @@ use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Httpd\PostRotateEvent;
@@ -142,7 +143,8 @@ use Tuleap\SvnCore\Cache\ParameterDao;
 use Tuleap\SvnCore\Cache\ParameterRetriever;
 use Tuleap\SvnCore\Cache\ParameterSaver;
 
-class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class SvnPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const SERVICE_SHORTNAME  = 'plugin_svn';
     public const SYSTEM_NATURE_NAME = ReferenceManager::REFERENCE_NATURE_SVNREVISION;
@@ -229,7 +231,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(GetAllRepositories::NAME);
         $this->addHook(SvnCoreUsage::NAME);
         $this->addHook(SvnCoreAccess::NAME);
-        $this->addHook(GetConfigKeys::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -1287,7 +1288,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
     }
 
-    public function getConfigKeys(GetConfigKeys $config_keys): void
+    public function getConfigKeys(ConfigClassProvider $config_keys): void
     {
         $config_keys->addConfigClass(FileSizeValidator::class);
     }
