@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
-final class ArtifactLinksFieldUpdateValueFormatter
+final class NewArtifactLinkChangesetValueFormatter
 {
-    public static function formatForWebUI(ArtifactLinksFieldUpdateValue $update_value): array
+    public static function formatForWebUI(NewArtifactLinkChangesetValue $update_value): array
     {
         $field_data          = [];
         $artifact_links_diff = $update_value->getArtifactLinksDiff();
@@ -38,9 +38,9 @@ final class ArtifactLinksFieldUpdateValueFormatter
             ];
         }
 
-        $parent_link = $update_value->getParentArtifactLink();
+        $parent_link = $update_value->getParent();
         if ($parent_link !== null) {
-            $field_data['parent'] = [$parent_link->getTargetArtifactId()];
+            $field_data['parent'] = [$parent_link->getParentArtifactId()];
         }
 
         return $field_data;

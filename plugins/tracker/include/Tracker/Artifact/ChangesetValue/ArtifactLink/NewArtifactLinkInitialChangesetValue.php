@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 /**
  * I hold the initial changeset value for the Artifact Link field.
  * Since it is the first changeset, there are no existing values to consider, so no diff.
- * @see ArtifactLinksFieldUpdateValue
+ * @see NewArtifactLinkChangesetValue
  * @psalm-immutable
  */
 final class NewArtifactLinkInitialChangesetValue

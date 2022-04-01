@@ -31,10 +31,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -101,10 +98,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $updater = new ArtifactUpdater(new FieldsDataBuilder(
             $this->fields_retriever,
-            new ArtifactLinksFieldUpdateValueBuilder(
-                new ArtifactLinksPayloadStructureChecker(),
-                new ArtifactLinksPayloadExtractor(),
-                new ArtifactParentLinkPayloadExtractor(),
+            new NewArtifactLinkChangesetValueBuilder(
                 RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([])),
             ),
             new NewArtifactLinkInitialChangesetValueBuilder()

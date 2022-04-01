@@ -86,10 +86,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValueBuilder;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadExtractor;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksPayloadStructureChecker;
-use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\ArtifactParentLinkPayloadExtractor;
+use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
@@ -250,10 +247,7 @@ class ExecutionsResource
         $this->artifact_updater = new ArtifactUpdater(
             new FieldsDataBuilder(
                 $this->formelement_factory,
-                new ArtifactLinksFieldUpdateValueBuilder(
-                    new ArtifactLinksPayloadStructureChecker(),
-                    new ArtifactLinksPayloadExtractor(),
-                    new ArtifactParentLinkPayloadExtractor(),
+                new NewArtifactLinkChangesetValueBuilder(
                     new ArtifactForwardLinksRetriever(
                         new ArtifactLinksByChangesetCache(),
                         new ChangesetValueArtifactLinkDao(),
@@ -381,10 +375,7 @@ class ExecutionsResource
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
                 new FieldsDataBuilder(
                     $this->formelement_factory,
-                    new ArtifactLinksFieldUpdateValueBuilder(
-                        new ArtifactLinksPayloadStructureChecker(),
-                        new ArtifactLinksPayloadExtractor(),
-                        new ArtifactParentLinkPayloadExtractor(),
+                    new NewArtifactLinkChangesetValueBuilder(
                         new ArtifactForwardLinksRetriever(
                             new ArtifactLinksByChangesetCache(),
                             new ChangesetValueArtifactLinkDao(),

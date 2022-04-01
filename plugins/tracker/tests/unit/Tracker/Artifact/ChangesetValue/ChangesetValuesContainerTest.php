@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactLinksFieldUpdateValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
 
@@ -52,7 +52,7 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
             ForwardLinkStub::withType(53, '_is_child'),
             ForwardLinkStub::withNoType(34),
         ]);
-        $artifact_link_value = ArtifactLinksFieldUpdateValue::build(
+        $artifact_link_value = NewArtifactLinkChangesetValue::fromParts(
             self::ARTIFACT_LINK_FIELD_ID,
             $already_linked,
             $submitted_links,

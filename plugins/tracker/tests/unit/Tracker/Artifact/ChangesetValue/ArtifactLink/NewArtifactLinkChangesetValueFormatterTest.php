@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink;
 
 use Tuleap\Tracker\Test\Stub\ForwardLinkStub;
+use Tuleap\Tracker\Test\Stub\NewParentLinkStub;
 
-final class ArtifactLinksFieldUpdateValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewArtifactLinkChangesetValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_ID = 993;
     private CollectionOfForwardLinks $already_linked;
     private CollectionOfForwardLinks $submitted_links;
-    private ?ForwardLink $parent;
+    private ?NewParentLink $parent;
 
     protected function setUp(): void
     {
@@ -40,13 +41,13 @@ final class ArtifactLinksFieldUpdateValueFormatterTest extends \Tuleap\Test\PHPU
 
     private function format(): array
     {
-        $value = ArtifactLinksFieldUpdateValue::build(
+        $value = NewArtifactLinkChangesetValue::fromParts(
             self::FIELD_ID,
             $this->already_linked,
             $this->submitted_links,
             $this->parent
         );
-        return ArtifactLinksFieldUpdateValueFormatter::formatForWebUI($value);
+        return NewArtifactLinkChangesetValueFormatter::formatForWebUI($value);
     }
 
     public function testItFormatsNewValuesWithoutType(): void
@@ -91,7 +92,7 @@ final class ArtifactLinksFieldUpdateValueFormatterTest extends \Tuleap\Test\PHPU
 
     public function testItFormatsParent(): void
     {
-        $this->parent = ForwardLinkStub::withNoType(55);
+        $this->parent = NewParentLinkStub::withId(55);
         $fields_data  = $this->format();
         self::assertArrayHasKey('parent', $fields_data);
         self::assertCount(1, $fields_data['parent']);
