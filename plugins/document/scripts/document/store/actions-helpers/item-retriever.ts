@@ -18,18 +18,20 @@
  *
  */
 
-import type { FakeItem, Folder, Item, ItemFile } from "../../type";
+import type { FakeItem, Folder, Item } from "../../type";
 import { isFolder } from "../../helpers/type-check-helper";
 
 export function getParentFolder(
     folder_content: Array<Item | FakeItem>,
-    fake_item: ItemFile | FakeItem,
+    item: Item | FakeItem,
     current_folder: Folder
 ): Folder {
-    const found_parent_folder = folder_content.find((item) => item.id === fake_item.parent_id);
+    const found_parent_folder = folder_content.find(
+        (possible_parent) => possible_parent.id === item.parent_id
+    );
     if (found_parent_folder && !isFolder(found_parent_folder)) {
         throw new Error(
-            "Parent item " + found_parent_folder.id + " of item " + fake_item.id + "is not a folder"
+            "Parent item " + found_parent_folder.id + " of item " + item.id + "is not a folder"
         );
     }
 

@@ -17,19 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { NewVersionFromEmptyInformation } from "./actions-update";
 import {
     createNewEmbeddedFileVersionFromModal,
     createNewFileVersion,
     createNewFileVersionFromModal,
     createNewLinkVersionFromModal,
+    createNewVersionFromEmpty,
     createNewWikiVersionFromModal,
 } from "./actions-update";
 import * as rest_querier from "../api/rest-querier";
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
-import type { Embedded, Folder, ItemFile, Link, RootState, Wiki } from "../type";
+import type { Embedded, Empty, Folder, ItemFile, Link, RootState, Wiki } from "../type";
 import type { ConfigurationState } from "./configuration";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../constants";
+import type { Upload } from "tus-js-client";
 
 describe("actions-update", () => {
     let context: ActionContext<RootState, RootState>;
@@ -314,6 +318,193 @@ describe("actions-update", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleErrorsForModal",
                 expect.anything()
+            );
+        });
+    });
+
+    describe("createNewVersionFromEmpty -", () => {
+        let context: ActionContext<RootState, RootState>,
+            postNewLinkVersionFromEmpty: jest.SpyInstance,
+            postNewEmbeddedFileVersionFromEmpty: jest.SpyInstance,
+            postNewFileVersionFromEmpty: jest.SpyInstance;
+
+        beforeEach(() => {
+            context = {
+                commit: jest.fn(),
+                dispatch: jest.fn(),
+                state: {
+                    folder_content: [{ id: 123, type: TYPE_EMPTY } as Empty],
+                } as unknown as RootState,
+            } as unknown as ActionContext<RootState, RootState>;
+
+            postNewLinkVersionFromEmpty = jest.spyOn(rest_querier, "postNewLinkVersionFromEmpty");
+            postNewEmbeddedFileVersionFromEmpty = jest.spyOn(
+                rest_querier,
+                "postNewEmbeddedFileVersionFromEmpty"
+            );
+            postNewFileVersionFromEmpty = jest.spyOn(rest_querier, "postNewFileVersionFromEmpty");
+        });
+
+        it("should update the empty document to link document", async () => {
+            const item_to_update = {
+                link_properties: {
+                    link_url: "https://example.test",
+                },
+            } as NewVersionFromEmptyInformation;
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY,
+            } as Empty;
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_LINK,
+            } as Link;
+            jest.spyOn(rest_querier, "getItem").mockResolvedValue(updated_item);
+            postNewLinkVersionFromEmpty.mockReturnValue(Promise.resolve());
+
+            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
+        });
+
+        it("should update the empty document to embedded_file document", async () => {
+            const item_to_update = {
+                embedded_properties: {
+                    content: "content",
+                },
+            } as NewVersionFromEmptyInformation;
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY,
+            } as Empty;
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_EMBEDDED,
+            } as Embedded;
+
+            jest.spyOn(rest_querier, "getItem").mockResolvedValue(updated_item);
+            postNewEmbeddedFileVersionFromEmpty.mockReturnValue(Promise.resolve());
+
+            await createNewVersionFromEmpty(context, [TYPE_EMBEDDED, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
+        });
+
+        it("should update the empty document to file document", async () => {
+            const item_to_update = {
+                file_properties: {
+                    file: { name: "toto.gif" } as File,
+                },
+            } as NewVersionFromEmptyInformation;
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY,
+            } as Empty;
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_FILE,
+            } as ItemFile;
+            const uploadVersionFromEmpty = jest
+                .spyOn(upload_file, "uploadVersionFromEmpty")
+                .mockReturnValue({} as Upload);
+            postNewFileVersionFromEmpty.mockReturnValue(Promise.resolve());
+            jest.spyOn(rest_querier, "getItem").mockResolvedValue(updated_item);
+
+            await createNewVersionFromEmpty(context, [TYPE_FILE, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
+            expect(postNewFileVersionFromEmpty).toHaveBeenCalled();
+            expect(uploadVersionFromEmpty).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
+        });
+
+        it("should failed the update", async () => {
+            const item_to_update = {
+                link_properties: {
+                    link_url: "https://example.test",
+                },
+            } as NewVersionFromEmptyInformation;
+            const item = {
+                id: 123,
+                type: TYPE_EMPTY,
+            } as Empty;
+
+            const updated_item = {
+                id: 123,
+                type: TYPE_LINK,
+            } as Link;
+
+            const getItem = jest.spyOn(rest_querier, "getItem");
+            postNewLinkVersionFromEmpty.mockImplementation(() => {
+                throw new Error("Failed to update");
+            });
+
+            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+
+            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "error/handleErrorsForModal",
+                expect.anything()
+            );
+            expect(getItem).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
             );
         });
     });
