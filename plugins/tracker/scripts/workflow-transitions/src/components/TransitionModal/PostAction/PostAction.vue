@@ -91,7 +91,7 @@ import {
     INT_FIELD,
     READ_ONLY_FIELDS,
     STRUCTURAL_FIELDS,
-} from "../../../../../constants/fields-constants.js";
+} from "@tuleap/plugin-tracker-constants";
 import { mapGetters, mapState } from "vuex";
 import { compare } from "../../../support/string.js";
 import AddToBacklogAgileDashboardPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";

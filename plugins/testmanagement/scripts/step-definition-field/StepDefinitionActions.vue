@@ -71,7 +71,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../../tracker/scripts/constants/fields-constants.js";
+} from "@tuleap/plugin-tracker-constants";
 import { mapState } from "vuex";
 import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
 import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";

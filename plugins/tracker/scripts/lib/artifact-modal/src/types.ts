@@ -21,7 +21,7 @@ import type {
     FieldTypeIdentifier,
     FileFieldIdentifier,
     Permission,
-} from "../../../constants/fields-constants";
+} from "@tuleap/plugin-tracker-constants";
 
 export type DisconnectFunction = () => void;
 

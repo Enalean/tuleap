@@ -31,7 +31,7 @@ import { updateFileUploadRulesWhenNeeded } from "./fields/file-field/file-upload
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
-import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "../../../constants/fields-constants.js";
+import { isValidTextFormat, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import { setTextFieldDefaultFormat } from "./model/UserPreferencesStore";
 import {
     getTargetFieldPossibleValues,

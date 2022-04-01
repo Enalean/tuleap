@@ -19,7 +19,7 @@
  */
 
 import type { FormatSelectorInterface, FormatSelectorPresenter } from "./FormatSelectorInterface";
-import { isValidTextFormat } from "../../../../constants/fields-constants";
+import { isValidTextFormat } from "@tuleap/plugin-tracker-constants";
 
 export class ExistingFormatSelector implements FormatSelectorInterface {
     constructor(private readonly doc: Document) {}

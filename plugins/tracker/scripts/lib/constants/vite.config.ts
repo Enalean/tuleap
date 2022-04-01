@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
-import type { TemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
+import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
+import * as path from "path";
+import dts from "vite-dts";
 
-export interface FormatHiddenInputPresenter {
-    readonly name: string;
-    readonly value: TextFieldFormat;
-}
-
-export const createFormatHiddenInput = (presenter: FormatHiddenInputPresenter): TemplateResult =>
-    html`
-        <input type="hidden" name="${presenter.name}" value="${presenter.value}" />
-    `;
+export default defineConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/constants.ts"),
+            name: "TrackerConstants",
+        },
+    },
+    plugins: [dts()],
+});

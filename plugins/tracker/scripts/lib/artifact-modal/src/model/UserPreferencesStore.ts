@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
-import { TEXT_FORMAT_TEXT } from "../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 
 let text_fields_default_format: TextFieldFormat = TEXT_FORMAT_TEXT;
 

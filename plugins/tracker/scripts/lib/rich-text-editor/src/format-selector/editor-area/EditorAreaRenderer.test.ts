@@ -23,11 +23,8 @@ import * as PreviewEditButton from "./components/PreviewEditButton";
 import * as FormatHiddenInput from "./components/FormatHiddenInput";
 import { EditorAreaRenderer } from "./EditorAreaRenderer";
 import type { GettextProvider } from "@tuleap/gettext";
-import type { TextFieldFormat } from "../../../../../constants/fields-constants";
-import {
-    TEXT_FORMAT_COMMONMARK,
-    TEXT_FORMAT_HTML,
-} from "../../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import type { EditorAreaStateInterface } from "./EditorAreaStateInterface";
 
 const emptyFunction = (): void => {

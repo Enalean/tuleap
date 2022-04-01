@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TEXT_FORMAT_HTML } from "../../../../../../constants/fields-constants";
+import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import { createFormatHiddenInput } from "./FormatHiddenInput";
 import { render } from "lit/html.js";
 import { stripLitExpressionComments } from "../../../test-helper";

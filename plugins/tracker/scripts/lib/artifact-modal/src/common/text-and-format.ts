@@ -21,7 +21,7 @@ import type { UpdateFunction } from "hybrids";
 import { html, dispatch } from "hybrids";
 import { sanitize } from "dompurify";
 import { getCommonMarkPreviewErrorIntroduction } from "../gettext-catalog";
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import { postInterpretCommonMark } from "../api/tuleap-api";
 import "../common/FormatSelector";
 import "../common/RichTextEditor";

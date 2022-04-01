@@ -33,7 +33,7 @@ HTML links when pressing the "Preview" button in Markdown format.
 ```typescript
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { RichTextEditorOptions } from "@tuleap/plugin-tracker-rich-text-editor";
-import type { TextFieldFormat } from "./fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
 const locale = "en_US"; // Retrieve the locale somehow
 
@@ -102,7 +102,7 @@ Pass the exports from `@tuleap/plugin-tracker-artifact-ckeditor-image-upload` in
 ```typescript
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import type { RichTextEditorOptions } from "@tuleap/plugin-tracker-rich-text-editor";
-import type { TextFieldFormat } from "./fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
     UploadImageFormFactory,
     getUploadImageOptions

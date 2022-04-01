@@ -24,10 +24,7 @@ import localVue from "./helpers/local-vue.js";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest.js";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import * as tuleap_api from "./api/tuleap-api.js";
-import {
-    TEXT_FORMAT_COMMONMARK,
-    TEXT_FORMAT_HTML,
-} from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
+import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 
 let store;
 function getComponentInstance(data = {}, description_format = TEXT_FORMAT_COMMONMARK) {

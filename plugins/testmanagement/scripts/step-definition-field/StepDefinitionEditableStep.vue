@@ -129,7 +129,7 @@ import {
     getUploadImageOptions,
     UploadImageFormFactory,
 } from "@tuleap/plugin-tracker-artifact-ckeditor-image-upload";
-import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
+import { TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";
 import { postInterpretCommonMark } from "./api/tuleap-api.js";
 
 export default {

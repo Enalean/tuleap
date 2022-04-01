@@ -6,6 +6,7 @@ specifiers:
   '@tuleap/date-helper': file:../../../../../src/scripts/lib/date-helper
   '@tuleap/fault': link:../../../../../src/scripts/lib/fault
   '@tuleap/list-picker': file:../../../../../src/scripts/lib/list-picker
+  '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/plugin-tracker-rich-text-editor': file:../rich-text-editor
   '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
   '@tuleap/tooltip': file:../../../../../src/scripts/lib/tooltip
@@ -32,6 +33,7 @@ dependencies:
   '@tuleap/date-helper': link:../../../../../src/scripts/lib/date-helper
   '@tuleap/fault': link:../../../../../src/scripts/lib/fault
   '@tuleap/list-picker': link:../../../../../src/scripts/lib/list-picker
+  '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
   '@tuleap/tooltip': link:../../../../../src/scripts/lib/tooltip
   angular-custom-elements: 2.1.0

@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { FLOAT_FIELD, INT_FIELD } from "../../../../constants/fields-constants.js";
+import { FLOAT_FIELD, INT_FIELD } from "@tuleap/plugin-tracker-constants";
 
 export {
     clearModalShown,

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CONTAINER_FIELDSET } from "../../../../constants/fields-constants.js";
+import { CONTAINER_FIELDSET } from "@tuleap/plugin-tracker-constants";
 
 const white_listed_fields = [
     CONTAINER_FIELDSET,

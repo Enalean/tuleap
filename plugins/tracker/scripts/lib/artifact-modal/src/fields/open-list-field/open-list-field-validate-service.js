@@ -22,7 +22,7 @@ import {
     LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,
     LIST_BIND_USERS,
-} from "../../../../../constants/fields-constants.js";
+} from "@tuleap/plugin-tracker-constants";
 
 export function validateOpenListFieldValue(value_model) {
     if (typeof value_model === "undefined") {

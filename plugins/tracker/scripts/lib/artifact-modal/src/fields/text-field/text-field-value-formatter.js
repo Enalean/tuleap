@@ -22,7 +22,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "../../../../../constants/fields-constants.js";
+} from "@tuleap/plugin-tracker-constants";
 
 export function formatExistingValue(artifact_value) {
     switch (artifact_value.format) {

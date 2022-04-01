@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    TEXT_FORMAT_HTML,
-    TEXT_FORMAT_COMMONMARK,
-} from "../../../../../constants/fields-constants.js";
+import { TEXT_FORMAT_HTML, TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 
 export function validateFileField(file_value_model, text_field_value_models, followup_value_model) {
     if (typeof file_value_model === "undefined") {

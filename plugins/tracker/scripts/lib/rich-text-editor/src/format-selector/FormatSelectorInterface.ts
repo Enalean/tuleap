@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TextFieldFormat } from "../../../../constants/fields-constants";
+import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import type { TextEditorInterface } from "../TextEditorInterface";
 
 export interface FormatSelectorPresenter {

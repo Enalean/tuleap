@@ -69,7 +69,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "../../../../../constants/fields-constants.js";
+import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "@tuleap/plugin-tracker-constants";
 import { compare } from "../../../support/string.js";
 import PostAction from "./PostAction.vue";
 import DateInput from "./DateInput.vue";

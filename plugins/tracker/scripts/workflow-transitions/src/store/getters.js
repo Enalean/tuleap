@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SELECTBOX_FIELD, LIST_BIND_STATIC } from "../../../constants/fields-constants.js";
+import { SELECTBOX_FIELD, LIST_BIND_STATIC } from "@tuleap/plugin-tracker-constants";
 import { compare } from "../support/string.js";
 
 export const current_workflow_field = (state) => {

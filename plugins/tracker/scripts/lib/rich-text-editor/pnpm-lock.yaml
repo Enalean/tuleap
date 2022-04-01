@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
+  '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
   '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
   '@types/bootstrap': ^3.4.0
@@ -16,6 +17,7 @@ specifiers:
 
 dependencies:
   '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
+  '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   dompurify: 2.3.4
   lit: 2.0.2

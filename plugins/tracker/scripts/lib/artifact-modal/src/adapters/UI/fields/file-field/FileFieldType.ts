@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FileFieldIdentifier } from "../../../../../../../constants/fields-constants";
+import type { FileFieldIdentifier } from "@tuleap/plugin-tracker-constants";
 import type { AttachedFileDescription } from "./AttachedFileDescription";
 
 /**

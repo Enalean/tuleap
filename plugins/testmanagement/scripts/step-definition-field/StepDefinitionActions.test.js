@@ -24,7 +24,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
     TEXT_FORMAT_TEXT,
-} from "@tuleap/plugin-tracker/scripts/constants/fields-constants.js";
+} from "@tuleap/plugin-tracker-constants";
 import CommonmarkPreviewButton from "./CommonMark/CommonmarkPreviewButton.vue";
 import CommonmarkSyntaxHelper from "./CommonMark/CommonmarkSyntaxHelper.vue";
 import localVue from "./helpers/local-vue.js";
