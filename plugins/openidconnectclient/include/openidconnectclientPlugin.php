@@ -26,7 +26,7 @@ use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\Client\Authentication\BasicAuth;
@@ -112,7 +112,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook(RegistrationGuardEvent::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(GetConfigKeys::NAME);
         $this->addHook(UserAuthenticationSucceeded::NAME);
     }
 
@@ -532,9 +532,9 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return $storage;
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $get_whitelisted_keys): void
+    public function getConfigKeys(GetConfigKeys $config_keys): void
     {
-        $get_whitelisted_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);
+        $config_keys->addConfigClass(Login\Registration\AutomaticUserRegistration::class);
     }
 
     public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void

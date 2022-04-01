@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,21 +21,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CLI\Events;
+namespace Tuleap\Config;
 
-use Tuleap\Config\ConfigCannotBeModified;
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyMetadata;
-use Tuleap\Config\ConfigKeySecret;
-
-final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetKeysWithAnnotationsOnClasses(): void
     {
-        $get_whitelisted_keys = new GetWhitelistedKeys();
+        $get_config_keys = new GetConfigKeys();
 
-        $all_keys = $get_whitelisted_keys->getSortedKeysWithMetadata();
+        $all_keys = $get_config_keys->getSortedKeysWithMetadata();
         self::assertArrayHasKey('sys_use_project_registration', $all_keys);
         self::assertEquals(
             new ConfigKeyMetadata('Is project creation allowed to regular users (1) or not (0)', true, false, null),
@@ -51,10 +45,10 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             public const SOME_STUFF = 'foo';
         };
 
-        $get_whitelisted_keys = new GetWhitelistedKeys();
-        $get_whitelisted_keys->addConfigClass($class::class);
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
 
-        self::assertFalse($get_whitelisted_keys->getSortedKeysWithMetadata()['foo']->can_be_modified);
+        self::assertFalse($get_config_keys->getSortedKeysWithMetadata()['foo']->can_be_modified);
     }
 
     public function testCannotBeModifiedAttributeDependsOnConfigKey(): void
@@ -64,18 +58,18 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             public const SOME_STUFF = 'foo';
         };
 
-        $get_whitelisted_keys = new GetWhitelistedKeys();
-        $get_whitelisted_keys->addConfigClass($class::class);
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
 
-        self::assertArrayNotHasKey('foo', $get_whitelisted_keys->getSortedKeysWithMetadata());
-        self::assertArrayNotHasKey('', $get_whitelisted_keys->getSortedKeysWithMetadata());
+        self::assertArrayNotHasKey('foo', $get_config_keys->getSortedKeysWithMetadata());
+        self::assertArrayNotHasKey('', $get_config_keys->getSortedKeysWithMetadata());
     }
 
     public function testGetKeysThatCanBeModifiedListKeysThatCanBeModified(): void
     {
-        $get_whitelisted_keys = new GetWhitelistedKeys();
+        $get_config_keys = new GetConfigKeys();
 
-        self::assertContains('sys_use_project_registration', $get_whitelisted_keys->getKeysThatCanBeModified());
+        self::assertContains('sys_use_project_registration', $get_config_keys->getKeysThatCanBeModified());
     }
 
     public function testGetKeysThatCanBeModifiedDoesntListKeysThatCannotBeModified(): void
@@ -86,17 +80,17 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             public const SOME_STUFF = 'foo';
         };
 
-        $get_whitelisted_keys = new GetWhitelistedKeys();
-        $get_whitelisted_keys->addConfigClass($class::class);
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
 
-        self::assertNotContains('foo', $get_whitelisted_keys->getKeysThatCanBeModified());
+        self::assertNotContains('foo', $get_config_keys->getKeysThatCanBeModified());
     }
 
     public function testCanBeModifiedWithAKeyThatCanBeModified(): void
     {
-        $get_whitelisted_keys = new GetWhitelistedKeys();
+        $get_config_keys = new GetConfigKeys();
 
-        self::assertTrue($get_whitelisted_keys->canBeModified('sys_use_project_registration'));
+        self::assertTrue($get_config_keys->canBeModified('sys_use_project_registration'));
     }
 
     public function testCanBeModifiedWithAKeyThatCannotBeModified(): void
@@ -107,10 +101,10 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             public const SOME_STUFF = 'foo';
         };
 
-        $get_whitelisted_keys = new GetWhitelistedKeys();
-        $get_whitelisted_keys->addConfigClass($class::class);
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
 
-        self::assertFalse($get_whitelisted_keys->canBeModified('foo'));
+        self::assertFalse($get_config_keys->canBeModified('foo'));
     }
 
     public function testConfigKeyHasCategory(): void
@@ -123,10 +117,10 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             public const SOME_STUFF = 'foo';
         };
 
-        $get_whitelisted_keys = new GetWhitelistedKeys();
-        $get_whitelisted_keys->addConfigClass($class::class);
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
 
-        $keys = $get_whitelisted_keys->getSortedKeysWithMetadata();
+        $keys = $get_config_keys->getSortedKeysWithMetadata();
         self::assertEquals('bar', $keys['foo']->category);
     }
 
@@ -138,10 +132,10 @@ final class GetWhitelistedKeysTest extends \Tuleap\Test\PHPUnit\TestCase
             public const SOME_STUFF = 'foo';
         };
 
-        $get_whitelisted_keys = new GetWhitelistedKeys();
-        $get_whitelisted_keys->addConfigClass($class::class);
+        $get_config_keys = new GetConfigKeys();
+        $get_config_keys->addConfigClass($class::class);
 
-        $key_metadata = $get_whitelisted_keys->getKeyMetadata($class::SOME_STUFF);
+        $key_metadata = $get_config_keys->getKeyMetadata($class::SOME_STUFF);
         self::assertTrue($key_metadata->is_secret);
     }
 }

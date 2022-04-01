@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Dashboard\Project\ProjectDashboardIsDisplayed;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -73,18 +72,12 @@ class RoadmapPlugin extends Plugin
     {
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(ConfigureAtXMLImport::NAME);
         $this->addHook(GetSemanticProgressUsageEvent::NAME);
         $this->addHook(ProjectDashboardIsDisplayed::NAME);
 
         return parent::getHooksAndCallbacks();
-    }
-
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
-    {
-        $event->addConfigClass(self::class);
     }
 
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void

@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\CLI\Events;
+namespace Tuleap\Config;
 
 use BackendLogger;
 use BackendSystem;
@@ -27,13 +27,6 @@ use ForgeAccess;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\BrowserDetection\BrowserDeprecationMessage;
-use Tuleap\Config\ConfigCannotBeModifiedInterface;
-use Tuleap\Config\ConfigKey;
-use Tuleap\Config\ConfigKeyCategory;
-use Tuleap\Config\ConfigKeyMetadata;
-use Tuleap\Config\ConfigKeySecret;
-use Tuleap\Config\FeatureFlagConfigKey;
-use Tuleap\Config\UnknownConfigKeyException;
 use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
 use Tuleap\Event\Dispatchable;
@@ -50,9 +43,9 @@ use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
 
-final class GetWhitelistedKeys implements Dispatchable
+final class GetConfigKeys implements Dispatchable
 {
-    public const NAME = 'getWhitelistedKeys';
+    public const NAME = 'getConfigKeys';
 
     /**
      * @var class-string[]
@@ -199,7 +192,7 @@ final class GetWhitelistedKeys implements Dispatchable
     private function getClassCategory(\ReflectionClass $reflected_class): ?string
     {
         $class_attributes = $reflected_class->getAttributes(ConfigKeyCategory::class);
-        if (count($class_attributes) !== 1) {
+        if (\count($class_attributes) !== 1) {
             return null;
         }
 

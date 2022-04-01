@@ -23,25 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-use Tuleap\CLI\Events\GetWhitelistedKeys;
-
 final class InvalidConfigKeyException extends \Exception
 {
-    /**
-     * @var GetWhitelistedKeys
-     */
-    private $white_listed_keys;
-
-    public function __construct(GetWhitelistedKeys $white_listed_keys)
+    public function __construct(private GetConfigKeys $config_keys)
     {
-        $this->white_listed_keys = $white_listed_keys;
     }
 
     /**
      * @return string[]
      */
-    public function getWhiteListedKeys(): array
+    public function getConfigKeys(): array
     {
-        return $this->white_listed_keys->getKeysThatCanBeModified();
+        return $this->config_keys->getKeysThatCanBeModified();
     }
 }

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\DocumentGeneration\CrossReport\CrossReportExportPropertiesFetcher;
 use Tuleap\DocumentGeneration\FeatureFlagCrossTrackerReportAction;
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
@@ -60,12 +60,12 @@ class document_generationPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(GetExportOptionsMenuItemsEvent::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(GetConfigKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    public function getConfigKeys(GetConfigKeys $event): void
     {
         $event->addConfigClass(FeatureFlagCrossTrackerReportAction::class);
     }

@@ -61,7 +61,7 @@ class ConfigSetCommand extends Command
 
             $this->config_set->set($key, $value);
         } catch (InvalidConfigKeyException $exception) {
-            $keys = $exception->getWhiteListedKeys();
+            $keys = $exception->getConfigKeys();
             sort($keys, SORT_STRING);
             throw new InvalidArgumentException(self::NAME . " only supports a subset of keys:\n* " . implode("\n* ", $keys));
         }
