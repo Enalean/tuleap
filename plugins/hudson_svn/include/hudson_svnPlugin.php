@@ -104,7 +104,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/hudson_svn',
+            __DIR__ . '/../frontend-assets',
             '/assets/hudson_svn'
         );
     }

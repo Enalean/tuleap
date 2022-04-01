@@ -27,9 +27,7 @@ module.exports = [
             form: "./scripts/form.js",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/hudson_svn/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
         externals: {
             jquery: "jQuery",
         },
