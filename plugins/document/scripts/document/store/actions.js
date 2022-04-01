@@ -23,12 +23,9 @@ import {
     getItem,
     getItemsReferencingSameWikiPage,
     getParents,
-    postEmbeddedFile,
-    postLinkVersion,
     postNewEmbeddedFileVersionFromEmpty,
     postNewFileVersionFromEmpty,
     postNewLinkVersionFromEmpty,
-    postWiki,
 } from "../api/rest-querier";
 
 import { getErrorMessage } from "./actions-helpers/handle-errors";
@@ -42,82 +39,12 @@ import {
 } from "../constants";
 import { handleErrorsForModal } from "./error/error-actions";
 import { createNewFile } from "./actions-helpers/create-new-file";
-import { uploadNewVersion } from "./actions-helpers/upload-new-version";
 
 export * from "./actions-create";
 export * from "./actions-retrieve";
 export * from "./actions-update";
 export * from "./actions-delete";
 export * from "./actions-quicklook";
-
-export const createNewFileVersionFromModal = async (
-    context,
-    [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]
-) => {
-    try {
-        await uploadNewVersion(context, [
-            item,
-            uploaded_file,
-            version_title,
-            changelog,
-            is_file_locked,
-            approval_table_action,
-        ]);
-        Vue.set(item, "updated", true);
-    } catch (exception) {
-        return handleErrorsForModal(context, exception);
-    }
-};
-
-export const createNewEmbeddedFileVersionFromModal = async (
-    context,
-    [item, new_html_content, version_title, changelog, is_file_locked, approval_table_action]
-) => {
-    try {
-        await postEmbeddedFile(
-            item,
-            new_html_content,
-            version_title,
-            changelog,
-            is_file_locked,
-            approval_table_action
-        );
-        Vue.set(item, "updated", true);
-    } catch (exception) {
-        return handleErrorsForModal(context, exception);
-    }
-};
-
-export const createNewWikiVersionFromModal = async (
-    context,
-    [item, new_wiki_page, version_title, changelog, is_file_locked]
-) => {
-    try {
-        await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
-        Vue.set(item, "updated", true);
-    } catch (exception) {
-        return handleErrorsForModal(context, exception);
-    }
-};
-
-export const createNewLinkVersionFromModal = async (
-    context,
-    [item, new_link_url, version_title, changelog, is_file_locked, approval_table_action]
-) => {
-    try {
-        await postLinkVersion(
-            item,
-            new_link_url,
-            version_title,
-            changelog,
-            is_file_locked,
-            approval_table_action
-        );
-        Vue.set(item, "updated", true);
-    } catch (exception) {
-        return handleErrorsForModal(context, exception);
-    }
-};
 
 export const refreshLink = async (context, item_to_refresh) => {
     const up_to_date_item = await getItem(item_to_refresh.id);

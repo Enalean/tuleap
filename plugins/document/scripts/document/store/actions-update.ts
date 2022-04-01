@@ -20,9 +20,10 @@
 import Vue from "vue";
 import { getErrorMessage } from "./actions-helpers/handle-errors";
 import type { ActionContext } from "vuex";
-import type { ItemFile, RootState } from "../type";
+import type { ApprovalTable, Embedded, ItemFile, Link, RootState, Wiki } from "../type";
 import { uploadNewVersion } from "./actions-helpers/upload-new-version";
 import { FetchWrapperError } from "tlp";
+import { postEmbeddedFile, postLinkVersion, postWiki } from "../api/rest-querier";
 
 export async function createNewFileVersion(
     context: ActionContext<RootState, RootState>,
@@ -40,3 +41,99 @@ export async function createNewFileVersion(
         throw exception;
     }
 }
+
+export const createNewFileVersionFromModal = async (
+    context: ActionContext<RootState, RootState>,
+    [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]: [
+        ItemFile,
+        File,
+        string,
+        string,
+        boolean,
+        ApprovalTable | null
+    ]
+): Promise<void> => {
+    try {
+        await uploadNewVersion(context, [
+            item,
+            uploaded_file,
+            version_title,
+            changelog,
+            is_file_locked,
+            approval_table_action,
+        ]);
+        Vue.set(item, "updated", true);
+    } catch (exception) {
+        await context.dispatch("error/handleErrorsForModal", exception);
+    }
+};
+
+export const createNewEmbeddedFileVersionFromModal = async (
+    context: ActionContext<RootState, RootState>,
+    [item, new_html_content, version_title, changelog, is_file_locked, approval_table_action]: [
+        Embedded,
+        string,
+        string,
+        string,
+        boolean,
+        ApprovalTable | null
+    ]
+): Promise<void> => {
+    try {
+        await postEmbeddedFile(
+            item,
+            new_html_content,
+            version_title,
+            changelog,
+            is_file_locked,
+            approval_table_action
+        );
+        Vue.set(item, "updated", true);
+    } catch (exception) {
+        await context.dispatch("error/handleErrorsForModal", exception);
+    }
+};
+
+export const createNewWikiVersionFromModal = async (
+    context: ActionContext<RootState, RootState>,
+    [item, new_wiki_page, version_title, changelog, is_file_locked]: [
+        Wiki,
+        string,
+        string,
+        string,
+        boolean
+    ]
+): Promise<void> => {
+    try {
+        await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
+        Vue.set(item, "updated", true);
+    } catch (exception) {
+        await context.dispatch("error/handleErrorsForModal", exception);
+    }
+};
+
+export const createNewLinkVersionFromModal = async (
+    context: ActionContext<RootState, RootState>,
+    [item, new_link_url, version_title, changelog, is_file_locked, approval_table_action]: [
+        Link,
+        string,
+        string,
+        string,
+        boolean,
+        ApprovalTable | null
+    ]
+): Promise<void> => {
+    try {
+        await postLinkVersion(
+            item,
+            new_link_url,
+            version_title,
+            changelog,
+            is_file_locked,
+            approval_table_action
+        );
+        Vue.set(item, "updated", true);
+    } catch (exception) {
+        await context.dispatch("error/handleErrorsForModal", exception);
+    }
+};

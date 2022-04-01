@@ -405,11 +405,13 @@ describe("actions-get", () => {
 
             context.state.current_folder = current_folder;
 
+            const retrieved_folder_promise = Promise.resolve(current_folder);
+
             jest.spyOn(rest_querier, "getItem").mockImplementation((item_id: number) => {
                 if (item_id === 42) {
                     return Promise.resolve(item);
                 } else if (item_id === 3) {
-                    return Promise.resolve(current_folder);
+                    return retrieved_folder_promise;
                 }
                 throw Error("Unknown item");
             });
@@ -419,7 +421,7 @@ describe("actions-get", () => {
             expect(loadAscendantHierarchy).toHaveBeenCalledWith(
                 context,
                 3,
-                Promise.resolve(current_folder)
+                retrieved_folder_promise
             );
         });
 
