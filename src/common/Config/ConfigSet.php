@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Config;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Cryptography\ConcealedString;
 
 final class ConfigSet
@@ -42,11 +41,11 @@ final class ConfigSet
      */
     public function set(string $key, string $value): void
     {
-        $white_listed_keys = $this->event_dispatcher->dispatch(new GetWhitelistedKeys());
+        $config_keys = $this->event_dispatcher->dispatch(new GetConfigKeys());
 
-        $key_metadata = $white_listed_keys->getKeyMetadata($key);
+        $key_metadata = $config_keys->getKeyMetadata($key);
         if (! $key_metadata->can_be_modified) {
-            throw new InvalidConfigKeyException($white_listed_keys);
+            throw new InvalidConfigKeyException($config_keys);
         }
 
         if ($key_metadata->is_secret) {

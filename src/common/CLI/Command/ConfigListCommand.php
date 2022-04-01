@@ -31,7 +31,7 @@ use Symfony\Component\Console\Helper\TableCellStyle;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\ConfigKeyMetadata;
 
 class ConfigListCommand extends Command
@@ -50,14 +50,14 @@ class ConfigListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $white_listed_keys = $this->event_manager->dispatch(new GetWhitelistedKeys());
+        $config_keys = $this->event_manager->dispatch(new GetConfigKeys());
 
         $table = new Table($output);
         $table->setHeaders(['Variable', 'Documentation', 'Can be set ?']);
 
         $categorized_rows   = [];
         $uncategorized_rows = [];
-        foreach ($white_listed_keys->getSortedKeysWithMetadata() as $key => $key_metadata) {
+        foreach ($config_keys->getSortedKeysWithMetadata() as $key => $key_metadata) {
             if ($key_metadata->category) {
                 $categorized_rows[$key_metadata->category][] = $this->getKeyRow($key, $key_metadata);
             } else {

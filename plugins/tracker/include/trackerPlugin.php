@@ -24,7 +24,7 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
@@ -339,7 +339,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
 
-        $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(GetConfigKeys::NAME);
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
@@ -2353,7 +2353,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    public function getConfigKeys(GetConfigKeys $event): void
     {
         $event->addConfigClass(ListPickerIncluder::class);
         $event->addConfigClass(Tracker_Report::class);

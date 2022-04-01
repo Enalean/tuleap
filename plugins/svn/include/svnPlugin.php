@@ -28,7 +28,7 @@ use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigSet;
 use Tuleap\Error\ProjectAccessSuspendedController;
@@ -229,7 +229,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(GetAllRepositories::NAME);
         $this->addHook(SvnCoreUsage::NAME);
         $this->addHook(SvnCoreAccess::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(GetConfigKeys::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -1287,9 +1287,9 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $get_whitelisted_keys): void
+    public function getConfigKeys(GetConfigKeys $config_keys): void
     {
-        $get_whitelisted_keys->addConfigClass(FileSizeValidator::class);
+        $config_keys->addConfigClass(FileSizeValidator::class);
     }
 
     public function siteAdministrationAddOption(SiteAdministrationAddOption $event): void

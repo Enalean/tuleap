@@ -25,7 +25,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\ConfigKey;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -104,7 +104,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
         $this->addHook(DisplayFileContentInGitView::NAME);
-        $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(GetConfigKeys::NAME);
         if (file_exists(__DIR__ . '/../../pullrequest/include/pullrequestPlugin.php')) {
             require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.php';
             $this->addHook(PullRequestDiffRepresentationBuild::NAME);
@@ -459,7 +459,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         }
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $event)
+    public function getConfigKeys(GetConfigKeys $event): void
     {
         $event->addConfigClass(self::class);
     }

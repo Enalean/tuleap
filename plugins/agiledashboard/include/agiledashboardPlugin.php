@@ -90,7 +90,7 @@ use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogVal
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
@@ -272,7 +272,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
             $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
-            $this->addHook(GetWhitelistedKeys::NAME);
+            $this->addHook(GetConfigKeys::NAME);
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
@@ -595,7 +595,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    public function getConfigKeys(GetConfigKeys $event): void
     {
         $event->addConfigClass(ScrumForMonoMilestoneChecker::class);
     }

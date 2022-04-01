@@ -29,7 +29,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
-use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\ConfigDao;
 use Tuleap\Config\ConfigKey;
 use Tuleap\date\RelativeDatesAssetsRetriever;
@@ -222,7 +222,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
-        $this->addHook(GetWhitelistedKeys::NAME);
+        $this->addHook(GetConfigKeys::NAME);
 
         $this->addHook(CollectRoutesEvent::NAME);
 
@@ -1575,7 +1575,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $cleaner->deleteDanglingVersionToUpload(new \DateTimeImmutable());
     }
 
-    public function getWhitelistedKeys(GetWhitelistedKeys $event)
+    public function getConfigKeys(GetConfigKeys $event): void
     {
         $event->addConfigClass(self::class);
     }
