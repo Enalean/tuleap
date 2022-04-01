@@ -75,6 +75,7 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('ftp_anon_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/pub');
         $this->initial_ftp_frs_dir_prefix = ForgeConfig::get('ftp_frs_dir_prefix');
         ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/codendi');
+        ForgeConfig::set('are_unix_users_disabled', 0);
 
         mkdir(ForgeConfig::get('homedir_prefix'), 0770, true);
         mkdir(ForgeConfig::get('grpdir_prefix'), 0770, true);
@@ -134,6 +135,22 @@ final class BackendSystemTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertFalse($backend->createUserHome($user));
         $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . "/666", "Home dir should be created");
+    }
+
+    public function testCreateUserHomeReturnFalseIfUnixUsersAreDisabled(): void
+    {
+        ForgeConfig::set('are_unix_users_disabled', 1);
+
+        $user = new PFUser([
+            'language_id' => 'en',
+            'user_name' => 'jean',
+        ]);
+
+        $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $backend->shouldReceive('log')->withArgs(['No homedir_prefix, createUserHome skipped', 'info'])->once();
+
+        $this->assertTrue($backend->createUserHome($user));
+        $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . "/jean", "Home dir should be created");
     }
 
     public function testCreateProjectHome(): void

@@ -305,7 +305,7 @@ class ForgeConfig
 
     public static function areUnixUsersAvailableOnSystem()
     {
-        return trim(self::get('homedir_prefix')) !== '';
+        return trim(self::get('homedir_prefix')) !== '' && ! self::get(BackendSystem::UNIX_USER_ARE_DISABLED);
     }
 
     public static function getCacheDir()

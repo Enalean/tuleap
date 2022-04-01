@@ -561,6 +561,7 @@ INSERT INTO forgeconfig (name, value) VALUES ('enable_not_mandatory_description'
 INSERT INTO forgeconfig (name, value) VALUES ('force_new_project_creation_usage', '1');
 INSERT INTO forgeconfig (name, value) VALUES ('can_use_default_site_template', '0');
 INSERT INTO forgeconfig (name, value) VALUES ('sys_suspend_send_account_suspension_email', '0');
+INSERT INTO forgeconfig (name, value) VALUES ('are_unix_users_disabled', 1);
 
 INSERT INTO password_configuration (breached_password_enabled) VALUES (1);
 

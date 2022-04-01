@@ -22,6 +22,7 @@
 namespace Tuleap\CLI\Events;
 
 use BackendLogger;
+use BackendSystem;
 use ForgeAccess;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
@@ -76,6 +77,7 @@ final class GetWhitelistedKeys implements Dispatchable
         SwitchToPresenterBuilder::class,
         DBConfig::class,
         DBAuthUserConfig::class,
+        BackendSystem::class,
     ];
 
     /**
