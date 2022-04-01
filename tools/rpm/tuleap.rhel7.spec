@@ -1027,6 +1027,7 @@ fi
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade
+%{APP_DIR}/src/frontend-assets
 %{APP_DIR}/src/templates
 %{APP_DIR}/src/tuleap-cfg
 %{APP_DIR}/src/utils
@@ -1039,8 +1040,6 @@ fi
 %dir %{APP_DIR}/src/www/api
 %{APP_DIR}/src/www/api/index.php
 %{APP_DIR}/src/www/api/reference
-%dir %{APP_DIR}/src/www/assets
-%{APP_DIR}/src/www/assets/core
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file

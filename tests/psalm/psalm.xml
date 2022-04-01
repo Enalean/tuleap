@@ -30,7 +30,6 @@
         <directory name="plugins/timetracking/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
-            <directory name="src/www/assets/"/>
             <directory name="src/themes/FlamingParrot/vendor/"/>
             <directory name="src/themes/BurningParrot/vendor/"/>
             <directory name="src/embedded_vendor/jpgraph/"/>

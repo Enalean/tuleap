@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 require_once __DIR__ . '/../../include/pre.php';
@@ -136,7 +135,7 @@ if ($id_to_replay) {
 
 $title = $Language->getText('admin_system_events', 'title');
 
-$include_assets = new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-system-events.js')

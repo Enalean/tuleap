@@ -41,7 +41,7 @@ final class ThirdPartyIntegrationStylesRepresentation
         $theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($user));
         $tlp_vars            = new \Tuleap\Layout\CssAssetWithDensityVariants(new IncludeCoreAssets(), 'tlp-vars');
         $url                 = $tlp_vars->getFileURL(new ThemeVariation($theme_variant_color, $user));
-        $path                = __DIR__ . '/../../../../www/' . $url;
+        $path                = __DIR__ . '/../../../../frontend-assets/' . substr($url, strlen('/assets/core/'));
 
         $css_file_content = file_get_contents($path);
 
