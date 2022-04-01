@@ -24,10 +24,12 @@ import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
 import type {
     CreatedItem,
     CreatedItemFileProperties,
+    Empty,
     FakeItem,
     Folder,
     ItemFile,
     State,
+    Uploadable,
 } from "../../type";
 import type { ActionContext } from "vuex";
 import { isFile } from "../../helpers/type-check-helper";
@@ -35,15 +37,15 @@ import { getParentFolder } from "./item-retriever";
 
 function updateParentProgress(
     bytes_total: number,
-    fake_item: FakeItem | ItemFile,
+    item_being_uploaded: Uploadable,
     bytes_uploaded: number,
     context: ActionContext<State, State>,
     parent: Folder
 ): void {
     if (bytes_total === 0) {
-        fake_item.progress = 100;
+        item_being_uploaded.progress = 100;
     } else {
-        fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
+        item_being_uploaded.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
     }
     context.commit("updateFolderProgressbar", parent);
 }
@@ -142,7 +144,7 @@ export function uploadVersion(
 export function uploadVersionFromEmpty(
     context: ActionContext<State, State>,
     dropped_file: File,
-    updated_empty: FakeItem,
+    updated_empty: Empty,
     new_version: CreatedItemFileProperties
 ): Upload {
     const parent_folder = getParentFolder(

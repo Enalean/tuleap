@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../constants";
+import { TYPE_FILE } from "../constants";
 import {
     addNewUploadFile,
     cancelFileUpload,
     cancelFolderUpload,
     cancelVersionUpload,
-    createNewVersionFromEmpty,
     getWikisReferencingSameWikiPage,
 } from "./actions.js";
 import * as rest_querier from "../api/rest-querier";
 
 import * as upload_file from "./actions-helpers/upload-file";
-import * as action_error_handler from "./error/error-actions";
 
 describe("Store actions", () => {
     let context;
@@ -344,197 +342,6 @@ describe("Store actions", () => {
             const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
 
             expect(referencers).toEqual(null);
-        });
-    });
-
-    describe("createNewVersionFromEmpty -", () => {
-        let context,
-            postNewLinkVersionFromEmpty,
-            postNewEmbeddedFileVersionFromEmpty,
-            postNewFileVersionFromEmpty,
-            handleErrorsForModal;
-        beforeEach(() => {
-            context = {
-                commit: jest.fn(),
-                state: {
-                    folder_content: [{ id: 123, type: TYPE_EMPTY }],
-                },
-            };
-
-            postNewLinkVersionFromEmpty = jest.spyOn(rest_querier, "postNewLinkVersionFromEmpty");
-            postNewEmbeddedFileVersionFromEmpty = jest
-                .spyOn(rest_querier, "postNewEmbeddedFileVersionFromEmpty")
-                .mockReturnValue(Promise.resolve());
-            postNewFileVersionFromEmpty = jest.spyOn(rest_querier, "postNewFileVersionFromEmpty");
-            handleErrorsForModal = jest.spyOn(action_error_handler, "handleErrorsForModal");
-        });
-
-        it("should update the empty document to link document", async () => {
-            const item_to_update = {
-                type: TYPE_EMPTY,
-                link_properties: {
-                    link_url: "https://example.test",
-                },
-            };
-            const item = {
-                id: 123,
-                type: TYPE_EMPTY,
-            };
-
-            const updated_item = {
-                id: 123,
-                type: TYPE_LINK,
-            };
-            jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(updated_item));
-            postNewLinkVersionFromEmpty.mockReturnValue(Promise.resolve());
-
-            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
-
-            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
-            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
-            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
-            expect(handleErrorsForModal).not.toHaveBeenCalled();
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                updated_item
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item
-            );
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                updated_item
-            );
-        });
-
-        it("should update the empty document to embedded_file document", async () => {
-            const item_to_update = {
-                type: TYPE_EMPTY,
-                embedded_properties: {
-                    content: "content",
-                },
-            };
-            const item = {
-                id: 123,
-                type: TYPE_EMPTY,
-            };
-
-            const updated_item = {
-                id: 123,
-                type: TYPE_EMBEDDED,
-            };
-
-            jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(updated_item));
-            postNewEmbeddedFileVersionFromEmpty.mockReturnValue(Promise.resolve());
-
-            await createNewVersionFromEmpty(context, [TYPE_EMBEDDED, item, item_to_update]);
-
-            expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
-            expect(postNewEmbeddedFileVersionFromEmpty).toHaveBeenCalled();
-            expect(postNewFileVersionFromEmpty).not.toHaveBeenCalled();
-            expect(handleErrorsForModal).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                updated_item
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item
-            );
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                updated_item
-            );
-        });
-
-        it("should update the empty document to file document", async () => {
-            const item_to_update = {
-                type: TYPE_EMPTY,
-                file_properties: {
-                    file: "",
-                },
-            };
-            const item = {
-                id: 123,
-                type: TYPE_EMPTY,
-            };
-
-            const updated_item = {
-                id: 123,
-                type: TYPE_FILE,
-            };
-            const uploadVersionFromEmpty = jest
-                .spyOn(upload_file, "uploadVersionFromEmpty")
-                .mockReturnValue({});
-            postNewFileVersionFromEmpty.mockReturnValue(Promise.resolve());
-            jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(updated_item));
-
-            await createNewVersionFromEmpty(context, [TYPE_FILE, item, item_to_update]);
-
-            expect(postNewLinkVersionFromEmpty).not.toHaveBeenCalled();
-            expect(postNewEmbeddedFileVersionFromEmpty).not.toHaveBeenCalled();
-            expect(postNewFileVersionFromEmpty).toHaveBeenCalled();
-            expect(uploadVersionFromEmpty).toHaveBeenCalled();
-            expect(handleErrorsForModal).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                updated_item
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item
-            );
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                updated_item
-            );
-        });
-
-        it("should failed the update", async () => {
-            const item_to_update = {
-                type: TYPE_EMPTY,
-                link_properties: {
-                    link_url: "https://example.test",
-                },
-            };
-            const item = {
-                id: 123,
-                type: TYPE_EMPTY,
-            };
-
-            const updated_item = {
-                id: 123,
-                type: TYPE_LINK,
-            };
-
-            const getItem = jest.spyOn(rest_querier, "getItem");
-            postNewLinkVersionFromEmpty.mockImplementation(() => {
-                throw new Error("Failed to update");
-            });
-
-            await expect(
-                createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update])
-            ).rejects.toBeDefined();
-            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
-            expect(handleErrorsForModal).toHaveBeenCalled();
-            expect(getItem).not.toHaveBeenCalled();
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                updated_item
-            );
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item
-            );
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                updated_item
-            );
         });
     });
 });

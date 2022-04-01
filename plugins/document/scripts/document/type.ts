@@ -230,7 +230,7 @@ export interface Wiki extends Item, ApprovableDocument {
     status: string;
 }
 
-export interface Empty extends Item {
+export interface Empty extends Item, Uploadable {
     parent_id: number;
     approval_table: ApprovalTable | null;
     type: "empty";

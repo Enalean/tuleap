@@ -448,7 +448,7 @@ function postNewEmbeddedFileVersionFromEmpty(item_id: number, content: string): 
 
 async function postNewFileVersionFromEmpty(
     item_id: number,
-    dropped_file: ItemFile
+    dropped_file: File
 ): Promise<CreatedItemFileProperties> {
     const response = await post(`/api/docman_empty_documents/${encodeURIComponent(item_id)}/file`, {
         headers: {

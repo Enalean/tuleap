@@ -20,10 +20,22 @@
 import Vue from "vue";
 import { getErrorMessage } from "./actions-helpers/handle-errors";
 import type { ActionContext } from "vuex";
-import type { ApprovalTable, Embedded, ItemFile, Link, RootState, Wiki } from "../type";
+import type { ApprovalTable, Embedded, Empty, ItemFile, Link, RootState, Wiki } from "../type";
 import { uploadNewVersion } from "./actions-helpers/upload-new-version";
 import { FetchWrapperError } from "tlp";
-import { postEmbeddedFile, postLinkVersion, postWiki } from "../api/rest-querier";
+import {
+    getItem,
+    postEmbeddedFile,
+    postLinkVersion,
+    postNewEmbeddedFileVersionFromEmpty,
+    postNewFileVersionFromEmpty,
+    postNewLinkVersionFromEmpty,
+    postWiki,
+} from "../api/rest-querier";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../constants";
+import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
+import type { CreatedItemFileProperties } from "../type";
+import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
 
 export async function createNewFileVersion(
     context: ActionContext<RootState, RootState>,
@@ -137,3 +149,83 @@ export const createNewLinkVersionFromModal = async (
         await context.dispatch("error/handleErrorsForModal", exception);
     }
 };
+
+export interface NewVersionFromEmptyInformation {
+    link_properties: {
+        link_url: string;
+    };
+    file_properties: {
+        file: File;
+    };
+    embedded_properties: {
+        content: string;
+    };
+}
+
+export const createNewVersionFromEmpty = async (
+    context: ActionContext<RootState, RootState>,
+    [selected_type, item, item_to_update]: [string, Empty, NewVersionFromEmptyInformation]
+): Promise<void> => {
+    try {
+        switch (selected_type) {
+            case TYPE_LINK:
+                await postNewLinkVersionFromEmpty(item.id, item_to_update.link_properties.link_url);
+                break;
+            case TYPE_EMBEDDED:
+                await postNewEmbeddedFileVersionFromEmpty(
+                    item.id,
+                    item_to_update.embedded_properties.content
+                );
+                break;
+            case TYPE_FILE:
+                await uploadNewFileVersionFromEmptyDocument(context, [
+                    item,
+                    item_to_update.file_properties.file,
+                ]);
+                break;
+            default:
+                await context.dispatch(
+                    "error/handleErrorsForModal",
+                    "The wanted type is not supported"
+                );
+                break;
+        }
+        const updated_item = await getItem(item.id);
+        Vue.set(updated_item, "updated", true);
+        context.commit("removeItemFromFolderContent", updated_item);
+        context.commit("addJustCreatedItemToFolderContent", updated_item);
+        context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
+    } catch (exception) {
+        await context.dispatch("error/handleErrorsForModal", exception);
+    }
+};
+
+async function uploadNewFileVersionFromEmptyDocument(
+    context: ActionContext<RootState, RootState>,
+    [item, uploaded_file]: [Empty, File]
+): Promise<void> {
+    const new_version = await postNewFileVersionFromEmpty(item.id, uploaded_file);
+    if (uploaded_file.size === 0) {
+        return;
+    }
+
+    const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
+
+    if (updated_item && (isFakeItem(updated_item) || isEmpty(updated_item))) {
+        context.commit("addFileInUploadsList", updated_item);
+        Vue.set(updated_item, "progress", null);
+        Vue.set(updated_item, "upload_error", null);
+        Vue.set(updated_item, "is_uploading_new_version", true);
+    }
+
+    uploadVersionAndAssignUploaderFromEmpty(item, context, uploaded_file, new_version);
+}
+
+function uploadVersionAndAssignUploaderFromEmpty(
+    item: Empty,
+    context: ActionContext<RootState, RootState>,
+    uploaded_file: File,
+    new_version: CreatedItemFileProperties
+): void {
+    item.uploader = uploadVersionFromEmpty(context, uploaded_file, item, new_version);
+}

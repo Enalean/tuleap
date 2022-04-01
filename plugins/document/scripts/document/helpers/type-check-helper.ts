@@ -28,7 +28,9 @@ import {
     TYPE_WIKI,
 } from "../constants";
 
-export function isFile(item: Item | Embedded | Empty | ItemFile | Link | Wiki): item is ItemFile {
+export function isFile(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem
+): item is ItemFile {
     return item.type === TYPE_FILE;
 }
 
