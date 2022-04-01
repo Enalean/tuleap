@@ -20,7 +20,6 @@
 describe("Platform allows restricted", function () {
     it("project administrator can define permission access level of mediawiki", function () {
         cy.updatePlatformVisibilityAndAllowRestricted();
-
         cy.projectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
@@ -52,18 +51,15 @@ describe("Platform allows restricted", function () {
         cy.projectAdministratorLogin();
 
         cy.visitProjectAdministration("platform-allows-restricted");
-        cy.get("[data-test=admin-nav-details]").click();
-        cy.get("[data-test=project_visibility]").select("private");
-        cy.get("[data-test=project-details-submit-button]").click();
-        cy.get("[data-test=term_of_service]").click();
-
-        cy.get("[data-test=project-details-submit-button]").click();
-
+        cy.switchProjectVisibility("private");
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
         cy.get("[data-test=mediawiki-administration-link]").click({ force: true });
 
         cy.get('[data-test=mediawiki-read-ugroups] > [value="3"]')
             .should("be.selected")
             .contains("Project members");
+
+        cy.visitProjectAdministration("platform-allows-restricted");
+        cy.switchProjectVisibility("public");
     });
 });

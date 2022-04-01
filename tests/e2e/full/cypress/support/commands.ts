@@ -36,6 +36,7 @@ declare global {
             regularUserLogin(): void;
             heisenbergLogin(): void;
             userLogout(): void;
+            switchProjectVisibility(visibility: string): void;
             updatePlatformVisibilityAndAllowRestricted(): void;
             updatePlatformVisibilityForAnonymous(): void;
             getProjectId(project_shortname: string): Chainable<number>;
@@ -217,6 +218,16 @@ Cypress.Commands.add("getProjectId", (project_shortname: string): Cypress.Chaina
             )}`
         )
         .then((response) => response.body[0].id);
+});
+
+Cypress.Commands.add("switchProjectVisibility", (visibility: string): void => {
+    cy.get("[data-test=admin-nav-details]").click();
+    cy.get("[data-test=project_visibility]").select(visibility);
+    cy.get("[data-test=project-details-short-description-input]").type("My short description");
+    cy.get("[data-test=project-details-submit-button]").click();
+    cy.get("[data-test=term_of_service]").click({ force: true });
+
+    cy.get("[data-test=project-details-submit-button]").click();
 });
 
 export {};

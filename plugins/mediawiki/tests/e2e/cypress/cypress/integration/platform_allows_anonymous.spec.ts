@@ -19,6 +19,7 @@
 
 describe("Plateform allows anonymous", function () {
     it("project administrator can define permission access level of mediawiki", function () {
+        cy.updatePlatformVisibilityForAnonymous();
         cy.projectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
@@ -35,20 +36,17 @@ describe("Plateform allows anonymous", function () {
 
     it("given project is switched from public to private, anonymous are redirected to login page", function () {
         cy.projectAdministratorLogin();
-
         cy.visitProjectAdministration("platform-allows-anonymous");
-        cy.get("[data-test=admin-nav-details]").click();
-        cy.get("[data-test=project_visibility]").select("private");
-        cy.get("[data-test=project-details-short-description-input]").type("My short description");
-        cy.get("[data-test=project-details-submit-button]").click();
-        cy.get("[data-test=term_of_service]").click();
-
-        cy.get("[data-test=project-details-submit-button]").click();
+        cy.switchProjectVisibility("private");
 
         cy.userLogout();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
 
         cy.get("[data-test=login-page-title]").contains("Login");
+
+        cy.projectAdministratorLogin();
+        cy.visitProjectAdministration("platform-allows-anonymous");
+        cy.switchProjectVisibility("public");
     });
 });
