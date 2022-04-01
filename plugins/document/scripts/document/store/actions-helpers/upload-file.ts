@@ -21,14 +21,21 @@ import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier";
 import { flagItemAsCreated } from "./flag-item-as-created";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
-import type { CreatedItem, CreatedItemFileProperties, FakeItem, Folder, State } from "../../type";
+import type {
+    CreatedItem,
+    CreatedItemFileProperties,
+    FakeItem,
+    Folder,
+    ItemFile,
+    State,
+} from "../../type";
 import type { ActionContext } from "vuex";
 import { isFile } from "../../helpers/type-check-helper";
 import { getParentFolder } from "./item-retriever";
 
 function updateParentProgress(
     bytes_total: number,
-    fake_item: FakeItem,
+    fake_item: FakeItem | ItemFile,
     bytes_uploaded: number,
     context: ActionContext<State, State>,
     parent: Folder
@@ -92,7 +99,7 @@ export function uploadFile(
 export function uploadVersion(
     context: ActionContext<State, State>,
     dropped_file: File,
-    updated_file: FakeItem,
+    updated_file: FakeItem | ItemFile,
     new_version: CreatedItemFileProperties
 ): Upload {
     const parent_folder = getParentFolder(

@@ -189,10 +189,9 @@ describe("rest-querier", () => {
                 } as FileProperties,
             } as ItemFile;
             const dropped_file = {
-                file_properties: {
-                    file_size: 124,
-                } as FileProperties,
-            } as ItemFile;
+                name: "stuff.doc",
+                size: 123,
+            } as File;
             const tlpPost = jest.spyOn(tlp, "post");
 
             mockFetchSuccess(tlpPost, { return_json: JSON.stringify(JSON.stringify({ id: 10 })) });

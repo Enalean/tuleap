@@ -23,7 +23,7 @@ import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_FILE } from "../constants";
 import * as upload_file from "./actions-helpers/upload-file";
 import type { ActionContext } from "vuex";
-import type { CreatedItem, Folder, Item, RootState } from "../type";
+import type { CreatedItem, FakeItem, Folder, Item, RootState } from "../type";
 import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
 
@@ -210,7 +210,7 @@ describe("actions-create", () => {
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
 
-            const expected_fake_item_with_uploader = {
+            const expected_fake_item_with_uploader: FakeItem = {
                 id: 66,
                 title: "filename.txt",
                 parent_id: 10,
@@ -220,6 +220,8 @@ describe("actions-create", () => {
                 progress: 0,
                 uploader,
                 upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
             };
 
             await createNewItem(context, [item, folder_of_created_item, current_folder]);
@@ -263,7 +265,7 @@ describe("actions-create", () => {
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
 
-            const expected_fake_item_with_uploader = {
+            const expected_fake_item_with_uploader: FakeItem = {
                 id: 66,
                 title: "filename.txt",
                 parent_id: 10,
@@ -273,6 +275,8 @@ describe("actions-create", () => {
                 progress: 0,
                 uploader,
                 upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
             };
 
             await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
@@ -320,7 +324,7 @@ describe("actions-create", () => {
             const uploader = {} as Upload;
             const uploadFile = jest.spyOn(upload_file, "uploadFile").mockReturnValue(uploader);
 
-            const expected_fake_item_with_uploader = {
+            const expected_fake_item_with_uploader: FakeItem = {
                 id: 66,
                 title: "filename.txt",
                 parent_id: 10,
@@ -330,6 +334,8 @@ describe("actions-create", () => {
                 progress: 0,
                 uploader,
                 upload_error: null,
+                is_uploading_in_collapsed_folder: false,
+                is_uploading_new_version: false,
             };
 
             await createNewItem(context, [item, extended_folder_of_created_item, current_folder]);

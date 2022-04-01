@@ -20,7 +20,6 @@
 import Vue from "vue";
 import {
     cancelUpload,
-    createNewVersion,
     getItem,
     getItemsReferencingSameWikiPage,
     getParents,
@@ -33,7 +32,7 @@ import {
 } from "../api/rest-querier";
 
 import { getErrorMessage } from "./actions-helpers/handle-errors";
-import { uploadVersion, uploadVersionFromEmpty } from "./actions-helpers/upload-file";
+import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import {
     TYPE_EMBEDDED,
@@ -43,22 +42,13 @@ import {
 } from "../constants";
 import { handleErrorsForModal } from "./error/error-actions";
 import { createNewFile } from "./actions-helpers/create-new-file";
+import { uploadNewVersion } from "./actions-helpers/upload-new-version";
 
 export * from "./actions-create";
 export * from "./actions-retrieve";
+export * from "./actions-update";
 export * from "./actions-delete";
 export * from "./actions-quicklook";
-
-export async function createNewFileVersion(context, [item, dropped_file]) {
-    try {
-        await uploadNewVersion(context, [item, dropped_file, item.title, "", false]);
-        Vue.set(item, "updated", true);
-    } catch (exception) {
-        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
-        const error_json = await exception.response.json();
-        throw getErrorMessage(error_json);
-    }
-}
 
 export const createNewFileVersionFromModal = async (
     context,
@@ -147,31 +137,6 @@ export const refreshEmbeddedFile = async (context, item_to_refresh) => {
     context.commit("replaceEmbeddedFilesWithNewVersion", [item_to_refresh, up_to_date_item]);
 };
 
-async function uploadNewVersion(
-    context,
-    [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]
-) {
-    const new_version = await createNewVersion(
-        item,
-        version_title,
-        changelog,
-        uploaded_file,
-        is_file_locked,
-        approval_table_action
-    );
-
-    if (uploaded_file.size === 0) {
-        return;
-    }
-
-    context.commit("addFileInUploadsList", item);
-    Vue.set(item, "progress", null);
-    Vue.set(item, "upload_error", null);
-    Vue.set(item, "is_uploading_new_version", true);
-
-    uploadVersionAndAssignUploader(item, context, uploaded_file, new_version);
-}
-
 async function uploadNewFileVersionFromEmptyDocument(context, [item, uploaded_file]) {
     const new_version = await postNewFileVersionFromEmpty(item.id, uploaded_file);
     if (uploaded_file.size === 0) {
@@ -190,10 +155,6 @@ async function uploadNewFileVersionFromEmptyDocument(context, [item, uploaded_fi
 
 function uploadVersionAndAssignUploaderFroEmpty(item, context, uploaded_file, new_version) {
     item.uploader = uploadVersionFromEmpty(context, uploaded_file, item, new_version);
-}
-
-function uploadVersionAndAssignUploader(item, context, uploaded_file, new_version) {
-    item.uploader = uploadVersion(context, uploaded_file, item, new_version);
 }
 
 export const addNewUploadFile = async (
