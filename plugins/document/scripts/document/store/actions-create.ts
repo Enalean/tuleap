@@ -36,6 +36,8 @@ import {
     isLink,
     isWiki,
 } from "../helpers/type-check-helper";
+import { getErrorMessage } from "./actions-helpers/handle-errors";
+import { FetchWrapperError } from "tlp";
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,
@@ -86,5 +88,33 @@ export const createNewItem = async (
         );
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
+    }
+};
+
+export const addNewUploadFile = async (
+    context: ActionContext<RootState, RootState>,
+    [dropped_file, parent, title, description, should_display_fake_item]: [
+        File,
+        Folder,
+        string,
+        string,
+        boolean
+    ]
+): Promise<void> => {
+    try {
+        const item = {
+            title,
+            description,
+            file_properties: { file: dropped_file },
+            properties: null,
+        };
+        await createNewFile(context, item, parent, should_display_fake_item);
+    } catch (exception) {
+        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+        if (exception instanceof FetchWrapperError) {
+            const error_json = await exception.response.json();
+            throw getErrorMessage(error_json);
+        }
+        throw exception;
     }
 };

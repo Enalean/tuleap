@@ -29,7 +29,7 @@ export async function createNewFile(
     item_to_create: {
         readonly title: string;
         readonly description: string;
-        readonly properties: Array<Property>;
+        readonly properties: Array<Property> | null;
         readonly file_properties: {
             readonly file: File;
         };

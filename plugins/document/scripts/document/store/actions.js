@@ -24,10 +24,8 @@ import {
     getParents,
 } from "../api/rest-querier";
 
-import { getErrorMessage } from "./actions-helpers/handle-errors";
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../constants";
-import { createNewFile } from "./actions-helpers/create-new-file";
 
 export * from "./actions-create";
 export * from "./actions-retrieve";
@@ -51,20 +49,6 @@ export const refreshEmbeddedFile = async (context, item_to_refresh) => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
     context.commit("replaceEmbeddedFilesWithNewVersion", [item_to_refresh, up_to_date_item]);
-};
-
-export const addNewUploadFile = async (
-    context,
-    [dropped_file, parent, title, description, should_display_fake_item]
-) => {
-    try {
-        const item = { title, description, file_properties: { file: dropped_file } };
-        await createNewFile(context, item, parent, should_display_fake_item);
-    } catch (exception) {
-        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
-        const error_json = await exception.response.json();
-        throw getErrorMessage(error_json);
-    }
 };
 
 export const cancelFileUpload = async (context, item) => {
