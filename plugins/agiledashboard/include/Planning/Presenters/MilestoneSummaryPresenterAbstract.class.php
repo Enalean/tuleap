@@ -49,11 +49,6 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract
         return dgettext('tuleap-agiledashboard', 'Overview');
     }
 
-    public function cardwall()
-    {
-        return dgettext('tuleap-agiledashboard', 'Cardwall');
-    }
-
     public function breadcrumbs()
     {
         $breadcrumbs = [];

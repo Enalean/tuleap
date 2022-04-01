@@ -322,6 +322,9 @@ msgstr "Kanban %1$s créé avec succès."
 msgid "Kanban Administration of Agile Dashboard"
 msgstr "Administration Kanban du dashboard agile"
 
+msgid "Kanban board"
+msgstr "Tableau du Kanban"
+
 msgid "Kanban cards"
 msgstr "Carte de Kanban"
 

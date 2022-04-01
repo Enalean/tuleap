@@ -67,9 +67,4 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter
     {
         return dgettext('tuleap-agiledashboard', 'closed');
     }
-
-    public function cardwall()
-    {
-        return dgettext('tuleap-agiledashboard', 'Cardwall');
-    }
 }
