@@ -32,7 +32,7 @@ module.exports = [
         entry,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/forumml/"),
+            path.resolve(__dirname, "./frontend-assets/"),
             "/assets/forumml/"
         ),
         externals: {

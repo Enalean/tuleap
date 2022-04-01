@@ -82,7 +82,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/pluginsadministration/',
+            __DIR__ . '/../frontend-assets/',
             '/assets/pluginsadministration/'
         );
     }

@@ -26,9 +26,7 @@ module.exports = [
             "project-ownership-project-admin": "./themes/project-admin.scss",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/project_ownership/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         module: {
             rules: [webpack_configurator.rule_scss_loader],
         },

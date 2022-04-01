@@ -22,7 +22,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/ldap"),
+    path.resolve(__dirname, "./frontend-assets"),
     "/assets/ldap/"
 );
 

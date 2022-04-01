@@ -84,7 +84,7 @@ class DiskUsagePieDisplayer
         $renderer  = TemplateRendererFactory::build()->getRenderer(STATISTICS_TEMPLATE_DIR);
 
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/statistics',
+            __DIR__ . '/../../frontend-assets',
             '/assets/statistics'
         );
 

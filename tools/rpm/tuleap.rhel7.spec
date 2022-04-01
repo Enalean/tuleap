@@ -557,7 +557,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki_standalone
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -577,14 +576,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectmilestones
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/roadmap
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testmanagement
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testplan
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
 %endif
@@ -1050,10 +1041,6 @@ fi
 %{APP_DIR}/src/www/api/reference
 %dir %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/assets/core
-%{APP_DIR}/src/www/assets/pluginsadministration
-%{APP_DIR}/src/www/assets/projectlinks
-%{APP_DIR}/src/www/assets/statistics
-%{APP_DIR}/src/www/assets/userlog
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
@@ -1186,7 +1173,6 @@ fi
 %files plugin-forumml
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/forumml
-%{APP_DIR}/src/www/assets/forumml
 %attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
 %attr(00644,root,root) %{_tmpfilesdir}/tuleap-forumml.conf
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
@@ -1231,7 +1217,6 @@ fi
 %files plugin-ldap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/ldap
-%{APP_DIR}/src/www/assets/ldap
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_ldap
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_ldap
 
@@ -1272,17 +1257,14 @@ fi
 %files plugin-graphontrackers
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/graphontrackersv5
-%{APP_DIR}/src/www/assets/graphontrackersv5
 
 %files plugin-tracker-encryption
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/tracker_encryption
-%{APP_DIR}/src/www/assets/tracker_encryption
 
 %files plugin-cardwall
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/cardwall
-%{APP_DIR}/src/www/assets/cardwall
 
 %files plugin-agiledashboard
 %defattr(-,root,root,-)
@@ -1299,7 +1281,6 @@ fi
 %files plugin-mediawiki
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/mediawiki
-%{APP_DIR}/src/www/assets/mediawiki
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/master
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/projects
@@ -1307,20 +1288,17 @@ fi
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/openidconnectclient
-%{APP_DIR}/src/www/assets/openidconnectclient
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
 %files plugin-proftpd
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/proftpd
-%{APP_DIR}/src/www/assets/proftpd
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
 
 %files plugin-frs
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/frs
-%{APP_DIR}/src/www/assets/frs
 
 %files plugin-referencealias-core
 %defattr(-,root,root,-)
@@ -1345,17 +1323,14 @@ fi
 %files plugin-artifactsfolders
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/artifactsfolders
-%{APP_DIR}/src/www/assets/artifactsfolders
 
 %files plugin-captcha
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/captcha
-%{APP_DIR}/src/www/assets/captcha
 
 %files plugin-bugzilla-reference
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/bugzilla_reference
-%{APP_DIR}/src/www/assets/bugzilla_reference
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
 %files plugin-create-test-env
@@ -1375,12 +1350,10 @@ fi
 %files plugin-embed
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/embed
-%{APP_DIR}/src/www/assets/embed
 
 %files plugin-gitlab
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/gitlab
-%{APP_DIR}/src/www/assets/gitlab
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_gitlab
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_gitlab
 
@@ -1393,7 +1366,6 @@ fi
 %files plugin-crosstracker
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/crosstracker
-%{APP_DIR}/src/www/assets/crosstracker
 
 %files plugin-document
 %defattr(-,root,root,-)
@@ -1410,7 +1382,6 @@ fi
 %files plugin-roadmap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/roadmap
-%{APP_DIR}/src/www/assets/roadmap
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
@@ -1419,12 +1390,10 @@ fi
 %files plugin-project-ownership
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/project_ownership
-%{APP_DIR}/src/www/assets/project_ownership
 
 %files plugin-projectmilestones
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/projectmilestones
-%{APP_DIR}/src/www/assets/projectmilestones
 
 %files plugin-prometheus-metrics
 %defattr(-,root,root,-)
@@ -1433,7 +1402,6 @@ fi
 %files plugin-taskboard
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/taskboard
-%{APP_DIR}/src/www/assets/taskboard
 
 %files plugin-tee-container
 %defattr(-,root,root,-)
@@ -1442,12 +1410,10 @@ fi
 %files plugin-testmanagement
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/testmanagement
-%{APP_DIR}/src/www/assets/testmanagement
 
 %files plugin-testplan
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/testplan
-%{APP_DIR}/src/www/assets/testplan
 
 
 %files plugin-timetracking
@@ -1457,7 +1423,6 @@ fi
 %files plugin-velocity
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/velocity
-%{APP_DIR}/src/www/assets/velocity
 
 %files plugin-jira-import
 %defattr(-,root,root,-)

@@ -27,9 +27,7 @@ module.exports = [
             "burningparrot-style": "./themes/BurningParrot/bugzilla_reference.scss",
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/bugzilla_reference/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
         },

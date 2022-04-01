@@ -150,7 +150,7 @@ class taskboardPlugin extends Plugin
             ),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/taskboard',
+                __DIR__ . '/../frontend-assets',
                 '/assets/taskboard'
             ),
             new VisitRecorder(new RecentlyVisitedDao()),

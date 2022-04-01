@@ -413,7 +413,7 @@ function plugin_forumml_reply(Codendi_HTMLPurifier $hp, $subject, $in_reply_to, 
     $request = HTTPRequest::instance();
     $tab_tmp = explode("\n", $body);
     $tab_tmp = array_pad($tab_tmp, -count($tab_tmp) - 1, "$author wrote :");
-    $assets  = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml');
+    $assets  = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../frontend-assets', '/assets/forumml');
 
     $GLOBALS['Response']->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'forumml.js'));
     echo ' <div id="reply-' . $hp->purify($in_reply_to) . '" class="plugin_forumml_message_reply">' . "

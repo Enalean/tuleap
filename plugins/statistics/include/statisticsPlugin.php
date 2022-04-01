@@ -393,7 +393,7 @@ class StatisticsPlugin extends Plugin
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/statistics',
+            __DIR__ . '/../frontend-assets',
             '/assets/statistics'
         );
     }

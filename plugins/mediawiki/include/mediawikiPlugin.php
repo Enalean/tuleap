@@ -287,7 +287,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/mediawiki',
+            __DIR__ . '/../frontend-assets',
             '/assets/mediawiki'
         );
     }

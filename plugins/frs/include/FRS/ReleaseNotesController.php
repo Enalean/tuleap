@@ -106,7 +106,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates'),
             new IncludeAssets(
-                __DIR__ . '/../../../../src/www/assets/frs',
+                __DIR__ . '/../../frontend-assets',
                 '/assets/frs'
             )
         );

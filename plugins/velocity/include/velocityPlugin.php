@@ -271,7 +271,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/velocity',
+            __DIR__ . '/../frontend-assets',
             '/assets/velocity'
         );
     }

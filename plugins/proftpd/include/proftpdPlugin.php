@@ -128,7 +128,7 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             $assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/proftpd/',
+                __DIR__ . '/../frontend-assets/',
                 '/assets/proftpd/'
             );
             echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style.css') . '" />' . "\n";

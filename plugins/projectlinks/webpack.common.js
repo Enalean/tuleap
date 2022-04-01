@@ -26,9 +26,7 @@ module.exports = [
             projectlinks: "./themes/projectlinks.scss",
         },
         context: __dirname,
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/projectlinks")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
         module: {
             rules: [webpack_configurator.rule_scss_loader],
         },

@@ -128,7 +128,7 @@ class ProjectMilestonesWidgetRetriever
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../src/www/assets/projectmilestones',
+            __DIR__ . '/../../frontend-assets',
             '/assets/projectmilestones'
         );
     }

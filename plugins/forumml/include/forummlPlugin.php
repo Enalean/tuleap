@@ -132,7 +132,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/forumml',
+            __DIR__ . '/../frontend-assets',
             '/assets/forumml'
         );
     }
@@ -259,7 +259,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return new ForumML\Threads\ThreadsController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-            new IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml'),
+            $this->getAssets(),
             new ForumML\Threads\ThreadsPresenterBuilder(
                 new ForumML\ThreadsDao(),
                 new TlpRelativeDatePresenterBuilder(),
@@ -282,7 +282,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return new ForumML\OneThread\OneThreadController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-            new IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml'),
+            $this->getAssets(),
             new ForumML\OneThread\OneThreadPresenterBuilder(
                 new ForumML\ThreadsDao(),
                 new ForumML\OneThread\MessageInfoToMessagePresenterConvertor(

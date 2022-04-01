@@ -30,9 +30,7 @@ module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/velocity")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
         resolve: {
             alias: {
                 "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),

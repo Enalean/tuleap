@@ -181,7 +181,7 @@ final class testplanPlugin extends Plugin
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/testplan',
+                __DIR__ . '/../frontend-assets',
                 '/assets/testplan'
             ),
             new TestPlanPaneDisplayable(

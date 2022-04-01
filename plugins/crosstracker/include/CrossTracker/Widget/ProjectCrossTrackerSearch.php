@@ -173,7 +173,7 @@ class ProjectCrossTrackerSearch extends Widget
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . '/../../../../../src/www/assets/crosstracker',
+            __DIR__ . '/../../../frontend-assets',
             '/assets/crosstracker'
         );
     }
