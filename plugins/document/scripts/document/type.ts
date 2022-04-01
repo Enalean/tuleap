@@ -31,6 +31,7 @@ export interface State {
     is_loading_ascendant_hierarchy: boolean;
     root_title: string;
     currently_previewed_item: Item | null;
+    files_uploads_list: Array<ItemFile | FakeItem>;
 }
 
 export interface RootState extends State {
