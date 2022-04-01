@@ -1184,6 +1184,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      * @return Tracker_Artifact_Changeset|null
      * @throws Tracker_NoChangeException In the validation
      * @throws Tracker_Exception In the validation
+     * @deprecated use \Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator::create() instead
      */
     public function createNewChangeset(
         $fields_data,
@@ -1216,6 +1217,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         );
     }
 
+    /**
+     * @deprecated use \Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator::create() instead
+     */
     public function createNewChangesetWithoutRequiredValidation(
         $fields_data,
         $comment,
