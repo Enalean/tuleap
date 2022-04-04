@@ -18,7 +18,7 @@ specifiers:
   buffer: ^6.0.3
   dompurify: ^2.3.4
   events: ^3.3.0
-  hybrids: ^7.0.4
+  hybrids: ^7.0.5
   lodash: 2.4.0
   moment: ^2.29.1
   pretty-kibibytes: ^4.0.4
@@ -41,7 +41,7 @@ dependencies:
   buffer: 6.0.3
   dompurify: 2.3.4
   events: 3.3.0
-  hybrids: 7.0.4
+  hybrids: 7.0.5
   lodash: 2.4.0
   moment: 2.29.1
   pretty-kibibytes: 4.0.4
@@ -108,8 +108,8 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: false
 
-  /hybrids/7.0.4:
-    resolution: {integrity: sha512-egw2e+IPyhET4kIaY+oKI/SN3CLcTDRwZtXjrI9TH/c6czQTqGG58AkW8EQKhY93um22rRuM6+l2TTzFkpFzwQ==}
+  /hybrids/7.0.5:
+    resolution: {integrity: sha512-uQmRBImwJw8HI55x9R6T3vDKL3FdIm/KKGBfArjd7/rPYLFHpn33XrgBc1bzTZ32yh0jCOZQdzyED5g+2lhf+w==}
     dev: false
 
   /ieee754/1.2.1:
