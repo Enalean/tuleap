@@ -18,75 +18,13 @@
  */
 
 import type { MinimalTracker } from "./tracker";
-
-interface BaseTrackerFieldValue {
-    field_id: number;
-    label: string;
-}
-
-export interface StringValueField extends BaseTrackerFieldValue {
-    type: "string";
-    value: string;
-}
-
-export interface TextValueField extends BaseTrackerFieldValue {
-    type: "text";
-    format: "text" | "html";
-    value: string;
-}
-
-interface NumberValueField extends BaseTrackerFieldValue {
-    type: "float" | "int";
-    value: null | number;
-}
-
-interface ComputedValueWithAutomaticValueField extends BaseTrackerFieldValue {
-    type: "computed";
-    is_autocomputed: true;
-    value: null | number;
-}
-
-interface ComputedValueWithManualValueField extends BaseTrackerFieldValue {
-    type: "computed";
-    is_autocomputed: false;
-    manual_value: null | number;
-}
-
-interface SubmittedOnValueField extends BaseTrackerFieldValue {
-    type: "subon";
-    value: string;
-}
-
-interface LastUpdateOnValueField extends BaseTrackerFieldValue {
-    type: "lud";
-    value: string;
-}
-
-interface DateValueField extends BaseTrackerFieldValue {
-    type: "date";
-    value: string | null;
-}
-
-interface OtherNonSupportedFieldValue extends BaseTrackerFieldValue {
-    type: never;
-}
-
-export type TrackerFieldValue =
-    | StringValueField
-    | TextValueField
-    | NumberValueField
-    | ComputedValueWithAutomaticValueField
-    | ComputedValueWithManualValueField
-    | SubmittedOnValueField
-    | LastUpdateOnValueField
-    | DateValueField
-    | OtherNonSupportedFieldValue;
+import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 
 export interface Artifact {
     id: number;
-    values: TrackerFieldValue[];
+    values: ArtifactReportResponseFieldValue[];
     values_by_field: {
-        [field_name: string]: TrackerFieldValue;
+        [field_name: string]: ArtifactReportResponseFieldValue;
     };
     tracker: MinimalTracker;
 }

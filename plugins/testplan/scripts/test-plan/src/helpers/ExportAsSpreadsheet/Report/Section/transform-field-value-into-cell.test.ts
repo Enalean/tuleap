@@ -20,7 +20,7 @@
 import { transformFieldValueIntoACell } from "./transform-field-value-into-cell";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
-import type { TrackerFieldValue } from "./Tracker/artifact";
+import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 
 describe("transform-field-value-into-cell", () => {
     it.each([
@@ -30,7 +30,7 @@ describe("transform-field-value-into-cell", () => {
                 label: "String field",
                 type: "string",
                 value: "A string",
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new TextCell("A string"),
         ],
         [
@@ -40,7 +40,7 @@ describe("transform-field-value-into-cell", () => {
                 type: "text",
                 format: "text",
                 value: "Plaintext Content",
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new TextCell("Plaintext Content"),
         ],
         [
@@ -50,7 +50,7 @@ describe("transform-field-value-into-cell", () => {
                 type: "text",
                 format: "html",
                 value: "HTML Content",
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new HTMLCell("HTML Content"),
         ],
         [
@@ -59,7 +59,7 @@ describe("transform-field-value-into-cell", () => {
                 label: "Int",
                 type: "int",
                 value: 10,
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new NumberCell(10),
         ],
         [
@@ -68,7 +68,7 @@ describe("transform-field-value-into-cell", () => {
                 label: "Float no value",
                 type: "float",
                 value: null,
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new EmptyCell(),
         ],
         [
@@ -78,7 +78,7 @@ describe("transform-field-value-into-cell", () => {
                 type: "computed",
                 is_autocomputed: true,
                 value: 12.12,
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new NumberCell(12.12),
         ],
         [
@@ -88,7 +88,7 @@ describe("transform-field-value-into-cell", () => {
                 type: "computed",
                 is_autocomputed: false,
                 manual_value: 14.14,
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new NumberCell(14.14),
         ],
         [
@@ -97,7 +97,7 @@ describe("transform-field-value-into-cell", () => {
                 label: "Date null value",
                 type: "date",
                 value: null,
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             null,
         ],
         [
@@ -106,7 +106,7 @@ describe("transform-field-value-into-cell", () => {
                 label: "Submitted on",
                 type: "subon",
                 value: "2020-08-18T10:40:03+01:00",
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new DateCell(new Date("2020-08-18T10:40:03+01:00")),
         ],
         [
@@ -115,7 +115,7 @@ describe("transform-field-value-into-cell", () => {
                 label: "Last updated on",
                 type: "lud",
                 value: "2020-08-18T10:40:03+01:00",
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             new DateCell(new Date("2020-08-18T10:40:03+01:00")),
         ],
         [
@@ -123,12 +123,16 @@ describe("transform-field-value-into-cell", () => {
             {
                 label: "Field that cannot be processed",
                 type: "something",
-            } as TrackerFieldValue,
+            } as ArtifactReportResponseFieldValue,
             null,
         ],
     ])(
         "transforms %s into a cell",
-        (_: string, field_value: Readonly<TrackerFieldValue>, expected_cell: ReportCell | null) => {
+        (
+            _: string,
+            field_value: Readonly<ArtifactReportResponseFieldValue>,
+            expected_cell: ReportCell | null
+        ) => {
             expect(transformFieldValueIntoACell(field_value)).toStrictEqual(expected_cell);
         }
     );
