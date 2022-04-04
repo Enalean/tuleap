@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "escape-string-regexp": "^2.0.0"
   },
   "peerDependencies": {

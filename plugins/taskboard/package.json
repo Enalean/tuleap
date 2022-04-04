@@ -7,7 +7,7 @@
   "dependencies": {
     "@tuleap/drag-and-drop": "file:../../src/scripts/lib/drag-and-drop",
     "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "fscreen": "^1.2.0",
     "mustache": "^4.2.0",
     "p-retry": "^4.5.0",
