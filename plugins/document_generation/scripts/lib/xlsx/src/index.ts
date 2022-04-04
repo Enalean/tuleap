@@ -20,3 +20,4 @@
 export * from "./report-cells";
 export * from "./build-xlsx";
 export * from "./type";
+export * from "./transform-report-cell-to-sheet-cell";
