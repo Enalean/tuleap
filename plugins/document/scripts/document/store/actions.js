@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    cancelUpload,
-    getItem,
-    getItemsReferencingSameWikiPage,
-    getParents,
-} from "../api/rest-querier";
+import { getItem, getItemsReferencingSameWikiPage, getParents } from "../api/rest-querier";
 
 import { buildItemPath } from "./actions-helpers/build-parent-paths";
 import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../constants";
@@ -32,6 +27,7 @@ export * from "./actions-retrieve";
 export * from "./actions-update";
 export * from "./actions-delete";
 export * from "./actions-quicklook";
+export * from "./actions-cancel";
 
 export const refreshLink = async (context, item_to_refresh) => {
     const up_to_date_item = await getItem(item_to_refresh.id);
@@ -49,57 +45,6 @@ export const refreshEmbeddedFile = async (context, item_to_refresh) => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
     context.commit("replaceEmbeddedFilesWithNewVersion", [item_to_refresh, up_to_date_item]);
-};
-
-export const cancelFileUpload = async (context, item) => {
-    try {
-        item.uploader.abort();
-        await cancelUpload(item);
-    } catch (e) {
-        // do nothing
-    } finally {
-        context.commit("removeItemFromFolderContent", item);
-        context.commit("removeFileFromUploadsList", item);
-    }
-};
-
-export const cancelVersionUpload = async (context, item) => {
-    try {
-        item.uploader.abort();
-        await cancelUpload(item);
-    } catch (e) {
-        // do nothing
-    } finally {
-        context.commit("removeVersionUploadProgress", item);
-    }
-};
-
-export const cancelFolderUpload = (context, folder) => {
-    try {
-        const children = context.state.files_uploads_list.filter(
-            (item) => item.parent_id === folder.id
-        );
-
-        children.forEach((child) => {
-            if (child.is_uploading_new_version) {
-                cancelVersionUpload(context, child);
-            } else {
-                cancelFileUpload(context, child);
-            }
-        });
-    } catch (e) {
-        // do nothing
-    } finally {
-        context.commit("resetFolderIsUploading", folder);
-    }
-};
-
-export const cancelAllFileUploads = (context) => {
-    return Promise.all(
-        context.state.folder_content
-            .filter((item) => item.is_uploading)
-            .map((item) => cancelFileUpload(context, item))
-    );
 };
 
 export const getWikisReferencingSameWikiPage = async (context, item) => {
