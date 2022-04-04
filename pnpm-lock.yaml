@@ -5,12 +5,12 @@ specifiers:
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@types/bootstrap': ^4.5.0
   '@types/dompurify': ^2.3.2
-  dompurify: ^2.3.4
+  dompurify: ^2.3.6
 
 dependencies:
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  dompurify: 2.3.4
+  dompurify: 2.3.6
 
 devDependencies:
   '@types/bootstrap': 4.5.0
@@ -45,8 +45,8 @@ packages:
     resolution: {integrity: sha512-TmhE+/eI8PP7EwT9EbK8i74F1ryNn0LToCyEaLpN+X+A3LS1j4CpsCk9Jwq6Y2Uu7w9wdrKl6bujdj5LSsDKKA==}
     dev: true
 
-  /dompurify/2.3.4:
-    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /popper.js/1.16.1:
