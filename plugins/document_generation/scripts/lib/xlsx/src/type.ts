@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./report-cells";
-export * from "./build-xlsx";
-export * from "./type";
+import type { CellObject } from "xlsx";
+
+export type CellObjectWithExtraInfo = CellObject & {
+    character_width: number;
+    nb_lines: number;
+    merge_columns?: number;
+};
