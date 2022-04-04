@@ -60,7 +60,7 @@ describe("mutations", () => {
             } as State;
             setActiveOption(state, TRACKER_TEMPLATE);
             expect(state.active_option).toBe(TRACKER_TEMPLATE);
-            expect(state.selected_tracker_template).toBe(null);
+            expect(state.selected_tracker_template).toBeNull();
         });
     });
 

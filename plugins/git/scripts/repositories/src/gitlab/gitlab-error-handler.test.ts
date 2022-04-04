@@ -30,7 +30,7 @@ describe("gitlab-error-handler", () => {
 
         it("When there is no response key, Then generic message is returned", async () => {
             const message = await handleError({} as FetchWrapperError, gettext_provider);
-            expect(message).toEqual("Oops, an error occurred!");
+            expect(message).toBe("Oops, an error occurred!");
         });
 
         it("When there is no error key, Then generic message is returned", async () => {
@@ -42,7 +42,7 @@ describe("gitlab-error-handler", () => {
                 } as FetchWrapperError,
                 gettext_provider
             );
-            expect(message).toEqual("Oops, an error occurred!");
+            expect(message).toBe("Oops, an error occurred!");
         });
 
         it("When there is i18n message, Then it is returned", async () => {
@@ -61,7 +61,7 @@ describe("gitlab-error-handler", () => {
                 } as Response),
                 gettext_provider
             );
-            expect(message).toEqual("My i18n Message");
+            expect(message).toBe("My i18n Message");
         });
 
         it("When there is no i18n message, Then it code ans message are returned", async () => {
@@ -79,7 +79,7 @@ describe("gitlab-error-handler", () => {
                 } as Response),
                 gettext_provider
             );
-            expect(message).toEqual("404 not found");
+            expect(message).toBe("404 not found");
         });
     });
 });

@@ -37,26 +37,26 @@ describe("program-configuration-builder", function () {
                 100
             );
 
-            expect(configuration.program_id).toEqual(100);
+            expect(configuration.program_id).toBe(100);
             expect(configuration.plannable_tracker_ids).toEqual([9, 10]);
-            expect(configuration.program_increment_tracker_id).toEqual(8);
+            expect(configuration.program_increment_tracker_id).toBe(8);
             expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
-            expect(configuration.program_increment_label).toEqual("PI");
-            expect(configuration.iteration?.iteration_tracker_id).toEqual(8);
-            expect(configuration.iteration?.iteration_label).toEqual("An Iteration");
-            expect(configuration.iteration?.iteration_sub_label).toEqual("");
+            expect(configuration.program_increment_label).toBe("PI");
+            expect(configuration.iteration?.iteration_tracker_id).toBe(8);
+            expect(configuration.iteration?.iteration_label).toBe("An Iteration");
+            expect(configuration.iteration?.iteration_sub_label).toBe("");
         });
         it("should return configuration with empty iteration object when no tracker iteration was selected", function () {
             const configuration = buildProgramConfiguration(
                 createDocumentWithSelectorWithoutEmptyField(""),
                 100
             );
-            expect(configuration.program_id).toEqual(100);
+            expect(configuration.program_id).toBe(100);
             expect(configuration.plannable_tracker_ids).toEqual([9, 10]);
-            expect(configuration.program_increment_tracker_id).toEqual(8);
+            expect(configuration.program_increment_tracker_id).toBe(8);
             expect(configuration.permissions.can_prioritize_features).toEqual(["100_3", "150"]);
-            expect(configuration.program_increment_label).toEqual("PI");
-            expect(configuration.program_increment_sub_label).toEqual("");
+            expect(configuration.program_increment_label).toBe("PI");
+            expect(configuration.program_increment_sub_label).toBe("");
             expect(configuration.iteration).toBeNull();
         });
     });

@@ -147,7 +147,7 @@ describe("execution-attachments-drop-zone", () => {
                 drop_zone_element.dispatchEvent(dragover);
                 drop_zone_element.dispatchEvent(dragover);
 
-                expect($root_scope.$emit.mock.calls.length).toEqual(1);
+                expect($root_scope.$emit.mock.calls).toHaveLength(1);
             });
 
             it("does not highlight the drop zone when the dnd is not allowed", () => {
@@ -184,7 +184,7 @@ describe("execution-attachments-drop-zone", () => {
                 drop_zone_element.dispatchEvent(dragleave);
                 drop_zone_element.dispatchEvent(dragleave);
 
-                expect($root_scope.$emit.mock.calls.length).toEqual(2);
+                expect($root_scope.$emit.mock.calls).toHaveLength(2);
             });
 
             it("does nothing when the dnd is not allowed", () => {

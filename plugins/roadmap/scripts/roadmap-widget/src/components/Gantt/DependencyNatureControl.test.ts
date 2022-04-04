@@ -96,7 +96,7 @@ describe("DependencyNatureControl", () => {
 
         expect(input_event[0][0]).toBe("depends_on");
         expect(input_event[1][0]).toBe("");
-        expect(input_event[2][0]).toBe(null);
+        expect(input_event[2][0]).toBeNull();
     });
 
     it("should mark the selectbox as disabled when there is no link", async () => {

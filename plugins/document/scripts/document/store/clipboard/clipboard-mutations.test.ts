@@ -55,7 +55,7 @@ describe("Clipboard mutations", () => {
 
         const state = { pasting_in_progress: true, item_id: null } as ClipboardState;
         cutItem(state, item);
-        expect(state.item_id).toBe(null);
+        expect(state.item_id).toBeNull();
     });
 
     it("Copy item when no item is being pasted", () => {
@@ -82,7 +82,7 @@ describe("Clipboard mutations", () => {
 
         const state = { pasting_in_progress: true, item_id: null } as ClipboardState;
         copyItem(state, item);
-        expect(state.item_id).toBe(null);
+        expect(state.item_id).toBeNull();
     });
 
     it("Clear clipboard", () => {
@@ -119,7 +119,7 @@ describe("Clipboard mutations", () => {
         } as ClipboardState;
 
         emptyClipboardAfterItemDeletion(state, { id: 741 } as Empty);
-        expect(state.item_id).toBe(null);
+        expect(state.item_id).toBeNull();
     });
 
     it("Keeps the clipboard intact when another item is deleted", () => {

@@ -77,12 +77,12 @@ describe("ExecutionListFilter", function () {
 
     it("filters on execution status when active", function () {
         var results = ngFilter("AutomatedTestsFilter")(list, false);
-        expect(results.length).toEqual(1);
+        expect(results).toHaveLength(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
     it("does not filter otherwise", function () {
         var results = ngFilter("AutomatedTestsFilter")(list, true);
-        expect(results.length).toEqual(2);
+        expect(results).toHaveLength(2);
     });
 });

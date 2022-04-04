@@ -25,7 +25,7 @@ describe("xml-data-extractor", () => {
 
         const file = new File(["I am not a xml file"], "message.txt", { type: "text/plain" });
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual("Not a xml file");
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe("Not a xml file");
     });
 
     it("throws an error when the file does not contain a tracker name", async () => {
@@ -37,7 +37,7 @@ describe("xml-data-extractor", () => {
             { type: "text/xml" }
         );
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
             "The provided XML file does not provide any name and/or shortname"
         );
     });
@@ -55,7 +55,7 @@ describe("xml-data-extractor", () => {
             { type: "text/xml" }
         );
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
             "The provided XML file does not provide any name and/or shortname"
         );
     });
@@ -74,7 +74,7 @@ describe("xml-data-extractor", () => {
             { type: "text/xml" }
         );
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
             "The provided XML file does not provide any name and/or shortname"
         );
     });
@@ -93,7 +93,7 @@ describe("xml-data-extractor", () => {
             { type: "text/xml" }
         );
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
             "The provided XML file does not provide any name and/or shortname"
         );
     });
@@ -113,7 +113,7 @@ describe("xml-data-extractor", () => {
             { type: "text/xml" }
         );
 
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
+        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toBe(
             "The tracker color cannot be an empty string"
         );
     });

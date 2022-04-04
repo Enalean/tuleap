@@ -140,9 +140,9 @@ describe("dropdown-manager", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
         selection_container.setAttribute("aria-expanded", "false");
         dropdown_manager.openListPicker();
-        expect(selection_container.getAttribute("aria-expanded")).toEqual("true");
+        expect(selection_container.getAttribute("aria-expanded")).toBe("true");
         dropdown_manager.closeListPicker();
-        expect(selection_container.getAttribute("aria-expanded")).toEqual("false");
+        expect(selection_container.getAttribute("aria-expanded")).toBe("false");
     });
 
     it("should unlock scrolling and stop observing items resize", () => {
@@ -195,9 +195,9 @@ describe("dropdown-manager", () => {
 
             expect(list_picker.classList).not.toContain("list-picker-with-dropdown-above");
             expect(dropdown.classList).not.toContain("list-picker-dropdown-above");
-            expect(dropdown.style.left).toEqual("60px");
-            expect(dropdown.style.width).toEqual("250px");
-            expect(dropdown.style.top).toEqual("900px"); // Below the wrapper
+            expect(dropdown.style.left).toBe("60px");
+            expect(dropdown.style.width).toBe("250px");
+            expect(dropdown.style.top).toBe("900px"); // Below the wrapper
 
             dropdown_manager.destroy();
         });
@@ -209,9 +209,9 @@ describe("dropdown-manager", () => {
 
             expect(list_picker.classList).toContain("list-picker-with-dropdown-above");
             expect(dropdown.classList).toContain("list-picker-dropdown-above");
-            expect(dropdown.style.left).toEqual("60px");
-            expect(dropdown.style.width).toEqual("250px");
-            expect(dropdown.style.top).toEqual("610px"); // Above the wrapper
+            expect(dropdown.style.left).toBe("60px");
+            expect(dropdown.style.width).toBe("250px");
+            expect(dropdown.style.top).toBe("610px"); // Above the wrapper
 
             dropdown_manager.destroy();
         });

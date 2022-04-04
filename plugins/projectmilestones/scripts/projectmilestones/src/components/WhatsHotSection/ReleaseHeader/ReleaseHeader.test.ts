@@ -118,7 +118,7 @@ describe("ReleaseHeader", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.get("[data-test=title-release]").text()).toEqual("1 > 2");
+        expect(wrapper.get("[data-test=title-release]").text()).toBe("1 > 2");
     });
 
     describe("Display PastReleaseHeader", () => {

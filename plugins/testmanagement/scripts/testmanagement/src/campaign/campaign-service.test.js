@@ -196,7 +196,7 @@ describe("CampaignService", () => {
         const promise = CampaignService.patchExecutions(17, definition_ids, execution_ids);
         const response = await wrapPromise(promise);
 
-        expect(response.total).toEqual("2");
+        expect(response.total).toBe("2");
         expect(response.results).toEqual(executions);
         expect(tlpPatch).toHaveBeenCalledWith(
             `/api/v1/testmanagement_campaigns/17/testmanagement_executions`,
@@ -235,7 +235,7 @@ describe("CampaignService", () => {
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = CampaignService.triggerAutomatedTests(31).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(error.message).toEqual(
+                expect(error.message).toBe(
                     "Message: The requested URL returned error: 403 Forbidden"
                 );
             });

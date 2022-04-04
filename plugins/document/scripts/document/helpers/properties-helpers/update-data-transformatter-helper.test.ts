@@ -78,7 +78,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
 
         transformDocumentPropertiesForUpdate(item, true);
 
-        expect(item.status).toEqual("rejected");
+        expect(item.status).toBe("rejected");
     });
 
     it("Given status is not used, then the status is not updated", () => {
@@ -103,7 +103,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
 
         transformDocumentPropertiesForUpdate(item, false);
 
-        expect(item.status).toEqual(undefined);
+        expect(item.status).toBeUndefined();
     });
 
     it("Given item has no properties key, it does not throw an error", () => {
@@ -114,7 +114,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
 
         transformDocumentPropertiesForUpdate(item, false);
 
-        expect(item.status).toEqual(undefined);
+        expect(item.status).toBeUndefined();
     });
 });
 

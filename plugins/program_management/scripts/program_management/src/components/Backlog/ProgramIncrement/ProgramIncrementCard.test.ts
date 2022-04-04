@@ -113,13 +113,13 @@ describe("ProgramIncrementCard", () => {
                 .get("[data-test=program-increment-content]")
                 .classes("program-increment-content-hidden")
         ).toBe(false);
-        expect(
-            wrapper.get("[data-test=program-increment-info-edit-link]").attributes().href
-        ).toEqual("/plugins/tracker/?aid=1&program_increment=update");
+        expect(wrapper.get("[data-test=program-increment-info-edit-link]").attributes().href).toBe(
+            "/plugins/tracker/?aid=1&program_increment=update"
+        );
         expect(
             wrapper.get("[data-test=program-increment-plan-iterations-link]").attributes().href
-        ).toEqual("/program_management/guinea-pig/increments/1/plan");
-        expect(wrapper.get("[data-test=program-increment-plan-iterations-link]").text()).toEqual(
+        ).toBe("/program_management/guinea-pig/increments/1/plan");
+        expect(wrapper.get("[data-test=program-increment-plan-iterations-link]").text()).toBe(
             "Plan stuff"
         );
     });

@@ -84,7 +84,7 @@ describe("Store mutations", () => {
             };
             mutations.toggleQuickLook(state, true);
 
-            expect(state.toggle_quick_look).toEqual(true);
+            expect(state.toggle_quick_look).toBe(true);
         });
 
         it("toggle quick look to false", () => {
@@ -93,7 +93,7 @@ describe("Store mutations", () => {
             };
             mutations.toggleQuickLook(state, false);
 
-            expect(state.toggle_quick_look).toEqual(false);
+            expect(state.toggle_quick_look).toBe(false);
         });
     });
 });

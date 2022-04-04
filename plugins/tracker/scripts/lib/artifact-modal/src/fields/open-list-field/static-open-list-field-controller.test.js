@@ -231,7 +231,7 @@ describe("StaticOpenListFieldController", function () {
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it("Given a string, then it returns an object with 'id', 'text', and 'isTag' attributes", function () {
@@ -280,7 +280,7 @@ describe("StaticOpenListFieldController", function () {
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
     });
 });

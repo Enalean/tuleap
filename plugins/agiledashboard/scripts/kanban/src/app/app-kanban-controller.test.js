@@ -154,7 +154,7 @@ describe("KanbanCtrl", function () {
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
                 expect(KanbanService.getArchiveSize).toHaveBeenCalledWith(kanban.id);
                 expect(KanbanCtrl.archive.loading_items).toBeFalsy();
-                expect(KanbanCtrl.archive.nb_items_at_kanban_init).toEqual(6);
+                expect(KanbanCtrl.archive.nb_items_at_kanban_init).toBe(6);
             });
         });
 
@@ -193,7 +193,7 @@ describe("KanbanCtrl", function () {
                 expect(KanbanColumnService.filterItems).not.toHaveBeenCalled();
                 expect(KanbanService.getBacklogSize).toHaveBeenCalledWith(kanban.id);
                 expect(KanbanCtrl.backlog.loading_items).toBeFalsy();
-                expect(KanbanCtrl.backlog.nb_items_at_kanban_init).toEqual(28);
+                expect(KanbanCtrl.backlog.nb_items_at_kanban_init).toBe(28);
             });
         });
 
@@ -216,13 +216,13 @@ describe("KanbanCtrl", function () {
                 expect(column.filtered_content).toEqual([]);
                 expect(column.filtered_content).not.toBe(column.content);
                 expect(column.loading_items).toBeTruthy();
-                expect(column.nb_items_at_kanban_init).toEqual(0);
+                expect(column.nb_items_at_kanban_init).toBe(0);
                 expect(column.fully_loaded).toBeFalsy();
                 expect(column.wip_in_edit).toBeFalsy();
-                expect(column.limit_input).toEqual(7);
+                expect(column.limit_input).toBe(7);
                 expect(column.saving_wip).toBeFalsy();
                 expect(column.is_defered).toBeFalsy();
-                expect(column.original_label).toEqual("palate");
+                expect(column.original_label).toBe("palate");
 
                 expect(KanbanService.getItems).toHaveBeenCalledWith(kanban.id, column.id, 50, 0);
                 get_column_request.resolve({
@@ -254,13 +254,13 @@ describe("KanbanCtrl", function () {
                 expect(column.filtered_content).toEqual([]);
                 expect(column.filtered_content).not.toBe(column.content);
                 expect(column.loading_items).toBeTruthy();
-                expect(column.nb_items_at_kanban_init).toEqual(0);
+                expect(column.nb_items_at_kanban_init).toBe(0);
                 expect(column.fully_loaded).toBeFalsy();
                 expect(column.wip_in_edit).toBeFalsy();
-                expect(column.limit_input).toEqual(21);
+                expect(column.limit_input).toBe(21);
                 expect(column.saving_wip).toBeFalsy();
                 expect(column.is_defered).toBeTruthy();
-                expect(column.original_label).toEqual("undisfranchised");
+                expect(column.original_label).toBe("undisfranchised");
 
                 KanbanCtrl.$onInit();
                 get_column_size_request.resolve(42);
@@ -272,7 +272,7 @@ describe("KanbanCtrl", function () {
                     column.id
                 );
                 expect(column.loading_items).toBeFalsy();
-                expect(column.nb_items_at_kanban_init).toEqual(42);
+                expect(column.nb_items_at_kanban_init).toBe(42);
             });
         });
     });
@@ -817,14 +817,14 @@ describe("KanbanCtrl", function () {
                 );
 
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(archive);
-                expect(archive.filtered_content.length).toBe(2);
+                expect(archive.filtered_content).toHaveLength(2);
             });
 
             it("empty the filtered column when the column is closed", () => {
                 created_artifact.in_column = 252;
                 jest.spyOn(SharedPropertiesService, "isNodeServerConnected").mockReturnValue(false);
 
-                expect(collapsed_column.filtered_content.length).toBe(3);
+                expect(collapsed_column.filtered_content).toHaveLength(3);
                 KanbanCtrl.openAddArtifactModal(fake_event);
                 get_request.resolve(created_artifact);
 
@@ -841,7 +841,7 @@ describe("KanbanCtrl", function () {
                 );
 
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(collapsed_column);
-                expect(collapsed_column.filtered_content.length).toBe(0);
+                expect(collapsed_column.filtered_content).toHaveLength(0);
             });
         });
     });

@@ -219,7 +219,7 @@ describe("ReleaseRestService -", function () {
             expect(progress_callback).toHaveBeenCalledWith(second_artifacts);
             expect(ReleaseRestService.getLinkedArtifacts).toHaveBeenCalledWith(uri, 2, 0);
             expect(ReleaseRestService.getLinkedArtifacts).toHaveBeenCalledWith(uri, 2, 2);
-            expect(ReleaseRestService.getLinkedArtifacts.mock.calls.length).toBe(2);
+            expect(ReleaseRestService.getLinkedArtifacts.mock.calls).toHaveLength(2);
         });
     });
 });

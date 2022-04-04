@@ -26,7 +26,7 @@ describe("ArrayUtils:", () => {
         const ALWAYS_FALSE = () => false;
 
         it("returns first element which match given predicate", () => {
-            expect(ArrayUtils.find([1, 2, 3], (value) => value > 1)).toEqual(2);
+            expect(ArrayUtils.find([1, 2, 3], (value) => value > 1)).toBe(2);
         });
 
         it("returns undefined when no element match with given predicate", () => {

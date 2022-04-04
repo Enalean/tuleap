@@ -107,11 +107,11 @@ describe("SidebarLogo", () => {
 
         const logo = wrapper.find("[data-test=legacy-logo]");
         expect(logo.exists()).toBe(true);
-        expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-url")).toStrictEqual(
+        expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-url")).toBe(
             "url(https://example.com/logo.png)"
         );
-        expect(
-            window.getComputedStyle(logo.element).getPropertyValue("--logo-small-url")
-        ).toStrictEqual("url(https://example.com/logo_small.png)");
+        expect(window.getComputedStyle(logo.element).getPropertyValue("--logo-small-url")).toBe(
+            "url(https://example.com/logo_small.png)"
+        );
     });
 });

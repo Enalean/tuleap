@@ -125,8 +125,8 @@ describe("NewTuleapArtifactModalService", () => {
             expect(model.tracker_id).toEqual(tracker_id);
             expect(model.parent_artifact_id).toEqual(parent_artifact_id);
             expect(model.tracker).toEqual(tracker);
-            expect(model.title).toEqual("preinvest");
-            expect(model.color).toEqual("importer");
+            expect(model.title).toBe("preinvest");
+            expect(model.color).toBe("importer");
             expect(model.values).toBeDefined();
             expect(model.ordered_fields).toBeDefined();
             expect(model.parent_artifacts).toBeUndefined();
@@ -345,17 +345,17 @@ describe("NewTuleapArtifactModalService", () => {
                 expect(buildFormTree).toHaveBeenCalledWith(tracker);
                 var model = promise.$$state.value;
                 expect(model.invert_followups_comments_order).toBeTruthy();
-                expect(model.text_fields_format).toEqual("html");
+                expect(model.text_fields_format).toBe("html");
                 expect(model.tracker_id).toEqual(tracker_id);
                 expect(model.artifact_id).toEqual(artifact_id);
-                expect(model.color).toEqual("slackerism");
+                expect(model.color).toBe("slackerism");
                 expect(model.tracker).toEqual(tracker);
                 expect(model.values).toBeDefined();
                 expect(model.ordered_fields).toBeDefined();
                 expect(setCreationMode).toHaveBeenCalledWith(false);
-                expect(model.title).toEqual("onomatomania");
-                expect(model.etag).toEqual("etag");
-                expect(model.last_modified).toEqual(1629097552);
+                expect(model.title).toBe("onomatomania");
+                expect(model.etag).toBe("etag");
+                expect(model.last_modified).toBe(1629097552);
             });
 
             it(`Given that the user didn't have a preference set for text fields format,
@@ -391,7 +391,7 @@ describe("NewTuleapArtifactModalService", () => {
                 await expect(wrapPromise(promise)).resolves.toBeDefined();
                 const model = promise.$$state.value;
 
-                expect(model.text_fields_format).toEqual("commonmark");
+                expect(model.text_fields_format).toBe("commonmark");
             });
         });
 

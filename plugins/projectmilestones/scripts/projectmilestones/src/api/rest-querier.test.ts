@@ -246,7 +246,7 @@ describe("getProject() -", () => {
             params: { limit: 1, offset: 0, query },
         });
 
-        expect(result).toEqual(10);
+        expect(result).toBe(10);
     });
 
     describe("getLastMiletsone", () => {
@@ -281,7 +281,7 @@ describe("getProject() -", () => {
         it("When there isn't last release, Then null is returned", async () => {
             const result = await getLastRelease(project_id, 0);
 
-            expect(result).toEqual(null);
+            expect(result).toBeNull();
         });
     });
 

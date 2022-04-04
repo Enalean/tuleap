@@ -48,7 +48,7 @@ describe(`replacers`, () => {
             const delete_button = createAndAppendButton(doc);
             delete_button.dataset.appId = "123";
 
-            expect(hiddenInputReplaceCallback(delete_button)).toEqual("123");
+            expect(hiddenInputReplaceCallback(delete_button)).toBe("123");
         });
     });
 

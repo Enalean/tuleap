@@ -46,14 +46,14 @@ describe("HumanizedDate", () => {
     });
 
     it("shows date with human readable format", () => {
-        expect(wrapper.text()).toEqual("dans un mois");
+        expect(wrapper.text()).toBe("dans un mois");
     });
 
     describe("with capital at first character", () => {
         beforeEach(() => wrapper.setProps({ start_with_capital: true }));
 
         it("starts with capital", () => {
-            expect(wrapper.text().charAt(0)).toEqual("D");
+            expect(wrapper.text().charAt(0)).toBe("D");
         });
     });
 });

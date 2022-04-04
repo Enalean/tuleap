@@ -70,7 +70,7 @@ describe("CancelSaveButtons", () => {
 
         it(`the save button will be disabled and will show a spinner icon`, () => {
             const save_button = wrapper.get("[data-test=save]");
-            expect(save_button.attributes("disabled")).toEqual("disabled");
+            expect(save_button.attributes("disabled")).toBe("disabled");
             const save_icon = wrapper.get("[data-test=save-icon]");
             expect(save_icon.classes()).toContain("fa-circle-o-notch");
             expect(save_icon.classes()).toContain("fa-spin");
@@ -78,7 +78,7 @@ describe("CancelSaveButtons", () => {
 
         it(`the cancel button will be disabled`, () => {
             const cancel_button = wrapper.get("[data-test=cancel]");
-            expect(cancel_button.attributes("disabled")).toEqual("disabled");
+            expect(cancel_button.attributes("disabled")).toBe("disabled");
         });
 
         it(`when the user presses the ESC key, it won't emit an event`, () => {

@@ -90,7 +90,7 @@ describe("ExecutionRestService", () => {
         const promise = ExecutionRestService.getRemoteExecutions(1, 10, 0);
 
         const response = await wrapPromise(promise);
-        expect(response.total).toEqual("2");
+        expect(response.total).toBe("2");
         expect(response.results).toEqual(executions);
         expect(tlpGet).toHaveBeenCalledWith(
             "/api/v1/testmanagement_campaigns/1/testmanagement_executions",
@@ -232,7 +232,7 @@ describe("ExecutionRestService", () => {
             expect(init_argument.headers).toEqual(expected_headers);
             const raw_body = JSON.parse(init_argument.body);
             expect(raw_body.issue_id).toEqual(issue_id);
-            expect(raw_body.comment.format).toEqual("html");
+            expect(raw_body.comment.format).toBe("html");
             expect(raw_body.comment.body).toMatch(expected_body_regex);
         });
 
@@ -244,7 +244,7 @@ describe("ExecutionRestService", () => {
             // eslint-disable-next-line jest/valid-expect-in-promise
             const promise = ExecutionRestService.linkIssue(123, execution).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(error).toEqual("Forbidden");
+                expect(error).toBe("Forbidden");
             });
 
             return wrapPromise(promise);
@@ -276,7 +276,7 @@ describe("ExecutionRestService", () => {
             const promise = ExecutionRestService.linkIssueWithoutComment(123, { id: 456 }).catch(
                 (error) => {
                     // eslint-disable-next-line jest/no-conditional-expect
-                    expect(error).toEqual("Forbidden");
+                    expect(error).toBe("Forbidden");
                 }
             );
 
@@ -372,7 +372,7 @@ describe("ExecutionRestService", () => {
                 status
             ).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(error).toEqual("This user cannot update the execution");
+                expect(error).toBe("This user cannot update the execution");
             });
             return wrapPromise(promise);
         });
@@ -433,7 +433,7 @@ describe("ExecutionRestService", () => {
                 file_info
             ).catch((error) => {
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(error).toEqual("File is too big");
+                expect(error).toBe("File is too big");
             });
 
             return wrapPromise(promise);

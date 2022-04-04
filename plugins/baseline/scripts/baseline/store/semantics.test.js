@@ -248,9 +248,7 @@ describe("Semantics store:", () => {
                 };
             });
             it("returns corresponding semantic label of given tracker", () => {
-                expect(store.getters.field_label(state)(1, "description")).toEqual(
-                    "My description"
-                );
+                expect(store.getters.field_label(state)(1, "description")).toBe("My description");
             });
         });
     });

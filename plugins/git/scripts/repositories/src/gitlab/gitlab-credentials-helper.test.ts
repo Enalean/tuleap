@@ -84,7 +84,7 @@ describe("Gitlab Credentials Helper", () => {
         it("When URL finishes with /, Then url is good", () => {
             const url = "https://example.com/";
 
-            expect(formatUrlToGetAllProject(url)).toEqual(
+            expect(formatUrlToGetAllProject(url)).toBe(
                 "https://example.com/api/v4/projects?membership=true&per_page=20&min_access_level=40"
             );
         });
@@ -92,7 +92,7 @@ describe("Gitlab Credentials Helper", () => {
         it("When URL doesn't finish with /, Then url is good", () => {
             const url = "https://example.com";
 
-            expect(formatUrlToGetAllProject(url)).toEqual(
+            expect(formatUrlToGetAllProject(url)).toBe(
                 "https://example.com/api/v4/projects?membership=true&per_page=20&min_access_level=40"
             );
         });
@@ -101,7 +101,7 @@ describe("Gitlab Credentials Helper", () => {
         it("When URL finishes with /, Then url is good", () => {
             const url = "https://example.com/";
 
-            expect(formatUrlToGetProjectFromId(url, 1)).toEqual(
+            expect(formatUrlToGetProjectFromId(url, 1)).toBe(
                 "https://example.com/api/v4/projects/1"
             );
         });
@@ -109,7 +109,7 @@ describe("Gitlab Credentials Helper", () => {
         it("When URL doesn't finish with /, Then url is good", () => {
             const url = "https://example.com";
 
-            expect(formatUrlToGetProjectFromId(url, 1)).toEqual(
+            expect(formatUrlToGetProjectFromId(url, 1)).toBe(
                 "https://example.com/api/v4/projects/1"
             );
         });

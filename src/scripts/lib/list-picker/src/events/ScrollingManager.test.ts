@@ -65,9 +65,9 @@ describe("ScrollingManager", () => {
             const { wrapper_element } = getModalElements();
             const scrolling_manager = new ScrollingManager(wrapper_element);
 
-            expect(scrolling_manager.findListPickerFirstScrollableParent(wrapper_element)).toEqual(
-                null
-            );
+            expect(
+                scrolling_manager.findListPickerFirstScrollableParent(wrapper_element)
+            ).toBeNull();
         });
     });
 

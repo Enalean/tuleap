@@ -53,7 +53,7 @@ describe("SwimlaneSkeleton", () => {
                 .exists()
         ).toBe(true);
         const skeletons = wrapper.findAllComponents(ColumnsSkeleton);
-        expect(skeletons.length).toBe(8);
+        expect(skeletons).toHaveLength(8);
         for (let i = 0; i < 8; i++) {
             expect(skeletons.at(i).props("column_index")).toBe(i);
         }

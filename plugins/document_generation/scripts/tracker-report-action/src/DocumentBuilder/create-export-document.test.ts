@@ -705,7 +705,7 @@ describe("Create ArtifactValues Collection", () => {
             ]
         );
 
-        expect(report.name).toEqual("tracker_shortname - report_name");
+        expect(report.name).toBe("tracker_shortname - report_name");
 
         const collection = report.artifacts;
 

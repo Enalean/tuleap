@@ -49,7 +49,7 @@ describe("get-target-row.ts", () => {
 
         it("returns null if there is no first row in the table", () => {
             const table_first_child = getTableFirstChild(empty_table);
-            expect(table_first_child).toBe(null);
+            expect(table_first_child).toBeNull();
         });
     });
 
@@ -61,7 +61,7 @@ describe("get-target-row.ts", () => {
 
         it("returns null if there is no last row in the table", () => {
             const table_last_child = getTableLastChild(empty_table);
-            expect(table_last_child).toBe(null);
+            expect(table_last_child).toBeNull();
         });
 
         it("returns the table last non-hidden row", () => {
@@ -79,7 +79,7 @@ describe("get-target-row.ts", () => {
 
         it("returns null if there is no previous row in the table", () => {
             const row_previous_sibling = getPreviousSibling(first_row);
-            expect(row_previous_sibling).toBe(null);
+            expect(row_previous_sibling).toBeNull();
         });
 
         it("returns the given row's previous non-hidden sibling", () => {
@@ -97,7 +97,7 @@ describe("get-target-row.ts", () => {
 
         it("returns null if there is no next row in the table", () => {
             const row_next_sibling = getNextSibling(third_row);
-            expect(row_next_sibling).toBe(null);
+            expect(row_next_sibling).toBeNull();
         });
 
         it("returns the given row's next non-hidden sibling", () => {
@@ -109,7 +109,7 @@ describe("get-target-row.ts", () => {
         it("returns null if there is no non-hidden row next to the given row", () => {
             third_row.classList.add("document-tree-item-hidden");
             const row_next_sibling = getNextSibling(second_row);
-            expect(row_next_sibling).toBe(null);
+            expect(row_next_sibling).toBeNull();
         });
     });
 

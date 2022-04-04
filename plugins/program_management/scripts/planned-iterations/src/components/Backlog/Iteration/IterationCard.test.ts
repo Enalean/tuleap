@@ -96,24 +96,16 @@ describe("IterationCard", () => {
     it("displays the content of an iteration", async () => {
         const wrapper = await getWrapper();
 
-        expect(
-            wrapper.get("[data-test=iteration-header-label]").text().includes(iteration.title)
-        ).toBe(true);
-        expect(
-            wrapper
-                .get("[data-test=iteration-header-dates]")
-                .text()
-                .includes(formatDateYearMonthDay("en-US", iteration.start_date))
-        ).toBe(true);
-        expect(
-            wrapper
-                .get("[data-test=iteration-header-dates]")
-                .text()
-                .includes(formatDateYearMonthDay("en-US", iteration.end_date))
-        ).toBe(true);
-        expect(
-            wrapper.get("[data-test=iteration-header-status]").text().includes(iteration.status)
-        ).toBe(true);
+        expect(wrapper.get("[data-test=iteration-header-label]").text()).toContain(iteration.title);
+        expect(wrapper.get("[data-test=iteration-header-dates]").text()).toContain(
+            formatDateYearMonthDay("en-US", iteration.start_date)
+        );
+        expect(wrapper.get("[data-test=iteration-header-dates]").text()).toContain(
+            formatDateYearMonthDay("en-US", iteration.end_date)
+        );
+        expect(wrapper.get("[data-test=iteration-header-status]").text()).toContain(
+            iteration.status
+        );
     });
 
     it("should not display the info header if the user cannot update the iteration", async () => {

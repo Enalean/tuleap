@@ -48,7 +48,7 @@ describe(`OngoingDrag`, () => {
             expect(ongoing_drag.source_dropzone).toBe(drag_start_context.source_dropzone);
             expect(ongoing_drag.initial_sibling).toBe(drag_start_context.initial_sibling);
             expect(mock_event_source.attachAfterDropListener).toHaveBeenCalledWith(ongoing_drag);
-            expect(ongoing_drag.source_dropzone.style.height).toEqual("100px");
+            expect(ongoing_drag.source_dropzone.style.height).toBe("100px");
         });
     });
 
@@ -131,7 +131,7 @@ describe(`OngoingDrag`, () => {
 
             ongoing_drag.afterDrop();
 
-            expect(ongoing_drag.source_dropzone.style.height).toEqual("");
+            expect(ongoing_drag.source_dropzone.style.height).toBe("");
         });
     });
 });

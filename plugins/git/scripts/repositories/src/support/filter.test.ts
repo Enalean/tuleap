@@ -41,7 +41,7 @@ describe("filter", () => {
 
             createHierarchy(hierarchy, path_part);
 
-            expect(hierarchy.label).toEqual("tutu");
+            expect(hierarchy.label).toBe("tutu");
         });
 
         it("get the children", () => {

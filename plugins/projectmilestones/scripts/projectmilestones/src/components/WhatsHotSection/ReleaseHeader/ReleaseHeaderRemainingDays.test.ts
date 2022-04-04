@@ -71,12 +71,12 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("0.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-success"
             );
-            expect(remaining_day_text.text()).toEqual("10");
+            expect(remaining_day_text.text()).toBe("10");
         });
 
         it("When there number of start days but null, Then 0 is displayed and a message in tooltip", async () => {
@@ -94,12 +94,12 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No start date defined.");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("No start date defined.");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-disabled"
             );
-            expect(remaining_day_text.text()).toEqual("0");
+            expect(remaining_day_text.text()).toBe("0");
         });
 
         it("When there is negative number of start days, Then 0 is displayed and 0.00% in tooltip", async () => {
@@ -118,13 +118,13 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("0.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
             expect(remaining_day_text.classes()).not.toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).not.toContain(
                 "release-remaining-progress-value-danger"
             );
-            expect(remaining_day_text.text()).toEqual("0");
+            expect(remaining_day_text.text()).toBe("0");
         });
 
         it("When there is negative remaining days, Then 0 is displayed and 100% in tooltip", async () => {
@@ -143,13 +143,13 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("100.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
             expect(remaining_day_text.classes()).not.toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).not.toContain(
                 "release-remaining-progress-value-danger"
             );
-            expect(remaining_day_text.text()).toEqual("0");
+            expect(remaining_day_text.text()).toBe("0");
         });
 
         it("When there is remaining days but equal at 0, Then remaining days is displayed and percent in tooltip", async () => {
@@ -168,7 +168,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("100.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-danger");
             expect(wrapper.classes()).not.toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).not.toContain(
@@ -177,7 +177,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             expect(remaining_day_value.classes()).not.toContain(
                 "release-remaining-progress-value-success"
             );
-            expect(remaining_day_text.text()).toEqual("0");
+            expect(remaining_day_text.text()).toBe("0");
         });
 
         it("When there is remaining days and is null, Then 0 is displayed and there is a message in tooltip", async () => {
@@ -196,12 +196,12 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No end date defined.");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("No end date defined.");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-disabled"
             );
-            expect(remaining_day_text.text()).toEqual("0");
+            expect(remaining_day_text.text()).toBe("0");
         });
 
         it("When there is remaining days, not null and greater than 0, Then remaining days is displayed and percent in tooltip", async () => {
@@ -220,12 +220,12 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("50.00%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("50.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-success"
             );
-            expect(remaining_day_text.text()).toEqual("5");
+            expect(remaining_day_text.text()).toBe("5");
         });
 
         it("When the progress is at least 80%, Then remaining days is displayed in red and percent in tooltip", async () => {
@@ -244,12 +244,12 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("80.00%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("80.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-danger"
             );
-            expect(remaining_day_text.text()).toEqual("2");
+            expect(remaining_day_text.text()).toBe("2");
         });
 
         it("When the progress is between 80% and 100%, Then remaining days is displayed in red and percent in tooltip", async () => {
@@ -268,12 +268,12 @@ describe("ReleaseHeaderRemainingDays", () => {
             const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
             const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
-            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("90.91%");
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("90.91%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
             expect(remaining_day_value.classes()).toContain(
                 "release-remaining-progress-value-danger"
             );
-            expect(remaining_day_text.text()).toEqual("1");
+            expect(remaining_day_text.text()).toBe("1");
         });
     });
 });

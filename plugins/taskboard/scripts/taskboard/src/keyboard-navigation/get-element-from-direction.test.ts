@@ -137,7 +137,7 @@ describe("get-element-from-direction", () => {
     describe("getElementRight", () => {
         it("returns null if current element is neither a Card nor an AddForm", () => {
             const right_element = getElementRight(document, first_swimlane);
-            expect(right_element).toBe(null);
+            expect(right_element).toBeNull();
         });
 
         it("returns the first card of the cell on the right", () => {
@@ -159,7 +159,7 @@ describe("get-element-from-direction", () => {
     describe("getElementLeft", () => {
         it("returns null if current element is neither a Card nor an AddForm", () => {
             const left_element = getElementLeft(document, first_swimlane);
-            expect(left_element).toBe(null);
+            expect(left_element).toBeNull();
         });
 
         it("returns the first card of the cell on the left", () => {

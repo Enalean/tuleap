@@ -40,7 +40,7 @@ describe("updateStatusProperty", () => {
 
         updateStatusProperty(property, item);
 
-        expect(item.status).toEqual("rejected");
+        expect(item.status).toBe("rejected");
     });
 
     it("Status is none by default", () => {
@@ -53,6 +53,6 @@ describe("updateStatusProperty", () => {
 
         updateStatusProperty(property, item);
 
-        expect(item.status).toEqual("none");
+        expect(item.status).toBe("none");
     });
 });

@@ -54,20 +54,20 @@ describe("FieldTrackerTemplateId", () => {
         const wrapper = getWrapper(true, false);
         const input: HTMLInputElement = wrapper.element as HTMLInputElement;
 
-        expect(input.value).toEqual("100");
+        expect(input.value).toBe("100");
     });
 
     it("sets the input value with the selected project tracker id", () => {
         const wrapper = getWrapper(false, false);
         const input: HTMLInputElement = wrapper.element as HTMLInputElement;
 
-        expect(input.value).toEqual("101");
+        expect(input.value).toBe("101");
     });
 
     it("If it is from default template, then it sets the input value with the selected tracker id", () => {
         const wrapper = getWrapper(false, true);
         const input: HTMLInputElement = wrapper.element as HTMLInputElement;
 
-        expect(input.value).toEqual("100");
+        expect(input.value).toBe("100");
     });
 });

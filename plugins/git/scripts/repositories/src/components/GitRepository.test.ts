@@ -92,7 +92,7 @@ describe("GitRepository", () => {
         const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toBe(
             "This is my description."
         );
         expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeTruthy();
@@ -115,7 +115,7 @@ describe("GitRepository", () => {
         const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toBe(
             "This is my description."
         );
         expect(wrapper.find("[data-test=git-repository-card-gitlab-icon]").exists()).toBeFalsy();
@@ -183,7 +183,7 @@ describe("GitRepository", () => {
         };
         const wrapper = instantiateComponent();
 
-        expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toEqual(
+        expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toBe(
             "https://example.com/MyPath/MyRepo"
         );
     });
@@ -206,7 +206,7 @@ describe("GitRepository", () => {
         };
         const wrapper = instantiateComponent();
 
-        expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toEqual(
+        expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toBe(
             "plugins/git/MyPath/MyRepo"
         );
     });
@@ -272,7 +272,7 @@ describe("GitRepository", () => {
         const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=git-repository-card-description]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-repository-card-description]").text()).toBe(
             "This is my description."
         );
         expect(wrapper.find("[data-test=git-repository-card-gerrit-icon]").exists()).toBeTruthy();

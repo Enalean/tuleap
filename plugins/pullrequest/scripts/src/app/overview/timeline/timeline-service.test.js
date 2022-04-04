@@ -172,19 +172,13 @@ describe("TimelineService", function () {
             $httpBackend.flush();
 
             expect(timeline).toHaveLength(7);
-            expect($sce.getTrustedHtml(timeline[0].content)).toEqual("Hello world");
-            expect($sce.getTrustedHtml(timeline[1].content)).toEqual("Hello<br/>Site User<br/>");
+            expect($sce.getTrustedHtml(timeline[0].content)).toBe("Hello world");
+            expect($sce.getTrustedHtml(timeline[1].content)).toBe("Hello<br/>Site User<br/>");
 
-            expect($sce.getTrustedHtml(timeline[3].content)).toEqual(
-                "Has updated the pull request."
-            );
-            expect($sce.getTrustedHtml(timeline[4].content)).toEqual(
-                "Has rebased the pull request."
-            );
-            expect($sce.getTrustedHtml(timeline[5].content)).toEqual(
-                "Has merged the pull request."
-            );
-            expect($sce.getTrustedHtml(timeline[6].content)).toEqual(
+            expect($sce.getTrustedHtml(timeline[3].content)).toBe("Has updated the pull request.");
+            expect($sce.getTrustedHtml(timeline[4].content)).toBe("Has rebased the pull request.");
+            expect($sce.getTrustedHtml(timeline[5].content)).toBe("Has merged the pull request.");
+            expect($sce.getTrustedHtml(timeline[6].content)).toBe(
                 "Has abandoned the pull request."
             );
         });

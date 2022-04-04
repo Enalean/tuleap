@@ -112,7 +112,7 @@ describe("Store actions", () => {
 
             const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
 
-            expect(referencers).toEqual(null);
+            expect(referencers).toBeNull();
         });
     });
 });

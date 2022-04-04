@@ -41,7 +41,7 @@ describe("EditCardButtons", () => {
                 },
             } as Card);
 
-            expect(wrapper.html()).toEqual("");
+            expect(wrapper.html()).toBe("");
         });
 
         it("displays nothing if there isn't any remaining effort", () => {
@@ -50,7 +50,7 @@ describe("EditCardButtons", () => {
                 remaining_effort: null,
             } as Card);
 
-            expect(wrapper.html()).toEqual("");
+            expect(wrapper.html()).toBe("");
         });
 
         it("displays buttons if remaining effort is in edit mode", () => {

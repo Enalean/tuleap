@@ -42,7 +42,7 @@ describe("DateInput", () => {
         beforeEach(() => wrapper.setProps({ value: null }));
 
         it("Shows placeholder", () => {
-            expect(findSelectedOption().dataset.testType).toEqual("placeholder");
+            expect(findSelectedOption().dataset.testType).toBe("placeholder");
         });
     });
 
@@ -50,7 +50,7 @@ describe("DateInput", () => {
         beforeEach(() => wrapper.setProps({ value: DATE_FIELD_VALUE.CURRENT }));
 
         it('Select "current" option', () => {
-            expect(findSelectedOption().dataset.testType).toEqual("current");
+            expect(findSelectedOption().dataset.testType).toBe("current");
         });
     });
 

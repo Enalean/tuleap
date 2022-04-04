@@ -80,7 +80,7 @@ describe("BaselinesList", () => {
 
             it("shows as many baselines as given", () => {
                 let baselines = wrapper.findAllComponents(BaselineListItem);
-                expect(baselines.length).toBe(3);
+                expect(baselines).toHaveLength(3);
             });
 
             it("does not show baseline skeleton", () => {

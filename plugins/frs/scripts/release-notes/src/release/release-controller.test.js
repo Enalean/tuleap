@@ -143,7 +143,7 @@ describe("ReleaseController", () => {
             ReleaseController.$onInit();
             await wrapPromise(promise);
 
-            expect(ReleaseController.milestone.id).toEqual(230);
+            expect(ReleaseController.milestone.id).toBe(230);
         });
     });
 });

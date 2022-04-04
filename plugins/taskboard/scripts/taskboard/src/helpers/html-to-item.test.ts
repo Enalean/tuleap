@@ -96,8 +96,8 @@ describe("html-to-item helper", () => {
                 throw new Error("Card has not been found");
             }
 
-            expect(card.id).toEqual(150);
-            expect(card.label).toEqual("I am the card you look for");
+            expect(card.id).toBe(150);
+            expect(card.label).toBe("I am the card you look for");
         });
 
         it("returns null if there is not card element", () => {

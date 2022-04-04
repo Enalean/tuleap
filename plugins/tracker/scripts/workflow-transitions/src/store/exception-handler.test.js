@@ -36,7 +36,7 @@ describe("Store fail actions:", () => {
                 result = await getErrorMessage(exception);
             });
 
-            it("returns nothing", () => expect(result).toEqual(null));
+            it("returns nothing", () => expect(result).toBeNull());
         });
 
         describe("with non internationalized exception", () => {
@@ -57,7 +57,7 @@ describe("Store fail actions:", () => {
             });
 
             it("returns a non internationalized message", () =>
-                expect(result).toEqual("non internationalized"));
+                expect(result).toBe("non internationalized"));
         });
 
         describe("with internationalized exception", () => {
@@ -80,7 +80,7 @@ describe("Store fail actions:", () => {
             });
 
             it("returns an internationalized message", () =>
-                expect(result).toEqual("internationalized message"));
+                expect(result).toBe("internationalized message"));
         });
     });
 });

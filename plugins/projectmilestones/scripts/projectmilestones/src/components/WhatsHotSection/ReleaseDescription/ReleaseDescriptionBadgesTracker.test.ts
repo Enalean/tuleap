@@ -77,9 +77,9 @@ describe("ReleaseDescriptionBadgesTracker", () => {
             "release-number-artifacts-tracker-red-fiesta",
         ]);
 
-        expect(wrapper.get("[data-test=total-artifact-tracker]").text()).toEqual("2");
+        expect(wrapper.get("[data-test=total-artifact-tracker]").text()).toBe("2");
 
-        expect(wrapper.get("[data-test=artifact-tracker-name]").text()).toEqual("Bug");
+        expect(wrapper.get("[data-test=artifact-tracker-name]").text()).toBe("Bug");
     });
 
     it("When there is a tracker but wihout artifact, Then it is not displayed", async () => {
@@ -151,6 +151,6 @@ describe("ReleaseDescriptionBadgesTracker", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.get("[data-test=badges-tracker-tooltip-2]").text()).toEqual("Sprints");
+        expect(wrapper.get("[data-test=badges-tracker-tooltip-2]").text()).toBe("Sprints");
     });
 });

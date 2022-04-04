@@ -71,8 +71,8 @@ describe("Store mutations", () => {
         it("When we put new dates, state must change too", () => {
             mutations.setStartDate(state, "2018-01-01");
             mutations.setEndDate(state, "2018-02-02");
-            expect(state.start_date).toEqual("2018-01-01");
-            expect(state.end_date).toEqual("2018-02-02");
+            expect(state.start_date).toBe("2018-01-01");
+            expect(state.end_date).toBe("2018-02-02");
         });
 
         it("When we set display void trackers, state must change too", () => {
@@ -82,7 +82,7 @@ describe("Store mutations", () => {
 
         it("When we init user id, state must change too", () => {
             mutations.initUserId(state, 102);
-            expect(state.user_id).toEqual(102);
+            expect(state.user_id).toBe(102);
         });
 
         it("When we toggle display void trackers, state must change too", () => {
@@ -103,12 +103,12 @@ describe("Store mutations", () => {
 
         it("When we set error message, state must change too", () => {
             mutations.setErrorMessage(state, "error");
-            expect(state.error_message).toEqual("error");
+            expect(state.error_message).toBe("error");
         });
 
         it("When we set success message, state must change too", () => {
             mutations.setSuccessMessage(state, "success");
-            expect(state.success_message).toEqual("success");
+            expect(state.success_message).toBe("success");
         });
 
         it("When we reset messages, state must change too", () => {
@@ -160,7 +160,7 @@ describe("Store mutations", () => {
 
         it("When we set report id, state must change too", () => {
             mutations.setReportId(state, 12);
-            expect(state.report_id).toEqual(12);
+            expect(state.report_id).toBe(12);
         });
 
         describe("When trackers are added, state must change too", () => {

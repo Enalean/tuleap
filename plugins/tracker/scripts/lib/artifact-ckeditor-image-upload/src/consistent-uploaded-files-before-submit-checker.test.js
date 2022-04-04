@@ -94,7 +94,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
             expect(form.addEventListener).toHaveBeenCalled();
             expect(other_form.addEventListener).toHaveBeenCalled();
 
-            expect(findAllHiddenInputByNames.mock.calls.length).toBe(2);
+            expect(findAllHiddenInputByNames.mock.calls).toHaveLength(2);
         });
 
         it(`takes into account images from multiple CKEditor instances`, () => {
@@ -108,7 +108,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
             addInstance(form, other_ckeditor_instance, other_field_name);
             triggerFormSubmit();
 
-            expect(findImageUrls.mock.calls.length).toBe(2);
+            expect(findImageUrls.mock.calls).toHaveLength(2);
         });
     });
 });

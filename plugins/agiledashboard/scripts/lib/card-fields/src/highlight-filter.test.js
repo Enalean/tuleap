@@ -27,7 +27,7 @@ describe("tuleapHighlight", () => {
     });
 
     it("should highlight a matching phrase", () => {
-        expect(highlightFilter(test_phrase, "highlight")).toEqual(
+        expect(highlightFilter(test_phrase, "highlight")).toBe(
             'Prefix <span class="highlight">Highlight</span> Suffix'
         );
     });
@@ -41,15 +41,15 @@ describe("tuleapHighlight", () => {
     });
 
     it("should work correctly if text is null", () => {
-        expect(highlightFilter(null, "highlight")).toEqual(null);
+        expect(highlightFilter(null, "highlight")).toBeNull();
     });
 
     it("should work correctly for number filters", () => {
-        expect(highlightFilter("3210123", 0)).toEqual('321<span class="highlight">0</span>123');
+        expect(highlightFilter("3210123", 0)).toBe('321<span class="highlight">0</span>123');
     });
 
     it("should work correctly for number text", () => {
-        expect(highlightFilter(3210123, "0")).toEqual('321<span class="highlight">0</span>123');
+        expect(highlightFilter(3210123, "0")).toBe('321<span class="highlight">0</span>123');
     });
 
     it("should highlight nothing if empty filter string passed", () => {
@@ -57,19 +57,19 @@ describe("tuleapHighlight", () => {
     });
 
     it("should highlight more that one element", () => {
-        expect(highlightFilter(test_phrase, "gh")).toEqual(
+        expect(highlightFilter(test_phrase, "gh")).toBe(
             'Prefix Hi<span class="highlight">gh</span>li<span class="highlight">gh</span>t Suffix'
         );
     });
 
     it("highlights each matching search terms", () => {
-        expect(highlightFilter(test_phrase, "suffix highlight")).toEqual(
+        expect(highlightFilter(test_phrase, "suffix highlight")).toBe(
             'Prefix <span class="highlight">Highlight</span> <span class="highlight">Suffix</span>'
         );
     });
 
     it("should escape regexp search terms", () => {
-        expect(highlightFilter("Prefix (Highlight) Suffix", "(Highlight)")).toEqual(
+        expect(highlightFilter("Prefix (Highlight) Suffix", "(Highlight)")).toBe(
             'Prefix <span class="highlight">(Highlight)</span> Suffix'
         );
     });

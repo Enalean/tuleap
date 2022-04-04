@@ -114,7 +114,7 @@ describe("ConfirmReplaceTokenModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-patch-edit-token]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-patch-edit-token]").text()).toBe(
             "Error message"
         );
         expect(
@@ -179,7 +179,7 @@ describe("ConfirmReplaceTokenModal", () => {
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.message_error_rest).toEqual("404 Error on server");
+        expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         expect(gitlab_error_handler.handleError).toHaveBeenCalled();
     });
 

@@ -53,7 +53,7 @@ describe("ChildCard", () => {
 
             const wrapper = getWrapper(card, false);
 
-            expect(wrapper.html()).toEqual("");
+            expect(wrapper.html()).toBe("");
         });
 
         it(`Given user wants to see closed items
@@ -67,7 +67,7 @@ describe("ChildCard", () => {
 
             const wrapper = getWrapper(card, true);
 
-            expect(wrapper.html()).not.toEqual("");
+            expect(wrapper.html()).not.toBe("");
             expect(wrapper.findComponent(BaseCard).props("card")).toBe(card);
         });
 

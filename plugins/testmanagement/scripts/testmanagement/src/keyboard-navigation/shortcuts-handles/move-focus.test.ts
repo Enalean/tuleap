@@ -63,7 +63,7 @@ describe("move-focus", () => {
             jest.spyOn(getter_current_test, "getCurrentTest").mockReturnValue(null);
             const target_test = getTargetTest(doc, TOP);
 
-            expect(target_test).toBe(null);
+            expect(target_test).toBeNull();
         });
 
         it("throws an error if test link does not have the [data-navigation-test-link] attribute", () => {

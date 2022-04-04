@@ -49,13 +49,13 @@ describe(`keyboard-drop helper`, () => {
         it("returns null if no card is being dragged", () => {
             const context = getContext(doc, no_card_dragged_state, RIGHT);
 
-            expect(context).toBe(null);
+            expect(context).toBeNull();
         });
 
         it("returns null if there is no target cell", () => {
             const context = getContext(doc, card_dragged_state, LEFT);
 
-            expect(context).toBe(null);
+            expect(context).toBeNull();
         });
 
         it("throws an error if card is not in a cell", () => {
@@ -82,14 +82,14 @@ describe(`keyboard-drop helper`, () => {
         it("returns null if there is no target cell", () => {
             const target_cell = getTargetCell(third_cell, RIGHT);
 
-            expect(target_cell).toBe(null);
+            expect(target_cell).toBeNull();
         });
 
         it("returns null if target cell is not a container", () => {
             third_cell.removeAttribute("data-is-container");
             const target_cell = getTargetCell(third_cell, RIGHT);
 
-            expect(target_cell).toBe(null);
+            expect(target_cell).toBeNull();
         });
 
         it("returns the next cell if direction is RIGHT", () => {
@@ -115,7 +115,7 @@ describe(`keyboard-drop helper`, () => {
         it("returns null if direction is LEFT or RIGHT", () => {
             const next_sibling = getNextSiblingAfterMove(first_card, first_cell, LEFT);
 
-            expect(next_sibling).toBe(null);
+            expect(next_sibling).toBeNull();
         });
 
         describe("direction is UP", () => {
@@ -128,7 +128,7 @@ describe(`keyboard-drop helper`, () => {
             it("returns null if card is the first in cell", () => {
                 const next_sibling = getNextSiblingAfterMove(first_card, first_cell, UP);
 
-                expect(next_sibling).toBe(null);
+                expect(next_sibling).toBeNull();
             });
         });
 
@@ -142,7 +142,7 @@ describe(`keyboard-drop helper`, () => {
             it("returns null if card is the before last in cell", () => {
                 const next_sibling = getNextSiblingAfterMove(second_card, first_cell, DOWN);
 
-                expect(next_sibling).toBe(null);
+                expect(next_sibling).toBeNull();
             });
 
             it("returns the first card in cell if card is the last in cell", () => {
@@ -165,7 +165,7 @@ describe(`keyboard-drop helper`, () => {
         it("returns null if no card is being dragged", () => {
             const dragged_card = getDraggedCard(doc, no_card_dragged_state);
 
-            expect(dragged_card).toBe(null);
+            expect(dragged_card).toBeNull();
         });
 
         it("returns the card being dragged", () => {

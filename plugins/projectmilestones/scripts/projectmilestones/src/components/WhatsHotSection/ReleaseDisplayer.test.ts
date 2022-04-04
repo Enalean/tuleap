@@ -147,7 +147,7 @@ describe("ReleaseDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         wrapper.setData({ is_loading: true });
-        expect(wrapper.attributes("data-tlp-tooltip")).toEqual("Loading data...");
+        expect(wrapper.attributes("data-tlp-tooltip")).toBe("Loading data...");
     });
 
     it("When the widget is rendered and the toggle opened, Then there are no errors and components called", async () => {

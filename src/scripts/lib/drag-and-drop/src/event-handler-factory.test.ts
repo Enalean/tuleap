@@ -140,7 +140,7 @@ describe(`event-handler-factory`, () => {
                 source_dropzone,
                 initial_sibling,
             });
-            expect(dataTransfer.effectAllowed).toEqual("move");
+            expect(dataTransfer.effectAllowed).toBe("move");
             expect(dataTransfer.setData).toHaveBeenCalled();
             expect(options.onDragStart).toHaveBeenCalledWith({ dragged_element: draggable });
         });
@@ -497,7 +497,7 @@ describe(`event-handler-factory`, () => {
             dragOverHandler(event);
 
             expect(event.preventDefault).toHaveBeenCalled();
-            expect(dataTransfer.dropEffect).toEqual("move");
+            expect(dataTransfer.dropEffect).toBe("move");
         });
     });
 

@@ -502,7 +502,7 @@ describe("ExecutionDetailController -", () => {
             expect(ExecutionService.clearFilesUploadedThroughAttachmentArea).not.toHaveBeenCalled();
             expect($scope.displayTestCommentEditor).toBeTruthy();
             expect($scope.displayTestCommentWarningOveriding).toBeTruthy();
-            expect(execution.results).toEqual("A comment in editing mode");
+            expect(execution.results).toBe("A comment in editing mode");
         });
         it("When the user is commenting a test and someone else is passing another one, Then warning message is NOT displayed", () => {
             $state.params.execid = 66;

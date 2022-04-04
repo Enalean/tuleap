@@ -31,7 +31,7 @@ describe("ExpiredBannerInfoMessage", () => {
             },
         });
 
-        expect(wrapper.element.children).not.toBe(undefined);
+        expect(wrapper.element.children).toBeDefined();
     });
 
     it("does not display the expired info message when no banner is set", async () => {
@@ -43,7 +43,7 @@ describe("ExpiredBannerInfoMessage", () => {
             },
         });
 
-        expect(wrapper.element.children).toBe(undefined);
+        expect(wrapper.element.children).toBeUndefined();
     });
 
     it("does not display the expired info message when the banner never expires", async () => {
@@ -55,7 +55,7 @@ describe("ExpiredBannerInfoMessage", () => {
             },
         });
 
-        expect(wrapper.element.children).toBe(undefined);
+        expect(wrapper.element.children).toBeUndefined();
     });
 
     it("does not display the expired info message when the banner is not yet expired", async () => {
@@ -67,6 +67,6 @@ describe("ExpiredBannerInfoMessage", () => {
             },
         });
 
-        expect(wrapper.element.children).toBe(undefined);
+        expect(wrapper.element.children).toBeUndefined();
     });
 });

@@ -164,9 +164,7 @@ describe("DroppedService", () => {
             var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
-            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual(
-                null
-            );
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toBeNull();
         });
     });
 
@@ -195,7 +193,7 @@ describe("DroppedService", () => {
             var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
-            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual(null);
+            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toBeNull();
         });
     });
 

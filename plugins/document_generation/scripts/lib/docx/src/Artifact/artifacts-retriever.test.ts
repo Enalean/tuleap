@@ -41,7 +41,7 @@ describe("getArtifacts", () => {
     it("sends no queries when no artifacts needs to be retrieved", async () => {
         const tlpGet = jest.spyOn(tlp, "get");
         const artifacts = await getArtifacts(new Set());
-        expect(artifacts.size).toStrictEqual(0);
+        expect(artifacts.size).toBe(0);
         expect(tlpGet).not.toBeCalled();
     });
 });

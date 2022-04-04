@@ -33,7 +33,7 @@ describe("KeyboardNavigationManager", () => {
         item_map_manager: ItemsMapManager;
 
     function assertOnlyOneItemIsHighlighted(): void {
-        expect(dropdown_list.querySelectorAll(".list-picker-item-highlighted").length).toEqual(1);
+        expect(dropdown_list.querySelectorAll(".list-picker-item-highlighted")).toHaveLength(1);
     }
 
     beforeEach(async () => {

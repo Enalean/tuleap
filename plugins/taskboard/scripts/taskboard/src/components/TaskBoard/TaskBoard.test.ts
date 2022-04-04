@@ -134,7 +134,7 @@ describe("TaskBoard", () => {
 
                 dragEnterCallback(payload);
 
-                expect(target_dropzone.dataset.drekOver).toEqual("1");
+                expect(target_dropzone.dataset.drekOver).toBe("1");
             });
 
             it(`when the column of the dropzone is collapsed,

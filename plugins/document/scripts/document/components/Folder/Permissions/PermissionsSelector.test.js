@@ -50,11 +50,11 @@ describe("PermissionsSelector", () => {
 
         expect(wrapper.text()).toContain(permission_label);
         const all_options = wrapper.get("select").findAll("option");
-        expect(all_options.length).toBe(4);
+        expect(all_options).toHaveLength(4);
         const selected_option_wrappers = all_options.wrappers.filter(
             (option_wrapper) => option_wrapper.element.selected
         );
-        expect(selected_option_wrappers.length).toBe(2);
+        expect(selected_option_wrappers).toHaveLength(2);
     });
 
     it("Select new user groups", () => {
@@ -69,7 +69,7 @@ describe("PermissionsSelector", () => {
 
         wrapper.get("select").setValue(ugroup_1.id);
         const emitted_input = wrapper.emitted("input");
-        expect(emitted_input.length).toBe(1);
+        expect(emitted_input).toHaveLength(1);
         expect(emitted_input[0]).toEqual([[{ id: ugroup_1.id }]]);
     });
 
@@ -95,6 +95,6 @@ describe("PermissionsSelector", () => {
             (option_wrapper) => option_wrapper.element.selected
         );
 
-        expect(selected_option_wrappers.length).toBe(1);
+        expect(selected_option_wrappers).toHaveLength(1);
     });
 });

@@ -77,7 +77,7 @@ describe("CollapsibleFolder", () => {
         );
 
         expect(wrapper.find("[data-test=git-repository-list-folder-label]").exists()).toBeTruthy();
-        expect(wrapper.find("[data-test=git-repository-list-folder-label]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-repository-list-folder-label]").text()).toBe(
             "Repositories"
         );
 

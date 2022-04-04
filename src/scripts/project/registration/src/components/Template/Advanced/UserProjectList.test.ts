@@ -89,7 +89,7 @@ describe("UserProjectList", () => {
 
         wrapper.vm.$data.selected_project = null;
 
-        expect(wrapper.vm.$data.selected_project).toBe(null);
+        expect(wrapper.vm.$data.selected_project).toBeNull();
     });
 
     it(`user can select a project`, async () => {

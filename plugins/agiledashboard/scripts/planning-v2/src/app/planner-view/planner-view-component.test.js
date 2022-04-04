@@ -210,8 +210,8 @@ describe("PlannerView", () => {
 
             PlanningController.$onInit();
 
-            expect(PlanningController.current_view_class).toEqual("detailed-view");
-            expect(PlanningController.current_closed_view_class).toEqual("show-closed-view");
+            expect(PlanningController.current_view_class).toBe("detailed-view");
+            expect(PlanningController.current_closed_view_class).toBe("show-closed-view");
         });
     });
 
@@ -219,7 +219,7 @@ describe("PlannerView", () => {
         it("Given a view mode, when I switch to this view mode, then the current view class will be updated and this mode will be saved as my user preference", function () {
             PlanningController.switchViewMode("detailed-view");
 
-            expect(PlanningController.current_view_class).toEqual("detailed-view");
+            expect(PlanningController.current_view_class).toBe("detailed-view");
             expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
                 102,
                 "agiledashboard_planning_item_view_mode_736",
@@ -232,7 +232,7 @@ describe("PlannerView", () => {
         it("Given a view mode, when I switch closed milestones' view mode, then the current view class will be updated", function () {
             PlanningController.switchClosedMilestoneItemsViewMode("show-closed-view");
 
-            expect(PlanningController.current_closed_view_class).toEqual("show-closed-view");
+            expect(PlanningController.current_closed_view_class).toBe("show-closed-view");
         });
     });
 
@@ -369,9 +369,7 @@ describe("PlannerView", () => {
 
             var result = PlanningController.generateMilestoneLinkUrl(milestone, pane);
 
-            expect(result).toEqual(
-                "?group_id=736&planning_id=207&action=show&aid=71&pane=burndown"
-            );
+            expect(result).toBe("?group_id=736&planning_id=207&action=show&aid=71&pane=burndown");
         });
     });
 

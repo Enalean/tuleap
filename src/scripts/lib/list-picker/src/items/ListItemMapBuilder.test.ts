@@ -39,7 +39,7 @@ describe("ListItemBuilder", () => {
 
         const map = await builder.buildListPickerItemsMap();
 
-        expect(map.size).toEqual(8);
+        expect(map.size).toBe(8);
 
         const iterator = map.entries();
 
@@ -120,7 +120,7 @@ describe("ListItemBuilder", () => {
 
         const map = await builder.buildListPickerItemsMap();
 
-        expect(map.size).toEqual(6);
+        expect(map.size).toBe(6);
 
         const iterator = map.entries();
         expect(iterator.next().value).toEqual([

@@ -54,7 +54,7 @@ describe("GitPermissions", () => {
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=git-permission-error]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-permission-error]").text()).toBe(
             "Error during get permissions"
         );
     });

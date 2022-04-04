@@ -83,7 +83,7 @@ describe("mutations", () => {
 
             expect(state.is_report_saved).toBe(true);
             expect(state.error_message).toBeNull();
-            expect(state.success_message).toEqual("Great success");
+            expect(state.success_message).toBe("Great success");
         });
     });
 });

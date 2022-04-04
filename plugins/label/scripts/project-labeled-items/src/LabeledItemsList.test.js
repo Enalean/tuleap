@@ -71,7 +71,7 @@ describe("LabeledItemsList", () => {
 
         await Vue.nextTick();
         await Vue.nextTick();
-        expect(vm.error).toEqual("404 Not Found");
+        expect(vm.error).toBe("404 Not Found");
     });
 
     it("Should display an empty state when no items are found", async () => {
@@ -135,7 +135,7 @@ describe("LabeledItemsList", () => {
         vm.$mount();
 
         await Vue.nextTick();
-        expect(vm.has_more_items).toEqual(true);
+        expect(vm.has_more_items).toBe(true);
     });
 
     it("Does not display a [load more] button, if there is not more items to display", async () => {
@@ -156,7 +156,7 @@ describe("LabeledItemsList", () => {
         vm.$mount();
 
         await Vue.nextTick();
-        expect(vm.has_more_items).toEqual(false);
+        expect(vm.has_more_items).toBe(false);
     });
 
     it("Loads the next page of items", async () => {
@@ -186,11 +186,11 @@ describe("LabeledItemsList", () => {
         vm.$mount();
 
         await Vue.nextTick();
-        expect(getLabeledItems.mock.calls.length).toEqual(1);
+        expect(getLabeledItems.mock.calls).toHaveLength(1);
         expect(getLabeledItems.mock.calls[0]).toEqual(["101", [3, 4], 0, 50]);
 
         vm.loadMore();
-        expect(getLabeledItems.mock.calls.length).toEqual(2);
+        expect(getLabeledItems.mock.calls).toHaveLength(2);
         expect(getLabeledItems.mock.calls[1]).toEqual(["101", [3, 4], 50, 50]);
     });
 });

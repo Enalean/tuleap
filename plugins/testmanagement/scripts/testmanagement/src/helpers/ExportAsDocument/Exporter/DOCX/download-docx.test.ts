@@ -27,7 +27,7 @@ describe("download-docx", () => {
         const trigger_download_spy = jest.spyOn(trigger_download, "triggerBlobDownload");
         trigger_download_spy.mockImplementation((filename: string, blob: Blob) => {
             expect(filename).toBe("Document Title.docx");
-            expect(blob.size > 0).toBe(true);
+            expect(blob.size).toBeGreaterThan(0);
         });
 
         await downloadDocx(

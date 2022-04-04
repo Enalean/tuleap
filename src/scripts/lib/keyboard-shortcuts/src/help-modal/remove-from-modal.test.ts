@@ -45,7 +45,7 @@ describe("removeShortcutsGroupFromShortcutsModal", () => {
 
         removeShortcutsGroupFromShortcutsModal(doc, shortcuts_group);
 
-        expect(shortcuts_section.childNodes.length).toBe(1);
+        expect(shortcuts_section.childNodes).toHaveLength(1);
         expect(shortcuts_section.firstElementChild).toBe(shortcuts_group_container);
     });
 

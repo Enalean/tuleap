@@ -56,10 +56,10 @@ describe("GitRepositoryTableFineGrainedPermissionsRepository", () => {
 
         const wrapper = instantiateComponent();
 
-        expect(
-            wrapper.find("[data-test=git-permissions-repository-link]").attributes().href
-        ).toEqual("/git/?action=repo_management&group_id=101&repo_id=1&pane=perms");
-        expect(wrapper.find("[data-test=git-permissions-repository-link]").text()).toEqual("repo");
+        expect(wrapper.find("[data-test=git-permissions-repository-link]").attributes().href).toBe(
+            "/git/?action=repo_management&group_id=101&repo_id=1&pane=perms"
+        );
+        expect(wrapper.find("[data-test=git-permissions-repository-link]").text()).toBe("repo");
         expect(
             wrapper.find("[data-test=git-permission-badge-project_members_readers]").exists()
         ).toBeTruthy();

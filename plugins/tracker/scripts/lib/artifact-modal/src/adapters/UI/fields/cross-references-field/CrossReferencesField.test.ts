@@ -56,7 +56,7 @@ describe("CrossReferencesField", () => {
         }
 
         expect(label.textContent?.trim()).toBe(field_label);
-        expect(empty_state).not.toBe(null);
+        expect(empty_state).not.toBeNull();
     });
 
     it("When there are cross-references, then it displays them", () => {
@@ -76,7 +76,7 @@ describe("CrossReferencesField", () => {
             target.querySelectorAll("[data-test=cross-references-field-cross-reference-link]")
         );
 
-        expect(references.length).toEqual(2);
+        expect(references).toHaveLength(2);
 
         expect(references[0].href).toBe("https://url/to/art/1");
         expect(references[0].textContent?.trim()).toBe("art #1");

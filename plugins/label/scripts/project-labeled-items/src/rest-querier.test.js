@@ -66,7 +66,7 @@ describe("getLabeledItems", () => {
             1
         );
 
-        expect(are_there_items_user_cannot_see).toEqual(false);
+        expect(are_there_items_user_cannot_see).toBe(false);
     });
 
     it("Sets has_more to true if there are still elements to fetch", async () => {
@@ -82,7 +82,7 @@ describe("getLabeledItems", () => {
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 0, 1);
 
-        expect(has_more).toEqual(true);
+        expect(has_more).toBe(true);
     });
 
     it("Sets has_more to false if there are no more elements to fetch", async () => {
@@ -98,7 +98,7 @@ describe("getLabeledItems", () => {
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 9, 1);
 
-        expect(has_more).toEqual(false);
+        expect(has_more).toBe(false);
     });
 
     it("Returns the offset so that the caller update its offset in case of recursive calls", async () => {
@@ -114,7 +114,7 @@ describe("getLabeledItems", () => {
 
         const { offset } = await getLabeledItems(project_id, labels_id, 9, 1);
 
-        expect(offset).toEqual(9);
+        expect(offset).toBe(9);
     });
 
     it("Fetches items recursively until it finds at least one readable", async () => {
@@ -162,7 +162,7 @@ describe("getLabeledItems", () => {
 
         const { offset, labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
-        expect(tlpGet.mock.calls.length).toEqual(3);
+        expect(tlpGet.mock.calls).toHaveLength(3);
         expect(tlpGet.mock.calls[0]).toEqual([
             "/api/projects/" + project_id + "/labeled_items",
             {
@@ -193,7 +193,7 @@ describe("getLabeledItems", () => {
                 },
             },
         ]);
-        expect(offset).toEqual(2);
+        expect(offset).toBe(2);
         expect(labeled_items).toEqual([{ title: "Le title" }]);
     });
 });

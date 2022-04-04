@@ -33,7 +33,7 @@ describe("time-period-week", () => {
                 createVueGettextProviderPassthrough()
             );
 
-            expect(period.formatLong(new Date("2021-04-08"))).toEqual("Week 14 of 2021");
+            expect(period.formatLong(new Date("2021-04-08"))).toBe("Week 14 of 2021");
         });
 
         it("should format the time in a short format", () => {
@@ -43,7 +43,7 @@ describe("time-period-week", () => {
                 createVueGettextProviderPassthrough()
             );
 
-            expect(period.formatShort(new Date("2021-04-08"))).toEqual("W14");
+            expect(period.formatShort(new Date("2021-04-08"))).toBe("W14");
         });
     });
 

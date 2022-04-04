@@ -46,7 +46,7 @@ describe("BurnupChartDrawer", () => {
             } as GenericBurnupData;
 
             const total = getTotal(generic);
-            expect(total).toEqual(20);
+            expect(total).toBe(20);
         });
 
         it("When points are null, Then capacity returns", () => {
@@ -56,7 +56,7 @@ describe("BurnupChartDrawer", () => {
             } as GenericBurnupData;
 
             const total = getTotal(generic);
-            expect(total).toEqual(30);
+            expect(total).toBe(30);
         });
 
         it("When points and capacity are null, Then DEFAULT_TOTAL_EFFORT returns", () => {
@@ -66,7 +66,7 @@ describe("BurnupChartDrawer", () => {
             } as GenericBurnupData;
 
             const total = getTotal(generic);
-            expect(total).toEqual(5);
+            expect(total).toBe(5);
         });
     });
     describe("createBurnupChart", () => {

@@ -162,7 +162,7 @@ describe("GanttTask", () => {
             );
 
             const arrows = wrapper.findAllComponents(DependencyArrow);
-            expect(arrows.length).toBe(expected_displayed_dependencies.length);
+            expect(arrows).toHaveLength(expected_displayed_dependencies.length);
 
             expected_displayed_dependencies.forEach((expected, index): void => {
                 expect(arrows.at(index).props("dependency")).toBe(expected);
@@ -180,7 +180,7 @@ describe("GanttTask", () => {
         );
 
         const arrows = wrapper.findAllComponents(DependencyArrow);
-        expect(arrows.length).toBe(0);
+        expect(arrows).toHaveLength(0);
     });
 
     it("Display arrow when task is closed and closed items are not shown", () => {
@@ -194,7 +194,7 @@ describe("GanttTask", () => {
         );
 
         const arrows = wrapper.findAllComponents(DependencyArrow);
-        expect(arrows.length).toBe(1);
+        expect(arrows).toHaveLength(1);
     });
 
     it("should display an arrow even if the dependency is displayed more than once because it is a subtask with multiple parents", () => {
@@ -210,7 +210,7 @@ describe("GanttTask", () => {
         );
 
         const arrows = wrapper.findAllComponents(DependencyArrow);
-        expect(arrows.length).toBe(2);
+        expect(arrows).toHaveLength(2);
 
         expect(arrows.at(0).props("dependency")).toStrictEqual(dep_1);
         expect(arrows.at(1).props("dependency")).toStrictEqual(dep_2);

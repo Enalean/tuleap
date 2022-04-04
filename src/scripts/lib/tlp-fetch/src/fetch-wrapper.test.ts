@@ -171,11 +171,11 @@ describe(`fetch-wrapper`, () => {
                 const expected_results_in_order = batch_A.concat(batch_B).concat(batch_C);
                 expect(results).toEqual(expected_results_in_order);
 
-                expect(globalFetch.mock.calls.length).toBe(3);
+                expect(globalFetch.mock.calls).toHaveLength(3);
                 const [, ...later_calls] = globalFetch.mock.calls;
                 later_calls.forEach((call) => {
                     const [, second_parameter] = call;
-                    expect(second_parameter.params.limit).toEqual(2);
+                    expect(second_parameter.params.limit).toBe(2);
                     expect([2, 4]).toContain(second_parameter.params.offset);
                 });
             });
@@ -268,7 +268,7 @@ describe(`fetch-wrapper`, () => {
                 })
             );
             const json = await response.json();
-            expect(json.value).toEqual("success");
+            expect(json.value).toBe("success");
         }
     );
 
@@ -318,7 +318,7 @@ describe(`fetch-wrapper`, () => {
                     credentials: "same-origin",
                 })
             );
-            expect(result.headers.get("X-PAGINATION-SIZE")).toEqual("2");
+            expect(result.headers.get("X-PAGINATION-SIZE")).toBe("2");
         }
     );
 

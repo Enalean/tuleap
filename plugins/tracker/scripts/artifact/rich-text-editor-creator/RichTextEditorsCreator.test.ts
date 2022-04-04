@@ -75,7 +75,7 @@ describe(`RichTextEditorsCreator`, () => {
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];
 
-                expect(options.format_selectbox_id).toEqual("new");
+                expect(options.format_selectbox_id).toBe("new");
             });
 
             it(`sets up the onEditorInit callback`, () => {
@@ -161,8 +161,8 @@ describe(`RichTextEditorsCreator`, () => {
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const options = createRichTextEditor.mock.calls[0][1];
 
-                expect(options.format_selectbox_id).toEqual("field_1234");
-                expect(options.format_selectbox_name).toEqual("artifact[1234][format]");
+                expect(options.format_selectbox_id).toBe("field_1234");
+                expect(options.format_selectbox_name).toBe("artifact[1234][format]");
                 expect(options.format_selectbox_value).toEqual(TEXT_FORMAT_COMMONMARK);
             });
 
@@ -188,14 +188,14 @@ describe(`RichTextEditorsCreator`, () => {
                 expect(createRichTextEditor).toHaveBeenCalled();
                 const first_options = createRichTextEditor.mock.calls[0][1];
 
-                expect(first_options.format_selectbox_id).toEqual("field_1234");
-                expect(first_options.format_selectbox_name).toEqual("artifact[1234][format]");
+                expect(first_options.format_selectbox_id).toBe("field_1234");
+                expect(first_options.format_selectbox_name).toBe("artifact[1234][format]");
                 expect(first_options.format_selectbox_value).toEqual(TEXT_FORMAT_HTML);
 
                 const second_options = createRichTextEditor.mock.calls[1][1];
 
-                expect(second_options.format_selectbox_id).toEqual("field_4567");
-                expect(second_options.format_selectbox_name).toEqual("artifact[4567][format]");
+                expect(second_options.format_selectbox_id).toBe("field_4567");
+                expect(second_options.format_selectbox_name).toBe("artifact[4567][format]");
                 expect(second_options.format_selectbox_value).toEqual(TEXT_FORMAT_TEXT);
             });
         });

@@ -85,8 +85,8 @@ describe("ReviewersService", () => {
 
             const result = await promise;
 
-            expect(result.length).toEqual(2);
-            expect(result[1].username).toEqual("ipsum");
+            expect(result).toHaveLength(2);
+            expect(result[1].username).toBe("ipsum");
         });
     });
 
@@ -147,7 +147,7 @@ describe("ReviewersService", () => {
             $httpBackend.flush();
 
             const result = await wrapPromise(promise);
-            expect(result.status).toEqual(204);
+            expect(result.status).toBe(204);
         });
 
         it("Give a pull request and user representations with wrong permissions, then it will call a REST route and open error modal", async () => {

@@ -99,10 +99,10 @@ describe("UpdatePropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.owner.id).toEqual(101);
+        expect(wrapper.vm.item_to_update.owner.id).toBe(101);
 
         emitter.emit("update-owner-property", 200);
-        expect(wrapper.vm.item_to_update.owner.id).toEqual(200);
+        expect(wrapper.vm.item_to_update.owner.id).toBe(200);
     });
 
     it("Transform item property rest representation", () => {
@@ -169,10 +169,10 @@ describe("UpdatePropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.status).toEqual("rejected");
+        expect(wrapper.vm.item_to_update.status).toBe("rejected");
 
         emitter.emit("update-status-property", "draft");
-        expect(wrapper.vm.item_to_update.status).toEqual("draft");
+        expect(wrapper.vm.item_to_update.status).toBe("draft");
     });
 
     it("Updates title", () => {
@@ -194,10 +194,10 @@ describe("UpdatePropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.title).toEqual("A folder");
+        expect(wrapper.vm.item_to_update.title).toBe("A folder");
 
         emitter.emit("update-title-property", "A folder updated");
-        expect(wrapper.vm.item_to_update.title).toEqual("A folder updated");
+        expect(wrapper.vm.item_to_update.title).toBe("A folder updated");
     });
 
     it("Updates description", () => {
@@ -219,9 +219,9 @@ describe("UpdatePropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.description).toEqual("A custom description");
+        expect(wrapper.vm.item_to_update.description).toBe("A custom description");
 
         emitter.emit("update-description-property", "A description");
-        expect(wrapper.vm.item_to_update.description).toEqual("A description");
+        expect(wrapper.vm.item_to_update.description).toBe("A description");
     });
 });

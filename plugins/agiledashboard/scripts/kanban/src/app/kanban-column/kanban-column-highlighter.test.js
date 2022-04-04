@@ -57,7 +57,7 @@ describe("highlightColumn() -", () => {
 
         highlightColumn($scope, artifact, kanban);
 
-        expect(kanban.backlog.have_new_item).toBe(undefined);
+        expect(kanban.backlog.have_new_item).toBeUndefined();
     });
 
     it(`Given item is added in archive column and given column is closed
@@ -97,7 +97,7 @@ describe("highlightColumn() -", () => {
 
         highlightColumn($scope, artifact, kanban);
 
-        expect(kanban.archive.have_new_item).toBe(undefined);
+        expect(kanban.archive.have_new_item).toBeUndefined();
     });
 
     it(`Given item is added in a column and given column is closed
@@ -133,6 +133,6 @@ describe("highlightColumn() -", () => {
 
         highlightColumn($scope, artifact, kanban);
 
-        expect(kanban.columns[0].have_new_item).toBe(undefined);
+        expect(kanban.columns[0].have_new_item).toBeUndefined();
     });
 });

@@ -37,8 +37,8 @@ describe("accessibility-helper", () => {
         (is_accessibility_mode_enabled: boolean) => {
             const classes = getAccessibilityClasses(user_story, is_accessibility_mode_enabled);
 
-            expect(classes.includes("element-card-red-wine")).toBe(true);
-            expect(classes.includes("element-card-background-lemon-green")).toBe(true);
+            expect(classes).toContain("element-card-red-wine");
+            expect(classes).toContain("element-card-background-lemon-green");
             expect(classes.includes("element-card-with-accessibility")).toBe(
                 is_accessibility_mode_enabled
             );

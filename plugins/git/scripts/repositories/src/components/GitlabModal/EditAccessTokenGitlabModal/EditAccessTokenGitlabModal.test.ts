@@ -75,7 +75,7 @@ describe("EditAccessTokenGitlabModal", () => {
         wrapper.findComponent(AccessTokenFormModal).vm.$emit("on-close-modal");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.repository).toEqual(null);
+        expect(wrapper.vm.$data.repository).toBeNull();
     });
 
     it("When CredentialsFormModal emits on-get-new-token-gitlab, Then ConfirmReplaceTokenModal is rendered", async () => {
@@ -97,9 +97,9 @@ describe("EditAccessTokenGitlabModal", () => {
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();
-        expect(
-            wrapper.findComponent(ConfirmReplaceTokenModal).attributes().gitlab_new_token
-        ).toEqual("azert123");
+        expect(wrapper.findComponent(ConfirmReplaceTokenModal).attributes().gitlab_new_token).toBe(
+            "azert123"
+        );
     });
 
     it("When ConfirmReplaceTokenModal emits on-success-edit-token, Then data are reset and success message is displayed", async () => {
@@ -125,7 +125,7 @@ describe("EditAccessTokenGitlabModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.repository).toBeNull();
-        expect(wrapper.vm.$data.gitlab_new_token).toEqual("");
+        expect(wrapper.vm.$data.gitlab_new_token).toBe("");
 
         expect(store.commit).toHaveBeenCalledWith(
             "setSuccessMessage",
@@ -158,13 +158,13 @@ describe("EditAccessTokenGitlabModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeTruthy();
-        expect(wrapper.findComponent(AccessTokenFormModal).attributes().gitlab_token).toEqual(
+        expect(wrapper.findComponent(AccessTokenFormModal).attributes().gitlab_token).toBe(
             "azert123"
         );
 
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeFalsy();
 
         expect(wrapper.vm.$data.repository).toEqual(repository);
-        expect(wrapper.vm.$data.gitlab_new_token).toEqual("azert123");
+        expect(wrapper.vm.$data.gitlab_new_token).toBe("azert123");
     });
 });

@@ -63,7 +63,7 @@ describe(`TextEditor`, () => {
             textarea.value = `<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>`;
             editor.init(TEXT_FORMAT_HTML);
             expect(markdown_converter.convert).not.toHaveBeenCalled();
-            expect(textarea.value).toEqual(
+            expect(textarea.value).toBe(
                 "<p>HTML</p>\t<ul>\t<li><strong>List</strong>\t<ul>\t\t<li>element</li>\t</ul>\t</li></ul>"
             );
         });
@@ -166,7 +166,7 @@ describe(`TextEditor`, () => {
                 editor.onFormatChange(TEXT_FORMAT_HTML);
 
                 expect(markdown_renderer.render).toHaveBeenCalledWith("**markdown** content");
-                expect(ckeditor_instance.getData()).toEqual(`<p>Some HTML content</p>`);
+                expect(ckeditor_instance.getData()).toBe(`<p>Some HTML content</p>`);
             });
         });
 
@@ -189,7 +189,7 @@ describe(`TextEditor`, () => {
                 expect(markdown_converter.convert).toHaveBeenCalledWith(
                     `<p><strong>HTML</strong> content</p>`
                 );
-                expect(textarea.value).toEqual("**markdown** content");
+                expect(textarea.value).toBe("**markdown** content");
             });
         });
 

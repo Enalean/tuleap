@@ -46,8 +46,8 @@ describe(`ReactiveLabelCollection`, () => {
         input_element.value = "iteration";
         collection.reactOnLabelChange((text, index, length) => text + " " + (length - index));
 
-        expect(first_node.textContent).toEqual("iteration 2");
-        expect(second_node.textContent).toEqual("iteration 1");
+        expect(first_node.textContent).toBe("iteration 2");
+        expect(second_node.textContent).toBe("iteration 1");
     });
 
     describe(`when its TimeboxLabel has an input`, () => {
@@ -63,8 +63,8 @@ describe(`ReactiveLabelCollection`, () => {
             input_element.value = "release";
             input_element.dispatchEvent(new InputEvent("input"));
 
-            expect(first_node.textContent).toEqual("release 2");
-            expect(second_node.textContent).toEqual("release 1");
+            expect(first_node.textContent).toBe("release 2");
+            expect(second_node.textContent).toBe("release 1");
         });
 
         it(`does not react when told to stop reacting`, () => {
@@ -81,8 +81,8 @@ describe(`ReactiveLabelCollection`, () => {
             input_element.value = "release";
             input_element.dispatchEvent(new InputEvent("input"));
 
-            expect(first_node.textContent).toEqual("iteration 2");
-            expect(second_node.textContent).toEqual("iteration 1");
+            expect(first_node.textContent).toBe("iteration 2");
+            expect(second_node.textContent).toBe("iteration 1");
         });
     });
 });

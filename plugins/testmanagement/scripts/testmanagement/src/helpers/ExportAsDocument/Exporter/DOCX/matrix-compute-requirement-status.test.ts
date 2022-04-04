@@ -25,7 +25,7 @@ describe("matrix-compute-requirement-status", () => {
         it("should return null if there is not tests linked to the requirement", () => {
             const result = computeRequirementStatus([]);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it("should return 'failed' if there is at least one linked test to the requirement set to 'failed'", () => {

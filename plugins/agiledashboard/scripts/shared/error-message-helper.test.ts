@@ -25,7 +25,7 @@ describe(`error-message-helper`, () => {
         it(`when there is no "response" property in the error object,
             it will return the error's message`, async () => {
             const result = await extractErrorMessage(new Error("Some other type of error"));
-            expect(result).toEqual("Some other type of error");
+            expect(result).toBe("Some other type of error");
         });
 
         it(`when the error response cannot be parsed as JSON,
@@ -38,7 +38,7 @@ describe(`error-message-helper`, () => {
             const result = await extractErrorMessage(
                 new FetchWrapperError("Internal Server Error", response)
             );
-            expect(result).toEqual("Internal Server Error");
+            expect(result).toBe("Internal Server Error");
         });
 
         it(`when there is no "error.message" property in the JSON body,
@@ -51,7 +51,7 @@ describe(`error-message-helper`, () => {
             const result = await extractErrorMessage(
                 new FetchWrapperError("Bad Request", response)
             );
-            expect(result).toEqual("Bad Request");
+            expect(result).toBe("Bad Request");
         });
 
         it(`when there is an "error.message" property in the JSON body,
@@ -64,7 +64,7 @@ describe(`error-message-helper`, () => {
             const result = await extractErrorMessage(
                 new FetchWrapperError("Bad Request", response)
             );
-            expect(result).toEqual(`Missing property "query"`);
+            expect(result).toBe(`Missing property "query"`);
         });
     });
 });

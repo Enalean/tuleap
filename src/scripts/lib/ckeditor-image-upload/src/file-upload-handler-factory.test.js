@@ -176,7 +176,7 @@ describe(`file-upload-handler-factory`, () => {
 
                     const handler = handlerFactory();
                     await expect(handler(file_upload_event)).rejects.toBeDefined();
-                    expect(loader.message).toEqual("Problème durant le téléversement");
+                    expect(loader.message).toBe("Problème durant le téléversement");
                     expect(loader.changeStatus).toHaveBeenCalledWith("error");
                 });
 
@@ -191,7 +191,7 @@ describe(`file-upload-handler-factory`, () => {
 
                     const handler = handlerFactory();
                     await expect(handler(file_upload_event)).rejects.toBeDefined();
-                    expect(loader.message).toEqual("Untranslated error message");
+                    expect(loader.message).toBe("Untranslated error message");
                     expect(loader.changeStatus).toHaveBeenCalledWith("error");
                 });
             });
@@ -212,9 +212,9 @@ describe(`file-upload-handler-factory`, () => {
                     const handler = handlerFactory();
                     await handler(file_upload_event);
 
-                    expect(loader.uploaded).toEqual(1);
-                    expect(loader.fileName).toEqual("pentacyanic.jpg");
-                    expect(loader.url).toEqual("https://example.com/download_url");
+                    expect(loader.uploaded).toBe(1);
+                    expect(loader.fileName).toBe("pentacyanic.jpg");
+                    expect(loader.url).toBe("https://example.com/download_url");
                     expect(loader.changeStatus).toHaveBeenCalledWith("uploaded");
                 });
 
@@ -267,8 +267,8 @@ describe(`file-upload-handler-factory`, () => {
                         TUS.Upload.mockImplementation((file, config) => ({
                             start: () => {
                                 config.onProgress(256, 1024);
-                                expect(loader.uploadTotal).toEqual(1024);
-                                expect(loader.uploaded).toEqual(256);
+                                expect(loader.uploadTotal).toBe(1024);
+                                expect(loader.uploaded).toBe(256);
                                 expect(loader.update).toHaveBeenCalled();
 
                                 config.onSuccess();
@@ -291,9 +291,9 @@ describe(`file-upload-handler-factory`, () => {
                             const handler = handlerFactory();
                             await handler(file_upload_event);
 
-                            expect(loader.uploaded).toEqual(1);
-                            expect(loader.fileName).toEqual("pentacyanic.jpg");
-                            expect(loader.url).toEqual("https://example.com/download_url");
+                            expect(loader.uploaded).toBe(1);
+                            expect(loader.fileName).toBe("pentacyanic.jpg");
+                            expect(loader.url).toBe("https://example.com/download_url");
                             expect(loader.changeStatus).toHaveBeenCalledWith("uploaded");
                         });
 
@@ -344,7 +344,7 @@ describe(`file-upload-handler-factory`, () => {
 
                             const handler = handlerFactory();
                             await expect(handler(file_upload_event)).rejects.toBe(error);
-                            expect(loader.message).toEqual("Translated error message");
+                            expect(loader.message).toBe("Translated error message");
                             expect(options.onErrorCallback).toHaveBeenCalledWith(
                                 new UploadError(loader)
                             );
@@ -361,7 +361,7 @@ describe(`file-upload-handler-factory`, () => {
 
                             const handler = handlerFactory();
                             await expect(handler(file_upload_event)).rejects.toBe(error);
-                            expect(loader.message).toEqual("Error 500");
+                            expect(loader.message).toBe("Error 500");
                             expect(options.onErrorCallback).toHaveBeenCalledWith(
                                 new UploadError(loader)
                             );

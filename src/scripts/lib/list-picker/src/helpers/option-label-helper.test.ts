@@ -26,14 +26,14 @@ describe("option-label-helper", () => {
             const option = document.createElement("option");
             option.innerText = "GR-4 Yaris";
             option.setAttribute("label", "4WD");
-            expect(getOptionsLabel(option)).toEqual("GR-4 Yaris");
+            expect(getOptionsLabel(option)).toBe("GR-4 Yaris");
         });
 
         it("should return the label of the option if the option has no text", function () {
             const option = document.createElement("option");
             option.innerText = "";
             option.setAttribute("label", "4WD");
-            expect(getOptionsLabel(option)).toEqual("4WD");
+            expect(getOptionsLabel(option)).toBe("4WD");
         });
     });
 });

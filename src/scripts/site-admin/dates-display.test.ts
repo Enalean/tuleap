@@ -108,26 +108,26 @@ describe("dates display", (): void => {
         });
 
         it("inits the <tlp-relative-date> element", () => {
-            expect(relative_date.preference).toEqual("absolute");
-            expect(relative_date.placement).toEqual("right");
+            expect(relative_date.preference).toBe("absolute");
+            expect(relative_date.placement).toBe("right");
 
             listenToPreferenceChange(doc);
 
-            expect(relative_date.preference).toEqual("relative");
-            expect(relative_date.placement).toEqual("right");
+            expect(relative_date.preference).toBe("relative");
+            expect(relative_date.placement).toBe("right");
         });
 
         it("updates the <tlp-relative-dates> preference and placement", () => {
             listenToPreferenceChange(doc);
 
-            expect(relative_date.preference).toEqual("relative");
-            expect(relative_date.placement).toEqual("right");
+            expect(relative_date.preference).toBe("relative");
+            expect(relative_date.placement).toBe("right");
 
             selectbox.selectedIndex = 1;
             selectbox.dispatchEvent(new Event("change"));
 
-            expect(relative_date.preference).toEqual("absolute");
-            expect(relative_date.placement).toEqual("tooltip");
+            expect(relative_date.preference).toBe("absolute");
+            expect(relative_date.placement).toBe("tooltip");
         });
     });
 });

@@ -30,12 +30,12 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         addTick(chart, 15, "Oct 2019", 50, 70);
 
         let displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(3);
+        expect(displayed_ticks).toHaveLength(3);
 
         removeAllLabelsOverlapsOthersLabels(chart);
 
         displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(3);
+        expect(displayed_ticks).toHaveLength(3);
     });
 
     it("When some ticks overlaps others ticks, Then there are deleted", () => {
@@ -46,12 +46,12 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         addTick(chart, 15, "Oct 2019", 25, 40);
 
         let displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(3);
+        expect(displayed_ticks).toHaveLength(3);
 
         removeAllLabelsOverlapsOthersLabels(chart);
 
         displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(2);
+        expect(displayed_ticks).toHaveLength(2);
     });
 
     it("When 2 ticks don't touch each other, Then no ticks are removed", () => {
@@ -61,12 +61,12 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         addTick(chart, 15, "Sept 2019", 30, 50);
 
         let displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(2);
+        expect(displayed_ticks).toHaveLength(2);
 
         removeAllLabelsOverlapsOthersLabels(chart);
 
         displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(2);
+        expect(displayed_ticks).toHaveLength(2);
     });
 
     it("When 3 ticks touch each other, Then 1 tick is removed", () => {
@@ -77,12 +77,12 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         addTick(chart, 15, "Oct 2019", 20, 30);
 
         let displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(3);
+        expect(displayed_ticks).toHaveLength(3);
 
         removeAllLabelsOverlapsOthersLabels(chart);
 
         displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(1);
+        expect(displayed_ticks).toHaveLength(1);
     });
 
     it("When 3 ticks touch each other and another ticks further, Then 1 tick is removed", () => {
@@ -94,12 +94,12 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         addTick(chart, 15, "Nov 2019", 30, 40);
 
         let displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(4);
+        expect(displayed_ticks).toHaveLength(4);
 
         removeAllLabelsOverlapsOthersLabels(chart);
 
         displayed_ticks = chart.selectAll(`.chart-x-axis > .tick`).nodes();
-        expect(displayed_ticks.length).toEqual(2);
+        expect(displayed_ticks).toHaveLength(2);
     });
 
     function addTick(

@@ -287,7 +287,7 @@ describe("execution-attachments-component", () => {
             expect(attachments_uploader.abortFileUpload).toHaveBeenCalledWith(
                 file_uploading.upload_url
             );
-            expect(execution.uploaded_files_through_attachment_area.length).toEqual(0);
+            expect(execution.uploaded_files_through_attachment_area).toHaveLength(0);
         });
     });
 

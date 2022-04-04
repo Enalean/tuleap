@@ -98,7 +98,7 @@ describe("ListOfTestDefinitions", () => {
             has_test_definitions_loading_error: false,
         } as BacklogItem);
 
-        expect(wrapper.findAllComponents(TestDefinitionCard).length).toBe(2);
+        expect(wrapper.findAllComponents(TestDefinitionCard)).toHaveLength(2);
     });
 
     it("Displays skeletons even if there are test definitions to show loading indication", async () => {

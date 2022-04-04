@@ -56,7 +56,7 @@ describe("Report cells", () => {
         const cell = new TextCell("Text");
         const cell_with_comment = cell.withComment("A comment").withComment("A comment 2");
 
-        expect(cell.comment).toBe(undefined);
+        expect(cell.comment).toBeUndefined();
         expect(cell_with_comment).toEqual({ type: "text", value: "Text", comment: "A comment 2" });
     });
 });

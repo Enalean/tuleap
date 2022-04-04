@@ -68,7 +68,7 @@ describe("form-field-error-helper", () => {
 
             expect(doc.body.classList).toContain("tlp-form-element-error");
             expect(doc.body.childElementCount).toBe(2);
-            expect(doc.body.children[1].textContent).toEqual("This field is mandatory");
+            expect(doc.body.children[1].textContent).toBe("This field is mandatory");
         });
     });
 });

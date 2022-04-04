@@ -72,7 +72,7 @@ describe("task-retriever", () => {
 
             const tasks = await retrieveTasks();
 
-            expect(tasks.length).toBe(0);
+            expect(tasks).toHaveLength(0);
         });
 
         it("Keeps tasks with no start and end dates and a time period error message so we can display it", async () => {
@@ -91,7 +91,7 @@ describe("task-retriever", () => {
 
             const tasks = await retrieveTasks();
 
-            expect(tasks.length).toBe(1);
+            expect(tasks).toHaveLength(1);
         });
 
         it("Marks a task as a milestone if it does not have a start date", async () => {

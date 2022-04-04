@@ -125,7 +125,7 @@ describe("UsersOpenListFieldController", () => {
 
             var result = UsersOpenListFieldController.templateUserResult(searching_result);
 
-            expect(result).toEqual("searching...");
+            expect(result).toBe("searching...");
         });
 
         it("Given a user result coming from the REST route, a class will be added to the container and a template will be rendered for it", function () {
@@ -164,7 +164,7 @@ describe("UsersOpenListFieldController", () => {
             expect($rootScope.$new).toHaveBeenCalled();
             expect($compile).toHaveBeenCalled();
             expect($compileSecondStep).toHaveBeenCalledWith(isolate_scope);
-            expect(result).toEqual("compiled template");
+            expect(result).toBe("compiled template");
             expect(classList_add).toHaveBeenCalled();
         });
     });
@@ -199,7 +199,7 @@ describe("UsersOpenListFieldController", () => {
             expect($rootScope.$new).toHaveBeenCalled();
             expect($compile).toHaveBeenCalled();
             expect($compileSecondStep).toHaveBeenCalledWith(isolate_scope);
-            expect(result).toEqual("compiled template");
+            expect(result).toBe("compiled template");
         });
 
         it("Given a user selection with only an ID (coming from the template ng-repeat), then the user's data from the value model will be used and a template will be rendered with it", function () {
@@ -230,7 +230,7 @@ describe("UsersOpenListFieldController", () => {
             expect($rootScope.$new).toHaveBeenCalled();
             expect($compile).toHaveBeenCalled();
             expect($compileSecondStep).toHaveBeenCalledWith(isolate_scope);
-            expect(result).toEqual("compiled template");
+            expect(result).toBe("compiled template");
         });
 
         it("Given a user selection with only a text (anonymous user coming from the template ng-repeat), then the user's data from the value model will be used and a template will be rendered with it", function () {
@@ -263,7 +263,7 @@ describe("UsersOpenListFieldController", () => {
             expect($rootScope.$new).toHaveBeenCalled();
             expect($compile).toHaveBeenCalled();
             expect($compileSecondStep).toHaveBeenCalledWith(isolate_scope);
-            expect(result).toEqual("compiled template");
+            expect(result).toBe("compiled template");
         });
     });
 
@@ -542,7 +542,7 @@ describe("UsersOpenListFieldController", () => {
 
             var result = UsersOpenListFieldController.newAnonymousUser(new_open_value);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it("Given a string, then it returns an object with 'id', 'display_name', 'email' and 'is_anonymous' attributes", function () {

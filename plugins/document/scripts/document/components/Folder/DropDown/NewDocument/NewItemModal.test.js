@@ -151,7 +151,7 @@ describe("NewItemModal", () => {
         const wrapper = factory({ item });
 
         emitter.emit("update-status-property", "draft");
-        expect(wrapper.vm.item.status).toEqual("draft");
+        expect(wrapper.vm.item.status).toBe("draft");
     });
 
     it("Updates title", () => {
@@ -174,7 +174,7 @@ describe("NewItemModal", () => {
         const wrapper = factory({ item });
 
         emitter.emit("update-title-property", "A folder");
-        expect(wrapper.vm.item.title).toEqual("A folder");
+        expect(wrapper.vm.item.title).toBe("A folder");
     });
 
     it("Updates description", () => {
@@ -197,6 +197,6 @@ describe("NewItemModal", () => {
         const wrapper = factory({ item });
 
         emitter.emit("update-description-property", "A description");
-        expect(wrapper.vm.item.description).toEqual("A description");
+        expect(wrapper.vm.item.description).toBe("A description");
     });
 });

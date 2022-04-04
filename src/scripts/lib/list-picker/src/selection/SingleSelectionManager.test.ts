@@ -77,7 +77,7 @@ describe("SingleSelectionManager", () => {
 
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(selection_container.querySelector(".list-picker-selected-value")).not.toBeNull();
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(item_1.target_option.hasAttribute("selected")).toBe(true);
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
@@ -89,7 +89,7 @@ describe("SingleSelectionManager", () => {
 
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(selection_container.querySelector(".list-picker-selected-value")).toBeNull();
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("false");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
             expect(item_1.target_option.hasAttribute("selected")).toBe(false);
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
@@ -103,7 +103,7 @@ describe("SingleSelectionManager", () => {
 
             manager.processSelection(item_1.element);
 
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
 
@@ -124,7 +124,7 @@ describe("SingleSelectionManager", () => {
             expect(selected_value).not.toBeNull();
             expect(selected_value?.textContent).toContain("Value 1");
             expect(item_1.is_selected).toBe(true);
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(item_1.target_option.hasAttribute("selected")).toBe(true);
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
         });
@@ -137,11 +137,11 @@ describe("SingleSelectionManager", () => {
             expect(selected_value).not.toBeNull();
             expect(selected_value?.textContent).toContain("Value 2");
 
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("false");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
             expect(item_1.is_selected).toBe(false);
             expect(item_1.target_option.hasAttribute("selected")).toBe(false);
 
-            expect(item_2.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_2.element.getAttribute("aria-selected")).toBe("true");
             expect(item_2.is_selected).toBe(true);
             expect(item_2.target_option.hasAttribute("selected")).toBe(true);
 
@@ -157,7 +157,7 @@ describe("SingleSelectionManager", () => {
             manager.processSelection(item_1.element);
 
             expect(item_1.is_selected).toBe(true);
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(selection_container.contains(placeholder)).toBe(false);
 
             expect(item_1.target_option.hasAttribute("selected")).toBe(true);
@@ -171,7 +171,7 @@ describe("SingleSelectionManager", () => {
             // Now unselect the item
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
             expect(item_1.is_selected).toBe(false);
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("false");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
             expect(item_1.target_option.hasAttribute("selected")).toBe(false);
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(dropdown_manager.openListPicker).toHaveBeenCalled();
@@ -191,7 +191,7 @@ describe("SingleSelectionManager", () => {
             }
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
             expect(item_1.is_selected).toBe(true);
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(item_1.target_option.hasAttribute("selected")).toBe(true);
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(dropdown_manager.openListPicker).not.toHaveBeenCalled();
@@ -206,7 +206,7 @@ describe("SingleSelectionManager", () => {
             manager.resetAfterDependenciesUpdate();
 
             expect(item_1.is_selected).toBe(false);
-            expect(item_1.element.getAttribute("aria-selected")).toEqual("false");
+            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
             expect(item_1.target_option.getAttribute("selected")).toBeNull();
             expect(selection_container.contains(placeholder)).toBe(true);
         });
@@ -234,8 +234,8 @@ describe("SingleSelectionManager", () => {
                 "list-picker-item-new-option-0"
             );
             expect(first_item.is_selected).toBe(true);
-            expect(first_item.element.getAttribute("aria-selected")).toEqual("true");
-            expect(first_item.target_option.getAttribute("selected")).toEqual("selected");
+            expect(first_item.element.getAttribute("aria-selected")).toBe("true");
+            expect(first_item.target_option.getAttribute("selected")).toBe("selected");
             expect(selection_container.contains(placeholder)).toBe(false);
         });
 
@@ -277,8 +277,8 @@ describe("SingleSelectionManager", () => {
 
             const new_item_1 = items_map_manager.findListPickerItemInItemMap(item_1.id);
             expect(new_item_1.is_selected).toBe(true);
-            expect(new_item_1.element.getAttribute("aria-selected")).toEqual("true");
-            expect(new_item_1.target_option.getAttribute("selected")).toEqual("selected");
+            expect(new_item_1.element.getAttribute("aria-selected")).toBe("true");
+            expect(new_item_1.target_option.getAttribute("selected")).toBe("selected");
             expect(selection_container.contains(placeholder)).toBe(false);
         });
 
@@ -300,8 +300,8 @@ describe("SingleSelectionManager", () => {
                 "list-picker-item-new-option-0"
             );
             expect(item_0.is_selected).toBe(true);
-            expect(item_0.element.getAttribute("aria-selected")).toEqual("true");
-            expect(item_0.target_option.getAttribute("selected")).toEqual("selected");
+            expect(item_0.element.getAttribute("aria-selected")).toBe("true");
+            expect(item_0.target_option.getAttribute("selected")).toBe("selected");
             expect(selection_container.contains(placeholder)).toBe(false);
         });
     });

@@ -39,7 +39,7 @@ describe("BurndownChartDrawer -", () => {
                 capacity: 10,
             } as BurndownData);
 
-            expect(max_remaining_effort).toEqual(15);
+            expect(max_remaining_effort).toBe(15);
         });
 
         it("Returns capacity if it is greater than the biggest remaining effort", () => {
@@ -48,7 +48,7 @@ describe("BurndownChartDrawer -", () => {
                 capacity: 20,
             } as BurndownData);
 
-            expect(max_remaining_effort).toEqual(20);
+            expect(max_remaining_effort).toBe(20);
         });
 
         it("When there are some remaining effort and no capacity, Then the biggest remaining effort is returned", () => {
@@ -57,7 +57,7 @@ describe("BurndownChartDrawer -", () => {
                 capacity: null,
             } as BurndownData);
 
-            expect(max_remaining_effort).toEqual(15);
+            expect(max_remaining_effort).toBe(15);
         });
 
         it("When there aren't capacity and remaining effort, Then 5 is returned", () => {
@@ -66,7 +66,7 @@ describe("BurndownChartDrawer -", () => {
                 capacity: null,
             } as BurndownData);
 
-            expect(max_remaining_effort).toEqual(5);
+            expect(max_remaining_effort).toBe(5);
         });
 
         it("When there aren't remaining effort but there is capacity, Then capacity is returned", () => {
@@ -75,7 +75,7 @@ describe("BurndownChartDrawer -", () => {
                 capacity: 100,
             } as BurndownData);
 
-            expect(max_remaining_effort).toEqual(100);
+            expect(max_remaining_effort).toBe(100);
         });
 
         it("When capacity and remaining effort are 0, Then 5 is returned", () => {
@@ -84,7 +84,7 @@ describe("BurndownChartDrawer -", () => {
                 capacity: 0,
             } as BurndownData);
 
-            expect(max_remaining_effort).toEqual(5);
+            expect(max_remaining_effort).toBe(5);
         });
     });
 
@@ -107,7 +107,7 @@ describe("BurndownChartDrawer -", () => {
             );
 
             expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
-            expect(chart_svg_element.childElementCount).toEqual(1);
+            expect(chart_svg_element.childElementCount).toBe(1);
         });
 
         it("When the last point has 0 remaining effort, Then there isn't badge", () => {
@@ -120,7 +120,7 @@ describe("BurndownChartDrawer -", () => {
             );
 
             expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
-            expect(chart_svg_element.childElementCount).toEqual(1);
+            expect(chart_svg_element.childElementCount).toBe(1);
         });
 
         function getDocument(): HTMLElement {

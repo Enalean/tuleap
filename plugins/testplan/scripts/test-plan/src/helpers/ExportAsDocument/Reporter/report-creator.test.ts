@@ -178,7 +178,7 @@ describe("Create an export report", () => {
         );
 
         expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);
-        expect(report.backlog.length).toBe(3);
-        expect(report.tests.length).toBe(1);
+        expect(report.backlog).toHaveLength(3);
+        expect(report.tests).toHaveLength(1);
     });
 });

@@ -55,7 +55,7 @@ describe("StepOne", () => {
             localVue: await createTrackerCreationLocalVue(),
         });
 
-        expect(wrapper.get("[data-test=platform-template-name]").text()).toEqual(
+        expect(wrapper.get("[data-test=platform-template-name]").text()).toBe(
             "Nichya company templates"
         );
     });
@@ -74,9 +74,7 @@ describe("StepOne", () => {
             localVue: await createTrackerCreationLocalVue(),
         });
 
-        expect(wrapper.get("[data-test=platform-template-name]").text()).toEqual(
-            "Custom templates"
-        );
+        expect(wrapper.get("[data-test=platform-template-name]").text()).toBe("Custom templates");
     });
 
     it(`Does not display custom template block if there is no project_templates`, async () => {

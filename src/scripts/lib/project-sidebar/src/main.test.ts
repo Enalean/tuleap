@@ -23,12 +23,12 @@
 describe("Main instantiation of the Tuleap Project Sidebar element", () => {
     it("instantiates the element", async () => {
         expect(document.head.getElementsByTagName("style")).toHaveLength(0);
-        expect(window.customElements.get("tuleap-project-sidebar")).toBe(undefined);
+        expect(window.customElements.get("tuleap-project-sidebar")).toBeUndefined();
 
         await import("./main");
 
         expect(document.head.getElementsByTagName("style")).toHaveLength(1);
-        expect(window.customElements.get("tuleap-project-sidebar")).not.toBe(undefined);
+        expect(window.customElements.get("tuleap-project-sidebar")).toBeDefined();
     });
 });
 

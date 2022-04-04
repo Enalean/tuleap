@@ -52,7 +52,7 @@ describe("initGettext", () => {
     });
 
     it("does not reject string looking like actual locale ID string", () => {
-        expect(getPOFileFromLocale("fr_FR")).toEqual("fr_FR.po");
+        expect(getPOFileFromLocale("fr_FR")).toBe("fr_FR.po");
     });
 
     it("rejects string that does not look like locale ID string", () => {

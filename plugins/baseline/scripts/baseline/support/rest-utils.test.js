@@ -33,7 +33,7 @@ describe("RestUtils:", () => {
                 result = await getMessageFromException(exception);
             });
 
-            it("returns nothing", () => expect(result).toEqual(null));
+            it("returns nothing", () => expect(result).toBeNull());
         });
 
         describe("with non internationalized exception", () => {
@@ -48,7 +48,7 @@ describe("RestUtils:", () => {
             });
 
             it("returns a non internationalized message", () =>
-                expect(result).toEqual("non internationalized"));
+                expect(result).toBe("non internationalized"));
         });
 
         describe("with internationalized exception", () => {
@@ -65,7 +65,7 @@ describe("RestUtils:", () => {
             });
 
             it("returns an internationalized message", () =>
-                expect(result).toEqual("internationalized message"));
+                expect(result).toBe("internationalized message"));
         });
     });
 });

@@ -75,7 +75,7 @@ describe("CardAssignees", () => {
         const wrapper = await getWrapper({ assignees: [steeve, bob] } as Card);
 
         const avatars = wrapper.findAllComponents(UserAvatar);
-        expect(avatars.length).toBe(2);
+        expect(avatars).toHaveLength(2);
         expect(avatars.at(0).props("user")).toBe(steeve);
         expect(avatars.at(1).props("user")).toBe(bob);
     });
@@ -196,10 +196,10 @@ describe("CardAssignees", () => {
                 wrapper = await getWrapper(card, tracker);
             });
 
-            it("is a button", () => expect(wrapper.attributes("role")).toEqual("button"));
-            it("is focusable", () => expect(wrapper.attributes("tabindex")).toEqual("0"));
+            it("is a button", () => expect(wrapper.attributes("role")).toBe("button"));
+            it("is focusable", () => expect(wrapper.attributes("tabindex")).toBe("0"));
             it("has an aria label", () =>
-                expect(wrapper.attributes("aria-label")).toEqual("Edit assignee"));
+                expect(wrapper.attributes("aria-label")).toBe("Edit assignee"));
         });
 
         describe("When the field assigned_to is multiple, then aria-label is plural", () => {
@@ -213,7 +213,7 @@ describe("CardAssignees", () => {
             });
 
             it("has an aria label", () =>
-                expect(wrapper.attributes("aria-label")).toEqual("Edit assignees"));
+                expect(wrapper.attributes("aria-label")).toBe("Edit assignees"));
         });
 
         describe("When the card is not in edit mode or assignees are not updatable", () => {
@@ -226,9 +226,9 @@ describe("CardAssignees", () => {
                 wrapper = await getWrapper(card, tracker);
             });
 
-            it("is not a button", () => expect(wrapper.attributes("role")).toEqual(undefined));
-            it("is not focusable", () => expect(wrapper.attributes("tabindex")).toEqual("-1"));
-            it("has no aria label", () => expect(wrapper.attributes("aria-label")).toEqual(""));
+            it("is not a button", () => expect(wrapper.attributes("role")).toBeUndefined());
+            it("is not focusable", () => expect(wrapper.attributes("tabindex")).toBe("-1"));
+            it("has no aria label", () => expect(wrapper.attributes("aria-label")).toBe(""));
         });
     });
 });

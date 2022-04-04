@@ -49,7 +49,7 @@ describe("creation properties transformer", () => {
 
         transformStatusPropertyForItemCreation(item, parent, true);
 
-        expect(item.status).toEqual("rejected");
+        expect(item.status).toBe("rejected");
     });
 
     it("Given an existing document, when status is not used, default status is not set regardless of parent configuration", () => {
@@ -77,7 +77,7 @@ describe("creation properties transformer", () => {
 
         transformStatusPropertyForItemCreation(item, parent, false);
 
-        expect(item.status).toEqual(undefined);
+        expect(item.status).toBeUndefined();
     });
 
     it("Given parent has no properties then it returns an empty array", () => {

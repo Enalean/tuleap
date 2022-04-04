@@ -152,10 +152,10 @@ describe(`Initializer`, () => {
                 it(`appends a hidden field on the form`, () => {
                     expect(form.appendChild).toHaveBeenCalled();
                     const input = form.appendChild.mock.calls[0][0];
-                    expect(input.type).toEqual("hidden");
-                    expect(input.name).toEqual("satrapess");
-                    expect(input.value).toEqual("182");
-                    expect(input.dataset.url).toEqual("http://example.com/scenary");
+                    expect(input.type).toBe("hidden");
+                    expect(input.name).toBe("satrapess");
+                    expect(input.value).toBe("182");
+                    expect(input.dataset.url).toBe("http://example.com/scenary");
                 });
 
                 it(`enables back form submits`, () => {

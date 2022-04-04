@@ -45,7 +45,7 @@ describe(`ReactiveLabel`, () => {
         input_element.value = "iteration";
         reactive_label.reactOnLabelChange((text) => "New " + text);
 
-        expect(node.textContent).toEqual("New iteration");
+        expect(node.textContent).toBe("New iteration");
     });
 
     describe(`when its TimeboxLabel has an input`, () => {
@@ -60,7 +60,7 @@ describe(`ReactiveLabel`, () => {
             input_element.value = "release";
             input_element.dispatchEvent(new InputEvent("input"));
 
-            expect(node.textContent).toEqual("New release");
+            expect(node.textContent).toBe("New release");
         });
 
         it(`does not react when told to stop reacting`, () => {
@@ -76,7 +76,7 @@ describe(`ReactiveLabel`, () => {
             input_element.value = "release";
             input_element.dispatchEvent(new InputEvent("input"));
 
-            expect(node.textContent).toEqual("New iteration");
+            expect(node.textContent).toBe("New iteration");
         });
     });
 });

@@ -68,7 +68,7 @@ describe("PlannedIterationsSection", () => {
             await Vue.nextTick();
             await Vue.nextTick();
 
-            expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toEqual(
+            expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toBe(
                 "Guinea Pigs"
             );
         });
@@ -101,9 +101,7 @@ describe("PlannedIterationsSection", () => {
             await Vue.nextTick();
             await Vue.nextTick();
 
-            expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toEqual(
-                "New g-pig"
-            );
+            expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toBe("New g-pig");
         });
     });
 
@@ -162,7 +160,7 @@ describe("PlannedIterationsSection", () => {
 
             const displayed_error = wrapper.find("[data-test=iteration-fetch-error]");
             expect(displayed_error.exists()).toBe(true);
-            expect(displayed_error.text()).toEqual("The retrieval of Guinea Pigs has failed");
+            expect(displayed_error.text()).toBe("The retrieval of Guinea Pigs has failed");
 
             expect(wrapper.findComponent(PlannedIterationsSectionEmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(IterationCard).exists()).toBe(false);

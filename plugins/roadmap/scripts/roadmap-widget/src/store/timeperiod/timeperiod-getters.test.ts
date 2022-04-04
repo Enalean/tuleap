@@ -195,7 +195,7 @@ describe("timeperiod-getters", () => {
             const time_period = getters.time_period(state, { first_date, last_date }, root_state);
 
             expect(time_period).toBeInstanceOf(TimePeriodWeek);
-            expect(time_period.units.length).toBe(8);
+            expect(time_period.units).toHaveLength(8);
         });
 
         it("should return a TimePeriod based on months", () => {
@@ -214,7 +214,7 @@ describe("timeperiod-getters", () => {
             const time_period = getters.time_period(state, { first_date, last_date }, root_state);
 
             expect(time_period).toBeInstanceOf(TimePeriodMonth);
-            expect(time_period.units.length).toBe(4);
+            expect(time_period.units).toHaveLength(4);
         });
 
         it("should return a TimePeriod based on quarters", () => {
@@ -233,7 +233,7 @@ describe("timeperiod-getters", () => {
             const time_period = getters.time_period(state, { first_date, last_date }, root_state);
 
             expect(time_period).toBeInstanceOf(TimePeriodQuarter);
-            expect(time_period.units.length).toBe(3);
+            expect(time_period.units).toHaveLength(3);
         });
     });
 });

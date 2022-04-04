@@ -130,13 +130,13 @@ describe("KanbanService", () => {
                     const promise = methodUnderTest();
                     const response = await wrapPromise(promise);
 
-                    expect(response.total).toEqual("2");
+                    expect(response.total).toBe("2");
                     const first_kanban_item = response.results[0];
-                    expect(first_kanban_item.id).toEqual(94);
+                    expect(first_kanban_item.id).toBe(94);
                     expect(first_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
 
                     const second_kanban_item = response.results[1];
-                    expect(second_kanban_item.id).toEqual(96);
+                    expect(second_kanban_item.id).toBe(96);
                     expect(second_kanban_item.is_collapsed).toBe(should_item_be_collapsed);
 
                     expect(tlpGet).toHaveBeenCalledWith(expected_url, {
@@ -171,7 +171,7 @@ describe("KanbanService", () => {
                 ).mockReturnValue(filter_report_id);
 
                 const promise = methodUnderTest();
-                await expect(wrapPromise(promise)).resolves.toEqual(27);
+                await expect(wrapPromise(promise)).resolves.toBe(27);
                 expect(tlpHead).toHaveBeenCalledWith(expected_url, {
                     params: { ...additional_params, ...query },
                 });
@@ -472,7 +472,7 @@ describe("KanbanService", () => {
             jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
 
             KanbanService.updateKanbanName("modified");
-            expect(kanban.label).toEqual("modified");
+            expect(kanban.label).toBe("modified");
         });
     });
 
@@ -490,7 +490,7 @@ describe("KanbanService", () => {
             KanbanService.removeKanban();
 
             expect(setItem).toHaveBeenCalledWith("tuleap_feedback", expect.any(String));
-            expect($window.location.href).toEqual("/plugins/agiledashboard/?group_id=103");
+            expect($window.location.href).toBe("/plugins/agiledashboard/?group_id=103");
         });
     });
 

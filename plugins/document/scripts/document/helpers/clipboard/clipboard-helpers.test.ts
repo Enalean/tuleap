@@ -23,7 +23,7 @@ import type { Folder, ItemFile } from "../../type";
 
 describe("isItemDestinationIntoItself", () => {
     it("Is into itself when destination and item are the same", () => {
-        expect(isItemDestinationIntoItself([], 3, 3)).toEqual(true);
+        expect(isItemDestinationIntoItself([], 3, 3)).toBe(true);
     });
 
     it("Is into itself when the item is in the destination somewhere in hierarchy", () => {
@@ -45,7 +45,7 @@ describe("isItemDestinationIntoItself", () => {
                 parent_id: 3,
             } as ItemFile,
         ];
-        expect(isItemDestinationIntoItself(folder_content, 2, 4)).toEqual(true);
+        expect(isItemDestinationIntoItself(folder_content, 2, 4)).toBe(true);
     });
 
     it("Is not considered into itself when the parent cannot be found", () => {
@@ -55,7 +55,7 @@ describe("isItemDestinationIntoItself", () => {
                 parent_id: 1,
             } as ItemFile,
         ];
-        expect(isItemDestinationIntoItself(folder_content, 2, 3)).toEqual(false);
+        expect(isItemDestinationIntoItself(folder_content, 2, 3)).toBe(false);
     });
 
     it("Is not considered into itself when the root is reached", () => {
@@ -69,6 +69,6 @@ describe("isItemDestinationIntoItself", () => {
                 parent_id: 1,
             } as ItemFile,
         ];
-        expect(isItemDestinationIntoItself(folder_content, 3, 2)).toEqual(false);
+        expect(isItemDestinationIntoItself(folder_content, 3, 2)).toBe(false);
     });
 });

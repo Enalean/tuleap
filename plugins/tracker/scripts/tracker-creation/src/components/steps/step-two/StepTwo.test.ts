@@ -83,7 +83,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
                 "application/x-www-form-urlencoded"
             );
         });
@@ -121,7 +121,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
                 "application/x-www-form-urlencoded"
             );
         });
@@ -151,7 +151,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
                 "multipart/form-data"
             );
         });
@@ -185,7 +185,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
                 "application/x-www-form-urlencoded"
             );
         });
@@ -211,7 +211,7 @@ describe("StepTwo", () => {
 
         it("Global HTML no longer have a feedback error", async () => {
             await getWrapper({} as State, true);
-            expect(document.getElementById("feedback")).toBe(null);
+            expect(document.getElementById("feedback")).toBeNull();
         });
     });
 });

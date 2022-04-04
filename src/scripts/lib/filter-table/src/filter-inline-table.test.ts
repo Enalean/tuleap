@@ -100,7 +100,7 @@ describe(`Filter inline Table`, () => {
             simulateInput(filter_input, "matches something");
 
             const hidden_cells = table.querySelectorAll("." + HIDDEN_ROW_CLASS_NAME);
-            expect(hidden_cells.length).toBe(0);
+            expect(hidden_cells).toHaveLength(0);
             table.remove();
         });
 
@@ -145,7 +145,7 @@ describe(`Filter inline Table`, () => {
                 simulateInput(filter_input, "matches something");
 
                 const hidden_sections = table.querySelectorAll("." + HIDDEN_SECTION_CLASS_NAME);
-                expect(hidden_sections.length).toBe(0);
+                expect(hidden_sections).toHaveLength(0);
                 table.remove();
             });
 
@@ -161,7 +161,7 @@ describe(`Filter inline Table`, () => {
                 simulateInput(filter_input, "matches something");
 
                 const hidden_sections = table.querySelectorAll("." + HIDDEN_SECTION_CLASS_NAME);
-                expect(hidden_sections.length).toBe(0);
+                expect(hidden_sections).toHaveLength(0);
                 table.remove();
             });
 
@@ -178,7 +178,7 @@ describe(`Filter inline Table`, () => {
                 simulateInput(filter_input, "matches something");
 
                 const hidden_sections = table.querySelectorAll("." + HIDDEN_SECTION_CLASS_NAME);
-                expect(hidden_sections.length).toBe(0);
+                expect(hidden_sections).toHaveLength(0);
                 table.remove();
             });
 
@@ -211,7 +211,7 @@ describe(`Filter inline Table`, () => {
         simulateKeyUp(filter_input, "A");
 
         const hidden_cells = table.querySelectorAll("." + HIDDEN_ROW_CLASS_NAME);
-        expect(hidden_cells.length).not.toBe(0);
+        expect(hidden_cells).not.toHaveLength(0);
         table.remove();
     });
 
@@ -226,8 +226,8 @@ describe(`Filter inline Table`, () => {
         simulateKeyUp(filter_input, "Escape");
 
         const hidden_cells = table.querySelectorAll("." + HIDDEN_ROW_CLASS_NAME);
-        expect(hidden_cells.length).toBe(0);
-        expect(filter_input.value).toEqual("");
+        expect(hidden_cells).toHaveLength(0);
+        expect(filter_input.value).toBe("");
         table.remove();
     });
 });

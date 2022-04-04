@@ -57,8 +57,8 @@ describe("column_and_swimlane_of_cell", () => {
             throw new Error("swimlane or column have not been found");
         }
 
-        expect(swimlane.card.id).toEqual(100);
-        expect(column.label).toEqual("Todo");
+        expect(swimlane.card.id).toBe(100);
+        expect(column.label).toBe("Todo");
     });
 
     it("should return an undefined swimlane or column if one or the other have not been found", () => {

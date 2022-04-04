@@ -131,7 +131,7 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(0);
+        expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(0);
         expect(wrapper.findComponent(NoDataToShowEmptyState).exists()).toBe(false);
     });
 
@@ -161,7 +161,7 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(1);
+        expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(1);
     });
 
     it("Displays level 2 iterations", () => {
@@ -190,7 +190,7 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(1);
+        expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(1);
     });
 
     it("Displays levels 1 & 2 iterations", () => {
@@ -219,7 +219,7 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(IterationsRibbon).length).toBe(2);
+        expect(wrapper.findAllComponents(IterationsRibbon)).toHaveLength(2);
     });
 
     it("Displays all tasks", () => {
@@ -254,7 +254,7 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
+        expect(wrapper.findAllComponents(GanttTask)).toHaveLength(3);
     });
 
     it("Displays subtasks skeleton", () => {
@@ -292,9 +292,9 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
-        expect(wrapper.findAllComponents(SubtaskSkeletonBar).length).toBe(1);
-        expect(wrapper.findAllComponents(SubtaskSkeletonHeader).length).toBe(1);
+        expect(wrapper.findAllComponents(GanttTask)).toHaveLength(2);
+        expect(wrapper.findAllComponents(SubtaskSkeletonBar)).toHaveLength(1);
+        expect(wrapper.findAllComponents(SubtaskSkeletonHeader)).toHaveLength(1);
     });
 
     it("Displays subtasks", () => {
@@ -333,8 +333,8 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(GanttTask).length).toBe(3);
-        expect(wrapper.findAllComponents(SubtaskHeader).length).toBe(1);
+        expect(wrapper.findAllComponents(GanttTask)).toHaveLength(3);
+        expect(wrapper.findAllComponents(SubtaskHeader)).toHaveLength(1);
     });
 
     it("Displays subtasks that can have multiple parents", () => {
@@ -379,8 +379,8 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(GanttTask).length).toBe(4);
-        expect(wrapper.findAllComponents(SubtaskHeader).length).toBe(2);
+        expect(wrapper.findAllComponents(GanttTask)).toHaveLength(4);
+        expect(wrapper.findAllComponents(SubtaskHeader)).toHaveLength(2);
 
         const popover_ids = wrapper
             .findAllComponents(BarPopover)
@@ -388,7 +388,7 @@ describe("GanttBoard", () => {
         const unique_popover_ids = popover_ids.filter(
             (id, index, ids) => ids.indexOf(id) === index
         );
-        expect(unique_popover_ids.length).toBe(4);
+        expect(unique_popover_ids).toHaveLength(4);
     });
 
     it("Displays subtasks error message if retrieval failed", () => {
@@ -426,9 +426,9 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
-        expect(wrapper.findAllComponents(SubtaskMessageHeader).length).toBe(1);
-        expect(wrapper.findAllComponents(SubtaskMessage).length).toBe(1);
+        expect(wrapper.findAllComponents(GanttTask)).toHaveLength(2);
+        expect(wrapper.findAllComponents(SubtaskMessageHeader)).toHaveLength(1);
+        expect(wrapper.findAllComponents(SubtaskMessage)).toHaveLength(1);
     });
 
     it("Displays subtasks empty message if retrieval returned no subtasks", () => {
@@ -466,9 +466,9 @@ describe("GanttBoard", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(GanttTask).length).toBe(2);
-        expect(wrapper.findAllComponents(SubtaskMessageHeader).length).toBe(1);
-        expect(wrapper.findAllComponents(SubtaskMessage).length).toBe(1);
+        expect(wrapper.findAllComponents(GanttTask)).toHaveLength(2);
+        expect(wrapper.findAllComponents(SubtaskMessageHeader)).toHaveLength(1);
+        expect(wrapper.findAllComponents(SubtaskMessage)).toHaveLength(1);
     });
 
     it("Observes the resize of the time period", () => {

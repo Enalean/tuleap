@@ -102,7 +102,7 @@ describe("FieldChosenTemplate", () => {
 
             const wrapper = await getWrapper(state, false, false, false, false, null, true);
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
-            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("Bugs");
+            expect(wrapper.get("[data-test=chosen-template]").text()).toBe("Bugs");
         });
 
         it("is a tracker duplication", async () => {
@@ -111,11 +111,11 @@ describe("FieldChosenTemplate", () => {
                 tracker_list: [],
             });
 
-            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
                 "Default Site Template"
             );
 
-            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=chosen-template]").text()).toBe(
                 "Tracker from a template project"
             );
         });
@@ -133,34 +133,32 @@ describe("FieldChosenTemplate", () => {
             );
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
-            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual(
-                "Tracker XML structure"
-            );
+            expect(wrapper.get("[data-test=chosen-template]").text()).toBe("Tracker XML structure");
         });
 
         it("is created from empty", async () => {
             const wrapper = await getWrapper(state, false, false, true);
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
-            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("Empty");
+            expect(wrapper.get("[data-test=chosen-template]").text()).toBe("Empty");
         });
 
         it("is an import from jira", async () => {
             const wrapper = await getWrapper(state, false, false, false, false, null, false, true);
 
-            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
                 "My chosen project"
             );
-            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("A Jira tracker");
+            expect(wrapper.get("[data-test=chosen-template]").text()).toBe("A Jira tracker");
         });
 
         it("is a duplication of a tracker from another project", async () => {
             const wrapper = await getWrapper(state, false, false, false, true);
 
-            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
                 "Another project"
             );
-            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=chosen-template]").text()).toBe(
                 "Tracker from another project"
             );
         });

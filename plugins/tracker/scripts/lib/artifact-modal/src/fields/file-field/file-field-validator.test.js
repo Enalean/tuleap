@@ -82,7 +82,7 @@ describe(`file-field-validator`, () => {
                 followup_value_model
             );
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it(`when the file's value is empty, it will return "field_id" and empty "value"`, () => {

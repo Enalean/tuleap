@@ -40,7 +40,7 @@ describe("Side-by-side line grouper", () => {
             it("Given diff lines, then it will return groups of deleted lines and a map from first line to group to be able to place line widgets", () => {
                 const { first_line_to_group_map } = buildLineGroups(lines);
 
-                expect(first_line_to_group_map.size).toEqual(4);
+                expect(first_line_to_group_map.size).toBe(4);
                 const first_unmoved_group = first_line_to_group_map.get(1);
                 const first_deleted_group = first_line_to_group_map.get(2);
                 const second_unmoved_group = first_line_to_group_map.get(5);
@@ -72,7 +72,7 @@ describe("Side-by-side line grouper", () => {
                 const second_unmoved_group = first_line_to_group_map.get(5);
                 const second_deleted_group = first_line_to_group_map.get(6);
 
-                expect(line_to_group_map.size).toEqual(7);
+                expect(line_to_group_map.size).toBe(7);
                 expect(line_to_group_map.get(1)).toBe(first_unmoved_group);
                 expect(line_to_group_map.get(2)).toBe(first_deleted_group);
                 expect(line_to_group_map.get(3)).toBe(first_deleted_group);
@@ -98,7 +98,7 @@ describe("Side-by-side line grouper", () => {
             it("Given diff lines, then it will return groups of added lines to be able to add line widgets", () => {
                 const { first_line_to_group_map } = buildLineGroups(lines);
 
-                expect(first_line_to_group_map.size).toEqual(4);
+                expect(first_line_to_group_map.size).toBe(4);
                 const first_unmoved_group = first_line_to_group_map.get(1);
                 const first_added_group = first_line_to_group_map.get(3);
                 const second_unmoved_group = first_line_to_group_map.get(6);
@@ -130,7 +130,7 @@ describe("Side-by-side line grouper", () => {
                 const second_unmoved_group = first_line_to_group_map.get(6);
                 const second_added_group = first_line_to_group_map.get(7);
 
-                expect(line_to_group_map.size).toEqual(8);
+                expect(line_to_group_map.size).toBe(8);
                 expect(line_to_group_map.get(1)).toBe(first_unmoved_group);
                 expect(line_to_group_map.get(2)).toBe(first_unmoved_group);
                 expect(line_to_group_map.get(3)).toBe(first_added_group);

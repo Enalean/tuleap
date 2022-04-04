@@ -86,8 +86,8 @@ describe("TimePeriodMonth", () => {
         const period = new TimePeriodMonth(start, end, "en-US");
 
         const a_date = new Date(2020, 5, 15);
-        expect(period.formatShort(a_date)).toStrictEqual("Jun");
-        expect(period.formatLong(a_date)).toStrictEqual("June 2020");
+        expect(period.formatShort(a_date)).toBe("Jun");
+        expect(period.formatLong(a_date)).toBe("June 2020");
     });
 
     it.each([[-1], [0]])(

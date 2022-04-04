@@ -96,7 +96,7 @@ describe("IterationsToBePlannedSection", () => {
         expect(retriever.retrieveUnplannedElements).toHaveBeenCalledWith(666);
         expect(wrapper.find("[data-test=no-unplanned-elements-empty-state]").exists()).toBe(false);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
-        expect(unplanned_elements.length).toBe(1);
+        expect(unplanned_elements).toHaveLength(1);
     });
 
     it("should display an error when the retrieval has failed", async () => {
@@ -114,7 +114,7 @@ describe("IterationsToBePlannedSection", () => {
         expect(retriever.retrieveUnplannedElements).toHaveBeenCalledWith(666);
         expect(wrapper.find("[data-test=no-unplanned-elements-empty-state]").exists()).toBe(false);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
-        expect(unplanned_elements.length).toBe(0);
+        expect(unplanned_elements).toHaveLength(0);
         expect(
             wrapper.find("[data-test=unplanned-elements-retrieval-error-message]").exists()
         ).toBe(true);

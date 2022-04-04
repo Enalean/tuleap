@@ -91,7 +91,7 @@ describe("LinkFieldController -", () => {
             LinkFieldController.$onInit();
             $rootScope.$apply();
 
-            expect(LinkFieldController.parent_artifact).toBe(null);
+            expect(LinkFieldController.parent_artifact).toBeNull();
             expect(LinkFieldController.loadParentArtifactsTitle).not.toHaveBeenCalled();
         });
 
@@ -251,7 +251,7 @@ describe("LinkFieldController -", () => {
 
             const promise = LinkFieldController.hasArtifactAlreadyAParent();
 
-            await expect(wrapPromise(promise)).resolves.toBe(null);
+            await expect(wrapPromise(promise)).resolves.toBeNull();
         });
     });
 

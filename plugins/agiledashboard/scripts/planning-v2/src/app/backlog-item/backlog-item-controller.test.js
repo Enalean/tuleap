@@ -385,7 +385,7 @@ describe("BacklogItemController -", function () {
                     move_request.resolve();
                     $scope.$apply();
 
-                    expect($source_element.children().length).toEqual(0);
+                    expect($source_element.children()).toHaveLength(0);
                     expect(source_backlog_item.children.data).toEqual([]);
                     expect(source_backlog_item.has_children).toBeFalsy();
                     expect(source_backlog_item.children.collapsed).toBeTruthy();
@@ -437,7 +437,7 @@ describe("BacklogItemController -", function () {
             });
 
             function expectNothingChanged() {
-                expect($source_element.children().length).toEqual(1);
+                expect($source_element.children()).toHaveLength(1);
                 expect(source_backlog_item.children.data).toEqual([{ id: dropped_item_ids[0] }]);
                 expect(source_backlog_item.has_children).toBeTruthy();
                 expect(source_backlog_item.children.collapsed).toBeFalsy();

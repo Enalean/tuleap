@@ -26,7 +26,7 @@ describe("hide-selectbox-helper", () => {
         hideSourceSelectBox(select);
 
         expect(select.classList.contains("list-picker-hidden-accessible")).toBe(true);
-        expect(select.getAttribute("tabindex")).toEqual("-1");
-        expect(select.getAttribute("aria-hidden")).toEqual("true");
+        expect(select.getAttribute("tabindex")).toBe("-1");
+        expect(select.getAttribute("aria-hidden")).toBe("true");
     });
 });

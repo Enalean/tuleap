@@ -93,7 +93,7 @@ describe("ListOfCampaigns", () => {
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
         });
 
-        expect(wrapper.findAllComponents(CampaignCard).length).toBe(2);
+        expect(wrapper.findAllComponents(CampaignCard)).toHaveLength(2);
     });
 
     it("Displays skeletons even if there are campaigns to show loading indication", async () => {

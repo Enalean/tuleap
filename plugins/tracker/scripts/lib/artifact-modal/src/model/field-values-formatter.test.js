@@ -302,8 +302,8 @@ describe("TuleapArtifactFieldValues", () => {
                     ],
                 };
                 const output = getSelectedValues({}, tracker);
-                expect(output[794].value).toEqual("");
-                expect(output[974].value).toEqual("");
+                expect(output[794].value).toBe("");
+                expect(output[974].value).toBe("");
             });
 
             it(`and that those fields had a default value,
@@ -368,7 +368,7 @@ describe("TuleapArtifactFieldValues", () => {
                 };
                 const output = getSelectedValues(artifact_values, tracker);
                 expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD");
-                expect(output[824].field_id).toEqual(824);
+                expect(output[824].field_id).toBe(824);
                 expect(output[824].permissions).toEqual(["read", "update", "create"]);
             });
 
@@ -391,7 +391,7 @@ describe("TuleapArtifactFieldValues", () => {
                 };
                 const output = getSelectedValues(artifact_values, tracker);
                 expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm");
-                expect(output[609].field_id).toEqual(609);
+                expect(output[609].field_id).toBe(609);
                 expect(output[609].permissions).toEqual(["read", "update", "create"]);
             });
         });

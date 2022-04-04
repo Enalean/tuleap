@@ -97,7 +97,7 @@ describe("CredentialsFormModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "Error message"
         );
     });
@@ -158,7 +158,7 @@ describe("CredentialsFormModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-empty-repositories]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-empty-repositories]").text()).toBe(
             "No repository is available with your GitLab account"
         );
     });
@@ -179,7 +179,7 @@ describe("CredentialsFormModal", () => {
         wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "You must provide a valid GitLab server and user API token"
         );
     });
@@ -200,7 +200,7 @@ describe("CredentialsFormModal", () => {
         wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "Server url is invalid"
         );
     });
@@ -222,7 +222,7 @@ describe("CredentialsFormModal", () => {
         wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.empty_message).toEqual(
+        expect(wrapper.vm.$data.empty_message).toBe(
             "No repository is available with your GitLab account"
         );
     });

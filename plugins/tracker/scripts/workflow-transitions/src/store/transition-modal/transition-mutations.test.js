@@ -213,11 +213,11 @@ describe("Transition mutations", () => {
         });
 
         it("Increments post action unique_id index", () => {
-            expect(state.new_post_action_unique_id_index).toEqual(4);
+            expect(state.new_post_action_unique_id_index).toBe(4);
         });
         it("Adds new ci build post action", () => {
             let post_action_unique_ids = Object.keys(state.post_actions_by_unique_id);
-            expect(post_action_unique_ids.length).toEqual(2);
+            expect(post_action_unique_ids).toHaveLength(2);
             expect(state.post_actions_by_unique_id["new_4"]).toEqual({
                 unique_id: "new_4",
                 type: "run_job",
@@ -244,7 +244,7 @@ describe("Transition mutations", () => {
             expect(state.post_actions_by_unique_id["unique_id_to_remove"]).toBeUndefined();
         });
         it("Keeps other post actions", () => {
-            expect(state.post_actions_by_unique_id["unique_id_to_keep"]).not.toBeUndefined();
+            expect(state.post_actions_by_unique_id["unique_id_to_keep"]).toBeDefined();
         });
     });
 
@@ -266,7 +266,7 @@ describe("Transition mutations", () => {
         };
 
         it("Updates post action field id", () => {
-            expect(mutatedPostAction().field_id).toEqual(4);
+            expect(mutatedPostAction().field_id).toBe(4);
         });
 
         describe("when field type change", () => {
@@ -276,7 +276,7 @@ describe("Transition mutations", () => {
             });
 
             it("Updates post action field type", () => {
-                expect(mutatedPostAction().field_type).toEqual("int");
+                expect(mutatedPostAction().field_type).toBe("int");
             });
             it("Reset post action id", () => {
                 expect(mutatedPostAction().id).toBeNull();
@@ -290,7 +290,7 @@ describe("Transition mutations", () => {
                 });
 
                 it("does not update post action value", () => {
-                    expect(mutatedPostAction().value).toEqual(23);
+                    expect(mutatedPostAction().value).toBe(23);
                 });
             });
 
@@ -302,7 +302,7 @@ describe("Transition mutations", () => {
                 });
 
                 it("converts post action value to int", () => {
-                    expect(mutatedPostAction().value).toEqual(1);
+                    expect(mutatedPostAction().value).toBe(1);
                 });
             });
 

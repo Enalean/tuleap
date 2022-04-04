@@ -23,7 +23,7 @@ describe("bidirectional-unicode-text", () => {
     it("marks potentially dangerous bidirectional characters", () => {
         const result = markPotentiallyDangerousBidirectionalUnicodeText("A\u202aB\u202b");
 
-        expect(result).toStrictEqual(
+        expect(result).toBe(
             'A<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202a">\u202a</span>B<span class="syntax-highlight-invisible-char" dir="ltr" title="\\u202b">\u202b</span>'
         );
     });

@@ -31,8 +31,8 @@ describe("BacklogItemFactory", () => {
         const backlog_item = augment(item);
 
         it("adds allowed tracker types to backlog item", () => {
-            expect(backlog_item.accepted_types.toString()).toEqual("trackerId123|trackerId895");
-            expect(backlog_item.trackerId).toEqual("trackerId78");
+            expect(backlog_item.accepted_types.toString()).toBe("trackerId123|trackerId895");
+            expect(backlog_item.trackerId).toBe("trackerId78");
         });
 
         it("adds children properties", () => {
@@ -46,7 +46,7 @@ describe("BacklogItemFactory", () => {
         });
 
         it("has method isOpen", () => {
-            expect(backlog_item.isOpen()).toEqual(true);
+            expect(backlog_item.isOpen()).toBe(true);
         });
     });
 });

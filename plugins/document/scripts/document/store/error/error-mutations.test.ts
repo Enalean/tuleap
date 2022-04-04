@@ -110,7 +110,7 @@ describe("Store mutations", () => {
 
         mutations.resetModalError(state);
         expect(state.has_modal_error).toBe(false);
-        expect(state.modal_error).toBe(null);
+        expect(state.modal_error).toBeNull();
     });
 
     it("setLockError", () => {

@@ -108,7 +108,7 @@ describe("MultipleSelectionManager", () => {
 
             [item_1, item_2].forEach((item) => {
                 expect(item.is_selected).toBe(true);
-                expect(item.element.getAttribute("aria-selected")).toEqual("true");
+                expect(item.element.getAttribute("aria-selected")).toBe("true");
             });
 
             expect(search_input.hasAttribute("placeholder")).toBe(false);
@@ -183,7 +183,7 @@ describe("MultipleSelectionManager", () => {
             if (items_badges === null) {
                 throw new Error("Badges of selected items are not found in selection element");
             }
-            expect(items_badges?.length).toEqual(3);
+            expect(items_badges?.length).toBe(3);
             expect(items_badges[0].textContent).toContain("Value 1");
             expect(items_badges[1].textContent).toContain("Value 2");
             expect(items_badges[2].textContent).toContain("Value Colored");
@@ -269,7 +269,7 @@ describe("MultipleSelectionManager", () => {
             expect(isItemSelected(item_1)).toBe(false);
             expect(isItemSelected(item_2)).toBe(false);
             expect(isItemSelected(item_none)).toBe(true);
-            expect(selection_container.querySelectorAll(".list-picker-badge").length).toEqual(1);
+            expect(selection_container.querySelectorAll(".list-picker-badge")).toHaveLength(1);
             expect(openListPicker).toHaveBeenCalled();
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 4);
         });
@@ -371,7 +371,7 @@ describe("MultipleSelectionManager", () => {
             manager.handleBackspaceKey(backspace_down_event);
 
             expect(backspace_down_event.cancelBubble).toBe(false);
-            expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
+            expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
         });
     });
@@ -410,7 +410,7 @@ describe("MultipleSelectionManager", () => {
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
             ).toBeNull();
-            expect(search_input.getAttribute("placeholder")).toEqual("Please select some values");
+            expect(search_input.getAttribute("placeholder")).toBe("Please select some values");
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
         });
     });

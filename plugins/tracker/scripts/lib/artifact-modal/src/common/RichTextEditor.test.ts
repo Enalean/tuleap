@@ -188,8 +188,8 @@ describe(`RichTextEditor`, () => {
                 triggerChange(null_event);
 
                 const event = dispatchEvent.mock.calls[0][0];
-                expect(event.type).toEqual("content-change");
-                expect(event.detail.content).toEqual("caramba");
+                expect(event.type).toBe("content-change");
+                expect(event.detail.content).toBe("caramba");
             });
 
             it(`and when the editor dispatched the "mode" event,
@@ -235,8 +235,8 @@ describe(`RichTextEditor`, () => {
                     expect.any(Function)
                 );
                 const event = dispatchEvent.mock.calls[0][0];
-                expect(event.type).toEqual("content-change");
-                expect(event.detail.content).toEqual("noniodized");
+                expect(event.type).toBe("content-change");
+                expect(event.detail.content).toBe("noniodized");
             });
         });
 
@@ -279,8 +279,8 @@ describe(`RichTextEditor`, () => {
                     throw new Error("Expected getAdditionalOptions to be a function");
                 }
                 const ckeditor_options = editor_options.getAdditionalOptions(host.textarea);
-                expect(ckeditor_options.extraPlugins).not.toBeDefined();
-                expect(ckeditor_options.uploadUrl).not.toBeDefined();
+                expect(ckeditor_options.extraPlugins).toBeUndefined();
+                expect(ckeditor_options.uploadUrl).toBeUndefined();
             });
 
             it(`disables the paste event for images and shows an error message`, () => {
@@ -379,7 +379,7 @@ describe(`RichTextEditor`, () => {
 
                     it(`emits an upload-image event`, () => {
                         const event = dispatchEvent.mock.calls[0][0];
-                        expect(event.type).toEqual("upload-image");
+                        expect(event.type).toBe("upload-image");
                         expect(event.detail.field_id).toEqual(FIRST_FILE_FIELD_ID);
                         expect(event.detail.image).toEqual({
                             id: 64,
@@ -442,8 +442,8 @@ describe(`RichTextEditor`, () => {
                 inner_textarea.dispatchEvent(new InputEvent("input"));
 
                 const event = dispatchEvent.mock.calls[0][0];
-                expect(event.type).toEqual("content-change");
-                expect(event.detail.content).toEqual("flattening");
+                expect(event.type).toBe("content-change");
+                expect(event.detail.content).toBe("flattening");
             });
         });
     });

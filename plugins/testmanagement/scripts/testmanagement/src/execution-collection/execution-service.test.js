@@ -247,7 +247,7 @@ describe("ExecutionService", () => {
             resolveExecutions(remote_executions);
             await wrapPromise(promise);
             expect(service_executions()[2]).toBeUndefined();
-            expect(service_categories().NonRegression.executions.length).toEqual(0);
+            expect(service_categories().NonRegression.executions).toHaveLength(0);
         });
 
         it(`Given that I have different sets of loaded and remote executions,
@@ -264,7 +264,7 @@ describe("ExecutionService", () => {
             resolveExecutions(remote_executions);
             await wrapPromise(promise);
             expect(service_executions()[2]).toEqual(execution_2);
-            expect(service_categories().NonRegression.executions.length).toEqual(1);
+            expect(service_categories().NonRegression.executions).toHaveLength(1);
         });
 
         it(`Given that I have the same sets of loaded and remote executions, when I synchronize them, then the local executions are not duplicated`, async () => {
@@ -274,9 +274,9 @@ describe("ExecutionService", () => {
             resolveExecutions(remote_executions);
             await wrapPromise(promise);
             //eslint-disable-next-line you-dont-need-lodash-underscore/size
-            expect(_.size(service_executions())).toEqual(2);
-            expect(service_categories().Security.executions.length).toEqual(1);
-            expect(service_categories().NonRegression.executions.length).toEqual(1);
+            expect(_.size(service_executions())).toBe(2);
+            expect(service_categories().Security.executions).toHaveLength(1);
+            expect(service_categories().NonRegression.executions).toHaveLength(1);
         });
     });
 
@@ -412,8 +412,8 @@ describe("ExecutionService", () => {
                     category: "Svn",
                 },
             });
-            expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
-            expect(ExecutionService.campaign.total).toEqual(0);
+            expect(ExecutionService.campaign.nb_of_notrun).toBe(0);
+            expect(ExecutionService.campaign.total).toBe(0);
         });
     });
 
@@ -467,7 +467,7 @@ describe("ExecutionService", () => {
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save);
 
-            expect(ExecutionService.executions[4].status).toEqual("failed");
+            expect(ExecutionService.executions[4].status).toBe("failed");
             expect(ExecutionService.campaign).toEqual(campaign_results);
             expect(brodcast).toHaveBeenCalledWith(
                 "reload-comment-editor-view",
@@ -509,7 +509,7 @@ describe("ExecutionService", () => {
             ExecutionService.updateTestExecution(execution_to_save);
 
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
-            expect(Object.keys(ExecutionService.campaign).length).toEqual(
+            expect(Object.keys(ExecutionService.campaign)).toHaveLength(
                 Object.keys(campaign_copy).length
             );
             expect(brodcast).toHaveBeenCalledWith(
@@ -570,14 +570,14 @@ describe("ExecutionService", () => {
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save, updated_by);
 
-            expect(ExecutionService.executions[4].definition.description).toEqual("Version A");
+            expect(ExecutionService.executions[4].definition.description).toBe("Version A");
             expect(
                 ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
             ).toBeTruthy();
 
             ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated();
 
-            expect(ExecutionService.executions[4].definition.description).toEqual("Version B");
+            expect(ExecutionService.executions[4].definition.description).toBe("Version B");
             expect(
                 ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
             ).toBeFalsy();
@@ -629,12 +629,12 @@ describe("ExecutionService", () => {
 
             ExecutionService.removeTestExecution(execution);
 
-            expect(ExecutionService.executions[4]).toEqual(undefined);
+            expect(ExecutionService.executions[4]).toBeUndefined();
             expect(
                 ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]
-            ).toEqual(undefined);
-            expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
-            expect(ExecutionService.campaign.total).toEqual(0);
+            ).toBeUndefined();
+            expect(ExecutionService.campaign.nb_of_notrun).toBe(0);
+            expect(ExecutionService.campaign.total).toBe(0);
         });
     });
 
@@ -679,12 +679,12 @@ describe("ExecutionService", () => {
 
             ExecutionService.removeTestExecutionWithoutUpdateCampaignStatus(execution);
 
-            expect(ExecutionService.executions[4]).toEqual(undefined);
+            expect(ExecutionService.executions[4]).toBeUndefined();
             expect(
                 ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]
-            ).toEqual(undefined);
-            expect(ExecutionService.campaign.nb_of_notrun).toEqual(1);
-            expect(ExecutionService.campaign.total).toEqual(1);
+            ).toBeUndefined();
+            expect(ExecutionService.campaign.nb_of_notrun).toBe(1);
+            expect(ExecutionService.campaign.total).toBe(1);
         });
     });
 
@@ -1304,7 +1304,7 @@ describe("ExecutionService", () => {
 
             ExecutionService.removeFileUploadedThroughAttachmentArea(execution, 105);
 
-            expect(execution.uploaded_files_through_attachment_area.length).toEqual(0);
+            expect(execution.uploaded_files_through_attachment_area).toHaveLength(0);
         });
     });
 
@@ -1314,7 +1314,7 @@ describe("ExecutionService", () => {
                 removed_files: [],
             };
             ExecutionService.addFileToDeletedFiles(execution, { id: 666, name: "bug.png" });
-            expect(execution.removed_files.length).toEqual(1);
+            expect(execution.removed_files).toHaveLength(1);
         });
     });
 
@@ -1324,7 +1324,7 @@ describe("ExecutionService", () => {
                 removed_files: [{ id: 666, name: "bug.png" }],
             };
             ExecutionService.removeFileFromDeletedFiles(execution, { id: 666, name: "bug.png" });
-            expect(execution.removed_files.length).toEqual(0);
+            expect(execution.removed_files).toHaveLength(0);
         });
     });
 

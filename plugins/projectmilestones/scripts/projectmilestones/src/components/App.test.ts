@@ -94,7 +94,7 @@ describe("Given a release widget", () => {
         store_options.getters.has_rest_error = true;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.get("[data-test=show-error-message]").text()).toEqual(
+        expect(wrapper.get("[data-test=show-error-message]").text()).toBe(
             "Oops, an error occurred!"
         );
     });

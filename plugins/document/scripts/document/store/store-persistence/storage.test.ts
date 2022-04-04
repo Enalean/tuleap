@@ -44,6 +44,6 @@ describe("Persistent storage with an expiration", () => {
 
         storage.setItem("mykey", "value");
         date_now_spy.mockImplementation(() => current_time + 3601 * 1000);
-        expect(storage.getItem("mykey")).toBe(null);
+        expect(storage.getItem("mykey")).toBeNull();
     });
 });

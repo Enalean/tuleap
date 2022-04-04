@@ -68,7 +68,7 @@ describe("execution-attachments-creation-error-modal", () => {
             jest.spyOn($scope, "$emit");
             controller.$onInit();
 
-            expect(controller.modal).toBe(null);
+            expect(controller.modal).toBeNull();
 
             errors.push({ filename: "bug_1.png", message: "File too big" });
 

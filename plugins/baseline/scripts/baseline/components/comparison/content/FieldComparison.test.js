@@ -38,13 +38,13 @@ describe("FieldComparison", () => {
     });
 
     it("renders deletion", () => {
-        expect(wrapper.findAll("del").length).toEqual(1);
-        expect(wrapper.get("del").text()).toEqual("My");
+        expect(wrapper.findAll("del")).toHaveLength(1);
+        expect(wrapper.get("del").text()).toBe("My");
     });
 
     it("renders addition", () => {
-        expect(wrapper.findAll("ins").length).toEqual(1);
-        expect(wrapper.get("ins").text()).toEqual("New");
+        expect(wrapper.findAll("ins")).toHaveLength(1);
+        expect(wrapper.get("ins").text()).toBe("New");
     });
 
     describe("when compared values contain html", () => {
