@@ -42,7 +42,11 @@
             <explanations-export />
             <first-level-selector
                 v-model:report_id="report_id"
+                v-model:artifact_link_type="artifact_link_type"
                 v-bind:current_tracker_reports="properties.current_tracker_reports"
+                v-bind:current_tracker_artifact_link_types="
+                    properties.current_tracker_artifact_link_types
+                "
             />
         </div>
         <div class="tlp-modal-footer">
@@ -98,6 +102,7 @@ onBeforeUnmount(() => {
 
 const props = defineProps<{ properties: GlobalExportProperties }>();
 const report_id = ref(props.properties.current_report_id);
+const artifact_link_type = ref("");
 
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {
