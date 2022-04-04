@@ -7,6 +7,9 @@
   "version": "0.0.0",
   "module": "dist/plugin-docgen-xlsx.es.js",
   "main": "dist/plugin-docgen-xlsx.umd.js",
+  "dependencies": {
+    "xlsx": "^0.18.3"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
