@@ -27,6 +27,8 @@ import GetTextPlugin from "vue-gettext";
 import type { Repository } from "../type";
 import type { Store } from "vuex-mock-store";
 
+jest.mock("tlp");
+
 describe("GitLabAdministration", () => {
     let repository: Repository;
     let store: Store;

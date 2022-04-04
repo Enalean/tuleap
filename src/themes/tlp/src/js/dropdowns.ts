@@ -18,6 +18,8 @@
  */
 
 import { findClosestElement } from "./dom-walker";
+import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
+import type { Placement } from "@floating-ui/dom";
 
 const TRANSITION_DURATION = 75;
 
@@ -54,6 +56,7 @@ export class Dropdown {
     private readonly shown_event: CustomEvent<{ target: HTMLElement }>;
     private readonly hidden_event: CustomEvent<{ target: HTMLElement }>;
     private readonly event_listeners: EventListener[];
+    private readonly cleanup: () => void;
 
     constructor(doc: Document, trigger: Element, options: DropdownOptions = { keyboard: true }) {
         this.doc = doc;
@@ -68,8 +71,13 @@ export class Dropdown {
             throw new Error("Dropdown menu must be an HTML element");
         }
         this.dropdown_menu = dropdown_menu;
-        this.dropdown_menu.setAttribute("data-dropdown", "menu");
         this.is_shown = false;
+        this.cleanup = autoUpdate(
+            this.trigger,
+            this.dropdown_menu,
+            this.updatePositionOfMenu.bind(this)
+        );
+        this.dropdown_menu.setAttribute("data-dropdown", "menu");
         this.keyboard = keyboard;
         this.shown_event = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, {
             detail: { target: this.dropdown_menu },
@@ -81,6 +89,37 @@ export class Dropdown {
 
         this.listenOpenEvents();
         this.listenCloseEvents();
+    }
+
+    async updatePositionOfMenu(): Promise<void> {
+        if (!this.is_shown) {
+            return;
+        }
+
+        const side = this.dropdown_menu.classList.contains("tlp-dropdown-menu-top")
+            ? "top"
+            : "bottom";
+        const alignment = this.dropdown_menu.classList.contains("tlp-dropdown-menu-right")
+            ? "end"
+            : "start";
+        const wanted_placement: Placement = `${side}-${alignment}`;
+
+        const { x, y, placement } = await computePosition(this.trigger, this.dropdown_menu, {
+            placement: wanted_placement,
+            middleware: [
+                offset(({ reference, placement }) => {
+                    return (placement.indexOf("top") === 0 ? reference.height / 2 : 0) + 4;
+                }),
+                flip(),
+                shift({ padding: 16 }),
+            ],
+        });
+
+        Object.assign(this.dropdown_menu.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+        });
+        this.dropdown_menu.dataset.placement = placement;
     }
 
     getDropdownMenu(): HTMLElement | null {
@@ -101,10 +140,10 @@ export class Dropdown {
         this.is_shown ? this.hide() : this.show();
     }
 
-    show(): void {
+    async show(): Promise<void> {
         this.dropdown_menu.classList.add(DROPDOWN_SHOWN_CLASS_NAME);
         this.is_shown = true;
-        this.reflow();
+        await this.updatePositionOfMenu();
 
         this.dispatchEvent(this.shown_event);
     }
@@ -112,15 +151,11 @@ export class Dropdown {
     hide(): void {
         this.dropdown_menu.classList.remove(DROPDOWN_SHOWN_CLASS_NAME);
         this.is_shown = false;
-        this.reflow();
+        this.cleanup();
 
         setTimeout(() => {
             this.dispatchEvent(this.hidden_event);
         }, TRANSITION_DURATION);
-    }
-
-    reflow(): void {
-        this.dropdown_menu.offsetHeight;
     }
 
     listenOpenEvents(): void {

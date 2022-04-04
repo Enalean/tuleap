@@ -634,6 +634,10 @@ $attachment-progress-bar-bg-color: var(--tlp-dimmed-color-lighter-50);
     margin: 0 5px 0 0;
 }
 
+.dropdown-link-bug-menu {
+    transform: translateX(4px);
+}
+
 .current-test-message-warning {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing)

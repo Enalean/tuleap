@@ -27,16 +27,13 @@ $tlp-dropdown-transition: 75ms ease-out;
 }
 
 .tlp-dropdown-menu {
-    display: flex;
-    visibility: hidden;
+    display: none;
     position: absolute;
     z-index: 1000;
     flex-direction: column;
     margin: $tlp-dropdown-arrow-size 0 0;
     padding: var(--tlp-small-spacing) 0;
-    transform: translateY(-10px);
-    transition: opacity $tlp-dropdown-transition, transform $tlp-dropdown-transition,
-        box-shadow $tlp-dropdown-transition;
+    transition: box-shadow $tlp-dropdown-transition;
     border-bottom: 0;
     border-radius: $tlp-dropdown-radius;
     background: var(--tlp-white-color);
@@ -65,14 +62,7 @@ $tlp-dropdown-transition: 75ms ease-out;
         border-bottom-color: var(--tlp-white-color);
     }
 
-    &.tlp-dropdown-menu-on-icon {
-        left: -12px;
-    }
-
-    &.tlp-dropdown-menu-top {
-        top: 0;
-        transform: translateY(-100%);
-
+    &[data-placement^="top"] {
         &::before {
             top: calc(100% + 1px);
             border-top-color: var(--tlp-dark-color-transparent-90);
@@ -86,29 +76,27 @@ $tlp-dropdown-transition: 75ms ease-out;
         }
     }
 
-    &.tlp-dropdown-menu-right {
-        right: 0;
-
+    &[data-placement$="end"] {
         &::before,
         &::after {
             right: 20px;
             left: auto;
         }
-
-        &.tlp-dropdown-menu-on-icon {
-            right: calc(-1 * var(--tlp-small-spacing));
-            left: auto;
-        }
     }
 
     &.tlp-dropdown-shown {
-        visibility: visible;
-        transform: translateY(0);
+        display: flex;
         box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
 
-        &.tlp-dropdown-menu-top {
-            transform: translateY(-100%) translateY(-10px) translateY(-#{$tlp-dropdown-arrow-size});
+        &.tlp-dropdown-menu-on-icon {
+            $offset-for-icon: 10px;
+
+            transform: translateX(-$offset-for-icon);
+
+            &[data-placement$="end"] {
+                transform: translateX($offset-for-icon);
+            }
         }
     }
 
@@ -124,7 +112,11 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 
     &.tlp-dropdown-menu-large {
-        margin: $tlp-dropdown-arrow-size 7px 0 6px;
+        transform: translateX(3px);
+
+        &[data-placement$="end"] {
+            transform: translateX(-4px);
+        }
     }
 }
 
