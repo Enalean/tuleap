@@ -27,7 +27,7 @@ const { esbuild_target } = require("../tools/utils/scripts/browserslist_config")
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { ESBuildMinifyPlugin } = require("esbuild-loader");
 const context = __dirname;
-const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
+const assets_dir_path = path.resolve(__dirname, "./frontend-assets");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/");
 
 const pkg = JSON.parse(
@@ -67,7 +67,7 @@ const webpack_config_for_ckeditor = {
         webpack_configurator.getCopyPlugin([
             {
                 from: path.resolve(__dirname, "./node_modules/ckeditor4"),
-                to: path.resolve(__dirname, `./www/assets/core/ckeditor-${ckeditor_version}/`),
+                to: path.resolve(__dirname, `./frontend-assets/ckeditor-${ckeditor_version}/`),
                 toType: "dir",
                 globOptions: {
                     ignore: [
@@ -134,7 +134,7 @@ const webpack_config_for_tlp_doc = {
         script: "./scripts/tlp-doc/src/index.js",
     },
     context,
-    // This one does NOT go in www/assets/core because we do not deliver it in production, only in dev environment
+    // This one does NOT go in ./frontend-assets because we do not deliver it in production, only in dev environment
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./www/tlp-doc/dist/"),
         "/tlp-doc/dist/"

@@ -72,7 +72,7 @@
     "vuex-mock-store": "^0.0.8"
   },
   "scripts": {
-    "build": "rm -rf ./www/assets/core && webpack --config webpack.prod.js",
+    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
   }

@@ -43,7 +43,7 @@ yarn-error.log
 .sass-cache/
 *.css.map
 node_modules/
-src/www/assets/*
+src/frontend-assets/
 plugins/**/frontend-assets/
 plugins/**/backend-assets/
 test_results*

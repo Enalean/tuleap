@@ -28,7 +28,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\InviteBuddy\Admin\InvitedByPresenterBuilder;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
@@ -50,7 +49,7 @@ require_once __DIR__ . '/../include/account.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new \Tuleap\Layout\IncludeCoreAssets();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-user-details.js')
