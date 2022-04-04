@@ -28,33 +28,12 @@ namespace Tuleap\JiraImport\JiraAgile;
  */
 final class JiraBoard
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $url;
-    /**
-     * @var int
-     */
-    public $project_id;
-    /**
-     * @var string
-     */
-    public $project_key;
-
-    public function __construct(int $id, string $url, int $project_id, string $project_key)
+    public function __construct(public int $id, public string $url)
     {
-        $this->id          = $id;
-        $this->url         = $url;
-        $this->project_id  = $project_id;
-        $this->project_key = $project_key;
     }
 
     public static function buildFakeBoard(): self
     {
-        return new self(1, 'https://example.com/rest/agile/latest/board/1', 10000, 'FOO');
+        return new self(1, 'https://example.com/rest/agile/latest/board/1');
     }
 }
