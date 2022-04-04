@@ -16,7 +16,7 @@
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.31",
     "vue3-gettext": "^2.2.1",
-    "xlsx": "^0.18.3"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",

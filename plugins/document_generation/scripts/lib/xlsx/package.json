@@ -8,7 +8,7 @@
   "module": "dist/plugin-docgen-xlsx.es.js",
   "main": "dist/plugin-docgen-xlsx.umd.js",
   "dependencies": {
-    "xlsx": "^0.18.3"
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

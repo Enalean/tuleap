@@ -15,7 +15,7 @@ specifiers:
   sprintf-js: ^1.1.2
   vue: ^3.2.31
   vue3-gettext: ^2.2.1
-  xlsx: ^0.18.3
+  xlsx: ^0.18.5
 
 dependencies:
   '@tuleap/gettext': link:../../src/scripts/lib/gettext
@@ -29,7 +29,7 @@ dependencies:
   sprintf-js: 1.1.2
   vue: 3.2.31
   vue3-gettext: 2.2.1_vue@3.2.31
-  xlsx: 0.18.3
+  xlsx: 0.18.5
 
 devDependencies:
   '@tuleap/po-gettext-plugin': link:../../src/scripts/lib/po-gettext-plugin
@@ -704,8 +704,8 @@ packages:
     resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=}
     dev: false
 
-  /xlsx/0.18.3:
-    resolution: {integrity: sha512-iNBdKSJO11bI59C/dJjYWfR2gglRUrbWtDK9YoKKvu+RA1dinyWU3XXc0BaZUoSYFkxvPrO/9dwBGu6mhVNVGQ==}
+  /xlsx/0.18.5:
+    resolution: {integrity: sha512-dmg3LCjBPHZnQp5/F/+nnTa+miPJxUXB6vtk42YjBBKayDNagxGEeIdWApkYPOf3Z3pm3k62Knjzp7lMeTEtFQ==}
     engines: {node: '>=0.8'}
     hasBin: true
     dependencies:
