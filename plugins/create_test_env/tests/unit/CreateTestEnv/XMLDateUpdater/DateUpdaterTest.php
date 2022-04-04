@@ -24,7 +24,7 @@ use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
 
 class DateUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItUpdatesTheDatesInTheXMLFileWithDateInArtifacts()
+    public function testItUpdatesTheDatesInTheXMLFileWithDateInArtifacts(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project.xml'));
 
@@ -35,28 +35,28 @@ class DateUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $updater->updateDateValuesInXML($xml);
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable('2018-09-23T15:02:16+02:00'),
             new \DateTimeImmutable((string) $xml->trackers->tracker->artifacts->artifact->changeset[0]->submitted_on)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable("2018-10-04T00:00:00+02:00"),
             new \DateTimeImmutable($xml->trackers->tracker->artifacts->artifact->changeset[0]->field_change[1]->value)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable("2018-10-07T15:02:36+02:00"),
             new \DateTimeImmutable($xml->trackers->tracker->artifacts->artifact->changeset[1]->submitted_on)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable("2018-10-12T15:02:36+02:00"),
             new \DateTimeImmutable((string) $xml->trackers->tracker->artifacts->artifact->changeset[1]->comments->comment->submitted_on)
         );
     }
 
-    public function testItUpdatesTheDatesInTheXMLFileWithDateInTrackerAndArtifacts()
+    public function testItUpdatesTheDatesInTheXMLFileWithDateInTrackerAndArtifacts(): void
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project4.xml'));
 
@@ -67,22 +67,22 @@ class DateUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $updater->updateDateValuesInXML($xml);
 
-        $this->assertEquals(
+        self::assertEquals(
             1534888800,
             (int) $xml->trackers->tracker->formElements->formElement[1]->formElements->formElement->formElements->formElement[0]->properties['default_value']
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable("2018-08-15T13:02:16+00:00"),
             new \DateTimeImmutable((string) $xml->trackers->tracker->artifacts->artifact->changeset[0]->submitted_on)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable("2018-08-16T13:02:36+00:00"),
             new \DateTimeImmutable((string) $xml->trackers->tracker->artifacts->artifact->changeset[1]->submitted_on)
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             new \DateTimeImmutable("2018-08-16T13:02:36+00:00"),
             new \DateTimeImmutable((string) $xml->trackers->tracker->artifacts->artifact->changeset[1]->comments->comment->submitted_on)
         );

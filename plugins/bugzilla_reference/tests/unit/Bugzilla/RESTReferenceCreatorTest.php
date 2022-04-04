@@ -24,7 +24,6 @@ namespace Tuleap\Bugzilla;
 
 use CrossReference;
 use Http\Mock\Client;
-use Mockery;
 use Psr\Log\LoggerInterface;
 use Tuleap\Bugzilla\Reference\Reference;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
@@ -33,12 +32,10 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testReferenceIsCommunicatedToTheBugzillaServer(): void
     {
         $http_client = new Client();
-        $logger      = Mockery::mock(LoggerInterface::class);
+        $logger      = $this->createMock(LoggerInterface::class);
         $creator     = new RESTReferenceCreator(
             $http_client,
             HTTPFactoryBuilder::requestFactory(),
@@ -46,8 +43,8 @@ final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $logger
         );
 
-        $logger->shouldReceive('info');
-        $logger->shouldNotReceive('error');
+        $logger->method('info');
+        $logger->expects(self::never())->method('error');
 
         $cross_reference    = new CrossReference(
             '1000',
@@ -75,9 +72,9 @@ final class RESTReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator->create($cross_reference, $bugzilla_reference);
 
         $requests = $http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $executed_request = $requests[0];
-        $this->assertEquals('POST', $executed_request->getMethod());
-        $this->assertStringStartsWith($rest_url, (string) $executed_request->getUri());
+        self::assertEquals('POST', $executed_request->getMethod());
+        self::assertStringStartsWith($rest_url, (string) $executed_request->getUri());
     }
 }

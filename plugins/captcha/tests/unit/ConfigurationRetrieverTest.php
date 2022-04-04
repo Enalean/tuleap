@@ -20,18 +20,14 @@
 
 namespace Tuleap\Captcha;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 require_once __DIR__ . '/bootstrap.php';
 
 class ConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testConfigurationIsRetrieved()
+    public function testConfigurationIsRetrieved(): void
     {
-        $dao = \Mockery::mock(DataAccessObject::class);
-        $dao->shouldReceive('getConfiguration')->andReturns([
+        $dao = $this->createMock(DataAccessObject::class);
+        $dao->method('getConfiguration')->willReturn([
             'site_key'   => 'site_key',
             'secret_key' => 'secret_key',
         ]);
@@ -39,14 +35,14 @@ class ConfigurationRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $configuration_retriever = new ConfigurationRetriever($dao);
         $configuration           = $configuration_retriever->retrieve();
 
-        $this->assertSame($configuration->getSiteKey(), 'site_key');
-        $this->assertSame($configuration->getSecretKey(), 'secret_key');
+        self::assertSame($configuration->getSiteKey(), 'site_key');
+        self::assertSame($configuration->getSecretKey(), 'secret_key');
     }
 
-    public function testAnExceptionIsThrownWhenConfigurationIsNotFound()
+    public function testAnExceptionIsThrownWhenConfigurationIsNotFound(): void
     {
-        $dao = \Mockery::mock(DataAccessObject::class);
-        $dao->shouldReceive('getConfiguration')->andReturns(false);
+        $dao = $this->createMock(DataAccessObject::class);
+        $dao->method('getConfiguration')->willReturn(false);
 
         $configuration_retriever = new ConfigurationRetriever($dao);
 

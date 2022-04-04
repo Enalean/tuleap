@@ -28,6 +28,13 @@
         <directory name="plugins/testplan/tests/unit/" />
         <directory name="plugins/mediawiki_standalone/tests/unit/" />
         <directory name="plugins/timetracking/tests/unit/" />
+        <directory name="plugins/api_explorer/tests/unit/" />
+        <directory name="plugins/archivedeleteditems/tests/unit/" />
+        <directory name="plugins/bugzilla_reference/tests/unit/" />
+        <directory name="plugins/captcha/tests/unit/" />
+        <directory name="plugins/create_test_env/tests/unit/" />
+        <directory name="plugins/label/tests/unit/" />
+        <directory name="plugins/project_ownership/tests/unit/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>

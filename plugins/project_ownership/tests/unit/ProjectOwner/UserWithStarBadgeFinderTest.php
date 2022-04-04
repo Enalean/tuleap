@@ -26,7 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Widget\Event\UserWithStarBadgeCollector;
 
-class UserWithStarBadgeFinderTest extends TestCase
+final class UserWithStarBadgeFinderTest extends TestCase
 {
     public function testItDoesNothingIfProjectHasNoOwnership(): void
     {
@@ -69,7 +69,9 @@ class UserWithStarBadgeFinderTest extends TestCase
         $finder = new UserWithStarBadgeFinder($dao);
         $finder->findBadgedUser($collector);
 
-        self::assertTrue($collector->getUserWithStarBadge()->isUserBadged($user));
-        self::assertFalse($collector->getUserWithStarBadge()->isUserBadged($other));
+        $user_with_star_badge = $collector->getUserWithStarBadge();
+        self::assertNotNull($user_with_star_badge);
+        self::assertTrue($user_with_star_badge->isUserBadged($user));
+        self::assertFalse($user_with_star_badge->isUserBadged($other));
     }
 }

@@ -20,27 +20,23 @@
 
 namespace Tuleap\Captcha;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 require_once __DIR__ . '/bootstrap.php';
 
 class ConfigurationSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testKeysAreSaved()
+    public function testKeysAreSaved(): void
     {
-        $dao = \Mockery::mock(DataAccessObject::class);
-        $dao->shouldReceive('save')->with('valid_site_key', 'valid_secret_key')->once()->andReturns(true);
+        $dao = $this->createMock(DataAccessObject::class);
+        $dao->expects(self::once())->method('save')->with('valid_site_key', 'valid_secret_key')->willReturn(true);
 
         $saver = new ConfigurationSaver($dao);
 
         $saver->save('valid_site_key', 'valid_secret_key');
     }
 
-    public function testInvalidKeysAreRejected()
+    public function testInvalidKeysAreRejected(): void
     {
-        $dao = \Mockery::mock(DataAccessObject::class);
+        $dao = $this->createMock(DataAccessObject::class);
 
         $saver = new ConfigurationSaver($dao);
 
@@ -49,10 +45,10 @@ class ConfigurationSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $saver->save(false, false);
     }
 
-    public function testUnsuccessfulSaveIsNoSilent()
+    public function testUnsuccessfulSaveIsNoSilent(): void
     {
-        $dao = \Mockery::mock(DataAccessObject::class);
-        $dao->shouldReceive('save')->andReturns(false)->once();
+        $dao = $this->createMock(DataAccessObject::class);
+        $dao->expects(self::once())->method('save')->willReturn(false);
 
         $saver = new ConfigurationSaver($dao);
 

@@ -20,46 +20,43 @@
 
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\MockInterface
+     * @var ProjectOwnerDAO&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(ProjectOwnerDAO::class);
+        $this->dao = $this->createMock(ProjectOwnerDAO::class);
     }
 
-    public function testProjectOwnerCanBeUpdated()
+    public function testProjectOwnerCanBeUpdated(): void
     {
-        $this->dao->shouldReceive('save')->once();
+        $this->dao->expects(self::once())->method('save');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns('102');
-        $user->shouldReceive('isAdmin')->with('101')->andReturns(true);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturns('101');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getId')->willReturn('102');
+        $user->method('isAdmin')->with('101')->willReturn(true);
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn('101');
 
         $updater = new ProjectOwnerUpdater($this->dao, new DBTransactionExecutorPassthrough());
         $updater->updateProjectOwner($project, $user);
     }
 
-    public function testProjectOwnerCannotBeSetIfNotAlreadyAProjectAdmin()
+    public function testProjectOwnerCannotBeSetIfNotAlreadyAProjectAdmin(): void
     {
-        $this->dao->shouldReceive('save')->never();
+        $this->dao->expects(self::never())->method('save');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns('102');
-        $user->shouldReceive('isAdmin')->with('101')->andReturns(false);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturns('101');
+        $user = $this->createMock(\PFUser::class);
+        $user->method('getId')->willReturn('102');
+        $user->method('isAdmin')->with('101')->willReturn(false);
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn('101');
 
         $updater = new ProjectOwnerUpdater($this->dao, new DBTransactionExecutorPassthrough());
 
