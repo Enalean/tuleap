@@ -50,7 +50,6 @@ class SwitchToPresenter
      * @var false|string
      */
     public $search_form;
-    public bool $is_forcing_legacy_label;
 
     /**
      * @param ProjectPresenter[] $projects
@@ -60,14 +59,12 @@ class SwitchToPresenter
         bool $are_restricted_users_allowed,
         bool $is_trove_cat_enabled,
         bool $is_search_available,
-        bool $is_forcing_legacy_label,
         SearchFormPresenter $search_form,
     ) {
         $this->projects                     = json_encode($projects, JSON_THROW_ON_ERROR);
         $this->are_restricted_users_allowed = $are_restricted_users_allowed;
         $this->is_trove_cat_enabled         = $is_trove_cat_enabled;
         $this->is_search_available          = $is_search_available;
-        $this->is_forcing_legacy_label      = $is_forcing_legacy_label;
         $this->search_form                  = json_encode($search_form, JSON_THROW_ON_ERROR);
     }
 }

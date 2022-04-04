@@ -22,16 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use Tuleap\Config\ConfigKey;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Project\ProjectPresentersBuilder;
 
 class SwitchToPresenterBuilder
 {
-    #[ConfigKey("Temporarily keep legacy 'Projects…' label for 'Switch to…' menu")]
-    public const LEGACY_LABEL_CONFIG_KEY   = 'temporarily_keep_legacy_projects_label_for_switchto_menu';
-    private const PLEASE_KEEP_LEGACY_LABEL = 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)';
-
     /**
      * @var ProjectPresentersBuilder
      */
@@ -60,7 +55,6 @@ class SwitchToPresenterBuilder
             (bool) \ForgeConfig::areRestrictedUsersAllowed(),
             (bool) \ForgeConfig::get('sys_use_trove'),
             $user->isAlive() && ! $user->isRestricted(),
-            \ForgeConfig::get(self::LEGACY_LABEL_CONFIG_KEY) === self::PLEASE_KEEP_LEGACY_LABEL,
             $this->search_form_presenter_builder->build(),
         );
     }
