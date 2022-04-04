@@ -19,7 +19,7 @@
     "angular-custom-elements": "^2.1.0",
     "angular-gettext": "^2.4.2",
     "buffer": "^6.0.3",
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "events": "^3.3.0",
     "hybrids": "^7.0.4",
     "lodash": "2.4.0",

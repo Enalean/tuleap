@@ -9,7 +9,7 @@ specifiers:
   '@types/jquery': ^3.5.5
   '@types/mustache': ^4.1.2
   '@vue/test-utils': ^1.3.0
-  dompurify: ^2.3.4
+  dompurify: ^2.3.6
   fscreen: ^1.2.0
   jquery: ^3.6.0
   mustache: ^4.2.0
@@ -24,7 +24,7 @@ specifiers:
 dependencies:
   '@tuleap/drag-and-drop': link:../../src/scripts/lib/drag-and-drop
   '@tuleap/keyboard-shortcuts': link:../../src/scripts/lib/keyboard-shortcuts
-  dompurify: 2.3.4
+  dompurify: 2.3.6
   fscreen: 1.2.0
   mustache: 4.2.0
   p-retry: 4.5.0
@@ -133,8 +133,8 @@ packages:
     resolution: {integrity: sha512-2G2Vwi2zXTHBGqXHsJ4+ak/iP0N8Ar+G8a7LiD2oup5o4sQWytwqqrZu/O6hIMV0KMID2PL69OhpshLO0n7UJQ==}
     dev: true
 
-  /dompurify/2.3.4:
-    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /editorconfig/0.15.3:
@@ -317,7 +317,7 @@ packages:
     peerDependencies:
       vue: ^2.0.0
     dependencies:
-      dompurify: 2.3.4
+      dompurify: 2.3.6
       vue: 2.6.14
     dev: false
 

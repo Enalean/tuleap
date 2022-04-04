@@ -10,7 +10,7 @@ specifiers:
   '@types/dompurify': ^2.3.2
   '@types/marked': ^3.0.2
   '@types/turndown': ^5.0.0
-  dompurify: ^2.3.4
+  dompurify: ^2.3.6
   lit: ^2.0.2
   marked: ^4.0.10
   turndown: ^7.0.0
@@ -19,7 +19,7 @@ dependencies:
   '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
   '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
-  dompurify: 2.3.4
+  dompurify: 2.3.6
   lit: 2.0.2
   marked: 4.0.10
   turndown: 7.1.1
@@ -84,8 +84,8 @@ packages:
     resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
-  /dompurify/2.3.4:
-    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /lit-element/3.0.1:

@@ -13,7 +13,7 @@
     "@tuleap/gettext": "file:../../../../../src/scripts/lib/gettext",
     "@tuleap/plugin-tracker-constants": "link:../constants",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "lit": "^2.0.2",
     "marked": "^4.0.10",
     "turndown": "^7.0.0"

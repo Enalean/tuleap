@@ -36,7 +36,7 @@
     "d3-selection-multi": "^1.0.1",
     "d3-zoom": "^3.0.0",
     "docx": "^7.3.0",
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "dragula": "^3.7.2",
     "lodash": "^2.4.2",
     "moment": "^2.29.1",

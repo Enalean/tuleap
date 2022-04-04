@@ -16,7 +16,7 @@ specifiers:
   angular-gettext: ^2.4.2
   angular-mocks: ^1.8.2
   buffer: ^6.0.3
-  dompurify: ^2.3.4
+  dompurify: ^2.3.6
   events: ^3.3.0
   hybrids: ^7.0.4
   lodash: 2.4.0
@@ -39,7 +39,7 @@ dependencies:
   angular-custom-elements: 2.1.0
   angular-gettext: 2.4.2
   buffer: 6.0.3
-  dompurify: 2.3.4
+  dompurify: 2.3.6
   events: 3.3.0
   hybrids: 7.0.4
   lodash: 2.4.0
@@ -93,8 +93,8 @@ packages:
     resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
     dev: false
 
-  /dompurify/2.3.4:
-    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /end-of-stream/1.4.1:

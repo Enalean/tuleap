@@ -19,7 +19,7 @@
     "@tuleap/plugin-tracker-rest-api-types": "link:../../../../tracker/scripts/lib/rest-api-types",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "docx": "^7.3.0",
-    "dompurify": "^2.3.4",
+    "dompurify": "^2.3.6",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {

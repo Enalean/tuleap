@@ -36,7 +36,7 @@ specifiers:
   d3-selection-multi: ^1.0.1
   d3-zoom: ^3.0.0
   docx: ^7.3.0
-  dompurify: ^2.3.4
+  dompurify: ^2.3.6
   dragula: ^3.7.2
   jquery: ^3.6.0
   lodash: ^2.4.2
@@ -84,7 +84,7 @@ dependencies:
   d3-selection-multi: 1.0.1
   d3-zoom: 3.0.0
   docx: 7.3.0
-  dompurify: 2.3.4
+  dompurify: 2.3.6
   dragula: 3.7.3
   lodash: 2.4.2
   moment: 2.29.1
@@ -416,8 +416,8 @@ packages:
     resolution: {integrity: sha512-2G2Vwi2zXTHBGqXHsJ4+ak/iP0N8Ar+G8a7LiD2oup5o4sQWytwqqrZu/O6hIMV0KMID2PL69OhpshLO0n7UJQ==}
     dev: true
 
-  /dompurify/2.3.4:
-    resolution: {integrity: sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==}
+  /dompurify/2.3.6:
+    resolution: {integrity: sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==}
     dev: false
 
   /dragula/3.7.3:
@@ -840,7 +840,7 @@ packages:
     peerDependencies:
       vue: ^2.0.0
     dependencies:
-      dompurify: 2.3.4
+      dompurify: 2.3.6
       vue: 2.6.14
     dev: false
 
