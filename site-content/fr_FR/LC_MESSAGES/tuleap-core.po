@@ -4943,16 +4943,6 @@ msgstr ""
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
 
-#, php-format
-msgid ""
-"Your old Tuleap login was not valid against the configuration of your "
-"platform. It will be changed to \"%s\". If you use Ldap, it will not change "
-"your ldap login."
-msgstr ""
-"Votre ancien login Tuleap n'était plus valide par rapport à la configuration "
-"de votre plateforme. Il a été changé pour \"%s\". Si vous utilisez Ldap pour "
-"vous connecter, le login Ldap n'a pas changé."
-
 msgid "Your place was saved"
 msgstr "Position dans le forum sauvegardée."
 

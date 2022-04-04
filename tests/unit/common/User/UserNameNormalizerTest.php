@@ -90,32 +90,6 @@ class UserNameNormalizerTest extends TestCase
         $this->username_normalizer->normalize("666");
     }
 
-    public function testItAddPrefixToUsernameIsNotUnixValidAndUnixUsersIsEnabled(): void
-    {
-        $slugified_username = "666";
-        $prefixed_username  = "tlp-666";
-        ForgeConfig::set('homedir_prefix', "home/user");
-
-        $this->rules->shouldReceive('atLeastOneChar')->andReturn(false);
-        $this->rules->shouldReceive('isUnixValid')->with($prefixed_username)->andReturn(true);
-
-        $this->rules->shouldReceive('isValid')->with($prefixed_username)->andReturn(true)->once();
-
-        $this->assertSame($prefixed_username, $this->username_normalizer->normalize("$slugified_username"));
-    }
-
-    public function testItDoesntCheckIfUsernameHasAtLeastOneCharIfUnixUsersNotEnabled(): void
-    {
-        $slugified_username = "666";
-
-        $this->rules->shouldReceive('atLeastOneChar')->never();
-        $this->rules->shouldReceive('isUnixValid')->never();
-
-        $this->rules->shouldReceive('isValid')->with($slugified_username)->andReturn(true)->once();
-
-        $this->assertSame($slugified_username, $this->username_normalizer->normalize($slugified_username));
-    }
-
     public function testGenerateUserLoginIncrementIfLoginAlreadyExist(): void
     {
         $slugified_username   = "jean_pierre";
