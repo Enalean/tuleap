@@ -4,6 +4,7 @@
         role="dialog"
         v-bind:aria-labelled-by="aria_labelled_by"
         v-on:submit.prevent="createNewFile"
+        ref="file_creation_modal_root_anchor"
     >
         <modal-header
             v-bind:modal-title="$gettext('Create a new file')"
@@ -25,85 +26,107 @@
     </form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import type { Modal } from "tlp";
 import { createModal } from "tlp";
 import DocumentGlobalPropertyForCreate from "../NewDocument/PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
-import type { DefaultFileItem, Folder } from "../../../../type";
+import type { DefaultFileItem, Folder, RootState } from "../../../../type";
 import { TYPE_FILE } from "../../../../constants";
-import { namespace, State } from "vuex-class";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
+import emitter from "../../../../helpers/emitter";
+import {
+    useActions,
+    useNamespacedMutations,
+    useNamespacedState,
+    useState,
+} from "vuex-composition-helpers";
+import type { ErrorState } from "../../../../store/error/module";
+import { onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { transformStatusPropertyForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import type { ConfigurationState } from "../../../../store/configuration";
 
-const error = namespace("error");
+const props = defineProps<{ parent: Folder; droppedFile: File }>();
 
-@Component({
-    components: {
-        ModalFooter,
-        ModalFeedback,
-        ModalHeader,
-        DocumentGlobalPropertyForCreate,
-    },
-})
-export default class FileCreationModal extends Vue {
-    @Prop({ required: true })
-    readonly parent!: Folder;
+const emit = defineEmits<{
+    (e: "close-file-creation-modal"): void;
+}>();
 
-    @Prop({ required: true })
-    readonly droppedFile!: File;
+const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
 
-    @State
-    readonly current_folder!: Folder;
+const { createNewItem } = useActions(["createNewItem"]);
+const { resetModalError } = useNamespacedMutations("error", ["resetModalError"]);
 
-    @error.State
-    readonly has_modal_error!: boolean;
+const modal = ref<Modal | null>(null);
+const is_loading = ref(false);
+const item = ref<DefaultFileItem>(getDefaultItem());
 
-    private modal: Modal | null = null;
-    private is_loading = false;
-    private item = this.getDefaultItem();
+const aria_labelled_by = ref("document-file-creation-modal");
 
-    readonly aria_labelled_by = "document-file-creation-modal";
+const file_creation_modal_root_anchor = ref<InstanceType<typeof HTMLElement>>();
 
-    getDefaultItem(): DefaultFileItem {
-        return {
-            title: "",
-            description: "",
-            type: TYPE_FILE,
-            file_properties: {
-                file: {},
-            },
-        };
+onMounted((): void => {
+    if (file_creation_modal_root_anchor.value) {
+        modal.value = createModal(file_creation_modal_root_anchor.value, { destroy_on_hide: true });
+        modal.value.addEventListener("tlp-modal-hidden", close);
+        modal.value.show();
     }
+    emitter.on("update-status-property", updateStatusValue);
+    transformStatusPropertyForItemCreation(item.value, props.parent, is_status_property_used.value);
+});
 
-    mounted(): void {
-        this.modal = createModal(this.$el, { destroy_on_hide: true });
-        this.modal.addEventListener("tlp-modal-hidden", this.close);
-        this.modal.show();
+onBeforeUnmount((): void => {
+    if (modal.value !== null) {
+        modal.value.removeEventListener("tlp-modal-hidden", close);
     }
+    emitter.off("update-status-property", updateStatusValue);
+});
 
-    close(): void {
-        if (this.modal !== null) {
-            this.modal.removeBackdrop();
-            this.$emit("close-file-creation-modal");
-            this.item = this.getDefaultItem();
-        }
-    }
+function getDefaultItem(): DefaultFileItem {
+    return {
+        title: "",
+        description: "",
+        type: TYPE_FILE,
+        file_properties: {
+            file: {},
+        },
+        status: "none",
+    };
+}
 
-    async createNewFile(): Promise<void> {
-        this.is_loading = true;
-        this.item.file_properties.file = this.droppedFile;
-        this.$store.commit("error/resetModalError");
-        await this.$store.dispatch("createNewItem", [this.item, this.parent, this.current_folder]);
-        this.is_loading = false;
-
-        if (!this.has_modal_error) {
-            this.item = this.getDefaultItem();
-            this.close();
-        }
+function close(): void {
+    if (modal.value !== null) {
+        modal.value.removeBackdrop();
+        emit("close-file-creation-modal");
+        item.value = getDefaultItem();
     }
 }
+
+function updateStatusValue(event: string) {
+    item.value.status = event;
+}
+
+async function createNewFile(): Promise<void> {
+    is_loading.value = true;
+    item.value.file_properties.file = props.droppedFile;
+    resetModalError({});
+    await createNewItem([item.value, props.parent, current_folder.value]);
+    is_loading.value = false;
+
+    if (!has_modal_error.value) {
+        item.value = getDefaultItem();
+        close();
+    }
+}
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+export default defineComponent({});
 </script>

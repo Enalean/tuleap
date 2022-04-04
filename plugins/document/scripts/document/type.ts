@@ -170,6 +170,7 @@ export interface DefaultFileItem {
     description: string;
     type: "file";
     file_properties: DefaultFileProperties;
+    status: string;
 }
 
 export interface Uploadable {

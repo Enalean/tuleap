@@ -26,10 +26,11 @@ import * as tlp from "tlp";
 import FileCreationModal from "./FileCreationModal.vue";
 import { TYPE_FILE } from "../../../../constants";
 import type { State } from "../../../../type";
+import emitter from "../../../../helpers/emitter";
 
 jest.mock("tlp");
 
-describe("FileVersionChangelogModal", () => {
+describe("FileCreationModal", () => {
     const add_event_listener = jest.fn();
     const modal_show = jest.fn();
     const remove_backdrop = jest.fn();
@@ -38,6 +39,7 @@ describe("FileVersionChangelogModal", () => {
         const state = {
             current_folder: { id: 13, title: "Limited Edition" },
             error: { has_modal_error },
+            configuration: { is_status_property_used: false },
         } as unknown as State;
         const store_option = { state };
         const store = createStoreMock(store_option);
@@ -73,6 +75,7 @@ describe("FileVersionChangelogModal", () => {
                 file_properties: {
                     file: {},
                 },
+                status: "Approved",
             },
         });
 
@@ -83,6 +86,7 @@ describe("FileVersionChangelogModal", () => {
             file_properties: {
                 file: dropped_file,
             },
+            status: "Approved",
         };
         wrapper.get("form").trigger("submit");
 
@@ -109,6 +113,7 @@ describe("FileVersionChangelogModal", () => {
                 file_properties: {
                     file: {},
                 },
+                status: "Approved",
             },
         });
 
@@ -119,6 +124,7 @@ describe("FileVersionChangelogModal", () => {
             file_properties: {
                 file: dropped_file,
             },
+            status: "Approved",
         };
         wrapper.get("form").trigger("submit");
 
@@ -136,7 +142,23 @@ describe("FileVersionChangelogModal", () => {
             file_properties: {
                 file: {},
             },
+            status: "none",
         };
         expect(wrapper.vm.$data.item).toMatchObject(default_item);
+    });
+    describe("Received event", () => {
+        it("Updates the default item status", async () => {
+            const dropped_file = new File([], "Duster Pikes Peak.lol");
+            const wrapper = getWrapper(dropped_file, false);
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.vm.$data.item.status).toBe("none");
+            emitter.emit("update-status-property", "approved");
+
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.vm.$data.item.status).toBe("approved");
+        });
     });
 });

@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Property, ListValue, Item } from "../../../type";
+import type { Property, ListValue, Item, DefaultFileItem } from "../../../type";
 import { getStatusFromMapping } from "../hardcoded-properties-mapping-helper";
 import { assertListIsOnlyMultipleValue } from "./list-value-helper";
 
-export function updateStatusProperty(property: Property, item: Item): void {
+export function updateStatusProperty(property: Property, item: Item | DefaultFileItem): void {
     let status = "none";
 
     if (property && property.list_value && assertListIsOnlyMultipleValue(property.list_value)) {
