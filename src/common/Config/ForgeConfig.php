@@ -26,6 +26,7 @@ use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Config\ConfigValueDefaultValueAttributeProvider;
 use Tuleap\Config\ConfigValueEnvironmentProvider;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
@@ -56,6 +57,7 @@ class ForgeConfig
 
     public static function loadInSequence(): void
     {
+        self::loadCoreDefaultsFromAttributes();
         self::loadLocalInc();
         self::loadDatabaseConfig();
         self::loadFromDatabase();
@@ -64,6 +66,7 @@ class ForgeConfig
 
     public static function loadForInitialSetup(string $fqdn): void
     {
+        self::loadCoreDefaultsFromAttributes();
         self::loadLocalInc();
         self::initDefaultValues($fqdn);
         self::load(new ConfigValueEnvironmentProvider(ServerHostname::class, ConfigurationVariables::class));
@@ -86,8 +89,6 @@ class ForgeConfig
         self::set(ConfigurationVariables::EMAIL_ADMIN, 'codendi-admin@' . $fqdn);
         self::set(ConfigurationVariables::EMAIL_CONTACT, 'codendi-contact@' . $fqdn);
         self::set(ConfigurationVariables::NOREPLY, sprintf('"Tuleap" <noreply@%s>', $fqdn));
-        self::set(ConfigurationVariables::ORG_NAME, 'Tuleap');
-        self::set(ConfigurationVariables::LONG_ORG_NAME, 'Tuleap');
         self::setNewDefault(ConfigurationVariables::HOMEDIR_PREFIX, '');
         self::setNewDefault(ConfigurationVariables::GRPDIR_PREFIX, '');
         self::setNewDefault(ConfigurationVariables::MAIL_SECURE_MODE, ConfigKeyLegacyBool::FALSE);
@@ -101,20 +102,19 @@ class ForgeConfig
 
     private static function loadDatabaseConfig(): void
     {
-        self::loadDatabaseDefaultValues();
         self::loadDatabaseInc();
         self::loadDatabaseParametersFromEnvironment();
+    }
+
+    private static function loadCoreDefaultsFromAttributes(): void
+    {
+        self::load(new ConfigValueDefaultValueAttributeProvider(...GetConfigKeys::CORE_CLASSES_WITH_CONFIG_KEYS));
     }
 
     private static function loadLocalInc(): void
     {
         self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
         self::loadFromFile((new Config_LocalIncFinder())->getLocalIncPath());
-    }
-
-    private static function loadDatabaseDefaultValues(): void
-    {
-        self::load(new ConfigValueDefaultValueAttributeProvider(\Tuleap\DB\DBConfig::class));
     }
 
     private static function loadDatabaseInc(): void

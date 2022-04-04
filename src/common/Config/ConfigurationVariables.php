@@ -48,13 +48,13 @@ final class ConfigurationVariables
     #[ConfigKey('Company/organization running the system (short)')]
     #[ConfigKeyHelp('Short version or abbreviation commonly used')]
     #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
+    #[ConfigKeyString('Tuleap')]
     public const ORG_NAME = 'sys_org_name';
 
     #[ConfigKey('Company/organization running the system (long)')]
     #[ConfigKeyHelp('Long/official/formal name')]
     #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
+    #[ConfigKeyString('Tuleap')]
     public const LONG_ORG_NAME = 'sys_long_org_name';
 
     #[ConfigKey('Prefix to add to the user\'s homedir')]

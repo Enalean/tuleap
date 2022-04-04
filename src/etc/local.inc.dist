@@ -245,10 +245,6 @@ $sys_auth_type = 'codendi';
 // System name to be used in Web pages, documentation,etc.
 $sys_name = 'Tuleap';
 
-// Company/Organization running the system (short and long)
-$sys_org_name      = '%sys_org_name%';
-$sys_long_org_name = '%sys_long_org_name%';
-
 // Email address pointing to the Tuleap site administrators
 // for use Web pages, documentation,etc.
 $sys_email_admin = 'codendi-admin@%sys_default_domain%';
