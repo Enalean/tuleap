@@ -38,7 +38,6 @@ use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\System\ServiceControl;
-use Tuleap\User\SwitchToPresenterBuilder;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
 use User_UserStatusManager;
@@ -67,7 +66,6 @@ final class GetConfigKeys implements Dispatchable
         InviteBuddyConfiguration::class,
         HelpDropdownPresenterBuilder::class,
         BrowserDeprecationMessage::class,
-        SwitchToPresenterBuilder::class,
         DBConfig::class,
         DBAuthUserConfig::class,
         BackendSystem::class,

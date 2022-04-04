@@ -2855,9 +2855,6 @@ msgstr "Statistiques projets"
 msgid "Projects visibility"
 msgstr "Visibilité des projets"
 
-msgid "Projects…"
-msgstr "Projets…"
-
 #, php-format
 msgid ""
 "Propagation of project's name update on system queued (%1$s -> %2$s). It "

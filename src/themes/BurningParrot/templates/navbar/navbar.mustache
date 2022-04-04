@@ -41,12 +41,7 @@
             <button type="button" class="tlp-button-secondary tlp-button-outline" id="switch-to-button" data-target-modal-id="switch-to-modal" data-test="switch-to-button">
                 <i class="fa fa-random tlp-button-icon" aria-hidden="true"></i>
                 <span class="header-button-label">
-                    {{# is_forcing_legacy_label }}
-                        {{# gettext }}Projects…{{/ gettext }}
-                    {{/ is_forcing_legacy_label }}
-                    {{^ is_forcing_legacy_label }}
-                        {{# gettext }}Switch to…{{/ gettext }}
-                    {{/ is_forcing_legacy_label }}
+                    {{# gettext }}Switch to…{{/ gettext }}
                 </span>
             </button>
         {{/ switch_to }}
