@@ -19,14 +19,15 @@
 
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { DateCell, EmptyCell, HTMLCell, NumberCell, TextCell } from "@tuleap/plugin-docgen-xlsx";
-import type { TextValueField, TrackerFieldValue } from "./Tracker/artifact";
+import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
+import type { TextChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 
 export function transformFieldValueIntoACell(
-    field_value: Readonly<TrackerFieldValue>
+    field_value: Readonly<ArtifactReportResponseFieldValue>
 ): ReportCell | null {
     switch (field_value.type) {
         case "string":
-            return new TextCell(field_value.value);
+            return new TextCell(field_value.value ?? "");
         case "text":
             return transformTextFieldValueIntoACell(field_value);
         case "int":
@@ -62,11 +63,11 @@ function getCellFromPossibleNumber(n: number | null): NumberCell | EmptyCell {
 }
 
 export function transformTextFieldValueIntoACell(
-    text_field_value: TextValueField
+    text_field_value: TextChangesetValue
 ): TextCell | HTMLCell {
     if (text_field_value.format === "text") {
-        return new TextCell(text_field_value.value);
+        return new TextCell(text_field_value.value ?? "");
     }
 
-    return new HTMLCell(text_field_value.value);
+    return new HTMLCell(text_field_value.value ?? "");
 }

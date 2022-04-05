@@ -24,7 +24,7 @@ import { buildRequirementsSection } from "./requirements-builder";
 import type { Tracker } from "./Tracker/tracker";
 import * as artifacts_retriever from "./Tracker/artifacts-retriever";
 import * as trackers_retriever from "./Tracker/trackers-retriever";
-import type { Artifact, TrackerFieldValue } from "./Tracker/artifact";
+import type { Artifact } from "./Tracker/artifact";
 
 describe("Build requirements section", () => {
     it("builds section", async () => {
@@ -138,6 +138,7 @@ describe("Build requirements section", () => {
                                 type: "computed",
                                 is_autocomputed: true,
                                 value: null,
+                                manual_value: null,
                             },
                             {
                                 field_id: 391,
@@ -149,7 +150,8 @@ describe("Build requirements section", () => {
                                 field_id: 491,
                                 label: "Artifact ID",
                                 type: "aid",
-                            } as TrackerFieldValue,
+                                value: null,
+                            },
                             {
                                 field_id: 591,
                                 label: "Text",
@@ -197,6 +199,7 @@ describe("Build requirements section", () => {
                                 type: "computed",
                                 is_autocomputed: true,
                                 value: 24,
+                                manual_value: null,
                             },
                             {
                                 field_id: 391,
@@ -208,7 +211,8 @@ describe("Build requirements section", () => {
                                 field_id: 491,
                                 label: "Artifact ID",
                                 type: "aid",
-                            } as TrackerFieldValue,
+                                value: null,
+                            },
                             {
                                 field_id: 591,
                                 label: "Text",
