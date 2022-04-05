@@ -21,29 +21,21 @@
 
 namespace Tuleap\Plugin;
 
+/**
+ * This class is meant to be serialized & rehydrated directly by VarExporter.
+ * For some reasons, it seems that it doesn't play well with constructor promotion
+ * when trying to add a new param.
+ */
 class EventPluginCache
 {
-    /**
-     * @var array
-     */
-    public $plugin_map;
+    public array $plugin_map        = [];
+    public array $event_plugin_map  = [];
+    public array $default_variables = [];
 
-    /**
-     * @var array
-     */
-    public $event_plugin_map;
-
-    public function __construct(array $plugin_map = [], array $event_plugin_map = [])
+    public function __construct(array $plugin_map = [], array $event_plugin_map = [], array $default_variables = [])
     {
-        $this->plugin_map       = $plugin_map;
-        $this->event_plugin_map = $event_plugin_map;
-    }
-
-    public static function __set_state($an_array)
-    {
-        return new self(
-            $an_array['plugin_map'],
-            $an_array['event_plugin_map']
-        );
+        $this->plugin_map        = $plugin_map;
+        $this->event_plugin_map  = $event_plugin_map;
+        $this->default_variables = $default_variables;
     }
 }

@@ -64,6 +64,19 @@ class ForgeConfig
         self::loadFromFile(self::get('redis_config_file'));
     }
 
+    /**
+     * @param array<string, mixed> $variables
+     */
+    public static function loadPluginsDefaultValues(array $variables): void
+    {
+        foreach ($variables as $key => $value) {
+            if (self::exists($key)) {
+                continue;
+            }
+            self::set($key, $value);
+        }
+    }
+
     public static function loadForInitialSetup(string $fqdn): void
     {
         self::loadCoreDefaultsFromAttributes();

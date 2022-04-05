@@ -25,8 +25,9 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigKey;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
@@ -59,7 +60,8 @@ use Tuleap\Request\CollectRoutesEvent;
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class gitlfsPlugin extends \Plugin // phpcs:ignore
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
 {
     public const SERVICE_SHORTNAME = "tuleap-gitlfs";
 
@@ -104,7 +106,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
         $this->addHook(DisplayFileContentInGitView::NAME);
-        $this->addHook(GetConfigKeys::NAME);
+
         if (file_exists(__DIR__ . '/../../pullrequest/include/pullrequestPlugin.php')) {
             require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.php';
             $this->addHook(PullRequestDiffRepresentationBuild::NAME);
@@ -459,7 +461,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         }
     }
 
-    public function getConfigKeys(GetConfigKeys $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);
     }

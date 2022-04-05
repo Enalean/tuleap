@@ -74,8 +74,6 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             putenv("$key=$value");
         }
 
-        ForgeConfig::loadInSequence();
-
         $tests();
 
         // Clean-up environment
@@ -92,6 +90,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'database' => [],
                 'environment' => [],
                 'tests' => function () {
+                    ForgeConfig::loadInSequence();
                     self::assertEquals('Tuleap', ForgeConfig::get(ConfigurationVariables::ORG_NAME));
                 },
             ],
@@ -102,6 +101,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'database' => [],
                 'environment' => [],
                 'tests' => function () {
+                    ForgeConfig::loadInSequence();
                     self::assertEquals('Acme Gmbh', ForgeConfig::get(ConfigurationVariables::ORG_NAME));
                 },
             ],
@@ -110,6 +110,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'database' => [],
                 'environment' => [],
                 'tests' => function () {
+                    ForgeConfig::loadInSequence();
                     self::assertEquals('%sys_fullname%', ForgeConfig::get('sys_fullname'));
                 },
             ],
@@ -120,6 +121,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'database' => [],
                 'environment' => [],
                 'tests' => function () {
+                    ForgeConfig::loadInSequence();
                     self::assertEquals('Matchete', ForgeConfig::get('sys_fullname'));
                 },
             ],
@@ -133,6 +135,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 ],
                 'environment' => [],
                 'tests' => function () {
+                    ForgeConfig::loadInSequence();
                     self::assertSame('1', ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL));
                 },
             ],
@@ -143,6 +146,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'database' => [],
                 'environment' => [],
                 'tests' => function () {
+                    ForgeConfig::loadInSequence();
                     self::assertEquals('foo', ForgeConfig::get('sys_dbhost'));
                 },
             ],
@@ -155,7 +159,35 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                     'TULEAP_SYS_DBHOST' => 'db.example.com',
                 ],
                 'tests' =>  function () {
+                    ForgeConfig::loadInSequence();
                     self::assertEquals('db.example.com', ForgeConfig::get('sys_dbhost'));
+                },
+            ],
+            'Plugin define a default value with attributes' => [
+                'local_inc' => [],
+                'database' => [],
+                'environment' => [],
+                'tests' => function () {
+                    ForgeConfig::loadInSequence();
+
+                    \ForgeConfig::loadPluginsDefaultValues(['some_key' => 'foo_bar']);
+                    self::assertEquals('foo_bar', \ForgeConfig::get('some_key'));
+                },
+            ],
+            'Plugin value loaded from database has precedence over attributes' => [
+                'local_inc' => [],
+                'database' => [
+                    [
+                        'name'  => 'some_key',
+                        'value' => 'set_in_db',
+                    ],
+                ],
+                'environment' => [],
+                'tests' => function () {
+                    ForgeConfig::loadInSequence();
+
+                    \ForgeConfig::loadPluginsDefaultValues(['some_key' => 'foo_bar']);
+                    self::assertEquals('set_in_db', \ForgeConfig::get('some_key'));
                 },
             ],
         ];

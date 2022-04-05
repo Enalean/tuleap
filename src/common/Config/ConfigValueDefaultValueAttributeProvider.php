@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Config;
 
-
 final class ConfigValueDefaultValueAttributeProvider implements \ConfigValueProvider
 {
     /**
@@ -41,19 +40,41 @@ final class ConfigValueDefaultValueAttributeProvider implements \ConfigValueProv
 
     /**
      * @return array<string, mixed>
+     * @throws \ReflectionException
      */
     public function getVariables(): array
     {
         $variables = [];
         foreach (ConstantWithConfigAttributesBuilder::get(...$this->classes) as $constant) {
             $default_values_attributes = $constant->getAttributes();
+
+            $key   = null;
+            $value = null;
             foreach ($default_values_attributes as $attribute) {
                 $attribute_object = $attribute->newInstance();
+
+                if ($attribute_object instanceof ConfigKey) {
+                    $const_value = $constant->getValue();
+                    if (is_string($const_value)) {
+                        $key = $const_value;
+                    }
+                }
+
+                if ($attribute_object instanceof FeatureFlagConfigKey) {
+                    $const_value = $constant->getValue();
+                    if (is_string($const_value)) {
+                        $key = \ForgeConfig::FEATURE_FLAG_PREFIX . $const_value;
+                    }
+                }
+
                 if ($attribute_object instanceof ConfigKeyType && $attribute_object->hasDefaultValue()) {
                     $constant_value = $constant->getValue();
                     assert(is_string($constant_value));
-                    $variables[$constant_value] = $attribute_object->default_value;
+                    $value = $attribute_object->default_value;
                 }
+            }
+            if ($key !== null && $value !== null) {
+                $variables[$key] = $value;
             }
         }
         return $variables;

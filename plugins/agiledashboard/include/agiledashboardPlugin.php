@@ -90,7 +90,8 @@ use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogVal
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
@@ -161,10 +162,8 @@ require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
-/**
- * AgileDashboardPlugin
- */
-class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const PLUGIN_NAME      = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
@@ -272,7 +271,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
             $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
-            $this->addHook(GetConfigKeys::NAME);
             $this->addHook(JiraImporterExternalPluginsEvent::NAME);
             $this->addHook(GetSemanticProgressUsageEvent::NAME);
             $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
@@ -595,7 +593,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function getConfigKeys(GetConfigKeys $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ScrumForMonoMilestoneChecker::class);
     }

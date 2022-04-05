@@ -20,6 +20,7 @@
  */
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Config\PluginWithConfigKeys;
 
 /**
  * Plugin
@@ -140,6 +141,9 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getHooksAndCallbacks()
     {
+        if ($this instanceof PluginWithConfigKeys && ! $this->hooks->containsKey(\Tuleap\Config\GetConfigKeys::NAME)) {
+            $this->addHook(\Tuleap\Config\GetConfigKeys::NAME);
+        }
         return $this->hooks->getValues();
     }
 
@@ -213,13 +217,6 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName() . '/templates';
     }
 
-    public function _getPluginPath()
-    {
-        $trace = debug_backtrace();
-        trigger_error("Plugin->_getPluginPath() is deprecated. Please use Plugin->getPluginPath() instead in " . $trace[0]['file'] . " at line " . $trace[0]['line'], E_USER_WARNING);
-        return $this->getPluginPath();
-    }
-
     /**
      * Return plugin's URL path from the server root
      *
@@ -239,13 +236,6 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $path = ForgeConfig::get('sys_custompluginspath');
         }
         return $path . '/' . $this->getName();
-    }
-
-    public function _getThemePath()
-    {
-        $trace = debug_backtrace();
-        trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in " . $trace[0]['file'] . " at line " . $trace[0]['line'], E_USER_WARNING);
-        return $this->getThemePath();
     }
 
     public function getThemePath()
@@ -312,12 +302,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return $this->name;
     }
 
-    /**
-     * Wrapper for PluginManager
-     *
-     * @return PluginManager
-     */
-    protected function _getPluginManager()
+    protected function _getPluginManager(): PluginManager // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $pm = PluginManager::instance();
         return $pm;
