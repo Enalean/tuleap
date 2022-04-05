@@ -1243,4 +1243,25 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         return $created_file_json['id'];
     }
+
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testGetDocumentVersions(array $items): void
+    {
+        $file_with_versions = $this->findItemByTitle($items, 'POST F V');
+
+        $file_id = $file_with_versions['id'];
+
+        $project_response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'docman_files/' . $file_id . '/versions'),
+            \TestDataBuilder::ADMIN_USER_NAME,
+        );
+
+        $json_history = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertEquals("", $json_history[1]["name"]);
+        self::assertEquals("My new versionnn", $json_history[0]['name']);
+    }
 }

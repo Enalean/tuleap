@@ -47,23 +47,13 @@ use UGroupManager;
 use UserHelper;
 use UserManager;
 
-class DocmanItemsResource extends AuthenticatedResource
+final class DocmanItemsResource extends AuthenticatedResource
 {
     public const MAX_LIMIT = 50;
 
-    /**
-     * @var Docman_ItemDao
-     */
-    private $item_dao;
-    /**
-     * @var DocmanItemsRequestBuilder
-     */
-    private $request_builder;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
+    private Docman_ItemDao $item_dao;
+    private DocmanItemsRequestBuilder $request_builder;
+    private EventManager $event_manager;
 
     public function __construct()
     {
@@ -75,7 +65,7 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      */
-    public function optionsId($id)
+    public function optionsId(int $id): void
     {
         $this->sendAllowHeaders();
     }
@@ -183,7 +173,7 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/docman_items
      */
-    public function optionsDocumentItems($id)
+    public function optionsDocumentItems(int $id): void
     {
         $this->sendAllowHeadersWithPost();
     }
@@ -191,7 +181,7 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/parents
      */
-    public function optionsParents($id)
+    public function optionsParents(int $id): void
     {
         $this->sendAllowHeaders();
     }

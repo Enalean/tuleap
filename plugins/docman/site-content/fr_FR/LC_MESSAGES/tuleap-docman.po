@@ -2957,7 +2957,7 @@ msgid "You're monitoring '%1$s'."
 msgstr "Vous surveillez désormais '%1$s'."
 
 msgid "Your are not allowed to access this data."
-msgstr "Your are not allowed to access this data."
+msgstr "Vous n'êtes pas authorisé à accéder à ces données."
 
 #, php-format
 msgid ""

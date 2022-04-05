@@ -59,6 +59,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -66,20 +67,13 @@ use Tuleap\REST\I18NRestException;
 use UGroupManager;
 use UserManager;
 
-class DocmanFilesResource extends AuthenticatedResource
+final class DocmanFilesResource extends AuthenticatedResource
 {
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var DocmanItemsRequestBuilder
-     */
-    private $request_builder;
+    private const MAX_LIMIT = 50;
+
+    private \EventManager $event_manager;
+    private UserManager $user_manager;
+    private DocmanItemsRequestBuilder $request_builder;
 
     public function __construct()
     {
@@ -532,5 +526,58 @@ class DocmanFilesResource extends AuthenticatedResource
                 $exception->getMessage()
             );
         }
+    }
+
+    /**
+     * Get the versions of an item
+     *
+     * Versions are sorted from newest to oldest.
+     *
+     * @url    GET {id}/versions
+     * @access hybrid
+     *
+     * @param int $id Id of the item
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $limit Number of elements displayed {@from path}{@min 0}{@max 50}
+     *
+     * @return array {@type \Tuleap\Docman\REST\v1\Files\FileVersionRepresentation}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     *
+     */
+    public function getVersions(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaders();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $user          = $items_request->getUser();
+        $project       = $items_request->getProject();
+
+        $item->accept($this->getValidator($project, $user, $item), []);
+
+        $item_representation_builder = new VersionRepresentationCollectionBuilder(new VersionDao());
+        $items_representation        = $item_representation_builder->buildVersionsCollection($item, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
+
+        return $items_representation->getPaginatedFileversionrepresentations();
+    }
+
+    /**
+     * @url OPTIONS {id}/versions
+     */
+    public function optionsDocumentVersions(int $id): void
+    {
+        $this->sendAllowHeaders();
+    }
+
+    private function sendAllowHeaders(): void
+    {
+        Header::allowOptionsGet();
     }
 }

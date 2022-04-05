@@ -32,6 +32,7 @@ use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchColumn;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
+use Tuleap\Docman\Version\VersionDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -66,7 +67,13 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
         $this->representation_builder = new BuildSearchedItemRepresentationsFromSearchReport(
             $this->status_mapper,
             $this->user_manager,
-            new ItemRepresentationCollectionBuilder($this->item_factory, $permissions_manager, $this->createMock(ItemRepresentationVisitor::class), $item_dao),
+            new ItemRepresentationCollectionBuilder(
+                $this->item_factory,
+                $permissions_manager,
+                $this->createMock(ItemRepresentationVisitor::class),
+                $item_dao,
+                $this->createMock(VersionDao::class)
+            ),
             $this->item_factory,
             new SearchRepresentationTypeVisitor(),
             new FilePropertiesVisitor($this->version_factory),
