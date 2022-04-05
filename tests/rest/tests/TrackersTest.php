@@ -533,6 +533,23 @@ final class TrackersTest extends TrackerBase
         $this->assertGETParentArtifacts($response);
     }
 
+    public function testGetUsedArtifactLinks(): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'trackers/' . $this->user_stories_tracker_id . '/used_artifact_links'),
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $representations = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $shortnames = [];
+        foreach ($representations as $representation) {
+            $shortnames[] = $representation['shortname'];
+        }
+
+        self::assertContains('_is_child', $shortnames);
+    }
+
     private function assertGETParentArtifacts(ResponseInterface $response): void
     {
         $parent_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
