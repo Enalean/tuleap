@@ -24,6 +24,7 @@ namespace Tuleap\DocumentGeneration\CrossReport;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveUsedArtifactLinkTypesInTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CrossReportExportPropertiesFetcherTest extends TestCase
@@ -37,7 +38,15 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
     protected function setUp(): void
     {
         $this->report_factory = $this->createStub(\Tracker_ReportFactory::class);
-        $this->fetcher        = new CrossReportExportPropertiesFetcher($this->report_factory);
+        $this->fetcher        = new CrossReportExportPropertiesFetcher(
+            $this->report_factory,
+            new class implements RetrieveUsedArtifactLinkTypesInTracker {
+                public function getAllUsedTypePresentersByTracker(\Tracker $tracker): array
+                {
+                    return [];
+                }
+            }
+        );
     }
 
     public function testFetchesProperties(): void
@@ -74,6 +83,7 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
             ],
             $props->current_tracker_reports
         );
+        self::assertEquals([], $props->current_tracker_artifact_link_types);
     }
 
     private static function buildReport(\Tracker $tracker, int $id, string $name, ?\PFUser $owned_by): \Tracker_Report

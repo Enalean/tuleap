@@ -20,24 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\DocumentGeneration\CrossReport;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
-
-/**
- * @psalm-immutable
- */
-final class CrossReportExportProperties
+interface RetrieveUsedArtifactLinkTypesInTracker
 {
-    /**
-     * @param CrossReportExportPropertiesReport[] $current_tracker_reports
-     * @param TypePresenter[] $current_tracker_artifact_link_types
-     */
-    public function __construct(
-        public string $current_tracker_name,
-        public int $current_report_id,
-        public array $current_tracker_reports,
-        public array $current_tracker_artifact_link_types,
-    ) {
-    }
+    /** @return TypePresenter[] */
+    public function getAllUsedTypePresentersByTracker(\Tracker $tracker): array;
 }

@@ -116,6 +116,23 @@ class TypeDao extends DataAccessObject
     }
 
     /**
+     * @psalm-return array{nature: string, forward_label: string, reverse_label: string}[]
+     */
+    public function searchAllUsedTypesByTrackerID(int $tracker_id): array
+    {
+        $sql = "SELECT DISTINCT nature, forward_label, reverse_label
+                 FROM tracker_changeset_value_artifactlink
+                 JOIN tracker_changeset_value ON (tracker_changeset_value_artifactlink.changeset_value_id = tracker_changeset_value.id)
+                 JOIN tracker_changeset ON (tracker_changeset_value.changeset_id = tracker_changeset.id)
+                 JOIN tracker_artifact ON (tracker_changeset.artifact_id = tracker_artifact.id)
+                 LEFT JOIN plugin_tracker_artifactlink_natures ON (tracker_changeset_value_artifactlink.nature = plugin_tracker_artifactlink_natures.shortname)
+                 WHERE tracker_artifact.tracker_id = ?
+                 ORDER BY nature ASC";
+
+        return $this->getDB()->run($sql, $tracker_id);
+    }
+
+    /**
      * @psalm-return array{shortname: string, forward_label: string, reverse_label: string}[]
      */
     public function searchAll(): array

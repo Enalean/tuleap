@@ -139,7 +139,10 @@ class document_generationPlugin extends Plugin
         }
 
         $tracker_reports_factory         = Tracker_ReportFactory::instance();
-        $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher($tracker_reports_factory);
+        $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher(
+            $tracker_reports_factory,
+            new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
+        );
 
         $event->addExportItem(
             $renderer->renderToString(

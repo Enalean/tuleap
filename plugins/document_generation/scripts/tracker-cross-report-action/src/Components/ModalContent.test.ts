@@ -42,6 +42,7 @@ describe("ModalContent", () => {
                     current_tracker_name: "Name",
                     current_report_id: 130,
                     current_tracker_reports: [],
+                    current_tracker_artifact_link_types: [],
                 } as GlobalExportProperties,
             },
         });

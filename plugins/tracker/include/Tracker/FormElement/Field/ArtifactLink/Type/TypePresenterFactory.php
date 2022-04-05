@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
-class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypesInProject
+class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypesInProject, RetrieveUsedArtifactLinkTypesInTracker
 {
     /**
      * Add new artifact link types
@@ -152,6 +152,22 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         }
 
         return $types;
+    }
+
+    /** @return TypePresenter[] */
+    public function getAllUsedTypePresentersByTracker(\Tracker $tracker): array
+    {
+        $types = [];
+
+        foreach ($this->dao->searchAllUsedTypesByTrackerID($tracker->getId()) as $row) {
+            if ($row['forward_label'] !== null && $row['reverse_label'] !== null) {
+                $types[] = TypePresenter::buildVisibleType($row['nature'], $row['forward_label'], $row['reverse_label']);
+            } else {
+                $types[] = $this->getFromShortname($row['nature']);
+            }
+        }
+
+        return array_filter($types);
     }
 
     public function getFromShortname($shortname): ?TypePresenter
