@@ -16,12 +16,11 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="document-properties">
         <div class="document-properties-title-and-status-container">
             <title-property
-                v-model="currentlyUpdatedItem.title"
+                v-bind:value="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="true"
@@ -30,8 +29,8 @@
                 v-bind:status_value="status_value"
             />
         </div>
-        <description-property v-model="currentlyUpdatedItem.description" />
-        <owner-property v-model="currentlyUpdatedItem.owner" />
+        <description-property v-bind:value="currentlyUpdatedItem.description" />
+        <owner-property v-bind:value="currentlyUpdatedItem.owner" />
     </div>
 </template>
 

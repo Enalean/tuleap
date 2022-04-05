@@ -18,7 +18,14 @@
   -->
 
 <template>
-    <select class="tlp-input" id="document-item-owner" name="owner" required ref="owner_input">
+    <select
+        class="tlp-input"
+        id="document-item-owner"
+        name="owner"
+        required
+        ref="owner_input"
+        data-test="people-picker-select"
+    >
         <option selected v-bind:value="currently_selected_user.id">
             {{ currently_selected_user.display_name }}
         </option>
@@ -28,6 +35,7 @@
 
 <script>
 import { autocomplete_users_for_select2 } from "../../../../../../../../src/scripts/tuleap/autocomplete-for-select2.js";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "PeoplePicker",
@@ -57,7 +65,10 @@ export default {
             .trigger("change")
             .on("change", (event) => {
                 const updated_value = parseInt(event.target.value, 10);
-                this.$emit("input", updated_value);
+                if (isNaN(updated_value)) {
+                    return;
+                }
+                emitter.emit("update-owner-property", updated_value);
             });
     },
     destroyed() {

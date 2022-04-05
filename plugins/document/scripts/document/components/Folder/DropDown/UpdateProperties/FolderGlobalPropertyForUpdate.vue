@@ -17,18 +17,17 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="document-properties">
         <div class="document-properties-margin">
             <title-property
-                v-model="currentlyUpdatedItem.title"
+                v-bind:value="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="true"
             />
         </div>
-        <description-property v-model="currentlyUpdatedItem.description" />
+        <description-property v-bind:value="currentlyUpdatedItem.description" />
         <folder-default-properties-for-update
             v-bind:currently-updated-item="currentlyUpdatedItem"
             v-bind:item-property="itemProperty"

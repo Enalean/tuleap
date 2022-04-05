@@ -77,6 +77,34 @@ describe("UpdatePropertiesModal", () => {
         });
     });
 
+    it("Updates owner", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            description: "A custom description",
+            owner: {
+                id: 101,
+            },
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.owner.id).toEqual(101);
+
+        emitter.emit("update-owner-property", 200);
+        expect(wrapper.vm.item_to_update.owner.id).toEqual(200);
+    });
+
     it("Transform item property rest representation", () => {
         store.state.properties = {
             has_loaded_properties: false,
@@ -145,5 +173,55 @@ describe("UpdatePropertiesModal", () => {
 
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item_to_update.status).toEqual("draft");
+    });
+
+    it("Updates title", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            title: "A folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.title).toEqual("A folder");
+
+        emitter.emit("update-title-property", "A folder updated");
+        expect(wrapper.vm.item_to_update.title).toEqual("A folder updated");
+    });
+
+    it("Updates description", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            description: "A custom description",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.description).toEqual("A custom description");
+
+        emitter.emit("update-description-property", "A description");
+        expect(wrapper.vm.item_to_update.description).toEqual("A description");
     });
 });

@@ -24,11 +24,7 @@
             <translate>Owner</translate>
             <i class="fa fa-asterisk"></i>
         </label>
-        <people-picker
-            v-bind:currently_selected_user="value"
-            v-on:input="$emit('input', { ...value, id: $event })"
-            id="document-item-owner"
-        />
+        <people-picker v-bind:currently_selected_user="value" id="document-item-owner" />
     </div>
 </template>
 

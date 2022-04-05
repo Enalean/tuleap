@@ -17,12 +17,11 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="document-properties">
         <div class="document-properties-title-and-status-container">
             <title-property
-                v-model="currentlyUpdatedItem.title"
+                v-bind:value="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="false"
@@ -32,7 +31,7 @@
                 v-bind:parent="parent"
             />
         </div>
-        <description-property v-model="currentlyUpdatedItem.description" />
+        <description-property v-bind:value="currentlyUpdatedItem.description" />
         <slot></slot>
     </div>
 </template>

@@ -111,6 +111,8 @@ export default {
         emitter.on("properties-recursion-option", this.setRecursionOption);
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
         emitter.on("update-status-property", this.updateStatusValue);
+        emitter.on("update-title-property", this.updateTitleValue);
+        emitter.on("update-description-property", this.updateDescriptionValue);
     },
     beforeDestroy() {
         emitter.off("properties-recursion-list", this.show);
@@ -120,6 +122,8 @@ export default {
             this.updateMultiplePropertiesListValue
         );
         emitter.off("update-status-property", this.updateStatusValue);
+        emitter.off("update-title-property", this.updateTitleValue);
+        emitter.off("update-description-property", this.updateDescriptionValue);
     },
     methods: {
         show() {
@@ -157,8 +161,14 @@ export default {
             );
             item_properties.list_value = event.detail.value;
         },
-        updateStatusValue(event) {
-            this.item_to_update.status.value = event;
+        updateStatusValue(status) {
+            this.item_to_update.status.value = status;
+        },
+        updateTitleValue(title) {
+            this.item_to_update.title = title;
+        },
+        updateDescriptionValue(description) {
+            this.item_to_update.description = description;
         },
     },
 };

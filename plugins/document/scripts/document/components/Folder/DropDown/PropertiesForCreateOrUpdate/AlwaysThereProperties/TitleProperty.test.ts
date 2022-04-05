@@ -24,6 +24,9 @@ import { TYPE_FILE, TYPE_FOLDER } from "../../../../../constants";
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import type { Folder, Item, ItemFile, State } from "../../../../../type";
 import TitlePropery from "./TitleProperty.vue";
+import emitter from "../../../../../helpers/emitter";
+
+jest.mock("../../../../../helpers/emitter");
 
 describe("TitleProperty", () => {
     let existing_folder_name: string, existing_document_name: string, updated_document_name: string;
@@ -120,6 +123,31 @@ describe("TitleProperty", () => {
             throw new Error("input element is not an html input");
         }
         expect(input.element.disabled).toBe(false);
+    });
+
+    it(`When input is updated an event is sent`, async () => {
+        const value = "A new folder title";
+        const isInUpdateContext = true;
+        const parent = {} as Folder;
+        const currentlyUpdatedItem = {
+            type: TYPE_FOLDER,
+            parent_id: 3,
+        } as Folder;
+
+        const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
+        wrapper.setProps({ value: value });
+
+        await wrapper.vm.$nextTick();
+        const input = wrapper.get("[data-test=document-new-item-title]");
+
+        if (!(input.element instanceof HTMLInputElement)) {
+            throw new Error("input element is not an html input");
+        }
+        input.element.value = "My new title";
+
+        input.trigger("input");
+
+        expect(emitter.emit).toHaveBeenCalledWith("update-title-property", "My new title");
     });
 
     describe("Folder creation", () => {

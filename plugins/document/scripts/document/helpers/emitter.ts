@@ -23,6 +23,9 @@ import type { Item, ListValue } from "../type";
 
 export default mitt<{
     "update-status-property": string;
+    "update-title-property": string;
+    "update-description-property": string;
+    "update-owner-property": number;
     "toggle-quick-look": { details: { item: Item } };
     "show-update-item-properties-modal": { detail: { current_item: Item } };
     "show-update-permissions-modal": { detail: { current_item: Item } };

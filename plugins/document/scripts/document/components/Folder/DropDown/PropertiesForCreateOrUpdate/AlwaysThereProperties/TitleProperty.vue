@@ -36,7 +36,7 @@
             required
             v-bind:value="value"
             v-bind:disabled="is_root_folder"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="oninput"
             ref="input"
             data-test="document-new-item-title"
         />
@@ -56,6 +56,7 @@ import { isFolder } from "../../../../../helpers/type-check-helper";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import type { Folder, Item } from "../../../../../type";
 import { State } from "vuex-class";
+import emitter from "../../../../../helpers/emitter";
 
 @Component
 export default class TitleProperty extends Vue {
@@ -150,6 +151,12 @@ export default class TitleProperty extends Vue {
 
     getErrorWhenFolderAlreadyExists(): string {
         return this.$gettext("A folder already exists with the same title.");
+    }
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLInputElement) {
+            emitter.emit("update-title-property", $event.target.value);
+        }
     }
 }
 </script>

@@ -187,4 +187,54 @@ describe("UpdateFolderPropertiesModal", () => {
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item_to_update.status).toEqual({ recursion: "none", value: "draft" });
     });
+
+    it("Updates title", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            title: "A folder",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.title).toEqual("A folder");
+
+        emitter.emit("update-title-property", "A folder updated");
+        expect(wrapper.vm.item_to_update.title).toEqual("A folder updated");
+    });
+
+    it("Updates description", () => {
+        const item = {
+            id: 7,
+            type: "folder",
+            description: "A custom description",
+            properties: [
+                {
+                    short_name: "status",
+                    list_value: [
+                        {
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const wrapper = factory({ item });
+
+        expect(wrapper.vm.item_to_update.description).toEqual("A custom description");
+
+        emitter.emit("update-description-property", "A description");
+        expect(wrapper.vm.item_to_update.description).toEqual("A description");
+    });
 });
