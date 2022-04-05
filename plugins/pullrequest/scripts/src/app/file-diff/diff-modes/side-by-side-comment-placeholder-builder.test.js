@@ -73,7 +73,7 @@ describe("side-by-side widget builder", () => {
                         right_code_mirror
                     );
 
-                    expect(widget_params.widget_height).toEqual(20);
+                    expect(widget_params.widget_height).toBe(20);
                 });
 
                 it("then it sets the widget below the line", () => {
@@ -131,7 +131,7 @@ describe("side-by-side widget builder", () => {
                         right_code_mirror
                     );
 
-                    expect(widget_params.widget_height).toEqual(66);
+                    expect(widget_params.widget_height).toBe(66);
                 });
 
                 it("then it will set the widget below the line", () => {
@@ -235,7 +235,7 @@ describe("side-by-side widget builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params.widget_height).toEqual(143);
+                expect(widget_params.widget_height).toBe(143);
             });
 
             it("then it will set the widget below the line", () => {
@@ -319,7 +319,7 @@ describe("side-by-side widget builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params.widget_height).toEqual(104);
+                expect(widget_params.widget_height).toBe(104);
             });
 
             it("then it will set the widget above the line", () => {
@@ -409,7 +409,7 @@ describe("side-by-side widget builder", () => {
                     right_code_mirror
                 );
 
-                expect(widget_params.widget_height).toEqual(89);
+                expect(widget_params.widget_height).toBe(89);
             });
 
             it("then it will set the widget above the line", () => {

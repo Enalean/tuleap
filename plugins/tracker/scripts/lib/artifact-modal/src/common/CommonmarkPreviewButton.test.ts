@@ -82,7 +82,7 @@ describe("CommonmarkPreviewButton", () => {
             const button = getButton(target);
             button.dispatchEvent(new MouseEvent("click"));
             const event = dispatchEvent.mock.calls[0][0];
-            expect(event.type).toEqual("commonmark-preview-event");
+            expect(event.type).toBe("commonmark-preview-event");
         });
 
         it(`while preview is loading, the button is disabled`, () => {

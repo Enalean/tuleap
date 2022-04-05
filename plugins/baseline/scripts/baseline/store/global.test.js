@@ -74,7 +74,7 @@ describe("Global store:", () => {
                     const loadBaseline_calls = context.dispatch.mock.calls.filter(
                         (call) => call[0] === "loadBaseline"
                     );
-                    expect(loadBaseline_calls.length).toEqual(1);
+                    expect(loadBaseline_calls).toHaveLength(1);
                 });
             });
         });

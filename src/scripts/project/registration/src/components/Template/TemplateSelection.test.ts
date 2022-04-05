@@ -125,7 +125,7 @@ describe("TemplateSelection", () => {
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
                     .element.innerHTML.trim()
-            ).toEqual("ACME");
+            ).toBe("ACME");
         });
 
         it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
@@ -140,7 +140,7 @@ describe("TemplateSelection", () => {
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
                     .element.innerHTML.trim()
-            ).toEqual("Custom templates");
+            ).toBe("Custom templates");
         });
 
         it("should not display the tab containing the company templates when there are no company templates", async () => {

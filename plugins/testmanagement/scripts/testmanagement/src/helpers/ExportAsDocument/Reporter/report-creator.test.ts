@@ -155,8 +155,8 @@ describe("Create an export report", () => {
         );
 
         expect(retrieveTrackerStructureMock).toHaveBeenCalledTimes(3);
-        expect(report.tests.length).toBe(1);
-        expect(report.backlog.length).toBe(2);
+        expect(report.tests).toHaveLength(1);
+        expect(report.backlog).toHaveLength(2);
         expect(report.name).toBe("Test campaign Tuleap 13.5");
     });
 });

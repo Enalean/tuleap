@@ -45,7 +45,7 @@ describe(`PreviewActualizer`, () => {
 
         label_input_element.value = "Release";
         label_input_element.dispatchEvent(new InputEvent("input"));
-        expect(timebox_label_element.textContent).toEqual("Release");
+        expect(timebox_label_element.textContent).toBe("Release");
     });
 
     it(`changes the illustration's new label and example labels when the sub label input is changed`, () => {
@@ -63,8 +63,8 @@ describe(`PreviewActualizer`, () => {
         sub_label_input_element.value = "release";
         sub_label_input_element.dispatchEvent(new InputEvent("input"));
         expect(new_label_element.textContent).toContain("release");
-        expect(first_example_element.textContent).toEqual("release 2");
-        expect(second_example_element.textContent).toEqual("release 1");
+        expect(first_example_element.textContent).toBe("release 2");
+        expect(second_example_element.textContent).toBe("release 1");
     });
 
     it(`defaults the labels when they are empty`, () => {
@@ -82,7 +82,7 @@ describe(`PreviewActualizer`, () => {
         sub_label_input_element.value = "";
         getActualizer().initTimeboxPreview();
 
-        expect(timebox_label_element.textContent).toEqual("Default Label");
+        expect(timebox_label_element.textContent).toBe("Default Label");
         expect(new_label_element.textContent).toContain("default label lowercase");
         expect(first_example_element.textContent).toContain("default label lowercase");
         expect(second_example_element.textContent).toContain("default label lowercase");
@@ -110,10 +110,10 @@ describe(`PreviewActualizer`, () => {
         sub_label_input_element.value = "sprint";
         sub_label_input_element.dispatchEvent(new InputEvent("input"));
 
-        expect(timebox_label_element.textContent).toEqual("Iterations");
-        expect(new_label_element.textContent).toEqual("New iteration");
-        expect(first_example_element.textContent).toEqual("iteration 2");
-        expect(second_example_element.textContent).toEqual("iteration 1");
+        expect(timebox_label_element.textContent).toBe("Iterations");
+        expect(new_label_element.textContent).toBe("New iteration");
+        expect(first_example_element.textContent).toBe("iteration 2");
+        expect(second_example_element.textContent).toBe("iteration 1");
     });
 
     function getActualizer(): PreviewActualizer {

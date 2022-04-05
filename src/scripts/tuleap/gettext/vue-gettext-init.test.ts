@@ -66,7 +66,7 @@ describe(`vue-gettext-init`, () => {
             ));
 
         it(`sets vue-gettext's language config to the document locale`, () =>
-            expect(Vue.config.language).toEqual("fr_FR"));
+            expect(Vue.config.language).toBe("fr_FR"));
     });
 
     describe(`when a locale is NOT defined on the document's body`, () => {
@@ -76,7 +76,7 @@ describe(`vue-gettext-init`, () => {
         });
         it(`does not call the callback`, () => expect(callback).not.toHaveBeenCalled());
         it(`does not set vue-gettext's language config`, () =>
-            expect(Vue.config.language).not.toBeDefined());
+            expect(Vue.config.language).toBeUndefined());
         it(`gives an empty translations object to vue-gettext`, () =>
             expect(Vue.use).toHaveBeenCalledWith(
                 GettextPlugin,

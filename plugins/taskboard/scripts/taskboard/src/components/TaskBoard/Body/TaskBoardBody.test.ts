@@ -127,7 +127,7 @@ describe("TaskBoardBody", () => {
             } as Swimlane,
         ];
         const wrapper = await createWrapper(swimlanes, false);
-        expect(wrapper.element.children.length).toBe(0);
+        expect(wrapper.element.children).toHaveLength(0);
     });
 
     it("loads all swimlanes as soon as the component is created", async () => {

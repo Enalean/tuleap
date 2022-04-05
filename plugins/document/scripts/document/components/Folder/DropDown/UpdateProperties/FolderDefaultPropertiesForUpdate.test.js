@@ -237,8 +237,8 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             expect(
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists()
             ).toBeTruthy();
-            expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toEqual("all_items");
-            expect(wrapper.vm.recursion).toEqual("all_items");
+            expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toBe("all_items");
+            expect(wrapper.vm.recursion).toBe("all_items");
         });
 
         it(`Emit event on check recursion for item`, () => {

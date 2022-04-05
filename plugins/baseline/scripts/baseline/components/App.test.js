@@ -53,7 +53,7 @@ describe("App", () => {
         beforeEach(() => wrapper.vm.changeTitle("new title"));
 
         it('changes document title and suffix with "Tuleap"', () => {
-            expect(document.title).toEqual("new title - Tuleap");
+            expect(document.title).toBe("new title - Tuleap");
         });
     });
 

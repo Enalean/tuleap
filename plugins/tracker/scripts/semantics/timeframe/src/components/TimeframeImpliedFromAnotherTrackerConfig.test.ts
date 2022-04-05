@@ -46,7 +46,7 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(select_box.value).toEqual("150");
+        expect(select_box.value).toBe("150");
     });
 
     it("should display an error message when the semantic cannot be inherited because some trackers inherit from the current tracker", async () => {

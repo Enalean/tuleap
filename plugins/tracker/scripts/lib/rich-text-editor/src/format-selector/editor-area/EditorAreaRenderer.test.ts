@@ -168,7 +168,7 @@ describe(`EditorAreaRenderer`, () => {
                 renderer.render(state);
 
                 const selectbox_id = createSelect.mock.calls[0][0].id;
-                expect(selectbox_id).toEqual("rte_format_selectboxnew");
+                expect(selectbox_id).toBe("rte_format_selectboxnew");
             });
 
             it(`when the state does not have a selectbox_name,
@@ -179,7 +179,7 @@ describe(`EditorAreaRenderer`, () => {
                 renderer.render(state);
 
                 const selectbox_name = createSelect.mock.calls[0][0].name;
-                expect(selectbox_name).toEqual("comment_formatnew");
+                expect(selectbox_name).toBe("comment_formatnew");
             });
 
             it(`when the format changes in the selectbox,

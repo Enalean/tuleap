@@ -30,8 +30,8 @@ describe("iterations-mutations", () => {
 
         mutations.setLvl1Iterations(state, [{ id: 1 } as Iteration]);
 
-        expect(state.lvl1_iterations.length).toBe(1);
-        expect(state.lvl2_iterations.length).toBe(0);
+        expect(state.lvl1_iterations).toHaveLength(1);
+        expect(state.lvl2_iterations).toHaveLength(0);
     });
 
     it("Set level 2 iterations", () => {
@@ -42,7 +42,7 @@ describe("iterations-mutations", () => {
 
         mutations.setLvl2Iterations(state, [{ id: 1 } as Iteration]);
 
-        expect(state.lvl1_iterations.length).toBe(0);
-        expect(state.lvl2_iterations.length).toBe(1);
+        expect(state.lvl1_iterations).toHaveLength(0);
+        expect(state.lvl2_iterations).toHaveLength(1);
     });
 });

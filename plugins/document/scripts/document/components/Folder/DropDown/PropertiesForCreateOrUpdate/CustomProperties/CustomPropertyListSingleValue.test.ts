@@ -72,7 +72,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
         const all_options = wrapper
             .get("[data-test=document-custom-list-select]")
             .findAll("option");
-        expect(all_options.length).toBe(3);
+        expect(all_options).toHaveLength(3);
 
         expect(wrapper.find("[data-test=document-custom-list-value-100]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-custom-list-value-101]").exists()).toBeTruthy();

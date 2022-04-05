@@ -49,9 +49,9 @@ describe(`RadioButtonsField`, () => {
         inner_input.dispatchEvent(new InputEvent("input"));
 
         const event = dispatchEvent.mock.calls[0][0];
-        expect(event.type).toEqual("value-changed");
-        expect(event.detail.field_id).toEqual(1);
-        expect(event.detail.value).toEqual("ichi");
+        expect(event.type).toBe("value-changed");
+        expect(event.detail.field_id).toBe(1);
+        expect(event.detail.value).toBe("ichi");
     });
 
     it(`adds a "none" value when the field is not required`, () => {

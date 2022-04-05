@@ -120,7 +120,7 @@ describe("LinkedArtifactsController -", function () {
                 nature_fixed_in.uri,
                 expect.any(Function)
             );
-            expect(ReleaseRestService.getAllLinkedArtifacts.mock.calls.length).toBe(2);
+            expect(ReleaseRestService.getAllLinkedArtifacts.mock.calls).toHaveLength(2);
             expect(LinkedArtifactsController.natures[0]).toEqual(
                 expect.objectContaining(nature_is_child)
             );

@@ -58,14 +58,14 @@ describe("NewComparisonModal", () => {
         '[data-test-type="no-baseline-to-compare-message"]';
 
     it("disables submit", () => {
-        expect(wrapper.get(submit_selector).attributes("disabled")).toEqual("disabled");
+        expect(wrapper.get(submit_selector).attributes("disabled")).toBe("disabled");
     });
 
     describe("when user choose a reference baseline", () => {
         beforeEach(() => wrapper.setData({ base_baseline_id: 1 }));
 
         it("still disable submit", () => {
-            expect(wrapper.get(submit_selector).attributes("disabled")).toEqual("disabled");
+            expect(wrapper.get(submit_selector).attributes("disabled")).toBe("disabled");
         });
 
         describe("when no other baseline with same artifact", () => {
@@ -97,7 +97,7 @@ describe("NewComparisonModal", () => {
                 });
 
                 it("enables submit", () => {
-                    expect(wrapper.get(submit_selector).attributes("disabled")).not.toEqual(
+                    expect(wrapper.get(submit_selector).attributes("disabled")).not.toBe(
                         "disabled"
                     );
                 });

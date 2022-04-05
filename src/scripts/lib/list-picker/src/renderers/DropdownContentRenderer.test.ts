@@ -121,12 +121,12 @@ describe("DropDownContentRenderer", () => {
             renderer.renderListPickerDropdownContent();
             renderer.renderFilteredListPickerDropdownContent("1");
 
-            expect(dropdown_list.childElementCount).toEqual(1);
+            expect(dropdown_list.childElementCount).toBe(1);
 
             if (!dropdown_list.firstElementChild) {
                 throw new Error("List should not be empty, it should contains the item 'Value 1'");
             }
-            expect(dropdown_list.firstElementChild.textContent?.trim()).toEqual("Value 1");
+            expect(dropdown_list.firstElementChild.textContent?.trim()).toBe("Value 1");
         });
 
         it("renders an empty state if no items are matching the query", async () => {
@@ -160,15 +160,15 @@ describe("DropDownContentRenderer", () => {
                 throw new Error("Item or group not found in the filtered list");
             }
 
-            expect(items.length).toEqual(1);
-            expect(groups.length).toEqual(1);
+            expect(items).toHaveLength(1);
+            expect(groups).toHaveLength(1);
 
             const group = groups[0];
             const item = items[0];
 
             expect(group.textContent).toContain("Group 1");
             expect(group.contains(item)).toBe(true);
-            expect(item.textContent?.trim()).toEqual("Value 1");
+            expect(item.textContent?.trim()).toBe("Value 1");
         });
     });
 
@@ -200,7 +200,7 @@ describe("DropDownContentRenderer", () => {
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
-            expect(stripExpressionComments(list_item_1.innerHTML).trim()).toEqual("Item 1");
+            expect(stripExpressionComments(list_item_1.innerHTML).trim()).toBe("Item 1");
 
             select.innerHTML = "";
             select.appendChild(option_2);
@@ -211,7 +211,7 @@ describe("DropDownContentRenderer", () => {
             if (!list_item_2) {
                 throw new Error("List item not found in the list");
             }
-            expect(stripExpressionComments(list_item_2.innerHTML).trim()).toEqual("Item 2");
+            expect(stripExpressionComments(list_item_2.innerHTML).trim()).toBe("Item 2");
         });
 
         it("should render an empty state when the source <select> has no options", async () => {
@@ -228,7 +228,7 @@ describe("DropDownContentRenderer", () => {
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
-            expect(stripExpressionComments(list_item_1.innerHTML).trim()).toEqual("Item 1");
+            expect(stripExpressionComments(list_item_1.innerHTML).trim()).toBe("Item 1");
 
             select.innerHTML = "";
             await items_map_manager.refreshItemsMap();

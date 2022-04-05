@@ -96,7 +96,7 @@ describe("PostActionsSection", () => {
                 expect(wrapper.find(empty_message_selector).exists()).toBeFalsy();
             });
             it("shows as many post action as stored", () => {
-                expect(wrapper.findAll(post_action_selector).length).toBe(2);
+                expect(wrapper.findAll(post_action_selector)).toHaveLength(2);
             });
         });
     });

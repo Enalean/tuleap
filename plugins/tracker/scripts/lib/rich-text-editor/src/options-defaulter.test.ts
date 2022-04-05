@@ -29,7 +29,7 @@ describe(`options-defaulter`, () => {
 
         const defaulted_options = defaultOptionsIfNotProvided("fr_FR", options_without_callbacks);
 
-        expect(defaulted_options.locale).toEqual("fr_FR");
+        expect(defaulted_options.locale).toBe("fr_FR");
         expect(defaulted_options.onFormatChange).toBeDefined();
         const doc = document.implementation.createHTMLDocument();
         const textarea = doc.createElement("textarea");

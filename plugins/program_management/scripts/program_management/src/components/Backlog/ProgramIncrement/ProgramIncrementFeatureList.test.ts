@@ -299,6 +299,6 @@ describe("ProgramIncrementFeatureList", () => {
         expect(
             (wrapper.get("[data-test=program-increment-feature-list]").element as HTMLElement)
                 .dataset.canPlan
-        ).toBe(undefined);
+        ).toBeUndefined();
     });
 });

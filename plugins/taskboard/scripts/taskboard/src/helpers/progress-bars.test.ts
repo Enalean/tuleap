@@ -22,38 +22,38 @@ import type { RemainingEffort } from "../type";
 
 describe("progress bars helper", () => {
     it("Returns a width percentage", () => {
-        expect(getWidthPercentage(10, { value: 5 } as RemainingEffort)).toEqual(50);
+        expect(getWidthPercentage(10, { value: 5 } as RemainingEffort)).toBe(50);
     });
 
     it("Returns a float percentage if the progress is not a round number", () => {
-        expect(getWidthPercentage(33, { value: 22 } as RemainingEffort)).toEqual(33.33333333333333);
+        expect(getWidthPercentage(33, { value: 22 } as RemainingEffort)).toBe(33.33333333333333);
     });
 
     it("Returns 0 if the remaining effort is greater than the initial effort", () => {
-        expect(getWidthPercentage(10, { value: 12 } as RemainingEffort)).toEqual(0);
+        expect(getWidthPercentage(10, { value: 12 } as RemainingEffort)).toBe(0);
     });
 
     it("Returns 100 if the remaining effort is lesser than 0", () => {
-        expect(getWidthPercentage(10, { value: -5 } as RemainingEffort)).toEqual(100);
+        expect(getWidthPercentage(10, { value: -5 } as RemainingEffort)).toBe(100);
     });
 
     it("Returns 100 if the remaining effort equals 0", () => {
-        expect(getWidthPercentage(10, { value: 0 } as RemainingEffort)).toEqual(100);
+        expect(getWidthPercentage(10, { value: 0 } as RemainingEffort)).toBe(100);
     });
 
     it("Returns 0 if the remaining effort field is null", () => {
-        expect(getWidthPercentage(10, null)).toEqual(0);
+        expect(getWidthPercentage(10, null)).toBe(0);
     });
 
     it("Returns 0 if the remaining effort is null", () => {
-        expect(getWidthPercentage(10, { value: null } as RemainingEffort)).toEqual(0);
+        expect(getWidthPercentage(10, { value: null } as RemainingEffort)).toBe(0);
     });
 
     it("Returns 0 if the initial effort equals 0", () => {
-        expect(getWidthPercentage(0, { value: 5 } as RemainingEffort)).toEqual(0);
+        expect(getWidthPercentage(0, { value: 5 } as RemainingEffort)).toBe(0);
     });
 
     it("Returns 0 if the initial effort is null", () => {
-        expect(getWidthPercentage(null, { value: 5 } as RemainingEffort)).toEqual(0);
+        expect(getWidthPercentage(null, { value: 5 } as RemainingEffort)).toBe(0);
     });
 });

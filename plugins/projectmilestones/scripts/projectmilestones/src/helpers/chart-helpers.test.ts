@@ -29,7 +29,7 @@ describe("Chart Helpers", () => {
                 throw new Error("Burndown doesn't exist");
             }
 
-            expect(burndown.label).toEqual("Burndown");
+            expect(burndown.label).toBe("Burndown");
         });
     });
 
@@ -41,7 +41,7 @@ describe("Chart Helpers", () => {
                 throw new Error("Burnup doesn't exist");
             }
 
-            expect(burnup.label).toEqual("Burnup");
+            expect(burnup.label).toBe("Burnup");
         });
     });
 

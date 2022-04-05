@@ -26,7 +26,7 @@ describe("widget finder", () => {
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
-            expect(comment_placeholder_widget).toEqual(null);
+            expect(comment_placeholder_widget).toBeNull();
         });
 
         it("Given a handle with no comment placeholder, then it will return null", () => {
@@ -40,7 +40,7 @@ describe("widget finder", () => {
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
 
-            expect(comment_placeholder_widget).not.toBeDefined();
+            expect(comment_placeholder_widget).toBeUndefined();
         });
 
         it("Given a handle with a comment placeholder, then it will return the comment placeholder widget", () => {

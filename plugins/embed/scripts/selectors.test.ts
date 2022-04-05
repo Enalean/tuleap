@@ -22,11 +22,11 @@ import selectors from "./selectors";
 describe("selectors", () => {
     describe("in trackers", () => {
         it("includes follow-up comments", () => {
-            expect(selectors.includes(".tracker_artifact_followup_comment_body")).toBe(true);
+            expect(selectors).toContain(".tracker_artifact_followup_comment_body");
         });
         it("includes artifact field values", () => {
-            expect(selectors.includes(".textarea-value")).toBe(true);
-            expect(selectors.includes(".tracker-string-field-value")).toBe(true);
+            expect(selectors).toContain(".textarea-value");
+            expect(selectors).toContain(".tracker-string-field-value");
         });
     });
 });

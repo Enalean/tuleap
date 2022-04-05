@@ -140,7 +140,7 @@ describe(`drag-drop helper`, () => {
                 })
             ).toBe(false);
             expect(error_message_element.classList).toContain("drop-not-accepted");
-            expect(error_message.textContent).toEqual(
+            expect(error_message.textContent).toBe(
                 "You are not allowed to plan in this program increment."
             );
         });
@@ -179,7 +179,7 @@ describe(`drag-drop helper`, () => {
                 })
             ).toBe(false);
             expect(error_message_element.classList).toContain("drop-not-accepted");
-            expect(error_message.textContent).toEqual(
+            expect(error_message.textContent).toBe(
                 "The feature has elements planned in team project, it can not be unplanned."
             );
         });
@@ -217,7 +217,7 @@ describe(`drag-drop helper`, () => {
                 })
             ).toBe(false);
             expect(error_message_element.classList).toContain("drop-not-accepted");
-            expect(error_message.textContent).toEqual(
+            expect(error_message.textContent).toBe(
                 "The feature has elements planned in team project, it can not be unplanned."
             );
         });

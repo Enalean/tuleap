@@ -253,7 +253,7 @@ describe("TuleapArtifactModalFieldDependenciesService", () => {
             setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback).toHaveBeenCalledWith(43, target_field, field_dependencies_rules);
-            expect(callback.mock.calls.length).toEqual(1);
+            expect(callback.mock.calls).toHaveLength(1);
         });
 
         it("Given field dependencies were defined in the tracker and given there were two rules for different source fields, and given a callback, when I set up field dependencies actions, then the callback will be called twice", () => {
@@ -282,7 +282,7 @@ describe("TuleapArtifactModalFieldDependenciesService", () => {
 
             setUpFieldDependenciesActions(tracker, callback);
 
-            expect(callback.mock.calls.length).toEqual(2);
+            expect(callback.mock.calls).toHaveLength(2);
             expect(callback).toHaveBeenCalledWith(81, { field_id: 69 }, field_dependencies_rules);
             expect(callback).toHaveBeenCalledWith(94, { field_id: 51 }, field_dependencies_rules);
         });
@@ -313,7 +313,7 @@ describe("TuleapArtifactModalFieldDependenciesService", () => {
             setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback).toHaveBeenCalled();
-            expect(callback.mock.calls.length).toEqual(2);
+            expect(callback.mock.calls).toHaveLength(2);
         });
 
         it("Given no field dependencies were defined in the tracker, when I set up field dependencies actions, then the callback will never be called", () => {

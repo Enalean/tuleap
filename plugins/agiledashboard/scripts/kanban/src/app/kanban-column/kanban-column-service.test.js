@@ -84,7 +84,7 @@ describe("KanbanColumnService -", () => {
                         compared_to
                     );
 
-                    expect(item.in_column).toEqual(2);
+                    expect(item.in_column).toBe(2);
                     expect(item.timeinfo[2]).toBeDefined();
                     expect(source_column.content).toEqual([{ id: 79 }, { id: 100 }]);
                     expect(source_column.filtered_content).toEqual([{ id: 79 }, { id: 100 }]);
@@ -115,7 +115,7 @@ describe("KanbanColumnService -", () => {
                         compared_to
                     );
 
-                    expect(item.in_column).toEqual(2);
+                    expect(item.in_column).toBe(2);
                     expect(item.timeinfo[2]).toBeDefined();
                     expect(source_column.content).toEqual([{ id: 79 }, { id: 100 }]);
                     expect(source_column.filtered_content).toEqual([]);
@@ -138,7 +138,7 @@ describe("KanbanColumnService -", () => {
 
                 KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
 
-                expect(item.in_column).toEqual(2);
+                expect(item.in_column).toBe(2);
                 expect(item.timeinfo[2]).toBeDefined();
                 expect(source_column.content).toEqual([{ id: 79 }, { id: 100 }]);
                 expect(source_column.filtered_content).toEqual([]);
@@ -158,7 +158,7 @@ describe("KanbanColumnService -", () => {
 
                 KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
 
-                expect(item.in_column).toEqual(2);
+                expect(item.in_column).toBe(2);
                 expect(item.timeinfo[2]).toBeDefined();
                 expect(source_column.content).toEqual([{ id: 79 }, { id: 100 }]);
                 expect(source_column.filtered_content).toEqual([{ id: 79 }, { id: 100 }]);
@@ -181,7 +181,7 @@ describe("KanbanColumnService -", () => {
 
                 KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
 
-                expect(item.in_column).toEqual(2);
+                expect(item.in_column).toBe(2);
                 expect(item.timeinfo[2]).toBeDefined();
                 expect(source_column.content).toEqual([{ id: 79 }, { id: 100 }]);
                 expect(source_column.filtered_content).toEqual([{ id: 79 }, { id: 100 }]);
@@ -189,7 +189,7 @@ describe("KanbanColumnService -", () => {
                 expect(destination_column.content).toEqual([]);
                 expect(destination_column.filtered_content).toEqual([]);
                 expect(destination_column.filtered_content).not.toBe(destination_column.content);
-                expect(destination_column.nb_items_at_kanban_init).toEqual(3);
+                expect(destination_column.nb_items_at_kanban_init).toBe(3);
             });
 
             it("and given the source column was closed and not fully loaded, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the source column's nb_items_at_kanban_init property will be updated and the destination column will be updated", function () {
@@ -205,12 +205,12 @@ describe("KanbanColumnService -", () => {
 
                 KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
 
-                expect(item.in_column).toEqual(2);
+                expect(item.in_column).toBe(2);
                 expect(item.timeinfo[2]).toBeDefined();
                 expect(source_column.content).toEqual([]);
                 expect(source_column.filtered_content).toEqual([]);
                 expect(source_column.filtered_content).not.toBe(source_column.content);
-                expect(source_column.nb_items_at_kanban_init).toEqual(2);
+                expect(source_column.nb_items_at_kanban_init).toBe(2);
                 expect(destination_column.content).toEqual([{ id: 56 }, item, { id: 21 }]);
                 expect(destination_column.filtered_content).toEqual([{ id: 56 }, item, { id: 21 }]);
                 expect(destination_column.filtered_content).not.toBe(destination_column.content);
@@ -240,7 +240,7 @@ describe("KanbanColumnService -", () => {
 
                 KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
 
-                expect(item.in_column).toEqual(2);
+                expect(item.in_column).toBe(2);
                 expect(item.timeinfo.kanban).toBeDefined();
                 expect(item.timeinfo.backlog).toBeDefined();
             });
@@ -297,7 +297,7 @@ describe("KanbanColumnService -", () => {
 
             expect($filter).toHaveBeenCalledWith("InPropertiesFilter");
             expect(column.filtered_content).toBe(filtered_content_ref);
-            expect(column.filtered_content.length).toEqual(0);
+            expect(column.filtered_content).toHaveLength(0);
         });
 
         it("Given filter terms that matched items, when I filter a column's items, then the InPropertiesFilter will be called and the column's filtered content collection will be updated", function () {
@@ -512,7 +512,7 @@ describe("KanbanColumnService -", () => {
 
             KanbanColumnService.updateItemContent(item, updated_item);
 
-            expect(item.in_column).toEqual(28);
+            expect(item.in_column).toBe(28);
             expect(item.timeinfo).toEqual({
                 kanban: expect.any(Date),
                 28: expect.any(Date),
@@ -533,7 +533,7 @@ describe("KanbanColumnService -", () => {
 
             KanbanColumnService.updateItemContent(item, updated_item);
 
-            expect(item.in_column).toEqual("backlog");
+            expect(item.in_column).toBe("backlog");
             expect(item.timeinfo).toEqual({
                 backlog: expect.any(Date),
             });

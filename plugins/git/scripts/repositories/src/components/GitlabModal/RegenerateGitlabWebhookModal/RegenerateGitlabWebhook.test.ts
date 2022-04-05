@@ -138,7 +138,7 @@ describe("RegenerateGitlabWebhook", () => {
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.message_error_rest).toEqual("404 Error on server");
+        expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         expect(
             wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled
         ).toBeTruthy();
@@ -164,8 +164,8 @@ describe("RegenerateGitlabWebhook", () => {
         wrapper.find("[data-test=regenerate-gitlab-webhook-cancel]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.message_error_rest).toEqual("");
-        expect(wrapper.vm.$data.repository).toEqual(null);
+        expect(wrapper.vm.$data.message_error_rest).toBe("");
+        expect(wrapper.vm.$data.repository).toBeNull();
         expect(wrapper.vm.$data.is_updating_webhook).toBeFalsy();
     });
 });

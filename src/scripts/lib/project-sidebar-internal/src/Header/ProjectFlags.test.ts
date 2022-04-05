@@ -57,6 +57,6 @@ describe("ProjectFlags", () => {
             },
         });
 
-        expect(wrapper.element.textContent).toStrictEqual("");
+        expect(wrapper.element.textContent).toBe("");
     });
 });

@@ -61,7 +61,7 @@ describe("Mutations", () => {
             } as ProgramIncrement;
 
             mutations.addProgramIncrement(state, program_increment);
-            expect(state.program_increments.length).toEqual(2);
+            expect(state.program_increments).toHaveLength(2);
             expect(state.program_increments[0]).toEqual({ id: 15 });
             expect(state.program_increments[1]).toEqual({
                 id: 14,
@@ -81,7 +81,7 @@ describe("Mutations", () => {
             } as FeaturePlanningChange;
 
             mutations.addToBePlannedElement(state, to_be_planned_element);
-            expect(state.to_be_planned_elements.length).toEqual(1);
+            expect(state.to_be_planned_elements).toHaveLength(1);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
         });
 
@@ -100,7 +100,7 @@ describe("Mutations", () => {
             } as FeaturePlanningChange;
 
             mutations.addToBePlannedElement(state, to_be_planned_element);
-            expect(state.to_be_planned_elements.length).toEqual(2);
+            expect(state.to_be_planned_elements).toHaveLength(2);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
             expect(state.to_be_planned_elements[1]).toEqual({ id: 125 });
         });
@@ -120,7 +120,7 @@ describe("Mutations", () => {
             } as FeaturePlanningChange;
 
             mutations.addToBePlannedElement(state, to_be_planned_element);
-            expect(state.to_be_planned_elements.length).toEqual(2);
+            expect(state.to_be_planned_elements).toHaveLength(2);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 125 });
             expect(state.to_be_planned_elements[1]).toEqual({ id: 14 });
         });
@@ -136,7 +136,7 @@ describe("Mutations", () => {
             } as FeaturePlanningChange;
 
             mutations.addToBePlannedElement(state, to_be_planned_element);
-            expect(state.to_be_planned_elements.length).toEqual(1);
+            expect(state.to_be_planned_elements).toHaveLength(1);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 125 });
         });
     });
@@ -152,7 +152,7 @@ describe("Mutations", () => {
             } as Feature;
 
             mutations.removeToBePlannedElement(state, element_to_remove);
-            expect(state.to_be_planned_elements.length).toEqual(1);
+            expect(state.to_be_planned_elements).toHaveLength(1);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
         });
 
@@ -166,7 +166,7 @@ describe("Mutations", () => {
             } as Feature;
 
             mutations.removeToBePlannedElement(state, element_to_remove);
-            expect(state.to_be_planned_elements.length).toEqual(2);
+            expect(state.to_be_planned_elements).toHaveLength(2);
             expect(state.to_be_planned_elements[0]).toEqual({ id: 14 });
             expect(state.to_be_planned_elements[1]).toEqual({ id: 125 });
         });
@@ -179,9 +179,9 @@ describe("Mutations", () => {
             } as State;
 
             mutations.startMoveElementInAProgramIncrement(state, 536);
-            expect(state.ongoing_move_elements_id.length).toEqual(2);
-            expect(state.ongoing_move_elements_id[0]).toEqual(14);
-            expect(state.ongoing_move_elements_id[1]).toEqual(536);
+            expect(state.ongoing_move_elements_id).toHaveLength(2);
+            expect(state.ongoing_move_elements_id[0]).toBe(14);
+            expect(state.ongoing_move_elements_id[1]).toBe(536);
         });
 
         it("When the element is already moving, Then error is thrown", () => {
@@ -202,8 +202,8 @@ describe("Mutations", () => {
             } as State;
 
             mutations.finishMoveElement(state, 536);
-            expect(state.ongoing_move_elements_id.length).toEqual(1);
-            expect(state.ongoing_move_elements_id[0]).toEqual(537);
+            expect(state.ongoing_move_elements_id).toHaveLength(1);
+            expect(state.ongoing_move_elements_id[0]).toBe(537);
         });
 
         it("When element is not moving, Then it is not deleted", () => {
@@ -212,9 +212,9 @@ describe("Mutations", () => {
             } as State;
 
             mutations.finishMoveElement(state, 14);
-            expect(state.ongoing_move_elements_id.length).toEqual(2);
-            expect(state.ongoing_move_elements_id[0]).toEqual(536);
-            expect(state.ongoing_move_elements_id[1]).toEqual(537);
+            expect(state.ongoing_move_elements_id).toHaveLength(2);
+            expect(state.ongoing_move_elements_id[0]).toBe(536);
+            expect(state.ongoing_move_elements_id[1]).toBe(537);
         });
     });
 

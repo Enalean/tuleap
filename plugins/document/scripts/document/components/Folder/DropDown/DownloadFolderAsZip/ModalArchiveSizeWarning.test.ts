@@ -70,7 +70,7 @@ describe("ModalArchiveSizeWarningModal", () => {
             "[data-test=confirm-download-archive-button-despite-size-warning]"
         );
 
-        expect(confirm_button.attributes("href")).toEqual("/download/me/here");
+        expect(confirm_button.attributes("href")).toBe("/download/me/here");
         confirm_button.trigger("click");
 
         expect(wrapper.emitted("download-folder-as-zip-modal-closed")?.length).toBe(1);

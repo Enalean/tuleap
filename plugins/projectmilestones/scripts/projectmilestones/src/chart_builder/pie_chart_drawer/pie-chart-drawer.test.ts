@@ -68,11 +68,11 @@ describe("PieChartDrawer", () => {
 
     describe("getSumOfValue", () => {
         it("When there are some value, Then the sum is returned", () => {
-            expect(getSumOfValue(getDataPieChart())).toEqual(111);
+            expect(getSumOfValue(getDataPieChart())).toBe(111);
         });
 
         it("When there are not some value, Then 0 is returned", () => {
-            expect(getSumOfValue([])).toEqual(0);
+            expect(getSumOfValue([])).toBe(0);
         });
     });
 
@@ -88,25 +88,25 @@ describe("PieChartDrawer", () => {
                     .select(".release-widget-pie-chart-ttm-slice-blocked")
                     .select("text")
                     .text()
-            ).toEqual("10");
+            ).toBe("10");
             expect(
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-passed")
                     .select("text")
                     .text()
-            ).toEqual("1");
+            ).toBe("1");
             expect(
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-notrun")
                     .select("text")
                     .text()
-            ).toEqual("100");
+            ).toBe("100");
             expect(
                 select(document)
                     .select(".release-widget-pie-chart-ttm-slice-failed")
                     .select("text")
                     .text()
-            ).toEqual("");
+            ).toBe("");
         });
     });
 

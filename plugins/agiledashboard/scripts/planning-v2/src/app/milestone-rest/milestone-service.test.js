@@ -94,7 +94,7 @@ describe("MilestoneService", () => {
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/milestones/97");
 
             const milestone = response.results;
-            expect(milestone.initialEffort).toEqual(0);
+            expect(milestone.initialEffort).toBe(0);
             expect(milestone.collapsed).toBe(true);
             expect(milestone.content).toEqual([]);
             expect(milestone.getContent).toBeDefined();
@@ -106,7 +106,7 @@ describe("MilestoneService", () => {
                 id: 91,
                 label: "Bugs",
             });
-            expect(milestone.backlog_accepted_types.toString()).toEqual("trackerId36|trackerId91");
+            expect(milestone.backlog_accepted_types.toString()).toBe("trackerId36|trackerId91");
             expect(milestone.content_accepted_types.content).toContainEqual({
                 id: 23,
                 label: "Tasks",
@@ -115,7 +115,7 @@ describe("MilestoneService", () => {
                 id: 78,
                 label: "Activities",
             });
-            expect(milestone.content_accepted_types.toString()).toEqual("trackerId23|trackerId78");
+            expect(milestone.content_accepted_types.toString()).toBe("trackerId23|trackerId78");
         });
 
         it(`after getting the milestone, when I call getContent() on it,
@@ -176,7 +176,7 @@ describe("MilestoneService", () => {
             const promise = MilestoneService.getContent(25, 50, 0);
             const response = await wrapPromise(promise);
 
-            expect(response.total).toEqual("2");
+            expect(response.total).toBe("2");
             expect(response.results[0]).toEqual(expect.objectContaining({ id: 140 }));
             expect(response.results[1]).toEqual(expect.objectContaining({ id: 142 }));
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/milestones/25/content", {
@@ -210,7 +210,7 @@ describe("MilestoneService", () => {
                 content: [{ initial_effort: 3 }, { initial_effort: 5 }],
             };
             MilestoneService.updateInitialEffort(milestone);
-            expect(milestone.initialEffort).toEqual(8);
+            expect(milestone.initialEffort).toBe(8);
         });
     });
 

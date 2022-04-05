@@ -96,9 +96,9 @@ describe("line-height-equalizer", () => {
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
-            expect(placeholder_to_create).not.toBeDefined();
+            expect(placeholder_to_create).toBeUndefined();
             expect(changed).toHaveBeenCalled();
-            expect(placeholder.node.style.height).toEqual("45px");
+            expect(placeholder.node.style.height).toBe("45px");
         });
 
         it("Given a line with 2 comments, when the opposite has a placeholder and a new comment is added, then it should reduce the opposite placeholder height.", () => {
@@ -139,8 +139,8 @@ describe("line-height-equalizer", () => {
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
-            expect(placeholder_to_create).not.toBeDefined();
-            expect(placeholder.node.style.height).toEqual("25px");
+            expect(placeholder_to_create).toBeUndefined();
+            expect(placeholder.node.style.height).toBe("25px");
         });
 
         it("When the two sides have the same number of comments, then the placeholders should be minimized (height 0px).", () => {
@@ -178,8 +178,8 @@ describe("line-height-equalizer", () => {
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
-            expect(placeholder_to_create).not.toBeDefined();
-            expect(placeholder.node.style.height).toEqual("0px");
+            expect(placeholder_to_create).toBeUndefined();
+            expect(placeholder.node.style.height).toBe("0px");
         });
 
         it("Given one side without content, then there is no need to resize it.", () => {
@@ -210,7 +210,7 @@ describe("line-height-equalizer", () => {
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
 
             expect(placeholder_to_create).toBeNull();
-            expect(placeholder.node.style.height).toEqual("20px");
+            expect(placeholder.node.style.height).toBe("20px");
         });
     });
 

@@ -207,7 +207,7 @@ describe(`LinkedArtifactTemplate`, () => {
 
             const button = target.querySelector("[data-test=action-button]");
 
-            expect(button).toBe(null);
+            expect(button).toBeNull();
         });
     });
 });

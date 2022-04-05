@@ -31,7 +31,7 @@ describe(`TimeboxLabel`, () => {
         input.value = "lactonize";
 
         const label = TimeboxLabel.fromId(RetrieveElementStub.withElements(input), "some_id");
-        expect(label.value).toEqual("lactonize");
+        expect(label.value).toBe("lactonize");
     });
 
     it(`disables the input and sets a class on its parent div`, () => {

@@ -26,10 +26,10 @@ describe("LoadCustomElement", () => {
     it("defines the custom element", () => {
         const installation_hook_spy = jest.fn();
 
-        expect(window.customElements.get("tuleap-project-sidebar")).toBe(undefined);
+        expect(window.customElements.get("tuleap-project-sidebar")).toBeUndefined();
         installProjectSidebarElement(window, installation_hook_spy);
         installProjectSidebarElement(window, installation_hook_spy);
-        expect(window.customElements.get("tuleap-project-sidebar")).not.toBe(undefined);
+        expect(window.customElements.get("tuleap-project-sidebar")).toBeDefined();
         expect(installation_hook_spy).toHaveBeenCalledTimes(1);
     });
 });

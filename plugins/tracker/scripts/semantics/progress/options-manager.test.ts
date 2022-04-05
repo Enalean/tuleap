@@ -172,8 +172,8 @@ describe("options-manager", () => {
                     )
                 ).toBe(true);
 
-                expect(total_effort_selector.getAttribute("disabled")).toEqual("disabled");
-                expect(remaining_effort_selector.getAttribute("disabled")).toEqual("disabled");
+                expect(total_effort_selector.getAttribute("disabled")).toBe("disabled");
+                expect(remaining_effort_selector.getAttribute("disabled")).toBe("disabled");
             });
 
             it("should disable the submit button when the links count section is active and config cannot be defined", () => {
@@ -188,9 +188,7 @@ describe("options-manager", () => {
                 links_based_option.selected = true;
                 method_selector.dispatchEvent(new Event("change"));
 
-                expect(update_semantic_progress_button.getAttribute("disabled")).toEqual(
-                    "disabled"
-                );
+                expect(update_semantic_progress_button.getAttribute("disabled")).toBe("disabled");
 
                 effort_based_option.selected = true;
                 method_selector.dispatchEvent(new Event("change"));

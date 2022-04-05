@@ -36,7 +36,7 @@ describe("IntInput", () => {
         beforeEach(() => wrapper.setProps({ value: null }));
 
         it("Shows nothing", () => {
-            expect(wrapper.text()).toEqual("");
+            expect(wrapper.text()).toBe("");
         });
     });
 

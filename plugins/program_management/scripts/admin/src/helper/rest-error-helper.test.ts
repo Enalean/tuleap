@@ -36,7 +36,7 @@ describe("RestErrorHelper", () => {
             const doc = getDocumentWithAlertElement(alert_element);
             resetRestErrorAlert(doc, "program-management-add-team-error-rest");
 
-            expect(alert_element.textContent).toEqual("");
+            expect(alert_element.textContent).toBe("");
             expect(alert_element.classList).toContain("program-management-error-rest-not-show");
         });
     });
@@ -54,7 +54,7 @@ describe("RestErrorHelper", () => {
             const doc = getDocumentWithAlertElement(alert_element);
             setRestErrorMessage(doc, "program-management-add-team-error-rest", "error");
 
-            expect(alert_element.textContent).toEqual("error");
+            expect(alert_element.textContent).toBe("error");
             expect(alert_element.classList).not.toContain("program-management-error-rest-not-show");
         });
     });

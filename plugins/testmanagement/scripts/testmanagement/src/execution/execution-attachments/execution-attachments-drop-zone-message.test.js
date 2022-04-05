@@ -74,7 +74,7 @@ describe("execution-attachments-drop-zone-message", () => {
 
     describe("message", () => {
         it("should build a message informing the user about the max file size allowed", () => {
-            expect(controller.getMessage()).toEqual(
+            expect(controller.getMessage()).toBe(
                 "Drop files here to attach them to your comment (max size is 95.4 MBs)."
             );
         });

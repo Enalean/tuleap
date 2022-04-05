@@ -59,13 +59,13 @@ describe("DateField", () => {
             throw new Error("Input not found in DateField");
         }
 
-        expect(input.id).toEqual("tracker_field_60");
-        expect(input.size).toEqual(19);
-        expect(input.value).toEqual("27-01-2022 12:30");
+        expect(input.id).toBe("tracker_field_60");
+        expect(input.size).toBe(19);
+        expect(input.value).toBe("27-01-2022 12:30");
         expect(input.disabled).toBe(false);
         expect(input.hasAttribute("data-enabletime")).toBe(true);
 
-        expect(target.querySelector("[data-test=date-field-required-flag]")).not.toBe(null);
+        expect(target.querySelector("[data-test=date-field-required-flag]")).not.toBeNull();
     });
 
     it("When the field is required and no value has been provided, Then the field is in error", () => {
@@ -86,9 +86,9 @@ describe("DateField", () => {
         }
 
         expect(form_element.classList.contains("tlp-form-element-error")).toBe(true);
-        expect(target.querySelector("[data-test=date-field-required-and-empty-error]")).not.toBe(
-            null
-        );
+        expect(
+            target.querySelector("[data-test=date-field-required-and-empty-error]")
+        ).not.toBeNull();
     });
 
     it("When the field is disabled, then the form-element and its input should be disabled", () => {

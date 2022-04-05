@@ -33,7 +33,7 @@ describe("FilterTrackerReportService -", () => {
             ]);
             const selected_tracker_report_id =
                 FilterTrackerReportService.getSelectedFilterTrackerReportId();
-            expect(selected_tracker_report_id).toEqual(306);
+            expect(selected_tracker_report_id).toBe(306);
         });
 
         it("Given filters tracker report array with no selected report, then 0 is returned", () => {
@@ -53,7 +53,7 @@ describe("FilterTrackerReportService -", () => {
             ]);
             const selected_tracker_report_id =
                 FilterTrackerReportService.getSelectedFilterTrackerReportId();
-            expect(selected_tracker_report_id).toEqual(0);
+            expect(selected_tracker_report_id).toBe(0);
         });
     });
 
@@ -74,7 +74,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toEqual(true);
+            expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toBe(true);
         });
 
         it("Given filters tracker report array with no selected report, then false is returned", () => {
@@ -92,7 +92,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toEqual(false);
+            expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toBe(false);
         });
     });
 
@@ -114,7 +114,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(false);
         });
 
         it("Given empty node.js server address and a selected report, then false will be returned", () => {
@@ -134,7 +134,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(false);
         });
 
         it("Given empty node.js server address and no selected report, then false will be returned", () => {
@@ -153,7 +153,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(false);
         });
 
         it("Given node.js server address and no selected report, then true will be returned", () => {
@@ -172,7 +172,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(true);
+            expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toBe(true);
         });
     });
 
@@ -194,7 +194,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
         });
 
         it("Given empty node.js server address and no selected report, then true will be returned", () => {
@@ -213,7 +213,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toEqual(true);
+            expect(FilterTrackerReportService.isWIPUpdated()).toBe(true);
         });
 
         it("Given node.js server address and a selected report, then false will be returned", () => {
@@ -233,7 +233,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
         });
 
         it("Given node.js server address and no selected report, then false will be returned", () => {
@@ -252,7 +252,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.isWIPUpdated()).toBe(false);
         });
     });
 
@@ -274,7 +274,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(true);
+            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(true);
         });
 
         it("Given empty node.js server address and a selected report, then false will be returned", () => {
@@ -294,7 +294,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(false);
         });
 
         it("Given empty node.js server address and no selected report, then false will be returned", () => {
@@ -313,7 +313,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(false);
         });
 
         it("Given node.js server address and no selected report, then false will be returned", () => {
@@ -332,7 +332,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toBe(false);
         });
     });
 
@@ -354,7 +354,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(true);
+            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(true);
         });
 
         it("Given empty node.js server address and no selected report, then false will be returned", () => {
@@ -373,7 +373,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(false);
         });
 
         it("Given node.js server address and a selected report, then false will be returned", () => {
@@ -393,7 +393,7 @@ describe("FilterTrackerReportService -", () => {
                     selected: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(false);
         });
 
         it("Given node.js server address and no selected report, then false will be returned", () => {
@@ -412,7 +412,7 @@ describe("FilterTrackerReportService -", () => {
                     selectable: true,
                 },
             ]);
-            expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
+            expect(FilterTrackerReportService.isNotWIPUpdated()).toBe(false);
         });
     });
 

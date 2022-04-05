@@ -72,7 +72,7 @@ describe("BacklogItem state mutations", () => {
 
         addBacklogItems(state, [{ id: 2 }, { id: 3 }] as BacklogItem[]);
 
-        expect(state.backlog_items.length).toBe(3);
+        expect(state.backlog_items).toHaveLength(3);
     });
 
     it("loadingErrorHasBeenCatched", () => {
@@ -301,7 +301,7 @@ describe("BacklogItem state mutations", () => {
                 test_definitions: [{ id: 678 } as TestDefinition],
             });
 
-            expect(state.backlog_items[0].test_definitions.length).toBe(2);
+            expect(state.backlog_items[0].test_definitions).toHaveLength(2);
         });
 
         it("Moves not planned test definitions to the end of the definitions of a backlog item", () => {
@@ -349,7 +349,7 @@ describe("BacklogItem state mutations", () => {
             });
             endLoadingTestDefinition(state, backlog_item);
 
-            expect(state.backlog_items[0].test_definitions.length).toBe(2);
+            expect(state.backlog_items[0].test_definitions).toHaveLength(2);
         });
     });
 

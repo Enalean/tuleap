@@ -97,7 +97,7 @@ describe("Transition getters:", () => {
 
             const fields = getters.set_value_action_fields({}, { post_actions }, root_state);
 
-            expect(fields.length).toEqual(2);
+            expect(fields).toHaveLength(2);
             expect(fields[0].disabled).toBe(true);
             expect(fields[1].disabled).toBe(false);
         });

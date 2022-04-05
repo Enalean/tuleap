@@ -64,7 +64,7 @@ describe("DeleteConfirmationModal", () => {
             expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
         });
         it("disables confirm button", () => {
-            expect(wrapper.get(confirm_selector).attributes().disabled).toEqual("disabled");
+            expect(wrapper.get(confirm_selector).attributes().disabled).toBe("disabled");
         });
         it("calls confirm method", () => {
             expect(confirm).toHaveBeenCalled();

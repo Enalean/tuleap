@@ -37,6 +37,6 @@ describe("Main", () => {
             },
         });
 
-        expect(main_content.innerHTML).not.toStrictEqual("");
+        expect(main_content.innerHTML).not.toBe("");
     });
 });

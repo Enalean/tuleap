@@ -44,8 +44,8 @@ describe("App", () => {
         button.trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.findAllComponents(CcInput).length).toBe(2);
-        expect(wrapper.findAllComponents(FileInput).length).toBe(0);
+        expect(wrapper.findAllComponents(CcInput)).toHaveLength(2);
+        expect(wrapper.findAllComponents(FileInput)).toHaveLength(0);
     });
 
     it("Adds FileInput components when we click on [Add attachment] button", async () => {
@@ -59,7 +59,7 @@ describe("App", () => {
         button.trigger("click");
         await Vue.nextTick();
 
-        expect(wrapper.findAllComponents(CcInput).length).toBe(0);
-        expect(wrapper.findAllComponents(FileInput).length).toBe(2);
+        expect(wrapper.findAllComponents(CcInput)).toHaveLength(0);
+        expect(wrapper.findAllComponents(FileInput)).toHaveLength(2);
     });
 });

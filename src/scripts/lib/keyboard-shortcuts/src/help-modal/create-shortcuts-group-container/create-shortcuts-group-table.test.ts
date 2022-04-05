@@ -55,7 +55,7 @@ describe("createShortcutsGroupTable", () => {
         const shortcuts_group_table = createShortcutsGroupTable(doc, shortcuts_group);
         const shortcuts_rows = shortcuts_group_table.querySelectorAll("tbody tr");
 
-        expect(shortcuts_rows.length).toBe(2);
+        expect(shortcuts_rows).toHaveLength(2);
     });
 
     it(`has table rows containing the shortcut description`, () => {

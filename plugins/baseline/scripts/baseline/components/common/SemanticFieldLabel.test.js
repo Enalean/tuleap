@@ -60,7 +60,7 @@ describe("SemanticFieldLabel", () => {
         it("shows only skeleton", () => {
             expect(wrapper.find('[data-test-type="skeleton"]').exists()).toBeTruthy();
 
-            expect(wrapper.text()).toEqual("");
+            expect(wrapper.text()).toBe("");
         });
     });
 
@@ -71,7 +71,7 @@ describe("SemanticFieldLabel", () => {
         });
 
         it("shows only field label", () => {
-            expect(wrapper.text()).toEqual("Status");
+            expect(wrapper.text()).toBe("Status");
         });
     });
 });

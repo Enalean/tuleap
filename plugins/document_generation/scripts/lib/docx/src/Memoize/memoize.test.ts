@@ -24,9 +24,9 @@ describe("memoize", () => {
         const fn = jest.fn((a: string, b: string): string => `${a}:${b}`);
         const memoized_fn = memoize(fn);
 
-        expect(memoized_fn("A", "B")).toStrictEqual("A:B");
-        expect(memoized_fn("A", "B")).toStrictEqual("A:B");
-        expect(memoized_fn("C", "D")).toStrictEqual("C:D");
+        expect(memoized_fn("A", "B")).toBe("A:B");
+        expect(memoized_fn("A", "B")).toBe("A:B");
+        expect(memoized_fn("C", "D")).toBe("C:D");
         expect(fn).toBeCalledTimes(2);
     });
 
@@ -46,8 +46,8 @@ describe("memoize", () => {
         const fn = jest.fn((): string => "A");
         const memoized_fn = memoize(fn);
 
-        expect(memoized_fn()).toStrictEqual("A");
-        expect(memoized_fn()).toStrictEqual("A");
+        expect(memoized_fn()).toBe("A");
+        expect(memoized_fn()).toBe("A");
         expect(fn).toBeCalledTimes(1);
     });
 });

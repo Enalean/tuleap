@@ -53,7 +53,7 @@ describe("MilestonesSelect", () => {
 
         it("shows as many milestones as given", () => {
             let milestones = wrapper.findAll(milestone_selector);
-            expect(milestones.length).toBe(3);
+            expect(milestones).toHaveLength(3);
         });
 
         describe("sorted_milestones", () => {

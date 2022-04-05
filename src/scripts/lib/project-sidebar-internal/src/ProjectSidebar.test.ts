@@ -36,6 +36,6 @@ describe("ProjectSidebar", () => {
     it("displays nothing when config attribute is incorrect", () => {
         const wrapper = shallowMount(ProjectSidebar, { props: { config: "" } });
 
-        expect(wrapper.element.childNodes.length).toBe(0);
+        expect(wrapper.element.childNodes).toHaveLength(0);
     });
 });

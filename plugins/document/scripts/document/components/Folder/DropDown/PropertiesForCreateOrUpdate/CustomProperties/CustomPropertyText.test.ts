@@ -45,7 +45,7 @@ describe("CustomPropertyText", () => {
         if (!(text_input.element instanceof HTMLTextAreaElement)) {
             throw new Error("Could not find text element in component");
         }
-        expect(text_input.element.value).toEqual("text value");
+        expect(text_input.element.value).toBe("text value");
         expect(text_input.element.required).toBe(true);
         expect(
             wrapper.find("[data-test=document-custom-property-is-required]").exists()
@@ -66,7 +66,7 @@ describe("CustomPropertyText", () => {
         if (!(text_input.element instanceof HTMLTextAreaElement)) {
             throw new Error("Could not find text element in component");
         }
-        expect(text_input.element.value).toEqual("");
+        expect(text_input.element.value).toBe("");
         expect(text_input.element.required).toBe(false);
         expect(
             wrapper.find("[data-test=document-custom-property-is-required]").exists()

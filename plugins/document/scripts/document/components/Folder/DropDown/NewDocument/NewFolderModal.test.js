@@ -133,7 +133,7 @@ describe("NewFolderModal", () => {
             detail: { parent: store.state.current_folder },
         });
         expect(wrapper.vm.item.properties).toEqual(folder_to_create.properties);
-        expect(wrapper.vm.item.status).toEqual("rejected");
+        expect(wrapper.vm.item.status).toBe("rejected");
     });
 
     it("Updates status", () => {
@@ -155,7 +155,7 @@ describe("NewFolderModal", () => {
         const wrapper = factory({ item });
 
         emitter.emit("update-status-property", "draft");
-        expect(wrapper.vm.item.status).toEqual("draft");
+        expect(wrapper.vm.item.status).toBe("draft");
     });
 
     it("Updates title", () => {
@@ -178,7 +178,7 @@ describe("NewFolderModal", () => {
         const wrapper = factory({ item });
 
         emitter.emit("update-title-property", "A folder");
-        expect(wrapper.vm.item.title).toEqual("A folder");
+        expect(wrapper.vm.item.title).toBe("A folder");
     });
 
     it("Updates description", () => {
@@ -201,6 +201,6 @@ describe("NewFolderModal", () => {
         const wrapper = factory({ item });
 
         emitter.emit("update-description-property", "A description");
-        expect(wrapper.vm.item.description).toEqual("A description");
+        expect(wrapper.vm.item.description).toBe("A description");
     });
 });

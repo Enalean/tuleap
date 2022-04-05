@@ -102,7 +102,7 @@ describe("file-field-detector", () => {
 
             const result = getFirstFileField(tracker_fields);
 
-            expect(result?.type).toEqual("file");
+            expect(result?.type).toBe("file");
         });
 
         it(`Given a tracker with only one enabled file field,

@@ -53,7 +53,7 @@ describe("FilterTrackerReportController -", () => {
 
     describe("init() -", () => {
         it("when the controller is created, then the selected filter tracker report will be retrieved", function () {
-            expect(FilterTrackerReportController.selected_item).toEqual("306");
+            expect(FilterTrackerReportController.selected_item).toBe("306");
         });
     });
 
@@ -61,7 +61,7 @@ describe("FilterTrackerReportController -", () => {
         it("when the user change the filter to another tracker report, then the search param is modified", function () {
             FilterTrackerReportController.selected_item = "305";
             FilterTrackerReportController.changeFilter();
-            expect($window.location.search).toEqual(
+            expect($window.location.search).toBe(
                 "?group_id=126&action=showKanban&id=19&tracker_report_id=305"
             );
         });
@@ -69,7 +69,7 @@ describe("FilterTrackerReportController -", () => {
         it("when the user change the filter to none, then the search param is not anymore in the url", function () {
             FilterTrackerReportController.selected_item = "0";
             FilterTrackerReportController.changeFilter();
-            expect($window.location.search).toEqual("?group_id=126&action=showKanban&id=19");
+            expect($window.location.search).toBe("?group_id=126&action=showKanban&id=19");
         });
     });
 });

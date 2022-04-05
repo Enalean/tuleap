@@ -274,7 +274,7 @@ describe("TlpModalService -", function () {
                 });
 
                 await wrapPromise(promise);
-                expect($document.find(".tlp-modal").length).toBe(0);
+                expect($document.find(".tlp-modal")).toHaveLength(0);
             });
         });
     });

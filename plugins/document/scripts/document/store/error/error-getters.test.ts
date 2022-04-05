@@ -39,7 +39,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("folder has an error if load fail", () => {
@@ -51,7 +51,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("folder has an error if lock action fail", () => {
@@ -63,7 +63,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("folder has an error if document preview fail", () => {
@@ -75,7 +75,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("folder has an error if document load fail", () => {
@@ -87,7 +87,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("folder has no error", () => {
@@ -99,7 +99,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
     });
 
@@ -112,7 +112,7 @@ describe("error_getters", () => {
 
             const result = getters.does_document_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("document has an error if load fail", () => {
@@ -123,7 +123,7 @@ describe("error_getters", () => {
 
             const result = getters.does_document_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("document has an error if lock action fail", () => {
@@ -134,7 +134,7 @@ describe("error_getters", () => {
 
             const result = getters.does_document_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("document has an error if the folder has an error", () => {
@@ -145,7 +145,7 @@ describe("error_getters", () => {
 
             const result = getters.does_document_have_any_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("document has no error", () => {
@@ -156,7 +156,7 @@ describe("error_getters", () => {
 
             const result = getters.does_folder_have_any_error(state);
 
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
     });
 
@@ -168,7 +168,7 @@ describe("error_getters", () => {
 
             const result = getters.has_any_loading_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("has an error if document load fail", () => {
@@ -178,7 +178,7 @@ describe("error_getters", () => {
 
             const result = getters.has_any_loading_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("has an error if lock action fail", () => {
@@ -188,7 +188,7 @@ describe("error_getters", () => {
 
             const result = getters.has_any_loading_error(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("document has no loading error", () => {
@@ -198,7 +198,7 @@ describe("error_getters", () => {
 
             const result = getters.has_any_loading_error(state);
 
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
     });
 });

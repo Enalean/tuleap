@@ -102,7 +102,7 @@ describe("ListOfBacklogItems", () => {
             backlog_items: [{ id: 1 }, { id: 2 }] as BacklogItem[],
         });
 
-        expect(wrapper.findAllComponents(BacklogItemContainer).length).toBe(2);
+        expect(wrapper.findAllComponents(BacklogItemContainer)).toHaveLength(2);
     });
 
     it("Displays skeletons even if there are backlog_items to show loading indication", async () => {

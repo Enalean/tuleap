@@ -44,7 +44,7 @@ describe("GitPermissionsTable", () => {
 
         const wrapper = instantiateComponent();
 
-        expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toBe(
             "Project Member has no permission for any repository in this project"
         );
     });
@@ -57,7 +57,7 @@ describe("GitPermissionsTable", () => {
 
         const wrapper = instantiateComponent();
 
-        expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toBe(
             "No repository found for project"
         );
     });
@@ -75,7 +75,7 @@ describe("GitPermissionsTable", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toEqual(
+        expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toBe(
             "There isn't any matching repository"
         );
     });

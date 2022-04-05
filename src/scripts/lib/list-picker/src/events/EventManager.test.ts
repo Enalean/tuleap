@@ -281,7 +281,7 @@ describe("event manager", () => {
 
                 search_field.dispatchEvent(new KeyboardEvent("keydown", event_init));
 
-                expect(search_field.value).toEqual("");
+                expect(search_field.value).toBe("");
                 expect(
                     dropdown_content_renderer.renderFilteredListPickerDropdownContent
                 ).toHaveBeenCalledWith("");

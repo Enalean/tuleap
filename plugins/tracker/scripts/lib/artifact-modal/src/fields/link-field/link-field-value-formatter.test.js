@@ -24,7 +24,7 @@ describe(`link-field-value-formatter -`, () => {
         it(`Given an undefined field value, then it will return null`, () => {
             const result = formatLinkFieldValue(undefined);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it(`Given an artifact link field's value

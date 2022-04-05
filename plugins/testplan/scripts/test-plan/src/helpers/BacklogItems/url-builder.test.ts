@@ -36,7 +36,7 @@ describe("URL Builder for backlog items", () => {
 
         const url = buildGoToTestExecutionLink(102, 12, test_definition);
 
-        expect(url).toBe(null);
+        expect(url).toBeNull();
     });
 
     it("generates an URL to go to the test exec for a planned test definition", () => {

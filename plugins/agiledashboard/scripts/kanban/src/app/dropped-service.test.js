@@ -198,7 +198,7 @@ describe("DroppedService -", function () {
 
             var compared_to = DroppedService.getComparedTo(item_list, index);
 
-            expect(compared_to).toBe(null);
+            expect(compared_to).toBeNull();
         });
 
         it("Given an item list, when I drop an item before its first element, then an object with direction 'before' and item_id equal to the id of the second element will be returned", function () {
@@ -234,7 +234,7 @@ describe("DroppedService -", function () {
 
             var compared_to = DroppedService.getComparedToBeFirstItemOfColumn(column);
 
-            expect(compared_to).toBe(null);
+            expect(compared_to).toBeNull();
         });
 
         it("Given a column, when I move an item to be first of it, then an object with direction 'before' and item_id equal to the id of the current first element will be returned", function () {
@@ -259,7 +259,7 @@ describe("DroppedService -", function () {
 
             var compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
 
-            expect(compared_to).toBe(null);
+            expect(compared_to).toBeNull();
         });
 
         it("Given a column, when I move an item to be last of it, then an object with direction 'after' and item_id equal to the id of the current last element will be returned", function () {

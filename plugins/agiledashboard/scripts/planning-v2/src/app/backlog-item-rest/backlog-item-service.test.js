@@ -90,7 +90,7 @@ describe("BacklogItemService", () => {
 
             expect(response.results[0]).toEqual(expect.objectContaining({ id: 271 }));
             expect(response.results[1]).toEqual(expect.objectContaining({ id: 242 }));
-            expect(response.total).toEqual("2");
+            expect(response.total).toBe("2");
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects/32/backlog", {
                 params: { limit: 50, offset: 0 },
             });
@@ -116,7 +116,7 @@ describe("BacklogItemService", () => {
 
             expect(response.results[0]).toEqual(expect.objectContaining({ id: 398 }));
             expect(response.results[1]).toEqual(expect.objectContaining({ id: 848 }));
-            expect(response.total).toEqual("2");
+            expect(response.total).toBe("2");
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/milestones/65/backlog", {
                 params: { limit: 50, offset: 0 },
             });
@@ -142,7 +142,7 @@ describe("BacklogItemService", () => {
 
             expect(response.results[0]).toEqual(expect.objectContaining({ id: 722 }));
             expect(response.results[1]).toEqual(expect.objectContaining({ id: 481 }));
-            expect(response.total).toEqual("2");
+            expect(response.total).toBe("2");
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/backlog_items/57/children", {
                 params: { limit: 50, offset: 0 },
             });

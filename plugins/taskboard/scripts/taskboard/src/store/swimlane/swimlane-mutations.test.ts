@@ -47,7 +47,7 @@ describe(`Swimlane state mutations`, () => {
                 is_loading_swimlanes: false,
             } as SwimlaneState;
             mutations.beginLoadingSwimlanes(state);
-            expect(state.is_loading_swimlanes).toStrictEqual(true);
+            expect(state.is_loading_swimlanes).toBe(true);
         });
     });
 
@@ -57,7 +57,7 @@ describe(`Swimlane state mutations`, () => {
                 is_loading_swimlanes: true,
             } as SwimlaneState;
             mutations.endLoadingSwimlanes(state);
-            expect(state.is_loading_swimlanes).toStrictEqual(false);
+            expect(state.is_loading_swimlanes).toBe(false);
         });
     });
 
@@ -108,7 +108,7 @@ describe(`Swimlane state mutations`, () => {
             mutations.addChildrenToSwimlane(state, { swimlane, children_cards });
 
             const second_swimlane = findSwimlane(state, unrelated_swimlane);
-            expect(second_swimlane.children_cards.length).toBe(0);
+            expect(second_swimlane.children_cards).toHaveLength(0);
         });
 
         it(`Given a swimlane with no children, it adds children and updates the card property to inform that now there are children`, () => {

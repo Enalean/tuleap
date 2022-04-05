@@ -119,7 +119,7 @@ describe("getTraceabilityMatrix", () => {
             }
         );
 
-        expect(matrix.length).toBe(3);
+        expect(matrix).toHaveLength(3);
         expect(matrix[0].requirement).toStrictEqual({
             id: 1231,
             title: "Lorem",
@@ -209,7 +209,7 @@ describe("getTraceabilityMatrix", () => {
             }
         );
 
-        expect(matrix.length).toBe(1);
+        expect(matrix).toHaveLength(1);
         expect(matrix[0].requirement).toStrictEqual({
             id: 1231,
             title: "Lorem",
@@ -285,7 +285,7 @@ describe("getTraceabilityMatrix", () => {
             }
         );
 
-        expect(matrix.length).toBe(2);
+        expect(matrix).toHaveLength(2);
         expect(matrix[0].requirement).toStrictEqual({
             id: 1231,
             title: "Lorem",
@@ -383,7 +383,7 @@ describe("getTraceabilityMatrix", () => {
             }
         );
 
-        expect(matrix.length).toBe(1);
+        expect(matrix).toHaveLength(1);
         expect(matrix[0].requirement).toStrictEqual({
             id: 1231,
             title: "Lorem",
@@ -508,7 +508,7 @@ describe("getTraceabilityMatrix", () => {
                     }
                 );
 
-                expect(matrix.length).toBe(1);
+                expect(matrix).toHaveLength(1);
                 expect(matrix[0].requirement).toStrictEqual({
                     id: 1231,
                     title: "Lorem",

@@ -100,14 +100,14 @@ describe("Getters", () => {
                 ongoing_move_elements_id: [] as number[],
             } as State;
 
-            expect(getters.hasAnElementMovedInsideIncrement(state)).toEqual(false);
+            expect(getters.hasAnElementMovedInsideIncrement(state)).toBe(false);
         });
         it("When there are elements moving, Then return true", () => {
             const state = {
                 ongoing_move_elements_id: [14],
             } as State;
 
-            expect(getters.hasAnElementMovedInsideIncrement(state)).toEqual(true);
+            expect(getters.hasAnElementMovedInsideIncrement(state)).toBe(true);
         });
     });
 

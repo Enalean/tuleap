@@ -66,7 +66,7 @@ describe("Store getters", () => {
                 ],
             } as State);
 
-            expect(global_progress).toEqual(50);
+            expect(global_progress).toBe(50);
         });
 
         it("returns 0 if no upload is in progress", () => {
@@ -81,7 +81,7 @@ describe("Store getters", () => {
                 ],
             } as State);
 
-            expect(global_progress).toEqual(0);
+            expect(global_progress).toBe(0);
         });
     });
 });

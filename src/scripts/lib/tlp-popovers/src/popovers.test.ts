@@ -63,7 +63,7 @@ describe(`Popovers`, () => {
                 anchor: anchor_element,
             });
             const placement_option = popperConstructor.mock.calls[0][2].placement;
-            expect(placement_option).toEqual("right");
+            expect(placement_option).toBe("right");
 
             popover.destroy();
             anchor_element.remove();
@@ -96,7 +96,7 @@ describe(`Popovers`, () => {
 
             const popover = createPopover(doc, trigger_element, content_element);
             const placement_option = popperConstructor.mock.calls[0][2].placement;
-            expect(placement_option).toEqual("left");
+            expect(placement_option).toBe("left");
 
             popover.destroy();
         });
@@ -114,7 +114,7 @@ describe(`Popovers`, () => {
             it will default to "bottom" placement`, () => {
             const popover = createPopover(doc, trigger_element, content_element);
             const placement_option = popperConstructor.mock.calls[0][2].placement;
-            expect(placement_option).toEqual("bottom");
+            expect(placement_option).toBe("bottom");
 
             popover.destroy();
         });

@@ -123,7 +123,7 @@ describe("UpdateFolderPropertiesModal", () => {
                 detail: { recursion_option: "all_items" },
             });
 
-            expect(wrapper.vm.recursion_option).toEqual("all_items");
+            expect(wrapper.vm.recursion_option).toBe("all_items");
         });
     });
     it("Transform item property rest representation", () => {
@@ -207,10 +207,10 @@ describe("UpdateFolderPropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.title).toEqual("A folder");
+        expect(wrapper.vm.item_to_update.title).toBe("A folder");
 
         emitter.emit("update-title-property", "A folder updated");
-        expect(wrapper.vm.item_to_update.title).toEqual("A folder updated");
+        expect(wrapper.vm.item_to_update.title).toBe("A folder updated");
     });
 
     it("Updates description", () => {
@@ -232,9 +232,9 @@ describe("UpdateFolderPropertiesModal", () => {
 
         const wrapper = factory({ item });
 
-        expect(wrapper.vm.item_to_update.description).toEqual("A custom description");
+        expect(wrapper.vm.item_to_update.description).toBe("A custom description");
 
         emitter.emit("update-description-property", "A description");
-        expect(wrapper.vm.item_to_update.description).toEqual("A description");
+        expect(wrapper.vm.item_to_update.description).toBe("A description");
     });
 });

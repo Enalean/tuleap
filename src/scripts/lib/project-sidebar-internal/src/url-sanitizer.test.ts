@@ -39,7 +39,7 @@ describe("url-sanitize", () => {
     it.each(["javascript:alert(1)", "JaVaScRiPt:alert(1)", "unknownprotocol:foo"])(
         "blocks not allowed URLs",
         (url: string) => {
-            expect(sanitizeURL(url)).toStrictEqual("");
+            expect(sanitizeURL(url)).toBe("");
         }
     );
 });

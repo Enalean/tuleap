@@ -54,6 +54,6 @@ describe("IterationsRibbon", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(IterationBar).length).toBe(3);
+        expect(wrapper.findAllComponents(IterationBar)).toHaveLength(3);
     });
 });

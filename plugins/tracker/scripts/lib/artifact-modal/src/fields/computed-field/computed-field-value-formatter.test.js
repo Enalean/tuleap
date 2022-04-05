@@ -24,7 +24,7 @@ describe("computed-field-value-formatter", () => {
         it(`Given a field value that was undefined, then it will return null`, () => {
             const result = formatComputedFieldValue(undefined);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it(`Given that the field value was set to autocomputed
@@ -59,7 +59,7 @@ describe("computed-field-value-formatter", () => {
 
                 const result = formatComputedFieldValue(field_value);
 
-                expect(result).toBe(null);
+                expect(result).toBeNull();
             });
 
             it(`and the manual value was not null

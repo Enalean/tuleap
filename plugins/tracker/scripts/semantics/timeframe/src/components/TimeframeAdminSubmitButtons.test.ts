@@ -54,7 +54,7 @@ describe("TimeframeAdminSubmitButtons", () => {
         const reset_button = wrapper.find("[data-test=reset-button]").element;
 
         expect(reset_button.hasAttribute("disabled")).toBe(true);
-        expect(reset_button.title).toEqual(
+        expect(reset_button.title).toBe(
             "You cannot reset this semantic because some trackers inherit their own semantics timeframe from this one."
         );
     });
@@ -75,7 +75,7 @@ describe("TimeframeAdminSubmitButtons", () => {
         const reset_button = wrapper.find("[data-test=reset-button]").element;
 
         expect(reset_button.hasAttribute("disabled")).toBe(true);
-        expect(reset_button.title).toEqual(
+        expect(reset_button.title).toBe(
             "You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin"
         );
     });

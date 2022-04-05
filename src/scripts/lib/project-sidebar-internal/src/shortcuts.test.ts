@@ -36,18 +36,18 @@ describe("Project Sidebar shortcuts", () => {
     it("does not find shortcuts when the sidebar is not present", () => {
         const doc = document.implementation.createHTMLDocument();
 
-        expect(getAvailableShortcuts(doc.body)).toStrictEqual(null);
+        expect(getAvailableShortcuts(doc.body)).toBeNull();
     });
 
     it("does not find shortcuts when the sidebar does not have a configuration", () => {
         const doc = document.implementation.createHTMLDocument();
         doc.body.appendChild(doc.createElement("tuleap-project-sidebar"));
 
-        expect(getAvailableShortcuts(doc.body)).toStrictEqual(null);
+        expect(getAvailableShortcuts(doc.body)).toBeNull();
     });
 
     it("does not find shortcuts when there is no tools", () => {
-        expect(getAvailableShortcutsFromToolsConfiguration([])).toStrictEqual(null);
+        expect(getAvailableShortcutsFromToolsConfiguration([])).toBeNull();
     });
 
     it("associates shortcuts with an action", () => {

@@ -39,7 +39,7 @@ describe("ItemsMapManager", () => {
                 "list-picker-item-group1-value_2"
             );
 
-            expect(item.id).toEqual("list-picker-item-group1-value_2");
+            expect(item.id).toBe("list-picker-item-group1-value_2");
         });
 
         it("should throw an error when the given item id does not reference a ListPickerItem", () => {

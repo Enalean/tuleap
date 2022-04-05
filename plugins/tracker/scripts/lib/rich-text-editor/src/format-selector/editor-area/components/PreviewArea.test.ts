@@ -47,7 +47,7 @@ describe(`PreviewArea`, () => {
         const template = createPreviewArea(null, gettext_provider);
         render(template, mount_point);
 
-        expect(mount_point.childElementCount).toEqual(0);
+        expect(mount_point.childElementCount).toBe(0);
     });
 
     it(`when the promise is fulfilled, it will return a div with its contents`, async () => {

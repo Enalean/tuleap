@@ -134,8 +134,8 @@ describe("NewBaselineModal", () => {
         });
 
         it("disables buttons", () => {
-            expect(wrapper.get(cancel_selector).attributes("disabled")).toEqual("disabled");
-            expect(wrapper.get('[data-test-action="submit"]').attributes("disabled")).toEqual(
+            expect(wrapper.get(cancel_selector).attributes("disabled")).toBe("disabled");
+            expect(wrapper.get('[data-test-action="submit"]').attributes("disabled")).toBe(
                 "disabled"
             );
         });
@@ -147,10 +147,10 @@ describe("NewBaselineModal", () => {
             });
 
             it("shows an error message", () => {
-                expect(wrapper.get(error_message_selector).text).not.toBe(null);
+                expect(wrapper.get(error_message_selector).text).not.toBeNull();
             });
             it("enables cancel buttons", () => {
-                expect(wrapper.get(cancel_selector).attributes("disabled")).not.toEqual("disabled");
+                expect(wrapper.get(cancel_selector).attributes("disabled")).not.toBe("disabled");
             });
         });
 

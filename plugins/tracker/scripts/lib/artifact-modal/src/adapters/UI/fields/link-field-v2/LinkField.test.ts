@@ -66,14 +66,14 @@ describe("LinkField", () => {
             const render = getSkeletonIfNeeded(LinkFieldPresenter.buildLoadingState());
 
             render(getHost(), target);
-            expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBe(null);
+            expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBeNull();
         });
 
         it("should render an empty state row when content has been loaded and there is no link to display", () => {
             const render = getEmptyStateIfNeeded(LinkFieldPresenter.forCreationMode());
 
             render(getHost(), target);
-            expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBe(null);
+            expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBeNull();
         });
     });
 });

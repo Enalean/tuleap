@@ -96,7 +96,7 @@ describe("list-value-helper", () => {
                 list_value: null,
             } as Property;
 
-            expect(formatPropertyListValue(property)).toStrictEqual(100);
+            expect(formatPropertyListValue(property)).toBe(100);
         });
 
         it(`returns none value (100) when list value is malformed`, () => {
@@ -106,7 +106,7 @@ describe("list-value-helper", () => {
                 list_value,
             } as Property;
 
-            expect(formatPropertyListValue(property)).toStrictEqual(100);
+            expect(formatPropertyListValue(property)).toBe(100);
         });
 
         it(`returns formatted property`, () => {
@@ -116,7 +116,7 @@ describe("list-value-helper", () => {
                 list_value,
             } as Property;
 
-            expect(formatPropertyListValue(property)).toStrictEqual(1);
+            expect(formatPropertyListValue(property)).toBe(1);
         });
     });
 });

@@ -23,11 +23,11 @@ describe("transformDocumentPropertyForCreation", () => {
     it(`Format a date`, () => {
         const formatted_date = formatDateValue("2019-08-30T00:00:00+02:00");
 
-        expect(formatted_date).toEqual("2019-08-30");
+        expect(formatted_date).toBe("2019-08-30");
     });
     it(`Returns an empty string when date is null`, () => {
         const formatted_date = formatDateValue(null);
 
-        expect(formatted_date).toEqual("");
+        expect(formatted_date).toBe("");
     });
 });

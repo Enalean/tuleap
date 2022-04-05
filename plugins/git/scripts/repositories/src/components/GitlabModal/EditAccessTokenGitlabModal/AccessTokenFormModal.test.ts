@@ -123,7 +123,7 @@ describe("AccessTokenFormModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
             "Error message"
         );
     });
@@ -178,7 +178,7 @@ describe("AccessTokenFormModal", () => {
             .trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
             "You must provide a valid GitLab API token"
         );
     });
@@ -209,7 +209,7 @@ describe("AccessTokenFormModal", () => {
             .trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.error_message).toEqual(
+        expect(wrapper.vm.$data.error_message).toBe(
             "Submitted token is invalid to access to this repository on this GitLab server."
         );
     });
@@ -233,14 +233,14 @@ describe("AccessTokenFormModal", () => {
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.gitlab_new_token).toEqual("AZERTY123");
-        expect(wrapper.vm.$data.error_message).toEqual("Error");
+        expect(wrapper.vm.$data.gitlab_new_token).toBe("AZERTY123");
+        expect(wrapper.vm.$data.error_message).toBe("Error");
 
         wrapper.find("[data-test=button-cancel-new-token-gitlab-repository]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.gitlab_new_token).toEqual("");
-        expect(wrapper.vm.$data.error_message).toEqual("");
+        expect(wrapper.vm.$data.gitlab_new_token).toBe("");
+        expect(wrapper.vm.$data.error_message).toBe("");
 
         const on_close_modal = wrapper.emitted()["on-close-modal"];
         if (!on_close_modal) {

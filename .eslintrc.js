@@ -188,12 +188,19 @@ module.exports = {
             extends: ["plugin:jest/recommended"],
             rules: {
                 "jest/consistent-test-it": "error",
-                "jest/valid-title": "error",
-                "jest/prefer-expect-resolves": "error",
                 "jest/no-large-snapshots": ["error", { maxSize: 100 }],
-                "jest/prefer-spy-on": "error",
-                "jest/require-top-level-describe": "error",
+                "jest/prefer-expect-resolves": "error",
                 "jest/prefer-hooks-on-top": "error",
+                "jest/prefer-spy-on": "error",
+                "jest/prefer-strict-equal": "warn",
+                "jest/require-top-level-describe": "error",
+                "jest/valid-title": "error",
+                // Style
+                "jest/prefer-comparison-matcher": "error",
+                "jest/prefer-equality-matcher": "error",
+                "jest/prefer-to-be": "error",
+                "jest/prefer-to-contain": "error",
+                "jest/prefer-to-have-length": "error",
             },
         },
         {

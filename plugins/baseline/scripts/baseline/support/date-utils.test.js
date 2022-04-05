@@ -37,13 +37,13 @@ describe("DateUtils:", () => {
 
     describe("#format", () => {
         it("format date", () => {
-            expect(DateFormatter.format("2019-03-22T10:01:48+00:00")).toEqual("22/03/2019 05:01");
+            expect(DateFormatter.format("2019-03-22T10:01:48+00:00")).toBe("22/03/2019 05:01");
         });
     });
 
     describe("#humanFormat", () => {
         it("formats date to make it readable", () => {
-            expect(DateFormatter.humanFormat("2019-03-22T10:01:48+00:00")).toEqual(
+            expect(DateFormatter.humanFormat("2019-03-22T10:01:48+00:00")).toBe(
                 "22. März 2019 05:01"
             );
         });
@@ -51,15 +51,13 @@ describe("DateUtils:", () => {
 
     describe("#getFromNow", () => {
         it("formats date and returns interval from now", () => {
-            expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toEqual("vor 3 Jahren");
+            expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toBe("vor 3 Jahren");
         });
     });
 
     describe("#formatToISO", () => {
         it("formats date to ISO", () => {
-            expect(DateFormatter.formatToISO("2019-03-22 10:01")).toEqual(
-                "2019-03-22T10:01:00-05:00"
-            );
+            expect(DateFormatter.formatToISO("2019-03-22 10:01")).toBe("2019-03-22T10:01:00-05:00");
         });
     });
 });

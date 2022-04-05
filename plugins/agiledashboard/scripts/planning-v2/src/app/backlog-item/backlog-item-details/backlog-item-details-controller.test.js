@@ -108,8 +108,8 @@ describe("BacklogItemDetailsController -", function () {
                     [207]
                 );
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(207);
-                expect(BacklogItemCollectionService.items[207].id).toEqual(207);
-                expect(BacklogItemCollectionService.items[207].parent.id).toEqual(53);
+                expect(BacklogItemCollectionService.items[207].id).toBe(207);
+                expect(BacklogItemCollectionService.items[207].parent.id).toBe(53);
                 expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(53);
                 const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
                     ({ id }) => id

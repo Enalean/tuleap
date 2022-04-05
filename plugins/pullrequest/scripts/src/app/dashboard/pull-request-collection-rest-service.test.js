@@ -241,7 +241,7 @@ describe("PullRequestCollectionRestService -", function () {
                     2,
                     null
                 );
-                expect(PullRequestCollectionRestService.getPullRequests.mock.calls.length).toBe(2);
+                expect(PullRequestCollectionRestService.getPullRequests.mock.calls).toHaveLength(2);
             });
         });
 
@@ -269,7 +269,7 @@ describe("PullRequestCollectionRestService -", function () {
                     2,
                     "open"
                 );
-                expect(PullRequestCollectionRestService.getPullRequests.mock.calls.length).toBe(2);
+                expect(PullRequestCollectionRestService.getPullRequests.mock.calls).toHaveLength(2);
             });
         });
 
@@ -297,7 +297,7 @@ describe("PullRequestCollectionRestService -", function () {
                     2,
                     "closed"
                 );
-                expect(PullRequestCollectionRestService.getPullRequests.mock.calls.length).toBe(2);
+                expect(PullRequestCollectionRestService.getPullRequests.mock.calls).toHaveLength(2);
             });
         });
     });

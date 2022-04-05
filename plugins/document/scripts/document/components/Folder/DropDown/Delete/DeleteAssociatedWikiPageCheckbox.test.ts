@@ -119,18 +119,18 @@ describe("ModalConfirmationDeletion", () => {
 
         const links = wiki_checkbox.findAll("[data-test=wiki-page-referencer-link]");
 
-        expect(links.length).toEqual(2);
+        expect(links).toHaveLength(2);
 
-        expect(links.at(0).element.tagName).toEqual("A");
-        expect(links.at(0).attributes("href")).toEqual(
+        expect(links.at(0).element.tagName).toBe("A");
+        expect(links.at(0).attributes("href")).toBe(
             "/plugins/docman/?group_id=104&action=show&id=43"
         );
-        expect(links.at(0).text()).toEqual("Project documentation/another wiki");
+        expect(links.at(0).text()).toBe("Project documentation/another wiki");
 
-        expect(links.at(1).element.tagName).toEqual("A");
-        expect(links.at(1).attributes("href")).toEqual(
+        expect(links.at(1).element.tagName).toBe("A");
+        expect(links.at(1).attributes("href")).toBe(
             "/plugins/docman/?group_id=104&action=show&id=44"
         );
-        expect(links.at(1).text()).toEqual("Project documentation/some folder/another wiki");
+        expect(links.at(1).text()).toBe("Project documentation/some folder/another wiki");
     });
 });

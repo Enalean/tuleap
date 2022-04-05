@@ -71,8 +71,8 @@ describe("root-actions", () => {
             await Vue.nextTick();
             await Vue.nextTick();
 
-            expect(tasks_retrieval.mock.calls.length).toBe(1);
-            expect(iterations_retrieval.mock.calls.length).toBe(2);
+            expect(tasks_retrieval.mock.calls).toHaveLength(1);
+            expect(iterations_retrieval.mock.calls).toHaveLength(2);
         });
 
         it.each([[400], [500]])(

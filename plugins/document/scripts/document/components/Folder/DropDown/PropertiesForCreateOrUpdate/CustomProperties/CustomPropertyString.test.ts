@@ -44,7 +44,7 @@ describe("CustomPropertyString", () => {
         if (!(string_input.element instanceof HTMLInputElement)) {
             throw new Error("Could not find string element in component");
         }
-        expect(string_input.element.value).toEqual("string value");
+        expect(string_input.element.value).toBe("string value");
         expect(string_input.element.required).toBe(true);
         expect(
             wrapper.find("[data-test=document-custom-property-is-required]").exists()
@@ -64,7 +64,7 @@ describe("CustomPropertyString", () => {
         if (!(string_input.element instanceof HTMLInputElement)) {
             throw new Error("Could not find string element in component");
         }
-        expect(string_input.element.value).toEqual("");
+        expect(string_input.element.value).toBe("");
         expect(string_input.element.required).toBe(false);
         expect(
             wrapper.find("[data-test=document-custom-property-is-required]").exists()

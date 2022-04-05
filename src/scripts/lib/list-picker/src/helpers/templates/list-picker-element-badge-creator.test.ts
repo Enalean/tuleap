@@ -48,7 +48,7 @@ describe("list-picker-element-badge-creator", () => {
             if (!badge_document_element) {
                 throw new Error("badge_document_element should not be null");
             }
-            expect(badge_document_element.className).toEqual(" list-picker-badge ");
+            expect(badge_document_element.className).toBe(" list-picker-badge ");
         });
 
         it("should create the custom colored badge if the source option has the color data set", () => {
@@ -62,7 +62,7 @@ describe("list-picker-element-badge-creator", () => {
             if (!badge_document_element) {
                 throw new Error("badge_document_element should not be null");
             }
-            expect(badge_document_element.className).toEqual(
+            expect(badge_document_element.className).toBe(
                 "list-picker-badge list-picker-badge-acid-green"
             );
         });
@@ -78,7 +78,7 @@ describe("list-picker-element-badge-creator", () => {
             if (!badge_document_element) {
                 throw new Error("badge_document_element should not be null");
             }
-            expect(badge_document_element.className).toEqual(
+            expect(badge_document_element.className).toBe(
                 " list-picker-badge list-picker-badge-custom "
             );
         });
@@ -94,7 +94,7 @@ describe("list-picker-element-badge-creator", () => {
             if (!badge_document_element) {
                 throw new Error("badge_document_element should not be null");
             }
-            expect(badge_document_element.className).toEqual("list-picker-badge");
+            expect(badge_document_element.className).toBe("list-picker-badge");
         });
     });
 });

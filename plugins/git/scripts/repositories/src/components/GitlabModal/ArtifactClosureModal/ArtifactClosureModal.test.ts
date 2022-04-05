@@ -186,7 +186,7 @@ describe("ArtifactClosureModal", () => {
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.$data.message_error_rest).toEqual("404 Error on server");
+            expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         });
     });
 });

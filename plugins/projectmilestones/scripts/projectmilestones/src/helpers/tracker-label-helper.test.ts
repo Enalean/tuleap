@@ -46,7 +46,7 @@ describe("Tracker Label Helper", () => {
 
             const label = getTrackerSubmilestoneLabel(release);
 
-            expect(label).toEqual("");
+            expect(label).toBe("");
         });
 
         it("When there is a tracker, Then Submilestone label is returned", () => {

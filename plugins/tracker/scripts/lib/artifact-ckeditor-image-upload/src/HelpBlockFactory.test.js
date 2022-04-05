@@ -42,7 +42,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toEqual(
+            expect(help_block_element.innerHTML).toBe(
                 `<p>You can drag 'n drop or paste image directly in the editor.</p>`
             );
             expect(help_block).not.toBeNull();
@@ -54,7 +54,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toEqual("");
+            expect(help_block_element.innerHTML).toBe("");
             expect(help_block).toBeNull();
         });
 
@@ -64,7 +64,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toEqual("");
+            expect(help_block_element.innerHTML).toBe("");
             expect(help_block).toBeNull();
         });
 
@@ -75,7 +75,7 @@ describe(`HelpBlockFactory`, () => {
 
             const help_block = factory.createHelpBlock(textarea);
 
-            expect(help_block_element.innerHTML).toEqual("Some other text");
+            expect(help_block_element.innerHTML).toBe("Some other text");
             expect(help_block).toBeNull();
         });
     });

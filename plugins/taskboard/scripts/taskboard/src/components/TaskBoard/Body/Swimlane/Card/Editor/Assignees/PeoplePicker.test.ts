@@ -72,7 +72,7 @@ describe("PeoplePicker", () => {
         expect(mocked_jquery.select2).toBeCalledWith("open");
 
         const options = wrapper.findAll("option");
-        expect(options.length).toBe(1);
+        expect(options).toHaveLength(1);
         expect(options.at(0)).toMatchInlineSnapshot("<option></option>");
     });
 

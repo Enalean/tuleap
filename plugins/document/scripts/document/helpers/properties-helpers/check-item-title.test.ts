@@ -41,7 +41,7 @@ describe("doesFolderNameAlreadyExist", () => {
         const parent_folder = {
             id: 3,
         } as Folder;
-        expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(true);
+        expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toBe(true);
     });
 
     it("Title does not already exist when no other folder have the same name", () => {
@@ -57,9 +57,7 @@ describe("doesFolderNameAlreadyExist", () => {
         const parent_folder = {
             id: 3,
         } as Folder;
-        expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
-            false
-        );
+        expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toBe(false);
     });
 });
 
@@ -77,9 +75,7 @@ describe("doesDocumentNameAlreadyExist", () => {
         const parent_folder = {
             id: 3,
         } as Folder;
-        expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
-            true
-        );
+        expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toBe(true);
     });
 
     it("Title does not already exist when no other item have the same name", () => {
@@ -95,9 +91,7 @@ describe("doesDocumentNameAlreadyExist", () => {
         const parent_folder = {
             id: 3,
         } as Folder;
-        expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
-            false
-        );
+        expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toBe(false);
     });
 });
 
@@ -125,7 +119,7 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_to_update,
                 parent_folder
             )
-        ).toEqual(true);
+        ).toBe(true);
     });
 
     it("Title does not already exist when file has no update on title", () => {
@@ -151,7 +145,7 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_to_update,
                 parent_folder
             )
-        ).toEqual(false);
+        ).toBe(false);
     });
 
     it("Title does not already exist when no other file have the same name", () => {
@@ -177,7 +171,7 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_to_update,
                 parent_folder
             )
-        ).toEqual(false);
+        ).toBe(false);
     });
 
     it("The folder title has not the same name of an other existing folder", () => {
@@ -203,7 +197,7 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_to_update,
                 parent_folder
             )
-        ).toEqual(false);
+        ).toBe(false);
     });
     it("The folder title has the same name of an other existing folder", () => {
         const item_title = "my existing folder";
@@ -228,7 +222,7 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_to_update,
                 parent_folder
             )
-        ).toEqual(true);
+        ).toBe(true);
     });
 
     it("The folder title has the same name of itself", () => {
@@ -254,6 +248,6 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 item_to_update,
                 parent_folder
             )
-        ).toEqual(false);
+        ).toBe(false);
     });
 });

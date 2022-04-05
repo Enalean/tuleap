@@ -99,7 +99,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
-        expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(2);
+        expect(wrapper.findAllComponents(RecentItemsEntry)).toHaveLength(2);
     });
 
     it("Display filtered items", async () => {
@@ -123,7 +123,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
-        expect(wrapper.findAllComponents(RecentItemsEntry).length).toBe(1);
+        expect(wrapper.findAllComponents(RecentItemsEntry)).toHaveLength(1);
     });
 
     it("Display error state", async () => {

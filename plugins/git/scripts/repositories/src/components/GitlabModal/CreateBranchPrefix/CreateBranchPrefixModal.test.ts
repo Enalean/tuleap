@@ -163,7 +163,7 @@ describe("CreateBranchPrefixModal", () => {
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.$data.message_error_rest).toEqual("400 Error on server");
+            expect(wrapper.vm.$data.message_error_rest).toBe("400 Error on server");
         });
     });
 });

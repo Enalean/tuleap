@@ -161,9 +161,9 @@ describe("Current comparison store:", () => {
                 });
 
                 it("updates count statistics", () => {
-                    expect(state.added_artifacts_count).toEqual(1);
-                    expect(state.removed_artifacts_count).toEqual(2);
-                    expect(state.modified_artifacts_count).toEqual(3);
+                    expect(state.added_artifacts_count).toBe(1);
+                    expect(state.removed_artifacts_count).toBe(2);
+                    expect(state.modified_artifacts_count).toBe(3);
                 });
 
                 describe("when comparison contains identical artifacts", () => {
@@ -182,7 +182,7 @@ describe("Current comparison store:", () => {
                             store.mutations.incrementStatistics(state, artifacts_comparison);
                         });
                         it("does not modify initial effort statistics", () => {
-                            expect(state.initial_effort_difference).toEqual(0);
+                            expect(state.initial_effort_difference).toBe(0);
                         });
                     });
 
@@ -201,7 +201,7 @@ describe("Current comparison store:", () => {
                             store.mutations.incrementStatistics(state, artifacts_comparison);
                         });
                         it("updates initial effort statistics", () => {
-                            expect(state.initial_effort_difference).toEqual(2);
+                            expect(state.initial_effort_difference).toBe(2);
                         });
                     });
                 });

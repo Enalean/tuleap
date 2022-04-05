@@ -44,6 +44,6 @@ describe("CardInitialEffort", () => {
                 },
             },
         });
-        expect(wrapper.html()).toEqual("");
+        expect(wrapper.html()).toBe("");
     });
 });

@@ -137,8 +137,8 @@ describe(`ProjectService`, () => {
             const promise = ProjectService.getProject(103);
 
             const response = await wrapPromise(promise);
-            expect(response.data.id).toEqual(103);
-            expect(response.data.label).toEqual("Project");
+            expect(response.data.id).toBe(103);
+            expect(response.data.label).toBe("Project");
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/projects/103");
         });
     });
@@ -172,9 +172,7 @@ describe(`ProjectService`, () => {
                 id: 71,
                 label: "Epics",
             });
-            expect(response.allowed_backlog_item_types.toString()).toEqual(
-                "trackerId36|trackerId91"
-            );
+            expect(response.allowed_backlog_item_types.toString()).toBe("trackerId36|trackerId91");
             expect(response.has_user_priority_change_permission).toBe(true);
             expect(tlpGet).toHaveBeenCalledWith("/api/v2/projects/103/backlog", {
                 params: { limit: "00", offset: 0 },

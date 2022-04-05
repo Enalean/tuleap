@@ -123,7 +123,7 @@ describe("appearance", () => {
                 throw new Error("The preview has not been initialized.");
             }
 
-            expect(previewed_elem.dataset.boundValue).toEqual("option-1");
+            expect(previewed_elem.dataset.boundValue).toBe("option-1");
         });
 
         it("Listens to the changes of the source <select> and displays the right preview element", () => {
@@ -140,7 +140,7 @@ describe("appearance", () => {
                 throw new Error("The preview has not been initialized.");
             }
 
-            expect(previewed_elem_after_init.dataset.boundValue).toEqual("option-1");
+            expect(previewed_elem_after_init.dataset.boundValue).toBe("option-1");
 
             select_box.selectedIndex = 1;
             select_box.dispatchEvent(new Event("change"));
@@ -150,7 +150,7 @@ describe("appearance", () => {
                 throw new Error("No preview element found, something must be wrong.");
             }
 
-            expect(currently_previewed_elem.dataset.boundValue).toEqual("option-2");
+            expect(currently_previewed_elem.dataset.boundValue).toBe("option-2");
         });
     });
 });

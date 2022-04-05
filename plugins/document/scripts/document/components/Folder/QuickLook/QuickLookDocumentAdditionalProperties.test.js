@@ -82,7 +82,7 @@ describe("QuickLookDocumentAdditionalProperties", () => {
 
             const value_list_element = wrapper.findAll("li");
 
-            expect(value_list_element.length).toBe(3);
+            expect(value_list_element).toHaveLength(3);
             expect(value_list_element.at(0).text()).toBe("value 1");
             expect(value_list_element.at(1).text()).toBe("fail");
             expect(value_list_element.at(2).text()).toBe("Tea");
@@ -148,8 +148,8 @@ describe("QuickLookDocumentAdditionalProperties", () => {
         expect(wrapper.find("ul").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=property-list-date]").exists()).toBeFalsy();
         expect(display_properties.text()).toBeTruthy();
-        expect(display_properties).not.toEqual("Permanent");
-        expect(display_properties.text()).toEqual("Empty");
+        expect(display_properties).not.toBe("Permanent");
+        expect(display_properties.text()).toBe("Empty");
         expect(display_properties.text()).not.toEqual(empty_property.value);
     });
 });

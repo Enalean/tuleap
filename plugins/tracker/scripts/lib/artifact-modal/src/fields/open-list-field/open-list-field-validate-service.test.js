@@ -24,7 +24,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function () {
         it("Given a field value that was undefined, then it will return null", function () {
             const result = validateOpenListFieldValue(undefined);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it("Given an open list value model, then it will return only the 'field_id' an 'value' attributes", function () {

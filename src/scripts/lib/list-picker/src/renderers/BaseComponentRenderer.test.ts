@@ -70,7 +70,7 @@ describe("base-component-renderer", () => {
     describe("placeholder element", () => {
         it("Should display the placeholder text when passed through the options", () => {
             const { placeholder_element } = renderer.renderBaseComponent();
-            expect(placeholder_element.textContent).toEqual("Please select a value");
+            expect(placeholder_element.textContent).toBe("Please select a value");
         });
 
         it("Should display an empty string otherwise", () => {
@@ -78,7 +78,7 @@ describe("base-component-renderer", () => {
                 doc,
                 select
             ).renderBaseComponent();
-            expect(placeholder_element.textContent).toEqual("");
+            expect(placeholder_element.textContent).toBe("");
         });
     });
 
@@ -91,17 +91,13 @@ describe("base-component-renderer", () => {
             const { selection_element, search_field_element } = renderer.renderBaseComponent();
 
             expect(selection_element.contains(search_field_element)).toBe(true);
-            expect(search_field_element.getAttribute("placeholder")).toEqual(
-                "Please select a value"
-            );
+            expect(search_field_element.getAttribute("placeholder")).toBe("Please select a value");
 
             if (!search_field_element.parentElement) {
                 throw new Error("Search input has no parent");
             }
 
-            expect(search_field_element.getAttribute("data-test")).toEqual(
-                "list-picker-search-field"
-            );
+            expect(search_field_element.getAttribute("data-test")).toBe("list-picker-search-field");
             expect(search_field_element.parentElement.classList).toContain(
                 "list-picker-multiple-search-section"
             );
@@ -123,11 +119,11 @@ describe("base-component-renderer", () => {
         it("should create a selection element tailored to contain multiple values", () => {
             const { selection_element } = renderer.renderBaseComponent();
 
-            expect(selection_element.getAttribute("aria-haspopup")).toEqual("true");
-            expect(selection_element.getAttribute("aria-expanded")).toEqual("false");
-            expect(selection_element.getAttribute("role")).toEqual("combobox");
-            expect(selection_element.getAttribute("tabindex")).toEqual("-1");
-            expect(selection_element.getAttribute("aria-disabled")).toEqual("false");
+            expect(selection_element.getAttribute("aria-haspopup")).toBe("true");
+            expect(selection_element.getAttribute("aria-expanded")).toBe("false");
+            expect(selection_element.getAttribute("role")).toBe("combobox");
+            expect(selection_element.getAttribute("tabindex")).toBe("-1");
+            expect(selection_element.getAttribute("aria-disabled")).toBe("false");
         });
 
         it("should disable the selection element when the source <select> is disabled", () => {
@@ -135,7 +131,7 @@ describe("base-component-renderer", () => {
             const { selection_element } = renderer.renderBaseComponent();
 
             expect(selection_element.hasAttribute("tabindex")).toBe(false);
-            expect(selection_element.getAttribute("aria-disabled")).toEqual("true");
+            expect(selection_element.getAttribute("aria-disabled")).toBe("true");
         });
     });
 });

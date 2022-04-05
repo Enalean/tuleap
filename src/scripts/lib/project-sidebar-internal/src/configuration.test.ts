@@ -38,10 +38,10 @@ describe("configuration", () => {
     });
 
     it("does nothing when no configuration is given", () => {
-        expect(unserializeConfiguration(undefined)).toBe(undefined);
+        expect(unserializeConfiguration(undefined)).toBeUndefined();
     });
 
     it("does not return a configuration when the unserialization fails", () => {
-        expect(unserializeConfiguration("{")).toBe(undefined);
+        expect(unserializeConfiguration("{")).toBeUndefined();
     });
 });

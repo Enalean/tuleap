@@ -239,7 +239,7 @@ describe("rest-querier", () => {
                 });
                 expect(tlpGet).toHaveBeenCalledTimes(2);
 
-                expect(results).toEqual(`"id"\r\n61\r\n26\r\n61\r\n26\r\n`);
+                expect(results).toBe(`"id"\r\n61\r\n26\r\n61\r\n26\r\n`);
             });
         });
     });

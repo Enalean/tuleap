@@ -134,7 +134,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.fields[0].value).toBe(null);
+                    expect(transformed_tracker.fields[0].value).toBeNull();
                 });
             });
 

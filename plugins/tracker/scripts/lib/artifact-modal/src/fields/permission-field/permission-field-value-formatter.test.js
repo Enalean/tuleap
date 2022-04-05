@@ -24,7 +24,7 @@ describe("permission-field-value-formatter -", () => {
         it("Given a field value that was undefined, then it will return null", () => {
             const result = formatPermissionFieldValue(undefined);
 
-            expect(result).toBe(null);
+            expect(result).toBeNull();
         });
 
         it("Given a field value object, it will only keep field_id and value attributes", () => {

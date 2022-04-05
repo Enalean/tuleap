@@ -46,7 +46,7 @@ describe("CreateCampaignTestSelector", () => {
         const selector = wrapper.get("select");
         const all_options = selector.findAll("option");
 
-        expect(all_options.length).toBe(4);
+        expect(all_options).toHaveLength(4);
         expect(selector.find("optgroup").exists()).toBe(true);
     });
 
@@ -93,7 +93,7 @@ describe("CreateCampaignTestSelector", () => {
         if (emitted_input === undefined) {
             throw new Error("Expected an update:modelValue event to be emitted");
         }
-        expect(emitted_input.length).toBe(1);
+        expect(emitted_input).toHaveLength(1);
         expect(emitted_input[0]).toEqual([{ test_selector: "none" }]);
     });
 });

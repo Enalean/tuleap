@@ -84,7 +84,7 @@ describe("ParentCardRemainingEffort", () => {
         } as RemainingEffort);
 
         expect(wrapper.attributes("tabindex")).toBe("-1");
-        expect(wrapper.attributes("role")).toBe(undefined);
+        expect(wrapper.attributes("role")).toBeUndefined();
         wrapper.trigger("click");
         expect(wrapper.props("card").remaining_effort.is_in_edit_mode).toBe(false);
     });
@@ -92,13 +92,13 @@ describe("ParentCardRemainingEffort", () => {
     it("displays nothing if the parent card has no remaining effort field", async () => {
         const wrapper = await getWrapper(null);
 
-        expect(wrapper.html()).toEqual("");
+        expect(wrapper.html()).toBe("");
     });
 
     it("displays nothing if the parent card has no remaining effort value", async () => {
         const wrapper = await getWrapper({ value: null } as RemainingEffort);
 
-        expect(wrapper.html()).toEqual("");
+        expect(wrapper.html()).toBe("");
     });
 
     it("sends a `editor-closed` event when the edition of remaining effort is closed", async () => {

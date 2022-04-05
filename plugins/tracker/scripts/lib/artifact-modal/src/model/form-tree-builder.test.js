@@ -209,7 +209,7 @@ describe("form-tree-builder", () => {
 
             const output = buildFormTree(tracker);
 
-            expect(output.length).toBe(0);
+            expect(output).toHaveLength(0);
         });
 
         it(`Given an unknown field in a structural field,

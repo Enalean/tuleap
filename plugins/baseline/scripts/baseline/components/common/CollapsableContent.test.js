@@ -45,7 +45,7 @@ describe("CollapsableContent", () => {
     it("shows default slot", () => {
         expect(
             wrapper.get("[data-test=collapsible-slot]").element.style.getPropertyValue("display")
-        ).not.toEqual("none");
+        ).not.toBe("none");
     });
 
     describe("when toggle expand/collapse", () => {
@@ -63,7 +63,7 @@ describe("CollapsableContent", () => {
                 wrapper
                     .get("[data-test=collapsible-slot]")
                     .element.style.getPropertyValue("display")
-            ).toEqual("none");
+            ).toBe("none");
         });
 
         describe("when toggle expand/collapse again", () => {
@@ -77,7 +77,7 @@ describe("CollapsableContent", () => {
                     wrapper
                         .get("[data-test=collapsible-slot]")
                         .element.style.getPropertyValue("display")
-                ).not.toEqual("none");
+                ).not.toBe("none");
             });
         });
     });

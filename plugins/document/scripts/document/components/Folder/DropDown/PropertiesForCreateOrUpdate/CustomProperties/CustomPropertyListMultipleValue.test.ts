@@ -78,7 +78,7 @@ describe("CustomPropertyListMultipleValue", () => {
             .get("[data-test=document-custom-list-multiple-select]")
             .findAll("option");
 
-        expect(all_options.length).toBe(3);
+        expect(all_options).toHaveLength(3);
         expect(
             wrapper.find("[data-test=document-custom-list-multiple-value-100]").exists()
         ).toBeTruthy();

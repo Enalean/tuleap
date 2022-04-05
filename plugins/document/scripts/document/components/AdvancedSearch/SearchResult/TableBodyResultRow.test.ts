@@ -58,7 +58,7 @@ describe("TableBodyResultRow", () => {
             });
 
             expect(wrapper.findComponent(expected_component).exists()).toBe(true);
-            expect(wrapper.element.children.length).toBe(1);
+            expect(wrapper.element.children).toHaveLength(1);
         }
     );
 });

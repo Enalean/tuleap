@@ -135,7 +135,7 @@ describe("EditKanbanController", () => {
             EditKanbanController.addColumn();
 
             expect(EditKanbanController.adding_column).toBe(true);
-            expect(EditKanbanController.new_column_label).toEqual("");
+            expect(EditKanbanController.new_column_label).toBe("");
         });
 
         it(`when I click a second time after writing a new column label,
@@ -158,7 +158,7 @@ describe("EditKanbanController", () => {
             expect(addColumnToCollection).toHaveBeenCalledWith(column_representation);
             expect(EditKanbanController.adding_column).toBe(false);
             expect(EditKanbanController.saving_new_column).toBe(false);
-            expect(EditKanbanController.new_column_label).toEqual("");
+            expect(EditKanbanController.new_column_label).toBe("");
         });
 
         it(`when there is a problem with the request,

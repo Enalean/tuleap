@@ -194,7 +194,7 @@ describe("ListRepositoriesModal", () => {
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-post-repositories]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-post-repositories]").text()).toBe(
             "404: Error during post"
         );
 
@@ -250,7 +250,7 @@ describe("ListRepositoriesModal", () => {
         ]);
         expect(
             wrapper.find("[data-test=gitlab-repositories-tooltip-1]").attributes("data-tlp-tooltip")
-        ).toEqual("This repository is already integrated.");
+        ).toBe("This repository is already integrated.");
     });
 
     it("When repository with same namepath and another instance is already integrated, Then button is disabled", () => {
@@ -300,7 +300,7 @@ describe("ListRepositoriesModal", () => {
         ]);
         expect(
             wrapper.find("[data-test=gitlab-repositories-tooltip-1]").attributes("data-tlp-tooltip")
-        ).toEqual("A repository with same name and path was already integrated.");
+        ).toBe("A repository with same name and path was already integrated.");
     });
 
     it("When user clicks on avatar or path, Then repository is selected", async () => {
@@ -325,11 +325,11 @@ describe("ListRepositoriesModal", () => {
         wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.selected_repository.id).toEqual(1);
+        expect(wrapper.vm.$data.selected_repository.id).toBe(1);
 
         wrapper.find("[data-test=gitlab-label-path-2]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.selected_repository.id).toEqual(2);
+        expect(wrapper.vm.$data.selected_repository.id).toBe(2);
     });
 });

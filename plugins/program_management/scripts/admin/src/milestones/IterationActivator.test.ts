@@ -71,7 +71,7 @@ describe(`IterationActivator`, () => {
 
             expect(iteration_label_element.disabled).toBe(false);
             expect(iteration_sub_label_element.disabled).toBe(false);
-            expect(iteration_illustration_label.textContent).toEqual("iteration");
+            expect(iteration_illustration_label.textContent).toBe("iteration");
         });
 
         it(`when no selection, it disables iteration labels and illustration preview`, () => {
@@ -86,7 +86,7 @@ describe(`IterationActivator`, () => {
             iteration_label_element.value = "sprint";
             iteration_label_element.dispatchEvent(new InputEvent("input"));
 
-            expect(iteration_illustration_label.textContent).not.toEqual("sprint");
+            expect(iteration_illustration_label.textContent).not.toBe("sprint");
         });
     });
 

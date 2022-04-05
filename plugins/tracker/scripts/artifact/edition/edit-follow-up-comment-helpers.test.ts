@@ -65,7 +65,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
         });
 
         it(`when the comment body element can't be found, it will default to empty string`, () => {
-            expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toEqual("");
+            expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toBe("");
         });
 
         it(`when the given format is html, it returns the comment body's trimmed innerHTML`, () => {
@@ -76,7 +76,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     </div>`
             );
 
-            expect(getTextAreaValue(comment_panel, TEXT_FORMAT_HTML)).toEqual(
+            expect(getTextAreaValue(comment_panel, TEXT_FORMAT_HTML)).toBe(
                 `<p>Some <strong>HTML</strong> content</p>`
             );
         });
@@ -89,9 +89,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                             Some Text content
                         </div>`
                 );
-                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toEqual(
-                    "Some Text content"
-                );
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toBe("Some Text content");
             });
 
             it(`defaults the textContent to empty string`, () => {
@@ -100,7 +98,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     `<div class="tracker_artifact_followup_comment_body"></div>`
                 );
 
-                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toEqual("");
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_TEXT)).toBe("");
             });
         });
 
@@ -114,7 +112,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                         ><p>Some <strong>Markdown</strong> content</p></div>`
                 );
 
-                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toEqual(
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toBe(
                     "Some **Markdown** content"
                 );
             });
@@ -125,7 +123,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
                     `<div class="tracker_artifact_followup_comment_body"><p>Some <strong>Markdown</strong> content</p></div>`
                 );
 
-                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toEqual("");
+                expect(getTextAreaValue(comment_panel, TEXT_FORMAT_COMMONMARK)).toBe("");
             });
         });
     });
@@ -147,7 +145,7 @@ describe(`edit-follow-up-comment-helpers`, () => {
             followups.append(followup_body);
             doc.body.append(followups);
 
-            expect(getProjectId(followup_body)).toEqual("128");
+            expect(getProjectId(followup_body)).toBe("128");
         });
     });
 
@@ -176,19 +174,19 @@ describe(`edit-follow-up-comment-helpers`, () => {
             createEditFollowupEditor(editor_factory, textarea, "123", TEXT_FORMAT_COMMONMARK);
 
             const options = createRichTextEditor.mock.calls[0][1];
-            expect(options.format_selectbox_id).toEqual("123");
-            expect(options.format_selectbox_name).toEqual("comment_format123");
+            expect(options.format_selectbox_id).toBe("123");
+            expect(options.format_selectbox_name).toBe("comment_format123");
         });
     });
 
     describe(`getLocaleFromBody()`, () => {
         it(`returns the body's data-user-locale attribute`, () => {
             doc.body.dataset.userLocale = "fr_FR";
-            expect(getLocaleFromBody(doc)).toEqual("fr_FR");
+            expect(getLocaleFromBody(doc)).toBe("fr_FR");
         });
 
         it(`defaults to en_US`, () => {
-            expect(getLocaleFromBody(doc)).toEqual("en_US");
+            expect(getLocaleFromBody(doc)).toBe("en_US");
         });
     });
 });

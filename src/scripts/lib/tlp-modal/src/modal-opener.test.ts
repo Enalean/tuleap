@@ -62,7 +62,7 @@ describe(`Modal Opener`, () => {
             createAndAppendElementById(doc, "div", "modal_id");
 
             const modal = openTargetModalIdOnClick(doc, "button_id");
-            expect(modal).not.toBe(null);
+            expect(modal).not.toBeNull();
         });
 
         describe(`when I click on the button`, () => {
@@ -209,13 +209,13 @@ describe(`Modal Opener`, () => {
             it(`will replace the paragraph's text using the options' callback`, () => {
                 replaceModalWithOptions();
 
-                expect(paragraph.textContent).toEqual("paragraph_text");
+                expect(paragraph.textContent).toBe("paragraph_text");
             });
 
             it(`will replace the hidden input's value using the options' callback`, () => {
                 replaceModalWithOptions();
 
-                expect(hidden_input.value).toEqual("hidden_input_value");
+                expect(hidden_input.value).toBe("hidden_input_value");
             });
 
             it(`will create the TLP modal and show it`, () => {

@@ -69,7 +69,7 @@ describe("Campaign state mutations", () => {
 
         addCampaigns(state, [{ id: 2 }, { id: 3 }] as Campaign[]);
 
-        expect(state.campaigns.length).toBe(3);
+        expect(state.campaigns).toHaveLength(3);
     });
 
     it("loadingErrorHasBeenCatched", () => {

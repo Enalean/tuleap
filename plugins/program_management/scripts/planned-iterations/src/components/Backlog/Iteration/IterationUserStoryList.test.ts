@@ -102,7 +102,7 @@ describe("IterationUserStoryList", () => {
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(false);
-        expect(user_stories_card.length).toEqual(3);
+        expect(user_stories_card).toHaveLength(3);
     });
 
     it("displays an error message when the loading of the iteration content has failed", async () => {
@@ -174,6 +174,6 @@ describe("IterationUserStoryList", () => {
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
         expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(false);
-        expect(feature_cards.length).toEqual(3);
+        expect(feature_cards).toHaveLength(3);
     });
 });

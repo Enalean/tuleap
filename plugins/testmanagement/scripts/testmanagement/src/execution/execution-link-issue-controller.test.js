@@ -155,7 +155,7 @@ describe("ExecutionLinkIssueController", () => {
                 // eslint-disable-next-line jest/no-conditional-expect
                 expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("17");
                 // eslint-disable-next-line jest/no-conditional-expect
-                expect(ExecutionLinkIssueController.issue_artifact).toBe(null);
+                expect(ExecutionLinkIssueController.issue_artifact).toBeNull();
             });
 
             return wrapPromise(promise);

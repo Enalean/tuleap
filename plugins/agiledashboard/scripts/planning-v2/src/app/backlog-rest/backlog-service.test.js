@@ -161,7 +161,7 @@ describe("BacklogService", () => {
 
             expect($filter).toHaveBeenCalledWith("InPropertiesFilter");
             expect(BacklogService.items.filtered_content).toBe(filtered_content_ref);
-            expect(BacklogService.items.filtered_content.length).toEqual(0);
+            expect(BacklogService.items.filtered_content).toHaveLength(0);
         });
 
         it("Given filter terms that matched items, when I filter backlog items, then the InPropertiesFilter will be called and the items' filtered content collection will be updated", function () {
@@ -224,8 +224,8 @@ describe("BacklogService", () => {
                 },
                 user_can_move_cards: true,
             });
-            expect(BacklogService.backlog.rest_base_route).toEqual("projects");
-            expect(BacklogService.backlog.rest_route_id).toEqual(736);
+            expect(BacklogService.backlog.rest_base_route).toBe("projects");
+            expect(BacklogService.backlog.rest_route_id).toBe(736);
             expect(BacklogService.backlog.current_milestone).toBeUndefined();
             expect(BacklogService.backlog.submilestone_type).toEqual({
                 id: 218,
@@ -252,8 +252,8 @@ describe("BacklogService", () => {
 
             BacklogService.loadMilestoneBacklog(milestone);
 
-            expect(BacklogService.backlog.rest_base_route).toEqual("milestones");
-            expect(BacklogService.backlog.rest_route_id).toEqual(592);
+            expect(BacklogService.backlog.rest_base_route).toBe("milestones");
+            expect(BacklogService.backlog.rest_route_id).toBe(592);
             expect(BacklogService.backlog.current_milestone).toBe(milestone);
             expect(BacklogService.backlog.submilestone_type).toEqual({
                 id: 66,

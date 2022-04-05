@@ -35,7 +35,7 @@ describe("Time formatters", () => {
         it("Given minutes, When I call this function, Then it should format it in a ISO-compliant format", () => {
             const minutes = 600;
 
-            expect(formatMinutes(minutes)).toEqual("10:00");
+            expect(formatMinutes(minutes)).toBe("10:00");
         });
     });
 
@@ -44,7 +44,7 @@ describe("Time formatters", () => {
             Settings.defaultZoneName = "Europe/Paris";
             const formatted_date = formatDatetimeToISO("2018-01-01");
 
-            expect(formatted_date).toEqual("2018-01-01T00:00:00+01:00");
+            expect(formatted_date).toBe("2018-01-01T00:00:00+01:00");
         });
     });
 
@@ -53,7 +53,7 @@ describe("Time formatters", () => {
             Settings.defaultZoneName = "Europe/Paris";
             const formatted_date = formatDateDayMonthYear("2018-11-11T00:00:00+01:00");
 
-            expect(formatted_date).toEqual("11/11/2018");
+            expect(formatted_date).toBe("11/11/2018");
         });
     });
 

@@ -32,7 +32,7 @@ describe("Store getters", () => {
 
             const result = getters.should_display_export_button(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("Given user is widget administrator and no trackers of query are invalid, then he should be able to export results", () => {
@@ -45,7 +45,7 @@ describe("Store getters", () => {
 
             const result = getters.should_display_export_button(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("Given user is widget administrator and at least one tracker is invalid, then he should not be able to export results", () => {
@@ -63,7 +63,7 @@ describe("Store getters", () => {
 
             const result = getters.should_display_export_button(state);
 
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
 
         it("Given report query has an error, nobody should be able to export result", () => {
@@ -73,7 +73,7 @@ describe("Store getters", () => {
 
             const result = getters.should_display_export_button(state);
 
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
     });
 });

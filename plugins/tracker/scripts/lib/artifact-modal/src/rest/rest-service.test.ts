@@ -194,7 +194,7 @@ describe("rest-service", () => {
 
             const { id } = await RestService.createArtifact(3, field_values);
 
-            expect(id).toEqual(286);
+            expect(id).toBe(286);
 
             expect(tlpPostSpy).toHaveBeenCalledWith("/api/v1/artifacts", {
                 headers: {
@@ -241,7 +241,7 @@ describe("rest-service", () => {
 
             const followup_comments = await RestService.getFollowupsComments(148, 66, 23, "desc");
 
-            expect(followup_comments.total).toEqual("74");
+            expect(followup_comments.total).toBe("74");
             expect(followup_comments.results[0]).toEqual(first_response);
             expect(followup_comments.results[1]).toEqual(second_response);
             expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/148/changesets", {
@@ -272,7 +272,7 @@ describe("rest-service", () => {
                 description
             );
 
-            expect(file_upload).toEqual(4);
+            expect(file_upload).toBe(4);
             expect(tlpPostSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files", {
                 headers: {
                     "content-type": "application/json",

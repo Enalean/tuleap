@@ -70,7 +70,7 @@ describe("getTrackedTimes() -", () => {
         });
 
         expect(result.times).toEqual(times);
-        expect(result.total).toEqual(1);
+        expect(result.total).toBe(1);
     });
 
     it("the REST API will add date and the new time should be returned", async () => {

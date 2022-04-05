@@ -25,12 +25,12 @@ describe("chartDatesServices", () => {
             const dataset = getDataset();
 
             const dataset_modified_once = getFormattedDates(dataset);
-            expect(dataset_modified_once[0].date).toEqual("2019-08-12");
-            expect(dataset_modified_once[1].date).toEqual("2019-08-13");
+            expect(dataset_modified_once[0].date).toBe("2019-08-12");
+            expect(dataset_modified_once[1].date).toBe("2019-08-13");
 
             const dataset_modified_twice = getFormattedDates(dataset);
-            expect(dataset_modified_twice[0].date).toEqual("2019-08-12");
-            expect(dataset_modified_twice[1].date).toEqual("2019-08-13");
+            expect(dataset_modified_twice[0].date).toBe("2019-08-12");
+            expect(dataset_modified_twice[1].date).toBe("2019-08-13");
         });
 
         it("When the dataset is formatted, Then all attributes still exists and only dates change", () => {

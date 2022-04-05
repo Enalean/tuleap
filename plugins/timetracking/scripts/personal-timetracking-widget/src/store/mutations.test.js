@@ -46,14 +46,14 @@ describe("Store mutations", () => {
             it("Then we put new dates, state must change too", () => {
                 mutations.toggleReadingMode(state);
                 mutations.setParametersForNewQuery(state, ["2018-01-01", "2018-02-02"]);
-                expect(state.start_date).toEqual("2018-01-01");
-                expect(state.end_date).toEqual("2018-02-02");
+                expect(state.start_date).toBe("2018-01-01");
+                expect(state.end_date).toBe("2018-02-02");
                 expect(state.reading_mode).toBe(true);
             });
 
             it("Then we change rest_error, state must change too", () => {
                 mutations.setErrorMessage(state, "oui");
-                expect(state.error_message).toEqual("oui");
+                expect(state.error_message).toBe("oui");
             });
 
             it("Then we change isLoading, state must change too", () => {
@@ -64,8 +64,8 @@ describe("Store mutations", () => {
             it("Then we call setAddMode, states must change", () => {
                 mutations.setAddMode(state, true);
                 expect(state.is_add_mode).toBe(true);
-                expect(state.rest_feedback.message).toEqual(null);
-                expect(state.rest_feedback.type).toEqual(null);
+                expect(state.rest_feedback.message).toBeNull();
+                expect(state.rest_feedback.type).toBeNull();
             });
 
             it("When states updated with error message, Then we call setAddMode, states must change", () => {
@@ -74,8 +74,8 @@ describe("Store mutations", () => {
                 mutations.setAddMode(state, true);
 
                 expect(state.is_add_mode).toBe(true);
-                expect(state.rest_feedback.message).toEqual("");
-                expect(state.rest_feedback.type).toEqual("");
+                expect(state.rest_feedback.message).toBe("");
+                expect(state.rest_feedback.type).toBe("");
             });
 
             it("When states updated with error message, Then we call setAddMode without being in add mode, states must change", () => {
@@ -85,8 +85,8 @@ describe("Store mutations", () => {
                 mutations.setAddMode(state, false);
 
                 expect(state.is_add_mode).toBe(false);
-                expect(state.rest_feedback.message).toEqual("");
-                expect(state.rest_feedback.type).toEqual("");
+                expect(state.rest_feedback.message).toBe("");
+                expect(state.rest_feedback.type).toBe("");
             });
 
             it("When states updated with error message, Then we call replaceCurrentTime, states must change", () => {
@@ -107,7 +107,7 @@ describe("Store mutations", () => {
                 mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
                 expect(state.current_times).toEqual([updated_time]);
                 expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_EDIT);
-                expect(state.rest_feedback.type).toEqual("success");
+                expect(state.rest_feedback.type).toBe("success");
             });
 
             it("When we call deleteCurrentTime, Then the deleted time should be removed from state.current_times anymore", () => {

@@ -45,11 +45,11 @@ describe("Tool", () => {
         expect(anchor.text()).toStrictEqual(tool_data.label);
         expect(anchor_element.getAttribute("href")).toStrictEqual(tool_data.href);
         expect(anchor_element.getAttribute("title")).toStrictEqual(tool_data.description);
-        expect(anchor_element.getAttribute("data-shortcut-sidebar")).toStrictEqual(
+        expect(anchor_element.getAttribute("data-shortcut-sidebar")).toBe(
             `sidebar-${tool_data.shortcut_id}`
         );
         expect(anchor.find("[data-test=tool-icon]").element.className).toContain(tool_data.icon);
-        expect(anchor_element.getAttribute("target")).toStrictEqual("_self");
+        expect(anchor_element.getAttribute("target")).toBe("_self");
         expect(anchor_element.classList.contains("active")).toBe(true);
         expect(anchor.find("[data-test=tool-new-tab-icon]").exists()).toBe(false);
     });
@@ -75,8 +75,8 @@ describe("Tool", () => {
         expect(anchor_element.getAttribute("href")).toStrictEqual(tool_data.href);
         expect(anchor_element.getAttribute("title")).toStrictEqual(tool_data.description);
         expect(anchor.find("[data-test=tool-icon]").element.className).toContain(tool_data.icon);
-        expect(anchor_element.getAttribute("target")).toStrictEqual("_blank");
-        expect(anchor_element.getAttribute("rel")).toStrictEqual("noopener noreferrer");
+        expect(anchor_element.getAttribute("target")).toBe("_blank");
+        expect(anchor_element.getAttribute("rel")).toBe("noopener noreferrer");
         expect(anchor_element.classList.contains("active")).toBe(false);
         expect(anchor.find("[data-test=tool-new-tab-icon]").exists()).toBe(true);
     });

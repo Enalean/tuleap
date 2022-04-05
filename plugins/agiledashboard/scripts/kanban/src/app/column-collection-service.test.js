@@ -99,7 +99,7 @@ describe("ColumnCollectionService -", function () {
 
             ColumnCollectionService.addColumn(column_to_add);
 
-            expect(SharedPropertiesService.getKanban().columns.length).toBe(2);
+            expect(SharedPropertiesService.getKanban().columns).toHaveLength(2);
         });
     });
 
@@ -192,7 +192,7 @@ describe("ColumnCollectionService -", function () {
                 archive: archive,
             });
 
-            expect(ColumnCollectionService.findItemById(60)).toBe(null);
+            expect(ColumnCollectionService.findItemById(60)).toBeNull();
         });
     });
 });

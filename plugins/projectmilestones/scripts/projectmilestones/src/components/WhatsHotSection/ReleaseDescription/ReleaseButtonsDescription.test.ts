@@ -97,8 +97,8 @@ describe("ReleaseButtonsDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         const ttm_element = wrapper.get("[data-test=pane-link-testplan]");
-        expect(ttm_element.attributes("href")).toEqual("/testplan/project/6");
-        expect(ttm_element.attributes("data-tlp-tooltip")).toEqual("Tests");
+        expect(ttm_element.attributes("href")).toBe("/testplan/project/6");
+        expect(ttm_element.attributes("data-tlp-tooltip")).toBe("Tests");
         expect(wrapper.get("[data-test=pane-icon-testplan]").classes()).toContain("fa-check");
     });
 
@@ -107,8 +107,8 @@ describe("ReleaseButtonsDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         const taskboard_element = wrapper.get("[data-test=pane-link-taskboard]");
-        expect(taskboard_element.attributes("href")).toEqual("/taskboard/project/6");
-        expect(taskboard_element.attributes("data-tlp-tooltip")).toEqual("Taskboard");
+        expect(taskboard_element.attributes("href")).toBe("/taskboard/project/6");
+        expect(taskboard_element.attributes("data-tlp-tooltip")).toBe("Taskboard");
         expect(wrapper.get("[data-test=pane-icon-taskboard]").classes()).toContain(
             "fa-tlp-taskboard"
         );

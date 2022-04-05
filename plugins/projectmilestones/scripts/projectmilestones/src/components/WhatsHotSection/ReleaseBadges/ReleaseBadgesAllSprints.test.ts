@@ -78,7 +78,7 @@ describe("ReleaseBadgesAllSprints", () => {
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.get("[data-test=badge-sprint]").text()).toEqual("10 Sprint1");
+            expect(wrapper.get("[data-test=badge-sprint]").text()).toBe("10 Sprint1");
         });
 
         it("When there isn't tracker, Then there is no link", async () => {

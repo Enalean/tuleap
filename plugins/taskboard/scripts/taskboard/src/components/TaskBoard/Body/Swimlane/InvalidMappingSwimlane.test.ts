@@ -49,6 +49,6 @@ describe(`InvalidMappingSwimlane`, () => {
         const wrapper = await createWrapper(columns, swimlane);
 
         expect(wrapper.findComponent(ParentCell).exists()).toBe(true);
-        expect(wrapper.findAllComponents(InvalidMappingCell).length).toBe(2);
+        expect(wrapper.findAllComponents(InvalidMappingCell)).toHaveLength(2);
     });
 });

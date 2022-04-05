@@ -131,7 +131,7 @@ describe("Store getters", () => {
             if (!(result.children instanceof Array)) {
                 throw new Error("result does not have any children");
             }
-            expect(result.children.length).toEqual(2);
+            expect(result.children).toHaveLength(2);
             const [first_folder, root_repo] = result.children;
             expect(first_folder).toEqual({
                 is_folder: true,
@@ -144,7 +144,7 @@ describe("Store getters", () => {
                 throw new Error("first folder does not have any children");
             }
 
-            expect(first_folder.children.length).toEqual(2);
+            expect(first_folder.children).toHaveLength(2);
             const [project_path_folder, other_leaf_repo] = first_folder.children;
             expect(project_path_folder).toEqual({
                 is_folder: true,
@@ -159,7 +159,7 @@ describe("Store getters", () => {
             ) {
                 throw new Error("project_path_folder does not have any children");
             }
-            expect(project_path_folder.children.length).toEqual(1);
+            expect(project_path_folder.children).toHaveLength(1);
             const leaf_repo = project_path_folder.children[0];
             expect(leaf_repo).toEqual(project_repository_with_path);
         });
@@ -191,7 +191,7 @@ describe("Store getters", () => {
                 throw new Error("result does not have any children");
             }
 
-            expect(result.children.length).toEqual(1);
+            expect(result.children).toHaveLength(1);
             const forks_folder = result.children[0];
             expect(forks_folder).toEqual({
                 is_folder: true,
@@ -202,7 +202,7 @@ describe("Store getters", () => {
             if (!("children" in forks_folder) || !(forks_folder.children instanceof Array)) {
                 throw new Error("forks folder does not have any children");
             }
-            expect(forks_folder.children.length).toEqual(1);
+            expect(forks_folder.children).toHaveLength(1);
             const user_folder = forks_folder.children[0];
             expect(user_folder).toEqual({
                 is_folder: true,
@@ -241,11 +241,11 @@ describe("Store getters", () => {
             if (!("label" in folder)) {
                 throw new Error("folder is not a Folder");
             }
-            expect(folder.label).toEqual("zannichelliaceae");
+            expect(folder.label).toBe("zannichelliaceae");
             if (!("label" in root_repo)) {
                 throw new Error("root_repo is not a Folder");
             }
-            expect(root_repo.label).toEqual("acquirability");
+            expect(root_repo.label).toBe("acquirability");
         });
 
         it("Given a filter query and repositories, then it will keep only repositories with the query in their normalized path and it will keep only folders that are not empty as a result", () => {
@@ -282,20 +282,20 @@ describe("Store getters", () => {
             if (!("children" in result) || !(result.children instanceof Array)) {
                 throw new Error("result does not have any children");
             }
-            expect(result.children.length).toEqual(2);
+            expect(result.children).toHaveLength(2);
             const [first_folder, root_repo] = result.children;
 
             expect(root_repo).toEqual(project_repository_at_root);
             if (!("children" in first_folder) || !(first_folder.children instanceof Array)) {
                 throw new Error("first_folder does not have any children");
             }
-            expect(first_folder.children.length).toEqual(1);
+            expect(first_folder.children).toHaveLength(1);
             const path_repo = first_folder.children[0];
 
             if (!("children" in path_repo) || !(path_repo.children instanceof Array)) {
                 throw new Error("path_repo does not have any children");
             }
-            expect(path_repo.children.length).toEqual(1);
+            expect(path_repo.children).toHaveLength(1);
             const leaf_repo = path_repo.children[0];
 
             expect(leaf_repo).toEqual(project_repository_with_path);
@@ -311,7 +311,7 @@ describe("Store getters", () => {
 
             const result = getters.areRepositoriesAlreadyLoadedForCurrentOwner(state);
 
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
 
         it("will return true when there is a key matching the selected 'owner' user id (the person who forked repositories)", () => {
@@ -324,7 +324,7 @@ describe("Store getters", () => {
 
             const result = getters.areRepositoriesAlreadyLoadedForCurrentOwner(state);
 
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
     });
 
@@ -336,7 +336,7 @@ describe("Store getters", () => {
             } as State;
 
             const result = getters.isInitialLoadingDoneWithoutError(state);
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("will return false when initial loading is not done", () => {
@@ -345,7 +345,7 @@ describe("Store getters", () => {
                 error_message_type: ERROR_TYPE_NO_ERROR,
             } as State;
             const result = getters.isInitialLoadingDoneWithoutError(state);
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
 
         it("will return false when there is an error", () => {
@@ -355,7 +355,7 @@ describe("Store getters", () => {
             } as State;
 
             const result = getters.isInitialLoadingDoneWithoutError(state);
-            expect(result).toEqual(false);
+            expect(result).toBe(false);
         });
     });
 
@@ -366,7 +366,7 @@ describe("Store getters", () => {
                 is_loading_next: false,
             } as State;
 
-            expect(getters.isLoading(state)).toEqual(true);
+            expect(getters.isLoading(state)).toBe(true);
         });
 
         it("will return true when 'next batch' loading is true", () => {
@@ -375,7 +375,7 @@ describe("Store getters", () => {
                 is_loading_next: true,
             } as State;
 
-            expect(getters.isLoading(state)).toEqual(true);
+            expect(getters.isLoading(state)).toBe(true);
         });
 
         it("will return false when initial loading and 'next batch' loading are both done", () => {
@@ -384,7 +384,7 @@ describe("Store getters", () => {
                 is_loading_next: false,
             } as State;
 
-            expect(getters.isLoading(state)).toEqual(false);
+            expect(getters.isLoading(state)).toBe(false);
         });
     });
 
@@ -406,7 +406,7 @@ describe("Store getters", () => {
             jest.spyOn(filter, "filterAFolder").mockReturnValue(folder);
 
             const result = getters.isThereAResultInCurrentFilteredList(state);
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
 
         it("Given current display mode is 'sorted by last update date', then it will return true if the filtered array has at least one repository", () => {
@@ -424,7 +424,7 @@ describe("Store getters", () => {
             } as State;
 
             const result = getters.isThereAResultInCurrentFilteredList(state);
-            expect(result).toEqual(true);
+            expect(result).toBe(true);
         });
     });
 

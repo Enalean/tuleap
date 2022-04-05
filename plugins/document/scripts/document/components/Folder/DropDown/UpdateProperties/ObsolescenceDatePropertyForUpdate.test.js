@@ -70,8 +70,8 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
             const select = wrapper.get("[data-test=document-obsolescence-date-select-update]");
             select.trigger("change");
 
-            expect(wrapper.vm.selected_value).toEqual("permanent");
-            expect(wrapper.vm.obsolescence_date).toEqual(null);
+            expect(wrapper.vm.selected_value).toBe("permanent");
+            expect(wrapper.vm.obsolescence_date).toBeNull();
         });
         it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, async () => {
             const wrapper = properties_factory({ value: "" });
@@ -88,7 +88,7 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
                 .add(3, "M")
                 .format("YYYY-MM-DD");
 
-            expect(wrapper.vm.selected_date_value).toEqual("3");
+            expect(wrapper.vm.selected_date_value).toBe("3");
             expect(wrapper.vm.date_value).toEqual(expected_date);
         });
     });
@@ -97,10 +97,10 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
             const wrapper = properties_factory({ value: "" });
             store.state.configuration.is_obsolescence_date_property_used = true;
 
-            expect(wrapper.vm.selected_value).toEqual("permanent");
+            expect(wrapper.vm.selected_value).toBe("permanent");
             wrapper.vm.obsolescence_date = "2019-09-07";
 
-            expect(wrapper.vm.selected_value).toEqual("fixed");
+            expect(wrapper.vm.selected_value).toBe("fixed");
         });
     });
 });

@@ -37,20 +37,20 @@ describe("getStatusProperty", () => {
 
 describe("getStatusFromMapping", () => {
     it("Returns the correct status string depending on status id", () => {
-        expect(getStatusFromMapping(101)).toEqual("draft");
+        expect(getStatusFromMapping(101)).toBe("draft");
     });
 
     it("Returns none if the value does not correspond to anything known", () => {
-        expect(getStatusFromMapping(200)).toEqual("none");
+        expect(getStatusFromMapping(200)).toBe("none");
     });
 });
 
 describe("getStatusIdFromName", () => {
     it("Returns the correct status string depending on status id", () => {
-        expect(getStatusIdFromName("draft")).toEqual(101);
+        expect(getStatusIdFromName("draft")).toBe(101);
     });
 
     it("Returns none if the value does not correspond to anything known", () => {
-        expect(getStatusIdFromName("aapap")).toEqual(100);
+        expect(getStatusIdFromName("aapap")).toBe(100);
     });
 });

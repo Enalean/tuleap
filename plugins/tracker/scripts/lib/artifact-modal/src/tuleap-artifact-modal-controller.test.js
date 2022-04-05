@@ -167,7 +167,7 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
             ArtifactModalController.$onInit();
 
-            expect(ArtifactModalController.title).toEqual("");
+            expect(ArtifactModalController.title).toBe("");
         });
 
         it(`when I close the modal, then it will reset the isUploadingInCKEditor state`, () => {

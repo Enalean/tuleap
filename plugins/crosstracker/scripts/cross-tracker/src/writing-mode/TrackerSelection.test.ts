@@ -166,7 +166,7 @@ describe("TrackerSelection", () => {
                 selected_project,
                 selected_tracker,
             });
-            expect(wrapper.vm.$data.selected_tracker).toBe(null);
+            expect(wrapper.vm.$data.selected_tracker).toBeNull();
         });
     });
 });

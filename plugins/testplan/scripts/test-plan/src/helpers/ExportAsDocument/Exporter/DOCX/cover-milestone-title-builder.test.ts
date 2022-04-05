@@ -23,12 +23,12 @@ describe("cover-milestone-title-builder", () => {
     it("builds a milestone title without parent", () => {
         const title = buildMilestoneTitle("Milestone 01", "");
 
-        expect(title).toStrictEqual("Milestone 01");
+        expect(title).toBe("Milestone 01");
     });
 
     it("builds a milestone title with parent", () => {
         const title = buildMilestoneTitle("Milestone 01", "Parent 01");
 
-        expect(title).toStrictEqual("Parent 01 > Milestone 01");
+        expect(title).toBe("Parent 01 > Milestone 01");
     });
 });

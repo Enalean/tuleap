@@ -84,9 +84,7 @@ describe("Store mutations", () => {
 
             mutations.pushRepositoriesForCurrentOwner(state, repositories);
 
-            expect(state.repositories_for_owner[PROJECT_KEY][0].normalized_path).toEqual(
-                "archiplasm"
-            );
+            expect(state.repositories_for_owner[PROJECT_KEY][0].normalized_path).toBe("archiplasm");
         });
 
         it("Given some repositories and that the selected owner has already some repositories loaded, then It should push them in his list.", () => {

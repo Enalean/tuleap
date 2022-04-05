@@ -43,7 +43,7 @@ describe("Item mutations", () => {
             if (!isFolderContentArrayOfItem(state.folder_content)) {
                 throw Error("folder_content should contain only items");
             }
-            expect(state.folder_content[0].lock_info).toBe(null);
+            expect(state.folder_content[0].lock_info).toBeNull();
             expect(state.folder_content[1].lock_info).toEqual({
                 lock_by: { id: 2 } as User,
                 lock_date: "",
@@ -66,8 +66,8 @@ describe("Item mutations", () => {
             if (!isFolderContentArrayOfItem(state.folder_content)) {
                 throw Error("folder_content should contain only items");
             }
-            expect(state.folder_content[0].lock_info).toBe(null);
-            expect(state.folder_content[1].lock_info).toBe(null);
+            expect(state.folder_content[0].lock_info).toBeNull();
+            expect(state.folder_content[1].lock_info).toBeNull();
         });
 
         it("replace the preview item", () => {
@@ -86,8 +86,8 @@ describe("Item mutations", () => {
             if (!isFolderContentArrayOfItem(state.folder_content)) {
                 throw Error("folder_content should contain only items");
             }
-            expect(state.folder_content[0].lock_info).toBe(null);
-            expect(state.currently_previewed_item?.lock_info).toBe(null);
+            expect(state.folder_content[0].lock_info).toBeNull();
+            expect(state.currently_previewed_item?.lock_info).toBeNull();
         });
 
         it("don't do anything when preview item is not the one updated", () => {

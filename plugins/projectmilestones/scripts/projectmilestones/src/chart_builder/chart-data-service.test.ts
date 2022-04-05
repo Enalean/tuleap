@@ -25,18 +25,18 @@ describe("chartDataService", () => {
     describe("getDisplayableData", () => {
         it("Get only data without empty remaining effort", () => {
             const points = getDisplayableData(getPointsWithDateWithMaxIs15());
-            expect(points.length).toEqual(2);
-            expect(points[0].remaining_effort).toEqual(10);
-            expect(points[1].remaining_effort).toEqual(15);
+            expect(points).toHaveLength(2);
+            expect(points[0].remaining_effort).toBe(10);
+            expect(points[1].remaining_effort).toBe(15);
         });
     });
 
     describe("getDisplayableDataForBurnup", () => {
         it("Get only data without empty total and progression", () => {
             const points = getDisplayableDataForBurnup(getPointsWithDateForGenericBurnup());
-            expect(points.length).toEqual(1);
-            expect(points[0].total).toEqual(40);
-            expect(points[0].progression).toEqual(30);
+            expect(points).toHaveLength(1);
+            expect(points[0].total).toBe(40);
+            expect(points[0].progression).toBe(30);
         });
     });
 

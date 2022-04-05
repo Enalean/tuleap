@@ -65,31 +65,31 @@ describe("TimePeriodQuarter", () => {
         end = new Date(2020, 7, 15);
         const period = new TimePeriodQuarter(start, end, createVueGettextProviderPassthrough());
 
-        expect(period.formatShort(new Date(2020, 0, 15))).toStrictEqual("Q1");
-        expect(period.formatShort(new Date(2020, 1, 15))).toStrictEqual("Q1");
-        expect(period.formatShort(new Date(2020, 2, 15))).toStrictEqual("Q1");
-        expect(period.formatShort(new Date(2020, 3, 15))).toStrictEqual("Q2");
-        expect(period.formatShort(new Date(2020, 4, 15))).toStrictEqual("Q2");
-        expect(period.formatShort(new Date(2020, 5, 15))).toStrictEqual("Q2");
-        expect(period.formatShort(new Date(2020, 6, 15))).toStrictEqual("Q3");
-        expect(period.formatShort(new Date(2020, 7, 15))).toStrictEqual("Q3");
-        expect(period.formatShort(new Date(2020, 8, 15))).toStrictEqual("Q3");
-        expect(period.formatShort(new Date(2020, 9, 15))).toStrictEqual("Q4");
-        expect(period.formatShort(new Date(2020, 10, 15))).toStrictEqual("Q4");
-        expect(period.formatShort(new Date(2020, 11, 15))).toStrictEqual("Q4");
+        expect(period.formatShort(new Date(2020, 0, 15))).toBe("Q1");
+        expect(period.formatShort(new Date(2020, 1, 15))).toBe("Q1");
+        expect(period.formatShort(new Date(2020, 2, 15))).toBe("Q1");
+        expect(period.formatShort(new Date(2020, 3, 15))).toBe("Q2");
+        expect(period.formatShort(new Date(2020, 4, 15))).toBe("Q2");
+        expect(period.formatShort(new Date(2020, 5, 15))).toBe("Q2");
+        expect(period.formatShort(new Date(2020, 6, 15))).toBe("Q3");
+        expect(period.formatShort(new Date(2020, 7, 15))).toBe("Q3");
+        expect(period.formatShort(new Date(2020, 8, 15))).toBe("Q3");
+        expect(period.formatShort(new Date(2020, 9, 15))).toBe("Q4");
+        expect(period.formatShort(new Date(2020, 10, 15))).toBe("Q4");
+        expect(period.formatShort(new Date(2020, 11, 15))).toBe("Q4");
 
-        expect(period.formatLong(new Date(2020, 0, 15))).toStrictEqual("Quarter 1 of 2020");
-        expect(period.formatLong(new Date(2020, 1, 15))).toStrictEqual("Quarter 1 of 2020");
-        expect(period.formatLong(new Date(2020, 2, 15))).toStrictEqual("Quarter 1 of 2020");
-        expect(period.formatLong(new Date(2020, 3, 15))).toStrictEqual("Quarter 2 of 2020");
-        expect(period.formatLong(new Date(2020, 4, 15))).toStrictEqual("Quarter 2 of 2020");
-        expect(period.formatLong(new Date(2020, 5, 15))).toStrictEqual("Quarter 2 of 2020");
-        expect(period.formatLong(new Date(2020, 6, 15))).toStrictEqual("Quarter 3 of 2020");
-        expect(period.formatLong(new Date(2020, 7, 15))).toStrictEqual("Quarter 3 of 2020");
-        expect(period.formatLong(new Date(2020, 8, 15))).toStrictEqual("Quarter 3 of 2020");
-        expect(period.formatLong(new Date(2020, 9, 15))).toStrictEqual("Quarter 4 of 2020");
-        expect(period.formatLong(new Date(2020, 10, 15))).toStrictEqual("Quarter 4 of 2020");
-        expect(period.formatLong(new Date(2020, 11, 15))).toStrictEqual("Quarter 4 of 2020");
+        expect(period.formatLong(new Date(2020, 0, 15))).toBe("Quarter 1 of 2020");
+        expect(period.formatLong(new Date(2020, 1, 15))).toBe("Quarter 1 of 2020");
+        expect(period.formatLong(new Date(2020, 2, 15))).toBe("Quarter 1 of 2020");
+        expect(period.formatLong(new Date(2020, 3, 15))).toBe("Quarter 2 of 2020");
+        expect(period.formatLong(new Date(2020, 4, 15))).toBe("Quarter 2 of 2020");
+        expect(period.formatLong(new Date(2020, 5, 15))).toBe("Quarter 2 of 2020");
+        expect(period.formatLong(new Date(2020, 6, 15))).toBe("Quarter 3 of 2020");
+        expect(period.formatLong(new Date(2020, 7, 15))).toBe("Quarter 3 of 2020");
+        expect(period.formatLong(new Date(2020, 8, 15))).toBe("Quarter 3 of 2020");
+        expect(period.formatLong(new Date(2020, 9, 15))).toBe("Quarter 4 of 2020");
+        expect(period.formatLong(new Date(2020, 10, 15))).toBe("Quarter 4 of 2020");
+        expect(period.formatLong(new Date(2020, 11, 15))).toBe("Quarter 4 of 2020");
     });
 
     it.each([[-1], [0]])(

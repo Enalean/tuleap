@@ -68,7 +68,7 @@ describe("ListOfProjects", () => {
             },
         });
 
-        expect(wrapper.findAllComponents(ProjectLink).length).toBe(2);
+        expect(wrapper.findAllComponents(ProjectLink)).toHaveLength(2);
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(TroveCatLink).exists()).toBe(true);
     });

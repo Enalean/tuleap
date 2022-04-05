@@ -74,7 +74,7 @@ describe("FieldsList -", () => {
             desc_required: "0",
         } as FieldData);
 
-        expect(wrapper.html()).toEqual("");
+        expect(wrapper.html()).toBe("");
     });
 
     it("Send an event when user chooses a new value for the field", async () => {
