@@ -45,9 +45,13 @@ class TypeCreator implements TypeCreatorInterface
         $this->validator->checkForwardLabel($forward_label);
         $this->validator->checkReverseLabel($reverse_label);
 
-        if (! $this->dao->create($shortname, $forward_label, $reverse_label)) {
+        try {
+            $this->dao->create($shortname, $forward_label, $reverse_label);
+        } catch (\Exception $exception) {
             throw new UnableToCreateTypeException(
-                dgettext('tuleap-tracker', 'error while playing with the database.  Help us improve your experience by sending an error report.')
+                dgettext('tuleap-tracker', 'error while playing with the database.  Help us improve your experience by sending an error report.'),
+                0,
+                $exception
             );
         }
     }
