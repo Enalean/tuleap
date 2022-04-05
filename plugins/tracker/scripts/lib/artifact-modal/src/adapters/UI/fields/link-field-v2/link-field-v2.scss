@@ -69,11 +69,9 @@ $link-table-cell-background: transparent;
 }
 
 .link-field-table-footer-type {
+    min-width: 150px;
     padding: $link-table-cell-padding 0 $link-table-cell-padding $link-table-cell-padding;
-
-    &.link-field-table-footer-type-no-padding {
-        padding: 0;
-    }
+    vertical-align: middle;
 }
 
 .link-field-table-footer-add-link {

@@ -22,6 +22,7 @@ import type { HostElement } from "./LinkField";
 import { getEmptyStateIfNeeded, getSkeletonIfNeeded, LinkField } from "./LinkField";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { Fault } from "@tuleap/fault";
+import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
 
@@ -29,6 +30,8 @@ function getHost(data?: Partial<LinkField>): HostElement {
     return {
         fieldId: 60,
         label: "Links overview",
+        allowedTypes: [],
+        artifactCrossReference: ArtifactCrossReferenceStub.withRef("story #103"),
         ...data,
     } as unknown as HostElement;
 }
