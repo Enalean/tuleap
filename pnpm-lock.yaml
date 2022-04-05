@@ -57,6 +57,7 @@ specifiers:
   stylelint-config-html: ^1.0.0
   stylelint-config-prettier: ^9.0.3
   stylelint-config-property-sort-order-smacss: ^9.0.0
+  stylelint-config-recommended: ^7.0.0
   stylelint-config-recommended-vue: ^1.4.0
   stylelint-config-sass-guidelines: ^9.0.1
   stylelint-config-standard-scss: ^3.0.0
@@ -139,6 +140,7 @@ devDependencies:
   stylelint-config-html: 1.0.0_50484b26a38601352aaf9ea7986ae8a8
   stylelint-config-prettier: 9.0.3_stylelint@14.6.1
   stylelint-config-property-sort-order-smacss: 9.0.0_stylelint@14.6.1
+  stylelint-config-recommended: 7.0.0_stylelint@14.6.1
   stylelint-config-recommended-vue: 1.4.0_50484b26a38601352aaf9ea7986ae8a8
   stylelint-config-sass-guidelines: 9.0.1_postcss@8.4.5+stylelint@14.6.1
   stylelint-config-standard-scss: 3.0.0_postcss@8.4.5+stylelint@14.6.1
@@ -6871,7 +6873,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.8
+      graceful-fs: 4.2.9
     dev: true
 
   /jsprim/2.0.2:
@@ -8703,13 +8705,21 @@ packages:
       semver: 7.3.5
       stylelint: 14.6.1
       stylelint-config-html: 1.0.0_50484b26a38601352aaf9ea7986ae8a8
-      stylelint-config-recommended: 6.0.0_stylelint@14.6.1
+      stylelint-config-recommended: 7.0.0_stylelint@14.6.1
     dev: true
 
   /stylelint-config-recommended/6.0.0_stylelint@14.6.1:
     resolution: {integrity: sha512-ZorSSdyMcxWpROYUvLEMm0vSZud2uB7tX1hzBZwvVY9SV/uly4AvvJPPhCcymZL3fcQhEQG5AELmrxWqtmzacw==}
     peerDependencies:
       stylelint: ^14.0.0
+    dependencies:
+      stylelint: 14.6.1
+    dev: true
+
+  /stylelint-config-recommended/7.0.0_stylelint@14.6.1:
+    resolution: {integrity: sha512-yGn84Bf/q41J4luis1AZ95gj0EQwRX8lWmGmBwkwBNSkpGSpl66XcPTulxGa/Z91aPoNGuIGBmFkcM1MejMo9Q==}
+    peerDependencies:
+      stylelint: ^14.4.0
     dependencies:
       stylelint: 14.6.1
     dev: true
