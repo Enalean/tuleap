@@ -20,11 +20,13 @@
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    use ForgeConfigSandbox;
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
@@ -49,9 +51,9 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
-        $this->assertTrue($r->isValid("user"));
-        $this->assertTrue($r->isValid("user_name"));
-        $this->assertTrue($r->isValid("user-name"));
+        self::assertTrue($r->isValid("user"));
+        self::assertTrue($r->isValid("user_name"));
+        self::assertTrue($r->isValid("user-name"));
     }
 
     public function testUserAlreadyExist(): void
@@ -76,7 +78,7 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
-        $this->assertFalse($r->isValid("user"));
+        self::assertFalse($r->isValid("user"));
     }
 
     public function testProjectAlreadyExist(): void
@@ -100,7 +102,7 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->shouldReceive('_getProjectManager')->andReturns($pm);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
-        $this->assertFalse($r->isValid("user"));
+        self::assertFalse($r->isValid("user"));
     }
 
     public function testSpaceInName(): void
@@ -124,11 +126,13 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
-        $this->assertFalse($r->isValid("user name"));
+        self::assertFalse($r->isValid("user name"));
     }
 
-    public function testUnixUserExists(): void
+    public function testUnixUserExistsWhenUnixUsersEnabled(): void
     {
+        ForgeConfig::set("homedir_prefix", "/home/users");
+
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getUserByUserName')->andReturns(null);
 
@@ -148,11 +152,40 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
-        $this->assertFalse($r->isValid("user"));
+        self::assertFalse($r->isValid("user"));
     }
 
-    public function testUnixGroupExists(): void
+
+    public function testItDontCheckIfUnixUserExistsWhenUnixUsersDisabled(): void
     {
+        ForgeConfig::set("homedir_prefix", "");
+
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getUserByUserName')->andReturns(null);
+
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+
+        $backend = \Mockery::spy(\Backend::class);
+        $backend->shouldReceive('unixUserExists')->never();
+        $backend->shouldReceive('unixGroupExists')->never();
+
+        $sm = \Mockery::spy(\SystemEventManager::class);
+        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
+
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getUserManager')->andReturns($um);
+        $r->shouldReceive('_getProjectManager')->andReturns($pm);
+        $r->shouldReceive('_getBackend')->andReturns($backend);
+        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+
+        self::assertTrue($r->isValid("user"));
+    }
+
+    public function testUnixGroupExistsWhenUnixUsersEnabled(): void
+    {
+        ForgeConfig::set("homedir_prefix", "/home/users");
+
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getUserByUserName')->andReturns(null);
 
@@ -172,6 +205,32 @@ class Rule_UserNameIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
         $r->shouldReceive('_getBackend')->andReturns($backend);
         $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
 
-        $this->assertFalse($r->isValid("user"));
+        self::assertFalse($r->isValid("user"));
+    }
+
+    public function testItDontCheckIfUnixGroupExistsWhenUnixUsersDisabled(): void
+    {
+        ForgeConfig::set("homedir_prefix", "");
+
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getUserByUserName')->andReturns(null);
+
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
+
+        $backend = \Mockery::spy(\Backend::class);
+        $backend->shouldReceive('unixUserExists')->never();
+        $backend->shouldReceive('unixGroupExists')->never();
+
+        $sm = \Mockery::spy(\SystemEventManager::class);
+        $sm->shouldReceive('isUserNameAvailable')->andReturns(true);
+
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getUserManager')->andReturns($um);
+        $r->shouldReceive('_getProjectManager')->andReturns($pm);
+        $r->shouldReceive('_getBackend')->andReturns($backend);
+        $r->shouldReceive('_getSystemEventManager')->andReturns($sm);
+
+        self::assertTrue($r->isValid("user"));
     }
 }

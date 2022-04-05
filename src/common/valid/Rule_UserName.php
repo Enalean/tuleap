@@ -217,7 +217,13 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function isValid($val)
     {
-        return $this->isUnixValid($val) && ! $this->isReservedName($val) && ! $this->isCvsAccount($val) && ! $this->isAlreadyUserName($val) && ! $this->isAlreadyProjectName($val) && ! $this->isSystemName($val) && $this->getPendingUserRename($val);
+        $is_valid = true;
+
+        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            $is_valid = $this->isAvailableOnSystem($val);
+        }
+
+        return $this->isUnixValid($val) && ! $this->isReservedName($val) && ! $this->isAlreadyUserName($val) && ! $this->isAlreadyProjectName($val) && $this->getPendingUserRename($val) && $is_valid;
     }
 
     public function isUnixValid(string $val): bool
@@ -299,5 +305,10 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
     protected function _getSystemEventManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return \SystemEventManager::instance();
+    }
+
+    private function isAvailableOnSystem(string $login): bool
+    {
+        return ! $this->isSystemName($login) && ! $this->isCvsAccount($login);
     }
 }
