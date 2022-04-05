@@ -1,0 +1,17 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="link-selector-sb">Link selector</label>
+    <select id="link-selector-sb" name="list-value">
+        <option value=""></option>
+        <option value="101">story #101 - Do this</option>
+        <option value="102">story #102 - Do that</option>
+        <option value="103">story #103 - And that too</option>
+    </select>
+    <script type="text/javascript">
+        import { createLinkSelector } from "@tuleap/link-selector";
+
+        createLinkSelector(document.querySelector('#link-selector-sb'), {
+            locale: "en_US",
+            placeholder: "Please select an item to link"
+        });
+    </script>
+</div>
