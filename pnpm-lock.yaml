@@ -56,7 +56,7 @@ specifiers:
   stylelint: ^14.6.1
   stylelint-config-html: ^1.0.0
   stylelint-config-prettier: ^9.0.3
-  stylelint-config-property-sort-order-smacss: ^8.0.0
+  stylelint-config-property-sort-order-smacss: ^9.0.0
   stylelint-config-recommended-vue: ^1.4.0
   stylelint-config-sass-guidelines: ^9.0.1
   stylelint-config-standard-scss: ^3.0.0
@@ -138,7 +138,7 @@ devDependencies:
   stylelint: 14.6.1
   stylelint-config-html: 1.0.0_50484b26a38601352aaf9ea7986ae8a8
   stylelint-config-prettier: 9.0.3_stylelint@14.6.1
-  stylelint-config-property-sort-order-smacss: 8.0.0_stylelint@14.6.1
+  stylelint-config-property-sort-order-smacss: 9.0.0_stylelint@14.6.1
   stylelint-config-recommended-vue: 1.4.0_50484b26a38601352aaf9ea7986ae8a8
   stylelint-config-sass-guidelines: 9.0.1_postcss@8.4.5+stylelint@14.6.1
   stylelint-config-standard-scss: 3.0.0_postcss@8.4.5+stylelint@14.6.1
@@ -4115,8 +4115,8 @@ packages:
       webpack: 5.64.4_webpack-cli@4.9.1
     dev: true
 
-  /css-property-sort-order-smacss/2.1.3:
-    resolution: {integrity: sha512-tMGlBxcfQq5VYmMFp4tGqxkNeXDBmlGbyuuz1FFGRvCUj9CvocShe23d4kFyfxW6JMlhlBVfnZRa8AO8kgceJA==}
+  /css-property-sort-order-smacss/2.2.0:
+    resolution: {integrity: sha512-nXutswsivIEBOrPo/OZw2KQjFPLvtg68aovJf6Kqrm3L6FmTvvFPaeDrk83hh0+pRJGuP3PeKJwMS0E6DFipdQ==}
     dev: true
 
   /css-select/1.2.0:
@@ -8669,12 +8669,12 @@ packages:
       stylelint: 14.6.1
     dev: true
 
-  /stylelint-config-property-sort-order-smacss/8.0.0_stylelint@14.6.1:
-    resolution: {integrity: sha512-tuHNU/PJ6SYvQCaBbv/mhtBh79yHtzc7M3y5oTck3Pgm3hk+K7Jkr6i4/PB7m5Rodle9wQ0oEPLF5psF/t+7wQ==}
+  /stylelint-config-property-sort-order-smacss/9.0.0_stylelint@14.6.1:
+    resolution: {integrity: sha512-jQ1miJ6uQA+n6UkunhdhBmjFd5XCe/X7l9/yBI2KGdU+8+nYt1/7slHeLvsT7SCYByYqaLt9fUUCCOjyXH6PCw==}
     peerDependencies:
       stylelint: ^14.0.0
     dependencies:
-      css-property-sort-order-smacss: 2.1.3
+      css-property-sort-order-smacss: 2.2.0
       stylelint: 14.6.1
       stylelint-order: 5.0.0_stylelint@14.6.1
     dev: true
