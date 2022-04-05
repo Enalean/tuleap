@@ -24,6 +24,7 @@ interface ExportLevelSetting {
     readonly tracker_name: string;
     readonly report_id: number;
     readonly report_name: string;
+    readonly artifact_link_types: ReadonlyArray<string>;
 }
 
 export interface ExportSettings {
