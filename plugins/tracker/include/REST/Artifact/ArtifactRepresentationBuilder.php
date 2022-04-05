@@ -261,7 +261,7 @@ class ArtifactRepresentationBuilder
             );
         }
 
-        $total_size = (int) $this->nature_dao->foundRows();
+        $total_size = $this->nature_dao->foundRows();
         $artifacts  = [];
         foreach ($linked_artifacts_ids as $linked_artifact_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_artifact_id);

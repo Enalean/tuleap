@@ -105,7 +105,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
 
         if ($linked_type && ! in_array($linked_type, $system_types, true)) {
             $type = $this->type_dao->getTypeByShortname($linked_type);
-            if ($type->count() === 0) {
+            if (count($type) === 0) {
                 $this->logger->error("Type $linked_type not found on plateform. Artifact $linked_artifact_id added without type.");
             }
         }

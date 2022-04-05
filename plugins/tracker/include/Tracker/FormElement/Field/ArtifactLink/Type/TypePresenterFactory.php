@@ -148,7 +148,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         $types = [];
 
         foreach ($this->dao->searchAllUsedTypesByProject($project->getGroupId()) as $row) {
-            $types[] = $row['type'];
+            $types[] = $row['nature'];
         }
 
         return $types;

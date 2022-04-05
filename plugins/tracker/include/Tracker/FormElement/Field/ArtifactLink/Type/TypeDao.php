@@ -21,145 +21,131 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyDB;
+use Tuleap\DB\DataAccessObject;
 
 class TypeDao extends DataAccessObject
 {
-    public function create($shortname, $forward_label, $reverse_label)
+    public function create($shortname, $forward_label, $reverse_label): void
     {
-        $type          = $this->getTypeByShortname($shortname);
-        $shortname     = $this->da->quoteSmart($shortname);
-        $forward_label = $this->da->quoteSmart($forward_label);
-        $reverse_label = $this->da->quoteSmart($reverse_label);
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($shortname, $forward_label, $reverse_label): void {
+            $type = $this->getTypeByShortname($shortname);
 
-        $this->da->startTransaction();
+            if (count($type) > 0) {
+                throw new UnableToCreateTypeException(
+                    sprintf(dgettext('tuleap-tracker', 'a type with %1$s as shortname already exists.'), $shortname)
+                );
+            }
 
-        if ($type->count() > 0) {
-            $this->rollBack();
-            throw new UnableToCreateTypeException(
-                sprintf(dgettext('tuleap-tracker', 'a type with %1$s as shortname already exists.'), $shortname)
+            $db->run(
+                'INSERT INTO plugin_tracker_artifactlink_natures (shortname, forward_label, reverse_label) VALUES (?, ?, ?)',
+                $shortname,
+                $forward_label,
+                $reverse_label
             );
-        }
-
-        $sql = "INSERT INTO plugin_tracker_artifactlink_natures (shortname, forward_label, reverse_label)
-                VALUES ($shortname, $forward_label, $reverse_label)";
-
-        if (! $this->update($sql)) {
-            $this->rollBack();
-            return false;
-        }
-
-        $this->commit();
-        return true;
+        });
     }
 
-    public function getTypeByShortname($shortname)
+    /**
+     * @psalm-return array{shortname: string, forward_label: string, reverse_label: string}[]
+     */
+    public function getTypeByShortname($shortname): array
     {
-        $shortname = $this->da->quoteSmart($shortname);
+        $sql = 'SELECT shortname, forward_label, reverse_label FROM plugin_tracker_artifactlink_natures WHERE shortname = ?';
 
-        $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
-
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $shortname);
     }
 
-    public function edit($shortname, $forward_label, $reverse_label)
+    public function edit($shortname, $forward_label, $reverse_label): void
     {
-        $shortname     = $this->da->quoteSmart($shortname);
-        $forward_label = $this->da->quoteSmart($forward_label);
-        $reverse_label = $this->da->quoteSmart($reverse_label);
+        $sql = 'UPDATE plugin_tracker_artifactlink_natures
+                   SET forward_label = ?, reverse_label = ?
+                WHERE shortname = ?';
 
-        $sql = "UPDATE plugin_tracker_artifactlink_natures
-                   SET forward_label = $forward_label, reverse_label = $reverse_label
-                WHERE shortname = $shortname";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $forward_label, $reverse_label, $shortname);
     }
 
-    public function delete($shortname)
+    public function delete($shortname): void
     {
-        $this->enableExceptionsOnError();
-        $this->startTransaction();
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($shortname): void {
+            $this->deleteTypeInTableColumns($shortname);
+            $this->purgeDeletedTypeInArtifactLinkTypeUsage($shortname);
 
-        $this->deleteTypeInTableColumns($shortname);
-        $this->purgeDeletedTypeInArtifactLinkTypeUsage($shortname);
-
-        $shortname = $this->da->quoteSmart($shortname);
-        $sql       = "DELETE FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
-
-        $this->update($sql);
-
-        $this->commit();
-        return true;
+            $sql = 'DELETE FROM plugin_tracker_artifactlink_natures WHERE shortname = ?';
+            $db->run($sql, $shortname);
+        });
     }
 
-    private function purgeDeletedTypeInArtifactLinkTypeUsage($type_shortname)
+    private function purgeDeletedTypeInArtifactLinkTypeUsage($type_shortname): void
     {
-        $type_shortname = $this->da->quoteSmart($type_shortname);
+        $sql = 'DELETE FROM plugin_tracker_projects_unused_artifactlink_types
+                WHERE type_shortname = ?';
 
-        $sql = "DELETE FROM plugin_tracker_projects_unused_artifactlink_types
-                WHERE type_shortname = $type_shortname";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $type_shortname);
     }
 
-    private function deleteTypeInTableColumns($shortname)
+    private function deleteTypeInTableColumns($shortname): void
     {
-        $shortname = $this->da->quoteSmart($shortname);
+        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE artlink_nature = ?";
 
-        $sql = "DELETE FROM tracker_report_renderer_table_columns WHERE artlink_nature = $shortname";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $shortname);
     }
 
-    public function isOrHasBeenUsed($shortname)
+    public function isOrHasBeenUsed($shortname): bool
     {
-        $shortname = $this->da->quoteSmart($shortname);
-
-        $sql = "SELECT 1
+        $sql = 'SELECT 1
                   FROM tracker_changeset_value_artifactlink
-                 WHERE nature = $shortname
-                 LIMIT 1";
+                 WHERE nature = ?
+                 LIMIT 1';
 
-        $dar = $this->retrieve($sql);
-        return $dar && count($dar) !== 0;
+        $rows = $this->getDB()->run($sql, $shortname);
+        return count($rows) !== 0;
     }
 
-    public function searchAllUsedTypesByProject($project_id)
+    /**
+     * @psalm-return array{nature: string}[]
+     */
+    public function searchAllUsedTypesByProject($project_id): array
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT DISTINCT nature
+        $sql = 'SELECT DISTINCT nature
                   FROM tracker_changeset_value_artifactlink
-                 WHERE group_id = $project_id
-                 ORDER BY nature ASC";
+                 WHERE group_id = ?
+                 ORDER BY nature ASC';
 
-        return $this->da->query($sql);
+        return $this->getDB()->run($sql, $project_id);
     }
 
-    public function searchAll()
+    /**
+     * @psalm-return array{shortname: string, forward_label: string, reverse_label: string}[]
+     */
+    public function searchAll(): array
     {
-        $sql = "SELECT *
+        $sql = "SELECT shortname, forward_label, reverse_label
                 FROM plugin_tracker_artifactlink_natures
                 ORDER BY shortname ASC";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
-    public function getFromShortname($shortname)
+    /**
+     * @psalm-return array{shortname: string, forward_label: string, reverse_label: string}|null
+     */
+    public function getFromShortname($shortname): array|null
     {
-        $shortname = $this->da->quoteSmart($shortname);
-
-        $sql = "SELECT *
+        $sql = 'SELECT shortname, forward_label, reverse_label
                 FROM plugin_tracker_artifactlink_natures
-                WHERE shortname = $shortname";
+                WHERE shortname = ?';
 
-        return $this->retrieveFirstRow($sql);
+        $rows = $this->getDB()->run($sql, $shortname);
+
+        return $rows[0] ?? null;
     }
 
-    public function searchForwardTypeShortNamesForGivenArtifact($artifact_id)
+    /**
+     * @psalm-return array{shortname: string}[]
+     */
+    public function searchForwardTypeShortNamesForGivenArtifact($artifact_id): array
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-
         $sql = "SELECT DISTINCT IFNULL(artlink.nature, '') AS shortname
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -168,16 +154,17 @@ class TypeDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (t.id = linked_art.tracker_id)
                     INNER JOIN `groups` ON (`groups`.group_id = t.group_id)
-                WHERE parent_art.id  = $artifact_id
+                WHERE parent_art.id  = ?
                     AND `groups`.status = 'A'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $artifact_id);
     }
 
-    public function searchReverseTypeShortNamesForGivenArtifact($artifact_id)
+    /**
+     * @psalm-return array{shortname: string}[]
+     */
+    public function searchReverseTypeShortNamesForGivenArtifact($artifact_id): array
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-
         $sql = "SELECT DISTINCT IFNULL(artlink.nature, '') AS shortname
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -186,19 +173,17 @@ class TypeDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (t.id = parent_art.tracker_id)
                     INNER JOIN `groups` ON (`groups`.group_id = t.group_id)
-                WHERE linked_art.id  = $artifact_id
+                WHERE linked_art.id  = ?
                     AND `groups`.status = 'A'";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $artifact_id);
     }
 
-    public function getForwardLinkedArtifactIds($artifact_id, $type, $limit, $offset)
+    /**
+     * @return int[]
+     */
+    public function getForwardLinkedArtifactIds($artifact_id, $type, $limit, $offset): array
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $type        = $this->da->quoteSmart($type);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
-
         $sql = "SELECT SQL_CALC_FOUND_ROWS artlink.artifact_id AS id
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -207,23 +192,27 @@ class TypeDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (t.id = linked_art.tracker_id)
                     INNER JOIN `groups` ON (`groups`.group_id = t.group_id)
-                WHERE parent_art.id  = $artifact_id
+                WHERE parent_art.id  = ?
                     AND t.deletion_date IS NULL
                     AND `groups`.status = 'A'
-                    AND IFNULL(artlink.nature, '') = $type
-                LIMIT $limit
-                OFFSET $offset";
+                    AND IFNULL(artlink.nature, '') = ?
+                LIMIT ?
+                OFFSET ?";
 
-        return $this->retrieveIds($sql);
+        $rows = $this->getDB()->run($sql, $artifact_id, $type, $limit, $offset);
+        $ids  = [];
+        foreach ($rows as $row) {
+            $ids[] = $row['id'];
+        }
+
+        return $ids;
     }
 
-    public function getReverseLinkedArtifactIds($artifact_id, $type, $limit, $offset)
+    /**
+     * @return int[]
+     */
+    public function getReverseLinkedArtifactIds($artifact_id, $type, $limit, $offset): array
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $type        = $this->da->quoteSmart($type);
-        $limit       = $this->da->escapeInt($limit);
-        $offset      = $this->da->escapeInt($offset);
-
         $sql = "SELECT SQL_CALC_FOUND_ROWS parent_art.id AS id
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -232,21 +221,24 @@ class TypeDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (t.id = parent_art.tracker_id)
                     INNER JOIN `groups` ON (`groups`.group_id = t.group_id)
-                WHERE linked_art.id  = $artifact_id
+                WHERE linked_art.id  = ?
                     AND t.deletion_date IS NULL
                     AND `groups`.status = 'A'
-                    AND IFNULL(artlink.nature, '') = $type
-                LIMIT $limit
-                OFFSET $offset";
+                    AND IFNULL(artlink.nature, '') = ?
+                LIMIT ?
+                OFFSET ?";
 
-        return $this->retrieveIds($sql);
+        $rows = $this->getDB()->run($sql, $artifact_id, $type, $limit, $offset);
+        $ids  = [];
+        foreach ($rows as $row) {
+            $ids[] = $row['id'];
+        }
+
+        return $ids;
     }
 
-    public function hasReverseLinkedArtifacts($artifact_id, $type)
+    public function hasReverseLinkedArtifacts($artifact_id, $type): bool
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $type        = $this->da->quoteSmart($type);
-
         $sql = "SELECT NULL
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
@@ -255,20 +247,25 @@ class TypeDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (t.id = parent_art.tracker_id)
                     INNER JOIN `groups` ON (`groups`.group_id = t.group_id)
-                WHERE linked_art.id  = $artifact_id
+                WHERE linked_art.id  = ?
                     AND `groups`.status = 'A'
-                    AND IFNULL(artlink.nature, '') = $type
+                    AND IFNULL(artlink.nature, '') = ?
                 LIMIT 1";
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $artifact_id, $type);
+
+        return count($rows) > 0;
     }
 
-    public function getUsedTypes()
+    /**
+     * @psalm-return array{shortname: string}[]
+     */
+    public function getUsedTypes(): array
     {
         $sql = "SELECT DISTINCT nature AS shortname
                 FROM tracker_changeset_value_artifactlink
                 WHERE nature IS NOT NULL";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 }
