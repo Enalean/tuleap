@@ -42,7 +42,7 @@
             <explanations-export />
             <first-level-selector
                 v-model:report_id="report_id"
-                v-model:artifact_link_type="artifact_link_type"
+                v-model:artifact_link_types="artifact_link_types"
                 v-bind:current_tracker_reports="properties.current_tracker_reports"
                 v-bind:current_tracker_artifact_link_types="
                     properties.current_tracker_artifact_link_types
@@ -102,7 +102,10 @@ onBeforeUnmount(() => {
 
 const props = defineProps<{ properties: GlobalExportProperties }>();
 const report_id = ref(props.properties.current_report_id);
-const artifact_link_type = ref("");
+const all_artifact_link_types = props.properties.current_tracker_artifact_link_types.map(
+    (art_link_type) => art_link_type.shortname
+);
+const artifact_link_types = ref(all_artifact_link_types);
 
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {

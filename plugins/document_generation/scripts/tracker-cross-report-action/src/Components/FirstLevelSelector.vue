@@ -26,14 +26,17 @@
         <div class="tlp-form-element">
             <label class="tlp-label">
                 {{ $gettext("Link type") }}
-                <select v-model="artifact_link_type" class="tlp-select">
-                    <option value="">{{ $gettext("All link types") }}</option>
+                <select v-model="artifact_link_types" class="tlp-select" multiple>
                     <option
-                        v-for="art_link in current_tracker_artifact_link_not_empty_types"
+                        v-for="art_link in current_tracker_artifact_link_types"
                         v-bind:key="art_link.shortname"
                         v-bind:value="art_link.shortname"
                     >
-                        {{ art_link.forward_label }}
+                        {{
+                            art_link.shortname === NO_TYPE_SHORTNAME
+                                ? $gettext("No type")
+                                : art_link.forward_label
+                        }}
                     </option>
                 </select>
             </label>
@@ -51,15 +54,17 @@ import type { ArtifactLinkType, TrackerReport } from "../type";
 import { computed } from "vue";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
 
+const NO_TYPE_SHORTNAME = "";
+
 const props = defineProps<{
     current_tracker_reports: ReadonlyArray<TrackerReport>;
     current_tracker_artifact_link_types: ReadonlyArray<ArtifactLinkType>;
     report_id: number;
-    artifact_link_type: string;
+    artifact_link_types: string[];
 }>();
 const emit = defineEmits<{
     (e: "update:report_id", value: number): void;
-    (e: "update:artifact_link_type", value: string): void;
+    (e: "update:artifact_link_types", value: string[]): void;
 }>();
 
 const report_id = computed({
@@ -71,20 +76,12 @@ const report_id = computed({
     },
 });
 
-const current_tracker_artifact_link_not_empty_types = computed(
-    (): ReadonlyArray<ArtifactLinkType> => {
-        return props.current_tracker_artifact_link_types.filter(
-            (art_link_type) => art_link_type.shortname !== ""
-        );
-    }
-);
-
-const artifact_link_type = computed({
-    get(): string {
-        return props.artifact_link_type;
+const artifact_link_types = computed({
+    get(): string[] {
+        return props.artifact_link_types;
     },
-    set(value: string) {
-        emit("update:artifact_link_type", value);
+    set(value: string[]) {
+        emit("update:artifact_link_types", value);
     },
 });
 </script>

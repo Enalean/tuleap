@@ -10,9 +10,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "All link types"
-msgstr "Tous les types de lien"
-
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -33,6 +30,9 @@ msgstr "Pour chaque niveau : "
 
 msgid "Link type"
 msgstr "Type de lien"
+
+msgid "No type"
+msgstr "Sans nature"
 
 msgid "Personal report"
 msgid_plural "Personal reports"
