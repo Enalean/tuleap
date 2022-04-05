@@ -3,7 +3,14 @@ const fs = require('fs')
 const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", "utf-8"));
 
 module.exports = {
-    extends: ["stylelint-config-sass-guidelines", "stylelint-config-property-sort-order-smacss", "stylelint-config-standard-scss", "stylelint-config-html/vue", "stylelint-prettier/recommended"],
+    extends: [
+        "stylelint-config-sass-guidelines",
+        "stylelint-config-property-sort-order-smacss",
+        "stylelint-config-standard-scss",
+        "stylelint-config-recommended-vue/scss",
+        "stylelint-config-html/vue",
+        "stylelint-prettier/recommended",
+    ],
     reportNeedlessDisables: true,
     reportInvalidScopeDisables: true,
     rules: {
@@ -59,7 +66,7 @@ module.exports = {
             "fr"
         ],
         // Plugins
-        "order/properties-alphabetical-order": null,
+        "order/properties-alphabetical-order": null, // Overridden by stylelint-config-property-sort-order-smacss
         "scss/at-else-empty-line-before": ["never"],
         "scss/dollar-variable-colon-space-before": null,
         "scss/operator-no-unspaced": true,

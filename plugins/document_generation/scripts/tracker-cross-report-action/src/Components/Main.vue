@@ -34,7 +34,6 @@ defineProps<{ properties: GlobalExportProperties }>();
 <style lang="scss" scoped>
 @use "sass:meta";
 
-/* stylelint-disable-next-line selector-pseudo-class-no-unknown -- Stylelint does not know about the Vue :deep() selector */
 .tracker-cross-report-document-modal :deep() {
     @include meta.load-css("@tuleap/tlp/src/scss/components/typography");
     @include meta.load-css("@tuleap/tlp/src/scss/components/buttons");
