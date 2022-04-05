@@ -23,20 +23,28 @@
         <textarea
             class="tlp-textarea"
             id="document-update-changelog"
+            data-test="document-update-changelog"
             name="changelog"
             v-bind:placeholder="`${$gettext(
                 'Please describe the changes of the new version here'
             )}`"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="oninput"
         ></textarea>
     </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import emitter from "../../../../helpers/emitter";
 @Component
 export default class ChangelogProperty extends Vue {
     @Prop({ required: true })
     readonly value!: string;
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLTextAreaElement) {
+            emitter.emit("update-changelog-property", $event.target.value);
+        }
+    }
 }
 </script>

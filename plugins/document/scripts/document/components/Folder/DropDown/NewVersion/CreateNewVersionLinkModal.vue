@@ -59,6 +59,7 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "CreateNewVersionLinkModal",
@@ -96,6 +97,12 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
         this.registerEvents();
+        emitter.on("update-version-title", this.updateTitleValue);
+        emitter.on("update-changelog-property", this.updateChangelogValue);
+    },
+    beforeDestroy() {
+        emitter.off("update-version-title", this.updateTitleValue);
+        emitter.off("update-changelog-property", this.updateChangelogValue);
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -144,6 +151,12 @@ export default {
                 this.link_model = null;
                 this.modal.hide();
             }
+        },
+        updateTitleValue(title) {
+            this.version.title = title;
+        },
+        updateChangelogValue(changelog) {
+            this.version.changelog = changelog;
         },
     },
 };

@@ -59,6 +59,7 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "CreateNewVersionEmbeddedFileModal",
@@ -95,6 +96,12 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
         this.registerEvents();
+        emitter.on("update-version-title", this.updateTitleValue);
+        emitter.on("update-changelog-property", this.updateChangelogValue);
+    },
+    beforeDestroy() {
+        emitter.off("update-version-title", this.updateTitleValue);
+        emitter.off("update-changelog-property", this.updateChangelogValue);
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -147,6 +154,12 @@ export default {
         },
         hide() {
             this.$emit("hidden");
+        },
+        updateTitleValue(title) {
+            this.version.title = title;
+        },
+        updateChangelogValue(changelog) {
+            this.version.changelog = changelog;
         },
     },
 };

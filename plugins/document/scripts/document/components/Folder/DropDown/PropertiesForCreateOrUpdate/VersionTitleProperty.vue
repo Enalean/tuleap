@@ -26,10 +26,11 @@
             type="text"
             class="tlp-input"
             id="document-update-version-title"
+            data-test="document-update-version-title"
             name="version_title"
             v-bind:placeholder="`${$gettext('My new version name')}`"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="oninput"
             ref="input"
         />
     </div>
@@ -37,6 +38,7 @@
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue } from "vue-property-decorator";
+import emitter from "../../../../helpers/emitter";
 
 @Component
 export default class VersionTitleProperty extends Vue {
@@ -47,6 +49,12 @@ export default class VersionTitleProperty extends Vue {
 
     mounted(): void {
         this.input.focus();
+    }
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLInputElement) {
+            emitter.emit("update-version-title", $event.target.value);
+        }
     }
 }
 </script>
