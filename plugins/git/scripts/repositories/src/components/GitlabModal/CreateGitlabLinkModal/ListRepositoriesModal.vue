@@ -179,7 +179,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 import { namespace } from "vuex-class";
 import type { GitlabProject, GitlabDataWithPath } from "../../../type";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { FetchWrapperError } from "tlp";
 import type { GitLabRepositoryCreation } from "../../../gitlab/gitlab-api-querier";
 
 const gitlab = namespace("gitlab");
