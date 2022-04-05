@@ -16,7 +16,9 @@
             <document-global-property-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
-            />
+            >
+                <preview-filename v-bind:item="item" />
+            </document-global-property-for-create>
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
@@ -35,6 +37,7 @@ import { TYPE_FILE } from "../../../../constants";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
+import PreviewFilename from "../../ModalCommon/PreviewFilename.vue";
 import emitter from "../../../../helpers/emitter";
 import {
     useActions,
@@ -79,6 +82,8 @@ onMounted((): void => {
         modal.value.show();
     }
     emitter.on("update-status-property", updateStatusValue);
+    emitter.on("update-title-property", updateTitleValue);
+    emitter.on("update-description-property", updateDescriptionValue);
     transformStatusPropertyForItemCreation(item.value, props.parent, is_status_property_used.value);
 });
 
@@ -87,6 +92,8 @@ onBeforeUnmount((): void => {
         modal.value.removeEventListener("tlp-modal-hidden", close);
     }
     emitter.off("update-status-property", updateStatusValue);
+    emitter.off("update-title-property", updateTitleValue);
+    emitter.off("update-description-property", updateDescriptionValue);
 });
 
 function getDefaultItem(): DefaultFileItem {
@@ -95,7 +102,7 @@ function getDefaultItem(): DefaultFileItem {
         description: "",
         type: TYPE_FILE,
         file_properties: {
-            file: {},
+            file: props.droppedFile,
         },
         status: "none",
     };
@@ -109,13 +116,8 @@ function close(): void {
     }
 }
 
-function updateStatusValue(event: string) {
-    item.value.status = event;
-}
-
 async function createNewFile(): Promise<void> {
     is_loading.value = true;
-    item.value.file_properties.file = props.droppedFile;
     resetModalError({});
     await createNewItem([item.value, props.parent, current_folder.value]);
     is_loading.value = false;
@@ -124,6 +126,18 @@ async function createNewFile(): Promise<void> {
         item.value = getDefaultItem();
         close();
     }
+}
+
+function updateStatusValue(status: string) {
+    item.value.status = status;
+}
+
+function updateTitleValue(title: string): void {
+    item.value.title = title;
+}
+
+function updateDescriptionValue(description: string): void {
+    item.value.description = description;
 }
 </script>
 <script lang="ts">
