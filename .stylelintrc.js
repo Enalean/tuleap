@@ -4,6 +4,7 @@ const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", "utf-8"));
 
 module.exports = {
     extends: [
+        "stylelint-config-recommended",
         "stylelint-config-sass-guidelines",
         "stylelint-config-property-sort-order-smacss",
         "stylelint-config-standard-scss",
@@ -77,5 +78,13 @@ module.exports = {
         "max-line-length": null, // Managed by Prettier
         "indentation": null, // Managed by Prettier
         "prettier/prettier": [true, prettier_config]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["**/*.scss"],
+            "rules": {
+                "function-no-unknown": null, // Stylelint thinks all SCSS functions (like map.get) are unknown. It's strangely not overridden by scss configs.
+            }
+        }
+    ]
 };
