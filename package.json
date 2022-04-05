@@ -57,11 +57,11 @@
     "prettier": "^2.6.0",
     "sass": "^1.49.9",
     "sass-loader": "^12.4.0",
-    "stylelint": "^14.2.0",
+    "stylelint": "^14.6.1",
     "stylelint-config-html": "^1.0.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-property-sort-order-smacss": "^8.0.0",
-    "stylelint-config-recommended-vue": "^1.1.0",
+    "stylelint-config-recommended-vue": "^1.4.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-config-standard-scss": "^3.0.0",
     "stylelint-prettier": "^2.0.0",
@@ -90,7 +90,7 @@
     "typecheck": "turbo run typecheck",
     "build": "turbo run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
-    "stylelint": "stylelint --config .stylelintrc.js",
+    "stylelint": "stylelint --config .stylelintrc.js **/*.{vue,scss}",
     "test": "turbo run test --concurrency=2 -- -- --verbose=false"
   },
   "packageManager": "pnpm@6.25.0"
