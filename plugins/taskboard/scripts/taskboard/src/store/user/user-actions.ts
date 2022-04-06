@@ -20,7 +20,7 @@
 import type { ActionContext } from "vuex";
 import type { UserPreference, UserPreferenceValue, UserState } from "./type";
 import type { RootState } from "../type";
-import { del, patch } from "tlp";
+import { del, patch } from "@tuleap/tlp-fetch";
 
 export async function setPreference(
     context: ActionContext<UserState, RootState>,

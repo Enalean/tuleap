@@ -19,7 +19,7 @@
 import type { ActionContext } from "vuex";
 import type { RootState } from "../../type";
 import type { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
-import { get, patch, post, put } from "tlp";
+import { get, patch, post, put } from "@tuleap/tlp-fetch";
 import type { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {
     getPostArtifactBody,

@@ -57,7 +57,7 @@ import Vue from "vue";
 import type { MilestoneData, TestManagementCampaign } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action } from "vuex-class";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../helpers/test-management-helper";
 
 @Component({

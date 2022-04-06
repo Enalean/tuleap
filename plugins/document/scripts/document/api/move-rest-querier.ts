@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch, post } from "tlp";
+import { patch, post } from "@tuleap/tlp-fetch";
 import type { Item } from "../type";
 
 export {

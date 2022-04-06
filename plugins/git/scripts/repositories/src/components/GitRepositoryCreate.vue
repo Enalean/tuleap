@@ -100,7 +100,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { createModal, FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { createModal } from "tlp";
 import type { Modal } from "tlp";
 import { getProjectId } from "../repository-list-presenter";
 import { postRepository } from "../api/rest-querier";

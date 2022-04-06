@@ -28,7 +28,7 @@ import {
     getAllSprints,
 } from "./rest-querier";
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type {
     ArtifactMilestone,
@@ -38,8 +38,6 @@ import type {
     ParametersRequestWithId,
     TestManagementCampaign,
 } from "../type";
-
-jest.mock("tlp");
 
 describe("getProject() -", () => {
     const limit = 50,
@@ -55,7 +53,7 @@ describe("getProject() -", () => {
             } as MilestoneData,
         ];
 
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
         tlpRecursiveGetMock.mockReturnValue(Promise.resolve(milestones));
 
         const result = await getCurrentMilestones({
@@ -102,7 +100,7 @@ describe("getProject() -", () => {
             },
         ];
 
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
         tlpRecursiveGetMock.mockReturnValue(Promise.resolve(user_stories));
 
         const result = await getMilestonesContent(milestone_id, {
@@ -143,7 +141,7 @@ describe("getProject() -", () => {
             },
         ];
 
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
         tlpRecursiveGetMock.mockReturnValue(Promise.resolve(backlog));
 
         const result = await getMilestonesBacklog(milestone_id, {
@@ -178,7 +176,7 @@ describe("getProject() -", () => {
             values: [{ value: burndown_data }, {}],
         } as ArtifactMilestone;
 
-        const tlpGetMock = jest.spyOn(tlp, "get");
+        const tlpGetMock = jest.spyOn(tlp_fetch, "get");
 
         mockFetchSuccess(tlpGetMock, {
             headers: {
@@ -209,7 +207,7 @@ describe("getProject() -", () => {
             } as MilestoneData,
         ];
 
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
         tlpRecursiveGetMock.mockReturnValue(Promise.resolve(sprints));
 
         const result = await getAllSprints(milestone_id, { limit: 1, offset: 0 });
@@ -228,7 +226,7 @@ describe("getProject() -", () => {
     });
 
     it("the REST API will be queried and the past milestones returned", async () => {
-        const tlpGetMock = jest.spyOn(tlp, "get");
+        const tlpGetMock = jest.spyOn(tlp_fetch, "get");
 
         mockFetchSuccess(tlpGetMock, {
             headers: {
@@ -242,9 +240,12 @@ describe("getProject() -", () => {
         });
 
         const result = await getNbOfPastRelease({ project_id } as ParametersRequestWithId);
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/milestones", {
-            params: { limit: 1, offset: 0, query },
-        });
+        expect(tlp_fetch.get).toHaveBeenCalledWith(
+            "/api/v1/projects/" + project_id + "/milestones",
+            {
+                params: { limit: 1, offset: 0, query },
+            }
+        );
 
         expect(result).toBe(10);
     });
@@ -256,7 +257,7 @@ describe("getProject() -", () => {
                 id: 10,
             } as MilestoneData;
 
-            const tlpGetMock = jest.spyOn(tlp, "get");
+            const tlpGetMock = jest.spyOn(tlp_fetch, "get");
 
             mockFetchSuccess(tlpGetMock, {
                 headers: {
@@ -271,9 +272,12 @@ describe("getProject() -", () => {
             });
 
             const result = await getLastRelease(project_id, 100);
-            expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/milestones", {
-                params: { limit: 1, offset: 99, query },
-            });
+            expect(tlp_fetch.get).toHaveBeenCalledWith(
+                "/api/v1/projects/" + project_id + "/milestones",
+                {
+                    params: { limit: 1, offset: 99, query },
+                }
+            );
 
             expect(result).toEqual(last_release);
         });
@@ -291,7 +295,7 @@ describe("getProject() -", () => {
             { nb_of_notrun: 2 } as TestManagementCampaign,
         ];
 
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
         tlpRecursiveGetMock.mockReturnValue(Promise.resolve(testmanagement_campaigns));
 
         const result = await getTestManagementCampaigns(milestone_id, {

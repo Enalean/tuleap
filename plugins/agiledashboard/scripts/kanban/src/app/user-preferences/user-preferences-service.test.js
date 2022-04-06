@@ -20,10 +20,8 @@
 import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 describe(`UserPreferencesService`, () => {
     let UserPreferencesService, $q, wrapPromise;
@@ -50,7 +48,7 @@ describe(`UserPreferencesService`, () => {
 
     describe(`setPreference`, () => {
         it(`will call PATCH on user's preferences`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = UserPreferencesService.setPreference(

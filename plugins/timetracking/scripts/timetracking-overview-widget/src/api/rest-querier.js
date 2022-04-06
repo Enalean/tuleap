@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, patch } from "tlp";
+import { get, put, patch } from "@tuleap/tlp-fetch";
 import { formatDatetimeToISO } from "../../../time-formatters";
 
 export {

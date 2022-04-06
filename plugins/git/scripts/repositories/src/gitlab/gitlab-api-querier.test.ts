@@ -24,13 +24,11 @@ import {
     patchGitlabRepository,
     postGitlabRepository,
 } from "./gitlab-api-querier";
-import * as tlp from "tlp";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
 import type { Repository } from "../type";
 import type { GitLabRepositoryUpdate } from "./gitlab-api-querier";
-
-jest.mock("tlp");
 
 describe("Gitlab Api Querier", () => {
     it("When api is called, Then the request with correct headers is sent", async () => {
@@ -39,12 +37,15 @@ describe("Gitlab Api Querier", () => {
             token: "azerty1234",
         };
 
+        const tlp_get_spy = jest.spyOn(tlp_fetch, "get");
+        mockFetchSuccess(tlp_get_spy);
+
         const headers = new Headers();
         headers.append("Authorization", "Bearer " + credentials.token);
 
         await getAsyncGitlabRepositoryList(credentials);
 
-        expect(tlp.get).toHaveBeenCalledWith("https://example.com", {
+        expect(tlp_get_spy).toHaveBeenCalledWith("https://example.com", {
             cache: "default",
             headers,
             mode: "cors",
@@ -56,7 +57,7 @@ describe("Gitlab Api Querier", () => {
             return new Promise<void>((done) => {
                 const repositories = [{ id: 37 } as Repository, { id: 91 } as Repository];
 
-                jest.spyOn(tlp, "recursiveGet").mockImplementation(
+                jest.spyOn(tlp_fetch, "recursiveGet").mockImplementation(
                     <T>(
                         url: string,
                         init?: RecursiveGetInit<Array<Repository>, T>
@@ -85,7 +86,7 @@ describe("Gitlab Api Querier", () => {
         it("Given integration id, Then api is queried to delete", async () => {
             const integration_id = 1;
 
-            const tlpDelete = jest.spyOn(tlp, "del");
+            const tlpDelete = jest.spyOn(tlp_fetch, "del");
             mockFetchSuccess(tlpDelete);
 
             await deleteIntegrationGitlab({ integration_id: integration_id });
@@ -114,7 +115,7 @@ describe("Gitlab Api Querier", () => {
                 allow_artifact_closure,
             });
 
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost);
 
             await postGitlabRepository({
@@ -147,7 +148,7 @@ describe("Gitlab Api Querier", () => {
 
             const body_stringify = JSON.stringify(body);
 
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             await patchGitlabRepository(gitlab_integration_id, body);
@@ -169,7 +170,7 @@ describe("Gitlab Api Querier", () => {
 
             const body_stringify = JSON.stringify(body);
 
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             await patchGitlabRepository(gitlab_integration_id, body);
@@ -191,7 +192,7 @@ describe("Gitlab Api Querier", () => {
 
             const body_stringify = JSON.stringify(body);
 
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             await patchGitlabRepository(gitlab_integration_id, body);

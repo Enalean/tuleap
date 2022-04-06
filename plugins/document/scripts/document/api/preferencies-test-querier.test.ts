@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 import {
@@ -26,8 +26,6 @@ import {
     patchUserPreferenciesForFolderInProject,
 } from "./preferencies-rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-
-jest.mock("tlp");
 
 describe("User preferences", () => {
     const user_id = 102;
@@ -42,7 +40,8 @@ describe("User preferences", () => {
 
     describe("patchUserPreferenciesForFolderInProject() -", () => {
         it("should set the current user's preferencies for a given folder on 'expanded'", async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+            mockFetchSuccess(tlpPatch);
             await patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
 
             expect(tlpPatch).toHaveBeenCalledWith("/api/users/102/preferences", {
@@ -57,7 +56,8 @@ describe("User preferences", () => {
 
     describe("deleteUserPreferenciesForFolderInProject() -", () => {
         it("should delete the current user's preferencies for a given folder (e.g collapsed)", async () => {
-            const tlpDel = jest.spyOn(tlp, "del");
+            const tlpDel = jest.spyOn(tlp_fetch, "del");
+            mockFetchSuccess(tlpDel);
             await deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
 
             expect(tlpDel).toHaveBeenCalledWith(
@@ -68,7 +68,7 @@ describe("User preferences", () => {
 
     describe("addUserLegacyUIPreferency() -", () => {
         it("should set the current user's preferencies to old UI", async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch, { return_json: JSON.stringify({ id: 10 }) });
 
             await addUserLegacyUIPreferency(user_id, project_id);

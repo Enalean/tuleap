@@ -20,8 +20,8 @@
 import type { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type";
 import type { ActionContext } from "vuex";
 import type { RootState } from "../type";
-import type { FetchWrapperError } from "tlp";
-import { recursiveGet } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { recursiveGet } from "@tuleap/tlp-fetch";
 import type {
     BacklogItem,
     BacklogItemFromREST,

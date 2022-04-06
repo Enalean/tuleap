@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "tlp";
+import { patch } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";
 import type { RootState } from "../type";
 import type {

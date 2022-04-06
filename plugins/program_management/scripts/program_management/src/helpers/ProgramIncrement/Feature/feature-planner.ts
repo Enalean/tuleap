@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "tlp";
+import { patch } from "@tuleap/tlp-fetch";
 import type { FeaturePlanningChangeInProgramIncrement } from "../../feature-reordering";
 import { formatOrderPositionForPatch } from "../../order-position-for-patch-formatter";
 

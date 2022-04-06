@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, patch } from "tlp";
+import { get, patch } from "@tuleap/tlp-fetch";
 import { augment } from "./backlog-item-factory";
 
 export default BacklogItemService;

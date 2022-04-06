@@ -27,14 +27,12 @@ import {
     getCSVReport,
 } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("rest-querier", () => {
     describe("getReport() -", () => {
         it("the REST API will be queried and the report returned", async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             const report = {
                 trackers: [{ id: 63 }, { id: 100 }],
                 expert_query: '@title = "bla"',
@@ -52,7 +50,7 @@ describe("rest-querier", () => {
 
     describe("getReportContent() -", () => {
         it("the artifacts and the total number of artifacts will be returned", async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             const artifacts = [{ id: 100 }, { id: 33 }];
             const total = "91";
             const headers = {
@@ -77,7 +75,7 @@ describe("rest-querier", () => {
 
     describe("getQueryResult() -", () => {
         it("the tracker ids and the expert query will be submitted to the REST API, and the artifacts and the total number of artifacts will be returned", async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             const artifacts = [{ id: 26 }, { id: 89 }];
             const total = "69";
             const headers = {
@@ -107,7 +105,7 @@ describe("rest-querier", () => {
 
         describe("updateReport() -", () => {
             it("the REST API will be queried and the report returned", async () => {
-                const tlpPut = jest.spyOn(tlp, "put");
+                const tlpPut = jest.spyOn(tlp_fetch, "put");
                 const expert_query = '@title = "dolous"';
                 const trackers_id = [8, 3, 67];
                 mockFetchSuccess(tlpPut, {
@@ -129,7 +127,7 @@ describe("rest-querier", () => {
 
         describe("getSortedProjectsIAmMemberOf() -", () => {
             it("the REST API will be queried and the list of projects will be sorted and returned", async () => {
-                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+                const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
                 const projects = [
                     { id: 765, label: "physicianless" },
                     { id: 239, label: "spur" },
@@ -159,7 +157,7 @@ describe("rest-querier", () => {
             });
 
             it("the REST API will be queried and the list of trackers returned", async () => {
-                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+                const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
                 const trackers = [{ id: 28 }, { id: 50 }];
                 tlpRecursiveGet.mockResolvedValue(trackers);
 
@@ -181,7 +179,7 @@ describe("rest-querier", () => {
             });
 
             it("When there is only one page then it will return the first request", async () => {
-                const tlpGet = jest.spyOn(tlp, "get");
+                const tlpGet = jest.spyOn(tlp_fetch, "get");
                 const csv = `"id"\r\n65\r\n88\r\n`;
 
                 tlpGet.mockReturnValue(
@@ -209,7 +207,7 @@ describe("rest-querier", () => {
             });
 
             it("When there are two pages, then it will drop the header line of the second request, concat the two requests and return them", async () => {
-                const tlpGet = jest.spyOn(tlp, "get");
+                const tlpGet = jest.spyOn(tlp_fetch, "get");
                 const csv = `"id"\r\n61\r\n26\r\n`;
 
                 tlpGet.mockReturnValue(

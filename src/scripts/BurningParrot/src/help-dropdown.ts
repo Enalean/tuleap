@@ -18,7 +18,8 @@
  */
 
 import type { Modal, Dropdown } from "tlp";
-import { createDropdown, createModal, post } from "tlp";
+import { createDropdown, createModal } from "tlp";
+import { post } from "@tuleap/tlp-fetch";
 import { actionsOnHelpMenuOpened } from "../../user/actions-help-menu-opened";
 
 export function initHelpDropdown(): void {

@@ -29,10 +29,10 @@ import type {
 import type { RootState } from "../type";
 import type { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
 import { AFTER, BEFORE } from "../../type";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-fetch");
 
 function createElement(): HTMLElement {
     const local_document = document.implementation.createHTMLDocument();
@@ -374,7 +374,7 @@ describe(`drag-drop-actions`, () => {
         } as ReorderCardsPayload;
 
         it("The new position of the card is stored and the cards are reordered", async () => {
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
             await actions.reorderCardsInCell(context, payload);
 
@@ -397,7 +397,7 @@ describe(`drag-drop-actions`, () => {
         it("A modal opens on error", async () => {
             const error = new Error();
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             tlpPatchMock.mockRejectedValue(error);
 
             await actions.reorderCardsInCell(context, payload);
@@ -434,7 +434,7 @@ describe(`drag-drop-actions`, () => {
             } as Swimlane;
             const payload: MoveCardsPayload = { swimlane, column, card: card_to_move };
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.moveCardToCell(context, payload);
@@ -468,7 +468,7 @@ describe(`drag-drop-actions`, () => {
             };
             const payload: MoveCardsPayload = { swimlane, column, card: card_to_move };
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.moveCardToCell(context, payload);
@@ -500,7 +500,7 @@ describe(`drag-drop-actions`, () => {
             };
             const payload: MoveCardsPayload = { swimlane, column, card: card_to_move, position };
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.moveCardToCell(context, payload);
@@ -534,7 +534,7 @@ describe(`drag-drop-actions`, () => {
 
             const error = new Error();
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             tlpPatchMock.mockRejectedValue(error);
 
             await actions.moveCardToCell(context, payload);

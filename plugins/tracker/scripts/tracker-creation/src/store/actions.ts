@@ -18,7 +18,7 @@
  *
  */
 
-import { post } from "tlp";
+import { post } from "@tuleap/tlp-fetch";
 import type { Credentials, ProjectList, ProjectTrackerPayload, TrackerList, State } from "./type";
 import type { ActionContext } from "vuex";
 

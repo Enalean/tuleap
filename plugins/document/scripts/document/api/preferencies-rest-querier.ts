@@ -18,7 +18,7 @@
  */
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
-import { del, get, patch } from "tlp";
+import { del, get, patch } from "@tuleap/tlp-fetch";
 
 export {
     patchUserPreferenciesForFolderInProject,

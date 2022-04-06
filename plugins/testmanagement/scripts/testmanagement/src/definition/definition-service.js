@@ -18,7 +18,7 @@
  */
 
 import { merge } from "lodash";
-import { get, recursiveGet } from "tlp";
+import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import { UNCATEGORIZED } from "./definition-constants.js";
 
 import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";

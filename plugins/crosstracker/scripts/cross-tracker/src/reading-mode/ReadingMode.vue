@@ -68,7 +68,7 @@ import { Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import Vue from "vue";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({
     components: { TrackerListReadingMode },

@@ -37,7 +37,7 @@ import {
     isWiki,
 } from "../helpers/type-check-helper";
 import { getErrorMessage } from "./actions-helpers/handle-errors";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,

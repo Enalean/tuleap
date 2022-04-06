@@ -17,14 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import type { GitRepositoryRecursiveGet } from "./rest-querier";
 import { postRepository, getRepositoryList, getForkedRepositoryList } from "./rest-querier";
 import type { Repository } from "../type";
 import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
-
-jest.mock("tlp");
 
 describe("API querier", () => {
     describe("getRepositoryList", () => {
@@ -35,7 +33,7 @@ describe("API querier", () => {
                     repositories,
                 };
                 const tlpRecursiveGet = jest
-                    .spyOn(tlp, "recursiveGet")
+                    .spyOn(tlp_fetch, "recursiveGet")
                     .mockImplementation(
                         <T>(
                             url: string,
@@ -82,7 +80,7 @@ describe("API querier", () => {
                     repositories,
                 };
                 const tlpRecursiveGet = jest
-                    .spyOn(tlp, "recursiveGet")
+                    .spyOn(tlp_fetch, "recursiveGet")
                     .mockImplementation(
                         <T>(
                             url: string,
@@ -128,7 +126,7 @@ describe("API querier", () => {
             const project_id = 6;
             const repository_name = "martial/rifleshot";
 
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost);
 
             await postRepository(project_id, repository_name);

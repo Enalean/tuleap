@@ -18,16 +18,14 @@
  */
 
 import type { Card, Swimlane } from "../../type";
-import * as tlp from "tlp";
-import type { RecursiveGetInit } from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
+import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
 import * as actions from "./swimlane-actions";
 import { loadChildrenCards } from "./swimlane-actions";
 import type { ActionContext } from "vuex";
 import type { RefreshCardActionPayload, SwimlaneState } from "./type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { RootState } from "../type";
-
-jest.mock("tlp");
 
 describe("Swimlane state actions", () => {
     let context: ActionContext<SwimlaneState, RootState>;
@@ -49,7 +47,7 @@ describe("Swimlane state actions", () => {
                 },
             } as RootState,
         } as unknown as ActionContext<SwimlaneState, RootState>;
-        tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
     });
 
     describe(`loadSwimlanes`, () => {
@@ -65,7 +63,7 @@ describe("Swimlane state actions", () => {
 
         it("Stores the new swimlanes", async () => {
             tlpRecursiveGetMock = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockImplementation(
                     <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
                         if (!init || !init.getCollectionCallback) {
@@ -116,7 +114,7 @@ describe("Swimlane state actions", () => {
                 has_children: false,
             } as Card;
             tlpRecursiveGetMock = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockImplementation(
                     <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
                         if (!init || !init.getCollectionCallback) {
@@ -210,7 +208,7 @@ describe("Swimlane state actions", () => {
         it(`Adds the new children cards to the swimlane in the store`, async () => {
             const children_cards = [{ id: 43 } as Card, { id: 44 } as Card];
             tlpRecursiveGetMock = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockImplementation(
                     <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<Array<T>> => {
                         if (!init || !init.getCollectionCallback) {
@@ -245,7 +243,7 @@ describe("Swimlane state actions", () => {
                 card: { id: 69 } as Card,
             } as Swimlane;
 
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
+            const tlpDeleteMock = jest.spyOn(tlp_fetch, "del");
             mockFetchSuccess(tlpDeleteMock, {});
 
             await actions.expandSwimlane(context, swimlane);
@@ -264,7 +262,7 @@ describe("Swimlane state actions", () => {
                 card: { id: 69 } as Card,
             } as Swimlane;
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.collapseSwimlane(context, swimlane);
@@ -294,7 +292,7 @@ describe("Swimlane state actions", () => {
                     label: "Refreshed solo card",
                     has_children: false,
                 } as Card;
-                const tlpGetMock = jest.spyOn(tlp, "get");
+                const tlpGetMock = jest.spyOn(tlp_fetch, "get");
                 mockFetchSuccess(tlpGetMock, { return_json: refreshed_card });
 
                 await actions.refreshCardAndParent(context, payload);
@@ -310,7 +308,7 @@ describe("Swimlane state actions", () => {
             it(`when there is an error, it will open a modal`, async () => {
                 const error = new Error();
 
-                const tlpGetMock = jest.spyOn(tlp, "get");
+                const tlpGetMock = jest.spyOn(tlp_fetch, "get");
                 tlpGetMock.mockRejectedValue(error);
 
                 await actions.refreshCardAndParent(context, payload);
@@ -340,7 +338,7 @@ describe("Swimlane state actions", () => {
                     label: "Refreshed parent card",
                     has_children: true,
                 } as Card;
-                const tlpGetMock = jest.spyOn(tlp, "get");
+                const tlpGetMock = jest.spyOn(tlp_fetch, "get");
                 tlpGetMock.mockResolvedValueOnce({
                     json: () => Promise.resolve(refreshed_child_card),
                 } as Response);
@@ -368,7 +366,7 @@ describe("Swimlane state actions", () => {
             it(`when there is an error, it will open a modal`, async () => {
                 const error = new Error();
 
-                const tlpGetMock = jest.spyOn(tlp, "get");
+                const tlpGetMock = jest.spyOn(tlp_fetch, "get");
                 tlpGetMock.mockRejectedValue(error);
 
                 await actions.refreshCardAndParent(context, payload);

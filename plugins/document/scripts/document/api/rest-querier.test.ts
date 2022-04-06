@@ -44,7 +44,7 @@ import {
 } from "./rest-querier";
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type {
     Embedded,
     FileProperties,
@@ -58,7 +58,7 @@ import type {
 } from "../type";
 import { buildAdvancedSearchParams } from "../helpers/build-advanced-search-params";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("rest-querier", () => {
     describe("getItem()", () => {
@@ -72,7 +72,7 @@ describe("rest-querier", () => {
                 },
                 last_update_date: "2018-08-21T17:01:49+02:00",
             } as Item;
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: item });
 
             const result = await getItem(3);
@@ -95,7 +95,7 @@ describe("rest-querier", () => {
                     last_update_date: "2018-08-21T17:01:49+02:00",
                 },
             } as ProjectService;
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: service });
 
             const result = await getDocumentManagerServiceInformation(891);
@@ -127,7 +127,7 @@ describe("rest-querier", () => {
                     last_update_date: "2018-10-03T11:16:11+02:00",
                 } as Folder,
             ];
-            const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+            const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
             tlpRecursiveGet.mockResolvedValue(items);
 
             const result = await getFolderContent(3);
@@ -165,7 +165,7 @@ describe("rest-querier", () => {
                     last_update_date: "2018-10-03T11:16:11+02:00",
                 } as Folder,
             ];
-            const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+            const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
             tlpRecursiveGet.mockResolvedValue(parents);
 
             const result = await getParents(3);
@@ -192,7 +192,7 @@ describe("rest-querier", () => {
                 name: "stuff.doc",
                 size: 123,
             } as File;
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
 
             mockFetchSuccess(tlpPost, { return_json: JSON.stringify(JSON.stringify({ id: 10 })) });
 
@@ -208,7 +208,7 @@ describe("rest-querier", () => {
                 description: "",
                 type: "folder",
             });
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
 
             await addNewFolder(
@@ -233,7 +233,7 @@ describe("rest-querier", () => {
                 description: "",
                 type: "file",
             } as ItemFile);
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
 
             await addNewFile(
@@ -259,7 +259,7 @@ describe("rest-querier", () => {
                 description: "",
                 type: "empty",
             });
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
 
             await addNewEmpty(
@@ -285,7 +285,7 @@ describe("rest-querier", () => {
                 description: "",
                 type: "wiki",
             });
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
 
             await addNewWiki(
@@ -312,7 +312,7 @@ describe("rest-querier", () => {
                 type: "link",
                 link_properties: { link_url: "http://example.test" },
             });
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
 
             await addNewLink(
@@ -346,7 +346,7 @@ describe("rest-querier", () => {
             const should_lock_file = true;
             const approval_table_action = null;
 
-            mockFetchSuccess(jest.spyOn(tlp, "post"));
+            mockFetchSuccess(jest.spyOn(tlp_fetch, "post"));
 
             await postEmbeddedFile(
                 item,
@@ -372,7 +372,7 @@ describe("rest-querier", () => {
             const change_log = "change title to nsfw";
             const should_lock_file = true;
 
-            mockFetchSuccess(jest.spyOn(tlp, "post"));
+            mockFetchSuccess(jest.spyOn(tlp_fetch, "post"));
 
             await postWiki(item, page_name, version_title, change_log, should_lock_file);
         });
@@ -392,7 +392,7 @@ describe("rest-querier", () => {
             const should_lock_file = true;
             const approval_table_action = null;
 
-            mockFetchSuccess(jest.spyOn(tlp, "post"));
+            mockFetchSuccess(jest.spyOn(tlp_fetch, "post"));
 
             await postLinkVersion(
                 item,
@@ -407,7 +407,7 @@ describe("rest-querier", () => {
 
     describe("getProjectUserGroups()", () => {
         it("Given a project ID, then the REST API will be queried with it to retrieve all user groups", async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: [] });
 
             const result = await getProjectUserGroups(102);
@@ -421,7 +421,7 @@ describe("rest-querier", () => {
 
     describe("searchInFolder", () => {
         it("should return the results with pagination information", async () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             const items = [{ id: 1 } as ItemSearchResult, { id: 2 } as ItemSearchResult];
             mockFetchSuccess(tlpPost, {
                 return_json: items,
@@ -547,7 +547,7 @@ describe("rest-querier", () => {
         });
 
         it("should exclude type from search when no specific item type is given", async () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             const items = [{ id: 1 } as ItemSearchResult, { id: 2 } as ItemSearchResult];
             mockFetchSuccess(tlpPost, {
                 return_json: items,

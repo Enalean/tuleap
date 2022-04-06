@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { retrieveArtifacts } from "./artifacts-retriever";
 import type { Artifact } from "./artifact";
 
-jest.mock("tlp");
-
 describe("artifacts-retriever", () => {
     it("Retrieves all artifacts", async () => {
-        const spyTlpGet = jest.spyOn(tlp, "get");
+        const spyTlpGet = jest.spyOn(tlp_fetch, "get");
 
         const expected_artifacts = [{ id: 12 } as Artifact, { id: 35 } as Artifact];
 

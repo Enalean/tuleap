@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import SearchResultError from "./SearchResultError.vue";
 import localVue from "../../../helpers/local-vue";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("SearchResultError", () => {
     it("should display error message", () => {

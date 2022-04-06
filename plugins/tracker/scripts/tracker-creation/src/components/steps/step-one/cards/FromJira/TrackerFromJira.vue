@@ -48,7 +48,7 @@ import { Component } from "vue-property-decorator";
 import type { Credentials, JiraImportData, ProjectList } from "../../../../../store/type";
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import TrackerFromJiraServer from "./TrackerFromJiraServer.vue";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({
     components: { TrackerFromJiraServer, TrackerFromJiraProject },

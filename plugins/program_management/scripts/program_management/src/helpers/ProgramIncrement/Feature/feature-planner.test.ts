@@ -1,14 +1,14 @@
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { planElementInProgramIncrement, reorderElementInProgramIncrement } from "./feature-planner";
 import type { Feature } from "../../../type";
 import { AFTER } from "../../feature-reordering";
-
-jest.mock("tlp");
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("Feature planner", () => {
     describe("planElementInProgramIncrement", () => {
         it("Plan feature with order", async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+            mockFetchSuccess(tlpPatch);
             await planElementInProgramIncrement({
                 to_program_increment_id: 4,
                 feature: { id: 5 } as Feature,
@@ -26,7 +26,8 @@ describe("Feature planner", () => {
             });
         });
         it("Plan feature without order", async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+            mockFetchSuccess(tlpPatch);
             await planElementInProgramIncrement({
                 to_program_increment_id: 4,
                 feature: { id: 5 } as Feature,
@@ -61,7 +62,8 @@ describe("Feature planner", () => {
         });
 
         it("When formatted order is not null, Then request is done", async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+            mockFetchSuccess(tlpPatch);
 
             await reorderElementInProgramIncrement({
                 to_program_increment_id: 1,

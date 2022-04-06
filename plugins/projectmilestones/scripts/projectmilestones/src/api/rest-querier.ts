@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, recursiveGet } from "tlp";
+import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import type {
     MilestoneContent,
     MilestoneData,

@@ -19,12 +19,10 @@
  */
 
 import type { ActionContext } from "vuex";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Credentials, State } from "./type";
 import { getJiraProjectList } from "./actions";
-
-jest.mock("tlp");
 
 describe("getJiraProjectList", () => {
     let context: ActionContext<State, State>;
@@ -38,7 +36,7 @@ describe("getJiraProjectList", () => {
             } as State,
         } as unknown as ActionContext<State, State>;
 
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
 
         mockFetchSuccess(tlpPost, { return_json: credentials });
 

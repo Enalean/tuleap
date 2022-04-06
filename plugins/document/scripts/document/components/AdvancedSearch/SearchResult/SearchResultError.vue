@@ -32,7 +32,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import type { FetchWrapperError } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 interface I18NWrapperError {
     readonly error: {

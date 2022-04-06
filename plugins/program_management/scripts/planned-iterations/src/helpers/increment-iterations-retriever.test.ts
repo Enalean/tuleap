@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { getIncrementIterations } from "./increment-iterations-retriever";
 
 import type { Iteration } from "../type";
 
-jest.mock("tlp");
-
 describe("increment-iterations-retriever", () => {
     it("retrieves the iterations of a given increment", async () => {
-        const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
+        const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
         const increment_iterations: Iteration[] = [
             {
                 id: 1279,

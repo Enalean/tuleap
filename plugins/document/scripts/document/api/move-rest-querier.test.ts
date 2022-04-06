@@ -18,7 +18,7 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
     copyEmbedded,
     copyEmpty,
@@ -34,14 +34,12 @@ import {
     moveWiki,
 } from "./move-rest-querier";
 
-jest.mock("tlp");
-
 describe("Move item", () => {
     const moved_item_id = 147;
     const destination_folder_id = 852;
 
     it("Move a file", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
         await moveFile(moved_item_id, destination_folder_id);
 
@@ -52,7 +50,7 @@ describe("Move item", () => {
     });
 
     it("Move an empty document", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
         await moveEmpty(moved_item_id, destination_folder_id);
 
@@ -63,7 +61,7 @@ describe("Move item", () => {
     });
 
     it("Move an embedded document", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
         await moveEmbedded(moved_item_id, destination_folder_id);
 
@@ -74,7 +72,7 @@ describe("Move item", () => {
     });
 
     it("Move a wiki document", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
         await moveWiki(moved_item_id, destination_folder_id);
 
@@ -85,7 +83,7 @@ describe("Move item", () => {
     });
 
     it("Move a link document", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
         await moveLink(moved_item_id, destination_folder_id);
 
@@ -96,7 +94,7 @@ describe("Move item", () => {
     });
 
     it("Move a folder", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch);
         await moveFolder(moved_item_id, destination_folder_id);
 
@@ -112,7 +110,7 @@ describe("Copy item", () => {
     const destination_folder_id = 852;
 
     it("Create a copy of a file", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, { return_json: JSON.stringify({ id: 963, uri: "path/to/963" }) });
         await copyFile(copied_item_id, destination_folder_id);
 
@@ -123,7 +121,7 @@ describe("Copy item", () => {
     });
 
     it("Create a copy of an empty document", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, { return_json: JSON.stringify({ id: 963, uri: "path/to/963" }) });
         await copyEmpty(copied_item_id, destination_folder_id);
 
@@ -137,7 +135,7 @@ describe("Copy item", () => {
     });
 
     it("Create a copy of an embedded document", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, { return_json: JSON.stringify({ id: 963, uri: "path/to/963" }) });
         await copyEmbedded(copied_item_id, destination_folder_id);
 
@@ -151,7 +149,7 @@ describe("Copy item", () => {
     });
 
     it("Create a copy of a wiki document", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, { return_json: JSON.stringify({ id: 963, uri: "path/to/963" }) });
         await copyWiki(copied_item_id, destination_folder_id);
 
@@ -162,7 +160,7 @@ describe("Copy item", () => {
     });
 
     it("Create a copy of a link document", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, { return_json: JSON.stringify({ id: 963, uri: "path/to/963" }) });
         await copyLink(copied_item_id, destination_folder_id);
 
@@ -173,7 +171,7 @@ describe("Copy item", () => {
     });
 
     it("Create a copy of a folder", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, { return_json: JSON.stringify({ id: 963, uri: "path/to/963" }) });
         await copyFolder(copied_item_id, destination_folder_id);
 

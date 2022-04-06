@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { getCampaigns, getDefinitions } from "./rest-querier.js";
-
-jest.mock("tlp");
 
 describe("rest querier", () => {
     describe("getCampaigns()", () => {
@@ -38,7 +36,7 @@ describe("rest querier", () => {
             ];
 
             const tlpRecursiveGetSpy = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockReturnValue(Promise.resolve(campaigns));
             const project_id = 101;
             const milestone_id = 26;
@@ -67,7 +65,7 @@ describe("rest querier", () => {
             ];
 
             const tlpRecursiveGetSpy = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockReturnValue(Promise.resolve(definitions));
             const project_id = 77;
             const report_id = 53;
@@ -93,7 +91,7 @@ describe("rest querier", () => {
             ];
 
             const tlpRecursiveGetSpy = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockReturnValue(Promise.resolve(definitions));
             const project_id = 6;
 

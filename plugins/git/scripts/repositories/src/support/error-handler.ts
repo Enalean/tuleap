@@ -18,7 +18,7 @@
  */
 
 import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export async function getErrorCode(e: unknown): Promise<number> {
     let error_code;

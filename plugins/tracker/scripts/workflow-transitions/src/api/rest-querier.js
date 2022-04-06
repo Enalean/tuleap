@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, get, put, patch, post } from "tlp";
+import { del, get, put, patch, post } from "@tuleap/tlp-fetch";
 
 const JSON_HEADERS = { "content-type": "application/json" };
 

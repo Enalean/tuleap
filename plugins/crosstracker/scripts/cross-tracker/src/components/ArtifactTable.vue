@@ -79,7 +79,7 @@ import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracke
 import { Component, Prop, Watch } from "vue-property-decorator";
 import type { Artifact, ArtifactsCollection } from "../type";
 import { State } from "vuex-class";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({ components: { ArtifactTableRow, ExportButton } })
 export default class ArtifactTable extends Vue {

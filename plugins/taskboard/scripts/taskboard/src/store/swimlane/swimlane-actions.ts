@@ -18,7 +18,7 @@
  */
 
 import type { Card, Swimlane } from "../../type";
-import { get, recursiveGet } from "tlp";
+import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";
 import type { RefreshCardActionPayload, SwimlaneState } from "./type";
 import type { RootState } from "../type";

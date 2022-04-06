@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, post } from "tlp";
+import { del, post } from "@tuleap/tlp-fetch";
 import type { Embedded, Empty, ItemFile, Link, Wiki } from "../type";
 
 export {

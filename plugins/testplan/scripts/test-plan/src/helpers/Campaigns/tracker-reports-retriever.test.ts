@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { TrackerReport } from "./tracker-reports-retriever";
 import { getTrackerReports } from "./tracker-reports-retriever";
 
-jest.mock("tlp");
-
 describe("Tracker reports retriever", () => {
     it("retrieves tracker reports", async () => {
-        const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
+        const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
 
         const expected_reports: TrackerReport[] = [
             { id: 14, label: "Report 14" },

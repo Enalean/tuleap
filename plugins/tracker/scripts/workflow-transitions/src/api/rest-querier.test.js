@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "tlp";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
     createTransition,
     createWorkflowTransitions,
@@ -33,8 +33,6 @@ import {
     changeWorkflowMode,
 } from "./rest-querier.js";
 import { create, createList } from "../support/factories.js";
-
-jest.mock("tlp");
 
 describe("Rest queries:", () => {
     const json_headers = {

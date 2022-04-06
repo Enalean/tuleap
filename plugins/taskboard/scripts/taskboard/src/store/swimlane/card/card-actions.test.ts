@@ -20,14 +20,14 @@
 import type { ActionContext } from "vuex";
 import type { RootState } from "../../type";
 import type { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import type { Card, Swimlane, Tracker, User } from "../../../type";
 import * as actions from "./card-actions";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ListField, TextField } from "./api-artifact-type";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("Card actions", () => {
     let context: ActionContext<SwimlaneState, RootState>;
@@ -68,7 +68,7 @@ describe("Card actions", () => {
                 value: 42,
             };
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.saveRemainingEffort(context, new_remaining_effort);
@@ -94,7 +94,7 @@ describe("Card actions", () => {
                 value: 42,
             };
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(tlpPatchMock, {});
 
             await actions.saveRemainingEffort(context, new_remaining_effort);
@@ -123,8 +123,8 @@ describe("Card actions", () => {
                 tracker: tracker,
             };
 
-            const tlpPutMock = jest.spyOn(tlp, "put");
-            const tlpGetMock = jest.spyOn(tlp, "get");
+            const tlpPutMock = jest.spyOn(tlp_fetch, "put");
+            const tlpGetMock = jest.spyOn(tlp_fetch, "get");
 
             const refreshed_card = { id: 123 } as Card;
             mockFetchSuccess(tlpGetMock, {
@@ -172,7 +172,7 @@ describe("Card actions", () => {
                 tracker,
             };
 
-            const tlpPutMock = jest.spyOn(tlp, "put");
+            const tlpPutMock = jest.spyOn(tlp_fetch, "put");
             const error = new Error();
             tlpPutMock.mockRejectedValue(error);
 
@@ -211,7 +211,7 @@ describe("Card actions", () => {
                 label: "Lorem",
             } as NewCardPayload;
 
-            const tlpPostMock = jest.spyOn(tlp, "post");
+            const tlpPostMock = jest.spyOn(tlp_fetch, "post");
 
             await actions.addCard(context, payload);
 
@@ -247,10 +247,10 @@ describe("Card actions", () => {
                 label: "Lorem",
             } as NewCardPayload;
 
-            const tlpPostMock = jest.spyOn(tlp, "post");
+            const tlpPostMock = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
 
-            const tlpGetMock = jest.spyOn(tlp, "get");
+            const tlpGetMock = jest.spyOn(tlp_fetch, "get");
             tlpGetMock.mockImplementation((uri: string): Promise<Response> => {
                 if (uri === "/api/v1/artifacts/74") {
                     return Promise.resolve({
@@ -291,7 +291,7 @@ describe("Card actions", () => {
                 label: "Lorem",
             } as NewCardPayload;
 
-            const tlpPostMock = jest.spyOn(tlp, "post");
+            const tlpPostMock = jest.spyOn(tlp_fetch, "post");
             const error = new Error();
             tlpPostMock.mockRejectedValue(error);
 
@@ -314,9 +314,9 @@ describe("Card actions", () => {
                     },
                     label: "Lorem",
                 } as NewCardPayload;
-                const tlpPostMock = jest.spyOn(tlp, "post");
+                const tlpPostMock = jest.spyOn(tlp_fetch, "post");
                 mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
-                tlpGetMock = jest.spyOn(tlp, "get");
+                tlpGetMock = jest.spyOn(tlp_fetch, "get");
                 mockFetchSuccess(tlpGetMock, {
                     headers: new Headers({ "Last-Modified": "Mon, 09 Dec 2019 10:11:35 GMT" }),
                     return_json: { values: [] },
@@ -324,7 +324,7 @@ describe("Card actions", () => {
             });
 
             it("attach the card to the parent", async () => {
-                const tlpPutMock = jest.spyOn(tlp, "put");
+                const tlpPutMock = jest.spyOn(tlp_fetch, "put");
 
                 await actions.addCard(context, payload);
 
@@ -342,7 +342,7 @@ describe("Card actions", () => {
 
             it(`when it could not attach the card to its parent due to any other error, it will show an error modal`, async () => {
                 const error = { response: { status: 500 } };
-                jest.spyOn(tlp, "put").mockRejectedValue(error);
+                jest.spyOn(tlp_fetch, "put").mockRejectedValue(error);
 
                 await actions.addCard(context, payload);
 
@@ -361,7 +361,7 @@ describe("Card actions", () => {
         let tlpGetMock: jest.SpyInstance<Promise<Response>>;
 
         beforeEach(() => {
-            tlpGetMock = jest.spyOn(tlp, "get");
+            tlpGetMock = jest.spyOn(tlp_fetch, "get");
         });
 
         it("Does nothing if the tracker has no assigned_to field", async () => {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch, post, del, recursiveGet } from "tlp";
+import { patch, post, del, recursiveGet } from "@tuleap/tlp-fetch";
 import { REPOSITORIES_SORTED_BY_PATH } from "../constants";
 import type { Repository } from "../type";
 

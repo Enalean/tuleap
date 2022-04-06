@@ -19,15 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import BranchesSection from "./BranchesSection.vue";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { Branch } from "../type";
 import { createBranchTagSelectorLocalVue } from "../helpers/local-vue-for-test";
 
-jest.mock("tlp");
-
 describe("BranchesSection", () => {
     it("Displays two branches referencing the same commit", async () => {
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
         const commit = { id: "commitref" };
         const branches: Array<Branch> = [
             { name: "main", commit },

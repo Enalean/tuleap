@@ -18,7 +18,7 @@
  */
 
 import { createElement } from "./jest/create-dom-element";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { HandleDropContextWithProgramId } from "./drag-drop";
 import type { ActionContext } from "vuex";
@@ -38,8 +38,6 @@ import {
 } from "./feature-moving";
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
 import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
-
-jest.mock("tlp");
 
 describe("FeatureMoving", () => {
     let context: ActionContext<State, State>;
@@ -87,7 +85,7 @@ describe("FeatureMoving", () => {
             const dropped_element = createElement();
             dropped_element.setAttribute("data-element-id", "125");
 
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
             const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
@@ -120,7 +118,7 @@ describe("FeatureMoving", () => {
             dropped_element.setAttribute("data-element-id", "125");
             const target_dropzone = createElement();
 
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },
@@ -185,7 +183,7 @@ describe("FeatureMoving", () => {
                 backlogAdder,
                 "moveElementFromProgramIncrementToTopBackLog"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
 
             await moveFeatureFromProgramIncrementToBacklog(
@@ -221,7 +219,7 @@ describe("FeatureMoving", () => {
                 backlogAdder,
                 "moveElementFromProgramIncrementToTopBackLog"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
 
             context.state.to_be_planned_elements = [];
@@ -258,7 +256,7 @@ describe("FeatureMoving", () => {
                 backlogAdder,
                 "moveElementFromProgramIncrementToTopBackLog"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },
@@ -312,7 +310,7 @@ describe("FeatureMoving", () => {
             dropped_element.setAttribute("data-element-id", "12");
             const target_dropzone = createElement();
 
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
             const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
@@ -352,7 +350,7 @@ describe("FeatureMoving", () => {
             const source_dropzone = createElement();
             const target_dropzone = createElement();
 
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
             const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
@@ -378,7 +376,7 @@ describe("FeatureMoving", () => {
 
             const plan_feature = jest.spyOn(featurePlanner, "planElementInProgramIncrement");
 
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },

@@ -20,12 +20,10 @@
 import type { BacklogItemState } from "./type";
 import type { ActionContext } from "vuex";
 import type { RootState } from "../type";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { loadBacklogItems, loadTestDefinitions } from "./backlog-item-actions";
 import type { BacklogItem, TestDefinition } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
-
-jest.mock("tlp");
 
 describe("BacklogItem state actions", () => {
     let context: ActionContext<BacklogItemState, RootState>;
@@ -41,7 +39,7 @@ describe("BacklogItem state actions", () => {
                 highlight_test_definition_id: 1001,
             } as RootState,
         } as unknown as ActionContext<BacklogItemState, RootState>;
-        tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
     });
 
     describe("loadBacklogItems", () => {

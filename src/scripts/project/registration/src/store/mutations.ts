@@ -20,7 +20,7 @@
 
 import type { State } from "./type";
 import type { TemplateData } from "../type";
-import type { FetchWrapperError } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export default {
     setSelectedTemplate(state: State, selected_template: TemplateData): void {

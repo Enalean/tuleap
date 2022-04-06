@@ -29,7 +29,7 @@ import {
 import type { ActionContext } from "vuex";
 import type { Folder, Item, RootState } from "../type";
 import type { ProjectService, RestFolder } from "../api/rest-querier";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { TYPE_FOLDER } from "../constants";

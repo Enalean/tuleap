@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, head, patch, del, post, put } from "tlp";
+import { get, head, patch, del, post, put } from "@tuleap/tlp-fetch";
 
 export default KanbanService;
 

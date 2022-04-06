@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { MilestoneRepresentation } from "./rest-querier";
 import {
     getClosedSubMilestones,
@@ -25,8 +25,6 @@ import {
     getOpenSubMilestones,
     getOpenTopMilestones,
 } from "./rest-querier";
-
-jest.mock("tlp");
 
 const identity = <T>(input: T): T => input;
 
@@ -64,7 +62,7 @@ describe(`rest-querier`, () => {
                 const first_sprint = { id: 77, label: "First Sprint" };
                 const second_sprint = { id: 98, label: "Second Sprint" };
                 const tlpRecursiveGet = jest
-                    .spyOn(tlp, "recursiveGet")
+                    .spyOn(tlp_fetch, "recursiveGet")
                     .mockResolvedValue([first_sprint, second_sprint]);
 
                 const response = await functionUnderTest();

@@ -20,8 +20,8 @@
 import type { CampaignState, CreateCampaignPayload } from "./type";
 import type { ActionContext } from "vuex";
 import type { RootState } from "../type";
-import type { FetchWrapperError } from "tlp";
-import { recursiveGet, post, get } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { recursiveGet, post, get } from "@tuleap/tlp-fetch";
 import type { Campaign } from "../../type";
 import type { ActionTree } from "vuex";
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
+import { recursiveGet } from "@tuleap/tlp-fetch";
 import type { Iteration } from "../type";
 
 export function getIncrementIterations(increment_id: number): Promise<Iteration[]> {

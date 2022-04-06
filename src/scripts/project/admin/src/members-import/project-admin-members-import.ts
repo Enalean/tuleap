@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post } from "tlp";
+import { post } from "@tuleap/tlp-fetch";
 import mustache from "mustache";
 import { getPOFileFromLocale, initGettext } from "../../../../tuleap/gettext/gettext-init";
 import import_preview_template from "./project-admin-member-import-preview.mustache";

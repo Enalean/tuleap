@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 
 import {
@@ -26,8 +26,6 @@ import {
     getTrackersWithTimetracking,
     saveNewReport,
 } from "./rest-querier.js";
-
-jest.mock("tlp");
 
 describe("Get Report() -", () => {
     it("the REST API will be queried : report with its trackers is returned", async () => {
@@ -38,7 +36,7 @@ describe("Get Report() -", () => {
                 trackers: [{ id: 1, label: "timetracking_tracker" }],
             },
         ];
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
             return_json: report,
         });
@@ -85,7 +83,7 @@ describe("Get Report's times() -", () => {
                 uri: "",
             },
         ];
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
             return_json: trackers,
         });
@@ -103,7 +101,7 @@ describe("getProjects() -", () => {
             { id: 765, label: "timetracking" },
             { id: 239, label: "projectTest" },
         ];
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
             return_json: projects,
         });
@@ -130,7 +128,7 @@ describe("getTrackers() -", () => {
             { id: 16, label: "tracker_1" },
             { id: 18, label: "tracker_2" },
         ];
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
             return_json: trackers,
         });
@@ -165,7 +163,7 @@ describe("Save new Report() -", () => {
             },
         ];
 
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut, {
             return_json: report,
         });

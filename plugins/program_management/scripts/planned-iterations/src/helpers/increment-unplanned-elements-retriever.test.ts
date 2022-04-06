@@ -17,16 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { retrieveUnplannedElements } from "./increment-unplanned-elements-retriever";
 
 import type { UserStory } from "../type";
 
-jest.mock("tlp");
-
 describe("increment-unplanned-elements-retriever", () => {
     it("retrieves the unplanned elements of a given iteration", async () => {
-        const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
+        const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
         const increment_iterations: UserStory[] = [
             {
                 background_color: "peggy-pink",

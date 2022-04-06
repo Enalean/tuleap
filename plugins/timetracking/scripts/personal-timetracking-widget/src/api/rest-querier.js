@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, put, del } from "tlp";
+import { get, post, put, del } from "@tuleap/tlp-fetch";
 import { formatDatetimeToISO } from "../../../time-formatters.js";
 
 export { getTrackedTimes, addTime, updateTime, deleteTime };

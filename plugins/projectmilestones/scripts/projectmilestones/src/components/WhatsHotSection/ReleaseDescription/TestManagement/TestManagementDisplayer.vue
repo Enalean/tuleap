@@ -38,7 +38,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData, TestManagementCampaign } from "../../../../type";
 import { Action, State } from "vuex-class";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
 
