@@ -159,7 +159,7 @@ class PhpWikiResource extends AuthenticatedResource
      *
      * @status 200
      *
-     * @return array {@type Tuleap\PhpWiki\Events\ItemsReferencingWikiPageRepresentation}
+     * @return array {@type \Tuleap\wiki\Events\ItemReferencingWikiPageRepresentation}
      *
      * @throws RestException 401
      * @throws RestException 403

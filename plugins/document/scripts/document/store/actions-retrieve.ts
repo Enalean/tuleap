@@ -22,14 +22,19 @@ import {
     getDocumentManagerServiceInformation,
     getFolderContent,
     getItem,
+    getItemsReferencingSameWikiPage,
+    getParents,
 } from "../api/rest-querier";
 import { loadFolderContent } from "./actions-helpers/load-folder-content";
 import { handleErrors, handleErrorsForDocument } from "./actions-helpers/handle-errors";
-import type { Folder, Item, RootState } from "../type";
+import type { Folder, Item, RootState, Wiki } from "../type";
 import type { ActionContext } from "vuex";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy";
 import { isFolder } from "../helpers/type-check-helper";
 import { convertFolderItemToFolder } from "../helpers/properties-helpers/metadata-to-properties";
+import type { ItemPath } from "./actions-helpers/build-parent-paths";
+import { buildItemPath } from "./actions-helpers/build-parent-paths";
+import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../constants";
 
 export const loadRootFolder = async (
     context: ActionContext<RootState, RootState>
@@ -167,5 +172,28 @@ export const loadFolder = (
 
     function shouldWeRemotelyLoadTheFolder(current_folder: Folder): boolean {
         return !current_folder || current_folder.id !== folder_id;
+    }
+};
+
+export const getWikisReferencingSameWikiPage = async (
+    context: ActionContext<RootState, RootState>,
+    item: Wiki
+): Promise<ItemPath[] | null> => {
+    if (item.wiki_properties.page_id === null) {
+        return [];
+    }
+
+    try {
+        const wiki_page_referencers = await getItemsReferencingSameWikiPage(
+            item.wiki_properties.page_id
+        );
+
+        return await Promise.all(
+            wiki_page_referencers.map((item) =>
+                getParents(item.item_id).then((parents) => buildItemPath(item, parents))
+            )
+        );
+    } catch (exception) {
+        return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
     }
 };

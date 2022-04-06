@@ -18,37 +18,32 @@
  */
 
 import { buildItemPath } from "./build-parent-paths";
-import type { ItemForPath } from "./build-parent-paths";
+import type { Item, ItemReferencingWikiPageRepresentation } from "../../type";
 
 describe("buildItemPath", () => {
     it("Build item parent path", () => {
-        const item: ItemForPath = {
+        const item: ItemReferencingWikiPageRepresentation = {
             item_id: 10,
             item_name: "my item",
-            title: "my item",
         };
 
         const parents = [
             {
-                item_id: 1,
                 title: "folder A",
-            } as ItemForPath,
+            } as Item,
             {
-                item_id: 2,
                 title: "folder B",
-            } as ItemForPath,
+            } as Item,
             {
-                item_id: 3,
                 title: "folder C",
-            } as ItemForPath,
+            } as Item,
             {
-                item_id: 4,
                 title: "folder D",
-            } as ItemForPath,
+            } as Item,
         ];
 
         const item_path = buildItemPath(item, parents);
-        expect(item_path).toEqual({
+        expect(item_path).toStrictEqual({
             path: "/folder A/folder B/folder C/folder D/my item",
             id: 10,
         });
