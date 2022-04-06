@@ -1032,10 +1032,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     /**
      * Say if the report is public
-     *
-     * @return bool
+     * @psalm-mutation-free
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return empty($this->user_id);
     }

@@ -325,11 +325,12 @@ final class TrackersTest extends TrackerBase
         $reports        = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $default_report = $reports[0];
 
-        $this->assertEquals($this->report_id, $default_report['id']);
-        $this->assertEquals('tracker_reports/' . $this->report_id, $default_report['uri']);
-        $this->assertEquals('Default', $default_report['label']);
+        self::assertEquals(200, $response->getStatusCode());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals($this->report_id, $default_report['id']);
+        self::assertEquals('tracker_reports/' . $this->report_id, $default_report['uri']);
+        self::assertEquals('Default', $default_report['label']);
+        self::assertEquals(true, $default_report['is_public']);
     }
 
     public function testGetReportsId(): void
@@ -353,11 +354,12 @@ final class TrackersTest extends TrackerBase
     {
         $report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals($this->report_id, $report['id']);
-        $this->assertEquals('tracker_reports/' . $this->report_id, $report['uri']);
-        $this->assertEquals('Default', $report['label']);
+        self::assertEquals(200, $response->getStatusCode());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        self::assertEquals($this->report_id, $report['id']);
+        self::assertEquals('tracker_reports/' . $this->report_id, $report['uri']);
+        self::assertEquals('Default', $report['label']);
+        self::assertEquals(true, $report['is_public']);
     }
 
     public function testGetReportsArtifactsId()
