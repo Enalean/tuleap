@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-interface RetrieveUsedArtifactLinkTypesInTracker
+interface RetrieveCurrentlyUsedArtifactLinkTypesInTracker
 {
     /** @return TypePresenter[] */
-    public function getAllUsedTypePresentersByTracker(\Tracker $tracker): array;
+    public function getAllCurrentlyUsedTypePresentersByTracker(\Tracker $tracker): array;
 }

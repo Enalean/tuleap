@@ -24,7 +24,7 @@ namespace Tuleap\DocumentGeneration\CrossReport;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveUsedArtifactLinkTypesInTracker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveCurrentlyUsedArtifactLinkTypesInTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CrossReportExportPropertiesFetcherTest extends TestCase
@@ -40,8 +40,8 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
         $this->report_factory = $this->createStub(\Tracker_ReportFactory::class);
         $this->fetcher        = new CrossReportExportPropertiesFetcher(
             $this->report_factory,
-            new class implements RetrieveUsedArtifactLinkTypesInTracker {
-                public function getAllUsedTypePresentersByTracker(\Tracker $tracker): array
+            new class implements RetrieveCurrentlyUsedArtifactLinkTypesInTracker {
+                public function getAllCurrentlyUsedTypePresentersByTracker(\Tracker $tracker): array
                 {
                     return [];
                 }
