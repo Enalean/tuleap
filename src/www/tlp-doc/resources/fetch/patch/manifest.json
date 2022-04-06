@@ -1,4 +1,4 @@
 {
     "label": "patch",
-    "shortcode": "tlp.patch(url_to_query, options)"
+    "shortcode": "(@tuleap/tlp-fetch).patch(url_to_query, options)"
 }
