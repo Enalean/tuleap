@@ -28,7 +28,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBAuthUserConfig;
 use Tuleap\DB\DBConfig;
@@ -36,7 +35,6 @@ use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
-use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
 use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 
 final class SetupMysqlInitCommand extends Command
@@ -108,7 +106,6 @@ final class SetupMysqlInitCommand extends Command
 
         $this
             ->setDescription('Initialize database (users, database, permissions)')
-            ->addOption(self::OPT_SKIP_DATABASE, '', InputOption::VALUE_NONE, 'Will skip database initialization (when you only want to re-write database.inc)')
             ->addOption(self::OPT_ADMIN_USER, '', InputOption::VALUE_REQUIRED, 'MySQL admin user', 'root')
             ->addOption(self::OPT_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'MySQL admin password')
             ->addOption(self::OPT_APP_DBNAME, '', InputOption::VALUE_REQUIRED, 'Name of the DB name to host Tuleap tables (`tuleap` by default)', DBConfig::DEFAULT_MYSQL_TULEAP_DB_NAME)
@@ -145,32 +142,10 @@ final class SetupMysqlInitCommand extends Command
         assert(is_string($fqdn));
 
         \ForgeConfig::loadForInitialSetup($fqdn);
-        \ForgeConfig::set(DBConfig::CONF_HOST, $this->command_helper->getHost($input));
-        try {
-            \ForgeConfig::set(DBConfig::CONF_PORT, $this->command_helper->getPort($input));
 
-            $ssl_mode = $this->command_helper->getSSLMode($input);
-            switch ($ssl_mode) {
-                case MysqlCommandHelper::SSL_NO_SSL:
-                    \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::FALSE);
-                    \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::FALSE);
-                    break;
-                case MysqlCommandHelper::SSL_NO_VERIFY:
-                    \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::TRUE);
-                    \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::FALSE);
-                    break;
-                case MysqlCommandHelper::SSL_VERIFY_CA:
-                    \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::TRUE);
-                    \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::TRUE);
-                    break;
-            }
-            \ForgeConfig::set(DBConfig::CONF_SSL_CA, $this->command_helper->getSSLCAFile($input, $ssl_mode));
-        } catch (InvalidSSLConfigurationException $exception) {
-            $io->getErrorStyle()->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
-            return 1;
-        }
-
-        $initialize_db = ! (bool) $input->getOption(self::OPT_SKIP_DATABASE);
+        $this->command_helper->setHost($input);
+        $this->command_helper->setPort($input);
+        $this->command_helper->setSSLMode($input);
 
         $app_dbname = $input->getOption(self::OPT_APP_DBNAME);
         assert(is_string($app_dbname));
@@ -214,36 +189,34 @@ final class SetupMysqlInitCommand extends Command
         $nss_password = $input->getOption(self::OPT_NSS_PASSWORD);
         assert($nss_password === null || is_string($nss_password));
 
-        if ($initialize_db) {
-            $db = $this->connection_manager->getDBWithoutDBName(
-                $io,
-                \ForgeConfig::get(DBConfig::CONF_HOST),
-                \ForgeConfig::get(DBConfig::CONF_PORT),
-                \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
-                \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
-                \ForgeConfig::get(DBConfig::CONF_SSL_CA),
-                $db_params->admin_user,
-                $db_params->admin_password
-            );
-            $output->writeln('<info>Successfully connected to the server !</info>');
+        $db = $this->connection_manager->getDBWithoutDBName(
+            $io,
+            \ForgeConfig::get(DBConfig::CONF_HOST),
+            \ForgeConfig::getInt(DBConfig::CONF_PORT),
+            \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
+            \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
+            \ForgeConfig::get(DBConfig::CONF_SSL_CA),
+            $db_params->admin_user,
+            $db_params->admin_password
+        );
+        $output->writeln('<info>Successfully connected to the server !</info>');
 
-            $this->connection_manager->checkSQLModes($db);
+        $this->connection_manager->checkSQLModes($db);
 
-            $this->initializeDatabase($input, $io, $db, $db_params);
-            $this->initializeNss(
-                $input,
-                $io,
-                $db,
-                \ForgeConfig::get(DBConfig::CONF_DBNAME),
-                $db_params->grant_hostname,
-                $db_params->azure_prefix,
-                $nss_user,
-                $nss_password
-            );
-            $this->initializeMediawiki($input, $io, $db, $tuleap_user, $db_params->grant_hostname);
+        $this->initializeDatabase($input, $io, $db, $db_params);
+        $this->initializeNss(
+            $input,
+            $io,
+            $db,
+            \ForgeConfig::get(DBConfig::CONF_DBNAME),
+            $db_params->grant_hostname,
+            $db_params->azure_prefix,
+            $nss_user,
+            $nss_password
+        );
+        $this->initializeMediawiki($input, $io, $db, $tuleap_user, $db_params->grant_hostname);
 
-            $db->run('FLUSH PRIVILEGES');
-        }
+        $db->run('FLUSH PRIVILEGES');
 
         $return_value = $this->database_configurator->writeDatabaseIncFile($db_params->azure_prefix, $this->base_directory);
         if ($return_value !== true) {

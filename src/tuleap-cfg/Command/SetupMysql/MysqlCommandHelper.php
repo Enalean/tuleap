@@ -26,6 +26,7 @@ namespace TuleapCfg\Command\SetupMysql;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Tuleap\Config\ConfigKeyLegacyBool;
 use Tuleap\DB\DBConfig;
 
 final class MysqlCommandHelper
@@ -34,9 +35,6 @@ final class MysqlCommandHelper
     public const OPT_PORT   = 'port';
     public const OPT_SSL    = 'ssl-mode';
     public const OPT_SSL_CA = 'ssl-ca';
-
-    private const ENV_SSL_MODE = 'TULEAP_DB_SSL_MODE';
-    private const ENV_SSL_CA   = 'TULEAP_DB_SSL_CA';
 
     public const SSL_NO_VERIFY = 'no-verify';
     public const SSL_NO_SSL    = 'disabled';
@@ -55,8 +53,8 @@ final class MysqlCommandHelper
     public function addOptions(Command $command): Command
     {
         $command
-            ->addOption(self::OPT_HOST, '', InputOption::VALUE_REQUIRED, 'MySQL server host', 'localhost')
-            ->addOption(self::OPT_PORT, '', InputOption::VALUE_REQUIRED, 'MySQL server port', (string) DBConfig::DEFAULT_MYSQL_PORT)
+            ->addOption(self::OPT_HOST, '', InputOption::VALUE_REQUIRED, 'MySQL server host (default: localhost)')
+            ->addOption(self::OPT_PORT, '', InputOption::VALUE_REQUIRED, 'MySQL server port (default: 3306)')
             ->addOption(
                 self::OPT_SSL,
                 '',
@@ -67,68 +65,90 @@ final class MysqlCommandHelper
                     self::SSL_NO_VERIFY,
                     self::SSL_VERIFY_CA
                 ),
-                self::SSL_NO_SSL
             )
             ->addOption(self::OPT_SSL_CA, '', InputOption::VALUE_REQUIRED, sprintf(
-                'When %s is set to %s or %s you should provide the path to CA file',
+                'When %s is set to %s or %s you can provide a path to a custom CA file (default: %s)',
                 self::OPT_SSL,
                 self::SSL_NO_VERIFY,
-                self::SSL_VERIFY_CA
-            ), DBConfig::DEFAULT_MYSQL_CA_FILE_PATH);
+                self::SSL_VERIFY_CA,
+                DBConfig::DEFAULT_MYSQL_CA_FILE_PATH,
+            ));
         return $command;
     }
 
-    public function getHost(InputInterface $input): string
+    public function setHost(InputInterface $input): void
     {
         $host = $input->getOption(self::OPT_HOST);
-        assert(is_string($host));
-        return $host;
-    }
-
-    public function getPort(InputInterface $input): int
-    {
-        return (int) $input->getOption(self::OPT_PORT);
-    }
-
-    /**
-     * @psalm-return value-of<self::ALLOWED_SSL_MODES>
-     */
-    public function getSSLMode(InputInterface $input): string
-    {
-        $ssl_mode = getenv(self::ENV_SSL_MODE);
-        if (in_array($ssl_mode, self::ALLOWED_SSL_MODES, true)) {
-            return $ssl_mode;
+        if ($host === null) {
+            return;
         }
+        assert(is_string($host));
+        \ForgeConfig::set(DBConfig::CONF_HOST, $host);
+    }
+
+    public function setPort(InputInterface $input): void
+    {
+        $port = $input->getOption(self::OPT_PORT);
+        if ($port === null) {
+            return;
+        }
+        \ForgeConfig::set(DBConfig::CONF_PORT, (int) $port);
+    }
+
+    public function setSSLMode(InputInterface $input): void
+    {
         $ssl_mode = $input->getOption(self::OPT_SSL);
+        if ($ssl_mode === null) {
+            return;
+        }
         assert(is_string($ssl_mode));
         if (! in_array($ssl_mode, self::ALLOWED_SSL_MODES, true)) {
             throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s', self::OPT_SSL, $ssl_mode));
         }
-        return $ssl_mode;
+        $this->setSSLVariablesFromOptionsOrLegacyEnv($input, $ssl_mode);
     }
 
     /**
      * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
      */
-    public function getSSLCAFile(InputInterface $input, string $ssl_mode): string
+    private function setSSLVariablesFromOptionsOrLegacyEnv(InputInterface $input, string $ssl_mode): void
     {
-        $ssl_ca_file = getenv(self::ENV_SSL_CA);
-        if ($ssl_ca_file !== false) {
-            $ca_file_path = $this->base_directory . '/' . $ssl_ca_file;
-            if (file_exists($ca_file_path)) {
-                return $ssl_ca_file;
-            }
+        switch ($ssl_mode) {
+            case self::SSL_NO_SSL:
+                \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::FALSE);
+                \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::FALSE);
+                break;
+            case self::SSL_NO_VERIFY:
+                \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::TRUE);
+                \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::FALSE);
+                break;
+            case self::SSL_VERIFY_CA:
+                \ForgeConfig::set(DBConfig::CONF_ENABLE_SSL, ConfigKeyLegacyBool::TRUE);
+                \ForgeConfig::set(DBConfig::CONF_SSL_VERIFY_CERT, ConfigKeyLegacyBool::TRUE);
+                break;
+        }
+
+        $this->setSSLCAFile($input, $ssl_mode);
+    }
+
+    /**
+     * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
+     */
+    private function setSSLCAFile(InputInterface $input, string $ssl_mode): void
+    {
+        if ($ssl_mode === self::SSL_NO_SSL) {
+            return;
+        }
+
+        $ssl_ca_file = $input->getOption(self::OPT_SSL_CA);
+        if ($ssl_ca_file === null) {
+            return;
+        }
+        assert(is_string($ssl_ca_file));
+        $ca_file_path = $this->base_directory . '/' . $ssl_ca_file;
+        if (! is_file($ca_file_path)) {
             throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s no such file', self::OPT_SSL_CA, $ca_file_path));
         }
-        if ($ssl_mode !== self::SSL_NO_SSL) {
-            $ssl_ca_file = $input->getOption(self::OPT_SSL_CA);
-            assert(is_string($ssl_ca_file));
-            $ca_file_path = $this->base_directory . '/' . $ssl_ca_file;
-            if (! is_file($ca_file_path)) {
-                throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s no such file', self::OPT_SSL_CA, $ca_file_path));
-            }
-            return $ssl_ca_file;
-        }
-        return DBConfig::DEFAULT_MYSQL_CA_FILE_PATH;
+        \ForgeConfig::set(DBConfig::CONF_SSL_CA, $ssl_ca_file);
     }
 }

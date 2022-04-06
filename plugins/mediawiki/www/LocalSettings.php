@@ -133,7 +133,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $wgEmergencyContact = forge_get_config('admin_email');
     $wgPasswordSender   = forge_get_config('admin_email');
     $wgDBtype           = "forge";
-    $wgDBserver         = forge_get_config('database_host');
+    $wgDBserver         = forge_get_config('database_host') . ':' . \ForgeConfig::getInt(DBConfig::CONF_PORT);
 
     if (forge_get_config('mw_dbtype', 'mediawiki') == 'mysql') {
         // At the time writing schema in mysql is synonym for database

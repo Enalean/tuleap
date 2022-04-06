@@ -45,7 +45,7 @@ final class DatabaseConfigurator
         $db = $this->connection_manager->getDBWithoutDBName(
             $output,
             \ForgeConfig::get(DBConfig::CONF_HOST),
-            \ForgeConfig::get(DBConfig::CONF_PORT),
+            \ForgeConfig::getInt(DBConfig::CONF_PORT),
             \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
             \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
             \ForgeConfig::get(DBConfig::CONF_SSL_CA),

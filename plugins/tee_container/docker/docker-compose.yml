@@ -23,6 +23,7 @@ services:
     environment:
       - TULEAP_FQDN=${TULEAP_FQDN}
       - TULEAP_SYS_DBHOST=db
+      - TULEAP_SYS_DBPORT=3307
       - TULEAP_SYS_DBPASSWD=${MYSQL_TULEAPADM_PASSWORD}
       - SITE_ADMINISTRATOR_PASSWORD=${SITE_ADMINISTRATOR_PASSWORD}
       - TULEAP_SYS_EMAIL_ADMIN=${TULEAP_SYS_EMAIL_ADMIN}
@@ -39,7 +40,7 @@ services:
 
   db:
     image: mysql:5.7
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"]
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION", "--port=3307"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
