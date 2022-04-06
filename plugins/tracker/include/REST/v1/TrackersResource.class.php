@@ -73,6 +73,7 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
+use Tuleap\Tracker\REST\Tracker\UsedArtifactLinkTypeRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -904,5 +905,53 @@ class TrackersResource extends AuthenticatedResource
     private function getJsonDecoder()
     {
         return new JsonDecoder();
+    }
+
+    /**
+     * @url GET {id}/used_artifact_links
+     * @access hybrid
+     * @oauth2-scope read:tracker
+     */
+    public function optionsUserArtifactLinkTypes(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get all used artifact link types in a tracker
+     *
+     * @url GET {id}/used_artifact_links
+     * @access hybrid
+     * @oauth2-scope read:tracker
+     *
+     * @param int $id Id of the tracker
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 1000}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array {@type UsedArtifactLinkTypeRepresentation}
+     * @psalm-return UsedArtifactLinkTypeRepresentation[]
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getUserArtifactLinkTypes(int $id, int $limit = 10, int $offset = self::DEFAULT_OFFSET): array
+    {
+        $this->checkAccess();
+
+        $user    = $this->user_manager->getCurrentUser();
+        $tracker = $this->getTrackerById($user, $id);
+
+        $factory = new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
+
+        $type_presenters = $factory->getAllUsedTypePresentersByTracker($tracker);
+
+        Header::sendPaginationHeaders($limit, $offset, count($type_presenters), self::MAX_LIMIT);
+
+        $representations = [];
+
+        foreach (array_slice($type_presenters, $offset, $limit) as $type_presenter) {
+            $representations[] = UsedArtifactLinkTypeRepresentation::fromTypePresenter($type_presenter);
+        }
+
+        return $representations;
     }
 }
