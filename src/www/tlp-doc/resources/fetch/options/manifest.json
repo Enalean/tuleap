@@ -1,4 +1,4 @@
 {
     "label": "options",
-    "shortcode": "tlp.options(url_to_query, options)"
+    "shortcode": "(@tuleap/tlp-fetch).options(url_to_query, options)"
 }

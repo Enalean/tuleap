@@ -1,5 +1,5 @@
 <script>
-import { put } from 'tlp';
+import { put } from '@tuleap/tlp-fetch';
 
 async function updateReport(report_id, trackers_id) {
     const response = await put(encodeURI("/api/v1/cross_tracker_reports/" + report_id), {
