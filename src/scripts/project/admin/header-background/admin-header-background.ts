@@ -26,7 +26,7 @@ const NO_BACKGROUND_IDENTIFIER = "0";
 const LOCATION_HASH_SUCCESS = "#header-background-change-success";
 const CLASS_HIDE_FEEDBACK = "project-admin-background-feedback-hidden";
 
-import { del, put } from "tlp";
+import { del, put } from "@tuleap/tlp-fetch";
 
 export function setupFormSubmission(mount_point: Document, location: Location): void {
     const form = mount_point.getElementById(FORM_ID);

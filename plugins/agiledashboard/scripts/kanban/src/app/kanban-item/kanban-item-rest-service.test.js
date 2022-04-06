@@ -20,10 +20,8 @@
 import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 describe("KanbanItemRestService -", function () {
     let wrapPromise, $q, KanbanItemRestService, RestErrorService;
@@ -81,7 +79,7 @@ describe("KanbanItemRestService -", function () {
     describe(`createItem`, () => {
         it(`will call POST on kanban items to create an item in a given column
             and will return the newly created item`, async () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             const item_representation = { id: 987, label: "prebenediction" };
             mockFetchSuccess(tlpPost, { return_json: item_representation });
 
@@ -103,7 +101,7 @@ describe("KanbanItemRestService -", function () {
     describe(`createItemInBacklog`, () => {
         it(`will call POST on kanban items to create an item in the backlog column
             and will return the newly created item`, async () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             const item_representation = { id: 987, label: "prebenediction" };
             mockFetchSuccess(tlpPost, { return_json: item_representation });
 
@@ -128,7 +126,7 @@ describe("KanbanItemRestService -", function () {
                 item_name: "paterfamiliarly",
                 label: "Disaccustomed",
             };
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: kanban_item });
 
             const promise = KanbanItemRestService.getItem(410);
@@ -141,7 +139,7 @@ describe("KanbanItemRestService -", function () {
         it(`When there is an error with my request,
             then the error will be handled by RestErrorService
             and a rejected promise will be returned`, () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchError(tlpGet, { status: 404, error_json: { error: { message: "Error" } } });
 
             // eslint-disable-next-line jest/valid-expect-in-promise

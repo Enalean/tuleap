@@ -18,17 +18,15 @@
  */
 
 import { setupFormSubmission } from "./admin-header-background";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-
-jest.mock("tlp");
 
 describe("admin-header-background", () => {
     it("sets a project header background", async () => {
         const { mount_point, form } = createDocumentExpectedFormStructure("beach-daytime");
         const location = { ...window.location, reload: jest.fn() };
 
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
 
         mockFetchSuccess(tlpPut);
 
@@ -44,7 +42,7 @@ describe("admin-header-background", () => {
         const { mount_point, form } = createDocumentExpectedFormStructure("0");
         const location = { ...window.location, reload: jest.fn() };
 
-        const tlpDelete = jest.spyOn(tlp, "del");
+        const tlpDelete = jest.spyOn(tlp_fetch, "del");
 
         mockFetchSuccess(tlpDelete);
 

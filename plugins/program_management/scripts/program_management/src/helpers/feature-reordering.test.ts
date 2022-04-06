@@ -31,7 +31,7 @@ import type { HandleDropContextWithProgramId } from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
 import * as backlogAdder from "./ProgramIncrement/add-to-top-backlog";
 import * as featurePlanner from "./ProgramIncrement/Feature/feature-planner";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
     getFeatureInProgramIncrement,
@@ -41,8 +41,6 @@ import {
     getToBePlannedElementFromId,
 } from "../store/getters";
 import type { ProgramIncrement } from "./ProgramIncrement/program-increment-retriever";
-
-jest.mock("tlp");
 
 describe("Feature Reordering", () => {
     describe("getFeatureReorderPosition", () => {
@@ -150,7 +148,7 @@ describe("Feature Reordering", () => {
                 backlogAdder,
                 "reorderElementInTopBacklog"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
 
             await reorderFeatureInProgramBacklog(context, {
@@ -190,7 +188,7 @@ describe("Feature Reordering", () => {
                 backlogAdder,
                 "reorderElementInTopBacklog"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
 
             await reorderFeatureInProgramBacklog(context, {
@@ -266,7 +264,7 @@ describe("Feature Reordering", () => {
                 backlogAdder,
                 "reorderElementInTopBacklog"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },
@@ -527,7 +525,7 @@ describe("Feature Reordering", () => {
                 featurePlanner,
                 "reorderElementInProgramIncrement"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
 
             await reorderFeatureInSameProgramIncrement(
@@ -572,7 +570,7 @@ describe("Feature Reordering", () => {
                 featurePlanner,
                 "reorderElementInProgramIncrement"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(patch);
 
             await reorderFeatureInSameProgramIncrement(
@@ -658,7 +656,7 @@ describe("Feature Reordering", () => {
                 featurePlanner,
                 "reorderElementInProgramIncrement"
             );
-            const patch = jest.spyOn(tlp, "patch");
+            const patch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(patch, {
                 status: 404,
                 error_json: { error: { code: 404, message: "Error" } },

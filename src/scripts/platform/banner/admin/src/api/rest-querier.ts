@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, put } from "tlp";
+import { del, put } from "@tuleap/tlp-fetch";
 import type { Importance } from "../type";
 
 const headers = {

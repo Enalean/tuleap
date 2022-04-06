@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getGitPermissions } from "./rest-querier";
 import type { RepositoryFineGrainedPermissions } from "./type";
-
-jest.mock("tlp");
 
 describe("API querier", () => {
     describe("getGitPermissions", () => {
         it("Given a project id and empty group id, Then it will get permission for git", async () => {
             const project_id = 101;
 
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 headers: {
                     // X-PAGINATION-SIZE

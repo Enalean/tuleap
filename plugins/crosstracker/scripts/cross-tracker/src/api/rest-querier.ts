@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, recursiveGet } from "tlp";
+import { get, put, recursiveGet } from "@tuleap/tlp-fetch";
 import type { ArtifactsCollection, Report, Project, Tracker } from "../type";
 
 export {

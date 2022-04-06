@@ -18,7 +18,7 @@
  */
 
 import type { RootState } from "../type";
-import type { FetchWrapperError } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";
 import type { ErrorState } from "./type";
 

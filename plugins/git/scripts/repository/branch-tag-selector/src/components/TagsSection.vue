@@ -61,7 +61,7 @@
     </section>
 </template>
 <script lang="ts">
-import { recursiveGet } from "tlp";
+import { recursiveGet } from "@tuleap/tlp-fetch";
 import encodeData from "../helpers/encode-data";
 import RefsFilter from "./RefsFilter.vue";
 import Vue from "vue";

@@ -20,10 +20,8 @@
 import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 describe(`JWTService`, () => {
     let JWTService, $q, wrapPromise;
@@ -51,7 +49,7 @@ describe(`JWTService`, () => {
     describe(`getJWT`, () => {
         it(`will call GET on jwt and return the response`, async () => {
             const token = "aaaaa";
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: token });
 
             const promise = JWTService.getJWT();

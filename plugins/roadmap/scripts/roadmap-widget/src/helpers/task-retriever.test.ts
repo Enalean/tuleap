@@ -17,12 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { retrieveAllTasks, retrieveAllSubtasks } from "./task-retriever";
 import type { Task } from "../type";
 import { SUBTASKS_WAITING_TO_BE_LOADED } from "../type";
-
-jest.mock("tlp");
 
 describe("task-retriever", () => {
     describe.each([["retrieveAllTasks"], ["retrieveAllSubasks"]])("%s", (method_to_test) => {
@@ -36,7 +34,7 @@ describe("task-retriever", () => {
         });
 
         it("Retrieves tasks and transform their dates from string to Date object", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -57,7 +55,7 @@ describe("task-retriever", () => {
         });
 
         it("Removes tasks that don't have start and end dates because we don't know how to display them yet", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -76,7 +74,7 @@ describe("task-retriever", () => {
         });
 
         it("Keeps tasks with no start and end dates and a time period error message so we can display it", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -95,7 +93,7 @@ describe("task-retriever", () => {
         });
 
         it("Marks a task as a milestone if it does not have a start date", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -114,7 +112,7 @@ describe("task-retriever", () => {
         });
 
         it("Marks a task as a milestone if it does not have an end date", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -133,7 +131,7 @@ describe("task-retriever", () => {
         });
 
         it("Marks a task as a milestone if it start date = end date", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -152,7 +150,7 @@ describe("task-retriever", () => {
         });
 
         it("Does not mark a task as a milestone if start date < end date", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -171,7 +169,7 @@ describe("task-retriever", () => {
         });
 
         it("should consider a task without _is_child dependencies as not having any sub tasks", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -191,7 +189,7 @@ describe("task-retriever", () => {
         });
 
         it("should consider a task with empty _is_child dependencies not having any sub tasks", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -211,7 +209,7 @@ describe("task-retriever", () => {
         });
 
         it("should consider a task with filled _is_child dependencies as having sub tasks", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -231,7 +229,7 @@ describe("task-retriever", () => {
         });
 
         it("should consider a task with end date < start date as not having sub tasks", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -251,7 +249,7 @@ describe("task-retriever", () => {
         });
 
         it("should init the task as not showing subtasks", async () => {
-            jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+            jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                 {
                     id: 6422,
                     xref: "epic #6422",
@@ -274,7 +272,7 @@ describe("task-retriever", () => {
 
         describe("Sort tasks", () => {
             it("should sort tasks by start date", async () => {
-                jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                     {
                         id: 1231,
                         start: "2020-03-02T10:00:00+01:00",
@@ -296,7 +294,7 @@ describe("task-retriever", () => {
             });
 
             it("should use the end date if there is no start date (milestone)", async () => {
-                jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                     {
                         id: 1231,
                         start: null,
@@ -318,7 +316,7 @@ describe("task-retriever", () => {
             });
 
             it("should put tasks with end date < start date at the end", async () => {
-                jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                     {
                         id: 1231,
                         title: "Do this",
@@ -350,7 +348,7 @@ describe("task-retriever", () => {
             });
 
             it("should put tasks with time period error at the end", async () => {
-                jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+                jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
                     {
                         id: 1231,
                         title: "Do this",
@@ -386,7 +384,7 @@ describe("task-retriever", () => {
     it("retrieveAllSubasks should inject the parent in retrieved subtasks", async () => {
         const task = { subtasks_uri: "uri/1234" } as Task;
 
-        jest.spyOn(tlp, "recursiveGet").mockResolvedValue([
+        jest.spyOn(tlp_fetch, "recursiveGet").mockResolvedValue([
             {
                 id: 6422,
                 xref: "epic #6422",

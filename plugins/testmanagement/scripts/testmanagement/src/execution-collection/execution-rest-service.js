@@ -18,7 +18,7 @@
  */
 
 export default ExecutionRestService;
-import { get, patch, post, put } from "tlp";
+import { get, patch, post, put } from "@tuleap/tlp-fetch";
 
 ExecutionRestService.$inject = ["$http", "$q", "SharedPropertiesService"];
 

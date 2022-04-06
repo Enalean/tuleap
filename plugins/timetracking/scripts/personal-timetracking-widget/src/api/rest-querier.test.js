@@ -22,9 +22,7 @@ import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.
 
 import { getTrackedTimes, addTime, deleteTime } from "./rest-querier.js";
 
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
@@ -43,7 +41,7 @@ describe("getTrackedTimes() -", () => {
             ],
         ];
 
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGet, {
             headers: {
                 get: (header_name) => {
@@ -81,7 +79,7 @@ describe("getTrackedTimes() -", () => {
             minutes: 20,
         };
 
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost, {
             return_json: time,
         });
@@ -105,7 +103,7 @@ describe("getTrackedTimes() -", () => {
     it("the REST API should delete the given time", async () => {
         Settings.defaultZoneName = "Europe/Paris";
 
-        const tlpDel = jest.spyOn(tlp, "del");
+        const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel, {
             return_json: [],
         });

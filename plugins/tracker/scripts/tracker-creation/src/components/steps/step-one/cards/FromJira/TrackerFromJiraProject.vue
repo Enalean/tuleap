@@ -93,7 +93,7 @@ import type {
 } from "../../../../../store/type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action, Mutation, State } from "vuex-class";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component
 export default class TrackerFromJiraProject extends Vue {

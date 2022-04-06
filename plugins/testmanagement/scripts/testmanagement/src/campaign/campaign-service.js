@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, patch } from "tlp";
+import { get, post, patch } from "@tuleap/tlp-fetch";
 
 export default CampaignService;
 

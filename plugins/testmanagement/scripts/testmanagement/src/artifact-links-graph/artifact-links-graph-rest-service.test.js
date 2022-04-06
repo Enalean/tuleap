@@ -20,10 +20,8 @@
 import testmanagment_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 describe(`ArtifactLinksGraphRestService`, () => {
     let ArtifactLinksGraphRestService, $q, wrapPromise;
@@ -64,7 +62,7 @@ describe(`ArtifactLinksGraphRestService`, () => {
                 color: "inca-silver",
                 links: [{ id: 123, title: "metallography", color: "inca-silver" }],
             };
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: links_representation });
 
             const promise = ArtifactLinksGraphRestService.getArtifactGraph(25);

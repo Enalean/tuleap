@@ -18,7 +18,7 @@
  */
 
 import type { Item, RootState } from "../../type";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { Store } from "vuex";
 
 interface DocumentJsonError {

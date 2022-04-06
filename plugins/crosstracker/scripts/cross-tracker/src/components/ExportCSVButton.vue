@@ -40,7 +40,7 @@ import { getCSVReport } from "../api/rest-querier";
 import Vue from "vue";
 import Component from "vue-class-component";
 import { State, Getter } from "vuex-class";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component
 export default class ExportCSVButton extends Vue {

@@ -17,14 +17,14 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { saveBannerForPlatform } from "./rest-querier";
-
-jest.mock("tlp");
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("rest-querier", () => {
     it("saves banner without an expiration date when none is provided", async () => {
-        const putSpy = jest.spyOn(tlp, "put");
+        const putSpy = jest.spyOn(tlp_fetch, "put");
+        mockFetchSuccess(putSpy);
 
         await saveBannerForPlatform("Some message", "critical", "");
 
@@ -37,7 +37,8 @@ describe("rest-querier", () => {
     });
 
     it("saves banner with an expiration date", async () => {
-        const putSpy = jest.spyOn(tlp, "put");
+        const putSpy = jest.spyOn(tlp_fetch, "put");
+        mockFetchSuccess(putSpy);
 
         await saveBannerForPlatform("Some message", "critical", "2021-06-30T14:53:40.720Z");
 

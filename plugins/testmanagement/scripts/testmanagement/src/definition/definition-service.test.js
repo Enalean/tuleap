@@ -21,10 +21,8 @@ import testmanagment_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as rest_querier from "../api/rest-querier";
-
-jest.mock("tlp");
 
 describe(`DefinitionService`, () => {
     let DefinitionService, $q, wrapPromise, SharedPropertiesService;
@@ -86,7 +84,7 @@ describe(`DefinitionService`, () => {
             const artifact_id = 123;
 
             const tlpRecursiveGetSpy = jest
-                .spyOn(tlp, "recursiveGet")
+                .spyOn(tlp_fetch, "recursiveGet")
                 .mockReturnValue($q.when([{ id: artifact_id }]));
 
             jest.spyOn(SharedPropertiesService, "getDefinitionTrackerId").mockReturnValue(
@@ -108,7 +106,7 @@ describe(`DefinitionService`, () => {
     describe(`getArtifactById`, () => {
         it(`will call GET on artifacts and return the response`, async () => {
             const artifact = { id: 123 };
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: artifact });
 
             const promise = DefinitionService.getArtifactById(123);
@@ -122,7 +120,7 @@ describe(`DefinitionService`, () => {
     describe(`getDefinitionById`, () => {
         it(`will call GET on testmanagement_definitions and return the response`, async () => {
             const definition = { id: 123 };
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: definition });
 
             const promise = DefinitionService.getDefinitionById(123);
@@ -136,7 +134,7 @@ describe(`DefinitionService`, () => {
     describe(`getTracker`, () => {
         it(`will call GET on trackers and return the response`, async () => {
             const tracker = { id: 12 };
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: tracker });
 
             const promise = DefinitionService.getTracker(12);

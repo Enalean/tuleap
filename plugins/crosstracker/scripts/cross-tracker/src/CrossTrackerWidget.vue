@@ -62,7 +62,7 @@ import { Getter, State } from "vuex-class";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 export interface SaveEvent {
     saved_state: boolean;

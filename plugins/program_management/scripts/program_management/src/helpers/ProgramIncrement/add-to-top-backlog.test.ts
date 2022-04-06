@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
     moveElementFromProgramIncrementToTopBackLog,
     reorderElementInTopBacklog,
 } from "./add-to-top-backlog";
 import { BEFORE } from "../feature-reordering";
 import type { Feature } from "../../type";
-
-jest.mock("tlp");
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("Add to top backlog", () => {
     it("Move element from program increment to top backlog without order", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+        mockFetchSuccess(tlpPatch);
         await moveElementFromProgramIncrementToTopBackLog(101, {
             order: null,
             feature: { id: 1 } as Feature,
@@ -49,7 +49,8 @@ describe("Add to top backlog", () => {
     });
 
     it("Move element from program increment to top backlog with order", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+        mockFetchSuccess(tlpPatch);
         await moveElementFromProgramIncrementToTopBackLog(101, {
             order: {
                 direction: BEFORE,
@@ -72,7 +73,8 @@ describe("Add to top backlog", () => {
     });
 
     it("Reorder elements in top backlog", async () => {
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
+        mockFetchSuccess(tlpPatch);
         await reorderElementInTopBacklog(101, {
             feature: { id: 415 } as Feature,
             order: {

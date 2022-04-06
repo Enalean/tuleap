@@ -19,11 +19,9 @@
 
 import { postProject, getProjectUserIsAdminOf, getTermOfService } from "./rest-querier";
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
-
-jest.mock("tlp");
 
 describe("rest-querier", () => {
     it("Post project - creates a new project", async () => {
@@ -38,7 +36,7 @@ describe("rest-querier", () => {
             fields: [],
         };
 
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
 
         mockFetchSuccess(tlpPost, { return_json: project_properties });
 
@@ -74,7 +72,7 @@ describe("rest-querier", () => {
         const project_list = [project_a, project_b];
 
         const recursiveGet = jest
-            .spyOn(tlp, "recursiveGet")
+            .spyOn(tlp_fetch, "recursiveGet")
             .mockReturnValue(Promise.resolve(project_list));
 
         const formatted_projects = await getProjectUserIsAdminOf();
@@ -93,7 +91,7 @@ describe("rest-querier", () => {
 
     it("getTermOfService - retrieves the term of service", async () => {
         const response_text = jest.fn();
-        jest.spyOn(tlp, "get").mockImplementation(() => {
+        jest.spyOn(tlp_fetch, "get").mockImplementation(() => {
             return {
                 text: response_text,
             } as unknown as Promise<Response>;

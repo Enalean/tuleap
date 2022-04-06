@@ -18,7 +18,7 @@
  */
 
 import type { Task } from "../type";
-import { recursiveGet } from "tlp";
+import { recursiveGet } from "@tuleap/tlp-fetch";
 import { SUBTASKS_WAITING_TO_BE_LOADED } from "../type";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "./task-has-valid-dates";
 

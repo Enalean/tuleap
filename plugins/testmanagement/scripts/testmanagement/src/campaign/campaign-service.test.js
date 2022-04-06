@@ -21,9 +21,7 @@ import testmanagement_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("CampaignService", () => {
     let $q, wrapPromise, CampaignService;
@@ -66,7 +64,7 @@ describe("CampaignService", () => {
     describe(`getCampaign()`, () => {
         it(`will call GET on the testmanagement_campaigns and return the test campaign`, async () => {
             const campaign = { id: 98 };
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, { return_json: campaign });
 
             const promise = CampaignService.getCampaign(98);
@@ -80,7 +78,8 @@ describe("CampaignService", () => {
         let campaign_to_create, tlpPost;
         beforeEach(() => {
             campaign_to_create = { label: "Test Campaign", project_id: 101 };
-            tlpPost = jest.spyOn(tlp, "post");
+            tlpPost = jest.spyOn(tlp_fetch, "post");
+            mockFetchSuccess(tlpPost);
         });
 
         it(`given a milestone and a report, it will call POST on the testmanagement_campaigns
@@ -159,7 +158,7 @@ describe("CampaignService", () => {
             token: "phrenicopericardiac",
         };
         const patched_campaign = { id: 17, label, job_configuration };
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch, { return_json: patched_campaign });
 
         const promise = CampaignService.patchCampaign(17, label, job_configuration);
@@ -190,7 +189,7 @@ describe("CampaignService", () => {
             },
         ];
 
-        const tlpPatch = jest.spyOn(tlp, "patch");
+        const tlpPatch = jest.spyOn(tlp_fetch, "patch");
         mockFetchSuccess(tlpPatch, { headers: { get: () => "2" }, return_json: executions });
 
         const promise = CampaignService.patchExecutions(17, definition_ids, execution_ids);
@@ -212,7 +211,7 @@ describe("CampaignService", () => {
 
     describe("triggerAutomatedTests()", () => {
         it(`When the server responds with code 200, then a promise will be resolved`, async () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPost);
 
             const promise = CampaignService.triggerAutomatedTests(53);
@@ -224,7 +223,7 @@ describe("CampaignService", () => {
         });
 
         it(`When the server responds with code 500, then a promise will be rejected`, () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             mockFetchError(tlpPost, {
                 error_json: {
                     error: { message: "Message: The requested URL returned error: 403 Forbidden" },

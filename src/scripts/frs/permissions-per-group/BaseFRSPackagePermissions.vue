@@ -51,7 +51,7 @@ import Component from "vue-class-component";
 import { Prop } from "vue-property-decorator";
 import Vue from "vue";
 import type { PackagePermission } from "./type";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({ components: { PackagePermissionsTable } })
 export default class BaseFRSPackagePermissions extends Vue {

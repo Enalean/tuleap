@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post, recursiveGet, get } from "tlp";
+import { post, recursiveGet, get } from "@tuleap/tlp-fetch";
 import type { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
 
 export { postProject, getProjectUserIsAdminOf, getTermOfService };

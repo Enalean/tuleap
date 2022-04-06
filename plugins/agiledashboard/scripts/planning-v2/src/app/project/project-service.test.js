@@ -20,10 +20,8 @@
 import planning_module from "../app";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper";
-
-jest.mock("tlp");
 
 const expected_headers = { "content-type": "application/json" };
 
@@ -55,7 +53,7 @@ describe(`ProjectService`, () => {
     describe(`reorderBacklog`, () => {
         it(`will call PATCH on the project backlog
             and reorder items`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = ProjectService.reorderBacklog(103, [99, 187], {
@@ -80,7 +78,7 @@ describe(`ProjectService`, () => {
     describe(`removeAddReorderToBacklog`, () => {
         it(`will call PATCH on the project backlog
             and reorder items while moving them from another milestone`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = ProjectService.removeAddReorderToBacklog(77, 103, [99, 187], {
@@ -109,7 +107,7 @@ describe(`ProjectService`, () => {
     describe(`removeAddToBacklog`, () => {
         it(`will call PATCH on the project backlog
             and move items from another milestone`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = ProjectService.removeAddToBacklog(77, 103, [99, 187]);
@@ -129,7 +127,7 @@ describe(`ProjectService`, () => {
 
     describe(`getProject`, () => {
         it(`will call GET on the project`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: { id: 103, label: "Project" },
             });
@@ -146,7 +144,7 @@ describe(`ProjectService`, () => {
     describe(`getProjectBacklog`, () => {
         it(`will call GET on the project backlog
             and will format as string the accepted trackers`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: {
                     accept: {

@@ -58,7 +58,7 @@ import Vue from "vue";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
 import type { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 @Component({
     components: { GitInlineFilter, GitPermissionsTable },

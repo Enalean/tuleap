@@ -18,7 +18,7 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
     postLockFile,
     deleteLockFile,
@@ -31,13 +31,11 @@ import {
 } from "./lock-rest-querier";
 import type { Embedded, Empty, ItemFile, Link } from "../type";
 
-jest.mock("tlp");
-
 describe("lock rest querier", () => {
     const id = 1234;
 
     it("Locks a file", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost);
 
         await postLockFile({ id: id } as ItemFile);
@@ -48,7 +46,7 @@ describe("lock rest querier", () => {
     });
 
     it("Locks an embedded", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost);
 
         await postLockEmbedded({ id: id } as Embedded);
@@ -59,7 +57,7 @@ describe("lock rest querier", () => {
     });
 
     it("Locks a link", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost);
 
         await postLockLink({ id: id } as Link);
@@ -70,7 +68,7 @@ describe("lock rest querier", () => {
     });
 
     it("Locks an empty document", async () => {
-        const tlpPost = jest.spyOn(tlp, "post");
+        const tlpPost = jest.spyOn(tlp_fetch, "post");
         mockFetchSuccess(tlpPost);
 
         await postLockEmpty({ id: id } as Empty);
@@ -81,7 +79,7 @@ describe("lock rest querier", () => {
     });
 
     it("Unlocks a file", async () => {
-        const tlpDel = jest.spyOn(tlp, "del");
+        const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel);
 
         await deleteLockFile({ id: id } as ItemFile);
@@ -90,7 +88,7 @@ describe("lock rest querier", () => {
     });
 
     it("Unlocks an embedded", async () => {
-        const tlpDel = jest.spyOn(tlp, "del");
+        const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel);
 
         await deleteLockEmbedded({ id: id } as Embedded);
@@ -99,7 +97,7 @@ describe("lock rest querier", () => {
     });
 
     it("Unlocks a link", async () => {
-        const tlpDel = jest.spyOn(tlp, "del");
+        const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel);
 
         await deleteLockLink({ id: id } as Link);
@@ -108,7 +106,7 @@ describe("lock rest querier", () => {
     });
 
     it("Unlocks an empty document", async () => {
-        const tlpDel = jest.spyOn(tlp, "del");
+        const tlpDel = jest.spyOn(tlp_fetch, "del");
         mockFetchSuccess(tlpDel);
 
         await deleteLockEmpty({ id: id } as Empty);

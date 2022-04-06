@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { ProgramIncrement } from "./program-increment-retriever";
 import { getProgramIncrements } from "./program-increment-retriever";
 
-jest.mock("tlp");
-
 describe("Tracker reports retriever", () => {
     it("retrieves tracker reports", async () => {
-        const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
+        const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
 
         const program_increments: ProgramIncrement[] = [
             {

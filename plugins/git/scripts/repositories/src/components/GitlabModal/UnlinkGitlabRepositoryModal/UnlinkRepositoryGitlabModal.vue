@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { Modal } from "tlp";
 import { createModal } from "tlp";
 import { deleteIntegrationGitlab } from "../../../gitlab/gitlab-api-querier";

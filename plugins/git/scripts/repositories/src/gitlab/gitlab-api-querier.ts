@@ -18,7 +18,7 @@
  */
 
 import type { GitLabCredentials, GitLabDataWithToken, Repository } from "../type";
-import { del, get, patch, post, recursiveGet } from "tlp";
+import { del, get, patch, post, recursiveGet } from "@tuleap/tlp-fetch";
 import type { RepositoryCallback } from "../api/rest-querier";
 
 export interface GitLabRepositoryDeletion {

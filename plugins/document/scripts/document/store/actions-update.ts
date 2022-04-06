@@ -22,7 +22,7 @@ import { getErrorMessage } from "./actions-helpers/handle-errors";
 import type { ActionContext } from "vuex";
 import type { ApprovalTable, Embedded, Empty, ItemFile, Link, RootState, Wiki } from "../type";
 import { uploadNewVersion } from "./actions-helpers/upload-new-version";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import {
     getItem,
     postEmbeddedFile,

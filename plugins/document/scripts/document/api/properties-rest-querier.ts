@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { put, recursiveGet } from "tlp";
+import { put, recursiveGet } from "@tuleap/tlp-fetch";
 import type { FolderStatus, Property } from "../type";
 
 export {

@@ -35,7 +35,7 @@ import type {
     TestManagementCampaign,
     TrackerNumberArtifacts,
 } from "../type";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";
 import { getSortedSprints } from "../helpers/milestones-sprints-helper";
 

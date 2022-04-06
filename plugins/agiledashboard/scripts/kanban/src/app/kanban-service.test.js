@@ -20,10 +20,8 @@
 import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 describe("KanbanService", () => {
     let wrapPromise,
@@ -121,7 +119,7 @@ describe("KanbanService", () => {
                     const first_item = { id: 94, item_name: "exotropia" };
                     const second_item = { id: 96, item_name: "trigeminous" };
 
-                    const tlpGet = jest.spyOn(tlp, "get");
+                    const tlpGet = jest.spyOn(tlp_fetch, "get");
                     mockFetchSuccess(tlpGet, {
                         return_json: { collection: [first_item, second_item] },
                         headers: { get: () => "2" },
@@ -163,7 +161,7 @@ describe("KanbanService", () => {
                 [0, {}],
                 [37, { query: JSON.stringify({ tracker_report_id: 37 }) }],
             ])(`will return the total number of items`, async (filter_report_id, query) => {
-                const tlpHead = jest.spyOn(tlp, "head");
+                const tlpHead = jest.spyOn(tlp_fetch, "head");
                 mockFetchSuccess(tlpHead, { headers: { get: () => "27" } });
                 jest.spyOn(
                     FilterTrackerReportService,
@@ -249,7 +247,7 @@ describe("KanbanService", () => {
     ])(
         `%s will call PATCH on the kanban column and will move and reorder items`,
         async (function_name, expected_url, expected_body, methodUnderTest) => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = methodUnderTest();
@@ -273,7 +271,7 @@ describe("KanbanService", () => {
     then the error will be handled by RestErrorService
     and a rejected promise will be returned`,
         (methodUnderTest) => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(tlpPatch, {
                 status: 401,
                 error_json: { error: { message: "Unauthorized" } },
@@ -290,7 +288,7 @@ describe("KanbanService", () => {
 
     describe(`updateKanbanLabel`, () => {
         it(`will call PATCH on the kanban to change its label`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.updateKanbanLabel(8, "relicmonger");
@@ -304,7 +302,7 @@ describe("KanbanService", () => {
 
     describe(`deleteKanban`, () => {
         it(`will call DELETE on the kanban`, async () => {
-            const tlpDelete = jest.spyOn(tlp, "del");
+            const tlpDelete = jest.spyOn(tlp_fetch, "del");
             mockFetchSuccess(tlpDelete);
 
             const promise = KanbanService.deleteKanban(8);
@@ -315,7 +313,7 @@ describe("KanbanService", () => {
 
     describe(`expandColumn`, () => {
         it(`will call PATCH on the kanban to expand a column`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandColumn(8, 97);
@@ -329,7 +327,7 @@ describe("KanbanService", () => {
 
     describe(`collapseColumn`, () => {
         it(`will call PATCH on the kanban to collapse a column`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseColumn(8, 97);
@@ -343,7 +341,7 @@ describe("KanbanService", () => {
 
     describe(`expandBacklog`, () => {
         it(`will call PATCH on the kanban to expand its backlog column`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandBacklog(8);
@@ -357,7 +355,7 @@ describe("KanbanService", () => {
 
     describe(`collapseBacklog`, () => {
         it(`will call PATCH on the kanban to collapse its backlog column`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseBacklog(8);
@@ -371,7 +369,7 @@ describe("KanbanService", () => {
 
     describe(`expandArchive`, () => {
         it(`will call PATCH on the kanban to expand its archive column`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.expandArchive(8);
@@ -385,7 +383,7 @@ describe("KanbanService", () => {
 
     describe(`collapseArchive`, () => {
         it(`will call PATCH on the kanban to collapse its archive column`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = KanbanService.collapseArchive(8);
@@ -400,7 +398,7 @@ describe("KanbanService", () => {
     describe(`addColumn`, () => {
         it(`will call POST on the kanban's columns to create a new column
             and will return the new column's representation`, async () => {
-            const tlpPost = jest.spyOn(tlp, "post");
+            const tlpPost = jest.spyOn(tlp_fetch, "post");
             const column_representation = { id: 876, label: "Review", is_open: true };
             mockFetchSuccess(tlpPost, { return_json: column_representation });
 
@@ -416,7 +414,7 @@ describe("KanbanService", () => {
 
     describe(`reorderColumns`, () => {
         it(`will call PUT on the kanban's columns to reorder columns`, async () => {
-            const tlpPut = jest.spyOn(tlp, "put");
+            const tlpPut = jest.spyOn(tlp_fetch, "put");
             mockFetchSuccess(tlpPut);
 
             const promise = KanbanService.reorderColumns(8, [20, 19, 21]);
@@ -430,7 +428,7 @@ describe("KanbanService", () => {
 
     describe(`removeColumn`, () => {
         it(`will call DELETE on the kanban columns`, async () => {
-            const tlpDelete = jest.spyOn(tlp, "del");
+            const tlpDelete = jest.spyOn(tlp_fetch, "del");
             mockFetchSuccess(tlpDelete);
 
             const promise = KanbanService.removeColumn(8, 19);
@@ -449,7 +447,7 @@ describe("KanbanService", () => {
             `will call PATCH on the kanban columns
             and will edit the column's label and WIP limit`,
             async (column_wip_limit, expected_wip_limit) => {
-                const tlpPatch = jest.spyOn(tlp, "patch");
+                const tlpPatch = jest.spyOn(tlp_fetch, "patch");
                 mockFetchSuccess(tlpPatch);
 
                 const promise = KanbanService.editColumn(8, {
@@ -497,7 +495,7 @@ describe("KanbanService", () => {
     describe("updateSelectableReports", () => {
         it(`will call PUT on the kanban's tracker reports
             and update the selectable reports`, async () => {
-            const tlpPut = jest.spyOn(tlp, "put");
+            const tlpPut = jest.spyOn(tlp_fetch, "put");
             mockFetchSuccess(tlpPut);
 
             const kanban_id = 59;

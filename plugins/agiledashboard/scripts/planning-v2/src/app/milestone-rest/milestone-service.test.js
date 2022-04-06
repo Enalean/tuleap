@@ -20,11 +20,9 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as factory from "../backlog-item-rest/backlog-item-factory";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 const expected_headers = { "content-type": "application/json" };
 
@@ -56,7 +54,7 @@ describe("MilestoneService", () => {
     describe(`getMilestone`, () => {
         let tlpGet;
         beforeEach(() => {
-            tlpGet = jest.spyOn(tlp, "get");
+            tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: {
                     id: 97,
@@ -161,7 +159,7 @@ describe("MilestoneService", () => {
     describe(`getContent`, () => {
         it(`will call GET on the milestone's content
             and will return the X-PAGINATION-SIZE header as the total number of items`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             const first_backlog_item = { id: 140, label: "First User Story" };
             const second_backlog_item = { id: 142, label: "Second User Story" };
             mockFetchSuccess(tlpGet, {
@@ -188,7 +186,7 @@ describe("MilestoneService", () => {
     describe(`patchSubMilestones`, () => {
         it(`will call PATCH on the milestone's milestones
             and add the new sub milestones`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.patchSubMilestones(26, [77, 81]);
@@ -217,7 +215,7 @@ describe("MilestoneService", () => {
     describe(`reorderBacklog`, () => {
         it(`will call PATCH on the milestone's backlog
             and reorder items`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.reorderBacklog(26, [99, 187], {
@@ -242,7 +240,7 @@ describe("MilestoneService", () => {
     describe(`removeAddReorderToBacklog`, () => {
         it(`will call PATCH on the milestone's backlog
             and reorder items while moving them from another milestone`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.removeAddReorderToBacklog(77, 26, [99, 187], {
@@ -271,7 +269,7 @@ describe("MilestoneService", () => {
     describe(`removeAddToBacklog`, () => {
         it(`will call PATCH on the milestone's backlog
             and move items from another milestone`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.removeAddToBacklog(77, 26, [99, 187]);
@@ -292,7 +290,7 @@ describe("MilestoneService", () => {
     describe(`reorderContent`, () => {
         it(`will call PATCH on the milestone's content
             and reorder items`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.reorderContent(26, [99, 187], {
@@ -317,7 +315,7 @@ describe("MilestoneService", () => {
     describe(`addReorderToContent`, () => {
         it(`will call PATCH on the milestone's content
             and add new items reordered`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.addReorderToContent(26, [99, 187], {
@@ -343,7 +341,7 @@ describe("MilestoneService", () => {
     describe(`addToContent`, () => {
         it(`will call PATCH on the milestone's content
             and add new items`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.addToContent(26, [99, 187]);
@@ -359,7 +357,7 @@ describe("MilestoneService", () => {
     describe(`removeAddReorderToContent`, () => {
         it(`will call PATCH on the milestone's content
             and reorder items while moving them from another milestone`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.removeAddReorderToContent(77, 26, [99, 187], {
@@ -388,7 +386,7 @@ describe("MilestoneService", () => {
     describe(`removeAddToContent`, () => {
         it(`will call PATCH on the milestone's content
             and move items from another milestone`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = MilestoneService.removeAddToContent(77, 26, [99, 187]);

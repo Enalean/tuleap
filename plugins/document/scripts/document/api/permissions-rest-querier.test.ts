@@ -18,7 +18,7 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
     putEmbeddedFilePermissions,
     putEmptyDocumentPermissions,
@@ -28,8 +28,6 @@ import {
     putWikiPermissions,
 } from "./permissions-rest-querier";
 import type { Permissions } from "../type";
-
-jest.mock("tlp");
 
 describe("Update item permissions", () => {
     const item_id = 123;
@@ -41,7 +39,7 @@ describe("Update item permissions", () => {
     } as Permissions;
 
     it("Update permissions of a file", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putFilePermissions(item_id, permissions);
@@ -53,7 +51,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of an embedded file", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putEmbeddedFilePermissions(item_id, permissions);
@@ -65,7 +63,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of a link", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putLinkPermissions(item_id, permissions);
 
@@ -76,18 +74,18 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of a wiki document", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putWikiPermissions(item_id, permissions);
 
-        expect(tlp.put).toHaveBeenCalledWith(`/api/docman_wikis/${item_id}/permissions`, {
+        expect(tlp_fetch.put).toHaveBeenCalledWith(`/api/docman_wikis/${item_id}/permissions`, {
             headers: expect.objectContaining({ "Content-Type": "application/json" }),
             body: JSON.stringify(permissions),
         });
     });
 
     it("Update permissions of an empty document", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putEmptyDocumentPermissions(item_id, permissions);
 
@@ -98,7 +96,7 @@ describe("Update item permissions", () => {
     });
 
     it("Update permissions of folder", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
         await putFolderPermissions(item_id, permissions);
 

@@ -18,13 +18,11 @@
  */
 
 import * as actions from "./user-actions";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ActionContext } from "vuex";
 import type { RootState } from "../type";
 import type { UserPreference, UserPreferenceValue, UserState } from "./type";
-
-jest.mock("tlp");
 
 function getContext(user_id: number): ActionContext<UserState, RootState> {
     return {
@@ -39,7 +37,7 @@ describe("User state actions", () => {
 
     describe("deletePreference", () => {
         it("Calls REST API to delete the preference for regular user", async () => {
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
+            const tlpDeleteMock = jest.spyOn(tlp_fetch, "del");
             mockFetchSuccess(tlpDeleteMock, {});
 
             await actions.deletePreference(getContext(101), { key: "my-key" } as UserPreference);
@@ -47,14 +45,14 @@ describe("User state actions", () => {
         });
 
         it("Silently ignore REST errors", async () => {
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
+            const tlpDeleteMock = jest.spyOn(tlp_fetch, "del");
             mockFetchError(tlpDeleteMock, {});
 
             await actions.deletePreference(getContext(101), { key: "my-key" } as UserPreference);
         });
 
         it("Does not call REST API to delete the preference for anonymous user", async () => {
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
+            const tlpDeleteMock = jest.spyOn(tlp_fetch, "del");
 
             await actions.deletePreference(getContext(0), { key: "my-key" } as UserPreference);
 
@@ -64,7 +62,7 @@ describe("User state actions", () => {
 
     describe("setPreference", () => {
         it("Calls REST API to set the preference for regular user", async () => {
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.setPreference(getContext(101), {
@@ -83,7 +81,7 @@ describe("User state actions", () => {
         });
 
         it("Silently ignore REST errors", async () => {
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
             mockFetchError(tlpPatchMock, {});
 
             await actions.setPreference(getContext(101), {
@@ -93,7 +91,7 @@ describe("User state actions", () => {
         });
 
         it("Does not call REST API to delete the preference for anonymous user", async () => {
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            const tlpPatchMock = jest.spyOn(tlp_fetch, "patch");
 
             await actions.setPreference(getContext(0), {
                 key: "my-key",

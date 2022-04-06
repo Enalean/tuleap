@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "tlp";
-import { get } from "../../../../../../../src/themes/tlp/src/js";
+import { get, patch } from "@tuleap/tlp-fetch";
 
 export default ProjectService;
 

@@ -20,11 +20,9 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as factory from "./backlog-item-factory";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
-
-jest.mock("tlp");
 
 const expected_headers = { "content-type": "application/json" };
 
@@ -58,7 +56,7 @@ describe("BacklogItemService", () => {
     describe(`getBacklogItem`, () => {
         it(`will call GET on the backlog_item
             and will return it`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: { id: 122, label: "A User Story" },
             });
@@ -75,7 +73,7 @@ describe("BacklogItemService", () => {
         it(`will call GET on the project's backlog,
             will augment each received backlog item
             and will return the total number of items`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: [{ id: 271 }, { id: 242 }],
                 headers: {
@@ -101,7 +99,7 @@ describe("BacklogItemService", () => {
         it(`will call GET on the milestone's backlog,
             will augment each received backlog item
             and will return the total number of items`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: [{ id: 398 }, { id: 848 }],
                 headers: {
@@ -127,7 +125,7 @@ describe("BacklogItemService", () => {
         it(`will call GET on the backlog item's children,
             will augment each received backlog item
             and will return the total number of items`, async () => {
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGet, {
                 return_json: [{ id: 722 }, { id: 481 }],
                 headers: {
@@ -152,7 +150,7 @@ describe("BacklogItemService", () => {
     describe(`reorderBacklogItemChildren`, () => {
         it(`will call PATCH on the backlog item's children
             and reorder items`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = BacklogItemService.reorderBacklogItemChildren(307, [99, 187], {
@@ -177,7 +175,7 @@ describe("BacklogItemService", () => {
     describe(`removeAddReorderBacklogItemChildren`, () => {
         it(`will call PATCH on the backlog item's children
             and reorder items while moving them from another backlog item`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = BacklogItemService.removeAddReorderBacklogItemChildren(
@@ -211,7 +209,7 @@ describe("BacklogItemService", () => {
     describe(`removeAddBacklogItemChildren`, () => {
         it(`will call PATCH on the backlog item's children
             and move items from another backlog item`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
 
             const promise = BacklogItemService.removeAddBacklogItemChildren(122, 307, [99, 187]);
@@ -232,7 +230,7 @@ describe("BacklogItemService", () => {
     describe("removeItemFromExplicitBacklog()", () => {
         it(`Given a project id and an item id,
             then the PATCH route is called to remove the item id from explicit backlog`, async () => {
-            const tlpPatch = jest.spyOn(tlp, "patch");
+            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
             mockFetchSuccess(tlpPatch);
             const project_id = 101;
 

@@ -18,7 +18,7 @@
  */
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import {
     getProjectProperties,
     putEmbeddedFileProperties,
@@ -27,8 +27,6 @@ import {
     putFolderDocumentProperties,
     putLinkProperties,
 } from "./properties-rest-querier";
-
-jest.mock("tlp");
 
 describe("properties rest querier", () => {
     const id = 1234;
@@ -40,7 +38,7 @@ describe("properties rest querier", () => {
     const properties = null;
 
     it("Update properties of a file", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putFileProperties(
@@ -67,7 +65,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of an embbeded file", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putEmbeddedFileProperties(
@@ -94,7 +92,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of an link", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putLinkProperties(
@@ -121,7 +119,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of empty", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putEmptyDocumentProperties(
@@ -148,7 +146,7 @@ describe("properties rest querier", () => {
     });
 
     it("Update properties of folder", async () => {
-        const tlpPut = jest.spyOn(tlp, "put");
+        const tlpPut = jest.spyOn(tlp_fetch, "put");
         mockFetchSuccess(tlpPut);
 
         await putFolderDocumentProperties(
@@ -175,7 +173,7 @@ describe("properties rest querier", () => {
     });
 
     it("get project properties", async () => {
-        const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+        const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
         mockFetchSuccess(tlpRecursiveGet);
 
         const project_id = 101;

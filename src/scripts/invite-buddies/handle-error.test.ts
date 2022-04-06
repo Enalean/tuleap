@@ -18,7 +18,7 @@
  */
 
 import { handleError } from "./handle-error";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as feedback_display from "./feedback-display";
 
 jest.mock("./feedback-display");

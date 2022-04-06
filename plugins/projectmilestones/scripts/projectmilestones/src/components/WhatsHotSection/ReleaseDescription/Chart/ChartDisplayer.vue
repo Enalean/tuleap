@@ -47,7 +47,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData } from "../../../../type";
 import Vue from "vue";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { getChartData } from "../../../../api/rest-querier";
 import { getBurndownDataFromType, getBurnupDataFromType } from "../../../../helpers/chart-helper";
 import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";

@@ -20,14 +20,12 @@
 import type { CampaignState } from "./type";
 import type { ActionContext } from "vuex";
 import type { RootState } from "../type";
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { createCampaign, loadCampaigns, refreshCampaign } from "./campaign-actions";
 import type { Campaign } from "../../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
-
-jest.mock("tlp");
 
 describe("Campaign state actions", () => {
     let context: ActionContext<CampaignState, RootState>;
@@ -44,13 +42,14 @@ describe("Campaign state actions", () => {
                 project_id: 104,
             } as RootState,
         } as unknown as ActionContext<CampaignState, RootState>;
-        tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
-        tlpPostMock = jest.spyOn(tlp, "post");
-        tlpGetMock = jest.spyOn(tlp, "get");
+        tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
+        tlpPostMock = jest.spyOn(tlp_fetch, "post");
+        tlpGetMock = jest.spyOn(tlp_fetch, "get");
     });
 
     describe("loadCampaigns", () => {
         it("Retrieves all campaigns for milestone", async () => {
+            tlpRecursiveGetMock.mockImplementation(() => []);
             await loadCampaigns(context);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoadingCampaigns");

@@ -17,14 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { retrieveTrackers } from "./trackers-retriever";
-
-jest.mock("tlp");
 
 describe("trackers-retriever", () => {
     it("Retrieves each tracker only once", async () => {
-        const spy_tlp_get = jest.spyOn(tlp, "get");
+        const spy_tlp_get = jest.spyOn(tlp_fetch, "get");
 
         const expected_trackers = [{ id: 85 }, { id: 23 }];
 

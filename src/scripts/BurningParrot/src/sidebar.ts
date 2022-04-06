@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "tlp";
+import { patch } from "@tuleap/tlp-fetch";
 import { installProjectSidebarElement } from "@tuleap/project-sidebar-internal";
 const SIDEBAR_COLLAPSED_CLASS = "sidebar-collapsed";
 const SIDEBAR_EXPANDED_CLASS = "sidebar-expanded";

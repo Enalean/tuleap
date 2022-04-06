@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
+import { get } from "@tuleap/tlp-fetch";
 import type { Artifact } from "./artifact";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 

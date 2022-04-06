@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { put } from "tlp";
+import { put } from "@tuleap/tlp-fetch";
 import type { Permissions } from "../type";
 
 export {

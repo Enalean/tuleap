@@ -9,6 +9,7 @@
     "@tuleap/plugin-docgen-docx": "file:../document_generation/scripts/lib/docx",
     "@tuleap/plugin-docgen-xlsx": "file:../document_generation/scripts/lib/xlsx",
     "@tuleap/plugin-testmanagement": "link:../testmanagement",
+    "@tuleap/tlp-fetch": "link:../../src/scripts/lib/tlp-fetch",
     "@tuleap/vue3-gettext-init": "link:../../src/scripts/lib/vue3-gettext-init",
     "docx": "^7.3.0",
     "vue": "^3.2.31",
@@ -19,9 +20,8 @@
   },
   "devDependencies": {
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
-    "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/plugin-tracker-rest-api-types": "link:../tracker/scripts/lib/rest-api-types",
+    "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",
     "@vue/test-utils": "^2.0.0-rc.17",
     "vue-loader": "^17.0.0"
   },

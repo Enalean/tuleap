@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, get, post, recursiveGet } from "tlp";
+import { del, get, post, recursiveGet } from "@tuleap/tlp-fetch";
 import type {
     AdminPermissions,
     ApprovalTable,

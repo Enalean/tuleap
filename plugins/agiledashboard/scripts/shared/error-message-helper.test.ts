@@ -18,7 +18,7 @@
  */
 
 import { extractErrorMessage } from "./error-message-helper";
-import { FetchWrapperError } from "tlp";
+import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe(`error-message-helper`, () => {
     describe(`extractErrorMessage`, () => {

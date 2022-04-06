@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post } from "tlp";
+import { get, post } from "@tuleap/tlp-fetch";
 
 export default KanbanItemRestService;
 
