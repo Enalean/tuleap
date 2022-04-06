@@ -24,7 +24,7 @@
                 type="checkbox"
                 name="is_file_locked"
                 data-test="lock-property-input-switch"
-                v-on:input="$emit('input', $event.target.checked)"
+                v-on:input="oninput"
                 v-bind:checked="is_checked"
             />
             {{ lock_label }}
@@ -35,6 +35,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Item } from "../../../../type";
+import emitter from "../../../../helpers/emitter";
 
 @Component
 export default class LockProperty extends Vue {
@@ -47,6 +48,12 @@ export default class LockProperty extends Vue {
 
     get lock_label(): string {
         return this.is_checked ? this.$gettext("Keep lock?") : this.$gettext("Lock new version");
+    }
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLInputElement) {
+            emitter.emit("update-lock", $event.target.checked);
+        }
     }
 }
 </script>

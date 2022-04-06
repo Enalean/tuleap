@@ -259,6 +259,8 @@ describe("actions-update", () => {
             const item = { id: 45 } as Wiki;
             context.state.folder_content = [{ id: 45 } as Wiki];
 
+            getItem.mockResolvedValue(item);
+
             await createNewWikiVersionFromModal(context, [
                 item,
                 "kinky wiki",
@@ -266,9 +268,11 @@ describe("actions-update", () => {
                 "Changed title to NSFW",
                 true,
             ]);
-
             expect(postWiki).toHaveBeenCalled();
             expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
+                root: true,
+            });
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 } as Wiki;
@@ -296,8 +300,10 @@ describe("actions-update", () => {
 
     describe("createNewLinkVersionFromModal", () => {
         it("updates a link url", async () => {
-            const item = { id: 45 } as Link;
+            const item = { id: 45, lock_info: null } as Link;
             context.state.folder_content = [{ id: 45 } as Link];
+
+            getItem.mockResolvedValue(item);
 
             await createNewLinkVersionFromModal(context, [
                 item,
@@ -307,9 +313,11 @@ describe("actions-update", () => {
                 true,
                 null,
             ]);
-
             expect(postLinkVersion).toHaveBeenCalled();
             expect(emit).toHaveBeenCalledWith("item-has-just-been-updated");
+            expect(context.commit).toHaveBeenCalledWith("replaceFolderContentByItem", item, {
+                root: true,
+            });
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 } as Link;

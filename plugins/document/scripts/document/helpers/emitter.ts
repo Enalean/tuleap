@@ -76,6 +76,7 @@ export type Events = {
     "item-has-just-been-deleted": void;
     "item-has-just-been-updated": void;
     "item-is-being-uploaded": void;
+    "update-lock": boolean;
 };
 
 export default mitt<Events>();

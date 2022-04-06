@@ -30,7 +30,7 @@
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
                 <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model" />
-                <lock-property v-model="version.is_file_locked" v-bind:item="item" />
+                <lock-property v-bind:item="item" />
             </div>
         </div>
         <modal-footer
@@ -52,6 +52,7 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
 import LockProperty from "../Lock/LockProperty.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "CreateNewVersionWikiModal",
@@ -92,12 +93,16 @@ export default {
 
         this.show();
     },
+    beforeDestroy() {
+        emitter.off("update-lock", this.updateLock);
+    },
     methods: {
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;
         },
         registerEvents() {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
+            emitter.on("update-lock", this.updateLock);
         },
         show() {
             this.version = {
@@ -138,6 +143,9 @@ export default {
                 this.wiki_model = {};
                 this.modal.hide();
             }
+        },
+        updateLock(is_locked) {
+            this.version.is_file_locked = is_locked;
         },
     },
 };

@@ -121,6 +121,8 @@ export const createNewWikiVersionFromModal = async (
 ): Promise<void> => {
     try {
         await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
+        const updated_item = await getItem(item.id);
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
         Vue.set(item, "updated", true);
         emitter.emit("item-has-just-been-updated");
     } catch (exception) {
@@ -148,6 +150,8 @@ export const createNewLinkVersionFromModal = async (
             is_file_locked,
             approval_table_action
         );
+        const updated_item = await getItem(item.id);
+        context.commit("replaceFolderContentByItem", updated_item, { root: true });
         Vue.set(item, "updated", true);
         emitter.emit("item-has-just-been-updated");
     } catch (exception) {
