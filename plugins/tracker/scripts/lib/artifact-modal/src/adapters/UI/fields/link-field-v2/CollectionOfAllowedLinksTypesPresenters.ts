@@ -27,14 +27,14 @@ export type CollectionOfAllowedLinksTypesPresenters =
     ReadonlyArray<AllowedLinkTypesPresenterContainer>;
 
 export interface AllowedLinkTypesPresenterContainer {
-    forward_type_presenter: AllowedLinkTypePresenter;
-    reverse_type_presenter: AllowedLinkTypePresenter;
+    readonly forward_type_presenter: AllowedLinkTypePresenter;
+    readonly reverse_type_presenter: AllowedLinkTypePresenter;
 }
 
 export interface AllowedLinkTypePresenter {
-    label: string;
-    shortname: string;
-    direction: string;
+    readonly label: string;
+    readonly shortname: string;
+    readonly direction: string;
 }
 
 export const CollectionOfAllowedLinksTypesPresenters = {
