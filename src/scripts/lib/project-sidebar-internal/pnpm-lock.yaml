@@ -7,7 +7,7 @@ specifiers:
   '@vue/test-utils': ^2.0.0-rc.17
   '@vueuse/core': ^7.5.3
   vue: ^3.2.26
-  vue-dompurify-html: ^3.0.0-beta.2
+  vue-dompurify-html: ^3.0.0-beta.3
 
 dependencies:
   '@fortawesome/fontawesome-free': 5.15.4
@@ -15,7 +15,7 @@ dependencies:
   '@tuleap/tlp-popovers': link:../tlp-popovers
   '@vueuse/core': 7.5.3_vue@3.2.26
   vue: 3.2.26
-  vue-dompurify-html: 3.0.0-beta.2_vue@3.2.26
+  vue-dompurify-html: 3.0.0-beta.3_vue@3.2.26
 
 devDependencies:
   '@vue/test-utils': 2.0.0-rc.17_vue@3.2.26
@@ -222,8 +222,8 @@ packages:
       vue: 3.2.26
     dev: false
 
-  /vue-dompurify-html/3.0.0-beta.2_vue@3.2.26:
-    resolution: {integrity: sha512-2gWkaStpTDETuoRpUBvPSZ7KDXH4Axerz7k/wwso6p+MYz51VDVNU4GZPbWTso5IWrDyQ/fVQ5jpYx0UZugFng==}
+  /vue-dompurify-html/3.0.0-beta.3_vue@3.2.26:
+    resolution: {integrity: sha512-2YPUtBA3ImJNicyePngA+VFoVGCMmA5hXpvCbxwTmGq2N6TlvaFLrUYtxzGa/1V6TU3Um2VKUXd1vYc50k8UTA==}
     peerDependencies:
       vue: ^3.0.0
     dependencies:

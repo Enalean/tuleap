@@ -15,7 +15,7 @@ specifiers:
   sprintf-js: ^1.1.2
   vue: ^2.6.14
   vue-class-component: ^7.2.6
-  vue-dompurify-html: ^2.5.0
+  vue-dompurify-html: ^2.5.1
   vue-property-decorator: ^9.1.2
   vue-template-compiler: ^2.6.14
   vuex: ^3.6.2
@@ -29,7 +29,7 @@ dependencies:
   d3-shape: 3.0.1
   sprintf-js: 1.1.2
   vue: 2.6.14
-  vue-dompurify-html: 2.5.0_vue@2.6.14
+  vue-dompurify-html: 2.5.1_vue@2.6.14
   vue-template-compiler: 2.6.14
   vuex: 3.6.2_vue@2.6.14
 
@@ -361,8 +361,8 @@ packages:
       vue: 2.6.14
     dev: true
 
-  /vue-dompurify-html/2.5.0_vue@2.6.14:
-    resolution: {integrity: sha512-k2ejMJmsCsREGtJFDXNwqMvvek447id5ZAOU10jm2+cmsZHXgFIEdlwDam4cU4wh0iOZM+uDmkwbVJAJtmgeVQ==}
+  /vue-dompurify-html/2.5.1_vue@2.6.14:
+    resolution: {integrity: sha512-B8rQj2jAPJJhtKHHa6jg5B3/RoKBmmUl/awP/GxWXGu75j4Y7+MHqv0DG52v0Uz0taEpHyZun34KEYMAfrPWnA==}
     peerDependencies:
       vue: ^2.0.0
     dependencies:
