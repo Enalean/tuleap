@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Item, ItemReferencingWikiPageRepresentation } from "../../type";
-
-export interface ItemPath {
-    id: number;
-    path: string;
-}
-export function buildItemPath(
-    item: ItemReferencingWikiPageRepresentation,
-    parents: Array<Item>
-): ItemPath {
-    const path = parents.reduce((path, parent) => path + `/${parent.title}`, "");
-
-    return {
-        path: path + `/${item.item_name}`,
-        id: item.item_id,
-    };
-}
+export * from "./actions-create";
+export * from "./actions-retrieve";
+export * from "./actions-update";
+export * from "./actions-delete";
+export * from "./actions-quicklook";
+export * from "./actions-cancel";
+export * from "./actions-refresh";

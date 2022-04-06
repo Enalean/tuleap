@@ -36,6 +36,7 @@ import type {
     FolderProperty,
     Property,
     Uploadable,
+    ItemReferencingWikiPageRepresentation,
 } from "../type";
 import { SEARCH_LIMIT } from "../type";
 import { getRestBodyFromSearchParams } from "../helpers/get-rest-body-from-search-params";
@@ -404,7 +405,9 @@ function deleteEmptyDocument(item: Empty): Promise<Response> {
     return del(`/api/docman_empty_documents/${escaped_item_id}`);
 }
 
-async function getItemsReferencingSameWikiPage(page_id: number): Promise<Item> {
+async function getItemsReferencingSameWikiPage(
+    page_id: number
+): Promise<ReadonlyArray<ItemReferencingWikiPageRepresentation>> {
     const escaped_page_id = encodeURIComponent(page_id);
     const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
 

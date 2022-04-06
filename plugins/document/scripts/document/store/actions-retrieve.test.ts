@@ -21,13 +21,14 @@ import * as load_folder_content from "./actions-helpers/load-folder-content";
 import * as rest_querier from "../api/rest-querier";
 import * as error_handler from "./actions-helpers/handle-errors";
 import {
+    getWikisReferencingSameWikiPage,
     loadDocument,
     loadDocumentWithAscendentHierarchy,
     loadFolder,
     loadRootFolder,
 } from "./actions-retrieve";
 import type { ActionContext } from "vuex";
-import type { Folder, Item, RootState } from "../type";
+import type { Folder, Item, RootState, Wiki } from "../type";
 import type { ProjectService, RestFolder } from "../api/rest-querier";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy";
@@ -60,7 +61,8 @@ describe("actions-get", () => {
                 },
                 last_update_date: "2018-08-21T17:01:49+02:00",
                 type: TYPE_FOLDER,
-            } as RestFolder;
+                metadata: [],
+            } as unknown as RestFolder;
 
             const item = {
                 id: 3,
@@ -71,7 +73,8 @@ describe("actions-get", () => {
                 },
                 last_update_date: "2018-08-21T17:01:49+02:00",
                 type: TYPE_FOLDER,
-            } as Item;
+                properties: [],
+            } as unknown as Item;
 
             const service = {
                 root_item,
@@ -87,12 +90,18 @@ describe("actions-get", () => {
             await loadRootFolder(context);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoading");
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", root_item);
+            expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", {
+                ...root_item,
+                properties: [],
+            });
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
             expect(handle_error).not.toHaveBeenCalled();
             await expect(
                 loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).resolves.toEqual(root_item);
+            ).resolves.toStrictEqual({
+                ...root_item,
+                properties: [],
+            });
         });
 
         it("When the user does not have access to the project, an error will be raised", async () => {
@@ -210,10 +219,10 @@ describe("actions-get", () => {
 
             await expect(
                 loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).resolves.toEqual(current_folder);
+            ).resolves.toStrictEqual(current_folder);
             await expect(
                 loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
-            ).resolves.toEqual(current_folder);
+            ).resolves.toStrictEqual(current_folder);
         });
 
         it("gets item if there isn't any current folder in the store", async () => {
@@ -238,10 +247,10 @@ describe("actions-get", () => {
             expect(loadAscendantHierarchy).toHaveBeenCalled();
             await expect(
                 loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).resolves.toEqual(folder_to_fetch);
+            ).resolves.toStrictEqual(folder_to_fetch);
             await expect(
                 loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
-            ).resolves.toEqual(folder_to_fetch);
+            ).resolves.toStrictEqual(folder_to_fetch);
         });
 
         it("gets item when the requested folder is not in the store", async () => {
@@ -277,10 +286,10 @@ describe("actions-get", () => {
             expect(loadAscendantHierarchy).toHaveBeenCalled();
             await expect(
                 loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
-            ).resolves.toEqual(folder_to_fetch);
+            ).resolves.toStrictEqual(folder_to_fetch);
             await expect(
                 loadAscendantHierarchy.mock.calls[loadAscendantHierarchy.mock.calls.length - 1][2]
-            ).resolves.toEqual(folder_to_fetch);
+            ).resolves.toStrictEqual(folder_to_fetch);
         });
 
         it("does not load ascendant hierarchy if folder is already inside the current one", async () => {
@@ -514,6 +523,99 @@ describe("actions-get", () => {
 
             await expect(loadDocument(context, 3)).rejects.toBeDefined();
             expect(getItem).toHaveBeenCalled();
+        });
+    });
+
+    describe("getWikisReferencingSameWikiPage()", () => {
+        let getItemsReferencingSameWikiPage: jest.SpyInstance, getParents: jest.SpyInstance;
+
+        beforeEach(() => {
+            getItemsReferencingSameWikiPage = jest.spyOn(
+                rest_querier,
+                "getItemsReferencingSameWikiPage"
+            );
+            getParents = jest.spyOn(rest_querier, "getParents");
+        });
+
+        it("should return a collection of the items referencing the same wiki page", async () => {
+            const wiki_1 = {
+                item_name: "wiki 1",
+                item_id: 1,
+            };
+
+            const wiki_2 = {
+                item_name: "wiki 2",
+                item_id: 2,
+            };
+
+            getItemsReferencingSameWikiPage.mockReturnValue([wiki_1, wiki_2]);
+
+            getParents
+                .mockReturnValueOnce(
+                    Promise.resolve([
+                        {
+                            title: "Project documentation",
+                        },
+                    ])
+                )
+                .mockReturnValueOnce(
+                    Promise.resolve([
+                        {
+                            title: "Project documentation",
+                        },
+                        {
+                            title: "Folder 1",
+                        },
+                    ])
+                );
+
+            const target_wiki = {
+                title: "wiki 3",
+                wiki_properties: {
+                    page_name: "A wiki page",
+                    page_id: 123,
+                },
+            } as Wiki;
+
+            const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
+
+            expect(referencers).toStrictEqual([
+                {
+                    path: "/Project documentation/wiki 1",
+                    id: 1,
+                },
+                {
+                    path: "/Project documentation/Folder 1/wiki 2",
+                    id: 2,
+                },
+            ]);
+        });
+
+        it("should return null if there is a rest exception", async () => {
+            const wiki_1 = {
+                item_name: "wiki 1",
+                item_id: 1,
+            };
+
+            const wiki_2 = {
+                item_name: "wiki 2",
+                item_id: 2,
+            };
+
+            getItemsReferencingSameWikiPage.mockReturnValue([wiki_1, wiki_2]);
+            getParents.mockReturnValue(Promise.reject(500));
+
+            const target_wiki = {
+                title: "wiki 3",
+                wiki_properties: {
+                    page_name: "A wiki page",
+                    page_id: 123,
+                },
+            } as Wiki;
+
+            const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
+
+            expect(referencers).toBeNull();
         });
     });
 });

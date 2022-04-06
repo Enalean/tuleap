@@ -315,6 +315,11 @@ export interface WikiProperties {
     page_id: number | null;
 }
 
+export interface ItemReferencingWikiPageRepresentation {
+    readonly item_id: number;
+    readonly item_name: string;
+}
+
 export interface UserGroup {
     id: string;
     label: string;

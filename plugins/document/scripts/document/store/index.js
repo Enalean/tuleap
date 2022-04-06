@@ -27,7 +27,7 @@ import createMutationsSharer, {
 import { expiringLocalStorage } from "./store-persistence/storage";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters";
-import * as actions from "./actions.js";
+import * as actions from "./actions";
 import state from "./state.js";
 import error from "./error/module";
 import clipboard from "./clipboard/module";
