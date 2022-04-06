@@ -918,7 +918,7 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * Get all used artifact link types in a tracker
+     * Get all currently used artifact link types in a tracker
      *
      * @url GET {id}/used_artifact_links
      * @access hybrid
@@ -942,7 +942,7 @@ class TrackersResource extends AuthenticatedResource
 
         $factory = new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
 
-        $type_presenters = $factory->getAllUsedTypePresentersByTracker($tracker);
+        $type_presenters = $factory->getAllCurrentlyUsedTypePresentersByTracker($tracker);
 
         Header::sendPaginationHeaders($limit, $offset, count($type_presenters), self::MAX_LIMIT);
 
