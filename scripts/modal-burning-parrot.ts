@@ -18,7 +18,8 @@
  */
 
 import type { Modal } from "tlp";
-import { createModal, get, post } from "tlp";
+import { get, post } from "@tuleap/tlp-fetch";
+import { createModal } from "tlp";
 import { setupContactSupportModalBurningParrot } from "./setup-contact-support-modal";
 import { contactSupportModalShown } from "./modal";
 

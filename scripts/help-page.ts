@@ -18,6 +18,6 @@
  */
 
 import { contactSupportModalShown } from "./modal";
-import { post } from "tlp";
+import { post } from "@tuleap/tlp-fetch";
 
 document.addEventListener("DOMContentLoaded", contactSupportModalShown(document, post));
