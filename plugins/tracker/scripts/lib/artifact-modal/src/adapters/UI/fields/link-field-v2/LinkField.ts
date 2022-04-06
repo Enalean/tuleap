@@ -19,11 +19,9 @@
 
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
-import { sprintf } from "sprintf-js";
 
 import {
     getAddLinkButtonLabel,
-    getLinkFieldFetchErrorMessage,
     getLinkFieldTableEmptyStateText,
     getLinkFieldUnderConstructionPlaceholder,
 } from "../../../../gettext-catalog";
@@ -44,17 +42,6 @@ export interface LinkField {
     presenter: LinkFieldPresenter;
 }
 export type HostElement = LinkField & HTMLElement;
-
-type MapOfClasses = Record<string, boolean>;
-
-const getLinksTableClasses = (presenter: LinkFieldPresenter): MapOfClasses => ({
-    "tlp-table": true,
-    "tuleap-artifact-modal-link-field-empty":
-        presenter.has_loaded_content && presenter.error_message !== "",
-});
-
-const formatErrorMessage = (error_message: string): string =>
-    sprintf(getLinkFieldFetchErrorMessage(), error_message);
 
 export const getEmptyStateIfNeeded = (presenter: LinkFieldPresenter): UpdateFunction<LinkField> => {
     if (presenter.linked_artifacts.length > 0 || !presenter.has_loaded_content) {
@@ -124,21 +111,7 @@ export const LinkField = define<LinkField>({
     },
     content: (host) => html`
         <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">${host.label}</label>
-        ${host.presenter.error_message !== "" &&
-        html`
-            <div
-                id="tuleap-artifact-modal-link-error"
-                class="tlp-alert-danger"
-                data-test="linked-artifacts-error"
-            >
-                ${formatErrorMessage(host.presenter.error_message)}
-            </div>
-        `}
-        <table
-            id="tuleap-artifact-modal-link-table"
-            class="${getLinksTableClasses(host.presenter)}"
-            data-test="linked-artifacts-table"
-        >
+        <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
                 ${getFormattedArtifacts(host.presenter)} ${getSkeletonIfNeeded(host.presenter)}
                 ${getEmptyStateIfNeeded(host.presenter)}

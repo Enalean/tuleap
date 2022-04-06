@@ -18,10 +18,9 @@
  */
 
 import { setCatalog } from "../../../../gettext-catalog";
-import type { HostElement } from "./LinkField";
-import { getEmptyStateIfNeeded, getSkeletonIfNeeded, LinkField } from "./LinkField";
+import type { HostElement, LinkField } from "./LinkField";
+import { getEmptyStateIfNeeded, getSkeletonIfNeeded } from "./LinkField";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import { Fault } from "@tuleap/fault";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 
 const getDocument = (): Document => document.implementation.createHTMLDocument();
@@ -47,24 +46,6 @@ describe("LinkField", () => {
             target = getDocument().createElement("div") as unknown as ShadowRoot;
         });
 
-        it("should hide the table and show an alert when an error occurred during the retrieval of the linked artifacts", () => {
-            const error_message = "Unable to retrieve the linked artifacts because reasons";
-            const presenter = LinkFieldPresenter.fromFault(Fault.fromMessage(error_message));
-            const host = getHost({ presenter });
-            const update = LinkField.content(host);
-            update(host, target);
-
-            const table = target.querySelector("[data-test=linked-artifacts-table]");
-            const error = target.querySelector("[data-test=linked-artifacts-error]");
-
-            if (!(table instanceof HTMLElement) || !(error instanceof HTMLElement)) {
-                throw new Error("Unable to find an expected element in DOM");
-            }
-
-            expect(table.classList.contains("tuleap-artifact-modal-link-field-empty")).toBe(true);
-            expect(error.textContent?.trim()).toContain(error_message);
-        });
-
         it("should render a skeleton row when the links are being loaded", () => {
             const render = getSkeletonIfNeeded(LinkFieldPresenter.buildLoadingState());
 
@@ -73,7 +54,7 @@ describe("LinkField", () => {
         });
 
         it("should render an empty state row when content has been loaded and there is no link to display", () => {
-            const render = getEmptyStateIfNeeded(LinkFieldPresenter.forCreationMode());
+            const render = getEmptyStateIfNeeded(LinkFieldPresenter.forFault());
 
             render(getHost(), target);
             expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBeNull();

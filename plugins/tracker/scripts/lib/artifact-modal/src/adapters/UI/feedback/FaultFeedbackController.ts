@@ -17,9 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { NotifyFault } from "../../../domain/NotifyFault";
+import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 
-export const NoLinksInCreationModeFault = (): Fault => ({
-    isCreationMode: () => true,
-    ...Fault.fromMessage("Modal is in creation mode"),
-});
+export type OnFaultHandler = (presenter: FaultFeedbackPresenter) => void;
+
+export interface FaultFeedbackControllerType extends NotifyFault {
+    registerFaultListener(handler: OnFaultHandler): void;
+}
+
+export const FaultFeedbackController = (): FaultFeedbackControllerType => {
+    let _handler: OnFaultHandler | undefined;
+
+    return {
+        registerFaultListener: (handler: OnFaultHandler) => (_handler = handler),
+
+        onFault(fault): void {
+            _handler?.(FaultFeedbackPresenter.fromFault(fault));
+        },
+    };
+};

@@ -18,38 +18,81 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getLinkedParentFeedback } from "../../../gettext-catalog";
 import { sprintf } from "sprintf-js";
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import type { ModalFeedbackControllerType } from "./ModalFeedbackController";
+import type { ParentFeedbackControllerType } from "./ParentFeedbackController";
+import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
+import type { FaultFeedbackControllerType } from "./FaultFeedbackController";
 
-export interface ModalFeedback {
-    presenter: ParentFeedbackPresenter;
-    readonly controller: ModalFeedbackControllerType | undefined;
+export type ModalFeedback = {
+    parent_presenter: ParentFeedbackPresenter;
+    fault_presenter: FaultFeedbackPresenter;
+    readonly parentController: ParentFeedbackControllerType;
+    readonly faultController: FaultFeedbackControllerType;
     content(): HTMLElement;
-}
+};
 export type HostElement = ModalFeedback & HTMLElement;
+
+const displayParentIfNeeded = (
+    presenter: ParentFeedbackPresenter
+): UpdateFunction<ModalFeedback> => {
+    if (presenter.parent_artifact === null) {
+        return html``;
+    }
+    return html`
+        <div class="tlp-alert-info" data-test="parent-feedback">
+            ${sprintf(getLinkedParentFeedback(), presenter.parent_artifact.title)}
+        </div>
+    `;
+};
+
+const displayFaultIfNeeded = (presenter: FaultFeedbackPresenter): UpdateFunction<ModalFeedback> => {
+    if (presenter.message === "") {
+        return html``;
+    }
+    return html`
+        <div class="tlp-alert-danger" data-test="fault-feedback">${presenter.message}</div>
+    `;
+};
+
+const noFeedbackToShow = (host: ModalFeedback): boolean =>
+    host.fault_presenter.message === "" && host.parent_presenter.parent_artifact === null;
 
 export const ModalFeedback = define<ModalFeedback>({
     tag: "modal-feedback",
-    controller: {
-        set(host, controller: ModalFeedbackControllerType) {
-            controller.displayParentFeedback().then((presenter) => (host.presenter = presenter));
+    parentController: {
+        set(host, controller: ParentFeedbackControllerType) {
+            controller
+                .displayParentFeedback()
+                .then((presenter) => (host.parent_presenter = presenter));
+            return controller;
         },
     },
-    presenter: {
+    faultController: {
+        set(host, controller: FaultFeedbackControllerType) {
+            controller.registerFaultListener((presenter) => (host.fault_presenter = presenter));
+            return controller;
+        },
+    },
+    parent_presenter: {
         get: (host, last_value) => last_value ?? ParentFeedbackPresenter.buildEmpty(),
         set: (host, presenter) => presenter,
     },
-    content: (host) =>
-        html`
-            ${host.presenter.parent_artifact !== null &&
-            html`
-                <div class="tlp-modal-feedback">
-                    <div class="tlp-alert-info" data-test="parent-feedback">
-                        ${sprintf(getLinkedParentFeedback(), host.presenter.parent_artifact.title)}
-                    </div>
-                </div>
-            `}
-        `,
+    fault_presenter: {
+        get: (host, last_value) => last_value ?? FaultFeedbackPresenter.buildEmpty(),
+        set: (host, presenter) => presenter,
+    },
+    content: (host) => {
+        if (noFeedbackToShow(host)) {
+            return html``;
+        }
+        return html`
+            <div class="tlp-modal-feedback">
+                ${displayParentIfNeeded(host.parent_presenter)}
+                ${displayFaultIfNeeded(host.fault_presenter)}
+            </div>
+        `;
+    },
 });

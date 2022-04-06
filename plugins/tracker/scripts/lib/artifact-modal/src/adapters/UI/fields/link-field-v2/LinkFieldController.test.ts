@@ -30,16 +30,18 @@ import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/Delet
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 
 const ARTIFACT_ID = 60;
 
 describe(`LinkFieldController`, () => {
     describe(`displayLinkedArtifacts()`, () => {
-        let links_retriever: RetrieveAllLinkedArtifacts;
+        let links_retriever: RetrieveAllLinkedArtifacts, fault_notifier: NotifyFaultStub;
 
         beforeEach(() => {
             const linked_artifact = LinkedArtifactStub.withDefaults();
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
+            fault_notifier = NotifyFaultStub.withCount();
         });
 
         const displayLinkedArtifacts = (): Promise<LinkFieldPresenter> => {
@@ -49,19 +51,22 @@ describe(`LinkFieldController`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
+                fault_notifier,
                 CurrentArtifactIdentifierStub.withId(18)
             );
             return controller.displayLinkedArtifacts();
         };
 
-        it(`when the modal is in creation mode, it will return a dedicated empty presenter`, async () => {
+        it(`when the modal is in creation mode,
+            it won't notify that there has been a fault
+            and it will return an empty presenter`, async () => {
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
                 NoLinksInCreationModeFault()
             );
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);
-            expect(presenter.error_message).toBe("");
+            expect(fault_notifier.getCallCount()).toBe(0);
         });
 
         it(`when the modal is in edition mode and it succeeds loading,
@@ -69,19 +74,16 @@ describe(`LinkFieldController`, () => {
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);
-            expect(presenter.error_message).toBe("");
         });
 
         it(`when the modal is in edition mode and it fails loading,
-            it will return a presenter with an error message`, async () => {
-            const error_message = "Ooops";
-            links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
-                Fault.fromMessage(error_message)
-            );
+            it will notify that there has been a fault
+            and it will return an empty presenter`, async () => {
+            links_retriever = RetrieveAllLinkedArtifactsStub.withFault(Fault.fromMessage("Ooops"));
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);
-            expect(presenter.error_message).toBe(error_message);
+            expect(fault_notifier.getCallCount()).toBe(1);
         });
     });
 
@@ -101,6 +103,7 @@ describe(`LinkFieldController`, () => {
                 deleted_link_adder,
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
+                NotifyFaultStub.withCount(),
                 CurrentArtifactIdentifierStub.withId(40)
             );
             return controller.markForRemoval(identifier);
@@ -133,6 +136,7 @@ describe(`LinkFieldController`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 deleted_link_remover,
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+                NotifyFaultStub.withCount(),
                 CurrentArtifactIdentifierStub.withId(80)
             );
             return controller.unmarkForRemoval(identifier);
