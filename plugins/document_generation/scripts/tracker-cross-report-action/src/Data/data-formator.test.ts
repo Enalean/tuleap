@@ -20,92 +20,94 @@
 import { formatData } from "./data-formator";
 import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
 import * as rest_querier from "../rest-querier";
+import * as organized_data from "./organize-reports-data";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 describe("data-formator", () => {
     it("generates the formatted data that will be used to create the XLSX document", async (): Promise<void> => {
-        const artifacts_report_response: ArtifactResponse[] = [
-            {
-                id: 74,
-                title: null,
-                xref: "bug #74",
-                tracker: { id: 14 },
-                html_url: "/plugins/tracker/?aid=74",
-                values: [
-                    {
-                        field_id: 1,
-                        type: "aid",
-                        label: "Artifact ID",
-                        value: 74,
-                    },
-                    {
-                        field_id: 2,
-                        type: "string",
-                        label: "Field02",
-                        value: "value02",
-                    },
-                    {
-                        field_id: 3,
-                        type: "sb",
-                        label: "Assigned to",
-                        values: [],
-                    },
-                    {
-                        field_id: 4,
-                        type: "art_link",
-                        label: "Artifact links",
-                        values: [],
-                    },
-                    {
-                        field_id: 5,
-                        type: "file",
-                        label: "Attachment",
-                        values: [],
-                    },
-                ],
-            } as ArtifactResponse,
-            {
-                id: 4,
-                title: null,
-                xref: "bug #4",
-                tracker: { id: 14 },
-                html_url: "/plugins/tracker/?aid=4",
-                values: [
-                    {
-                        field_id: 1,
-                        type: "aid",
-                        label: "Artifact ID",
-                        value: 4,
-                    },
-                    {
-                        field_id: 2,
-                        type: "string",
-                        label: "Field02",
-                        value: "value04",
-                    },
-                    {
-                        field_id: 3,
-                        type: "sb",
-                        label: "Assigned to",
-                        values: [],
-                    },
-                    {
-                        field_id: 4,
-                        type: "art_link",
-                        label: "Artifact links",
-                        values: [],
-                    },
-                    {
-                        field_id: 5,
-                        type: "file",
-                        label: "Attachment",
-                        values: [],
-                    },
-                ],
-            } as ArtifactResponse,
-        ];
+        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        artifact_representations_map.set(74, {
+            id: 74,
+            title: null,
+            xref: "bug #74",
+            tracker: { id: 14 },
+            html_url: "/plugins/tracker/?aid=74",
+            values: [
+                {
+                    field_id: 1,
+                    type: "aid",
+                    label: "Artifact ID",
+                    value: 74,
+                },
+                {
+                    field_id: 2,
+                    type: "string",
+                    label: "Field02",
+                    value: "value02",
+                },
+                {
+                    field_id: 3,
+                    type: "sb",
+                    label: "Assigned to",
+                    values: [],
+                },
+                {
+                    field_id: 4,
+                    type: "art_link",
+                    label: "Artifact links",
+                    values: [],
+                },
+                {
+                    field_id: 5,
+                    type: "file",
+                    label: "Attachment",
+                    values: [],
+                },
+            ],
+        } as ArtifactResponse);
+        artifact_representations_map.set(4, {
+            id: 4,
+            title: null,
+            xref: "bug #4",
+            tracker: { id: 14 },
+            html_url: "/plugins/tracker/?aid=4",
+            values: [
+                {
+                    field_id: 1,
+                    type: "aid",
+                    label: "Artifact ID",
+                    value: 4,
+                },
+                {
+                    field_id: 2,
+                    type: "string",
+                    label: "Field02",
+                    value: "value04",
+                },
+                {
+                    field_id: 3,
+                    type: "sb",
+                    label: "Assigned to",
+                    values: [],
+                },
+                {
+                    field_id: 4,
+                    type: "art_link",
+                    label: "Artifact links",
+                    values: [],
+                },
+                {
+                    field_id: 5,
+                    type: "file",
+                    label: "Attachment",
+                    values: [],
+                },
+            ],
+        } as ArtifactResponse);
 
-        jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
+        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+            artifact_representations: artifact_representations_map,
+        });
         jest.spyOn(rest_querier, "getLinkedArtifacts").mockResolvedValue([]);
 
         const formatted_data = await formatData({
@@ -130,8 +132,9 @@ describe("data-formator", () => {
         });
     });
     it("generates empty formatted data if no artifact found", async (): Promise<void> => {
-        const artifacts_report_response: ArtifactResponse[] = [];
-        jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
+        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+            artifact_representations: new Map(),
+        });
 
         const formatted_data = await formatData({
             first_level: {
