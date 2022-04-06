@@ -45,7 +45,7 @@ class ReportRepresentation
      * @var string
      */
     public $label;
-
+    public bool $is_public;
     /**
      * @var array
      */
@@ -56,6 +56,7 @@ class ReportRepresentation
         $this->id        = JsonCast::toInt($report->getId());
         $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $report->getName();
+        $this->is_public = $report->isPublic();
         $this->resources = [
             [
                 'type' => 'artifacts',
