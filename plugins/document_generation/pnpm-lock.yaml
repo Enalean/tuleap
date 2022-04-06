@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/concurrency-limit-pool': file:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/gettext': file:../../src/scripts/lib/gettext
   '@tuleap/plugin-docgen-docx': file:./scripts/lib/docx
   '@tuleap/plugin-docgen-xlsx': file:./scripts/lib/xlsx
@@ -18,6 +19,7 @@ specifiers:
   xlsx: ^0.18.5
 
 dependencies:
+  '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
   '@tuleap/gettext': link:../../src/scripts/lib/gettext
   '@tuleap/plugin-docgen-docx': link:scripts/lib/docx
   '@tuleap/plugin-docgen-xlsx': link:scripts/lib/xlsx

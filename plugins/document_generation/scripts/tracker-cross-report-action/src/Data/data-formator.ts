@@ -24,6 +24,7 @@ import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../export-document";
 import type { ArtifactReportResponseFieldValueWithExtraFields } from "../type";
+import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
 export interface ReportSection {
     readonly headers?: ReadonlyArray<TextCell>;
@@ -45,11 +46,18 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
     let first_row_processed = false;
     let artifact_value_rows: Array<ReportCell> = [];
 
+    await limitConcurrencyPool(
+        5,
+        report_artifacts,
+        async (artifact: ArtifactResponse): Promise<void> => {
+            for (const artifact_link_type of export_settings.first_level.artifact_link_types) {
+                await getLinkedArtifacts(artifact.id, artifact_link_type);
+            }
+        }
+    );
     for (const artifact of report_artifacts) {
         artifact_value_rows = [];
-        for (const artifact_link_type of export_settings.first_level.artifact_link_types) {
-            await getLinkedArtifacts(artifact.id, artifact_link_type);
-        }
+
         for (const field_value of artifact.values) {
             if (!isFieldTakenIntoAccount(field_value)) {
                 continue;
