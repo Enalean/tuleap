@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, recursiveGet, put, post, options } from "tlp";
-import type { FetchWrapperError } from "tlp";
+import { get, recursiveGet, put, post, options } from "@tuleap/tlp-fetch";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";

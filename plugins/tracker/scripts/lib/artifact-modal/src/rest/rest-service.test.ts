@@ -21,7 +21,7 @@ import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fe
 import * as RestService from "./rest-service";
 import * as rest_error_state from "./rest-error-state";
 
-import * as tlp from "tlp";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
 
 const noop = (): void => {
@@ -34,7 +34,7 @@ describe("rest-service", () => {
             id: 84,
             label: "Functionize recklessly",
         };
-        const tlpGetSpy = jest.spyOn(tlp, "get");
+        const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGetSpy, { return_json });
 
         const tracker = await RestService.getTracker(84);
@@ -62,7 +62,7 @@ describe("rest-service", () => {
                 },
             ],
         };
-        const tlpGetSpy = jest.spyOn(tlp, "get");
+        const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
         mockFetchSuccess(tlpGetSpy, { return_json });
 
         const artifact = await RestService.getArtifact(792);
@@ -88,7 +88,7 @@ describe("rest-service", () => {
             ],
             title: "coincoin",
         };
-        mockFetchSuccess(jest.spyOn(tlp, "get"), {
+        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), {
             return_json,
             headers: {
                 get: (header) => {
@@ -117,7 +117,9 @@ describe("rest-service", () => {
                 { id: 21, title: "equationally" },
                 { id: 82, title: "brachiator" },
             ];
-            const tlpRecursiveGetSpy = jest.spyOn(tlp, "recursiveGet").mockResolvedValue(artifacts);
+            const tlpRecursiveGetSpy = jest
+                .spyOn(tlp_fetch, "recursiveGet")
+                .mockResolvedValue(artifacts);
 
             const values = await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
 
@@ -144,7 +146,7 @@ describe("rest-service", () => {
             };
 
             const setErrorSpy = jest.spyOn(rest_error_state, "setError").mockImplementation(noop);
-            mockFetchError(jest.spyOn(tlp, "recursiveGet"), { error_json });
+            mockFetchError(jest.spyOn(tlp_fetch, "recursiveGet"), { error_json });
 
             await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset).then(
                 () => Promise.reject(new Error("Promise should be rejected")),
@@ -161,7 +163,7 @@ describe("rest-service", () => {
                 { id: 629, label: "Blue" },
                 { id: 593, label: "Blurred" },
             ];
-            const tlpGetSpy = jest.spyOn(tlp, "get");
+            const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGetSpy, { return_json });
 
             const {
@@ -189,7 +191,7 @@ describe("rest-service", () => {
                 { field_id: 38, value: "fingerroot" },
                 { field_id: 140, bind_value_ids: [253] },
             ];
-            const tlpPostSpy = jest.spyOn(tlp, "post");
+            const tlpPostSpy = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPostSpy, { return_json });
 
             const { id } = await RestService.createArtifact(3, field_values);
@@ -230,7 +232,7 @@ describe("rest-service", () => {
             ];
             const [first_response, second_response] = return_json;
 
-            const tlpGetSpy = jest.spyOn(tlp, "get");
+            const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGetSpy, {
                 headers: {
                     /** 'X-PAGINATION-SIZE' */
@@ -257,7 +259,7 @@ describe("rest-service", () => {
 
     describe("uploadTemporaryFile() -", () => {
         it("Given a file name, a file type and a first chunk and given a description, when I upload a new temporary file, then a promise will be resolved with the new temporary file's id", async () => {
-            const tlpPostSpy = jest.spyOn(tlp, "post");
+            const tlpPostSpy = jest.spyOn(tlp_fetch, "post");
             mockFetchSuccess(tlpPostSpy, { return_json: { id: 4 } });
 
             const file_name = "bitterheartedness";
@@ -289,7 +291,7 @@ describe("rest-service", () => {
 
     describe("uploadAdditionalChunk() -", () => {
         it("Given a temporary file id, a chunk and a chunk offset, when I upload an additional chunk to be appended to a temporary file, then a promise will be resolved", async () => {
-            const tlpPutSpy = jest.spyOn(tlp, "put");
+            const tlpPutSpy = jest.spyOn(tlp_fetch, "put");
             mockFetchSuccess(tlpPutSpy);
 
             await RestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
@@ -312,7 +314,7 @@ describe("rest-service", () => {
                 key: "tracker_comment_invertorder_93",
                 value: "1",
             };
-            const tlpGetSpy = jest.spyOn(tlp, "get");
+            const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGetSpy, { return_json });
 
             const result = await RestService.getUserPreference(
@@ -340,7 +342,7 @@ describe("rest-service", () => {
                 { field_id: 47, value: "unpensionableness" },
                 { field_id: 71, bind_value_ids: [726, 332] },
             ];
-            const tlpPutSpy = jest.spyOn(tlp, "put");
+            const tlpPutSpy = jest.spyOn(tlp_fetch, "put");
             mockFetchSuccess(tlpPutSpy, {
                 return_json: {
                     values: field_values,
@@ -379,7 +381,7 @@ describe("rest-service", () => {
                 { field_id: 47, value: "unpensionableness" },
                 { field_id: 71, bind_value_ids: [726, 332] },
             ];
-            const tlpPutSpy = jest.spyOn(tlp, "put");
+            const tlpPutSpy = jest.spyOn(tlp_fetch, "put");
             mockFetchSuccess(tlpPutSpy, {
                 return_json: {
                     values: field_values,
@@ -416,7 +418,7 @@ describe("rest-service", () => {
                 body: "",
                 format: TEXT_FORMAT_TEXT,
             };
-            const tlpPutSpy = jest.spyOn(tlp, "put");
+            const tlpPutSpy = jest.spyOn(tlp_fetch, "put");
             mockFetchSuccess(tlpPutSpy, {
                 return_json: {
                     values: [],
@@ -450,7 +452,7 @@ describe("rest-service", () => {
 
     describe("getFileUploadRules() -", () => {
         it("When I get the file upload rules, then a promise will be resolved with an object containing the disk quota for the logged user, her disk usage and the max chunk size that can be sent when uploading a file", async () => {
-            const tlpOptionsSpy = jest.spyOn(tlp, "options");
+            const tlpOptionsSpy = jest.spyOn(tlp_fetch, "options");
             mockFetchSuccess(tlpOptionsSpy, {
                 headers: {
                     get: (header) => {
@@ -484,7 +486,7 @@ describe("rest-service", () => {
         it("Given an artifact id, then an array containing the first reverse _is_child linked artifact will be returned", async () => {
             const artifact_id = 20;
             const collection = [{ id: 46 }];
-            const tlpGetSpy = jest.spyOn(tlp, "get");
+            const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(tlpGetSpy, {
                 return_json: { collection },
             });
@@ -504,7 +506,7 @@ describe("rest-service", () => {
 
         it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", async () => {
             const artifact_id = 78;
-            mockFetchSuccess(jest.spyOn(tlp, "get"), {
+            mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), {
                 return_json: { collection: [] },
             });
 
@@ -521,7 +523,7 @@ describe("rest-service", () => {
                 },
             };
             const setErrorSpy = jest.spyOn(rest_error_state, "setError").mockImplementation(noop);
-            mockFetchError(jest.spyOn(tlp, "get"), { error_json });
+            mockFetchError(jest.spyOn(tlp_fetch, "get"), { error_json });
 
             await RestService.getFirstReverseIsChildLink(artifact_id).then(
                 () => Promise.reject(new Error("Promise should be rejected")),

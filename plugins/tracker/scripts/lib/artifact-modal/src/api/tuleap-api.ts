@@ -18,8 +18,8 @@
  *
  */
 
-import type { FetchWrapperError } from "tlp";
-import { post } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { post } from "@tuleap/tlp-fetch";
 
 export function postInterpretCommonMark(markdown: string, project_id: number): Promise<string> {
     const form_data = new FormData();

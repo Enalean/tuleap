@@ -19,8 +19,8 @@
 
 import type { RetrieveArtifact } from "../../domain/RetrieveArtifact";
 import { getArtifact } from "../../rest/rest-service";
-import type { FetchWrapperError } from "tlp";
-import { get, recursiveGet } from "tlp";
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";

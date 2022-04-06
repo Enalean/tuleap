@@ -8,7 +8,7 @@ specifiers:
   '@tuleap/list-picker': file:../../../../../src/scripts/lib/list-picker
   '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/plugin-tracker-rich-text-editor': file:../rich-text-editor
-  '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   '@tuleap/tooltip': file:../../../../../src/scripts/lib/tooltip
   '@types/ckeditor': ^4.9.10
   angular: ^1.8.2
@@ -35,6 +35,7 @@ dependencies:
   '@tuleap/list-picker': link:../../../../../src/scripts/lib/list-picker
   '@tuleap/plugin-tracker-constants': link:../constants
   '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
+  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   '@tuleap/tooltip': link:../../../../../src/scripts/lib/tooltip
   angular-custom-elements: 2.1.0
   angular-gettext: 2.4.2
@@ -51,7 +52,6 @@ dependencies:
   sprintf-js: 1.1.2
 
 devDependencies:
-  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
   '@types/ckeditor': 4.9.10
   angular: 1.8.2
   angular-mocks: 1.8.2
