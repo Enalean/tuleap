@@ -18,7 +18,7 @@
  */
 
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import { getReportArtifacts } from "../rest-querier";
+import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
@@ -47,6 +47,9 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
 
     for (const artifact of report_artifacts) {
         artifact_value_rows = [];
+        for (const artifact_link_type of export_settings.first_level.artifact_link_types) {
+            await getLinkedArtifacts(artifact.id, artifact_link_type);
+        }
         for (const field_value of artifact.values) {
             if (!isFieldTakenIntoAccount(field_value)) {
                 continue;

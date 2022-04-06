@@ -37,3 +37,21 @@ export async function getReportArtifacts(
 
     return report_artifacts;
 }
+
+export async function getLinkedArtifacts(
+    artifact_id: number,
+    artifact_link_type: string
+): Promise<ArtifactResponse[]> {
+    const linked_artifacts: ArtifactResponse[] = await recursiveGet(
+        `/api/v1/artifacts/${encodeURIComponent(artifact_id)}/linked_artifacts`,
+        {
+            params: {
+                direction: "forward",
+                nature: artifact_link_type,
+                limit: 10,
+            },
+        }
+    );
+
+    return linked_artifacts;
+}

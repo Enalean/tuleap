@@ -124,6 +124,7 @@ async function startExport(): Promise<void> {
                     props.properties.current_tracker_reports.find(
                         (report: TrackerReport) => report.id === report_id.value
                     )?.name ?? "",
+                artifact_link_types: artifact_link_types.value,
             },
         },
         downloadXLSX

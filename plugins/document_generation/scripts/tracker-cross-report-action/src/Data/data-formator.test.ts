@@ -21,7 +21,6 @@ import { formatData } from "./data-formator";
 import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
 import * as rest_querier from "../rest-querier";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import type { ExportSettings } from "../export-document";
 
 describe("data-formator", () => {
     it("generates the formatted data that will be used to create the XLSX document", async (): Promise<void> => {
@@ -107,10 +106,16 @@ describe("data-formator", () => {
         ];
 
         jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
+        jest.spyOn(rest_querier, "getLinkedArtifacts").mockResolvedValue([]);
 
         const formatted_data = await formatData({
-            first_level: { report_id: 1 },
-        } as ExportSettings);
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: ["_is_child"],
+            },
+        });
 
         expect(formatted_data).toStrictEqual({
             headers: [
@@ -129,8 +134,13 @@ describe("data-formator", () => {
         jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
 
         const formatted_data = await formatData({
-            first_level: { report_id: 1 },
-        } as ExportSettings);
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: [],
+            },
+        });
 
         expect(formatted_data).toStrictEqual({});
     });
