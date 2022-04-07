@@ -18,7 +18,17 @@
  *
  */
 
-import type { Embedded, Empty, FakeItem, Folder, Item, ItemFile, Link, Wiki } from "../type";
+import type {
+    DefaultFileItem,
+    Embedded,
+    Empty,
+    FakeItem,
+    Folder,
+    Item,
+    ItemFile,
+    Link,
+    Wiki,
+} from "../type";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -29,7 +39,7 @@ import {
 } from "../constants";
 
 export function isFile(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem
 ): item is ItemFile {
     return item.type === TYPE_FILE;
 }

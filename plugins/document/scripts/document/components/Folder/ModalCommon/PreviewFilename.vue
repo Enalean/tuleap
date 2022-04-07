@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-property" v-if="is_filename_pattern_enforced">
+    <div class="tlp-property" v-if="is_filename_pattern_enforced && isFile(props.item)">
         <label class="tlp-label">{{ filename_preview_label }}</label>
         <p data-test="preview">{{ preview }}</p>
     </div>
@@ -32,6 +32,7 @@ import { computed, ref } from "@vue/composition-api";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../helpers/add-original-filename-extension";
+import { isFile } from "../../../helpers/type-check-helper";
 
 const { $gettext } = useGettext();
 
