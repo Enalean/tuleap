@@ -18,6 +18,7 @@
  */
 
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 export interface TrackerReport {
     readonly id: number;
@@ -46,4 +47,8 @@ interface ArtifactReportExtraFieldValue {
     type: "burndown" | "burnup" | "Encrypted" | "ttmstepexec";
     label: string;
     value: never;
+}
+
+export interface OrganizedReportsData {
+    readonly artifact_representations: Map<number, ArtifactResponse>;
 }

@@ -18,13 +18,15 @@
  */
 
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
+import { getLinkedArtifacts } from "../rest-querier";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../export-document";
 import type { ArtifactReportResponseFieldValueWithExtraFields } from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
+import { organizeReportsData } from "./organize-reports-data";
+import type { OrganizedReportsData } from "../type";
 
 export interface ReportSection {
     readonly headers?: ReadonlyArray<TextCell>;
@@ -32,12 +34,9 @@ export interface ReportSection {
 }
 
 export async function formatData(export_settings: ExportSettings): Promise<ReportSection> {
-    const report_artifacts: ArtifactResponse[] = await getReportArtifacts(
-        export_settings.first_level.report_id,
-        true
-    );
+    const organized_reports_data: OrganizedReportsData = await organizeReportsData(export_settings);
 
-    if (report_artifacts.length === 0) {
+    if (organized_reports_data.artifact_representations.size === 0) {
         return {};
     }
 
@@ -48,14 +47,15 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
 
     await limitConcurrencyPool(
         5,
-        report_artifacts,
+        Array.from(organized_reports_data.artifact_representations.values()),
         async (artifact: ArtifactResponse): Promise<void> => {
             for (const artifact_link_type of export_settings.first_level.artifact_link_types) {
                 await getLinkedArtifacts(artifact.id, artifact_link_type);
             }
         }
     );
-    for (const artifact of report_artifacts) {
+
+    for (const artifact of organized_reports_data.artifact_representations.values()) {
         artifact_value_rows = [];
 
         for (const field_value of artifact.values) {
