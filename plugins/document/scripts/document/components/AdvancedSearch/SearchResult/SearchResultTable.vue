@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <fragment>
+    <div class="document-search-table-container-with-pagination">
         <div class="document-search-table-container">
             <table class="tlp-table document-search-table">
                 <thead>
@@ -33,7 +33,9 @@
                                 "
                             ></th>
                             <th
-                                v-bind:class="{ 'tlp-table-cell-numeric': column.name === 'id' }"
+                                v-bind:class="{
+                                    'tlp-table-cell-numeric': column.name === 'id',
+                                }"
                                 v-bind:key="'document-search-result-' + column.name + '-header'"
                             >
                                 {{ column.label }}
@@ -57,7 +59,7 @@
             v-bind:total="results.total"
             v-bind:limit="limit"
         />
-    </fragment>
+    </div>
 </template>
 <script setup lang="ts">
 import TableBodySkeleton from "./TableBodySkeleton.vue";
@@ -66,7 +68,6 @@ import type { ItemSearchResult, SearchResult } from "../../../type";
 import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
-import { Fragment } from "vue-frag";
 import { computed, ref } from "@vue/composition-api";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
