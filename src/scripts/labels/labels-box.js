@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet, patch, select2 } from "tlp";
+import { recursiveGet, patch } from "@tuleap/tlp-fetch";
+import { select2 } from "tlp";
 import mustache from "mustache";
 
 export async function create(

@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/core": "link:../../src",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
+    "@tuleap/tlp-fetch": "link:../../src/scripts/lib/tlp-fetch",
     "mustache": "^4.2.0",
     "sprintf-js": "^1.1.2"
   },

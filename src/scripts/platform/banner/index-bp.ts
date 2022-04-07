@@ -18,7 +18,7 @@
  */
 
 import { allowToHideAndShowPlatformBanner } from "./platform-banner-show-hide";
-import { patch } from "tlp";
+import { patch } from "@tuleap/tlp-fetch";
 import { allowUnclampingPlatformBannerMessage } from "./platform-banner-clamp";
 
 document.addEventListener("DOMContentLoaded", () => {

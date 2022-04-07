@@ -18,10 +18,8 @@
  */
 
 import { postInterpretCommonMark } from "./tuleap-api";
-import type { FetchWrapperError } from "tlp";
-import * as tlp from "tlp";
-
-jest.mock("tlp");
+import type { FetchWrapperError } from "@tuleap/tlp-fetch";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe(`tuleap-api`, () => {
     describe(`postInterpretCommonMark()`, () => {
@@ -32,7 +30,7 @@ describe(`tuleap-api`, () => {
             and will return the rendered HTML string`, async () => {
             const html_string = "<p><strong>Markdown</strong> content</p>";
 
-            const post = jest.spyOn(tlp, "post").mockResolvedValue({
+            const post = jest.spyOn(tlp_fetch, "post").mockResolvedValue({
                 text: () => Promise.resolve(html_string),
             } as Response);
 
@@ -61,7 +59,7 @@ describe(`tuleap-api`, () => {
                 } as Response,
             } as FetchWrapperError;
 
-            jest.spyOn(tlp, "post").mockRejectedValue(error);
+            jest.spyOn(tlp_fetch, "post").mockRejectedValue(error);
 
             await expect(() =>
                 postInterpretCommonMark(markdown_string, project_id)

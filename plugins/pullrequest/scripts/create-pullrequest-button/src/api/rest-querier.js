@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post, recursiveGet } from "tlp";
+import { post, recursiveGet } from "@tuleap/tlp-fetch";
 
 export function getBranches(repository_id) {
     return recursiveGet("/api/git/" + repository_id + "/branches", {

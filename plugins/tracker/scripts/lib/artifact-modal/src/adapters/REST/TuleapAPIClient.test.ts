@@ -19,8 +19,8 @@
 
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
-import type { RecursiveGetInit } from "tlp";
-import * as tlp from "tlp";
+import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { APILinkedArtifact } from "./APILinkedArtifact";
@@ -42,7 +42,7 @@ describe(`TuleapAPIClient`, () => {
 
         it(`will return the artifact matching the given id`, () => {
             const artifact = { id: ARTIFACT_ID } as Artifact;
-            const getSpy = jest.spyOn(tlp, "get");
+            const getSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(getSpy, {
                 return_json: artifact,
             });
@@ -69,7 +69,7 @@ describe(`TuleapAPIClient`, () => {
                 label: "Child",
             };
 
-            const getSpy = jest.spyOn(tlp, "get");
+            const getSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(getSpy, {
                 return_json: { natures: [child_type, parent_type] },
             });
@@ -82,7 +82,7 @@ describe(`TuleapAPIClient`, () => {
         });
 
         it(`when there is an error, it will unwrap the error message from the response`, () => {
-            const getSpy = jest.spyOn(tlp, "get");
+            const getSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchError(getSpy, {
                 error_json: { error: { code: 403, message: "You cannot" } },
             });
@@ -114,7 +114,7 @@ describe(`TuleapAPIClient`, () => {
             const first_artifact = { id: FIRST_LINKED_ARTIFACT_ID } as APILinkedArtifact;
             const second_artifact = { id: SECOND_LINKED_ARTIFACT_ID } as APILinkedArtifact;
 
-            const recursiveGetSpy = jest.spyOn(tlp, "recursiveGet");
+            const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
 
             getMockLinkedArtifactsRetrieval(recursiveGetSpy, {
                 collection: [first_artifact, second_artifact],
@@ -143,7 +143,7 @@ describe(`TuleapAPIClient`, () => {
         });
 
         it(`when there is an error, it will unwrap the error message from the response`, () => {
-            const getSpy = jest.spyOn(tlp, "recursiveGet");
+            const getSpy = jest.spyOn(tlp_fetch, "recursiveGet");
             mockFetchError(getSpy, {
                 error_json: { error: { code: 403, message: "You cannot" } },
             });

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, openTargetModalIdOnClick } from "tlp";
+import { get } from "@tuleap/tlp-fetch";
+import { openTargetModalIdOnClick } from "tlp";
 import { initLdapBindingPreview } from "./preview-for-select2.js";
 
 const LDAP_LINK_BUTTON_ID = "project-admin-members-link-ldap-button";

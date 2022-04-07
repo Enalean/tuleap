@@ -20,7 +20,6 @@
 import type { Dropdown, DropdownOptions } from "./dropdowns";
 import { createDropdown as createDropdownImplementation } from "./dropdowns";
 
-export * from "@tuleap/tlp-fetch";
 export * from "@tuleap/tlp-popovers";
 export * from "@tuleap/tlp-modal";
 
