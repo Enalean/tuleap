@@ -21,6 +21,8 @@ import { utils, writeFile } from "xlsx";
 import type { ReportSection } from "../../Data/data-formator";
 import type { CellObjectWithExtraInfo } from "@tuleap/plugin-docgen-xlsx";
 import {
+    buildSheetTextCell,
+    createMerges,
     fitColumnWidthsToContent,
     fitRowHeightsToContent,
     transformReportCellIntoASheetCell,
@@ -33,6 +35,7 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
     const sheet = utils.aoa_to_sheet(cells);
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
+    sheet["!merges"] = createMerges(cells);
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
@@ -52,7 +55,15 @@ function buildContent(
 ): Array<Array<CellObjectWithExtraInfo>> {
     const content: CellObjectWithExtraInfo[][] = [];
     const report_columns_label: CellObjectWithExtraInfo[] = [];
+    const report_trackers_names: CellObjectWithExtraInfo[] = [];
     if (formatted_data.headers && formatted_data.headers.length > 0) {
+        report_trackers_names.push({
+            ...buildSheetTextCell(export_settings.first_level.tracker_name),
+            ...(formatted_data.headers.length > 0 ? { character_width: 10 } : {}),
+            merge_columns: formatted_data.headers.length - 1,
+        });
+        content.push(report_trackers_names);
+
         for (const header of formatted_data.headers) {
             report_columns_label.push(transformReportCellIntoASheetCell(header));
         }
