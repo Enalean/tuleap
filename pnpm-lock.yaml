@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
+  '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
 
 dependencies:
-  '@tuleap/html-escaper': link:../../src/scripts/lib/html-escaper
+  '@tuleap/html-escaper': link:../../lib/frontend/html-escaper

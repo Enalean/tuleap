@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper"
+    "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper"
   },
   "devDependencies": {},
   "scripts": {
