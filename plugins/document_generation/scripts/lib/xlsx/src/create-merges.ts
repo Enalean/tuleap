@@ -17,8 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./report-cells";
-export * from "./build-xlsx";
-export * from "./type";
-export * from "./transform-report-cell-to-sheet-cell";
-export * from "./create-merges";
+import type { Range } from "xlsx";
+import type { CellObjectWithExtraInfo } from "./type";
+
+export function createMerges(cells: CellObjectWithExtraInfo[][]): Range[] {
+    return cells.flatMap((row: CellObjectWithExtraInfo[], row_line: number): Range[] => {
+        if (typeof row[0] === "undefined") {
+            return [];
+        }
+        const first_cell_row = row[0];
+        if (first_cell_row.merge_columns) {
+            return [
+                {
+                    s: { r: row_line, c: 0 },
+                    e: { r: row_line, c: first_cell_row.merge_columns },
+                },
+            ];
+        }
+        return [];
+    });
+}
