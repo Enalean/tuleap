@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatData } from "./data-formator";
-import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
-import * as rest_querier from "../rest-querier";
-import * as organized_data from "./organize-reports-data";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactResponse } from "../../../lib/docx";
+import type { OrganizedReportsData } from "../type";
+import { formatHeader } from "./headers-formator";
+import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 
-describe("data-formator", () => {
-    it("generates the formatted data that will be used to create the XLSX document", async (): Promise<void> => {
+describe("headers-formator", () => {
+    it("builds the headers TextCell", (): void => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
         artifact_representations_map.set(74, {
             id: 74,
@@ -55,12 +54,6 @@ describe("data-formator", () => {
                     field_id: 4,
                     type: "art_link",
                     label: "Artifact links",
-                    values: [],
-                },
-                {
-                    field_id: 5,
-                    type: "file",
-                    label: "Attachment",
                     values: [],
                 },
             ],
@@ -96,57 +89,43 @@ describe("data-formator", () => {
                     label: "Artifact links",
                     values: [],
                 },
-                {
-                    field_id: 5,
-                    type: "file",
-                    label: "Attachment",
-                    values: [],
-                },
             ],
         } as ArtifactResponse);
 
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
             first_level_artifacts_ids: [74, 4],
-        });
-        jest.spyOn(rest_querier, "getLinkedArtifacts").mockResolvedValue([]);
+        };
 
-        const formatted_data = await formatData({
-            first_level: {
-                tracker_name: "tracker01",
-                report_id: 1,
-                report_name: "report01",
-                artifact_link_types: ["_is_child"],
-            },
-        });
-
-        expect(formatted_data).toStrictEqual({
-            headers: [
-                new TextCell("Artifact ID"),
-                new TextCell("Field02"),
-                new TextCell("Assigned to"),
-            ],
-            rows: [
-                [new NumberCell(74), new TextCell("value02"), new EmptyCell()],
-                [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
-            ],
-        });
+        const formatted_headers = formatHeader(organized_reports_data);
+        expect(formatted_headers).toStrictEqual([
+            new TextCell("Artifact ID"),
+            new TextCell("Field02"),
+            new TextCell("Assigned to"),
+        ]);
     });
-    it("generates empty formatted data if no artifact found", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
-            artifact_representations: new Map(),
+    it("throws an Error if organized data does not have any ArtifactResponse", (): void => {
+        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+
+        const organized_reports_data: OrganizedReportsData = {
+            artifact_representations: artifact_representations_map,
             first_level_artifacts_ids: [],
-        });
+        };
 
-        const formatted_data = await formatData({
-            first_level: {
-                tracker_name: "tracker01",
-                report_id: 1,
-                report_name: "report01",
-                artifact_link_types: [],
-            },
-        });
+        expect(() => formatHeader(organized_reports_data)).toThrowError(
+            "This must not happen. Check must be done before."
+        );
+    });
+    it("throws an Error if organized data does not have the matching ArtifactResponse in first level id", (): void => {
+        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
 
-        expect(formatted_data).toStrictEqual({});
+        const organized_reports_data: OrganizedReportsData = {
+            artifact_representations: artifact_representations_map,
+            first_level_artifacts_ids: [4],
+        };
+
+        expect(() => formatHeader(organized_reports_data)).toThrowError(
+            "This must not happen. Collection must be consistent."
+        );
     });
 });

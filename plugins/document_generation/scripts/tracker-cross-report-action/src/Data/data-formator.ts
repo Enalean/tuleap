@@ -21,12 +21,13 @@ import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getLinkedArtifacts } from "../rest-querier";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
-import { TextCell } from "@tuleap/plugin-docgen-xlsx";
+import type { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../export-document";
-import type { ArtifactReportResponseFieldValueWithExtraFields } from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import { organizeReportsData } from "./organize-reports-data";
 import type { OrganizedReportsData } from "../type";
+import { isFieldTakenIntoAccount } from "./field-type-checker";
+import { formatHeader } from "./headers-formator";
 
 export interface ReportSection {
     readonly headers?: ReadonlyArray<TextCell>;
@@ -40,9 +41,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
         return {};
     }
 
-    const report_field_columns: Array<TextCell> = [];
     const artifact_rows: Array<Array<ReportCell>> = [];
-    let first_row_processed = false;
     let artifact_value_rows: Array<ReportCell> = [];
 
     await limitConcurrencyPool(
@@ -63,34 +62,13 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                 continue;
             }
 
-            if (!first_row_processed) {
-                report_field_columns.push(new TextCell(field_value.label));
-            }
-
             artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
         }
         artifact_rows.push(artifact_value_rows);
-        first_row_processed = true;
     }
 
     return {
-        headers: report_field_columns,
+        headers: formatHeader(organized_reports_data),
         rows: artifact_rows,
     };
-}
-
-function isFieldTakenIntoAccount(
-    field_value: ArtifactReportResponseFieldValueWithExtraFields
-): boolean {
-    return (
-        field_value.type !== "art_link" &&
-        field_value.type !== "file" &&
-        field_value.type !== "cross" &&
-        field_value.type !== "perm" &&
-        field_value.type !== "ttmstepdef" &&
-        field_value.type !== "ttmstepexec" &&
-        field_value.type !== "burndown" &&
-        field_value.type !== "burnup" &&
-        field_value.type !== "Encrypted"
-    );
 }

@@ -197,6 +197,7 @@ describe("organize-reports-data", () => {
 
         expect(organized_reports_data).toStrictEqual({
             artifact_representations: expected_artifact_representations_map,
+            first_level_artifacts_ids: [74, 4],
         });
     });
     it("generates empty organized data if no artifact found", async (): Promise<void> => {
@@ -214,6 +215,7 @@ describe("organize-reports-data", () => {
 
         expect(organized_reports_data).toStrictEqual({
             artifact_representations: new Map(),
+            first_level_artifacts_ids: [],
         });
     });
 });
