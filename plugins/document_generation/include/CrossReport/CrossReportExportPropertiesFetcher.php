@@ -22,46 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\DocumentGeneration\CrossReport;
 
-use Tracker_ReportFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveCurrentlyUsedArtifactLinkTypesInTracker;
 
 class CrossReportExportPropertiesFetcher
 {
     public function __construct(
-        private Tracker_ReportFactory $report_factory,
         private RetrieveCurrentlyUsedArtifactLinkTypesInTracker $artlink_used_types_retriever,
     ) {
     }
 
-    public function fetchExportProperties(\Tracker $tracker, \Tracker_Report $tracker_report, \PFUser $current_user): CrossReportExportProperties
+    public function fetchExportProperties(\Tracker $tracker, \Tracker_Report $tracker_report): CrossReportExportProperties
     {
         return new CrossReportExportProperties(
+            $tracker->getId(),
             $tracker->getName(),
             (int) $tracker_report->getId(),
-            $this->getCurrentTrackerReportsProperties($tracker, $current_user),
             $this->artlink_used_types_retriever->getAllCurrentlyUsedTypePresentersByTracker($tracker),
-        );
-    }
-
-    /**
-     * @return CrossReportExportPropertiesReport[]
-     */
-    private function getCurrentTrackerReportsProperties(\Tracker $tracker, \PFUser $current_user): array
-    {
-        return array_values(
-            array_map(
-                static function (\Tracker_Report $report): CrossReportExportPropertiesReport {
-                    return new CrossReportExportPropertiesReport(
-                        (int) $report->getId(),
-                        $report->getName(),
-                        $report->isPublic()
-                    );
-                },
-                $this->report_factory->getReportsByTrackerId(
-                    $tracker->getId(),
-                    (int) $current_user->getId(),
-                )
-            )
         );
     }
 }

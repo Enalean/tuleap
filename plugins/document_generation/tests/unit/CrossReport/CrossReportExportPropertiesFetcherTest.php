@@ -22,24 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\DocumentGeneration\CrossReport;
 
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveCurrentlyUsedArtifactLinkTypesInTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CrossReportExportPropertiesFetcherTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_ReportFactory
-     */
-    private $report_factory;
     private CrossReportExportPropertiesFetcher $fetcher;
 
     protected function setUp(): void
     {
-        $this->report_factory = $this->createStub(\Tracker_ReportFactory::class);
-        $this->fetcher        = new CrossReportExportPropertiesFetcher(
-            $this->report_factory,
+        $this->fetcher = new CrossReportExportPropertiesFetcher(
             new class implements RetrieveCurrentlyUsedArtifactLinkTypesInTracker {
                 public function getAllCurrentlyUsedTypePresentersByTracker(\Tracker $tracker): array
                 {
@@ -51,38 +44,18 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
 
     public function testFetchesProperties(): void
     {
-        $tracker           = TrackerTestBuilder::aTracker()->withName('Tracker Name')->build();
-        $user              = UserTestBuilder::aUser()->withId(200)->build();
+        $tracker           = TrackerTestBuilder::aTracker()->withId(789)->withName('Tracker Name')->build();
         $current_report_id = 101;
         $current_report    = self::buildReport($tracker, $current_report_id, 'Public', null);
-
-        $this->report_factory->method('getReportsByTrackerId')->willReturn(
-            [
-                $current_report,
-                self::buildReport(
-                    $tracker,
-                    102,
-                    'Private',
-                    $user
-                ),
-            ]
-        );
 
         $props = $this->fetcher->fetchExportProperties(
             $tracker,
             $current_report,
-            $user
         );
 
+        self::assertEquals(789, $props->current_tracker_id);
         self::assertEquals('Tracker Name', $props->current_tracker_name);
         self::assertEquals($current_report_id, $props->current_report_id);
-        self::assertEquals(
-            [
-                new CrossReportExportPropertiesReport($current_report_id, 'Public', true),
-                new CrossReportExportPropertiesReport(102, 'Private', false),
-            ],
-            $props->current_tracker_reports
-        );
         self::assertEquals([], $props->current_tracker_artifact_link_types);
     }
 

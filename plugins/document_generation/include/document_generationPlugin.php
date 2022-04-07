@@ -138,9 +138,7 @@ class document_generationPlugin extends Plugin implements PluginWithConfigKeys
             return;
         }
 
-        $tracker_reports_factory         = Tracker_ReportFactory::instance();
         $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher(
-            $tracker_reports_factory,
             new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
         );
 
@@ -149,7 +147,7 @@ class document_generationPlugin extends Plugin implements PluginWithConfigKeys
                 'tracker-cross-report-action',
                 [
                     'properties' => json_encode(
-                        $cross_report_properties_fetcher->fetchExportProperties($tracker, $report, $current_user),
+                        $cross_report_properties_fetcher->fetchExportProperties($tracker, $report),
                         JSON_THROW_ON_ERROR
                     ),
                 ]

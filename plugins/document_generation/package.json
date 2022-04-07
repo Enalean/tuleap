@@ -5,10 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
     "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
     "@tuleap/plugin-docgen-xlsx": "file:./scripts/lib/xlsx",
-    "@tuleap/concurrency-limit-pool": "file:../../src/scripts/lib/concurrency-limit-pool",
+    "@tuleap/plugin-tracker-rest-api-types": "link:../tracker/scripts/lib/rest-api-types",
     "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "@tuleap/tlp-modal": "link:../../src/scripts/lib/tlp-modal",

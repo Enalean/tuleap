@@ -2,7 +2,6 @@
     "extends": "../../../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
         "lib": ["ES2019"],
-        "outDir": "types/",
     },
     "include": ["src/**/*"],
     "exclude": ["src/**/*.test.ts"]
