@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/tlp": "file:../../src/themes/tlp",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "dompurify": "^2.3.6"
   },
   "devDependencies": {
