@@ -243,6 +243,7 @@ describe("ListItemBuilder", () => {
                 items_template_formatter: jest
                     .fn()
                     .mockReturnValue(Promise.resolve("A beautiful template")),
+                search_field_callback: jest.fn(),
             };
             builder = new ListItemMapBuilder(select, options);
         });

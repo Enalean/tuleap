@@ -113,7 +113,7 @@ export class EventManager {
             }
 
             if (this.dropdown_manager.isDropdownOpen()) {
-                this.resetSearchField();
+                this.resetHighlight();
                 this.dropdown_manager.closeLinkSelector();
             } else {
                 this.list_item_highlighter.resetHighlight();
@@ -139,7 +139,7 @@ export class EventManager {
         items.forEach((item) => {
             item.addEventListener("pointerup", () => {
                 this.selection_manager.processSelection(item);
-                this.resetSearchField();
+                this.resetHighlight();
                 this.dropdown_manager.closeLinkSelector();
             });
 
@@ -174,28 +174,12 @@ export class EventManager {
                 return;
             }
 
-            const filter_query = search_field_element.value;
-            this.dropdown_content_renderer.renderFilteredLinkSelectorDropdownContent(filter_query);
-
-            this.list_item_highlighter.resetHighlight();
             this.dropdown_manager.openLinkSelector();
         });
 
-        if (
-            search_field_element.parentElement &&
-            search_field_element.parentElement.classList.contains(
-                "link-selector-multiple-search-section"
-            )
-        ) {
-            search_field_element.addEventListener("pointerdown", () => {
-                this.list_item_highlighter.resetHighlight();
-                this.dropdown_manager.openLinkSelector();
-            });
-        }
-
         search_field_element.addEventListener("keydown", (event: Event) => {
             if (isTabKey(event)) {
-                this.resetSearchField();
+                this.resetHighlight();
             }
         });
     }
@@ -208,25 +192,23 @@ export class EventManager {
             (!this.wrapper_element.contains(target_element) &&
                 !this.dropdown_element.contains(target_element))
         ) {
-            this.resetSearchField();
+            this.resetHighlight();
             this.has_keyboard_selection_occurred = false;
             this.dropdown_manager.closeLinkSelector();
         }
     }
 
-    private resetSearchField(): void {
+    private resetHighlight(): void {
         if (!this.dropdown_manager.isDropdownOpen()) {
             return;
         }
 
-        this.search_field_element.value = "";
-        this.dropdown_content_renderer.renderFilteredLinkSelectorDropdownContent("");
         this.list_item_highlighter.resetHighlight();
     }
 
     private handleEscapeKey(event: Event): void {
         if (isEscapeKey(event)) {
-            this.resetSearchField();
+            this.resetHighlight();
             this.dropdown_manager.closeLinkSelector();
             this.has_keyboard_selection_occurred = false;
             event.stopPropagation();
@@ -270,7 +252,7 @@ export class EventManager {
             const highlighted_item = this.list_item_highlighter.getHighlightedItem();
             if (isEnterKey(event) && highlighted_item) {
                 this.selection_manager.processSelection(highlighted_item);
-                this.resetSearchField();
+                this.resetHighlight();
                 this.dropdown_manager.closeLinkSelector();
                 this.has_keyboard_selection_occurred = true;
             } else {

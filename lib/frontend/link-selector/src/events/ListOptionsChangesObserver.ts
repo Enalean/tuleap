@@ -21,6 +21,7 @@ import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { EventManager } from "./EventManager";
 import type { SelectionManager } from "../selection/SelectionManager";
+import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 
 export class ListOptionsChangesObserver {
     private readonly observer: MutationObserver;
@@ -30,7 +31,8 @@ export class ListOptionsChangesObserver {
         private readonly items_map_manager: ItemsMapManager,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly selection_manager: SelectionManager,
-        private readonly event_manager: EventManager
+        private readonly event_manager: EventManager,
+        private readonly list_item_highlighter: ListItemHighlighter
     ) {
         this.observer = new MutationObserver(this.refreshListPickerOnOptionsChanges());
     }
@@ -57,6 +59,7 @@ export class ListOptionsChangesObserver {
             this.dropdown_content_renderer.renderAfterDependenciesUpdate();
             this.selection_manager.resetAfterDependenciesUpdate();
             this.event_manager.attachItemListEvent();
+            this.list_item_highlighter.resetHighlight();
         };
     }
 

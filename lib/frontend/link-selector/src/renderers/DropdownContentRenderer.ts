@@ -20,6 +20,7 @@
 import type { LinkSelectorItemGroup } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { GettextProvider } from "@tuleap/gettext";
+import { html, render } from "lit/html.js";
 
 export class DropdownContentRenderer {
     private readonly groups_map: Map<string, LinkSelectorItemGroup>;
@@ -36,7 +37,7 @@ export class DropdownContentRenderer {
     public renderLinkSelectorDropdownContent(): void {
         const items = this.items_map_manager.getLinkSelectorItems();
         if (items.length === 0) {
-            this.dropdown_list_element.appendChild(this.createEmptyStateNoValuesAvailable());
+            this.appendEmptyStates();
             return;
         }
 
@@ -50,43 +51,10 @@ export class DropdownContentRenderer {
         });
     }
 
-    public renderFilteredLinkSelectorDropdownContent(filter_query: string): void {
-        this.dropdown_list_element.innerHTML = "";
-        if (filter_query.length === 0) {
-            this.renderLinkSelectorDropdownContent();
-            return;
-        }
-
-        const lowercase_query = filter_query.toLowerCase();
-        const matching_items = this.items_map_manager.getLinkSelectorItems().filter((item) => {
-            return item.label.toLowerCase().includes(lowercase_query);
-        });
-
-        if (matching_items.length === 0) {
-            this.dropdown_list_element.appendChild(this.createEmptyStateQueryDidNotMatch());
-            return;
-        }
-
-        const displayed_groups_ids: string[] = [];
-        matching_items.forEach((item) => {
-            const group = this.groups_map.get(item.group_id);
-            if (group && displayed_groups_ids.includes(item.group_id)) {
-                group.list_element.appendChild(item.element);
-            } else if (group) {
-                displayed_groups_ids.push(group.id);
-                group.list_element.innerHTML = "";
-                group.list_element.appendChild(item.element);
-                this.dropdown_list_element.appendChild(group.root_element);
-            } else {
-                this.dropdown_list_element.appendChild(item.element);
-            }
-        });
-    }
-
     public renderAfterDependenciesUpdate(): void {
         this.dropdown_list_element.innerHTML = "";
         if (this.items_map_manager.getLinkSelectorItems().length === 0) {
-            this.dropdown_list_element.appendChild(this.createEmptyStateNoValuesAvailable());
+            this.appendEmptyStates();
             return;
         }
         this.renderLinkSelectorDropdownContent();
@@ -108,8 +76,28 @@ export class DropdownContentRenderer {
                 })
                 .forEach((item) => {
                     group.list_element.appendChild(item.element);
+                    this.dropdown_list_element.appendChild(group.root_element);
                 });
         });
+    }
+
+    private renderGroupedOptionsEmptyStates(): void {
+        this.source_select_box.querySelectorAll("optgroup").forEach((optgroup) => {
+            const group = this.getRenderedEmptyListItemGroup(optgroup);
+            const group_empty_state = this.getOptionGroupEmptyState(optgroup);
+
+            if (group_empty_state && group_empty_state.textContent) {
+                group.list_element.appendChild(
+                    this.createEmptyDropdownState(group_empty_state.textContent)
+                );
+
+                this.dropdown_list_element.appendChild(group.root_element);
+            }
+        });
+    }
+
+    private getOptionGroupEmptyState(element: Element): HTMLOptionElement | null {
+        return element.querySelector("option[data-link-selector-role=empty-state]");
     }
 
     private getRenderedEmptyListItemGroup(optgroup: HTMLOptGroupElement): LinkSelectorItemGroup {
@@ -134,8 +122,6 @@ export class DropdownContentRenderer {
         group.appendChild(group_label);
         group.appendChild(group_list);
 
-        this.dropdown_list_element.appendChild(group);
-
         return {
             id: label.replace(" ", "").toLowerCase(),
             label,
@@ -144,21 +130,35 @@ export class DropdownContentRenderer {
         };
     }
 
-    private createEmptyStateQueryDidNotMatch(): Element {
-        return this.createEmptyDropdownState(this.gettext_provider.gettext("No results found"));
-    }
-
-    private createEmptyStateNoValuesAvailable(): Element {
+    private createEmptyStateNoValuesAvailable(): DocumentFragment {
         return this.createEmptyDropdownState(this.gettext_provider.gettext("No values to select"));
     }
 
-    private createEmptyDropdownState(dropdown_message: string): Element {
-        const empty_state = document.createElement("li");
-        empty_state.classList.add("link-selector-empty-dropdown-state");
-        empty_state.setAttribute("role", "alert");
-        empty_state.setAttribute("aria-live", "assertive");
-        empty_state.appendChild(document.createTextNode(dropdown_message));
+    private createEmptyDropdownState(dropdown_message: string): DocumentFragment {
+        const document_fragment = document.createDocumentFragment();
+        render(
+            html`
+                <li
+                    class="link-selector-empty-dropdown-state"
+                    role="alert"
+                    aria-live="assertive"
+                    data-test="link-selector-empty-state"
+                >
+                    ${dropdown_message}
+                </li>
+            `,
+            document_fragment
+        );
 
-        return empty_state;
+        return document_fragment;
+    }
+
+    private appendEmptyStates(): void {
+        if (this.hasGroupedListItems()) {
+            this.renderGroupedOptionsEmptyStates();
+            return;
+        }
+
+        this.dropdown_list_element.appendChild(this.createEmptyStateNoValuesAvailable());
     }
 }

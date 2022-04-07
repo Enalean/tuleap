@@ -19,5 +19,34 @@
                 <li><code class="code-inline">option_label: string</code> The text content of the current select box option</li>
             </ul>
         </li>
+        <li>
+            <code class="code-inline">search_field_callback: LinkSelectorSearchFieldCallback (mandatory)</code>: A callback to be executed each time the user types a query in the search input.
+            <br>
+            This callback takes a <code class="code-inline">query: string</code> in its parameters, which contains the query typed by the user, and returns <code class="code-inline">void</code>.
+            <br>
+            In this callback, you are expected to filter the collection of <code class="code-inline">HTMLOptionElement</code> inside the source <code class="code-inline">HTMLSelectElement</code>.
+            <br>
+            To do so, you can:
+            <ol>
+                <li>Clear the source select options</li>
+                <li>Compare the options to the received query or fetch some on a distant endpoint</li>
+                <li>Insert the matching options inside the source select</li>
+                <li>Insert an empty state in the source select if the query did not match any item (see details below)</li>
+            </ol>
+        </li>
     </ul>
+    <br>
+    Empty state:
+    <br>
+    <br>
+    There is a special select option that will be identified and used by the link-selector as an empty state.
+    <br>
+    <br>
+    This option should have the following attributes and values:
+    <ul>
+        <li><code class="code-inline">value="" (no value)</code>. Link-selector will ignore this option as it has no value.</li>
+        <li><code class="code-inline">disabled</code> to prevent it to be selected.</li>
+        <li><code class="code-inline">data-link-selector-role="empty-state"</code> to mark the option as an empty state.</li>
+    </ul>
+    <strong>Please note that these empty states are only supported in optgroups.</strong>
 </p>
