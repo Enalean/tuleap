@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveArtifact } from "../../domain/RetrieveArtifact";
-import { getArtifact } from "../../rest/rest-service";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { get, recursiveGet } from "@tuleap/tlp-fetch";
+import { Fault } from "@tuleap/fault";
+import { ResultAsync } from "neverthrow";
+import type { RetrieveArtifact } from "../../domain/RetrieveArtifact";
+import { getArtifact } from "../../rest/rest-service";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
@@ -39,7 +41,13 @@ type TuleapAPIClientType = RetrieveArtifact & RetrieveLinkTypes & RetrieveLinked
 export const TuleapAPIClient = (): TuleapAPIClientType => ({
     getArtifact: (
         artifact_id: CurrentArtifactIdentifier | ParentArtifactIdentifier
-    ): Promise<Artifact> => getArtifact(artifact_id.id),
+    ): ResultAsync<Artifact, Fault> =>
+        ResultAsync.fromPromise(getArtifact(artifact_id.id), (error) => {
+            if (error instanceof Error) {
+                return Fault.fromError(error);
+            }
+            return Fault.fromMessage("Unknown error");
+        }),
 
     getAllLinkTypes(artifact_id: CurrentArtifactIdentifier): Promise<LinkType[]> {
         const id = artifact_id.id;

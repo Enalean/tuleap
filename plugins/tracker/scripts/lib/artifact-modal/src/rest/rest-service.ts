@@ -336,8 +336,9 @@ async function errorHandler(error: FetchWrapperError): Promise<never> {
     const error_json = await error.response.json();
     if (error_json !== undefined && error_json.error && error_json.error.message) {
         setError(error_json.error.message);
-        return Promise.reject(error_json.error);
+        return Promise.reject(new Error(error_json.error.message));
     }
-    setError(error.response.status + " " + error.response.statusText);
-    return Promise.reject(error);
+    const status_and_text = error.response.status + " " + error.response.statusText;
+    setError(status_and_text);
+    return Promise.reject(new Error(status_and_text));
 }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { Artifact } from "./Artifact";
 import type { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
 import type { ParentArtifactIdentifier } from "./parent/ParentArtifactIdentifier";
@@ -24,5 +26,5 @@ import type { ParentArtifactIdentifier } from "./parent/ParentArtifactIdentifier
 export interface RetrieveArtifact {
     getArtifact(
         artifact_identifier: CurrentArtifactIdentifier | ParentArtifactIdentifier
-    ): Promise<Artifact>;
+    ): ResultAsync<Artifact, Fault>;
 }

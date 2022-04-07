@@ -19,9 +19,6 @@
 
 import type { Fault } from "@tuleap/fault";
 
-export const isLinkRetrievalFault = (fault: Fault): boolean =>
-    typeof fault.isLinkRetrieval === "function" && fault.isLinkRetrieval();
-
 export const LinkRetrievalFault = (previous: Fault): Fault => ({
     isLinkRetrieval: () => true,
     ...previous,

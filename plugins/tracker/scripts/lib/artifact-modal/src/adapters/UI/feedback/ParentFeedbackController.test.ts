@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Fault } from "@tuleap/fault";
 import { ParentFeedbackController } from "./ParentFeedbackController";
 import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArtifactIdentifier";
@@ -24,19 +25,27 @@ import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArti
 import { RetrieveArtifactStub } from "../../../../tests/stubs/RetrieveArtifactStub";
 import type { Artifact } from "../../../domain/Artifact";
 import { ParentRetriever } from "../../../domain/parent/ParentRetriever";
+import { NotifyFaultStub } from "../../../../tests/stubs/NotifyFaultStub";
+import type { RetrieveArtifact } from "../../../domain/RetrieveArtifact";
 
 const PARENT_ARTIFACT_ID = 78;
 
 describe(`ParentFeedbackController`, () => {
-    let parent_identifier: ParentArtifactIdentifier | null;
+    let fault_notifier: NotifyFaultStub,
+        artifact_retriever: RetrieveArtifact,
+        parent_identifier: ParentArtifactIdentifier | null;
+
     beforeEach(() => {
+        fault_notifier = NotifyFaultStub.withCount();
+        const parent_artifact: Artifact = { id: PARENT_ARTIFACT_ID, title: "nonhereditary" };
+        artifact_retriever = RetrieveArtifactStub.withArtifact(parent_artifact);
         parent_identifier = ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID);
     });
 
     const displayParentFeedback = (): Promise<ParentFeedbackPresenter> => {
-        const parent_artifact: Artifact = { id: PARENT_ARTIFACT_ID, title: "nonhereditary" };
         const controller = ParentFeedbackController(
-            ParentRetriever(RetrieveArtifactStub.withArtifact(parent_artifact)),
+            ParentRetriever(artifact_retriever),
+            fault_notifier,
             parent_identifier
         );
         return controller.displayParentFeedback();
@@ -52,10 +61,23 @@ describe(`ParentFeedbackController`, () => {
             expect(presenter.parent_artifact.id).toBe(PARENT_ARTIFACT_ID);
         });
 
-        it(`when there is no parent artifact, it will return a presenter without parent`, async () => {
+        it(`when there is a problem while retrieving the parent, it will notify that there has been a fault`, async () => {
+            const fault = Fault.fromMessage("Could not retrieve parent");
+            artifact_retriever = RetrieveArtifactStub.withFault(fault);
+
+            const presenter = await displayParentFeedback();
+
+            expect(presenter.parent_artifact).toBeNull();
+            expect(fault_notifier.getCallCount()).toBe(1);
+        });
+
+        it(`when there is no parent artifact,
+            it won't notify that there has been a fault
+            and it will return a presenter without parent`, async () => {
             parent_identifier = null;
             const presenter = await displayParentFeedback();
             expect(presenter.parent_artifact).toBeNull();
+            expect(fault_notifier.getCallCount()).toBe(0);
         });
     });
 });

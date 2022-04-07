@@ -150,6 +150,7 @@ function ArtifactModalController(
         ),
         parent_feedback_controller: ParentFeedbackController(
             ParentRetriever(api_client),
+            fault_feedback_controller,
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
         fault_feedback_controller,

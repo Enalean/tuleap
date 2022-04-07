@@ -26,6 +26,7 @@
     "hybrids": "^7.0.5",
     "lodash": "2.4.0",
     "moment": "^2.29.1",
+    "neverthrow": "^4.2.1",
     "pretty-kibibytes": "^4.0.4",
     "process": "^0.11.10",
     "pump": "^3.0.0",

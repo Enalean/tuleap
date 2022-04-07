@@ -17,11 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ResultAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { Artifact } from "../../src/domain/Artifact";
 import type { RetrieveArtifact } from "../../src/domain/RetrieveArtifact";
 
 export const RetrieveArtifactStub = {
     withArtifact: (artifact: Artifact): RetrieveArtifact => ({
-        getArtifact: (): Promise<Artifact> => Promise.resolve(artifact),
+        getArtifact: (): ResultAsync<Artifact, Fault> => okAsync(artifact),
+    }),
+
+    withFault: (fault: Fault): RetrieveArtifact => ({
+        getArtifact: (): ResultAsync<Artifact, Fault> => errAsync(fault),
     }),
 };

@@ -18,10 +18,8 @@
  */
 
 import type { Fault } from "@tuleap/fault";
-import type { ResultAsync } from "neverthrow";
-import type { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
-import type { Artifact } from "../Artifact";
 
-export interface RetrieveParent {
-    getParent(parent_identifier: ParentArtifactIdentifier | null): ResultAsync<Artifact, Fault>;
-}
+export const ParentRetrievalFault = (previous: Fault): Fault => ({
+    isParentRetrieval: () => true,
+    ...previous,
+});
