@@ -29,122 +29,100 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
 final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItCatchesWhenDataReturnedByJiraIsNotWellFormed(): void
+    /**
+     * @dataProvider getData
+     */
+    public function testImportOfArtifactLinkTypes(array $urls, array $types, callable $expectations, callable $tests): void
     {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
-            public function getUrl(string $url): ?array
+        $client       = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
+        };
+        $client->urls = $urls;
+
+        $all_natures = new class ($types) implements AllTypesRetriever
+        {
+            public function __construct(public array $types)
             {
-                return [
+            }
+
+            public function getAllTypes(): array
+            {
+                return $this->types;
+            }
+        };
+
+        $creator = new class implements TypeCreatorInterface
+        {
+            public array $natures = [];
+            public function createFromType(TypePresenter $type): void
+            {
+                $this->natures[] = $type;
+            }
+        };
+
+        $expectations($this);
+
+        $importer = new ArtifactLinkTypeImporter($all_natures, $creator);
+        $importer->import($client);
+
+        $tests($creator);
+    }
+
+    public function getData(): iterable
+    {
+        return [
+            'it throws an exception when data returned by Jira is not well formed' => [
+                'urls' => [
                     'issueLinkTypes' => 'YOU MUST PAY!',
-                ];
-            }
-        };
-
-        $all_natures = new class implements AllTypesRetriever
-        {
-            public function getAllTypes(): array
-            {
-                return [];
-            }
-        };
-
-        $creator = new class implements TypeCreatorInterface
-        {
-            public function createFromType(TypePresenter $type): void
-            {
-            }
-        };
-
-        $this->expectException(\RuntimeException::class);
-
-        $importer = new ArtifactLinkTypeImporter($all_natures, $creator);
-        $importer->import($client);
-    }
-
-    public function testItReturnsAnArtifactLinkTypeWithAccurateLabels(): void
-    {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
-            public function getUrl(string $url): ?array
-            {
-                return [
-                    'issueLinkTypes' => [
-                        [
-                            "id"      => "10000",
-                            "name"    => "Blocks",
-                            "inward"  => "is blocked by",
-                            "outward" => "blocks",
-                            "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                ],
+                'types' => [],
+                'expectations' => function (ArtifactLinkTypeImporterTest $test_case) {
+                    $test_case->expectException(\RuntimeException::class);
+                },
+                'tests' => fn () => null,
+            ],
+            'it returns an artifact link type with accurate labels' => [
+                'urls' => [
+                    '/rest/api/2/issueLinkType' => [
+                        'issueLinkTypes' => [
+                            [
+                                "id"      => "10000",
+                                "name"    => "Blocks",
+                                "inward"  => "is blocked by",
+                                "outward" => "blocks",
+                                "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                            ],
                         ],
                     ],
-                ];
-            }
-        };
-
-        $all_natures = new class implements AllTypesRetriever
-        {
-            public function getAllTypes(): array
-            {
-                return [];
-            }
-        };
-
-        $creator = new class implements TypeCreatorInterface
-        {
-            public array $natures = [];
-            public function createFromType(TypePresenter $type): void
-            {
-                $this->natures[] = $type;
-            }
-        };
-
-        $importer = new ArtifactLinkTypeImporter($all_natures, $creator);
-        $importer->import($client);
-
-        self::assertCount(1, $creator->natures);
-        self::assertSame('Blocks', $creator->natures[0]->shortname);
-        self::assertSame('blocks', $creator->natures[0]->forward_label);
-        self::assertSame('is blocked by', $creator->natures[0]->reverse_label);
-    }
-
-    public function testItDoesntReturnAnythingWhenTypeAlreadyExists(): void
-    {
-        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
-            public function getUrl(string $url): ?array
-            {
-                return [
-                    'issueLinkTypes' => [
-                        [
-                            "id"      => "10000",
-                            "name"    => "Blocks",
-                            "inward"  => "is blocked by",
-                            "outward" => "blocks",
-                            "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                ],
+                'types' => [],
+                'expectations' => fn () => null,
+                'tests' => function (mixed $creator) {
+                    self::assertCount(1, $creator->natures);
+                    self::assertSame('Blocks', $creator->natures[0]->shortname);
+                    self::assertSame('blocks', $creator->natures[0]->forward_label);
+                    self::assertSame('is blocked by', $creator->natures[0]->reverse_label);
+                },
+            ],
+            'it does not return anything when type already exists' => [
+                'urls' => [
+                    '/rest/api/2/issueLinkType' => [
+                        'issueLinkTypes' => [
+                            [
+                                "id"      => "10000",
+                                "name"    => "Blocks",
+                                "inward"  => "is blocked by",
+                                "outward" => "blocks",
+                                "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                            ],
                         ],
                     ],
-                ];
-            }
-        };
-
-        $all_natures = new class implements AllTypesRetriever
-        {
-            public function getAllTypes(): array
-            {
-                return [TypePresenter::buildVisibleType('Blocks', '', '')];
-            }
-        };
-
-        $creator = new class implements TypeCreatorInterface
-        {
-            public array $natures = [];
-            public function createFromType(TypePresenter $type): void
-            {
-                $this->natures[] = $type;
-            }
-        };
-
-        $importer = new ArtifactLinkTypeImporter($all_natures, $creator);
-        $importer->import($client);
-
-        self::assertEmpty($creator->natures);
+                ],
+                'types' => [TypePresenter::buildVisibleType('Blocks', '', '')],
+                'expectations' => fn () => null,
+                'tests' => function (mixed $creator) {
+                    self::assertEmpty($creator->natures);
+                },
+            ],
+        ];
     }
 }
