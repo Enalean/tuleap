@@ -23,6 +23,7 @@ import FileVersionChangelogModal from "./FileVersionChangelogModal.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import * as tlp from "tlp";
+import emitter from "../../../../helpers/emitter";
 
 jest.mock("tlp");
 
@@ -93,5 +94,27 @@ describe("FileVersionChangelogModal", () => {
             false,
             "reset",
         ]);
+    });
+
+    it("Updates the version title", async () => {
+        const wrapper = getWrapper();
+
+        expect(wrapper.vm.$data.version.title).toBe("");
+        emitter.emit("update-version-title", "A title");
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.version.title).toBe("A title");
+    });
+
+    it("Updates the changelog", async () => {
+        const wrapper = getWrapper();
+
+        expect(wrapper.vm.$data.version.changelog).toBe("");
+        emitter.emit("update-changelog-property", "A changelog");
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
     });
 });

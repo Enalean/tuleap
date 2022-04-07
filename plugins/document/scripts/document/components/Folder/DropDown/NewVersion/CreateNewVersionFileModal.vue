@@ -57,6 +57,7 @@ import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "CreateNewVersionFileModal",
@@ -99,6 +100,12 @@ export default {
         this.registerEvents();
 
         this.show();
+        emitter.on("update-version-title", this.updateTitleValue);
+        emitter.on("update-changelog-property", this.updateChangelogValue);
+    },
+    beforeDestroy() {
+        emitter.off("update-version-title", this.updateTitleValue);
+        emitter.off("update-changelog-property", this.updateChangelogValue);
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -144,6 +151,12 @@ export default {
                 this.uploaded_item = {};
                 this.modal.hide();
             }
+        },
+        updateTitleValue(title) {
+            this.version.title = title;
+        },
+        updateChangelogValue(changelog) {
+            this.version.changelog = changelog;
         },
     },
 };

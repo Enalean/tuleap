@@ -51,6 +51,7 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "FileVersionChangelogModal",
@@ -74,7 +75,7 @@ export default {
         return {
             modal: null,
             is_loading: false,
-            version: {},
+            version: { title: "", changelog: "" },
             approval_table_action: null,
         };
     },
@@ -91,6 +92,12 @@ export default {
         this.modal = createModal(this.$el, { destroy_on_hide: true });
         this.modal.addEventListener("tlp-modal-hidden", this.close);
         this.modal.show();
+        emitter.on("update-version-title", this.updateTitleValue);
+        emitter.on("update-changelog-property", this.updateChangelogValue);
+    },
+    beforeDestroy() {
+        emitter.off("update-version-title", this.updateTitleValue);
+        emitter.off("update-changelog-property", this.updateChangelogValue);
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -117,6 +124,12 @@ export default {
         close() {
             this.modal.removeBackdrop();
             this.$emit("close-changelog-modal");
+        },
+        updateTitleValue(title) {
+            this.version.title = title;
+        },
+        updateChangelogValue(changelog) {
+            this.version.changelog = changelog;
         },
     },
 };
