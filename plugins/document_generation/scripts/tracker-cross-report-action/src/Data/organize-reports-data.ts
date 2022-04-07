@@ -31,11 +31,14 @@ export async function organizeReportsData(
     );
 
     const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+    const first_level_artifacts_ids_array: Array<number> = [];
     for (const artifact_response of report_artifacts_reponses) {
         artifact_representations_map.set(artifact_response.id, artifact_response);
+        first_level_artifacts_ids_array.push(artifact_response.id);
     }
 
     return {
         artifact_representations: artifact_representations_map,
+        first_level_artifacts_ids: first_level_artifacts_ids_array,
     };
 }

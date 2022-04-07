@@ -51,4 +51,5 @@ interface ArtifactReportExtraFieldValue {
 
 export interface OrganizedReportsData {
     readonly artifact_representations: Map<number, ArtifactResponse>;
+    readonly first_level_artifacts_ids: ReadonlyArray<number>;
 }
