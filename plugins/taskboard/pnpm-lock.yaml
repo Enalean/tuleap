@@ -1,9 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/drag-and-drop': file:../../src/scripts/lib/drag-and-drop
-  '@tuleap/keyboard-shortcuts': file:../../src/scripts/lib/keyboard-shortcuts
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/drag-and-drop': file:../../lib/frontend/drag-and-drop
+  '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/tlp': file:../../src/themes/tlp
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/dompurify': ^2.3.2
   '@types/fscreen': ^1.0.1
   '@types/jquery': ^3.5.5
@@ -22,9 +23,10 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@tuleap/drag-and-drop': link:../../src/scripts/lib/drag-and-drop
-  '@tuleap/keyboard-shortcuts': link:../../src/scripts/lib/keyboard-shortcuts
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
+  '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   dompurify: 2.3.6
   fscreen: 1.2.0
   mustache: 4.2.0

@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/angular-tlp": "file:../../src/scripts/lib/angular-tlp",
+    "@tuleap/angular-tlp": "file:../../lib/frontend/angular-tlp",
     "@uirouter/angularjs": "^1.0.29",
     "angular": "^1.8.2",
     "angular-filter": "^0.5.17",

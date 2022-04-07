@@ -1,20 +1,20 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-tlp': file:../../src/scripts/lib/angular-tlp
-  '@tuleap/ckeditor-image-upload': file:../../src/scripts/lib/ckeditor-image-upload
-  '@tuleap/concurrency-limit-pool': file:../../src/scripts/lib/concurrency-limit-pool
+  '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
+  '@tuleap/ckeditor-image-upload': file:../../lib/frontend/ckeditor-image-upload
+  '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
   '@tuleap/core': file:../../src
-  '@tuleap/filter-inline-table': file:../../src/scripts/lib/filter-table
-  '@tuleap/gettext': file:../../src/scripts/lib/gettext
-  '@tuleap/keyboard-shortcuts': file:../../src/scripts/lib/keyboard-shortcuts
-  '@tuleap/list-picker': file:../../src/scripts/lib/list-picker
+  '@tuleap/filter-inline-table': file:../../lib/frontend/filter-table
+  '@tuleap/gettext': file:../../lib/frontend/gettext
+  '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': file:../../lib/frontend/list-picker
   '@tuleap/plugin-docgen-docx': file:../document_generation/scripts/lib/docx
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': file:../tracker/scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-artifact-modal': file:../tracker/scripts/lib/artifact-modal
   '@tuleap/plugin-tracker-constants': file:../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': file:../tracker/scripts/lib/rich-text-editor
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/node': ^14.14.31
   '@types/sprintf-js': ^1.1.2
   '@uirouter/angularjs': ^1.0.29
@@ -53,20 +53,20 @@ specifiers:
   vuex: ^3.6.2
 
 dependencies:
-  '@tuleap/angular-tlp': link:../../src/scripts/lib/angular-tlp
-  '@tuleap/ckeditor-image-upload': link:../../src/scripts/lib/ckeditor-image-upload
-  '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
+  '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
+  '@tuleap/ckeditor-image-upload': link:../../lib/frontend/ckeditor-image-upload
+  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
   '@tuleap/core': link:../../src
-  '@tuleap/filter-inline-table': link:../../src/scripts/lib/filter-table
-  '@tuleap/gettext': link:../../src/scripts/lib/gettext
-  '@tuleap/keyboard-shortcuts': link:../../src/scripts/lib/keyboard-shortcuts
-  '@tuleap/list-picker': link:../../src/scripts/lib/list-picker
+  '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
+  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': link:../tracker/scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
   '@tuleap/plugin-tracker-constants': link:../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:../tracker/scripts/lib/rich-text-editor
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@uirouter/angularjs': 1.0.29_angular@1.8.2
   angular: 1.8.2
   angular-breadcrumb: 0.5.0

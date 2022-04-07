@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
+  '@tuleap/gettext': file:../../../../../lib/frontend/gettext
   '@tuleap/plugin-tracker-constants': file:../constants
-  '@tuleap/po-gettext-plugin': file:../../../../../src/scripts/lib/po-gettext-plugin
-  '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/po-gettext-plugin': file:../../../../../lib/frontend/po-gettext-plugin
+  '@tuleap/tlp-fetch': file:../../../../../lib/frontend/tlp-fetch
   '@types/bootstrap': ^3.4.0
   '@types/ckeditor': ^4.9.10
   '@types/dompurify': ^2.3.2
@@ -16,16 +16,16 @@ specifiers:
   turndown: ^7.0.0
 
 dependencies:
-  '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
+  '@tuleap/gettext': link:../../../../../lib/frontend/gettext
   '@tuleap/plugin-tracker-constants': link:../constants
-  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
   dompurify: 2.3.6
   lit: 2.0.2
   marked: 4.0.10
   turndown: 7.1.1
 
 devDependencies:
-  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
+  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
   '@types/bootstrap': 3.4.0
   '@types/ckeditor': 4.9.10
   '@types/dompurify': 2.3.2

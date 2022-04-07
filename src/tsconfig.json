@@ -23,5 +23,5 @@
         "scripts/global-shortcuts/**/*",
         "scripts/frs/permissions-per-group/**/*"
     ],
-    "exclude": ["node_modules", "scripts/lib"]
+    "exclude": ["node_modules"]
 }

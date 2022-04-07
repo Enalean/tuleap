@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/date-helper': file:../../src/scripts/lib/date-helper
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/date-helper': file:../../lib/frontend/date-helper
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/d3-array': ^2.12.1
   '@types/d3-selection': ^2.0.0
   '@types/d3-shape': ^2.1.0
@@ -22,8 +22,8 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@tuleap/date-helper': link:../../src/scripts/lib/date-helper
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/date-helper': link:../../lib/frontend/date-helper
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   d3-array: 3.0.1
   d3-scale: 4.0.0
   d3-selection: 3.0.0

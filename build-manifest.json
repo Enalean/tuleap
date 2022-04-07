@@ -8,8 +8,8 @@
     },
     "gettext-ts": {
         "list-picker": {
-            "src": "src/scripts/lib/list-picker/src",
-            "po": "src/scripts/lib/list-picker/po"
+            "src": "lib/frontend/list-picker/src",
+            "po": "lib/frontend/list-picker/po"
         },
         "access-denied-error": {
             "src": "src/scripts/BurningParrot/src/",
@@ -24,8 +24,8 @@
             "po": "src/scripts/project/admin/po"
         },
         "link-selector": {
-            "src": "src/scripts/lib/link-selector/src",
-            "po": "src/scripts/lib/link-selector/po"
+            "src": "lib/frontend/link-selector/src",
+            "po": "lib/frontend/link-selector/po"
         }
     },
     "gettext-vue": {

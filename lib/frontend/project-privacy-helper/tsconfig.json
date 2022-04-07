@@ -1,0 +1,7 @@
+{
+    "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "types": ["jest"],
+    },
+    "include": ["src/**/*"]
+}

@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/plugin-tracker-artifact-modal': file:../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/node': ^14.14.31
   '@types/node-gettext': ^3.0.1
   d3: ^7.0.0
@@ -20,7 +20,7 @@ specifiers:
 
 dependencies:
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   d3: 7.0.0
   d3-array: 3.0.1
   d3-axis: 3.0.0

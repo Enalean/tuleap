@@ -1,7 +1,8 @@
 packages:  # all packages in subdirs of packages/ and components/  - 'packages/**'
-  - "src/scripts/**/"
-  - "src/themes/tlp/"
+  - "lib/frontend/**/"
+  - "src/scripts/tlp-doc"
   - "src/"
+  - "src/themes/tlp"
   - "src/themes/BurningParrot"
   - "plugins/**/"
 shared-workspace-lockfile: false

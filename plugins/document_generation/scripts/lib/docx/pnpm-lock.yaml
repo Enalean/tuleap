@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/concurrency-limit-pool': file:../../../../../src/scripts/lib/concurrency-limit-pool
+  '@tuleap/concurrency-limit-pool': file:../../../../../lib/frontend/concurrency-limit-pool
   '@tuleap/plugin-tracker-constants': file:../../../../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rest-api-types': file:../../../../tracker/scripts/lib/rest-api-types
-  '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../../../../lib/frontend/tlp-fetch
   '@types/dompurify': ^2.3.2
   '@types/sprintf-js': ^1.1.2
   docx: ^7.3.0
@@ -12,10 +12,10 @@ specifiers:
   sprintf-js: ^1.1.2
 
 dependencies:
-  '@tuleap/concurrency-limit-pool': link:../../../../../src/scripts/lib/concurrency-limit-pool
+  '@tuleap/concurrency-limit-pool': link:../../../../../lib/frontend/concurrency-limit-pool
   '@tuleap/plugin-tracker-constants': link:../../../../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rest-api-types': link:../../../../tracker/scripts/lib/rest-api-types
-  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
   docx: 7.3.0
   dompurify: 2.3.6
   sprintf-js: 1.1.2

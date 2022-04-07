@@ -5,9 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
-    "@tuleap/vue-breadcrumb-privacy": "file:../../src/scripts/lib/vue-breadcrumb-privacy",
+    "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
+    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/vue-breadcrumb-privacy": "file:../../lib/frontend/vue-breadcrumb-privacy",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "node-htmldiff": "^0.9.3",

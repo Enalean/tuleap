@@ -1,0 +1,27 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@types/node-gettext': ^3.0.1
+  node-gettext: ^3.0.0
+
+dependencies:
+  node-gettext: 3.0.0
+
+devDependencies:
+  '@types/node-gettext': 3.0.3
+
+packages:
+
+  /@types/node-gettext/3.0.3:
+    resolution: {integrity: sha512-SA5ojwtVq4kVjJDriE20y4BYoS+m6wMJmARsDBF11qock6WNixoYEJH79sHuXLQSjMsmvvwqxrnjZLB5cWDLgg==}
+    dev: true
+
+  /lodash.get/4.4.2:
+    resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
+    dev: false
+
+  /node-gettext/3.0.0:
+    resolution: {integrity: sha512-/VRYibXmVoN6tnSAY2JWhNRhWYJ8Cd844jrZU/DwLVoI4vBI6ceYbd8i42sYZ9uOgDH3S7vslIKOWV/ZrT2YBA==}
+    dependencies:
+      lodash.get: 4.4.2
+    dev: false

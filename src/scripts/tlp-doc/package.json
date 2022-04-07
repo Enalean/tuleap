@@ -6,9 +6,9 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@tuleap/filter-inline-table": "file:../lib/filter-table",
-    "@tuleap/link-selector": "file:../lib/link-selector",
-    "@tuleap/list-picker": "file:../lib/list-picker",
+    "@tuleap/filter-inline-table": "file:../../../lib/frontend/filter-table",
+    "@tuleap/link-selector": "file:../../../lib/frontend/link-selector",
+    "@tuleap/list-picker": "file:../../../lib/frontend/list-picker",
     "codemirror": "^5.62.0",
     "dompurify": "^2.3.6"
   }

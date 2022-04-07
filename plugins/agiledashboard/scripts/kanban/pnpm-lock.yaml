@@ -1,12 +1,12 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-async': file:../../../../src/scripts/lib/angular-async
-  '@tuleap/angular-tlp': file:../../../../src/scripts/lib/angular-tlp
-  '@tuleap/html-escaper': file:../../../../src/scripts/lib/html-escaper
+  '@tuleap/angular-async': file:../../../../lib/frontend/angular-async
+  '@tuleap/angular-tlp': file:../../../../lib/frontend/angular-tlp
+  '@tuleap/html-escaper': file:../../../../lib/frontend/html-escaper
   '@tuleap/plugin-agiledashboard-card-fields': file:../lib/card-fields
   '@tuleap/plugin-tracker-artifact-modal': file:../../../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': file:../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../../../lib/frontend/tlp-fetch
   angular: ^1.8.2
   angular-gettext: ^2.4.2
   angular-jwt: ^0.1.11
@@ -23,12 +23,12 @@ specifiers:
   socket.io-client: ^4.4.1
 
 dependencies:
-  '@tuleap/angular-async': link:../../../../src/scripts/lib/angular-async
-  '@tuleap/angular-tlp': link:../../../../src/scripts/lib/angular-tlp
-  '@tuleap/html-escaper': link:../../../../src/scripts/lib/html-escaper
+  '@tuleap/angular-async': link:../../../../lib/frontend/angular-async
+  '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
+  '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
   '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
   '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': link:../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   angular: 1.8.2
   angular-gettext: 2.4.2
   angular-jwt: 0.1.11

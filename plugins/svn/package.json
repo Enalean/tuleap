@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper",
+    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12"
   },

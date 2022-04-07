@@ -5,9 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/angular-tlp": "file:../../src/scripts/lib/angular-tlp",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
-    "@tuleap/tooltip": "file:../../src/scripts/lib/tooltip",
+    "@tuleap/angular-tlp": "file:../../lib/frontend/angular-tlp",
+    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tooltip": "file:../../lib/frontend/tooltip",
     "@uirouter/angularjs": "^1.0.29",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",

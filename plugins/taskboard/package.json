@@ -5,9 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/drag-and-drop": "file:../../src/scripts/lib/drag-and-drop",
-    "@tuleap/keyboard-shortcuts": "file:../../src/scripts/lib/keyboard-shortcuts",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/drag-and-drop": "file:../../lib/frontend/drag-and-drop",
+    "@tuleap/keyboard-shortcuts": "file:../../lib/frontend/keyboard-shortcuts",
+    "@tuleap/tlp": "file:../../src/themes/tlp",
+    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "dompurify": "^2.3.6",
     "fscreen": "^1.2.0",
     "mustache": "^4.2.0",

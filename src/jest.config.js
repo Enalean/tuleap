@@ -39,5 +39,5 @@ module.exports = {
         "!www/**/datepicker/**",
         "!scripts/FlamingParrot/keymaster-sequence/**",
     ],
-    testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/", "/scripts/lib/"],
+    testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/"],
 };

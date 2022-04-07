@@ -2,15 +2,15 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/core': file:../../src
-  '@tuleap/html-escaper': file:../../src/scripts/lib/html-escaper
-  '@tuleap/list-picker': file:../../src/scripts/lib/list-picker
-  '@tuleap/mention': file:../../src/scripts/lib/mention
+  '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
+  '@tuleap/list-picker': file:../../lib/frontend/list-picker
+  '@tuleap/mention': file:../../lib/frontend/mention
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': file:scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-constants': file:scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': file:scripts/lib/rich-text-editor
   '@tuleap/tlp': file:../../src/themes/tlp
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
-  '@tuleap/tooltip': file:../../src/scripts/lib/tooltip
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/tooltip': file:../../lib/frontend/tooltip
   '@types/bootstrap': ^4.5.1
   '@types/ckeditor': ^4.9.10
   '@types/codemirror': ^5.60.1
@@ -43,14 +43,14 @@ specifiers:
 
 dependencies:
   '@tuleap/core': link:../../src
-  '@tuleap/html-escaper': link:../../src/scripts/lib/html-escaper
-  '@tuleap/list-picker': link:../../src/scripts/lib/list-picker
-  '@tuleap/mention': link:../../src/scripts/lib/mention
+  '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
+  '@tuleap/list-picker': link:../../lib/frontend/list-picker
+  '@tuleap/mention': link:../../lib/frontend/mention
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': link:scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-constants': link:scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:scripts/lib/rich-text-editor
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  '@tuleap/tooltip': link:../../src/scripts/lib/tooltip
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tooltip': link:../../lib/frontend/tooltip
   codemirror: 5.62.0
   d3-array: 3.0.1
   d3-axis: 3.0.0
