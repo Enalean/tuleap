@@ -22,11 +22,9 @@ import type {
     ArtifactIdInTrackerFieldIdentifier,
     ArtifactLinkFieldIdentifier,
     CheckBoxFieldIdentifier,
-    ColumnIdentifier,
     ComputedFieldIdentifier,
     CrossReferenceFieldIdentifier,
     DateFieldIdentifier,
-    FieldSetIdentifier,
     FileFieldIdentifier,
     FloatFieldIdentifier,
     HTMLFormat,
@@ -45,9 +43,6 @@ import type {
     TextFieldIdentifier,
     TextFormat,
 } from "@tuleap/plugin-tracker-constants";
-
-// Export an empty constant so that the resulting JS file is not completely empty
-export const _z = "";
 
 interface StaticValueRepresentation {
     readonly id: number;
@@ -78,67 +73,6 @@ export interface UserGroupRepresentation {
     readonly users_uri: string;
     readonly short_name: string;
     readonly key: string;
-}
-
-export interface BaseFieldStructure {
-    readonly field_id: number;
-}
-
-interface UnknownFieldStructure extends BaseFieldStructure {
-    readonly type: never;
-}
-
-interface DateFieldStructure extends BaseFieldStructure {
-    readonly type:
-        | DateFieldIdentifier
-        | LastUpdateDateFieldIdentifier
-        | SubmissionDateFieldIdentifier;
-    readonly is_time_displayed: boolean;
-}
-
-interface ContainerFieldStructure extends BaseFieldStructure {
-    readonly type: ColumnIdentifier | FieldSetIdentifier;
-    readonly label: string;
-}
-
-interface ListFieldStructure extends BaseFieldStructure {
-    readonly type:
-        | SelectBoxFieldIdentifier
-        | RadioButtonFieldIdentifier
-        | MultiSelectBoxFieldIdentifier
-        | CheckBoxFieldIdentifier
-        | OpenListFieldIdentifier;
-}
-
-interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
-    readonly type: PermissionFieldIdentifier;
-    readonly values: {
-        readonly is_used_by_default: boolean;
-        readonly ugroup_representations: ReadonlyArray<UserGroupRepresentation>;
-    };
-}
-
-interface ArtifactLinkFieldStructure extends BaseFieldStructure {
-    readonly type: ArtifactLinkFieldIdentifier;
-    readonly label: string;
-}
-
-export type StructureFields =
-    | UnknownFieldStructure
-    | DateFieldStructure
-    | ContainerFieldStructure
-    | ListFieldStructure
-    | PermissionsOnArtifactFieldStructure
-    | ArtifactLinkFieldStructure;
-
-export interface StructureFormat {
-    readonly id: number;
-    readonly content: null | ReadonlyArray<this>;
-}
-
-export interface TrackerResponse {
-    readonly fields: ReadonlyArray<StructureFields>;
-    readonly structure: ReadonlyArray<StructureFormat>;
 }
 
 interface BaseChangesetValue {

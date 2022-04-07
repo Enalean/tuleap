@@ -21,7 +21,7 @@
 <template>
     <label class="tlp-label">
         {{ $gettext("Report") }}
-        <select v-model="report_id" class="tlp-select">
+        <select v-model="report" class="tlp-select" v-bind:disabled="is_processing">
             <optgroup
                 v-if="personal_reports.length > 0"
                 v-bind:label="
@@ -29,11 +29,11 @@
                 "
             >
                 <option
-                    v-for="report in personal_reports"
-                    v-bind:key="report.id"
-                    v-bind:value="report.id"
+                    v-for="personal_report in personal_reports"
+                    v-bind:key="personal_report.id"
+                    v-bind:value="personal_report"
                 >
-                    {{ report.name }}
+                    {{ personal_report.label }}
                 </option>
             </optgroup>
             <optgroup
@@ -41,39 +41,55 @@
                 v-bind:label="$ngettext('Public report', 'Public reports', public_reports.length)"
             >
                 <option
-                    v-for="report in public_reports"
-                    v-bind:key="report.id"
-                    v-bind:value="report.id"
+                    v-for="public_report in public_reports"
+                    v-bind:key="public_report.id"
+                    v-bind:value="public_report"
                 >
-                    {{ report.name }}
+                    {{ public_report.label }}
                 </option>
             </optgroup>
         </select>
     </label>
 </template>
 <script lang="ts" setup>
-import type { TrackerReport } from "../type";
-import { readonly, computed } from "vue";
+import { computed } from "vue";
+import { getTrackerReports } from "../rest-querier";
+import { usePromise } from "../Helpers/use-promise";
+import type { SelectedReport } from "../type";
 
-const props =
-    defineProps<{ current_tracker_reports: ReadonlyArray<TrackerReport>; report_id: number }>();
+const props = defineProps<{ tracker_id: number; report: SelectedReport }>();
 const emit = defineEmits<{
-    (e: "update:report_id", value: number): void;
+    (e: "update:report", value: SelectedReport): void;
 }>();
 
-const report_id = computed({
-    get(): number {
-        return props.report_id;
+const { is_processing, data } = usePromise(
+    [],
+    computed(() => {
+        return getTrackerReports(props.tracker_id);
+    })
+);
+
+const report = computed({
+    get(): SelectedReport {
+        const retrieved_report = data.value.find(
+            (retrieved_report) => retrieved_report.id === props.report.id
+        );
+        if (retrieved_report !== undefined) {
+            emit("update:report", retrieved_report);
+            return retrieved_report;
+        }
+        return props.report;
     },
-    set(value: number) {
-        emit("update:report_id", value);
+    set(value: SelectedReport) {
+        emit("update:report", value);
     },
 });
 
-const public_reports = readonly(
-    props.current_tracker_reports.filter((report: TrackerReport) => report.is_public)
-);
-const personal_reports = readonly(
-    props.current_tracker_reports.filter((report: TrackerReport) => !report.is_public)
-);
+const public_reports = computed(() => {
+    return data.value.filter((report) => report.is_public);
+});
+
+const personal_reports = computed(() => {
+    return data.value.filter((report) => !report.is_public);
+});
 </script>

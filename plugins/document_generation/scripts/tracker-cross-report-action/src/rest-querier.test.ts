@@ -18,9 +18,10 @@
  */
 
 import * as tlp from "@tuleap/tlp-fetch";
-import { getLinkedArtifacts, getReportArtifacts } from "./rest-querier";
+import { getLinkedArtifacts, getReportArtifacts, getTrackerReports } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 
 jest.mock("tlp");
 
@@ -71,6 +72,31 @@ describe("API querier", () => {
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/artifacts/101/linked_artifacts", {
                 params: { limit: 10, direction: "forward", nature: "_is_child" },
             });
+        });
+    });
+    describe("getTrackerReports", () => {
+        it("retrieves tracker reports", async () => {
+            const tracker_id = 123;
+            const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
+
+            const reports_response: TrackerReportResponse[] = [
+                {
+                    id: 741,
+                    label: "Report label",
+                    is_public: true,
+                },
+            ];
+            mockFetchSuccess(recursive_get_spy, {
+                return_json: {
+                    collection: reports_response,
+                },
+            });
+
+            await getTrackerReports(tracker_id);
+
+            expect(recursive_get_spy).toHaveBeenCalledWith(
+                `/api/v1/trackers/${tracker_id}/tracker_reports`
+            );
         });
     });
 });

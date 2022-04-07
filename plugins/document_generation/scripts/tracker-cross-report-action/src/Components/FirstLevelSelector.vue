@@ -42,37 +42,34 @@
             </label>
         </div>
         <div class="tlp-form-element">
-            <tracker-report-selector
-                v-model:report_id="report_id"
-                v-bind:current_tracker_reports="current_tracker_reports"
-            />
+            <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker_id" />
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-import type { ArtifactLinkType, TrackerReport } from "../type";
+import type { ArtifactLinkType, SelectedReport } from "../type";
 import { computed } from "vue";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
 
 const NO_TYPE_SHORTNAME = "";
 
 const props = defineProps<{
-    current_tracker_reports: ReadonlyArray<TrackerReport>;
     current_tracker_artifact_link_types: ReadonlyArray<ArtifactLinkType>;
-    report_id: number;
+    tracker_id: number;
+    report: SelectedReport;
     artifact_link_types: string[];
 }>();
 const emit = defineEmits<{
-    (e: "update:report_id", value: number): void;
+    (e: "update:report", value: SelectedReport): void;
     (e: "update:artifact_link_types", value: string[]): void;
 }>();
 
-const report_id = computed({
-    get(): number {
-        return props.report_id;
+const report = computed({
+    get(): SelectedReport {
+        return props.report;
     },
-    set(value: number) {
-        emit("update:report_id", value);
+    set(value: SelectedReport) {
+        emit("update:report", value);
     },
 });
 

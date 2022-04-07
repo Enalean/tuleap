@@ -20,20 +20,29 @@
 import { shallowMount } from "@vue/test-utils";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
-import type { TrackerReport } from "../type";
+import * as rest_querier from "../rest-querier";
+import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import { nextTick } from "vue";
 
 describe("TrackerReportSelector", () => {
-    it("displays possible reports", () => {
+    it("displays possible reports", async () => {
+        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+            { id: 100, label: "Public", is_public: true },
+            { id: 101, label: "Private", is_public: false },
+        ] as TrackerReportResponse[]);
+
         const wrapper = shallowMount(TrackerReportSelector, {
             global: getGlobalTestOptions(),
             props: {
-                current_tracker_reports: [
-                    { id: 100, name: "Public", is_public: true },
-                    { id: 101, name: "Private", is_public: false },
-                ] as TrackerReport[],
-                report_id: 101,
+                tracker_id: 21,
+                report: {
+                    id: 101,
+                    label: "",
+                },
             },
         });
+
+        await nextTick();
 
         const selector = wrapper.get("select");
 
@@ -41,16 +50,23 @@ describe("TrackerReportSelector", () => {
         expect(selector.findAll("optgroup")).toHaveLength(2);
     });
 
-    it("only shows report groups when there is a report to show", () => {
+    it("only shows report groups when there is a report to show", async () => {
+        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+            { id: 101, label: "Private", is_public: false },
+        ] as TrackerReportResponse[]);
+
         const wrapper = shallowMount(TrackerReportSelector, {
             global: getGlobalTestOptions(),
             props: {
-                current_tracker_reports: [
-                    { id: 101, name: "Private", is_public: false },
-                ] as TrackerReport[],
-                report_id: 101,
+                tracker_id: 21,
+                report: {
+                    id: 101,
+                    label: "",
+                },
             },
         });
+
+        await nextTick();
 
         const selector = wrapper.get("select");
 
@@ -58,25 +74,31 @@ describe("TrackerReportSelector", () => {
         expect(selector.findAll("optgroup")).toHaveLength(1);
     });
 
-    it("selects a new report", () => {
+    it("returns full report on load", async () => {
+        const expected_report = { id: 101, label: "Private", is_public: false };
+        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+            { id: 100, label: "Public", is_public: true },
+            expected_report,
+        ] as TrackerReportResponse[]);
+
         const wrapper = shallowMount(TrackerReportSelector, {
             global: getGlobalTestOptions(),
             props: {
-                current_tracker_reports: [
-                    { id: 100, name: "Public", is_public: true },
-                    { id: 101, name: "Private", is_public: false },
-                ] as TrackerReport[],
-                report_id: 101,
+                tracker_id: 21,
+                report: {
+                    id: expected_report.id,
+                    label: "",
+                },
             },
         });
 
-        wrapper.get("select").setValue(100);
+        await nextTick();
 
-        const emitted_input = wrapper.emitted("update:report_id");
+        const emitted_input = wrapper.emitted("update:report");
         expect(emitted_input).toBeDefined();
         if (emitted_input === undefined) {
             throw new Error("Expected an update event to be emitted");
         }
-        expect(emitted_input[0]).toEqual([100]);
+        expect(emitted_input[0]).toStrictEqual([expected_report]);
     });
 });

@@ -41,9 +41,9 @@
         <div class="tlp-modal-body">
             <explanations-export />
             <first-level-selector
-                v-model:report_id="report_id"
+                v-model:report="selected_report"
                 v-model:artifact_link_types="artifact_link_types"
-                v-bind:current_tracker_reports="properties.current_tracker_reports"
+                v-bind:tracker_id="properties.current_tracker_id"
                 v-bind:current_tracker_artifact_link_types="
                     properties.current_tracker_artifact_link_types
                 "
@@ -81,7 +81,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { GlobalExportProperties, TrackerReport } from "../type";
+import type { GlobalExportProperties, SelectedReport } from "../type";
 import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 
@@ -101,7 +101,10 @@ onBeforeUnmount(() => {
 });
 
 const props = defineProps<{ properties: GlobalExportProperties }>();
-const report_id = ref(props.properties.current_report_id);
+const selected_report = ref<SelectedReport>({
+    id: props.properties.current_report_id,
+    label: "",
+});
 const all_artifact_link_types = props.properties.current_tracker_artifact_link_types.map(
     (art_link_type) => art_link_type.shortname
 );
@@ -119,11 +122,8 @@ async function startExport(): Promise<void> {
         {
             first_level: {
                 tracker_name: props.properties.current_tracker_name,
-                report_id: report_id.value,
-                report_name:
-                    props.properties.current_tracker_reports.find(
-                        (report: TrackerReport) => report.id === report_id.value
-                    )?.name ?? "",
+                report_id: selected_report.value.id,
+                report_name: selected_report.value.label,
                 artifact_link_types: artifact_link_types.value,
             },
         },

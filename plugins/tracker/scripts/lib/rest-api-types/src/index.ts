@@ -17,16 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
-import * as path from "path";
-import dts from "vite-dts";
+// Export an empty constant so that the resulting JS file is not completely empty
+export const _z = "";
 
-export default defineConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "TrackerRESTAPITypes",
-        },
-    },
-    plugins: [dts()],
-});
+export * from "./artifacts";
+export * from "./reports";
+export * from "./trackers";
