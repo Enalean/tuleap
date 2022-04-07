@@ -17,9 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { Fault } from "@tuleap/fault";
+import { sprintf } from "sprintf-js";
+import { getLinkFieldFetchErrorMessage } from "../../../gettext-catalog";
+import { isLinkRetrievalFault } from "../../../domain/fields/link-field-v2/LinkRetrievalFault";
 
-export const NoLinksInCreationModeFault = (): Fault => ({
-    isCreationMode: () => true,
-    ...Fault.fromMessage("Modal is in creation mode"),
-});
+export type FaultFeedbackPresenter = {
+    readonly message: string;
+};
+
+export const FaultFeedbackPresenter = {
+    buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
+    fromFault: (fault: Fault): FaultFeedbackPresenter => {
+        if (isLinkRetrievalFault(fault)) {
+            return { message: sprintf(getLinkFieldFetchErrorMessage(), fault) };
+        }
+        return { message: String(fault) };
+    },
+};

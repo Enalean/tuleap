@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { Fault } from "@tuleap/fault";
 
-export const NoLinksInCreationModeFault = (): Fault => ({
-    isCreationMode: () => true,
-    ...Fault.fromMessage("Modal is in creation mode"),
+export const isLinkRetrievalFault = (fault: Fault): boolean =>
+    typeof fault.isLinkRetrieval === "function" && fault.isLinkRetrieval();
+
+export const LinkRetrievalFault = (previous: Fault): Fault => ({
+    isLinkRetrieval: () => true,
+    ...previous,
 });

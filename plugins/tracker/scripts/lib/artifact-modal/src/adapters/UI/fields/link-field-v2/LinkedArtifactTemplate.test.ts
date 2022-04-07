@@ -34,6 +34,7 @@ import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/Curren
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -142,6 +143,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
+                NotifyFaultStub.withCount(),
                 CurrentArtifactIdentifierStub.withId(72)
             );
 

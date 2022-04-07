@@ -48,7 +48,7 @@ import {
 } from "./field-dependencies-helper.js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
-import { ModalFeedbackController } from "./adapters/UI/feedback/ModalFeedbackController";
+import { ParentFeedbackController } from "./adapters/UI/feedback/ParentFeedbackController";
 import { LinkFieldController } from "./adapters/UI/fields/link-field-v2/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
 import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
@@ -64,6 +64,7 @@ import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkField
 import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
 import { TrackerArtifactCrossReferenceProxy } from "./adapters/Caller/TrackerArtifactCrossReferenceProxy";
 import { TrackerShortnameProxy } from "./adapters/Caller/TrackerShortnameProxy";
+import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 
 export default ArtifactModalController;
 
@@ -93,6 +94,7 @@ function ArtifactModalController(
     let confirm_action_to_edit = false;
     const concurrency_error_code = 412;
 
+    const fault_feedback_controller = FaultFeedbackController();
     const api_client = TuleapAPIClient();
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
@@ -139,16 +141,18 @@ function ArtifactModalController(
             links_marked_for_removal_store,
             links_marked_for_removal_store,
             links_marked_for_removal_store,
+            fault_feedback_controller,
             CurrentArtifactIdentifierProxy.fromModalArtifactId(modal_model.artifact_id)
         ),
         date_picker_initializer: DatePickerInitializer(),
         readonly_date_field_formatter: ReadonlyDateFieldFormatter(
             document.body.dataset.userLocale ?? "en_US"
         ),
-        feedback_controller: ModalFeedbackController(
+        parent_feedback_controller: ParentFeedbackController(
             ParentRetriever(api_client),
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
+        fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id]);

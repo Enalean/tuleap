@@ -18,7 +18,6 @@
  */
 
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
-import { Fault } from "@tuleap/fault";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 
@@ -26,17 +25,8 @@ describe(`LinkFieldPresenter`, () => {
     it(`builds a loading state`, () => {
         const presenter = LinkFieldPresenter.buildLoadingState();
         expect(presenter.linked_artifacts).toHaveLength(0);
-        expect(presenter.error_message).toBe("");
         expect(presenter.is_loading).toBe(true);
         expect(presenter.has_loaded_content).toBe(false);
-    });
-
-    it(`builds for creation mode`, () => {
-        const presenter = LinkFieldPresenter.forCreationMode();
-        expect(presenter.linked_artifacts).toHaveLength(0);
-        expect(presenter.error_message).toBe("");
-        expect(presenter.is_loading).toBe(false);
-        expect(presenter.has_loaded_content).toBe(true);
     });
 
     it(`builds from linked artifacts`, () => {
@@ -52,17 +42,13 @@ describe(`LinkFieldPresenter`, () => {
         const presenter = LinkFieldPresenter.fromArtifacts([first_artifact, second_artifact]);
         expect(presenter.linked_artifacts).toContain(first_artifact);
         expect(presenter.linked_artifacts).toContain(second_artifact);
-        expect(presenter.error_message).toBe("");
         expect(presenter.is_loading).toBe(false);
         expect(presenter.has_loaded_content).toBe(true);
     });
 
-    it(`builds from error`, () => {
-        const error_message = "Ooops";
-
-        const presenter = LinkFieldPresenter.fromFault(Fault.fromMessage(error_message));
+    it(`builds for fault`, () => {
+        const presenter = LinkFieldPresenter.forFault();
         expect(presenter.linked_artifacts).toHaveLength(0);
-        expect(presenter.error_message).toBe(error_message);
         expect(presenter.is_loading).toBe(false);
         expect(presenter.has_loaded_content).toBe(true);
     });

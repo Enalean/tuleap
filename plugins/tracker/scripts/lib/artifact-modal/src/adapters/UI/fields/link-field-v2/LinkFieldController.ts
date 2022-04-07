@@ -28,6 +28,8 @@ import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-fie
 import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field-v2/DeleteLinkMarkedForRemoval";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
+import type { NotifyFault } from "../../../../domain/NotifyFault";
+import { LinkRetrievalFault } from "../../../../domain/fields/link-field-v2/LinkRetrievalFault";
 
 export interface LinkFieldControllerType {
     displayLinkedArtifacts(): Promise<LinkFieldPresenter>;
@@ -60,6 +62,7 @@ export const LinkFieldController = (
     deleted_link_adder: AddLinkMarkedForRemoval,
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
+    fault_notifier: NotifyFault,
     current_artifact_identifier: CurrentArtifactIdentifier | null
 ): LinkFieldControllerType => ({
     displayLinkedArtifacts: (): Promise<LinkFieldPresenter> => {
@@ -70,10 +73,10 @@ export const LinkFieldController = (
                 );
                 return LinkFieldPresenter.fromArtifacts(presenters);
             }
-            if (isCreationModeFault(result)) {
-                return LinkFieldPresenter.forCreationMode();
+            if (!isCreationModeFault(result)) {
+                fault_notifier.onFault(LinkRetrievalFault(result));
             }
-            return LinkFieldPresenter.fromFault(result);
+            return LinkFieldPresenter.forFault();
         });
     },
 

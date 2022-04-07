@@ -17,26 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isFault } from "@tuleap/fault";
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArtifactIdentifier";
 import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
-import { isFault } from "@tuleap/fault";
 
-export interface ModalFeedbackControllerType {
+export type ParentFeedbackControllerType = {
     displayParentFeedback(): Promise<ParentFeedbackPresenter>;
-}
+};
 
-export const ModalFeedbackController = (
+export const ParentFeedbackController = (
     retriever: RetrieveParent,
     parent_identifier: ParentArtifactIdentifier | null
-): ModalFeedbackControllerType => {
-    return {
-        displayParentFeedback: async (): Promise<ParentFeedbackPresenter> => {
-            const result = await retriever.getParent(parent_identifier);
-            if (isFault(result)) {
-                return ParentFeedbackPresenter.buildEmpty();
-            }
-            return ParentFeedbackPresenter.fromArtifact(result);
-        },
-    };
-};
+): ParentFeedbackControllerType => ({
+    displayParentFeedback: async (): Promise<ParentFeedbackPresenter> => {
+        const result = await retriever.getParent(parent_identifier);
+        if (isFault(result)) {
+            return ParentFeedbackPresenter.buildEmpty();
+        }
+        return ParentFeedbackPresenter.fromArtifact(result);
+    },
+});

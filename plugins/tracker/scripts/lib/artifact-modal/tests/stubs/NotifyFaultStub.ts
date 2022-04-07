@@ -17,9 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { NotifyFault } from "../../src/domain/NotifyFault";
 
-export const NoLinksInCreationModeFault = (): Fault => ({
-    isCreationMode: () => true,
-    ...Fault.fromMessage("Modal is in creation mode"),
-});
+export interface NotifyFaultStub extends NotifyFault {
+    getCallCount(): number;
+}
+
+export const NotifyFaultStub = {
+    withCount: (): NotifyFaultStub => {
+        let call_count = 0;
+        return {
+            onFault(): void {
+                call_count++;
+            },
+            getCallCount: (): number => call_count,
+        };
+    },
+};

@@ -18,8 +18,20 @@
  */
 
 import { Fault } from "@tuleap/fault";
+import { FaultFeedbackController } from "./FaultFeedbackController";
 
-export const NoLinksInCreationModeFault = (): Fault => ({
-    isCreationMode: () => true,
-    ...Fault.fromMessage("Modal is in creation mode"),
+describe(`FaultFeedbackController`, () => {
+    describe(`onFault`, () => {
+        it(`will notify its pre-registered handler with a FaultFeedbackPresenter`, () => {
+            const controller = FaultFeedbackController();
+            const handler = jest.fn();
+            controller.registerFaultListener(handler);
+
+            const fault = Fault.fromMessage("Ooops");
+            controller.onFault(fault);
+
+            const presenter = handler.mock.calls[0][0];
+            expect(presenter.message).toBe(String(fault));
+        });
+    });
 });
