@@ -45,14 +45,20 @@ describe("PreviewFilename", () => {
         });
     }
 
-    it("should display nothing if filename is not inforced", () => {
-        const wrapper = getWrapper(
-            {} as DefaultFileItem,
-            { is_filename_pattern_enforced: false, filename_pattern: "" } as ConfigurationState
-        );
+    it.each([
+        ["enforced", false],
+        ["a file", true],
+    ])(
+        `"should display nothing if filename pattern is not %s"`,
+        (string_display_condition, is_filename_pattern_enforced) => {
+            const wrapper = getWrapper(
+                {} as DefaultFileItem,
+                { is_filename_pattern_enforced, filename_pattern: "" } as ConfigurationState
+            );
 
-        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
-    });
+            expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+        }
+    );
 
     it("should update the preview according to item's values", async () => {
         const item = {

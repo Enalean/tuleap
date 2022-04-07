@@ -56,6 +56,7 @@
                     v-bind:item="item"
                     name="properties"
                 />
+                <preview-filename v-bind:item="item" />
             </document-global-property-for-create>
             <other-information-properties-for-create
                 v-bind:currently-updated-item="item"
@@ -99,10 +100,12 @@ import {
     transformStatusPropertyForItemCreation,
 } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import emitter from "../../../../helpers/emitter";
+import PreviewFilename from "../../ModalCommon/PreviewFilename.vue";
 
 export default {
     name: "NewItemModal",
     components: {
+        PreviewFilename,
         OtherInformationPropertiesForCreate,
         DocumentGlobalPropertyForCreate,
         FileProperties,
@@ -177,7 +180,7 @@ export default {
                     page_name: "",
                 },
                 file_properties: {
-                    file: "",
+                    file: {},
                 },
                 embedded_properties: {
                     content: "",
@@ -189,6 +192,7 @@ export default {
                     can_write: [],
                     can_manage: [],
                 },
+                status: "none",
             };
         },
         async show(event) {
