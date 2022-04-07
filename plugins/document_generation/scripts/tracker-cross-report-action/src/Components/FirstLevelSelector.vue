@@ -24,22 +24,10 @@
             {{ $gettext("First level") }}
         </h2>
         <div class="tlp-form-element">
-            <label class="tlp-label">
-                {{ $gettext("Link type") }}
-                <select v-model="artifact_link_types" class="tlp-select" multiple>
-                    <option
-                        v-for="art_link in current_tracker_artifact_link_types"
-                        v-bind:key="art_link.shortname"
-                        v-bind:value="art_link.shortname"
-                    >
-                        {{
-                            art_link.shortname === NO_TYPE_SHORTNAME
-                                ? $gettext("No type")
-                                : art_link.forward_label
-                        }}
-                    </option>
-                </select>
-            </label>
+            <artifact-link-types-selector
+                v-model:artifact_link_types="artifact_link_types"
+                v-bind:tracker_id="tracker_id"
+            />
         </div>
         <div class="tlp-form-element">
             <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker_id" />
@@ -47,14 +35,12 @@
     </div>
 </template>
 <script lang="ts" setup>
-import type { ArtifactLinkType, SelectedReport } from "../type";
+import type { SelectedReport } from "../type";
 import { computed } from "vue";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
-
-const NO_TYPE_SHORTNAME = "";
+import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
 
 const props = defineProps<{
-    current_tracker_artifact_link_types: ReadonlyArray<ArtifactLinkType>;
     tracker_id: number;
     report: SelectedReport;
     artifact_link_types: string[];

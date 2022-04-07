@@ -20,16 +20,10 @@
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
-export interface ArtifactLinkType {
-    readonly shortname: string;
-    readonly forward_label: string;
-}
-
 export interface GlobalExportProperties {
     readonly current_tracker_id: number;
     readonly current_tracker_name: string;
     readonly current_report_id: number;
-    readonly current_tracker_artifact_link_types: ReadonlyArray<ArtifactLinkType>;
 }
 
 export interface SelectedReport {

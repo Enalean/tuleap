@@ -138,9 +138,7 @@ class document_generationPlugin extends Plugin implements PluginWithConfigKeys
             return;
         }
 
-        $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher(
-            new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
-        );
+        $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher();
 
         $event->addExportItem(
             $renderer->renderToString(
