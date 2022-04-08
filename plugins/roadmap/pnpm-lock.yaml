@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/list-picker': file:../../src/scripts/lib/list-picker
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/tlp-popovers': file:../../src/scripts/lib/tlp-popovers
   '@vue/test-utils': ^1.3.0
   current-week-number: ^1.0.7

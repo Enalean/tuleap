@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@floating-ui/dom': ^0.4.2
-  '@tuleap/tlp-modal': link:../../scripts/lib/tlp-modal
+  '@tuleap/tlp-modal': file:../../scripts/lib/tlp-modal
   '@tuleap/tlp-popovers': file:../../scripts/lib/tlp-popovers
   '@types/jquery': ^3.5.5
   flatpickr: ^4.6.9

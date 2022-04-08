@@ -9,11 +9,11 @@
     "@tuleap/gettext": "file:../../src/scripts/lib/gettext",
     "@tuleap/plugin-docgen-docx": "file:./scripts/lib/docx",
     "@tuleap/plugin-docgen-xlsx": "file:./scripts/lib/xlsx",
-    "@tuleap/plugin-tracker-rest-api-types": "link:../tracker/scripts/lib/rest-api-types",
-    "@tuleap/tlp": "link:../../src/themes/tlp",
+    "@tuleap/plugin-tracker-rest-api-types": "file:../tracker/scripts/lib/rest-api-types",
+    "@tuleap/tlp": "file:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
-    "@tuleap/tlp-modal": "link:../../src/scripts/lib/tlp-modal",
-    "@tuleap/vue3-gettext-init": "link:../../src/scripts/lib/vue3-gettext-init",
+    "@tuleap/tlp-modal": "file:../../src/scripts/lib/tlp-modal",
+    "@tuleap/vue3-gettext-init": "file:../../src/scripts/lib/vue3-gettext-init",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.31",
@@ -21,7 +21,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin",
+    "@tuleap/po-gettext-plugin": "file:../../src/scripts/lib/po-gettext-plugin",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^2.0.0-rc.17"
   },

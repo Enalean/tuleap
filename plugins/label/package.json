@@ -5,14 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp-fetch": "link:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "mustache": "^4.2.0",
     "vue": "^2.6.14",
     "vue-dompurify-html": "^2.5.1",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
-    "@tuleap/po-gettext-plugin": "link:../../src/scripts/lib/po-gettext-plugin"
+    "@tuleap/po-gettext-plugin": "file:../../src/scripts/lib/po-gettext-plugin"
   },
   "scripts": {
     "build": "vite build",

@@ -14,8 +14,8 @@
   ],
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
-    "@tuleap/project-privacy-helper": "link:../project-privacy-helper",
-    "@tuleap/tlp-popovers": "link:../tlp-popovers",
+    "@tuleap/project-privacy-helper": "file:../project-privacy-helper",
+    "@tuleap/tlp-popovers": "file:../tlp-popovers",
     "@vueuse/core": "^7.5.3",
     "vue": "^3.2.26",
     "vue-dompurify-html": "^3.0.0-beta.3"

@@ -4,11 +4,11 @@ specifiers:
   '@tuleap/angular-tlp': file:../../../../../src/scripts/lib/angular-tlp
   '@tuleap/ckeditor-image-upload': file:../../../../../src/scripts/lib/ckeditor-image-upload
   '@tuleap/date-helper': file:../../../../../src/scripts/lib/date-helper
-  '@tuleap/fault': link:../../../../../src/scripts/lib/fault
+  '@tuleap/fault': file:../../../../../src/scripts/lib/fault
   '@tuleap/list-picker': file:../../../../../src/scripts/lib/list-picker
-  '@tuleap/plugin-tracker-constants': link:../constants
+  '@tuleap/plugin-tracker-constants': file:../constants
   '@tuleap/plugin-tracker-rich-text-editor': file:../rich-text-editor
-  '@tuleap/tlp-fetch': link:../../../../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../../../../src/scripts/lib/tlp-fetch
   '@tuleap/tooltip': file:../../../../../src/scripts/lib/tooltip
   '@types/ckeditor': ^4.9.10
   angular: ^1.8.2

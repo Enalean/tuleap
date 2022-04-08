@@ -10,6 +10,6 @@
         "watch": "webpack --config webpack.dev.js --watch"
     },
     "dependencies": {
-        "@tuleap/tlp": "link:../../src/themes/tlp"
+        "@tuleap/tlp": "file:../../src/themes/tlp"
     }
 }

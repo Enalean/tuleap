@@ -9,7 +9,7 @@
   "module": "./src/js/index.ts",
   "dependencies": {
     "@floating-ui/dom": "^0.4.2",
-    "@tuleap/tlp-modal": "link:../../scripts/lib/tlp-modal",
+    "@tuleap/tlp-modal": "file:../../scripts/lib/tlp-modal",
     "@tuleap/tlp-popovers": "file:../../scripts/lib/tlp-popovers",
     "flatpickr": "^4.6.9",
     "jquery": "^3.6.0",

@@ -5,11 +5,11 @@
     "license": "GPL-2.0-or-later",
     "private": true,
     "dependencies": {
-        "@tuleap/core": "link:../../src",
+        "@tuleap/core": "file:../../src",
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
-        "@tuleap/tlp": "link:../../src/themes/tlp",
+        "@tuleap/tlp": "file:../../src/themes/tlp",
         "@types/sprintf-js": "^1.1.2"
     },
     "scripts": {

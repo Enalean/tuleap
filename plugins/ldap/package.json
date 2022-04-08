@@ -5,9 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "link:../../src",
+    "@tuleap/core": "file:../../src",
     "@tuleap/html-escaper": "file:../../src/scripts/lib/html-escaper",
-    "@tuleap/tlp-fetch": "link:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "mustache": "^4.2.0",
     "sprintf-js": "^1.1.2"
   },
@@ -17,6 +17,6 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
-    "@tuleap/tlp": "link:../../src/themes/tlp"
+    "@tuleap/tlp": "file:../../src/themes/tlp"
   }
 }

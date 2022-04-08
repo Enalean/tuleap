@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/angular-tlp': file:../../src/scripts/lib/angular-tlp
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@tuleap/tooltip': file:../../src/scripts/lib/tooltip
   '@types/codemirror': ^5.60.1
   '@uirouter/angularjs': ^1.0.29

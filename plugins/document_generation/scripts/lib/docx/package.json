@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../../../../../src/scripts/lib/concurrency-limit-pool",
-    "@tuleap/plugin-tracker-constants": "link:../../../../tracker/scripts/lib/constants",
-    "@tuleap/plugin-tracker-rest-api-types": "link:../../../../tracker/scripts/lib/rest-api-types",
+    "@tuleap/plugin-tracker-constants": "file:../../../../tracker/scripts/lib/constants",
+    "@tuleap/plugin-tracker-rest-api-types": "file:../../../../tracker/scripts/lib/rest-api-types",
     "@tuleap/tlp-fetch": "file:../../../../../src/scripts/lib/tlp-fetch",
     "docx": "^7.3.0",
     "dompurify": "^2.3.6",

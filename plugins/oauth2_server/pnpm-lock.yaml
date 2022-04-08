@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/core': link:../../src
-  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/core': file:../../src
+  '@tuleap/tlp': file:../../src/themes/tlp
   '@types/sprintf-js': ^1.1.2
   sprintf-js: ^1.1.2
 

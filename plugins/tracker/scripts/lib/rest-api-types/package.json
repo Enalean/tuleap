@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "@tuleap/plugin-tracker-constants": "link:../constants"
+    "@tuleap/plugin-tracker-constants": "file:../constants"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
