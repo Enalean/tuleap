@@ -67,3 +67,12 @@ export function getTrackerCurrentlyUsedArtifactLinkTypes(
 ): Promise<TrackerUsedArtifactLinkResponse[]> {
     return recursiveGet(`/api/v1/trackers/${encodeURIComponent(tracker_id)}/used_artifact_links`);
 }
+
+export interface ProjectResponse {
+    readonly id: number;
+    readonly label: string;
+}
+
+export function getProjects(): Promise<ProjectResponse[]> {
+    return recursiveGet("/api/v1/projects", { params: { limit: 50 } });
+}

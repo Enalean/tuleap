@@ -18,8 +18,10 @@
  */
 
 import * as tlp from "@tuleap/tlp-fetch";
+import type { ProjectResponse } from "./rest-querier";
 import {
     getLinkedArtifacts,
+    getProjects,
     getReportArtifacts,
     getTrackerCurrentlyUsedArtifactLinkTypes,
     getTrackerReports,
@@ -128,6 +130,31 @@ describe("API querier", () => {
             expect(recursive_get_spy).toHaveBeenCalledWith(
                 `/api/v1/trackers/${tracker_id}/used_artifact_links`
             );
+        });
+    });
+
+    describe("getProjects", () => {
+        it("retrieves projects", async () => {
+            const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
+
+            const projects: ProjectResponse[] = [
+                {
+                    id: 102,
+                    label: "Project A",
+                },
+                {
+                    id: 105,
+                    label: "Project B",
+                },
+            ];
+            recursive_get_spy.mockResolvedValue(projects);
+
+            const received_projects = await getProjects();
+
+            expect(recursive_get_spy).toHaveBeenCalledWith(`/api/v1/projects`, {
+                params: { limit: 50 },
+            });
+            expect(received_projects).toStrictEqual(projects);
         });
     });
 });
