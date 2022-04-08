@@ -18,41 +18,52 @@
  */
 
 import type { Folder, Property, ListValue } from "../../../type";
-import { updateStatusProperty } from "./status-property-helper";
+import { getItemStatus, updateStatusProperty } from "./status-property-helper";
 
-describe("updateStatusProperty", () => {
-    it("Given status is provided in properties array, then we extract and return its value", () => {
-        const list_value = [
-            {
-                id: 103,
-            } as ListValue,
-        ];
+describe("status-property-helper", () => {
+    describe("updateStatusProperty", () => {
+        it("Given status is provided in properties array, then we extract and update the status item's key", () => {
+            const list_value = [
+                {
+                    id: 103,
+                } as ListValue,
+            ];
 
-        const property: Property = {
-            short_name: "status",
-            list_value: list_value,
-        } as Property;
+            const property: Property = {
+                short_name: "status",
+                list_value: list_value,
+            } as Property;
 
-        const item = {
-            id: 7,
-            type: "folder",
-        } as Folder;
+            const item = {
+                id: 7,
+                type: "folder",
+            } as Folder;
 
-        updateStatusProperty(property, item);
+            updateStatusProperty(property, item);
 
-        expect(item.status).toBe("rejected");
+            expect(item.status).toBe("rejected");
+        });
     });
+    describe("getItemStatus", () => {
+        it("Given status is provided in properties array, then we extract and return its value", () => {
+            const list_value = [
+                {
+                    id: 103,
+                } as ListValue,
+            ];
 
-    it("Status is none by default", () => {
-        const property: Property = {} as Property;
+            const property: Property = {
+                short_name: "status",
+                list_value: list_value,
+            } as Property;
 
-        const item = {
-            id: 7,
-            type: "folder",
-        } as Folder;
+            expect(getItemStatus(property)).toBe("rejected");
+        });
 
-        updateStatusProperty(property, item);
+        it("Status is none by default", () => {
+            const property: Property = {} as Property;
 
-        expect(item.status).toBe("none");
+            expect(getItemStatus(property)).toBe("none");
+        });
     });
 });

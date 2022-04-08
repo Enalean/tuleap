@@ -22,6 +22,10 @@ import { getStatusFromMapping } from "../hardcoded-properties-mapping-helper";
 import { assertListIsOnlyMultipleValue } from "./list-value-helper";
 
 export function updateStatusProperty(property: Property, item: Item | DefaultFileItem): void {
+    item.status = getItemStatus(property);
+}
+
+export function getItemStatus(property: Property): string {
     let status = "none";
 
     if (property && property.list_value && assertListIsOnlyMultipleValue(property.list_value)) {
@@ -29,5 +33,5 @@ export function updateStatusProperty(property: Property, item: Item | DefaultFil
         status = getStatusFromMapping(multiple_list_value.id);
     }
 
-    item.status = status;
+    return status;
 }

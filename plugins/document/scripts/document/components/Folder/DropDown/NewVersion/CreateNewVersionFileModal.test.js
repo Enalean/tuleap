@@ -42,7 +42,20 @@ describe("CreateNewVersionFileModal", () => {
         return shallowMount(CreateNewVersionFileModal, {
             localVue,
             propsData: {
-                item: { id: 12, title: "Dacia" },
+                item: {
+                    id: 12,
+                    title: "Dacia",
+                    properties: [
+                        {
+                            short_name: "miam",
+                            list_value: [
+                                {
+                                    id: 103,
+                                },
+                            ],
+                        },
+                    ],
+                },
             },
             mocks: { $store: store },
         });
