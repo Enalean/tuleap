@@ -26,7 +26,7 @@ use Tuleap\Dashboard\XML\XMLDashboard;
 use Tuleap\Project\Service\XML\XMLService;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class XMLProjectTest extends TestCase
+final class XMLProjectTest extends TestCase
 {
     public function testExportBasicInfo(): void
     {
