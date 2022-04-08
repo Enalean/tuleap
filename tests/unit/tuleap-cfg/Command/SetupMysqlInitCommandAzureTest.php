@@ -77,7 +77,6 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItWritesConfigurationFileUserWithMiddleAt(): void
     {
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
@@ -86,7 +85,6 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
@@ -97,7 +95,6 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         putenv('TULEAP_DB_AZURE_SUFFIX=some-id');
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
@@ -105,7 +102,6 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');

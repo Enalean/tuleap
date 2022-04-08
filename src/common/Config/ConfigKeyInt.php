@@ -43,7 +43,7 @@ final class ConfigKeyInt implements ConfigKeyType
 
     public function getSerializedRepresentation(string $name, string|int|bool $value): string
     {
-        if (! is_int($value)) {
+        if (! is_numeric($value)) {
             throw new \LogicException('Cannot accept non int values');
         }
         return sprintf('$%s = %d;%s', $name, $value, PHP_EOL);

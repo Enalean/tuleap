@@ -65,12 +65,12 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         putenv('TULEAP_DB_SSL_MODE');
         putenv('TULEAP_DB_SSL_CA');
+        putenv('TULEAP_SYS_DBPORT');
     }
 
     public function testItWritesConfigurationFileWithGivenValuesNoSSL(): void
     {
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
@@ -78,7 +78,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
@@ -96,7 +95,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItWritesConfigurationFileWithSpecifiedPort(): void
     {
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--host'           => '192.0.2.1',
             '--port'           => '3307',
             '--admin-password' => 'welcome0',
@@ -105,7 +103,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
@@ -115,7 +112,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItWritesConfigurationFileWithGivenValuesEnableSSL(): void
     {
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
@@ -125,7 +121,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
@@ -142,7 +137,6 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testNoConfigurationFileWrittenIfPasswordNotProvided(): void
     {
         $this->command_tester->execute([
-            '--skip-database'  => true,
             '--host'           => '192.0.2.1',
             '--app-password'   => 'a complex password',
             '--tuleap-fqdn'    => 'localhost',
@@ -152,45 +146,74 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFileDoesNotExist($this->base_dir . '/etc/tuleap/conf/database.inc');
     }
 
-    public function testUsesSSLModeDefinedWithEnvVariable(): void
+    /**
+     * @dataProvider getEnvironmentIsNotOverrideByCLIDefaults
+     */
+    public function testEnvironmentIsNotOverrideByCLIDefaults(array $env_var, callable $tests): void
     {
-        putenv('TULEAP_DB_SSL_MODE=no-verify');
+        foreach ($env_var as $var => $value) {
+            putenv("$var=$value");
+        }
 
-        $this->command_tester->execute([
-            '--skip-database'  => true,
-            '--host'           => '192.0.2.1',
-            '--admin-password' => 'welcome0',
-            '--app-password'   => 'a complex password',
-            '--tuleap-fqdn'    => 'localhost',
-        ]);
+        $this->command_tester->execute(
+            [
+                '--tuleap-fqdn'    => 'tuleap.example.com',
+                '--admin-password' => 'welcome0',
+                '--app-password'   => 'a complex password',
+            ],
+            [
+                'capture_stderr_separately' => true,
+            ]
+        );
 
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
+        echo $this->command_tester->getErrorOutput();
+        self::assertEquals(0, $this->command_tester->getStatusCode());
 
-        require($this->base_dir . '/etc/tuleap/conf/database.inc');
+        include($this->base_dir . '/etc/tuleap/conf/database.inc');
 
-        $this->assertEquals('1', $sys_enablessl);
+        $tests(get_defined_vars());
+
+        foreach ($env_var as $var => $value) {
+            putenv("$var");
+        }
     }
 
-    public function testUsesSSLCAFileDefinedWithEnvVariable(): void
+    public function getEnvironmentIsNotOverrideByCLIDefaults(): iterable
     {
-        putenv('TULEAP_DB_SSL_MODE=no-verify');
-        putenv('TULEAP_DB_SSL_CA=/some_ca.pem');
-
-        $this->command_tester->execute([
-            '--skip-database'  => true,
-            '--host'           => '192.0.2.1',
-            '--admin-password' => 'welcome0',
-            '--app-password'   => 'a complex password',
-            '--tuleap-fqdn'    => 'localhost',
-        ]);
-
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
-
-        require($this->base_dir . '/etc/tuleap/conf/database.inc');
-
-        $this->assertEquals('/some_ca.pem', $sys_db_ssl_ca);
+        return [
+            'host' => [
+                'env_var' => ['TULEAP_SYS_DBHOST' => 'db'],
+                'tests' => function (array $defined_vars) {
+                    self::assertSame('db', $defined_vars['sys_dbhost']);
+                },
+            ],
+            'db port' => [
+                'env_var' => ['TULEAP_SYS_DBPORT' => '3307'],
+                'tests' => function (array $defined_vars) {
+                    self::assertSame(3307, $defined_vars['sys_dbport']);
+                },
+            ],
+            'use ForgeConfig environment variables to define enable ssl' => [
+                'env_var' => [
+                    'TULEAP_SYS_ENABLESSL' => '1',
+                ],
+                'tests' => function (array $defined_vars) {
+                    self::assertSame('1', $defined_vars['sys_enablessl']);
+                },
+            ],
+            'use ForgeConfig environment to adjust SSL configuration' => [
+                'env_var' => [
+                    'TULEAP_SYS_ENABLESSL' => '1',
+                    'TULEAP_SYS_DB_SSL_VERIFY_CERT' => '1',
+                    'TULEAP_SYS_DB_SSL_CA' => '/some_ca.pem',
+                ],
+                'tests' => function (array $defined_vars) {
+                    self::assertSame('1', $defined_vars['sys_enablessl']);
+                    self::assertSame('1', $defined_vars['sys_db_ssl_verify_cert']);
+                    self::assertSame('/some_ca.pem', $defined_vars['sys_db_ssl_ca']);
+                },
+            ],
+        ];
     }
 
     public function testGrantTuleapAccessApplicationToUser(): void
