@@ -248,7 +248,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     &.tlp-search-small {
         height: var(--tlp-form-element-small-height);
         padding: 0 10px 0 26px;
-        border-radius: var(--tlp-form-element-small-height) / 2;
+        border-radius: calc(var(--tlp-form-element-small-height) / 2);
         background: var(--tlp-form-element-background) $tlp-form-element-search-small-background
             no-repeat;
         background-position: 10px center;
