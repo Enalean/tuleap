@@ -104,7 +104,7 @@ import NewFolderModal from "./DropDown/NewDocument/NewFolderModal.vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
 import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
-import FileCreationModal from "./DropDown/NewVersion/FileCreationModal.vue";
+import FileCreationModal from "./DropDown/NewDocument/FileCreationModal.vue";
 
 export default {
     name: "FolderHeader",
@@ -142,7 +142,7 @@ export default {
         "file-creation-modal": () =>
             import(
                 /* webpackChunkName: "file-creation-modal" */
-                "./DropDown/NewVersion/FileCreationModal.vue"
+                "./DropDown/NewDocument/FileCreationModal.vue"
             ),
     },
     data() {
