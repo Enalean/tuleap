@@ -83,6 +83,7 @@ import type { GlobalExportProperties, SelectedReport } from "../type";
 import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 import SecondLevelSelector from "./SecondLevelSelector.vue";
+import type { ExportSettings } from "../export-document";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();
 let modal: Modal | null = null;
@@ -105,7 +106,7 @@ const selected_report = ref<SelectedReport>({
     label: "",
 });
 const artifact_link_types = ref([]);
-
+const search_params = new URLSearchParams(location.search);
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {
     export_is_ongoing.value = true;
@@ -114,17 +115,27 @@ async function startExport(): Promise<void> {
 
     const { downloadXLSXDocument } = await export_document_module;
     const { downloadXLSX } = await download_xlsx_module;
-    downloadXLSXDocument(
-        {
-            first_level: {
-                tracker_name: props.properties.current_tracker_name,
-                report_id: selected_report.value.id,
-                report_name: selected_report.value.label,
-                artifact_link_types: artifact_link_types.value,
-            },
+    let export_settings: ExportSettings = {
+        first_level: {
+            tracker_name: props.properties.current_tracker_name,
+            report_id: selected_report.value.id,
+            report_name: selected_report.value.label,
+            artifact_link_types: artifact_link_types.value,
         },
-        downloadXLSX
-    );
+    };
+    const level_2_report_id = search_params.get("export_report_id_2");
+    if (level_2_report_id) {
+        export_settings = {
+            ...export_settings,
+            second_level: {
+                tracker_name: "Tracker level 2",
+                report_id: parseInt(level_2_report_id, 10),
+                report_name: "Test report name level 2",
+                artifact_link_types: [],
+            },
+        };
+    }
+    downloadXLSXDocument(export_settings, downloadXLSX);
 
     modal?.hide();
 }

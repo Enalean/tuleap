@@ -95,6 +95,7 @@ describe("headers-formator", () => {
         const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
             first_level_artifacts_ids: [74, 4],
+            second_level_artifacts_ids: [],
         };
 
         const formatted_headers = formatHeader(organized_reports_data);
@@ -110,6 +111,7 @@ describe("headers-formator", () => {
         const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
             first_level_artifacts_ids: [],
+            second_level_artifacts_ids: [],
         };
 
         expect(() => formatHeader(organized_reports_data)).toThrowError(
@@ -122,6 +124,7 @@ describe("headers-formator", () => {
         const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
             first_level_artifacts_ids: [4],
+            second_level_artifacts_ids: [],
         };
 
         expect(() => formatHeader(organized_reports_data)).toThrowError(

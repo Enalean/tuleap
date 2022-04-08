@@ -17,13 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import { getLinkedArtifacts } from "../rest-querier";
 import { transformFieldValueIntoAFormattedCell } from "./transform-field-value-into-formatted-cell";
 import type { ReportCell } from "@tuleap/plugin-docgen-xlsx";
 import type { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../export-document";
-import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import { organizeReportsData } from "./organize-reports-data";
 import type { OrganizedReportsData } from "../type";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
@@ -43,16 +40,6 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
 
     const artifact_rows: Array<Array<ReportCell>> = [];
     let artifact_value_rows: Array<ReportCell> = [];
-
-    await limitConcurrencyPool(
-        5,
-        Array.from(organized_reports_data.artifact_representations.values()),
-        async (artifact: ArtifactResponse): Promise<void> => {
-            for (const artifact_link_type of export_settings.first_level.artifact_link_types) {
-                await getLinkedArtifacts(artifact.id, artifact_link_type);
-            }
-        }
-    );
 
     for (const artifact of organized_reports_data.artifact_representations.values()) {
         artifact_value_rows = [];

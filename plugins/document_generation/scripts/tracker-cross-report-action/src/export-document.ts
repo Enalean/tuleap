@@ -29,6 +29,7 @@ interface ExportLevelSetting {
 
 export interface ExportSettings {
     readonly first_level: ExportLevelSetting;
+    readonly second_level?: ExportLevelSetting;
 }
 
 export async function downloadXLSXDocument(

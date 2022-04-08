@@ -21,6 +21,7 @@ import { recursiveGet } from "@tuleap/tlp-fetch";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { LinkedArtifactsResponse } from "./type";
 
 export async function getReportArtifacts(
     report_id: number,
@@ -40,22 +41,17 @@ export async function getReportArtifacts(
     return report_artifacts;
 }
 
-export async function getLinkedArtifacts(
+export function getLinkedArtifacts(
     artifact_id: number,
     artifact_link_type: string
-): Promise<ArtifactResponse[]> {
-    const linked_artifacts: ArtifactResponse[] = await recursiveGet(
-        `/api/v1/artifacts/${encodeURIComponent(artifact_id)}/linked_artifacts`,
-        {
-            params: {
-                direction: "forward",
-                nature: artifact_link_type,
-                limit: 10,
-            },
-        }
-    );
-
-    return linked_artifacts;
+): Promise<LinkedArtifactsResponse[]> {
+    return recursiveGet(`/api/v1/artifacts/${encodeURIComponent(artifact_id)}/linked_artifacts`, {
+        params: {
+            direction: "forward",
+            nature: artifact_link_type,
+            limit: 10,
+        },
+    });
 }
 
 export function getTrackerReports(tracker_id: number): Promise<TrackerReportResponse[]> {

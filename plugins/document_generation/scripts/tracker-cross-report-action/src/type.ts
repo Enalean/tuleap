@@ -42,7 +42,12 @@ interface ArtifactReportExtraFieldValue {
     value: never;
 }
 
+export interface LinkedArtifactsResponse {
+    collection: ReadonlyArray<ArtifactResponse>;
+}
+
 export interface OrganizedReportsData {
     readonly artifact_representations: Map<number, ArtifactResponse>;
     readonly first_level_artifacts_ids: ReadonlyArray<number>;
+    readonly second_level_artifacts_ids: ReadonlyArray<number>;
 }

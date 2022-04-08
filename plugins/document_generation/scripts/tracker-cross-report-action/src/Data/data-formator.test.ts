@@ -19,7 +19,6 @@
 
 import { formatData } from "./data-formator";
 import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
-import * as rest_querier from "../rest-querier";
 import * as organized_data from "./organize-reports-data";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
@@ -108,8 +107,8 @@ describe("data-formator", () => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             artifact_representations: artifact_representations_map,
             first_level_artifacts_ids: [74, 4],
+            second_level_artifacts_ids: [],
         });
-        jest.spyOn(rest_querier, "getLinkedArtifacts").mockResolvedValue([]);
 
         const formatted_data = await formatData({
             first_level: {
@@ -136,6 +135,7 @@ describe("data-formator", () => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             artifact_representations: new Map(),
             first_level_artifacts_ids: [],
+            second_level_artifacts_ids: [],
         });
 
         const formatted_data = await formatData({
