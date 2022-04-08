@@ -5,7 +5,7 @@
     "license": "GPL-2.0-or-later",
     "private": true,
     "dependencies": {
-        "@tuleap/tlp": "link:../../src/themes/tlp"
+        "@tuleap/tlp": "file:../../src/themes/tlp"
     },
     "scripts": {
         "build": "webpack --config webpack.prod.js",

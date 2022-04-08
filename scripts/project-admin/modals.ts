@@ -26,17 +26,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function initModalAddBot() {
         const modal_element = document.getElementById("modal-add-bot");
         if (!modal_element) {
-            throw new Error(
-                "Bad reference to an unknown modal element"
-            );
+            throw new Error("Bad reference to an unknown modal element");
         }
 
         const modal_simple_content = createModal(modal_element, {});
         const button_add_bot = document.getElementById("button-modal-add-bot");
         if (!button_add_bot) {
-            throw new Error(
-                "Bad reference to an unknown button"
-            );
+            throw new Error("Bad reference to an unknown button");
         }
 
         button_add_bot.addEventListener("click", function () {
@@ -58,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
-            var modal = createModal(modal_element);
+            const modal = createModal(modal_element);
 
             button.addEventListener("click", function () {
                 modal.toggle();

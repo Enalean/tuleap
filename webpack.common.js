@@ -30,9 +30,7 @@ module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "./frontend-assets/")
-        ),
+        output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             tlp: "tlp",
         },
@@ -42,7 +40,7 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_scss_loader
+                webpack_configurator.rule_scss_loader,
             ],
         },
         plugins: [
