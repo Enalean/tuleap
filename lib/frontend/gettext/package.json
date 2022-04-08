@@ -1,0 +1,27 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/gettext",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/gettext.es.js",
+  "main": "dist/gettext.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/gettext.es.js",
+      "require": "./dist/gettext.umd.js"
+    }
+  },
+  "dependencies": {
+    "node-gettext": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node-gettext": "^3.0.1"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

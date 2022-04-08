@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/concurrency-limit-pool': file:../../src/scripts/lib/concurrency-limit-pool
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/bootstrap': ^4.5.1
   '@types/jquery': ^3.5.5
   jquery: ^3.6.0
@@ -13,8 +13,8 @@ specifiers:
   vue-property-decorator: ^9.1.2
 
 dependencies:
-  '@tuleap/concurrency-limit-pool': link:../../src/scripts/lib/concurrency-limit-pool
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   neverthrow: 4.2.1
   vue: 2.6.14
   vue-gettext: 2.1.12

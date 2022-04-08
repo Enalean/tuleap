@@ -51,7 +51,7 @@ module.exports = {
         // alias to the source TS file to avoid running into "regeneratorRuntime" not defined errors in tests
         "^@tuleap/tlp-fetch$": path.resolve(
             __dirname,
-            "../../src/scripts/lib/tlp-fetch/src/fetch-wrapper.ts"
+            "../../lib/frontend/tlp-fetch/src/fetch-wrapper.ts"
         ),
         "\\.(css|scss)(\\?inline)?$": "identity-obj-proxy",
     },

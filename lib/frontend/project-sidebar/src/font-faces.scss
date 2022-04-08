@@ -1,0 +1,60 @@
+/**
+ * Copyright (c) 2021-Present Enalean
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+@use "@tuleap/tlp/src/fonts/tlp-font/font-face" with (
+    $tlp-font-basepath: "@tuleap/tlp/src/"
+);
+
+$-fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
+$-fa-font-display: block;
+
+tuleap-project-sidebar {
+    --tuleap-project-sidebar-icon-font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
+    --tuleap-project-sidebar-icon-font-family-brands: "Font Awesome 5 Tuleap Project Sidebar Brands";
+}
+
+// Solid
+@font-face {
+    font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
+    font-style: normal;
+    font-weight: 900;
+    font-display: $-fa-font-display;
+    src: url("#{$-fa-font-path}/fa-solid-900.woff2") format("woff2");
+}
+
+// Regular
+@font-face {
+    font-family: "Font Awesome 5 Free Tuleap Project Sidebar";
+    font-style: normal;
+    font-weight: 400;
+    font-display: $-fa-font-display;
+    src: url("#{$-fa-font-path}/fa-regular-400.woff2") format("woff2");
+}
+
+// Brand
+@font-face {
+    font-family: "Font Awesome 5 Tuleap Project Sidebar Brands";
+    font-style: normal;
+    font-weight: 400;
+    font-display: $-fa-font-display;
+    src: url("#{$-fa-font-path}/fa-brands-400.woff2") format("woff2");
+}

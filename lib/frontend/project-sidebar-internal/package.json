@@ -1,0 +1,34 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/project-sidebar-internal",
+  "license": "MIT",
+  "private": true,
+  "version": "0.0.0",
+  "types": "dist/index.d.ts",
+  "module": "dist/project-sidebar-internal.es.js",
+  "main": "dist/project-sidebar-internal.umd.js",
+  "style": "dist/style.css",
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@tuleap/burningparrot-theme": "file:../../../src/themes/BurningParrot",
+    "@tuleap/project-privacy-helper": "file:../project-privacy-helper",
+    "@tuleap/tlp": "file:../../../src/themes/tlp",
+    "@tuleap/tlp-popovers": "file:../tlp-popovers",
+    "@vueuse/core": "^7.5.3",
+    "vue": "^3.2.26",
+    "vue-dompurify-html": "^3.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.0.0-rc.17"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build",
+    "dev": "vite",
+    "test": "jest"
+  }
+}

@@ -1,21 +1,21 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/ckeditor-image-upload': file:../../../../../src/scripts/lib/ckeditor-image-upload
-  '@tuleap/gettext': file:../../../../../src/scripts/lib/gettext
-  '@tuleap/po-gettext-plugin': file:../../../../../src/scripts/lib/po-gettext-plugin
+  '@tuleap/ckeditor-image-upload': file:../../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/gettext': file:../../../../../lib/frontend/gettext
+  '@tuleap/po-gettext-plugin': file:../../../../../lib/frontend/po-gettext-plugin
   css.escape: ^1.5.1
   pretty-kibibytes: ^4.0.4
   sprintf-js: ^1.1.2
 
 dependencies:
-  '@tuleap/ckeditor-image-upload': link:../../../../../src/scripts/lib/ckeditor-image-upload
-  '@tuleap/gettext': link:../../../../../src/scripts/lib/gettext
+  '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/gettext': link:../../../../../lib/frontend/gettext
   pretty-kibibytes: 4.0.4
   sprintf-js: 1.1.2
 
 devDependencies:
-  '@tuleap/po-gettext-plugin': link:../../../../../src/scripts/lib/po-gettext-plugin
+  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
   css.escape: 1.5.1
 
 packages:

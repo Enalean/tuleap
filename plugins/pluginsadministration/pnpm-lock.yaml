@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/filter-inline-table': file:../../src/scripts/lib/filter-table
+  '@tuleap/filter-inline-table': file:../../lib/frontend/filter-table
 
 dependencies:
-  '@tuleap/filter-inline-table': link:../../src/scripts/lib/filter-table
+  '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table

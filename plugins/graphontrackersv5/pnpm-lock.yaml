@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   d3-array: ^3.0.1
   d3-axis: ^3.0.0
   d3-collection: ^1.0.7
@@ -16,7 +16,7 @@ specifiers:
   sprintf-js: ^1.1.2
 
 dependencies:
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   d3-array: 3.0.1
   d3-axis: 3.0.0
   d3-collection: 1.0.7

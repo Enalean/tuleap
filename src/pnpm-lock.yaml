@@ -4,19 +4,19 @@ specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
   '@joeattardi/emoji-button': ^4.6.2
   '@shopify/jest-dom-mocks': ^2.10.0
-  '@tuleap/date-helper': file:scripts/lib/date-helper
-  '@tuleap/filter-inline-table': file:scripts/lib/filter-table
-  '@tuleap/gettext': file:scripts/lib/gettext
-  '@tuleap/html-escaper': file:scripts/lib/html-escaper
-  '@tuleap/keyboard-shortcuts': file:scripts/lib/keyboard-shortcuts
-  '@tuleap/list-picker': file:scripts/lib/list-picker
-  '@tuleap/mention': file:scripts/lib/mention
-  '@tuleap/project-privacy-helper': file:scripts/lib/project-privacy-helper
-  '@tuleap/project-sidebar-internal': file:scripts/lib/project-sidebar-internal
-  '@tuleap/tlp-fetch': file:scripts/lib/tlp-fetch
-  '@tuleap/tlp-modal': file:scripts/lib/tlp-modal
-  '@tuleap/tlp-popovers': file:scripts/lib/tlp-popovers
-  '@tuleap/tooltip': file:scripts/lib/tooltip
+  '@tuleap/date-helper': file:../lib/frontend/date-helper
+  '@tuleap/filter-inline-table': file:../lib/frontend/filter-table
+  '@tuleap/gettext': file:../lib/frontend/gettext
+  '@tuleap/html-escaper': file:../lib/frontend/html-escaper
+  '@tuleap/keyboard-shortcuts': file:../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': file:../lib/frontend/list-picker
+  '@tuleap/mention': file:../lib/frontend/mention
+  '@tuleap/project-privacy-helper': file:../lib/frontend/project-privacy-helper
+  '@tuleap/project-sidebar-internal': file:../lib/frontend/project-sidebar-internal
+  '@tuleap/tlp-fetch': file:../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': file:../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': file:../lib/frontend/tlp-popovers
+  '@tuleap/tooltip': file:../lib/frontend/tooltip
   '@types/bootstrap': ^4.5.0
   '@types/ckeditor': ^4.9.10
   '@types/d3-scale': ^3.3.0
@@ -67,19 +67,19 @@ specifiers:
 dependencies:
   '@fortawesome/fontawesome-free': 5.15.4
   '@joeattardi/emoji-button': 4.6.2
-  '@tuleap/date-helper': link:scripts/lib/date-helper
-  '@tuleap/filter-inline-table': link:scripts/lib/filter-table
-  '@tuleap/gettext': link:scripts/lib/gettext
-  '@tuleap/html-escaper': link:scripts/lib/html-escaper
-  '@tuleap/keyboard-shortcuts': link:scripts/lib/keyboard-shortcuts
-  '@tuleap/list-picker': link:scripts/lib/list-picker
-  '@tuleap/mention': link:scripts/lib/mention
-  '@tuleap/project-privacy-helper': link:scripts/lib/project-privacy-helper
-  '@tuleap/project-sidebar-internal': link:scripts/lib/project-sidebar-internal
-  '@tuleap/tlp-fetch': link:scripts/lib/tlp-fetch
-  '@tuleap/tlp-modal': link:scripts/lib/tlp-modal
-  '@tuleap/tlp-popovers': link:scripts/lib/tlp-popovers
-  '@tuleap/tooltip': link:scripts/lib/tooltip
+  '@tuleap/date-helper': link:../lib/frontend/date-helper
+  '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
+  '@tuleap/gettext': link:../lib/frontend/gettext
+  '@tuleap/html-escaper': link:../lib/frontend/html-escaper
+  '@tuleap/keyboard-shortcuts': link:../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': link:../lib/frontend/list-picker
+  '@tuleap/mention': link:../lib/frontend/mention
+  '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
+  '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
+  '@tuleap/tlp-fetch': link:../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': link:../lib/frontend/tlp-popovers
+  '@tuleap/tooltip': link:../lib/frontend/tooltip
   ckeditor4: 4.17.1
   d3-array: 3.0.1
   d3-axis: 3.0.0

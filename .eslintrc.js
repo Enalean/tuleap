@@ -258,7 +258,7 @@ module.exports = {
         // remaining apps
         {
             files: [
-                "src/scripts/lib/project-sidebar-internal/**/*.vue",
+                "lib/frontend/project-sidebar-internal/**/*.vue",
                 "plugins/document_generation/scripts/**/*.vue",
                 "plugins/testplan/scripts/**/*.vue",
             ],

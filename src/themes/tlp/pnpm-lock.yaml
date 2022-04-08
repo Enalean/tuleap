@@ -2,8 +2,8 @@ lockfileVersion: 5.3
 
 specifiers:
   '@floating-ui/dom': ^0.4.2
-  '@tuleap/tlp-modal': file:../../scripts/lib/tlp-modal
-  '@tuleap/tlp-popovers': file:../../scripts/lib/tlp-popovers
+  '@tuleap/tlp-modal': file:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': file:../../../lib/frontend/tlp-popovers
   '@types/jquery': ^3.5.5
   flatpickr: ^4.6.9
   jquery: ^3.6.0
@@ -11,8 +11,8 @@ specifiers:
 
 dependencies:
   '@floating-ui/dom': 0.4.2
-  '@tuleap/tlp-modal': link:../../scripts/lib/tlp-modal
-  '@tuleap/tlp-popovers': link:../../scripts/lib/tlp-popovers
+  '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
   flatpickr: 4.6.9
   jquery: 3.6.0
   select2: 4.0.13

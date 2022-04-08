@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/plugin-tracker-artifact-modal": "file:../tracker/scripts/lib/artifact-modal",
-    "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
+    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "d3": "^7.0.0",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",

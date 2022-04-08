@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-tlp': file:../../src/scripts/lib/angular-tlp
+  '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
   angular-filter: ^0.5.17
@@ -10,7 +10,7 @@ specifiers:
   angular-sanitize: ^1.8.2
 
 dependencies:
-  '@tuleap/angular-tlp': link:../../src/scripts/lib/angular-tlp
+  '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
   '@uirouter/angularjs': 1.0.29_angular@1.8.2
   angular: 1.8.2
   angular-filter: 0.5.17

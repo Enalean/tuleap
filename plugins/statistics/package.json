@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/filter-inline-table": "file:../../src/scripts/lib/filter-table",
+    "@tuleap/filter-inline-table": "file:../../lib/frontend/filter-table",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "d3-transition": "^3.0.1"

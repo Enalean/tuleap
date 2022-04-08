@@ -1,9 +1,9 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-tlp': file:../../src/scripts/lib/angular-tlp
-  '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
-  '@tuleap/tooltip': file:../../src/scripts/lib/tooltip
+  '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
+  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/tooltip': file:../../lib/frontend/tooltip
   '@types/codemirror': ^5.60.1
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
@@ -19,9 +19,9 @@ specifiers:
   vuex: ^3.6.2
 
 dependencies:
-  '@tuleap/angular-tlp': link:../../src/scripts/lib/angular-tlp
-  '@tuleap/tlp-fetch': link:../../src/scripts/lib/tlp-fetch
-  '@tuleap/tooltip': link:../../src/scripts/lib/tooltip
+  '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tooltip': link:../../lib/frontend/tooltip
   '@uirouter/angularjs': 1.0.29_angular@1.8.2
   angular: 1.8.2
   angular-gettext: 2.4.2
