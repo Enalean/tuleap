@@ -42,6 +42,7 @@ import {
     isEmpty,
     isFolder,
 } from "../../helpers/type-check-helper";
+import emitter from "../../helpers/emitter";
 
 export const loadProjectProperties = async (
     context: ActionContext<PropertiesState, RootState>
@@ -142,6 +143,8 @@ export const updateProperties = async (
         }
 
         const updated_item = await getItem(payload.item.id);
+
+        emitter.emit("item-properties-have-just-been-updated");
 
         if (payload.item.id === payload.current_folder.id) {
             context.commit("replaceCurrentFolder", updated_item, { root: true });

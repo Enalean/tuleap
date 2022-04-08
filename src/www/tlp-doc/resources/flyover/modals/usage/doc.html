@@ -18,13 +18,37 @@
 
 <h4>Arguments:</h4>
 <ul>
-    <li>{ Element id } id</li>
-    <li>(Optional) { Object } options. Contains: <ul>
-        <li>{ Boolean } keyboard, defaults to true
-            <p>When true, enables closing the modal when pressing the <keycode>ESC</keycode> key.</p>
-        </li>
-        <li>{ Boolean } destroy_on_hide, defaults to false
-            <p>When true, destroys the event listeners when hiding the modal. Useful when for example you create new modals on a button click.</p>
-        </li>
-    </ul></li>
+    <li><code>element: ELement</code></li>
+    <li><code>options: ModalOptions</code> (Optional).
+        <table class="tlp-table">
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>keyboard</code></td>
+                    <td>boolean</td>
+                    <td><code>true</code></td>
+                    <td>When <code>true</code>, enables closing the modal when pressing the <kbd>ESC</kbd> key.</td>
+                </tr>
+                <tr>
+                    <td><code>destroy_on_hide</code></td>
+                    <td>boolean</td>
+                    <td><code>false</code></td>
+                    <td>When <code>true</code>, destroys the event listeners when hiding the modal. Useful when for example you create new modals on a button click.</td>
+                </tr>
+                <tr>
+                    <td><code>dismiss_on_backdrop_click</code></td>
+                    <td>boolean</td>
+                    <td><code>true</code></td>
+                    <td>When <code>true</code>, dismiss the modal when user clicks on the backdrop.</td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
 </ul>

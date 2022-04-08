@@ -38,6 +38,7 @@ import {
 } from "../helpers/type-check-helper";
 import { getErrorMessage } from "./actions-helpers/handle-errors";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import emitter from "../helpers/emitter";
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,
@@ -80,6 +81,7 @@ export const createNewItem = async (
             );
             return;
         }
+        emitter.emit("new-item-has-just-been-created");
         await adjustItemToContentAfterItemCreationInAFolder(
             context,
             parent,

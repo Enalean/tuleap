@@ -17,12 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <drop-down-menu
-        v-bind:item="item"
-        v-bind:is-in-quick-look-mode="true"
-        v-bind:is-in-folder-empty-state="false"
-        role="menu"
-    >
+    <drop-down-menu v-bind:item="item">
         <drop-down-item-title
             slot="display-item-title"
             v-bind:item="item"

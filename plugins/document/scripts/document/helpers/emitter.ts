@@ -21,7 +21,35 @@
 import mitt from "mitt";
 import type { Item, ListValue } from "../type";
 
-export default mitt<{
+export interface DeleteItemEvent {
+    item: Item;
+}
+
+export interface UpdatePermissionsEvent {
+    detail: { current_item: Item };
+}
+
+export interface UpdatePropertiesEvent {
+    detail: { current_item: Item };
+}
+
+export interface NewVersionEvent {
+    detail: { current_item: Item };
+}
+
+export interface ArchiveSizeWarningModalEvent {
+    detail: {
+        current_folder_size: number;
+        folder_href: string;
+        should_warn_osx_user: boolean;
+    };
+}
+
+export interface MaxArchiveSizeThresholdExceededEvent {
+    detail: { current_folder_size: number };
+}
+
+export type Events = {
     "update-status-property": string;
     "update-title-property": string;
     "update-version-title": string;
@@ -29,19 +57,25 @@ export default mitt<{
     "update-owner-property": number;
     "update-changelog-property": string;
     "toggle-quick-look": { details: { item: Item } };
-    "show-update-item-properties-modal": { detail: { current_item: Item } };
-    "show-update-permissions-modal": { detail: { current_item: Item } };
-    "show-create-new-item-version-modal": { detail: { current_item: Item } };
+    "show-update-item-properties-modal": UpdatePropertiesEvent;
+    "show-update-permissions-modal": UpdatePermissionsEvent;
+    "show-create-new-item-version-modal": NewVersionEvent;
     "set-dropdown-shown": { is_dropdown_shown: boolean };
-    "show-max-archive-size-threshold-exceeded-modal": { detail: { current_folder_size: number } };
-    "show-archive-size-warning-modal": {
-        detail: { current_folder_size: number; folder_href: string; should_warn_osx_user: boolean };
-    };
+    "show-max-archive-size-threshold-exceeded-modal": MaxArchiveSizeThresholdExceededEvent;
+    "show-archive-size-warning-modal": ArchiveSizeWarningModalEvent;
     "show-new-folder-modal": { detail: { parent: Item } };
     "hide-action-menu": void;
     "update-multiple-properties-list-value": {
         detail: { value: number[] | [] | ListValue[] | null; id: string };
     };
     createItem: { item: Item };
-    deleteItem: { item: Item };
-}>();
+    deleteItem: DeleteItemEvent;
+    "new-item-has-just-been-created": void;
+    "item-properties-have-just-been-updated": void;
+    "item-permissions-have-just-been-updated": void;
+    "item-has-just-been-deleted": void;
+    "item-has-just-been-updated": void;
+    "item-is-being-uploaded": void;
+};
+
+export default mitt<Events>();

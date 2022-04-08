@@ -17,16 +17,26 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div
         class="document-file-upload-progress"
-        v-bind:class="{ 'document-file-upload-progress-error': props.nb_uploads_in_error > 0 }"
+        v-bind:class="{ 'document-file-upload-progress-error': nb_uploads_in_error > 0 }"
     >
-        <span class="document-file-upload-progress-value">{{ props.progress }}%</span>
+        <span class="document-file-upload-progress-value">{{ progress }}%</span>
         <progress
             class="document-file-upload-progress-bar"
             max="100"
-            v-bind:value="props.progress"
+            v-bind:value="progress"
         ></progress>
     </div>
 </template>
+
+<script setup lang="ts">
+defineProps<{ progress: number; nb_uploads_in_error: number }>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
+</script>

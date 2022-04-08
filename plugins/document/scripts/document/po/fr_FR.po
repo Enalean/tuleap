@@ -150,6 +150,9 @@ msgstr ""
 msgid "Content"
 msgstr "Contenu"
 
+msgid "Continue"
+msgstr "Continuer"
+
 msgid "Copy"
 msgstr "Copier"
 
@@ -424,6 +427,9 @@ msgstr "Obsolète aujourd'hui"
 msgid "On"
 msgstr "Le"
 
+msgid "Ongoing upload"
+msgstr "Téléversement en cours"
+
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
 "will be\n"
@@ -507,6 +513,9 @@ msgstr ""
 
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
+
+msgid "Please wait until the ongoing upload is finished."
+msgstr "Merci d'attendre que les téléversements en cours soient terminés."
 
 msgid "Please write something meaningful for the admin."
 msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."

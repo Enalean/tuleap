@@ -35,7 +35,16 @@
             <i class="fa fa-ellipsis-h" v-if="!isAppended"></i>
             <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': !isAppended }"></i>
         </button>
-        <slot></slot>
+        <div
+            class="tlp-dropdown-menu document-dropdown-menu"
+            v-bind:class="{
+                'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
+                'tlp-dropdown-menu-right': isInQuickLookMode,
+            }"
+            role="menu"
+        >
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -52,6 +61,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class DropDownButton extends Vue {
+    @Prop({ required: true })
+    readonly isInFolderEmptyState!: boolean;
+
     @Prop({ required: true })
     readonly isInLargeMode!: boolean;
 
@@ -95,9 +107,11 @@ export default class DropDownButton extends Vue {
     }
     showDropdownEvent(): void {
         emitter.emit("set-dropdown-shown", { is_dropdown_shown: true });
+        this.$emit("dropdown-shown");
     }
     hideDropdownEvent(): void {
         emitter.emit("set-dropdown-shown", { is_dropdown_shown: false });
+        this.$emit("dropdown-hidden");
     }
 }
 </script>

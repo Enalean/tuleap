@@ -48,6 +48,9 @@ import type {
     ListValue,
 } from "../../type";
 import type { PropertiesState } from "./module";
+import emitter from "../../helpers/emitter";
+
+jest.mock("../../helpers/emitter");
 
 describe("Properties actions", () => {
     let context: ActionContext<PropertiesState, RootState>, getProjectProperties: jest.SpyInstance;
@@ -62,6 +65,8 @@ describe("Properties actions", () => {
         } as unknown as ActionContext<PropertiesState, RootState>;
 
         getProjectProperties = jest.spyOn(properties_rest_querier, "getProjectProperties");
+
+        jest.clearAllMocks();
     });
 
     it(`load project properties definition`, async () => {
@@ -144,6 +149,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -195,6 +201,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -248,6 +255,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -301,6 +309,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -355,6 +364,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -408,6 +418,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -478,6 +489,7 @@ describe("Properties actions", () => {
                     recursion_option: "none",
                 });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",
                     item_to_update,
@@ -535,6 +547,7 @@ describe("Properties actions", () => {
 
                 await updateProperties(context, { item, item_to_update, current_folder });
 
+                expect(emitter.emit).toHaveBeenCalledWith("item-properties-have-just-been-updated");
                 expect(context.commit).toHaveBeenCalledWith(
                     "replaceCurrentFolder",
                     item_to_update,

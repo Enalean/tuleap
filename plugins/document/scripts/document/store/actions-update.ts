@@ -36,6 +36,7 @@ import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../constants";
 import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
 import type { CreatedItemFileProperties } from "../type";
 import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
+import emitter from "../helpers/emitter";
 
 export async function createNewFileVersion(
     context: ActionContext<RootState, RootState>,
@@ -75,6 +76,7 @@ export const createNewFileVersionFromModal = async (
             approval_table_action,
         ]);
         Vue.set(item, "updated", true);
+        emitter.emit("item-is-being-uploaded");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -101,6 +103,7 @@ export const createNewEmbeddedFileVersionFromModal = async (
             approval_table_action
         );
         Vue.set(item, "updated", true);
+        emitter.emit("item-has-just-been-updated");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -119,6 +122,7 @@ export const createNewWikiVersionFromModal = async (
     try {
         await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
         Vue.set(item, "updated", true);
+        emitter.emit("item-has-just-been-updated");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -145,6 +149,7 @@ export const createNewLinkVersionFromModal = async (
             approval_table_action
         );
         Vue.set(item, "updated", true);
+        emitter.emit("item-has-just-been-updated");
     } catch (exception) {
         await context.dispatch("error/handleErrorsForModal", exception);
     }
@@ -192,6 +197,11 @@ export const createNewVersionFromEmpty = async (
         }
         const updated_item = await getItem(item.id);
         Vue.set(updated_item, "updated", true);
+        if (selected_type === TYPE_LINK || selected_type === TYPE_EMBEDDED) {
+            emitter.emit("item-has-just-been-updated");
+        } else {
+            emitter.emit("item-is-being-uploaded");
+        }
         context.commit("removeItemFromFolderContent", updated_item);
         context.commit("addJustCreatedItemToFolderContent", updated_item);
         context.commit("updateCurrentItemForQuickLokDisplay", updated_item);

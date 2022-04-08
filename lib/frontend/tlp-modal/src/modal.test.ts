@@ -280,6 +280,27 @@ describe(`Modal`, () => {
 
             expect(document.activeElement).toBe(dropdown_trigger);
         });
+
+        it("focuses the trigger of the dropdown if previous active element was in dropdown menu outside of dropdown element", () => {
+            const dropdown_item = document.createElement("button");
+            dropdown_item.classList.add("tlp-dropdown-menu-item");
+            const dropdown_menu = document.createElement("div");
+            dropdown_menu.dataset.dropdown = "menu";
+            dropdown_menu.dataset.triggeredBy = "lorem-ipsum";
+            const dropdown_trigger = document.createElement("button");
+            dropdown_trigger.dataset.dropdown = "trigger";
+            dropdown_trigger.id = "lorem-ipsum";
+            const dropdown = document.createElement("div");
+            dropdown_menu.append(dropdown_item);
+            dropdown.append(dropdown_trigger);
+            document.body.append(dropdown, dropdown_menu);
+
+            dropdown_item.focus();
+            modal.show();
+            modal.hide();
+
+            expect(document.activeElement).toBe(dropdown_trigger);
+        });
     });
 
     it(`when I click on the backdrop element, it will hide the modal`, () => {
@@ -292,6 +313,22 @@ describe(`Modal`, () => {
 
         backdrop.dispatchEvent(new MouseEvent("click"));
         expectTheModalToBeHidden(modal_element);
+
+        modal.destroy();
+    });
+
+    it(`when I click on the backdrop element, it will NOT hide the modal if dismiss_on_backdrop_click is false`, () => {
+        const modal = createModal(doc, modal_element, {
+            dismiss_on_backdrop_click: false,
+        });
+        modal.show();
+        const backdrop = doc.querySelector("#tlp-modal-backdrop");
+        if (backdrop === null || !(backdrop instanceof HTMLElement)) {
+            throw new Error("backdrop should exist in the document");
+        }
+
+        backdrop.dispatchEvent(new MouseEvent("click"));
+        expectTheModalToBeShown(modal_element);
 
         modal.destroy();
     });

@@ -26,6 +26,9 @@ import type { ActionContext } from "vuex";
 import type { CreatedItem, FakeItem, Folder, Item, ItemFile, RootState } from "../type";
 import type { ConfigurationState } from "./configuration";
 import type { Upload } from "tus-js-client";
+import emitter from "../helpers/emitter";
+
+jest.mock("../helpers/emitter");
 
 describe("actions-create", () => {
     let context: ActionContext<RootState, RootState>;
@@ -40,6 +43,7 @@ describe("actions-create", () => {
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
+        jest.clearAllMocks();
     });
 
     describe("createNewItem", () => {
@@ -81,7 +85,7 @@ describe("actions-create", () => {
             expect(addNewEmpty).toHaveBeenCalledWith(correct_item, parent.id);
         });
 
-        it("Creates new document and reload folder content", async () => {
+        it("Creates new document warns about new item creation and reload folder content", async () => {
             const created_item_reference = { id: 66 } as CreatedItem;
             addNewEmpty.mockResolvedValue(created_item_reference);
 
@@ -98,6 +102,7 @@ describe("actions-create", () => {
             await createNewItem(context, [item, parent, current_folder]);
 
             expect(getItem).toHaveBeenCalledWith(66);
+            expect(emitter.emit).toHaveBeenCalledWith("new-item-has-just-been-created");
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
             expect(context.dispatch).not.toHaveBeenCalledWith("error/handleErrorsForModal");
         });

@@ -29,6 +29,7 @@ const DISMISS_SELECTOR = '[data-dismiss="modal"]';
 export interface ModalOptions {
     keyboard?: boolean;
     destroy_on_hide?: boolean;
+    dismiss_on_backdrop_click?: boolean;
 }
 
 export type ModalEventListener = (event: CustomEvent<{ target: HTMLElement }>) => void;
@@ -42,6 +43,17 @@ export const createModal = (doc: Document, element: Element, options?: ModalOpti
     new Modal(doc, element, options);
 
 const getDropdownTrigger = (dropdown_menu: HTMLElement): HTMLElement => {
+    if (dropdown_menu.dataset.triggeredBy) {
+        const dropdown_trigger = dropdown_menu.ownerDocument.getElementById(
+            dropdown_menu.dataset.triggeredBy
+        );
+        if (!dropdown_trigger) {
+            throw new Error("Dropdown trigger should exist");
+        }
+
+        return dropdown_trigger;
+    }
+
     let dropdown_trigger = dropdown_menu.previousSibling;
     while (
         dropdown_trigger &&
@@ -70,13 +82,18 @@ export class Modal {
     private previous_active_element: HTMLElement | null = null;
 
     constructor(doc: Document, element: Element, options: ModalOptions = { keyboard: true }) {
-        const { keyboard = true, destroy_on_hide = false } = options;
+        const {
+            keyboard = true,
+            destroy_on_hide = false,
+            dismiss_on_backdrop_click = true,
+        } = options;
         this.doc = doc;
         this.element = element;
         this.is_shown = false;
         this.options = {
             keyboard,
             destroy_on_hide,
+            dismiss_on_backdrop_click,
         };
         this.shown_event = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {
             detail: { target: this.element },
@@ -152,9 +169,11 @@ export class Modal {
         this.element.after(this.backdrop_element);
 
         this.backdrop_element.classList.add(BACKDROP_SHOWN_CLASS_NAME);
-        this.backdrop_element.addEventListener("click", () => {
-            this.hide();
-        });
+        if (this.options.dismiss_on_backdrop_click) {
+            this.backdrop_element.addEventListener("click", () => {
+                this.hide();
+            });
+        }
     }
 
     removeBackdrop(): void {

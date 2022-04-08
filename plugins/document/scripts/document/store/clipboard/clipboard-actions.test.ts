@@ -35,6 +35,7 @@ import type { ClipboardState } from "./module";
 import type { ActionContext } from "vuex";
 import type { Embedded, Empty, ItemFile, Link, State, Wiki } from "../../type";
 import type { Folder } from "../../type";
+import emitter from "../../helpers/emitter";
 
 describe("Clipboard actions", () => {
     let context = {
@@ -81,6 +82,7 @@ describe("Clipboard actions", () => {
     describe("Cut item", () => {
         let state, adjustItemToContentAfterItemCreationInAFolder: jest.SpyInstance;
         const moved_item_id = 852;
+        let emit: jest.SpyInstance;
 
         beforeEach(() => {
             state = {
@@ -101,6 +103,7 @@ describe("Clipboard actions", () => {
                     "adjustItemToContentAfterItemCreationInAFolder"
                 )
                 .mockReturnValue(Promise.resolve());
+            emit = jest.spyOn(emitter, "emit");
         });
 
         const testPasteSuccess = async (type: string): Promise<void> => {
@@ -119,6 +122,7 @@ describe("Clipboard actions", () => {
 
             expect(moveFile).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste a folder", async () => {
@@ -129,6 +133,7 @@ describe("Clipboard actions", () => {
 
             expect(moveFolder).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste an empty document", async () => {
@@ -139,6 +144,7 @@ describe("Clipboard actions", () => {
 
             expect(mocked_move).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste a wiki document", async () => {
@@ -149,6 +155,7 @@ describe("Clipboard actions", () => {
 
             expect(moveWiki).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste an embedded file", async () => {
@@ -159,6 +166,7 @@ describe("Clipboard actions", () => {
 
             expect(moveEmbedded).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste a link", async () => {
@@ -169,6 +177,7 @@ describe("Clipboard actions", () => {
 
             expect(moveLink).toHaveBeenCalledWith(moved_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it(`When item to paste is of an unknown type
@@ -178,6 +187,7 @@ describe("Clipboard actions", () => {
             await pasteItem(context, paste_payload);
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
             expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            expect(emit).not.toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it(`When an error is raised when pasting an item
@@ -192,6 +202,7 @@ describe("Clipboard actions", () => {
             expect(context.commit).not.toHaveBeenCalledWith("emptyClipboard");
             expect(context.commit).toHaveBeenCalledWith("pastingHasFailed");
             expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            expect(emit).not.toHaveBeenCalledWith("new-item-has-just-been-created");
         });
     });
 
@@ -199,6 +210,7 @@ describe("Clipboard actions", () => {
         let state: ClipboardState;
         let adjustItemToContentAfterItemCreationInAFolder: jest.SpyInstance;
         const copied_item_id = 852;
+        let emit: jest.SpyInstance;
 
         beforeEach(() => {
             state = {
@@ -219,6 +231,7 @@ describe("Clipboard actions", () => {
                     "adjustItemToContentAfterItemCreationInAFolder"
                 )
                 .mockReturnValue(Promise.resolve());
+            emit = jest.spyOn(emitter, "emit");
         });
 
         const testPasteSuccess = async (type: string): Promise<void> => {
@@ -237,6 +250,7 @@ describe("Clipboard actions", () => {
 
             expect(copyFile).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste a folder", async () => {
@@ -247,6 +261,7 @@ describe("Clipboard actions", () => {
 
             expect(copyFolder).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste an empty document", async () => {
@@ -257,6 +272,7 @@ describe("Clipboard actions", () => {
 
             expect(copyEmpty).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste a wiki document", async () => {
@@ -267,6 +283,7 @@ describe("Clipboard actions", () => {
 
             expect(copyWiki).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste an embedded file", async () => {
@@ -277,6 +294,7 @@ describe("Clipboard actions", () => {
 
             expect(copyEmbedded).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it("Paste a link", async () => {
@@ -287,6 +305,7 @@ describe("Clipboard actions", () => {
 
             expect(copyLink).toHaveBeenCalledWith(copied_item_id, expect.any(Number));
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(emit).toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it(`When item to paste is of an unknown type
@@ -296,6 +315,7 @@ describe("Clipboard actions", () => {
             await pasteItem(context, paste_payload);
             expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
             expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            expect(emit).not.toHaveBeenCalledWith("new-item-has-just-been-created");
         });
 
         it(`When an error is raised when pasting an item
@@ -310,6 +330,7 @@ describe("Clipboard actions", () => {
             expect(context.commit).not.toHaveBeenCalledWith("emptyClipboard");
             expect(context.commit).toHaveBeenCalledWith("pastingHasFailed");
             expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            expect(emit).not.toHaveBeenCalledWith("new-item-has-just-been-created");
         });
     });
 });

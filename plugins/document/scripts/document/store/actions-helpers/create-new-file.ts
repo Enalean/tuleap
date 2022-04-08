@@ -23,6 +23,7 @@ import { TYPE_FILE } from "../../constants";
 import { uploadFile } from "./upload-file";
 import type { ActionContext } from "vuex";
 import type { FakeItem, Folder, Property, RootState } from "../../type";
+import emitter from "../../helpers/emitter";
 
 export async function createNewFile(
     context: ActionContext<RootState, RootState>,
@@ -55,6 +56,7 @@ export async function createNewFile(
     if (dropped_file.size === 0) {
         const created_item = await getItem(new_file.id);
         flagItemAsCreated(context, created_item);
+        emitter.emit("new-item-has-just-been-created");
 
         return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
     }
@@ -79,6 +81,7 @@ export async function createNewFile(
     context.commit("addJustCreatedItemToFolderContent", fake_item);
     context.commit("addDocumentToFoldedFolder", [parent, fake_item, should_display_fake_item]);
     context.commit("addFileInUploadsList", fake_item);
+    emitter.emit("item-is-being-uploaded");
 
     let display_progress_bar_on_folder = true;
     if (parent.is_expanded) {
