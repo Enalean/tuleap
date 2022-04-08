@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator

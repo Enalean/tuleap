@@ -19,6 +19,7 @@
     "watch": "vite build --watch --mode development --minify false"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator",
     "@vue/composition-api": "^1.4.4"
   }
 }

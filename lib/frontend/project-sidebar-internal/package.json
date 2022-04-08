@@ -23,6 +23,7 @@
     "vue-dompurify-html": "^3.0.0-beta.3"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator",
     "@vue/test-utils": "^2.0.0-rc.17"
   },
   "scripts": {

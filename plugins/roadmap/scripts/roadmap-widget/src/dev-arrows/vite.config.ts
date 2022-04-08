@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../../../../tools/utils/scripts/vite-configurator";
+import { vite } from "@tuleap/build-system-configurator";
 
-export default defineConfig({
+export default vite.defineLibConfig({
     server: {
         open: true,
     },

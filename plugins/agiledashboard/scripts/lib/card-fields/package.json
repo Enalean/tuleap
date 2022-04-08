@@ -23,6 +23,7 @@
     "moment": "^2.29.1"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator",
     "@types/dompurify": "^2.3.3",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2",

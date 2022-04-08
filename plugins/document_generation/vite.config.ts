@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineAppConfig } from "../../tools/utils/scripts/vite-configurator";
+import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export default defineAppConfig("document_generation", {
+export default vite.defineAppConfig("document_generation", {
     plugins: [POGettextPlugin.vite(), vue()],
     build: {
         rollupOptions: {

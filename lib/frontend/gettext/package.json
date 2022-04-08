@@ -17,6 +17,7 @@
     "node-gettext": "^3.0.0"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator",
     "@types/node-gettext": "^3.0.1"
   },
   "scripts": {

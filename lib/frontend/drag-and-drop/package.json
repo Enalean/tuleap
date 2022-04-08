@@ -8,8 +8,9 @@
   "module": "dist/drag-and-drop.es.js",
   "main": "dist/drag-and-drop.umd.js",
   "style": "dist/style.css",
-  "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",

@@ -14,11 +14,12 @@
       "require": "./dist/tooltip.umd.js"
     }
   },
-  "dependencies": {},
   "peerDependencies": {
     "jquery": ">=1.7.0 <4.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"

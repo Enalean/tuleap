@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': file:../../../../../lib/frontend/concurrency-limit-pool
   '@tuleap/plugin-tracker-constants': file:../../../../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rest-api-types': file:../../../../tracker/scripts/lib/rest-api-types
@@ -21,6 +22,7 @@ dependencies:
   sprintf-js: 1.1.2
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
   '@types/dompurify': 2.3.2
   '@types/sprintf-js': 1.1.2
 

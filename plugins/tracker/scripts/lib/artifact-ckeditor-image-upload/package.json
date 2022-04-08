@@ -21,6 +21,7 @@
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "file:../../../../../lib/frontend/po-gettext-plugin",
     "css.escape": "^1.5.1"
   },

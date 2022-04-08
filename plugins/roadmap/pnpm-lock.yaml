@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/list-picker': file:../../lib/frontend/list-picker
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-popovers': file:../../lib/frontend/tlp-popovers
@@ -22,6 +23,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/tlp-popovers': link:../../lib/frontend/tlp-popovers
   '@vue/test-utils': 1.3.0_vue@2.6.14
