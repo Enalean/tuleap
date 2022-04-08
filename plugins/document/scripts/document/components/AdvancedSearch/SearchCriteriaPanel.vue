@@ -19,39 +19,37 @@
   -->
 
 <template>
-    <div class="tlp-framed-horizontally">
-        <section class="tlp-pane">
-            <form class="tlp-pane-container" data-test="form" v-on:submit.prevent="advancedSearch">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
+    <section class="tlp-pane search-criteria-panel">
+        <form class="tlp-pane-container" data-test="form" v-on:submit.prevent="advancedSearch">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title" v-translate>Search criteria</h1>
+            </div>
+            <section class="tlp-pane-section search-criteria-panel-criteria-container">
+                <search-criteria-breadcrumb v-if="!is_in_root_folder" />
+                <div class="document-search-criteria">
+                    <criterion-global-text v-model="new_query.global_search" />
+                    <component
+                        v-for="criterion in criteria"
+                        v-bind:key="criterion.name"
+                        v-bind:is="`criterion-${criterion.type}`"
+                        v-bind:criterion="criterion"
+                        v-model="new_query[criterion.name]"
+                        v-bind:data-test="`criterion-${criterion.name}`"
+                    />
                 </div>
-                <section class="tlp-pane-section">
-                    <search-criteria-breadcrumb v-if="!is_in_root_folder" />
-                    <div class="document-search-criteria">
-                        <criterion-global-text v-model="new_query.global_search" />
-                        <component
-                            v-for="criterion in criteria"
-                            v-bind:key="criterion.name"
-                            v-bind:is="`criterion-${criterion.type}`"
-                            v-bind:criterion="criterion"
-                            v-model="new_query[criterion.name]"
-                            v-bind:data-test="`criterion-${criterion.name}`"
-                        />
-                    </div>
-                </section>
-                <section class="tlp-pane-section tlp-pane-section-submit">
-                    <button
-                        type="submit"
-                        class="tlp-button-primary document-search-submit"
-                        v-translate
-                        data-test="submit"
-                    >
-                        Apply
-                    </button>
-                </section>
-            </form>
-        </section>
-    </div>
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit search-criteria-panel-submit">
+                <button
+                    type="submit"
+                    class="tlp-button-primary document-search-submit"
+                    v-translate
+                    data-test="submit"
+                >
+                    Apply
+                </button>
+            </section>
+        </form>
+    </section>
 </template>
 
 <script lang="ts">

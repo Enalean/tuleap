@@ -36,6 +36,17 @@
     }
 }
 
+.document-search-container-criteria-table {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tlp-medium-spacing);
+    min-height: 0;
+}
+
+.search-criteria-panel {
+    margin: 0 var(--tlp-medium-spacing);
+}
+
 .sidebar-collapsed .document-search-container {
     height: calc(100vh - #{global-variables.$breadcrumb-height-with-collapsed-sidebar});
 }
@@ -107,6 +118,14 @@
     min-width: 120px;
 }
 
+.document-search-table-container-with-pagination {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tlp-medium-spacing);
+    min-width: 0;
+    min-height: 0;
+}
+
 .document-search-table-container {
     flex: 0 1 auto;
     overflow: auto;
@@ -114,7 +133,7 @@
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
 
     + .tlp-pagination {
-        margin: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing);
+        padding: 0 0 var(--tlp-medium-spacing);
     }
 }
 
@@ -217,4 +236,51 @@
 
 .document-search-breadcrumbs-final-separator {
     padding: 0 calc(var(--tlp-small-spacing) / 2) 0 2px;
+}
+
+@media (max-height: 900px) {
+    .document-search-container {
+        min-height: 0;
+    }
+
+    .document-search-container-criteria-table {
+        flex-direction: row;
+        min-height: 0;
+        padding: 0 var(--tlp-medium-spacing);
+    }
+
+    .search-criteria-panel {
+        $pagination-height: calc(3.5 * var(--tlp-medium-spacing));
+
+        position: relative;
+        height: calc(100% - #{$pagination-height});
+        margin: 0;
+
+        > .tlp-pane-container > .tlp-pane-header {
+            border-bottom: 1px solid var(--tlp-neutral-light-color);
+        }
+    }
+
+    .search-criteria-panel-criteria-container {
+        flex: 1 1 auto;
+        overflow: auto;
+
+        > .document-search-criteria {
+            flex-direction: column;
+
+            .document-search-criterion-owner,
+            .document-search-criterion-text {
+                min-width: auto;
+            }
+        }
+    }
+
+    .document-search-table-container {
+        border: 1px solid var(--tlp-neutral-normal-color);
+        border-radius: var(--tlp-large-radius);
+
+        + .tlp-pagination {
+            padding: 0;
+        }
+    }
 }
