@@ -26,11 +26,17 @@
         <div class="tlp-form-element">
             <project-selector v-model:project_id="project_id" />
         </div>
+        <div class="tlp-form-element">
+            <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
 import ProjectSelector from "./ProjectSelector.vue";
+import TrackerSelector from "./TrackerSelector.vue";
+import type { SelectedTracker } from "../type";
 
 const project_id = ref<number | null>(null);
+const tracker = ref<SelectedTracker | null>(null);
 </script>

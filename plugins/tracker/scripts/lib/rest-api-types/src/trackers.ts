@@ -90,7 +90,12 @@ export interface StructureFormat {
     readonly content: null | ReadonlyArray<this>;
 }
 
-export interface TrackerResponse {
+export interface MinimalTrackerResponse {
+    readonly id: number;
+    readonly label: string;
+}
+
+export interface TrackerResponse extends MinimalTrackerResponse {
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
 }

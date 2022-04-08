@@ -31,6 +31,11 @@ export interface SelectedReport {
     readonly label: string;
 }
 
+export interface SelectedTracker {
+    readonly id: number;
+    readonly label: string;
+}
+
 export type ArtifactReportResponseFieldValueWithExtraFields =
     | ArtifactReportResponseFieldValue
     | ArtifactReportExtraFieldValue;
