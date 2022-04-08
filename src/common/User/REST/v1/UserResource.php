@@ -22,6 +22,7 @@ namespace Tuleap\User\REST\v1;
 use Luracast\Restler\RestException;
 use PaginatedUserCollection;
 use PFUser;
+use Rule_UserName;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -612,6 +613,7 @@ class UserResource extends AuthenticatedResource
                         $user_to_update->setRealName($value);
                         break;
                     case "username":
+                        $this->userNameIsValid($value);
                         $user_to_update->setUserName($value);
                         break;
                     default:
@@ -845,5 +847,16 @@ class UserResource extends AuthenticatedResource
         }
 
         return $user_id;
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function userNameIsValid(string $user_name): void
+    {
+        $user_name_rules = new Rule_UserName();
+        if (! $user_name_rules->isValid($user_name)) {
+            throw new RestException(400, $user_name_rules->getErrorMessage());
+        }
     }
 }

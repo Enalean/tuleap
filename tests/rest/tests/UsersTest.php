@@ -306,6 +306,30 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    public function testUserCanNotUpdateIfTheUpdatedUserNameIsNotValid(): void
+    {
+        $value = json_encode(
+            [
+                'values' => [
+                    'username' => "codendiadm",
+                ],
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest(
+                'PATCH',
+                'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $value
+                )
+            )
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
     public function testPATCHUserWithReadOnlySiteAdmin(): void
     {
         $value    = json_encode(
