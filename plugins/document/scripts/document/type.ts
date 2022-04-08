@@ -173,6 +173,16 @@ export interface DefaultFileItem {
     status: string;
 }
 
+export interface DefaultFileNewVersionItem extends DefaultFileItem {
+    id: number;
+}
+
+export interface NewVersion {
+    title: string;
+    changelog: string;
+    is_file_locked?: boolean;
+}
+
 export interface Uploadable {
     progress: number | null;
     upload_error: string | null;

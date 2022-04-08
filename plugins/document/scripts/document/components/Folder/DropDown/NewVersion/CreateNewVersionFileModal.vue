@@ -37,6 +37,10 @@
                     v-model="uploaded_item.file_properties"
                     v-bind:item="uploaded_item"
                 />
+                <preview-filename-new-version
+                    v-bind:version="version"
+                    v-bind:item="uploaded_item"
+                />
             </item-update-properties>
         </div>
         <modal-footer
@@ -58,10 +62,15 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import emitter from "../../../../helpers/emitter";
+import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
+import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
+import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
+import { TYPE_FILE } from "../../../../constants";
 
 export default {
     name: "CreateNewVersionFileModal",
     components: {
+        PreviewFilenameNewVersion,
         ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
@@ -76,8 +85,8 @@ export default {
     },
     data() {
         return {
-            uploaded_item: {},
-            version: {},
+            uploaded_item: this.getDefaultUploadedItem(),
+            version: { title: "", changelog: "", is_file_locked: false },
             is_loading: false,
             is_displayed: false,
             modal: null,
@@ -108,6 +117,17 @@ export default {
         emitter.off("update-changelog-property", this.updateChangelogValue);
     },
     methods: {
+        getDefaultUploadedItem() {
+            return {
+                title: "",
+                description: "",
+                type: TYPE_FILE,
+                status: "none",
+                file_properties: {
+                    file: {},
+                },
+            };
+        },
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;
         },
@@ -121,8 +141,14 @@ export default {
                 is_file_locked: this.item.lock_info !== null,
             };
             this.uploaded_item = {
-                type: this.item.type,
-                file_properties: {},
+                id: this.item.id,
+                title: this.item.title,
+                description: this.item.description,
+                type: TYPE_FILE,
+                status: getItemStatus(getStatusProperty(this.item.properties)),
+                file_properties: {
+                    file: {},
+                },
             };
             this.is_displayed = true;
             this.modal.show();
@@ -131,7 +157,7 @@ export default {
             this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
-            this.uploaded_item = {};
+            this.uploaded_item = this.getDefaultUploadedItem();
         },
         async createNewFileVersion(event) {
             event.preventDefault();
@@ -148,7 +174,7 @@ export default {
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.uploaded_item = {};
+                this.uploaded_item = this.getDefaultUploadedItem();
                 this.modal.hide();
             }
         },
