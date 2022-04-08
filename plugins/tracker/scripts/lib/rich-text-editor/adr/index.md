@@ -2,7 +2,7 @@
 
 This log lists the architectural decisions for `@tuleap/plugin-tracker-rich-text-editor`.
 
-<!-- adrlog -- Regenerate the content by using "adr-log -e template.md -i". You can install it via "npm install -g adr-log" -->
+<!-- adrlog -- Regenerate the content by using `nix-shell -p nodePackages.npm --run 'npm exec --package=adr-log -- adr-log -e template.md -i'` -->
 
 * [ADR-0001](0001-choice-of-lit-html-templating.md) - Choice of lit-html templating
 

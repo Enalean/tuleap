@@ -4,7 +4,7 @@ This log lists the architectural decisions for Program Management plugin.
 
 * [Glossary](glossary.md) - Definition of terms used in Program Management plugin
 
-<!-- adrlog Regenerate the content by using "adr-log -e "+(template|glossary).md" -i". You can install it via "npm install -g adr-log" -->
+<!-- adrlog -- Regenerate the content by using `nix-shell -p nodePackages.npm --run 'npm exec --package=adr-log -- adr-log -e "+(template|glossary).md" -i'` -->
 
 * [ADR-0001](0001-mirror-milestones.md) - Create Mirror Artifacts to filter what Teams can view
 * [ADR-0002](0002-hexagonal-architecture.md) - Hexagonal Architecture in Program Management plugin
