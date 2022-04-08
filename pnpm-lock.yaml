@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../src/scripts/lib/tlp-fetch
   '@types/bootstrap': ^4.5.0
   '@types/dompurify': ^2.3.2

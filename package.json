@@ -2,7 +2,7 @@
   "name": "@tuleap/plugin-mytuleap_contact_support",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp": "link:../../src/themes/tlp",
+    "@tuleap/tlp": "file:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../src/scripts/lib/tlp-fetch",
     "dompurify": "^2.3.6"
   },
