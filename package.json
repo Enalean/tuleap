@@ -91,7 +91,7 @@
     "typecheck": "turbo run typecheck",
     "build": "turbo run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
-    "stylelint": "stylelint --config .stylelintrc.js **/*.{vue,scss}",
+    "stylelint": "stylelint --config .stylelintrc.js",
     "test": "turbo run test --concurrency=2 -- -- --verbose=false"
   },
   "packageManager": "pnpm@6.25.0"
