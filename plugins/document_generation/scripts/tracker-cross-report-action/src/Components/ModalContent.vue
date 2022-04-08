@@ -45,6 +45,7 @@
                 v-model:artifact_link_types="artifact_link_types"
                 v-bind:tracker_id="properties.current_tracker_id"
             />
+            <second-level-selector />
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -81,6 +82,7 @@ import { createModal } from "@tuleap/tlp-modal";
 import type { GlobalExportProperties, SelectedReport } from "../type";
 import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
+import SecondLevelSelector from "./SecondLevelSelector.vue";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();
 let modal: Modal | null = null;

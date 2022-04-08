@@ -39,6 +39,9 @@ msgid_plural "Personal reports"
 msgstr[0] "Rapport personnel"
 msgstr[1] "Rapports personnels"
 
+msgid "Project"
+msgstr "Projet"
+
 msgid "Public report"
 msgid_plural "Public reports"
 msgstr[0] "Rapport public"
@@ -46,6 +49,9 @@ msgstr[1] "Rapports publics"
 
 msgid "Report"
 msgstr "Rapport"
+
+msgid "Second level"
+msgstr "Second niveau"
 
 msgid ""
 "The columns exported are the ones used of the first table of the selected "
