@@ -19,6 +19,7 @@
     "tus-js-client": "^2.3.0"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator",
     "@types/ckeditor": "^4.9.10"
   },
   "scripts": {

@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
   '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/plugin-docgen-docx': file:./scripts/lib/docx
@@ -36,6 +37,7 @@ dependencies:
   xlsx: 0.18.5
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 2.0.0-rc.17_vue@3.2.31

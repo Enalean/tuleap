@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
+import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 
-export default defineConfig({
+export default vite.defineLibConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),

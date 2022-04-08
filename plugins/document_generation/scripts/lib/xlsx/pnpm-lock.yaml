@@ -1,10 +1,14 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
   xlsx: ^0.18.5
 
 dependencies:
   xlsx: 0.18.5
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
 
 packages:
 

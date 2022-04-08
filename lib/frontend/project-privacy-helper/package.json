@@ -18,5 +18,8 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
   }
 }

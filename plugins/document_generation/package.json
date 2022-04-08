@@ -21,6 +21,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "file:../../lib/frontend/po-gettext-plugin",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^2.0.0-rc.17"

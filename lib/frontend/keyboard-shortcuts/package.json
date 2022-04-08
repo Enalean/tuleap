@@ -16,7 +16,9 @@
   "dependencies": {
     "hotkeys-js": "^3.8.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",

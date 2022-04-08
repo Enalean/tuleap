@@ -13,8 +13,9 @@
       "require": "./dist/date-helper.umd.js"
     }
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",

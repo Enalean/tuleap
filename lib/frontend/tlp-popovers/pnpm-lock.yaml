@@ -2,9 +2,13 @@ lockfileVersion: 5.3
 
 specifiers:
   '@popperjs/core': ^2.9.2
+  '@tuleap/build-system-configurator': file:../build-system-configurator
 
 dependencies:
   '@popperjs/core': 2.9.2
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../build-system-configurator
 
 packages:
 

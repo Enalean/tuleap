@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../../../tools/utils/scripts/vite-configurator";
+import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import dts from "vite-plugin-dts";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export default defineConfig({
+export default vite.defineLibConfig({
     plugins: [POGettextPlugin.vite(), dts({ insertTypesEntry: true })],
     build: {
         lib: {

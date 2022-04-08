@@ -20,6 +20,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator",
     "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
   }
 }

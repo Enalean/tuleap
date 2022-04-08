@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from "../../../tools/utils/scripts/vite-configurator";
+import { vite } from "@tuleap/build-system-configurator";
 import { createVuePlugin } from "vite-plugin-vue2";
 import * as path from "path";
 import dts from "vite-dts";
 
-export default defineConfig({
+export default vite.defineLibConfig({
     plugins: [createVuePlugin(), dts()],
     build: {
         lib: {

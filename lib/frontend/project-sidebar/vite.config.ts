@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 
-import { defineConfig } from "../../../tools/utils/scripts/vite-configurator";
+import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 import dts from "vite-plugin-dts";
 
-export default defineConfig({
+export default vite.defineLibConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/main.ts"),

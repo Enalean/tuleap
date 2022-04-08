@@ -13,11 +13,12 @@
       "require": "./dist/angular-async.umd.js"
     }
   },
-  "dependencies": {},
   "peerDependencies": {
     "angular": "^1.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"

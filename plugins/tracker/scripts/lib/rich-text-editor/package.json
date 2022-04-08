@@ -19,6 +19,7 @@
     "turndown": "^7.0.0"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "file:../../../../../lib/frontend/po-gettext-plugin",
     "@types/bootstrap": "^3.4.0",
     "@types/ckeditor": "^4.9.10",

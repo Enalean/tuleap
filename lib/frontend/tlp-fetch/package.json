@@ -16,7 +16,9 @@
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "file:../concurrency-limit-pool"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",

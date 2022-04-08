@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,8 +18,13 @@
  */
 
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
+// vite is still defined at the root of the workspace to make it easier to call it in package.json scripts
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig as viteDefineConfig } from "vite";
-import { browserlist_config, esbuild_target } from "./browserslist_config";
+import {
+    browserlist_config,
+    esbuild_target,
+} from "../../../../tools/utils/scripts/browserslist_config";
 import autoprefixer from "autoprefixer";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
@@ -30,7 +35,7 @@ type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: Overload
     server?: OverloadedServerOptions;
 } & { css?: OverloadedCSSOptions };
 
-export function defineConfig(config: OverloadedUserConfig): UserConfigExport {
+export function defineLibConfig(config: OverloadedUserConfig): UserConfigExport {
     return defineBaseConfig(config);
 }
 
@@ -82,7 +87,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         },
         server: {
             fs: {
-                allow: [__dirname + "/../../../"],
+                allow: [__dirname + "/../../../../"],
                 strict: true,
             },
         },

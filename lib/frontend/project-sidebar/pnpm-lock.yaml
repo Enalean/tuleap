@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
+  '@tuleap/build-system-configurator': file:../build-system-configurator
   '@tuleap/project-sidebar-internal': file:../project-sidebar-internal
   '@tuleap/tlp': file:../../../src/themes/tlp
 
@@ -10,6 +11,7 @@ dependencies:
 
 devDependencies:
   '@fortawesome/fontawesome-free': 5.15.4
+  '@tuleap/build-system-configurator': link:../build-system-configurator
   '@tuleap/project-sidebar-internal': link:../project-sidebar-internal
 
 packages:
