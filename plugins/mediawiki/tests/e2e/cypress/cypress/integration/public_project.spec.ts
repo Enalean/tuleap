@@ -19,7 +19,7 @@
 
 describe("Mediawiki public projects", function () {
     before(() => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.clearSessionCookie();
     });
 
     it("platform administrator can choose mediawiki visibility", function () {

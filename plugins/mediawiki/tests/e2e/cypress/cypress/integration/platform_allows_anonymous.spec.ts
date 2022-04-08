@@ -18,6 +18,10 @@
  */
 
 describe("Plateform allows anonymous", function () {
+    before(() => {
+        cy.clearSessionCookie();
+    });
+
     it("project administrator can define permission access level of mediawiki", function () {
         cy.updatePlatformVisibilityForAnonymous();
         cy.projectAdministratorLogin();

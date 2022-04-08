@@ -20,6 +20,11 @@
 
 describe("Time tracking", function () {
     let now: number;
+
+    before(() => {
+        cy.clearSessionCookie();
+    });
+
     beforeEach(function () {
         now = Date.now();
     });

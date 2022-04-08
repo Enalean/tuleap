@@ -18,6 +18,10 @@
  */
 
 describe("Platform allows restricted", function () {
+    before(() => {
+        cy.clearSessionCookie();
+    });
+
     it("project administrator can define permission access level of mediawiki", function () {
         cy.updatePlatformVisibilityAndAllowRestricted();
         cy.projectAdministratorLogin();

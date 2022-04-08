@@ -20,6 +20,7 @@
 
 describe("Hide widget", function () {
     before(() => {
+        cy.clearSessionCookie();
         cy.platformAdminLogin();
     });
 
