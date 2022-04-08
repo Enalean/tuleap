@@ -70,15 +70,12 @@ describe("TypeSelectorTemplate", () => {
         const options = optgroup.querySelectorAll("[data-test=link-type-select-option]");
 
         expect(optgroup.label).toBe("story #150");
-        expect(options).toHaveLength(5);
+        expect(options).toHaveLength(2);
 
         expect(options[0].textContent?.trim()).toBe("Linked to");
         expect(options[0].hasAttribute("selected")).toBe(true);
 
         expect(options[1].textContent?.trim()).toBe("Child");
-        expect(options[2].textContent?.trim()).toBe("Parent");
-        expect(options[3].textContent?.trim()).toBe("Covered by");
-        expect(options[4].textContent?.trim()).toBe("Covers");
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {

@@ -19,6 +19,7 @@
 
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { LinkField } from "./LinkField";
 import type { AllowedLinkType } from "../../../../domain/fields/link-field-v2/AllowedLinkType";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
@@ -29,20 +30,15 @@ import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossRef
 const getOptions = (
     types_container: AllowedLinkTypesPresenterContainer
 ): UpdateFunction<LinkField> => {
-    const { forward_type_presenter, reverse_type_presenter } = types_container;
+    const { forward_type_presenter } = types_container;
 
     const forward_link_value =
         forward_type_presenter.shortname + " " + forward_type_presenter.direction;
-    const reverse_link_value =
-        reverse_type_presenter.shortname + " " + reverse_type_presenter.direction;
 
     return html`
         <option disabled>–</option>
         <option value="${forward_link_value}" data-test="link-type-select-option">
             ${forward_type_presenter.label}
-        </option>
-        <option value="${reverse_link_value}" data-test="link-type-select-option">
-            ${reverse_type_presenter.label}
         </option>
     `;
 };
@@ -53,7 +49,7 @@ export const getTypeSelectorTemplate = (
 ): UpdateFunction<LinkField> => {
     const types_presenters =
         CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-            allowed_links_types
+            allowed_links_types.filter((type) => type.shortname === IS_CHILD_LINK_TYPE)
         );
     const current_artifact_xref =
         artifact_cross_reference === null ? getNewArtifactLabel() : artifact_cross_reference.ref;
