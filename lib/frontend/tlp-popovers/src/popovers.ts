@@ -19,7 +19,6 @@
 
 import type { Instance, Options, Placement } from "@popperjs/core";
 import { createPopper } from "@popperjs/core";
-import { findClosestElement } from "../../../../src/themes/tlp/src/js/dom-walker";
 
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 
@@ -239,8 +238,8 @@ function buildDocumentClickListener(
             }
             if (
                 popover_content.classList.contains(POPOVER_SHOWN_CLASS_NAME) &&
-                findClosestElement(doc, event.target, popover_content) === null &&
-                findClosestElement(doc, event.target, popover_trigger) === null
+                !popover_content.contains(event.target) &&
+                !popover_trigger.contains(event.target)
             ) {
                 hideAllShownPopovers(doc);
             }
