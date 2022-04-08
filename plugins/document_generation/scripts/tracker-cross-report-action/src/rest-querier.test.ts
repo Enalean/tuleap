@@ -18,12 +18,18 @@
  */
 
 import * as tlp from "@tuleap/tlp-fetch";
-import { getLinkedArtifacts, getReportArtifacts, getTrackerReports } from "./rest-querier";
+import {
+    getLinkedArtifacts,
+    getReportArtifacts,
+    getTrackerCurrentlyUsedArtifactLinkTypes,
+    getTrackerReports,
+} from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
-
-jest.mock("tlp");
+import type {
+    TrackerReportResponse,
+    TrackerUsedArtifactLinkResponse,
+} from "@tuleap/plugin-tracker-rest-api-types/src";
 
 describe("API querier", () => {
     describe("getReportArtifacts", () => {
@@ -96,6 +102,31 @@ describe("API querier", () => {
 
             expect(recursive_get_spy).toHaveBeenCalledWith(
                 `/api/v1/trackers/${tracker_id}/tracker_reports`
+            );
+        });
+    });
+
+    describe("getTrackerCurrentlyUsedArtifactLinkTypes", () => {
+        it("retrieves currently used artifact link types in the tracker", async () => {
+            const tracker_id = 123;
+            const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
+
+            const used_artifact_link_types_response: TrackerUsedArtifactLinkResponse[] = [
+                {
+                    shortname: "_is_child",
+                    forward_label: "Child",
+                },
+            ];
+            mockFetchSuccess(recursive_get_spy, {
+                return_json: {
+                    collection: used_artifact_link_types_response,
+                },
+            });
+
+            await getTrackerCurrentlyUsedArtifactLinkTypes(tracker_id);
+
+            expect(recursive_get_spy).toHaveBeenCalledWith(
+                `/api/v1/trackers/${tracker_id}/used_artifact_links`
             );
         });
     });

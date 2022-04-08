@@ -20,6 +20,7 @@
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 
 export async function getReportArtifacts(
     report_id: number,
@@ -59,4 +60,10 @@ export async function getLinkedArtifacts(
 
 export function getTrackerReports(tracker_id: number): Promise<TrackerReportResponse[]> {
     return recursiveGet(`/api/v1/trackers/${encodeURIComponent(tracker_id)}/tracker_reports`);
+}
+
+export function getTrackerCurrentlyUsedArtifactLinkTypes(
+    tracker_id: number
+): Promise<TrackerUsedArtifactLinkResponse[]> {
+    return recursiveGet(`/api/v1/trackers/${encodeURIComponent(tracker_id)}/used_artifact_links`);
 }

@@ -44,9 +44,6 @@
                 v-model:report="selected_report"
                 v-model:artifact_link_types="artifact_link_types"
                 v-bind:tracker_id="properties.current_tracker_id"
-                v-bind:current_tracker_artifact_link_types="
-                    properties.current_tracker_artifact_link_types
-                "
             />
         </div>
         <div class="tlp-modal-footer">
@@ -105,10 +102,7 @@ const selected_report = ref<SelectedReport>({
     id: props.properties.current_report_id,
     label: "",
 });
-const all_artifact_link_types = props.properties.current_tracker_artifact_link_types.map(
-    (art_link_type) => art_link_type.shortname
-);
-const artifact_link_types = ref(all_artifact_link_types);
+const artifact_link_types = ref([]);
 
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {

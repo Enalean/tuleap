@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\CrossReport;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveCurrentlyUsedArtifactLinkTypesInTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class CrossReportExportPropertiesFetcherTest extends TestCase
@@ -32,14 +31,7 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fetcher = new CrossReportExportPropertiesFetcher(
-            new class implements RetrieveCurrentlyUsedArtifactLinkTypesInTracker {
-                public function getAllCurrentlyUsedTypePresentersByTracker(\Tracker $tracker): array
-                {
-                    return [];
-                }
-            }
-        );
+        $this->fetcher = new CrossReportExportPropertiesFetcher();
     }
 
     public function testFetchesProperties(): void
@@ -56,7 +48,6 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
         self::assertEquals(789, $props->current_tracker_id);
         self::assertEquals('Tracker Name', $props->current_tracker_name);
         self::assertEquals($current_report_id, $props->current_report_id);
-        self::assertEquals([], $props->current_tracker_artifact_link_types);
     }
 
     private static function buildReport(\Tracker $tracker, int $id, string $name, ?\PFUser $owned_by): \Tracker_Report

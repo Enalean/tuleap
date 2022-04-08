@@ -22,22 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\DocumentGeneration\CrossReport;
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveCurrentlyUsedArtifactLinkTypesInTracker;
-
 class CrossReportExportPropertiesFetcher
 {
-    public function __construct(
-        private RetrieveCurrentlyUsedArtifactLinkTypesInTracker $artlink_used_types_retriever,
-    ) {
-    }
-
     public function fetchExportProperties(\Tracker $tracker, \Tracker_Report $tracker_report): CrossReportExportProperties
     {
         return new CrossReportExportProperties(
             $tracker->getId(),
             $tracker->getName(),
             (int) $tracker_report->getId(),
-            $this->artlink_used_types_retriever->getAllCurrentlyUsedTypePresentersByTracker($tracker),
         );
     }
 }

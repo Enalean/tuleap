@@ -94,3 +94,8 @@ export interface TrackerResponse {
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
 }
+
+export interface TrackerUsedArtifactLinkResponse {
+    readonly shortname: string;
+    readonly forward_label: string;
+}
