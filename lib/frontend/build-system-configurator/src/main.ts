@@ -18,3 +18,5 @@
  */
 
 export * as vite from "./vite-configurator";
+export * as webpack_configurator from "./webpack/main";
+export { esbuild_target } from "./browserslist_config";

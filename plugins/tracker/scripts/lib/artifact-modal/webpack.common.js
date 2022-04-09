@@ -24,7 +24,7 @@ const webpack = require("webpack");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 const context = __dirname;
 const webpack_config = {

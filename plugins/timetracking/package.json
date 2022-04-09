@@ -12,6 +12,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@vue/test-utils": "^1.3.0"
   },
   "scripts": {

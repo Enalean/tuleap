@@ -18,7 +18,7 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = __dirname;
 const output = webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets"));

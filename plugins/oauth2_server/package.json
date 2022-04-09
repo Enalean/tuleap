@@ -9,6 +9,7 @@
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {
+        "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
         "@tuleap/tlp": "file:../../src/themes/tlp",
         "@types/sprintf-js": "^1.1.2"
     },

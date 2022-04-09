@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,5 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const browserlist_config: string;
-export const esbuild_target: string;
+export * from "./webpack-rule-configs";
+export * from "./plugins-aliases";

@@ -17,6 +17,7 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@tuleap/tlp": "file:../../src/themes/tlp"
   }
 }

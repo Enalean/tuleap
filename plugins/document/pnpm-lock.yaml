@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/core': file:../../src
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
@@ -58,6 +59,7 @@ dependencies:
   vuex-shared-mutations: 1.0.2
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14
   moment-timezone-data-webpack-plugin: 1.5.0_moment-timezone@0.5.34

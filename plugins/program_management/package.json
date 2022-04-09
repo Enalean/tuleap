@@ -17,6 +17,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@tuleap/list-picker": "file:../../lib/frontend/list-picker",
     "@tuleap/tlp": "file:../../src/themes/tlp",
     "@types/sprintf-js": "^1.1.2",

@@ -4,6 +4,7 @@ specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
   '@joeattardi/emoji-button': ^4.6.2
   '@shopify/jest-dom-mocks': ^2.10.0
+  '@tuleap/build-system-configurator': file:../lib/frontend/build-system-configurator
   '@tuleap/date-helper': file:../lib/frontend/date-helper
   '@tuleap/filter-inline-table': file:../lib/frontend/filter-table
   '@tuleap/gettext': file:../lib/frontend/gettext
@@ -108,6 +109,7 @@ dependencies:
 
 devDependencies:
   '@shopify/jest-dom-mocks': 2.10.0_node-fetch@3.0.0
+  '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
   '@types/d3-scale': 3.3.0

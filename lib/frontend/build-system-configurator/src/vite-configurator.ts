@@ -21,10 +21,7 @@ import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExp
 // vite is still defined at the root of the workspace to make it easier to call it in package.json scripts
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig as viteDefineConfig } from "vite";
-import {
-    browserlist_config,
-    esbuild_target,
-} from "../../../../tools/utils/scripts/browserslist_config";
+import { browserlist_config, esbuild_target } from "./browserslist_config";
 import autoprefixer from "autoprefixer";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;

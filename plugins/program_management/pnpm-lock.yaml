@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/core': file:../../src
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/drag-and-drop': file:../../lib/frontend/drag-and-drop
@@ -33,6 +34,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/tlp': link:../../src/themes/tlp
   '@types/sprintf-js': 1.1.2

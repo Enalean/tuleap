@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const path = require("path");
-const { browserlist_config, esbuild_target } = require("./browserslist_config");
+// eslint-disable-next-line import/no-extraneous-dependencies
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { browserlist_config, esbuild_target } from "../browserslist_config";
 
-function configureTypescriptRules() {
+export function configureTypescriptRules(): object[] {
     return [
         {
             test: /\.ts(x?)$/,
@@ -39,25 +39,25 @@ function configureTypescriptRules() {
     ];
 }
 
-const rule_vue_loader = {
+export const rule_vue_loader = {
     test: /\.vue$/,
     exclude: /node_modules/,
     use: [{ loader: "vue-loader" }],
 };
 
-const rule_po_files = {
+export const rule_po_files = {
     test: /\.po$/,
     exclude: /node_modules/,
     use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }],
 };
 
-const rule_mustache_files = {
+export const rule_mustache_files = {
     test: /\.mustache$/,
     exclude: /node_modules/,
     type: "asset/source",
 };
 
-const rule_ng_cache_loader = {
+export const rule_ng_cache_loader = {
     test: /\.html$/,
     exclude: [/node_modules/, /vendor/],
     use: [
@@ -67,17 +67,9 @@ const rule_ng_cache_loader = {
     ],
 };
 
-const artifact_modal_vue_initializer_path = path.resolve(
-    __dirname,
-    "../../../plugins/tracker/scripts/angular-artifact-modal/src/vue-initializer.js"
-);
-
-const rule_angular_gettext_loader = {
+export const rule_angular_gettext_loader = {
     test: /\.po$/,
     exclude: [/node_modules/, /vendor/],
-    issuer: {
-        not: [artifact_modal_vue_initializer_path],
-    },
     use: [
         { loader: "json-loader" },
         {
@@ -86,13 +78,13 @@ const rule_angular_gettext_loader = {
     ],
 };
 
-const rule_easygettext_loader = {
+export const rule_easygettext_loader = {
     test: /\.po$/,
     exclude: /node_modules/,
     use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
 };
 
-const rule_scss_loader = {
+export const rule_scss_loader = {
     test: /\.scss$/,
     use: [
         MiniCssExtractPlugin.loader,
@@ -100,7 +92,7 @@ const rule_scss_loader = {
             loader: "css-loader",
             options: {
                 url: {
-                    filter: (url) => {
+                    filter: (url: string): boolean => {
                         // Organization logos might be customized by administrators, let's exclude them for now
                         return (
                             !url.endsWith("organization_logo.png") &&
@@ -122,7 +114,7 @@ const rule_scss_loader = {
     ],
 };
 
-const rule_css_assets = {
+export const rule_css_assets = {
     test: /(\.(webp|png|gif|eot|ttf|woff|woff2|svg))$/,
     type: "asset/resource",
     generator: {
@@ -131,23 +123,10 @@ const rule_css_assets = {
 };
 
 //Workaround to fix the image display in vue, see: https://github.com/vuejs/vue-loader/issues/1612
-const rule_vue_images = {
+export const rule_vue_images = {
     test: /(\.(webp|png|gif|svg))$/,
     type: "asset/resource",
     generator: {
         filename: "static/[name]-[hash][ext][query]",
     },
-};
-
-module.exports = {
-    configureTypescriptRules,
-    rule_po_files,
-    rule_mustache_files,
-    rule_vue_loader,
-    rule_ng_cache_loader,
-    rule_angular_gettext_loader,
-    rule_easygettext_loader,
-    rule_scss_loader,
-    rule_css_assets,
-    rule_vue_images,
 };

@@ -5,8 +5,9 @@
   "homepage": "https://www.enalean.com",
   "license": "MIT",
   "private": true,
-  "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator"
+  },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"

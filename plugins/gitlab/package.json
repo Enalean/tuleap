@@ -12,6 +12,7 @@
         "vue-gettext": "^2.1.12"
     },
     "devDependencies": {
+        "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
         "@types/bootstrap": "^4.5.1",
         "@types/jquery": "^3.5.5",
         "jquery": "^3.6.0",

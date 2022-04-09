@@ -6,5 +6,5 @@
     "sourceMap": false,
     "esModuleInterop": true
   },
-  "include": ["src/main.ts"]
+  "include": ["src/main.ts", "src/webpack/webpack.d.ts"]
 }

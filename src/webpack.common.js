@@ -21,8 +21,7 @@ const fs = require("fs");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const path = require("path");
-const webpack_configurator = require("../tools/utils/scripts/webpack-configurator.js");
-const { esbuild_target } = require("../tools/utils/scripts/browserslist_config");
+const { webpack_configurator, esbuild_target } = require("@tuleap/build-system-configurator");
 // Dependency is defined at the root of the repo
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { ESBuildMinifyPlugin } = require("esbuild-loader");

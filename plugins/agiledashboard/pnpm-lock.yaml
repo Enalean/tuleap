@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/plugin-tracker-artifact-modal': file:../tracker/scripts/lib/artifact-modal
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/node': ^14.14.31
@@ -35,6 +36,7 @@ dependencies:
   vue-gettext: 2.1.12
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@types/node': 14.14.31
   '@types/node-gettext': 3.0.1
 

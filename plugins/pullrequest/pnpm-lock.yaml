@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/tooltip': file:../../lib/frontend/tooltip
   '@types/codemirror': ^5.60.1
@@ -34,6 +35,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@types/codemirror': 5.60.5
   angular-mocks: 1.8.2
   jquery: 3.6.0

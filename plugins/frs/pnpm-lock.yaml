@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
   angular-filter: ^0.5.17
@@ -18,6 +19,7 @@ dependencies:
   angular-sanitize: 1.8.2
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   angular-mocks: 1.8.2
 
 packages:

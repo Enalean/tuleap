@@ -18,7 +18,7 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
 const rule_vue_loader_with_css_extraction = {
     ...webpack_configurator.rule_vue_loader,
