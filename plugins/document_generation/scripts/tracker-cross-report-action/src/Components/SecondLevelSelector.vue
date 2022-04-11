@@ -29,14 +29,43 @@
         <div class="tlp-form-element">
             <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
         </div>
+        <div class="tlp-form-element">
+            <tracker-report-selector
+                v-model:report="report"
+                v-bind:tracker_id="tracker?.id ?? null"
+            />
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import ProjectSelector from "./ProjectSelector.vue";
 import TrackerSelector from "./TrackerSelector.vue";
-import type { SelectedTracker } from "../type";
+import type { SelectedReport, SelectedTracker } from "../type";
+import TrackerReportSelector from "./TrackerReportSelector.vue";
+
+const props = defineProps<{ tracker: SelectedTracker | null; report: SelectedReport | null }>();
+const emit = defineEmits<{
+    (e: "update:tracker", value: SelectedTracker | null): void;
+    (e: "update:report", value: SelectedReport | null): void;
+}>();
+
+const tracker = computed({
+    get(): SelectedTracker | null {
+        return props.tracker;
+    },
+    set(value: SelectedTracker | null) {
+        emit("update:tracker", value);
+    },
+});
+const report = computed({
+    get(): SelectedReport | null {
+        return props.report;
+    },
+    set(value: SelectedReport | null) {
+        emit("update:report", value);
+    },
+});
 
 const project_id = ref<number | null>(null);
-const tracker = ref<SelectedTracker | null>(null);
 </script>

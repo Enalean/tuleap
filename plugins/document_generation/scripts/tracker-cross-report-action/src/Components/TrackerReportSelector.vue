@@ -21,7 +21,11 @@
 <template>
     <label class="tlp-label">
         {{ $gettext("Report") }}
-        <select v-model="report" class="tlp-select" v-bind:disabled="is_processing">
+        <select
+            v-model="report"
+            class="tlp-select"
+            v-bind:disabled="tracker_id === null || is_processing"
+        >
             <optgroup
                 v-if="personal_reports.length > 0"
                 v-bind:label="
@@ -53,26 +57,35 @@
 </template>
 <script lang="ts" setup>
 import { computed } from "vue";
-import { getTrackerReports } from "../rest-querier";
+import { getTrackerReports as getTrackerReportsFromAPI } from "../rest-querier";
 import { usePromise } from "../Helpers/use-promise";
 import type { SelectedReport } from "../type";
+import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 
-const props = defineProps<{ tracker_id: number; report: SelectedReport }>();
+const props = defineProps<{ tracker_id: number | null; report: SelectedReport | null }>();
 const emit = defineEmits<{
-    (e: "update:report", value: SelectedReport): void;
+    (e: "update:report", value: SelectedReport | null): void;
 }>();
 
+const default_tracker_reports: TrackerReportResponse[] = [];
+function getTrackerReports(tracker_id: number | null): Promise<TrackerReportResponse[]> {
+    if (tracker_id === null) {
+        return Promise.resolve(default_tracker_reports);
+    }
+    return getTrackerReportsFromAPI(tracker_id);
+}
+
 const { is_processing, data } = usePromise(
-    [],
+    default_tracker_reports,
     computed(() => {
         return getTrackerReports(props.tracker_id);
     })
 );
 
 const report = computed({
-    get(): SelectedReport {
+    get(): SelectedReport | null {
         const retrieved_report = data.value.find(
-            (retrieved_report) => retrieved_report.id === props.report.id
+            (retrieved_report) => retrieved_report.id === props.report?.id
         );
         if (retrieved_report !== undefined) {
             emit("update:report", retrieved_report);
@@ -80,7 +93,7 @@ const report = computed({
         }
         return props.report;
     },
-    set(value: SelectedReport) {
+    set(value: SelectedReport | null) {
         emit("update:report", value);
     },
 });

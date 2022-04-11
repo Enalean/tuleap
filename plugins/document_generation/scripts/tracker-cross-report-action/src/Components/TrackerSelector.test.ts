@@ -90,13 +90,13 @@ describe("ProjectSelector", () => {
 
         const selector = wrapper.get("select");
 
-        await selector.setValue(tracker_a.id);
+        await selector.setValue(tracker_a);
 
         const emitted_input = wrapper.emitted("update:tracker");
         expect(emitted_input).toBeDefined();
         if (emitted_input === undefined) {
             throw new Error("Expected an update event to be emitted");
         }
-        expect(emitted_input[0]).toStrictEqual([tracker_a.id]);
+        expect(emitted_input[0]).toStrictEqual([tracker_a]);
     });
 });

@@ -41,11 +41,14 @@
         <div class="tlp-modal-body">
             <explanations-export />
             <first-level-selector
-                v-model:report="selected_report"
-                v-model:artifact_link_types="artifact_link_types"
+                v-model:report="selected_report_level_1"
+                v-model:artifact_link_types="artifact_link_types_level_1"
                 v-bind:tracker_id="properties.current_tracker_id"
             />
-            <second-level-selector />
+            <second-level-selector
+                v-model:tracker="selected_tracker_level_2"
+                v-model:report="selected_report_level_2"
+            />
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -84,6 +87,7 @@ import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 import SecondLevelSelector from "./SecondLevelSelector.vue";
 import type { ExportSettings } from "../export-document";
+import type { SelectedTracker } from "../type";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();
 let modal: Modal | null = null;
@@ -101,12 +105,15 @@ onBeforeUnmount(() => {
 });
 
 const props = defineProps<{ properties: GlobalExportProperties }>();
-const selected_report = ref<SelectedReport>({
+const selected_report_level_1 = ref<SelectedReport>({
     id: props.properties.current_report_id,
     label: "",
 });
-const artifact_link_types = ref([]);
-const search_params = new URLSearchParams(location.search);
+const artifact_link_types_level_1 = ref([]);
+
+const selected_tracker_level_2 = ref<SelectedTracker | null>(null);
+const selected_report_level_2 = ref<SelectedReport | null>(null);
+
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {
     export_is_ongoing.value = true;
@@ -118,24 +125,23 @@ async function startExport(): Promise<void> {
     let export_settings: ExportSettings = {
         first_level: {
             tracker_name: props.properties.current_tracker_name,
-            report_id: selected_report.value.id,
-            report_name: selected_report.value.label,
-            artifact_link_types: artifact_link_types.value,
+            report_id: selected_report_level_1.value.id,
+            report_name: selected_report_level_1.value.label,
+            artifact_link_types: artifact_link_types_level_1.value,
         },
     };
-    const level_2_report_id = search_params.get("export_report_id_2");
-    if (level_2_report_id) {
+    if (selected_tracker_level_2.value !== null && selected_report_level_2.value !== null) {
         export_settings = {
             ...export_settings,
             second_level: {
-                tracker_name: "Tracker level 2",
-                report_id: parseInt(level_2_report_id, 10),
-                report_name: "Test report name level 2",
+                tracker_name: selected_tracker_level_2.value.label,
+                report_id: selected_report_level_2.value.id,
+                report_name: selected_report_level_2.value.label,
                 artifact_link_types: [],
             },
         };
     }
-    downloadXLSXDocument(export_settings, downloadXLSX);
+    await downloadXLSXDocument(export_settings, downloadXLSX);
 
     modal?.hide();
 }
