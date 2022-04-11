@@ -67,7 +67,7 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
 
     if (!artifact.is_marked_for_removal) {
         const markForRemoval = (host: LinkField): void => {
-            host.presenter = host.controller.markForRemoval(artifact.identifier);
+            host.linked_artifacts_presenter = host.controller.markForRemoval(artifact.identifier);
         };
         return html`
             <button
@@ -83,7 +83,7 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
     }
 
     const cancelRemoval = (host: LinkField): void => {
-        host.presenter = host.controller.unmarkForRemoval(artifact.identifier);
+        host.linked_artifacts_presenter = host.controller.unmarkForRemoval(artifact.identifier);
     };
     return html`
         <button

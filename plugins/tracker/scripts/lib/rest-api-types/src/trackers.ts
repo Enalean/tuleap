@@ -72,9 +72,16 @@ interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
     };
 }
 
-interface ArtifactLinkFieldStructure extends BaseFieldStructure {
+export interface AllowedLinkTypeRepresentation {
+    readonly shortname: string;
+    readonly forward_label: string;
+    readonly reverse_label: string;
+}
+
+export interface ArtifactLinkFieldStructure extends BaseFieldStructure {
     readonly type: ArtifactLinkFieldIdentifier;
     readonly label: string;
+    readonly allowed_types: ReadonlyArray<AllowedLinkTypeRepresentation>;
 }
 
 export type StructureFields =

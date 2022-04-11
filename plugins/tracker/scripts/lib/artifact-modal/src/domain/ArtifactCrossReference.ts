@@ -17,6 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { CurrentArtifactIdentifier } from "./CurrentArtifactIdentifier";
+import type { TrackerShortname } from "./TrackerShortname";
+
 export interface ArtifactCrossReference {
     readonly ref: string;
 }
+
+export const ArtifactCrossReference = {
+    fromCurrentArtifact: (
+        current_artifact_identifier: CurrentArtifactIdentifier | null,
+        tracker_shortname: TrackerShortname
+    ): ArtifactCrossReference | null => {
+        if (current_artifact_identifier === null) {
+            return null;
+        }
+
+        return { ref: `${tracker_shortname.shortname} #${current_artifact_identifier.id}` };
+    },
+};

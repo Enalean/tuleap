@@ -8,6 +8,7 @@ specifiers:
   '@tuleap/fault': file:../../../../../lib/frontend/fault
   '@tuleap/list-picker': file:../../../../../lib/frontend/list-picker
   '@tuleap/plugin-tracker-constants': file:../constants
+  '@tuleap/plugin-tracker-rest-api-types': file:../rest-api-types
   '@tuleap/plugin-tracker-rich-text-editor': file:../rich-text-editor
   '@tuleap/tlp': file:../../../../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../../../../lib/frontend/tlp-fetch
@@ -37,6 +38,7 @@ dependencies:
   '@tuleap/fault': link:../../../../../lib/frontend/fault
   '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
   '@tuleap/plugin-tracker-constants': link:../constants
+  '@tuleap/plugin-tracker-rest-api-types': link:../rest-api-types
   '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
   '@tuleap/tlp': link:../../../../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch

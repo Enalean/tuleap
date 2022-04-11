@@ -17,30 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
-export interface LinkFieldPresenter {
-    readonly linked_artifacts: LinkedArtifactPresenter[];
-    readonly has_loaded_content: boolean;
-    readonly is_loading: boolean;
-}
+export type LinkFieldPresenter = {
+    readonly field_id: number;
+    readonly label: string;
+    readonly current_artifact_reference: ArtifactCrossReference | null;
+    readonly allowed_types: CollectionOfAllowedLinksTypesPresenters;
+};
 
 export const LinkFieldPresenter = {
-    buildLoadingState: (): LinkFieldPresenter => ({
-        linked_artifacts: [],
-        is_loading: true,
-        has_loaded_content: false,
-    }),
-
-    fromArtifacts: (artifact_presenters: LinkedArtifactPresenter[]): LinkFieldPresenter => ({
-        linked_artifacts: artifact_presenters,
-        is_loading: false,
-        has_loaded_content: true,
-    }),
-
-    forFault: (): LinkFieldPresenter => ({
-        linked_artifacts: [],
-        is_loading: false,
-        has_loaded_content: true,
-    }),
+    fromFieldAndCrossReference: (
+        field: ArtifactLinkFieldStructure,
+        current_artifact_reference: ArtifactCrossReference | null
+    ): LinkFieldPresenter => {
+        const type_presenters =
+            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                field.allowed_types.filter((type) => type.shortname === IS_CHILD_LINK_TYPE)
+            );
+        return {
+            field_id: field.field_id,
+            label: field.label,
+            current_artifact_reference,
+            allowed_types: type_presenters,
+        };
+    },
 };

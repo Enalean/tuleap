@@ -37,7 +37,7 @@ describe("AllowedLinksTypesPresenter", () => {
         const presenters =
             CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(allowed_types);
 
-        expect(presenters).toEqual([
+        expect(presenters).toStrictEqual([
             {
                 forward_type_presenter: {
                     label: "Child",

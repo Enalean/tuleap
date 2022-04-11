@@ -62,9 +62,9 @@ import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaC
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkFieldValueFormatter";
 import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
-import { TrackerArtifactCrossReferenceProxy } from "./adapters/Caller/TrackerArtifactCrossReferenceProxy";
 import { TrackerShortnameProxy } from "./adapters/Caller/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
+import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 
 export default ArtifactModalController;
 
@@ -105,11 +105,6 @@ function ArtifactModalController(
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,
-        artifact_cross_reference:
-            TrackerArtifactCrossReferenceProxy.fromArtifactIdentifierAndTracker(
-                current_artifact_identifier,
-                TrackerShortnameProxy.fromString(modal_model.tracker.item_name)
-            ),
         current_artifact_identifier,
         color: formatColor(modal_model.color),
         creation_mode: isInCreationMode(),
@@ -135,15 +130,6 @@ function ArtifactModalController(
             links_store,
             links_marked_for_removal_store
         ),
-        link_field_controller: LinkFieldController(
-            LinksRetriever(api_client, api_client, links_store),
-            links_store,
-            links_marked_for_removal_store,
-            links_marked_for_removal_store,
-            links_marked_for_removal_store,
-            fault_feedback_controller,
-            CurrentArtifactIdentifierProxy.fromModalArtifactId(modal_model.artifact_id)
-        ),
         date_picker_initializer: DatePickerInitializer(),
         readonly_date_field_formatter: ReadonlyDateFieldFormatter(
             document.body.dataset.userLocale ?? "en_US"
@@ -155,6 +141,22 @@ function ArtifactModalController(
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
+        getLinkFieldController: (field) => {
+            return LinkFieldController(
+                LinksRetriever(api_client, api_client, links_store),
+                links_store,
+                links_marked_for_removal_store,
+                links_marked_for_removal_store,
+                links_marked_for_removal_store,
+                fault_feedback_controller,
+                field,
+                current_artifact_identifier,
+                ArtifactCrossReference.fromCurrentArtifact(
+                    current_artifact_identifier,
+                    TrackerShortnameProxy.fromString(modal_model.tracker.item_name)
+                )
+            );
+        },
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id]);
         },

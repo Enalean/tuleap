@@ -14,6 +14,7 @@
     "@tuleap/fault": "file:../../../../../lib/frontend/fault",
     "@tuleap/list-picker": "file:../../../../../lib/frontend/list-picker",
     "@tuleap/plugin-tracker-constants": "file:../constants",
+    "@tuleap/plugin-tracker-rest-api-types": "file:../rest-api-types",
     "@tuleap/plugin-tracker-rich-text-editor": "file:../rich-text-editor",
     "@tuleap/tlp": "file:../../../../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../../../../lib/frontend/tlp-fetch",

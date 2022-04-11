@@ -164,11 +164,7 @@
 <script type="text/ng-template" id="field-art_link.tpl.html">
 <tuleap-artifact-modal-link-field-v2
     ng-if="modal.is_links_field_v2_enabled === true"
-    field-id="field.field_id"
-    label="field.label"
-    allowed-types="field.allowed_types"
-    artifact-cross-reference="modal.artifact_cross_reference"
-    controller="modal.link_field_controller"
+    controller="modal.getLinkFieldController(field)"
     ce-one-way
 ></tuleap-artifact-modal-link-field-v2>
 <div

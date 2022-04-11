@@ -19,13 +19,10 @@
 
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { LinkField } from "./LinkField";
-import type { AllowedLinkType } from "../../../../domain/fields/link-field-v2/AllowedLinkType";
-import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { getDefaultLinkTypeLabel, getNewArtifactLabel } from "../../../../gettext-catalog";
 import type { AllowedLinkTypesPresenterContainer } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 
 const getOptions = (
     types_container: AllowedLinkTypesPresenterContainer
@@ -44,15 +41,12 @@ const getOptions = (
 };
 
 export const getTypeSelectorTemplate = (
-    allowed_links_types: AllowedLinkType[],
-    artifact_cross_reference: ArtifactCrossReference | null
+    presenter: LinkFieldPresenter
 ): UpdateFunction<LinkField> => {
-    const types_presenters =
-        CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-            allowed_links_types.filter((type) => type.shortname === IS_CHILD_LINK_TYPE)
-        );
     const current_artifact_xref =
-        artifact_cross_reference === null ? getNewArtifactLabel() : artifact_cross_reference.ref;
+        presenter.current_artifact_reference === null
+            ? getNewArtifactLabel()
+            : presenter.current_artifact_reference.ref;
 
     return html`
         <select class="tlp-select tlp-select-small" data-test="link-type-select" required>
@@ -60,7 +54,7 @@ export const getTypeSelectorTemplate = (
                 <option value="" data-test="link-type-select-option" selected>
                     ${getDefaultLinkTypeLabel()}
                 </option>
-                ${types_presenters.map((presenter) => getOptions(presenter))}
+                ${presenter.allowed_types.map((presenter) => getOptions(presenter))}
             </optgroup>
         </select>
     `;
