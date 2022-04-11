@@ -46,7 +46,7 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
             ->getColumns($metadata_factory);
 
         self::assertEquals(
-            ["id", "title", "description", "owner", "update_date", "create_date", "status", "obsolescence_date", "location"],
+            ["title", "id", "description", "owner", "update_date", "create_date", "status", "obsolescence_date", "location"],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
                 $columns,
