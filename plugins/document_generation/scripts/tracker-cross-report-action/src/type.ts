@@ -19,6 +19,7 @@
 
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 
 export interface GlobalExportProperties {
     readonly current_tracker_id: number;
@@ -53,6 +54,18 @@ export interface LinkedArtifactsResponse {
 
 export interface OrganizedReportsData {
     readonly artifact_representations: Map<number, ArtifactResponse>;
-    readonly first_level_artifacts_ids: ReadonlyArray<number>;
-    readonly second_level_artifacts_ids: ReadonlyArray<number>;
+    readonly first_level: OrganizedReportDataLevel;
+    readonly second_level?: OrganizedReportDataLevel;
+}
+
+interface OrganizedReportDataLevel {
+    artifact_ids: ReadonlyArray<number>;
+    tracker_name: string;
+    report_fields_labels: ReadonlyArray<string>;
+}
+
+export class TextCellWithMerges extends TextCell {
+    constructor(override readonly value: string, readonly merges: number) {
+        super(value);
+    }
 }

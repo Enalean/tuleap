@@ -19,29 +19,24 @@
 
 import type { OrganizedReportsData } from "../type";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
-import { isFieldTakenIntoAccount } from "./field-type-checker";
 
 export function formatHeader(organized_data: OrganizedReportsData): ReadonlyArray<TextCell> {
-    if (organized_data.first_level_artifacts_ids.length === 0) {
+    if (organized_data.first_level.report_fields_labels.length === 0) {
         throw new Error("This must not happen. Check must be done before.");
     }
 
-    const first_artifact_id_in_first_level = organized_data.first_level_artifacts_ids[0];
-    const first_artifact_in_first_level = organized_data.artifact_representations.get(
-        first_artifact_id_in_first_level
-    );
-
-    if (first_artifact_in_first_level === undefined) {
-        throw new Error("This must not happen. Collection must be consistent.");
+    const headers_columns: Array<TextCell> = [];
+    for (const field_label of organized_data.first_level.report_fields_labels) {
+        headers_columns.push(new TextCell(field_label));
     }
 
-    const headers_columns: Array<TextCell> = [];
-    for (const field_value of first_artifact_in_first_level.values) {
-        if (!isFieldTakenIntoAccount(field_value)) {
-            continue;
+    if (
+        organized_data.second_level &&
+        organized_data.second_level.report_fields_labels.length > 0
+    ) {
+        for (const field_label of organized_data.second_level.report_fields_labels) {
+            headers_columns.push(new TextCell(field_label));
         }
-
-        headers_columns.push(new TextCell(field_value.label));
     }
 
     return headers_columns;

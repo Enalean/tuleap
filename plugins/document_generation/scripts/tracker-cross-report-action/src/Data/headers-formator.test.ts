@@ -28,7 +28,7 @@ describe("headers-formator", () => {
         artifact_representations_map.set(74, {
             id: 74,
             title: null,
-            xref: "bug #74",
+            xref: "story #74",
             tracker: { id: 14 },
             html_url: "/plugins/tracker/?aid=74",
             values: [
@@ -61,7 +61,7 @@ describe("headers-formator", () => {
         artifact_representations_map.set(4, {
             id: 4,
             title: null,
-            xref: "bug #4",
+            xref: "story #4",
             tracker: { id: 14 },
             html_url: "/plugins/tracker/?aid=4",
             values: [
@@ -91,11 +91,34 @@ describe("headers-formator", () => {
                 },
             ],
         } as ArtifactResponse);
+        artifact_representations_map.set(75, {
+            id: 75,
+            title: null,
+            xref: "Task #75",
+            tracker: { id: 15 },
+            html_url: "/plugins/tracker/?aid=75",
+            values: [
+                {
+                    field_id: 10,
+                    type: "aid",
+                    label: "Artifact ID",
+                    value: 75,
+                },
+            ],
+        } as ArtifactResponse);
 
         const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
-            first_level_artifacts_ids: [74, 4],
-            second_level_artifacts_ids: [],
+            first_level: {
+                tracker_name: "Tracker01",
+                artifact_ids: [74, 4],
+                report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
+            },
+            second_level: {
+                tracker_name: "Tracker0é",
+                artifact_ids: [75],
+                report_fields_labels: ["Artifact ID"],
+            },
         };
 
         const formatted_headers = formatHeader(organized_reports_data);
@@ -103,32 +126,23 @@ describe("headers-formator", () => {
             new TextCell("Artifact ID"),
             new TextCell("Field02"),
             new TextCell("Assigned to"),
+            new TextCell("Artifact ID"),
         ]);
     });
-    it("throws an Error if organized data does not have any ArtifactResponse", (): void => {
+    it("throws an Error if organized data does not have any ArtifactResponse in first level", (): void => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
 
         const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
-            first_level_artifacts_ids: [],
-            second_level_artifacts_ids: [],
+            first_level: {
+                tracker_name: "Tracker01",
+                artifact_ids: [],
+                report_fields_labels: [],
+            },
         };
 
         expect(() => formatHeader(organized_reports_data)).toThrowError(
             "This must not happen. Check must be done before."
-        );
-    });
-    it("throws an Error if organized data does not have the matching ArtifactResponse in first level id", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-
-        const organized_reports_data: OrganizedReportsData = {
-            artifact_representations: artifact_representations_map,
-            first_level_artifacts_ids: [4],
-            second_level_artifacts_ids: [],
-        };
-
-        expect(() => formatHeader(organized_reports_data)).toThrowError(
-            "This must not happen. Collection must be consistent."
         );
     });
 });
