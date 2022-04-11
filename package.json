@@ -7,7 +7,9 @@
   "dependencies": {
     "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator"
+  },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"
