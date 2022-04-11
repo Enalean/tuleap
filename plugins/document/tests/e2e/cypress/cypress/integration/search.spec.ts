@@ -64,7 +64,7 @@ describe("Document search", () => {
 
             cy.get("[data-test=document-new-item-title]").type(title);
 
-            cy.get("[data-test=document-modal-submit-button]").click();
+            cy.get("[data-test=document-modal-submit-button-create-item]").click();
         });
 
         cy.log(`Searching for "ipsum"`);
@@ -86,5 +86,37 @@ describe("Document search", () => {
 
         cy.log("User can go back to documents tree from the search page");
         cy.get("[data-test=breadcrumb-project-documentation]").click();
+    });
+
+    it("user can use dropdown", () => {
+        cy.visitProjectService(project_unixname, "Documents");
+
+        const title = `Document title`;
+
+        cy.get("[data-test=document-header-actions]").within(() => {
+            cy.get("[data-test=document-item-action-new-button]").click();
+        });
+
+        cy.get("[data-test=document-new-item-modal]").within(() => {
+            cy.get("[data-test=empty]").click();
+
+            cy.get("[data-test=document-new-item-title]").type(title);
+
+            cy.get("[data-test=document-modal-submit-button-create-item]").click();
+        });
+
+        cy.log("Open the dropdown");
+        cy.get("[data-test=document-search-box]").clear().type(`title{enter}`);
+
+        // Dropdown is only visible at hover, need to force visibility
+        cy.get("[data-test=trigger]").first().click({ force: true });
+        cy.get("[data-test=document-update-properties").first().click();
+        cy.get("[data-test=document-new-item-title]").clear().type(`Title`);
+        cy.get("[data-test=document-modal-submit-update-properties]").click();
+
+        cy.log("Check title have been updated");
+        cy.visitProjectService(project_unixname, "Documents");
+        cy.get("[data-test=document-search-box]").clear().type(`title{enter}`);
+        cy.get("[data-test=search-results-table-body]").contains("tr", `Title`);
     });
 });

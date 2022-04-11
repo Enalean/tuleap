@@ -57,7 +57,7 @@ describe("Document new UI", () => {
                     "With a description because I like to describe what I'm doing"
                 );
 
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-folder]").click();
             });
 
             cy.get("[data-test=document-tree-content]")
@@ -85,7 +85,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=empty]").click();
 
                 cy.get("[data-test=document-new-item-title]").type("My new empty document");
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-item]").click();
             });
 
             cy.get("[data-test=document-tree-content]")
@@ -114,7 +114,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=link]").click();
                 cy.get("[data-test=document-new-item-title]").type("My new link document");
                 cy.get("[data-test=document-new-item-link-url]").type("https://example.com");
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-item]").click();
             });
 
             cy.get("[data-test=document-tree-content]")
@@ -134,7 +134,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-new-item-link-url]").clear();
                 cy.get("[data-test=document-new-item-link-url]").type("https://example-bis.com");
 
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-link-version]").click();
             });
 
             // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
@@ -162,7 +162,7 @@ describe("Document new UI", () => {
                         `<strong>This is the story of my life </strong>`
                     );
                 });
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-item]").click();
             });
 
             cy.get("[data-test=document-tree-content]")
@@ -190,7 +190,7 @@ describe("Document new UI", () => {
 
             cy.get("[data-test=document-new-folder-modal]").within(() => {
                 cy.get("[data-test=document-new-item-title]").type("Folder download");
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-folder]").click();
             });
 
             // Go to the folder
@@ -213,7 +213,7 @@ describe("Document new UI", () => {
                     );
                 });
 
-                cy.get("[data-test=document-modal-submit-button]").click();
+                cy.get("[data-test=document-modal-submit-button-create-item]").click();
             });
 
             cy.visitProjectService("document-project", "Documents");
@@ -275,7 +275,7 @@ function testNewFolderShortcut(): void {
             cy.focused()
                 .should("have.attr", "data-test", "document-new-item-title")
                 .type("First item");
-            cy.get("[data-test=document-modal-submit-button]").click();
+            cy.get("[data-test=document-modal-submit-button-create-folder]").click();
         });
     cy.get("[data-test=document-new-folder-modal]").should("not.be.visible");
     cy.get("[data-test=folder-title]").contains("First item");
@@ -290,7 +290,7 @@ function testNewItemShortcut(): void {
                 .should("have.attr", "data-test", "document-new-item-title")
                 .type("Last item");
             cy.get("[data-test=empty]").click();
-            cy.get("[data-test=document-modal-submit-button]").click();
+            cy.get("[data-test=document-modal-submit-button-create-item]").click();
         });
     cy.get("[data-test=document-new-item-modal]").should("not.be.visible");
     cy.get("[data-test=empty-file-title]").contains("Last item");

@@ -32,7 +32,7 @@
             type="submit"
             class="tlp-button-primary tlp-modal-action"
             v-bind:disabled="props.isLoading"
-            data-test="document-modal-submit-button"
+            v-bind:data-test="props.dataTest"
         >
             <i
                 v-if="props.isLoading"

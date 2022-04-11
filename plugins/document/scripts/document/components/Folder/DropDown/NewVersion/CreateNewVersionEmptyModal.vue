@@ -51,6 +51,7 @@
             v-bind:submit-button-label="submit_button_label"
             v-bind:aria-labelled-by="`document-new-empty-version-modal`"
             v-bind:icon-submit-button-class="'fa-plus'"
+            data-test="document-modal-submit-button-create-empty"
         />
     </form>
 </template>
