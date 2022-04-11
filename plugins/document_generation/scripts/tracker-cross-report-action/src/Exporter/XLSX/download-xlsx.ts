@@ -21,6 +21,7 @@ import { utils, writeFile } from "xlsx";
 import type { ReportSection } from "../../Data/data-formator";
 import type { CellObjectWithExtraInfo } from "@tuleap/plugin-docgen-xlsx";
 import {
+    buildSheetEmptyCell,
     buildSheetTextCell,
     createMerges,
     fitColumnWidthsToContent,
@@ -54,16 +55,27 @@ function buildContent(
     formatted_data: ReportSection
 ): Array<Array<CellObjectWithExtraInfo>> {
     const content: CellObjectWithExtraInfo[][] = [];
-    const report_columns_label: CellObjectWithExtraInfo[] = [];
     const report_trackers_names: CellObjectWithExtraInfo[] = [];
-    if (formatted_data.headers && formatted_data.headers.length > 0) {
-        report_trackers_names.push({
-            ...buildSheetTextCell(export_settings.first_level.tracker_name),
-            ...(formatted_data.headers.length > 0 ? { character_width: 10 } : {}),
-            merge_columns: formatted_data.headers.length - 1,
-        });
-        content.push(report_trackers_names);
+    if (formatted_data.tracker_names && formatted_data.tracker_names.length > 0) {
+        for (const tracker_name of formatted_data.tracker_names) {
+            report_trackers_names.push({
+                ...buildSheetTextCell(tracker_name.value),
+                ...(tracker_name.merges > 0 ? { character_width: 10 } : {}),
+                merge_columns: tracker_name.merges - 1,
+            });
 
+            let empty_cells_to_add = 0;
+            while (empty_cells_to_add < tracker_name.merges - 1) {
+                report_trackers_names.push(buildSheetEmptyCell());
+                empty_cells_to_add++;
+            }
+        }
+
+        content.push(report_trackers_names);
+    }
+
+    const report_columns_label: CellObjectWithExtraInfo[] = [];
+    if (formatted_data.headers && formatted_data.headers.length > 0) {
         for (const header of formatted_data.headers) {
             report_columns_label.push(transformReportCellIntoASheetCell(header));
         }

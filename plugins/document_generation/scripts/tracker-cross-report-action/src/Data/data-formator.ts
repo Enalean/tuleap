@@ -25,8 +25,11 @@ import { organizeReportsData } from "./organize-reports-data";
 import type { OrganizedReportsData } from "../type";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
 import { formatHeader } from "./headers-formator";
+import type { TextCellWithMerges } from "../type";
+import { formatTrackerNames } from "./tracker-names-formattor";
 
 export interface ReportSection {
+    readonly tracker_names?: ReadonlyArray<TextCellWithMerges>;
     readonly headers?: ReadonlyArray<TextCell>;
     readonly rows?: ReadonlyArray<ReadonlyArray<ReportCell>>;
 }
@@ -55,6 +58,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
     }
 
     return {
+        tracker_names: formatTrackerNames(organized_reports_data),
         headers: formatHeader(organized_reports_data),
         rows: artifact_rows,
     };

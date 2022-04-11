@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatData } from "./data-formator";
-import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
-import * as organized_data from "./organize-reports-data";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import { formatTrackerNames } from "./tracker-names-formattor";
 import type { OrganizedReportsData } from "../type";
 import { TextCellWithMerges } from "../type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
-describe("data-formator", () => {
-    it("generates the formatted data that will be used to create the XLSX document", async (): Promise<void> => {
+describe("tracker-names-formattor", () => {
+    it("Formats tracker names", (): void => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
         artifact_representations_map.set(74, {
             id: 74,
@@ -105,52 +103,40 @@ describe("data-formator", () => {
                 },
             ],
         } as ArtifactResponse);
+        artifact_representations_map.set(4, {
+            id: 75,
+            title: null,
+            xref: "bug #15",
+            tracker: { id: 25 },
+            html_url: "/plugins/tracker/?aid=75",
+            values: [
+                {
+                    field_id: 1,
+                    type: "aid",
+                    label: "Artifact ID",
+                    value: 75,
+                },
+            ],
+        } as ArtifactResponse);
 
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        const organized_reports_data: OrganizedReportsData = {
             artifact_representations: artifact_representations_map,
             first_level: {
                 artifact_ids: [74, 4],
                 tracker_name: "tracker01",
                 report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
             },
-        });
-
-        const formatted_data = await formatData({
-            first_level: {
-                tracker_name: "tracker01",
-                report_id: 1,
-                report_name: "report01",
-                artifact_link_types: ["_is_child"],
+            second_level: {
+                artifact_ids: [75],
+                tracker_name: "tracker02",
+                report_fields_labels: ["Artifact ID"],
             },
-        });
+        };
 
-        expect(formatted_data).toStrictEqual({
-            tracker_names: [new TextCellWithMerges("tracker01", 3)],
-            headers: [
-                new TextCell("Artifact ID"),
-                new TextCell("Field02"),
-                new TextCell("Assigned to"),
-            ],
-            rows: [
-                [new NumberCell(74), new TextCell("value02"), new EmptyCell()],
-                [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
-            ],
-        });
-    });
-    it("generates empty formatted data if no artifact found", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
-            artifact_representations: new Map(),
-        } as OrganizedReportsData);
-
-        const formatted_data = await formatData({
-            first_level: {
-                tracker_name: "tracker01",
-                report_id: 1,
-                report_name: "report01",
-                artifact_link_types: [],
-            },
-        });
-
-        expect(formatted_data).toStrictEqual({});
+        const formatted_tracker_names = formatTrackerNames(organized_reports_data);
+        expect(formatted_tracker_names).toStrictEqual([
+            new TextCellWithMerges("tracker01", 3),
+            new TextCellWithMerges("tracker02", 1),
+        ]);
     });
 });

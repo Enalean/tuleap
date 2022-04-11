@@ -332,8 +332,16 @@ describe("organize-reports-data", () => {
         expect(organized_reports_data.artifact_representations.size).toBe(3);
         expect(organized_reports_data).toStrictEqual({
             artifact_representations: expected_artifact_representations_map,
-            first_level_artifacts_ids: [74, 4],
-            second_level_artifacts_ids: [75],
+            first_level: {
+                artifact_ids: [74, 4],
+                tracker_name: "tracker01",
+                report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
+            },
+            second_level: {
+                artifact_ids: [75],
+                tracker_name: "tracker02",
+                report_fields_labels: ["Artifact ID", "Title", "Assigned to"],
+            },
         });
     });
     it("generates empty organized data if no artifact found", async (): Promise<void> => {
@@ -351,8 +359,11 @@ describe("organize-reports-data", () => {
 
         expect(organized_reports_data).toStrictEqual({
             artifact_representations: new Map(),
-            first_level_artifacts_ids: [],
-            second_level_artifacts_ids: [],
+            first_level: {
+                artifact_ids: [],
+                tracker_name: "tracker01",
+                report_fields_labels: [],
+            },
         });
     });
 });

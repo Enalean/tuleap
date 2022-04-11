@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse } from "../../../lib/docx";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
 import type { ExportSettings } from "../export-document";
 import type { OrganizedReportsData } from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
+import { extractFieldsLabels } from "./report-fields-labels-extractor";
 
 export async function organizeReportsData(
     export_settings: ExportSettings
@@ -37,6 +38,23 @@ export async function organizeReportsData(
         artifact_representations_map.set(artifact_response.id, artifact_response);
         first_level_artifacts_ids_array.push(artifact_response.id);
     }
+
+    let first_level_report_fields_labels: Array<string> = [];
+    if (first_level_artifacts_ids_array.length > 0) {
+        first_level_report_fields_labels = extractFieldsLabels(
+            artifact_representations_map,
+            first_level_artifacts_ids_array
+        );
+    }
+
+    let organized_reports_data: OrganizedReportsData = {
+        artifact_representations: artifact_representations_map,
+        first_level: {
+            artifact_ids: first_level_artifacts_ids_array,
+            tracker_name: export_settings.first_level.tracker_name,
+            report_fields_labels: first_level_report_fields_labels,
+        },
+    };
 
     const second_level_artifacts_ids_array: Array<number> = [];
     if (export_settings.second_level) {
@@ -76,11 +94,24 @@ export async function organizeReportsData(
             artifact_representations_map.set(artifact_response.id, artifact_response);
             second_level_artifacts_ids_array.push(artifact_response.id);
         }
+
+        let second_level_report_fields_labels: Array<string> = [];
+        if (second_level_artifacts_ids_array.length > 0) {
+            second_level_report_fields_labels = extractFieldsLabels(
+                artifact_representations_map,
+                second_level_artifacts_ids_array
+            );
+        }
+
+        organized_reports_data = {
+            ...organized_reports_data,
+            second_level: {
+                artifact_ids: second_level_artifacts_ids_array,
+                tracker_name: export_settings.second_level.tracker_name,
+                report_fields_labels: second_level_report_fields_labels,
+            },
+        };
     }
 
-    return {
-        artifact_representations: artifact_representations_map,
-        first_level_artifacts_ids: first_level_artifacts_ids_array,
-        second_level_artifacts_ids: second_level_artifacts_ids_array,
-    };
+    return organized_reports_data;
 }
