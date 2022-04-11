@@ -29,6 +29,8 @@ describe("tracker-structure-retriever", () => {
             const tlpGet = jest.spyOn(tlp, "get");
 
             const tracker_definition_response: TrackerDefinition = {
+                id: 102,
+                label: "Label",
                 fields: [{ field_id: 2, type: "date", is_time_displayed: false }],
                 structure: [
                     {
@@ -64,6 +66,8 @@ describe("tracker-structure-retriever", () => {
             const tlpGet = jest.spyOn(tlp, "get");
 
             const tracker_definition_response: TrackerDefinition = {
+                id: 102,
+                label: "Label",
                 fields: [{ field_id: 2, type: "date", is_time_displayed: false }],
                 structure: [
                     {

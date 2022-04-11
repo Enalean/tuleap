@@ -19,7 +19,10 @@
 
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type {
+    MinimalTrackerResponse,
+    TrackerReportResponse,
+} from "@tuleap/plugin-tracker-rest-api-types/src";
 import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 import type { LinkedArtifactsResponse } from "./type";
 
@@ -71,4 +74,10 @@ export interface ProjectResponse {
 
 export function getProjects(): Promise<ProjectResponse[]> {
     return recursiveGet("/api/v1/projects", { params: { limit: 50 } });
+}
+
+export function getTrackers(project_id: number): Promise<MinimalTrackerResponse[]> {
+    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/trackers`, {
+        params: { limit: 50, representation: "minimal" },
+    });
 }
