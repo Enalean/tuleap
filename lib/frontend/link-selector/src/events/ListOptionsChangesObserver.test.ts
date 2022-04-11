@@ -26,6 +26,7 @@ import {
     appendGroupedOptionsToSourceSelectBox,
     appendSimpleOptionsToSourceSelectBox,
 } from "../test-helpers/select-box-options-generator";
+import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 
 describe("ListOptionsChangesObserver", () => {
     let source_select_box: HTMLSelectElement,
@@ -33,7 +34,16 @@ describe("ListOptionsChangesObserver", () => {
         dropdown_content_renderer: DropdownContentRenderer,
         selection_manager: SelectionManager,
         event_manager: EventManager,
-        list_options_changes_observer: ListOptionsChangesObserver;
+        list_options_changes_observer: ListOptionsChangesObserver,
+        list_item_highlighter: ListItemHighlighter;
+
+    async function expectLinkSelectorToRefresh(): Promise<void> {
+        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
+        expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
+        expect(event_manager.attachItemListEvent).toHaveBeenCalled();
+        expect(list_item_highlighter.resetHighlight).toHaveBeenCalled();
+    }
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -51,12 +61,15 @@ describe("ListOptionsChangesObserver", () => {
 
         event_manager = { attachItemListEvent: jest.fn() } as unknown as EventManager;
 
+        list_item_highlighter = { resetHighlight: jest.fn() } as unknown as ListItemHighlighter;
+
         list_options_changes_observer = new ListOptionsChangesObserver(
             source_select_box,
             items_map_manager,
             dropdown_content_renderer,
             selection_manager,
-            event_manager
+            event_manager,
+            list_item_highlighter
         );
     });
 
@@ -68,10 +81,7 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
-        expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(event_manager.attachItemListEvent).toHaveBeenCalled();
+        await expectLinkSelectorToRefresh();
     });
 
     it("should refresh the link-selector when options are removed in the source <select>", async () => {
@@ -83,10 +93,7 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
-        expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(event_manager.attachItemListEvent).toHaveBeenCalled();
+        await expectLinkSelectorToRefresh();
     });
 
     it("should refresh the link-selector when attribute disabled on children is added", async () => {
@@ -98,10 +105,7 @@ describe("ListOptionsChangesObserver", () => {
             done();
         });
 
-        await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
-        expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(selection_manager.resetAfterDependenciesUpdate).toHaveBeenCalled();
-        expect(event_manager.attachItemListEvent).toHaveBeenCalled();
+        await expectLinkSelectorToRefresh();
     });
 
     it("should not react otherwise", async () => {
@@ -117,5 +121,6 @@ describe("ListOptionsChangesObserver", () => {
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).not.toHaveBeenCalled();
         expect(selection_manager.resetAfterDependenciesUpdate).not.toHaveBeenCalled();
         expect(event_manager.attachItemListEvent).not.toHaveBeenCalled();
+        expect(list_item_highlighter.resetHighlight).not.toHaveBeenCalled();
     });
 });

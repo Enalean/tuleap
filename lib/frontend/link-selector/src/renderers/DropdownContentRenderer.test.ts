@@ -26,6 +26,7 @@ import { BaseComponentRenderer } from "./BaseComponentRenderer";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import type { GettextProvider } from "@tuleap/gettext";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
+import { html, render } from "lit/html.js";
 
 describe("DropDownContentRenderer", () => {
     let select: HTMLSelectElement,
@@ -51,7 +52,7 @@ describe("DropDownContentRenderer", () => {
         items_map_manager = new ItemsMapManager(new ListItemMapBuilder(select));
     });
 
-    describe("without search input", () => {
+    describe("rendering", () => {
         beforeEach(() => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
                 document.implementation.createHTMLDocument(),
@@ -70,6 +71,24 @@ describe("DropDownContentRenderer", () => {
             renderer.renderLinkSelectorDropdownContent();
 
             expect(stripExpressionComments(dropdown.innerHTML)).toMatchSnapshot();
+        });
+
+        it("renders empty option groups when they have a placeholder", async () => {
+            const empty_state_text = "No results found on the server";
+
+            select.appendChild(createOptionGroupWithEmptyState(empty_state_text));
+
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+            renderer.renderLinkSelectorDropdownContent();
+
+            const empty_state = dropdown_list.querySelector(
+                "[data-test=link-selector-empty-state]"
+            );
+            if (!empty_state) {
+                throw new Error("The empty state has not been found in the dropdown");
+            }
+            expect(empty_state.textContent?.trim()).toEqual(empty_state_text);
         });
 
         it("renders simple list items", async () => {
@@ -100,9 +119,9 @@ describe("DropDownContentRenderer", () => {
         });
     });
 
-    describe("with search input", () => {
+    describe("renderAfterDependenciesUpdate", () => {
         beforeEach(() => {
-            const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
+            const { dropdown_list_element, dropdown_element } = new BaseComponentRenderer(
                 document.implementation.createHTMLDocument(),
                 select,
                 ""
@@ -112,85 +131,8 @@ describe("DropDownContentRenderer", () => {
             dropdown_list = dropdown_list_element;
         });
 
-        it("renders only items matching the query", async () => {
-            appendSimpleOptionsToSourceSelectBox(select);
-            const renderer = getDropdownContentRenderer();
-            await items_map_manager.refreshItemsMap();
-
-            renderer.renderLinkSelectorDropdownContent();
-            renderer.renderFilteredLinkSelectorDropdownContent("1");
-
-            expect(dropdown_list.childElementCount).toBe(1);
-
-            if (!dropdown_list.firstElementChild) {
-                throw new Error("List should not be empty, it should contains the item 'Value 1'");
-            }
-            expect(dropdown_list.firstElementChild.textContent?.trim()).toBe("Value 1");
-        });
-
-        it("renders an empty state if no items are matching the query", async () => {
-            appendSimpleOptionsToSourceSelectBox(select);
-            const renderer = getDropdownContentRenderer();
-            await items_map_manager.refreshItemsMap();
-
-            renderer.renderLinkSelectorDropdownContent();
-            renderer.renderFilteredLinkSelectorDropdownContent("This query will match no item");
-
-            expect(dropdown_list.querySelector(".link-selector-dropdown-option-value")).toBeNull();
-
-            const empty_state = dropdown_list.querySelector(".link-selector-empty-dropdown-state");
-            if (!empty_state) {
-                throw new Error("Empty state not found");
-            }
-        });
-
-        it("renders groups containing matching items", async () => {
-            appendGroupedOptionsToSourceSelectBox(select);
-            const renderer = getDropdownContentRenderer();
-            await items_map_manager.refreshItemsMap();
-
-            renderer.renderLinkSelectorDropdownContent();
-            renderer.renderFilteredLinkSelectorDropdownContent("Value 1");
-
-            const items = dropdown_list.querySelectorAll(".link-selector-dropdown-option-value");
-            const groups = dropdown_list.querySelectorAll(".link-selector-item-group");
-
-            if (items.length === 0 || groups.length === 0) {
-                throw new Error("Item or group not found in the filtered list");
-            }
-
-            expect(items).toHaveLength(1);
-            expect(groups).toHaveLength(1);
-
-            const group = groups[0];
-            const item = items[0];
-
-            expect(group.textContent).toContain("Group 1");
-            expect(group.contains(item)).toBe(true);
-            expect(item.textContent?.trim()).toBe("Value 1");
-        });
-    });
-
-    describe("renderAfterDependenciesUpdate", () => {
-        beforeEach(() => {
-            const { dropdown_list_element } = new BaseComponentRenderer(
-                document.implementation.createHTMLDocument(),
-                select,
-                ""
-            ).renderBaseComponent();
-
-            dropdown_list = dropdown_list_element;
-        });
-
         it("should re-render the list", async () => {
-            const option_1 = document.createElement("option");
-            option_1.innerText = "Item 1";
-            option_1.value = "item_1";
-            const option_2 = document.createElement("option");
-            option_2.innerText = "Item 2";
-            option_2.value = "item_2";
-
-            select.appendChild(option_1);
+            select.appendChild(createOption("item_1", "Item 1"));
 
             const renderer = getDropdownContentRenderer();
             await items_map_manager.refreshItemsMap();
@@ -203,7 +145,7 @@ describe("DropDownContentRenderer", () => {
             expect(stripExpressionComments(list_item_1.innerHTML).trim()).toBe("Item 1");
 
             select.innerHTML = "";
-            select.appendChild(option_2);
+            select.appendChild(createOption("item_2", "Item 2"));
             await items_map_manager.refreshItemsMap();
             renderer.renderAfterDependenciesUpdate();
 
@@ -215,10 +157,7 @@ describe("DropDownContentRenderer", () => {
         });
 
         it("should render an empty state when the source <select> has no options", async () => {
-            const option_1 = document.createElement("option");
-            option_1.innerText = "Item 1";
-            option_1.value = "item_1";
-            select.appendChild(option_1);
+            select.appendChild(createOption("item_1", "Item 1"));
 
             const renderer = getDropdownContentRenderer();
             await items_map_manager.refreshItemsMap();
@@ -242,6 +181,32 @@ describe("DropDownContentRenderer", () => {
         });
     });
 });
+
+function createOption(value: string, label: string): DocumentFragment {
+    const document_fragment = document.createDocumentFragment();
+    render(
+        html`
+            <option value="${value}">${label}</option>
+        `,
+        document_fragment
+    );
+    return document_fragment;
+}
+
+function createOptionGroupWithEmptyState(empty_state_text: string): DocumentFragment {
+    const document_fragment = document.createDocumentFragment();
+    render(
+        html`
+            <optgroup label="Auto completed results">
+                <option data-link-selector-role="empty-state" value="" disabled>
+                    ${empty_state_text}
+                </option>
+            </optgroup>
+        `,
+        document_fragment
+    );
+    return document_fragment;
+}
 
 /**
  * See https://github.com/lit/lit/blob/lit%402.0.2/packages/lit-html/src/test/test-utils/strip-markers.ts

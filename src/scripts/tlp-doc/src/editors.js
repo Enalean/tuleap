@@ -236,9 +236,53 @@ import { createLinkSelector } from "@tuleap/link-selector";
                 });
             }
             if (example.id === "example-link-selector-") {
-                createLinkSelector(document.querySelector("#link-selector-sb"), {
+                const source_select = document.querySelector("#link-selector-sb");
+                const filterable_results = document.querySelector(
+                    "#link-selector-sb-filterable-results"
+                );
+                const source_select_options = [...source_select.options];
+                const auto_completed_results = document.querySelector(
+                    "#link-selector-sb-auto-completed-results"
+                );
+
+                createLinkSelector(source_select, {
                     locale: "en_US",
                     placeholder: "Please select an item to link",
+                    search_field_callback: (query) => {
+                        source_select.options.length = 0;
+
+                        if (query === "") {
+                            source_select_options.forEach((option) => {
+                                filterable_results.appendChild(option);
+                            });
+                            return;
+                        }
+                        const lowercase_query = query.toLowerCase();
+                        const filtered_options = Array.from(source_select_options).filter(
+                            (option) => {
+                                return option.label.toLowerCase().includes(lowercase_query);
+                            }
+                        );
+                        if (filtered_options.length === 0) {
+                            if (lowercase_query === "105") {
+                                const auto_completed_result = document.createElement("option");
+                                auto_completed_result.innerText = "story #105 - Do more stuff";
+                                auto_completed_results.appendChild(auto_completed_result);
+
+                                return;
+                            }
+                            const empty_state = document.createElement("option");
+                            empty_state.setAttribute("data-link-selector-role", "empty-state");
+                            empty_state.setAttribute("disabled", "disabled");
+                            empty_state.setAttribute("value", "");
+                            empty_state.innerText = "No results have been found on the server";
+
+                            auto_completed_results.appendChild(empty_state);
+                        }
+                        filtered_options.forEach((option) => {
+                            filterable_results.appendChild(option);
+                        });
+                    },
                 });
             }
 

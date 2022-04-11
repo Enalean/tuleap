@@ -32,11 +32,12 @@ import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
 import type { GettextProvider } from "@tuleap/gettext";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
+import { SearchFieldEventCallbackHandler } from "./events/SearchFieldEventCallbackHandler";
 
 export async function createLinkSelector(
     source_select_box: HTMLSelectElement,
     gettext_provider: GettextProvider,
-    options?: LinkSelectorOptions
+    options: LinkSelectorOptions
 ): Promise<LinkSelector> {
     hideSourceSelectBox(source_select_box);
 
@@ -125,9 +126,12 @@ export async function createLinkSelector(
         items_map_manager,
         dropdown_content_renderer,
         selection_manager,
-        event_manager
+        event_manager,
+        highlighter
     );
     list_options_observer.startWatchingChangesInSelectOptions();
+
+    SearchFieldEventCallbackHandler.init(search_field_element, options.search_field_callback);
 
     return {
         destroy: (): void => {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DropDownContentRenderer without search input renders grouped list items 1`] = `
+exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
 <span class="link-selector-single-dropdown-search-section"><input data-test="link-selector-search-field" class="link-selector-search-field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="none" role="searchbox" aria-autocomplete="list" aria-controls="link-selector-dropdown-values-list"></span>
 <ul class="link-selector-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li class="link-selector-item-group"><strong class="link-selector-group-label">Group 1</strong>
@@ -44,7 +44,7 @@ exports[`DropDownContentRenderer without search input renders grouped list items
 </ul>
 `;
 
-exports[`DropDownContentRenderer without search input renders simple list items 1`] = `
+exports[`DropDownContentRenderer rendering renders simple list items 1`] = `
 <span class="link-selector-single-dropdown-search-section"><input data-test="link-selector-search-field" class="link-selector-search-field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="none" role="searchbox" aria-autocomplete="list" aria-controls="link-selector-dropdown-values-list"></span>
 <ul class="link-selector-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-100" class="link-selector-dropdown-option-value">

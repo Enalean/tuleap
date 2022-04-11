@@ -224,27 +224,6 @@ describe("SelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
-        it("when no item has been selected, then it should select the first available option", async () => {
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
-            new_option_1.value = "new option 1";
-            source_select_box.appendChild(new_option_0);
-            source_select_box.appendChild(new_option_1);
-
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            const first_item = items_map_manager.findLinkSelectorItemInItemMap(
-                "link-selector-item-new-option-0"
-            );
-            expect(first_item.is_selected).toBe(true);
-            expect(first_item.element.getAttribute("aria-selected")).toBe("true");
-            expect(first_item.target_option.getAttribute("selected")).toBe("selected");
-            expect(selection_container.contains(placeholder)).toBe(false);
-        });
-
         it("when an item has been selected, and is still available in the new options, then it should keep it selected", async () => {
             manager.processSelection(item_1.element);
 
@@ -263,29 +242,6 @@ describe("SelectionManager", () => {
             expect(new_item_1.is_selected).toBe(true);
             expect(new_item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(new_item_1.target_option.getAttribute("selected")).toBe("selected");
-            expect(selection_container.contains(placeholder)).toBe(false);
-        });
-
-        it("when an item has been selected, but is not available in the new options, then the first available item should be selected", async () => {
-            manager.processSelection(item_1.element);
-
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
-            new_option_1.value = "new option 1";
-            source_select_box.appendChild(new_option_0);
-            source_select_box.appendChild(new_option_1);
-
-            await items_map_manager.refreshItemsMap();
-            manager.resetAfterDependenciesUpdate();
-
-            const item_0 = items_map_manager.findLinkSelectorItemInItemMap(
-                "link-selector-item-new-option-0"
-            );
-            expect(item_0.is_selected).toBe(true);
-            expect(item_0.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_0.target_option.getAttribute("selected")).toBe("selected");
             expect(selection_container.contains(placeholder)).toBe(false);
         });
     });

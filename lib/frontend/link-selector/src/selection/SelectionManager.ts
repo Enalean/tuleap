@@ -95,7 +95,6 @@ export class SelectionManager {
         }
 
         if (this.selection_state === null) {
-            this.processSelection(available_items[0].element);
             return;
         }
 
@@ -105,10 +104,7 @@ export class SelectionManager {
 
         if (item) {
             this.processSelection(item.element);
-            return;
         }
-
-        this.processSelection(available_items[0].element);
     }
 
     private createCurrentSelectionElement(item: LinkSelectorItem): DocumentFragment {

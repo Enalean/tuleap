@@ -31,7 +31,9 @@ export interface LinkSelectorOptions {
         value_id: string,
         item_label: string
     ) => Promise<TemplateResult>;
+    search_field_callback: LinkSelectorSearchFieldCallback;
 }
+export type LinkSelectorSearchFieldCallback = (query: string) => void;
 
 export type LinkSelectorItemMap = Map<string, LinkSelectorItem>;
 

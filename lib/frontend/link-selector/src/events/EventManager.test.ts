@@ -237,18 +237,7 @@ describe("event manager", () => {
     });
 
     describe("Search input events", () => {
-        it("should filter the items when user types in the search input", () => {
-            manager.attachEvents();
-            search_field.value = "query";
-            search_field.dispatchEvent(new KeyboardEvent("keyup"));
-
-            expect(
-                dropdown_content_renderer.renderFilteredLinkSelectorDropdownContent
-            ).toHaveBeenCalledWith("query");
-            expect(item_highlighter.resetHighlight).toHaveBeenCalledTimes(1);
-        });
-
-        it("should erase the search input content and reset the dropdown content when the tab key has been pressed", () => {
+        it("should keep the search input content and reset the highlight when the tab key has been pressed", () => {
             jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
 
             manager.attachEvents();
@@ -257,10 +246,8 @@ describe("event manager", () => {
 
             search_field.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
 
-            expect(search_field.value).toBe("");
-            expect(
-                dropdown_content_renderer.renderFilteredLinkSelectorDropdownContent
-            ).toHaveBeenCalledWith("");
+            expect(search_field.value).toBe("an old query");
+
             expect(item_highlighter.resetHighlight).toHaveBeenCalled();
         });
 
