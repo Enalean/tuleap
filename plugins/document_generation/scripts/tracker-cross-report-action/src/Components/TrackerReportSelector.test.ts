@@ -50,6 +50,20 @@ describe("TrackerReportSelector", () => {
         expect(selector.findAll("optgroup")).toHaveLength(2);
     });
 
+    it("disables the selector when no project ID is provided", () => {
+        const wrapper = shallowMount(TrackerReportSelector, {
+            global: getGlobalTestOptions(),
+            props: {
+                tracker_id: null,
+                report: null,
+            },
+        });
+
+        const selector = wrapper.get("select");
+
+        expect(selector.element.disabled).toBe(true);
+    });
+
     it("only shows report groups when there is a report to show", async () => {
         jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             { id: 101, label: "Private", is_public: false },

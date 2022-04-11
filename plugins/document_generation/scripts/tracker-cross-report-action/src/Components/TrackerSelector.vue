@@ -22,14 +22,14 @@
     <label class="tlp-label">
         {{ $gettext("Tracker") }}
         <select
-            class="tlp-select"
             v-model="tracker"
+            class="tlp-select"
             v-bind:disabled="project_id === null || is_processing"
         >
             <option
                 v-for="current_tracker in current_trackers"
                 v-bind:key="current_tracker.id"
-                v-bind:value="current_tracker.id"
+                v-bind:value="current_tracker"
             >
                 {{ current_tracker.label }}
             </option>
