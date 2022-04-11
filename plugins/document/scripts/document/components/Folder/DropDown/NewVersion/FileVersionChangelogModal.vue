@@ -33,6 +33,7 @@
                 v-bind:is-open-after-dnd="true"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             />
+            <preview-filename-new-version v-bind:version="version" v-bind:item="new_version_item" />
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
@@ -52,10 +53,15 @@ import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 import emitter from "../../../../helpers/emitter";
+import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
+import { TYPE_FILE } from "../../../../constants";
+import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
+import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
 
 export default {
     name: "FileVersionChangelogModal",
     components: {
+        PreviewFilenameNewVersion,
         ModalHeader,
         ModalFeedback,
         ModalFooter,
@@ -77,6 +83,14 @@ export default {
             is_loading: false,
             version: { title: "", changelog: "" },
             approval_table_action: null,
+            new_version_item: {
+                id: 0,
+                title: "",
+                description: "",
+                type: "file",
+                file_properties: { file: {} },
+                status: "none",
+            },
         };
     },
     computed: {
@@ -89,6 +103,14 @@ export default {
         },
     },
     mounted() {
+        this.new_version_item = {
+            id: this.updatedFile.id,
+            title: this.updatedFile.title,
+            description: this.updatedFile.description,
+            type: TYPE_FILE,
+            file_properties: { file: this.droppedFile },
+            status: getItemStatus(getStatusProperty(this.updatedFile.properties)),
+        };
         this.modal = createModal(this.$el, { destroy_on_hide: true });
         this.modal.addEventListener("tlp-modal-hidden", this.close);
         this.modal.show();

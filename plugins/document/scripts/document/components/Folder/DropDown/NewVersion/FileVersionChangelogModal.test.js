@@ -34,7 +34,7 @@ describe("FileVersionChangelogModal", () => {
         return shallowMount(FileVersionChangelogModal, {
             localVue,
             propsData: {
-                updatedFile: { id: 12, title: "How to.pdf" },
+                updatedFile: { id: 12, title: "How to.pdf", properties: [] },
                 droppedFile: new File([], "How to (updated).pdf"),
             },
             mocks: { $store: store },
@@ -63,7 +63,7 @@ describe("FileVersionChangelogModal", () => {
         wrapper.get("form").trigger("submit");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("createNewFileVersionFromModal", [
-            { id: 12, title: "How to.pdf" },
+            { id: 12, title: "How to.pdf", properties: [] },
             expect.any(File),
             "Added the [contributions] section",
             "Now, it mentions how to contribute to the project.",
@@ -87,7 +87,7 @@ describe("FileVersionChangelogModal", () => {
         wrapper.get("form").trigger("submit");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("createNewFileVersionFromModal", [
-            { id: 12, title: "How to.pdf" },
+            { id: 12, title: "How to.pdf", properties: [] },
             expect.any(File),
             "Added the [contributions] section",
             "Now, it mentions how to contribute to the project.",
