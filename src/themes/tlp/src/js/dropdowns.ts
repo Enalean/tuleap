@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { findClosestElement } from "./dom-walker";
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
 import type { Placement } from "@floating-ui/dom";
 
@@ -172,8 +171,8 @@ export class Dropdown {
             }
             if (
                 this.is_shown &&
-                !findClosestElement(this.doc, event.target, this.dropdown_menu) &&
-                !findClosestElement(this.doc, event.target, this.trigger)
+                !this.dropdown_menu.contains(event.target) &&
+                !this.trigger.contains(event.target)
             ) {
                 this.hide();
             }
