@@ -47,7 +47,6 @@ export interface ConfigurationState {
     readonly user_locale: string;
     readonly relative_dates_display: string;
     readonly project_icon: string;
-    readonly search_for_document_with_criteria: boolean;
     readonly criteria: SearchCriteria;
     readonly columns: ListOfSearchResultColumnDefinition;
     readonly forbid_writers_to_update: boolean;

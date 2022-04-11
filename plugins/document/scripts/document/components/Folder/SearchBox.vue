@@ -28,71 +28,30 @@
             v-model="search_query"
             data-shortcut-search-document
             v-on:keyup.enter="advancedSearch()"
-            v-if="search_for_document_with_criteria"
             data-test="document-search-box"
         />
         <router-link
             v-bind:to="{ name: 'search', params: { folder_id: current_folder.id } }"
             v-bind:title="`${$gettext('Search')}`"
-            v-if="search_for_document_with_criteria"
         >
             <a class="document-advanced-link" data-test="document-advanced-link" v-translate>
                 Advanced
             </a>
         </router-link>
-        <div v-else>
-            <input
-                type="search"
-                class="tlp-search document-search-box"
-                v-bind:placeholder="`${$gettext('Name, description...')}`"
-                v-model="search_query"
-                v-on:keyup.enter="searchUrl()"
-                data-shortcut-search-document
-            />
-            <a
-                class="document-advanced-link"
-                v-bind:href="advancedUrl()"
-                data-test="document-advanced-link"
-                v-translate
-            >
-                Advanced
-            </a>
-        </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
+import { State } from "vuex-class";
 import type { Folder } from "../../type";
-// We need to manually import because router is still in JS
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type Router from "vue-router";
-
-const configuration = namespace("configuration");
 
 @Component
 export default class SearchBox extends Vue {
     @State
     readonly current_folder!: Folder;
-    @configuration.State
-    readonly project_id!: number;
-    @configuration.State
-    readonly search_for_document_with_criteria!: boolean;
 
     private search_query = "";
-
-    advancedUrl(): string {
-        return (
-            "/plugins/docman/?group_id=" +
-            encodeURIComponent(this.project_id) +
-            "&id=" +
-            encodeURIComponent(this.current_folder.id) +
-            "&action=search&global_txt=" +
-            encodeURIComponent(this.search_query) +
-            "&sort_update_date=0&add_filter=--&save_report=--&filtersubmit=Apply"
-        );
-    }
 
     advancedSearch(): void {
         this.$router.push({
@@ -104,18 +63,6 @@ export default class SearchBox extends Vue {
                 folder_id: String(this.current_folder.id),
             },
         });
-    }
-
-    searchUrl(): void {
-        const encoded_url =
-            "/plugins/docman/?group_id=" +
-            encodeURIComponent(this.project_id) +
-            "&id=" +
-            encodeURIComponent(this.current_folder.id) +
-            "&action=search&global_txt=" +
-            encodeURIComponent(this.search_query) +
-            "&global_filtersubmit=Apply";
-        window.location.assign(encoded_url);
     }
 }
 </script>

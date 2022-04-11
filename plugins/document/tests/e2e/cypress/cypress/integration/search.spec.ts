@@ -67,8 +67,6 @@ describe("Document search", () => {
             cy.get("[data-test=document-modal-submit-button]").click();
         });
 
-        activateFeatureFlag();
-
         cy.log(`Searching for "ipsum"`);
         cy.get("[data-test=document-search-box]").clear().type(`ipsum{enter}`);
         cy.get("[data-test=search-results-table-body]").contains("tr", title);
@@ -90,12 +88,3 @@ describe("Document search", () => {
         cy.get("[data-test=breadcrumb-project-documentation]").click();
     });
 });
-
-function activateFeatureFlag(): void {
-    cy.url().then((url) => {
-        if (url.indexOf("feature-flag-new-search") === -1) {
-            cy.visit(`${url}#feature-flag-new-search`);
-            cy.reload();
-        }
-    });
-}
