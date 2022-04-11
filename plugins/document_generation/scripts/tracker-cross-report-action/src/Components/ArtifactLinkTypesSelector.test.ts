@@ -52,4 +52,18 @@ describe("ArtifactLinkTypesSelector", () => {
         }
         expect(emitted_input[0]).toStrictEqual([["shortname_a", "shortname_b"]]);
     });
+
+    it("disables the selector when no tracker ID is provided", () => {
+        const wrapper = shallowMount(ArtifactLinkTypesSelector, {
+            global: getGlobalTestOptions(),
+            props: {
+                tracker_id: null,
+                artifact_link_types: [],
+            },
+        });
+
+        const selector = wrapper.get("select");
+
+        expect(selector.element.disabled).toBe(true);
+    });
 });

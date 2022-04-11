@@ -48,6 +48,7 @@
             <second-level-selector
                 v-model:tracker="selected_tracker_level_2"
                 v-model:report="selected_report_level_2"
+                v-model:artifact_link_types="artifact_link_types_level_2"
             />
         </div>
         <div class="tlp-modal-footer">
@@ -113,6 +114,7 @@ const artifact_link_types_level_1 = ref([]);
 
 const selected_tracker_level_2 = ref<SelectedTracker | null>(null);
 const selected_report_level_2 = ref<SelectedReport | null>(null);
+const artifact_link_types_level_2 = ref([]);
 
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {
@@ -137,7 +139,7 @@ async function startExport(): Promise<void> {
                 tracker_name: selected_tracker_level_2.value.label,
                 report_id: selected_report_level_2.value.id,
                 report_name: selected_report_level_2.value.label,
-                artifact_link_types: [],
+                artifact_link_types: artifact_link_types_level_2.value,
             },
         };
     }

@@ -25,7 +25,7 @@
             v-model="artifact_link_types"
             class="tlp-select"
             multiple
-            v-bind:disabled="is_processing"
+            v-bind:disabled="tracker_id === null || is_processing"
         >
             <option
                 v-for="art_link in current_tracker_artifact_link_types"
@@ -43,18 +43,29 @@
 </template>
 <script lang="ts" setup>
 import { computed, watch } from "vue";
-import { getTrackerCurrentlyUsedArtifactLinkTypes } from "../rest-querier";
+import { getTrackerCurrentlyUsedArtifactLinkTypes as getTrackerCurrentlyUsedArtifactLinkTypesFromAPI } from "../rest-querier";
 import { usePromise } from "../Helpers/use-promise";
+import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 
 const NO_TYPE_SHORTNAME = "";
 
-const props = defineProps<{ tracker_id: number; artifact_link_types: string[] }>();
+const props = defineProps<{ tracker_id: number | null; artifact_link_types: string[] }>();
 const emit = defineEmits<{
     (e: "update:artifact_link_types", value: string[]): void;
 }>();
 
+const default_artifact_link_types: TrackerUsedArtifactLinkResponse[] = [];
+function getTrackerCurrentlyUsedArtifactLinkTypes(
+    tracker_id: number | null
+): Promise<TrackerUsedArtifactLinkResponse[]> {
+    if (tracker_id === null) {
+        return Promise.resolve(default_artifact_link_types);
+    }
+    return getTrackerCurrentlyUsedArtifactLinkTypesFromAPI(tracker_id);
+}
+
 const { is_processing, data: current_tracker_artifact_link_types } = usePromise(
-    [],
+    default_artifact_link_types,
     computed(() => getTrackerCurrentlyUsedArtifactLinkTypes(props.tracker_id))
 );
 
