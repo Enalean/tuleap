@@ -151,3 +151,6 @@ export type Permission = ReadPermission | CreatePermission | UpdatePermission;
 export const FIELD_PERMISSION_READ: ReadPermission = "read";
 export const FIELD_PERMISSION_CREATE: CreatePermission = "create";
 export const FIELD_PERMISSION_UPDATE: UpdatePermission = "update";
+
+export type IsChildLinkType = "_is_child";
+export const IS_CHILD_LINK_TYPE: IsChildLinkType = "_is_child";
