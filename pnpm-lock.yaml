@@ -1,10 +1,14 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   mustache: ^4.2.0
 
 dependencies:
   mustache: 4.2.0
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
 
 packages:
 
