@@ -148,7 +148,7 @@ class BurningParrotTheme extends BaseLayout
             $project_context = ProjectContextPresenter::build(
                 $project,
                 $this->project_flags_builder->buildProjectFlags($project),
-                $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner-bp.js'),
+                $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner.js'),
                 $this->getProjectSidebarData($params, $project, $this->user),
             );
 
@@ -236,7 +236,7 @@ class BurningParrotTheme extends BaseLayout
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
-            $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner-bp.js'),
+            $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner.js'),
             $this->detected_browser,
             $this->theme_variant_color,
             $this->theme_variation,
