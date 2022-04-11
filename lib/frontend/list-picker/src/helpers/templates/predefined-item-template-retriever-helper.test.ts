@@ -18,7 +18,7 @@
  *
  */
 
-import { html } from "lit/html.js";
+import { html, render } from "lit/html.js";
 import { convertBadColorHexToRGB } from "../color-helper";
 import { retrievePredefinedTemplate } from "./predefined-item-template-retriever-helper";
 import { styleMap } from "lit/directives/style-map.js";
@@ -40,24 +40,24 @@ describe("predefined-item-template-retriever", () => {
         `
         );
     });
+
     it("should return the colored template according to the color given from a color picker", () => {
         const option_with_colored_badge = document.createElement("option");
         const label = "TS050 Hybrid";
         option_with_colored_badge.appendChild(document.createTextNode(label));
         const color = "fiesta-red";
-        const color2 = "fiesta-red";
         option_with_colored_badge.setAttribute("data-color-value", color);
 
-        // The source of truth is the production code, Prettier should not interfere with the spacing here
-        // prettier-ignore
-        expect(retrievePredefinedTemplate(option_with_colored_badge)).toEqual(
-            html`
-            <span class="list-picker-option-colored-label-container">
-                <span class="list-picker-circular-color-${color2}"></span>
-                ${label}
-            </span>
-        `
-        );
+        const div = document.createElement("div");
+        render(retrievePredefinedTemplate(option_with_colored_badge), div);
+        expect(stripExpressionComments(div.innerHTML)).toMatchInlineSnapshot(`
+            "
+                        <span class=\\"list-picker-option-colored-label-container\\">
+                            <span class=\\"tlp-swatch-fiesta-red list-picker-circular-color\\"></span>
+                            TS050 Hybrid
+                        </span>
+                    "
+        `);
     });
 
     it("should return the legacy colored template if the color is an old color", () => {
@@ -93,3 +93,10 @@ describe("predefined-item-template-retriever", () => {
         `);
     });
 });
+
+/**
+ * See https://github.com/lit/lit/blob/lit%402.0.2/packages/lit-html/src/test/test-utils/strip-markers.ts
+ */
+function stripExpressionComments(html: string): string {
+    return html.replace(/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g, "");
+}

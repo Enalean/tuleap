@@ -18,7 +18,6 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
 @use "badges";
 @use "avatars";
 
@@ -69,8 +68,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         > .tlp-radio > input,
         > .select2-container.select2-container--disabled .select2-selection--single,
         > .select2-container.select2-container--disabled .select2-selection--multiple,
-        > .select2-container.select2-container--disabled .select2-selection__clear,
-        > .list-picker.list-picker-disabled {
+        > .select2-container.select2-container--disabled .select2-selection__clear {
             cursor: not-allowed;
         }
         /* stylelint-enable */
@@ -90,8 +88,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         .select2-container--tlp-select2-large .select2-selection--single,
         .select2-container--tlp-select2 .select2-selection--multiple,
         .select2-container--tlp-select2-small .select2-selection--multiple,
-        .select2-container--tlp-select2-large .select2-selection--multiple,
-        .list-picker-selection {
+        .select2-container--tlp-select2-large .select2-selection--multiple {
             border-color: var(--tlp-danger-color);
             color: var(--tlp-danger-dark-color);
 
@@ -112,8 +109,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         .select2-container--tlp-select2
             .select2-selection--multiple
             .select2-selection__rendered
-            .select2-selection__choice,
-        .list-picker-badge {
+            .select2-selection__choice {
             border-color: var(--tlp-danger-color);
             background-color: var(--tlp-danger-color-transparent-90);
             color: var(--tlp-danger-dark-color);
@@ -347,198 +343,6 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
 
     &.tlp-select-adjusted {
         width: auto;
-    }
-}
-
-.list-picker {
-    z-index: 2003;
-
-    &.list-picker-disabled {
-        border-color: var(--tlp-form-element-border-color);
-
-        .list-picker-badge,
-        .list-picker-selection {
-            cursor: not-allowed;
-        }
-
-        .list-picker-multiple-search-section-disabled > .list-picker-search-field {
-            background: var(--tlp-white-color);
-            cursor: not-allowed;
-        }
-    }
-
-    &.list-picker-with-open-dropdown .list-picker-selection {
-        border-radius: var(--tlp-form-element-border-radius) var(--tlp-form-element-border-radius) 0
-            0;
-        border-color: var(--tlp-main-color);
-    }
-
-    &.list-picker-with-open-dropdown {
-        &.list-picker-with-dropdown-above .list-picker-selection {
-            border-radius: 0 0 var(--tlp-form-element-border-radius)
-                var(--tlp-form-element-border-radius);
-        }
-    }
-
-    .list-picker-badge {
-        @extend %tlp-badge;
-        // stylelint-disable-next-line scss/at-extend-no-missing-placeholder
-        @extend .tlp-badge-primary, .tlp-badge-outline;
-
-        display: flex;
-        flex: 0 0 auto;
-        align-items: center;
-        margin: 6px 5px 0 0;
-        cursor: pointer;
-    }
-
-    @each $color-name, $colors in tlp-swatch-colors.$color-map {
-        .list-picker-badge-#{$color-name} {
-            @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
-        }
-    }
-
-    .list-picker-selection {
-        @extend %tlp-form-element;
-
-        display: flex;
-        align-items: center;
-        width: 100%;
-        line-height: normal;
-        cursor: default;
-        user-select: none;
-
-        &.list-picker-single {
-            height: var(--tlp-form-element-height);
-            padding: 0
-                calc(
-                    var(--tlp-form-element-padding-horizontal) * 2 +
-                        var(--tlp-form-element-select-background-size)
-                )
-                0 var(--tlp-form-element-padding-horizontal);
-            background: var(--tlp-form-element-background) $tlp-form-element-select-background-url
-                no-repeat;
-            background-position: right var(--tlp-form-element-padding-horizontal) center;
-        }
-
-        &.list-picker-multiple {
-            position: relative;
-            min-height: var(--tlp-form-element-height);
-            padding: 0 52px 5px 6px;
-            background: var(--tlp-form-element-background)
-                $tlp-form-element-select-multiple-background-url no-repeat;
-            background-position: right var(--tlp-form-element-padding-horizontal) top 17px;
-        }
-    }
-
-    .list-picker-placeholder {
-        color: var(--tlp-form-element-placeholder-color);
-    }
-}
-
-.list-picker-dropdown {
-    z-index: 2002;
-    padding: 0;
-    border-right: 1px solid var(--tlp-main-color);
-    border-bottom: 1px solid var(--tlp-main-color);
-    border-left: 1px solid var(--tlp-main-color);
-    box-shadow: var(--tlp-flyover-shadow);
-
-    &.list-picker-dropdown-above {
-        border-top: 1px solid var(--tlp-main-color);
-        border-bottom: unset;
-        box-shadow: var(--tlp-flyover-shadow-above);
-    }
-
-    .list-picker-dropdown-option-value-disabled {
-        color: var(--tlp-dimmed-color);
-    }
-
-    .list-picker-group-label {
-        padding: 6px var(--tlp-form-element-padding-horizontal);
-        color: var(--tlp-dimmed-color);
-        font-size: var(--tlp-form-element-small-font-size);
-        font-weight: 600;
-        line-height: 30px;
-        text-transform: uppercase;
-    }
-
-    .list-picker-empty-dropdown-state {
-        padding: var(--tlp-form-element-padding-horizontal);
-        color: var(--tlp-dimmed-color);
-        font-size: var(--tlp-form-element-small-font-size);
-        line-height: normal;
-    }
-}
-
-.list-picker-option-colored-label-container {
-    display: flex;
-    align-items: center;
-}
-
-.list-picker-single-dropdown-search-section {
-    padding: var(--tlp-form-element-padding-horizontal);
-
-    .list-picker-search-field {
-        @extend %tlp-form-element;
-
-        height: var(--tlp-form-element-small-height);
-        padding: 0 4px;
-        font-size: var(--tlp-form-element-small-font-size);
-    }
-}
-
-.list-picker-dropdown-option-value {
-    &.list-picker-item-highlighted {
-        background-color: var(--tlp-main-color);
-        color: var(--tlp-white-color);
-    }
-
-    &[aria-selected="true"]::before {
-        content: "\f00c"; // fa-check
-        position: absolute;
-        top: 9px;
-        left: var(--tlp-form-element-padding-horizontal);
-        font-family: "Font Awesome 5 Free";
-        font-size: 12px;
-        font-weight: 900;
-    }
-
-    &[aria-selected="true"] {
-        position: relative;
-        padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
-        color: var(--tlp-main-color);
-
-        &.list-picker-item-highlighted {
-            color: var(--tlp-white-color);
-        }
-    }
-}
-
-.list-picker-avatar {
-    @extend %tlp-avatar;
-
-    width: 20px;
-    height: 20px;
-    margin: 0 4px 0 0;
-}
-
-@each $color-name, $colors in tlp-swatch-colors.$color-map {
-    .list-picker-badge-#{$color-name} {
-        @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
-    }
-}
-
-@each $color-name, $colors in tlp-swatch-colors.$color-map {
-    .list-picker-circular-color-#{$color-name} {
-        width: 20px;
-        height: 20px;
-        margin: 0 6px 0 0;
-        border: 3px solid map.get($colors, "primary");
-        border-radius: 50%;
-        background-color: map.get($colors, "secondary");
-        color: map.get($colors, "text");
-        cursor: pointer;
     }
 }
 

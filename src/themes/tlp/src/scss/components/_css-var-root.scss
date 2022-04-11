@@ -315,6 +315,12 @@ $fade-background-color: color.mix($tlp-background-color, $tlp-white-color, 50);
     --tlp-sidebar-action-background: rgb(255 255 255 / 25%);
     --tlp-sidebar-action-background-hover: rgb(255 255 255 / 35%);
 
+    // Badges
+    --tlp-badge-font-size: 0.75rem;
+    --tlp-badge-line-height: 0.75rem;
+    --tlp-badge-font-weight: 600;
+    --tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-spacing);
+
     // Form elements
     --tlp-form-element-padding-horizontal: 12px;
     --tlp-form-element-border-transition-duration: 150ms;

@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.list-picker-dropdown-option-value,
+.list-picker-dropdown-option-value-disabled {
+    display: flex;
+    align-items: baseline;
+    padding: 6px 12px 6px 32px;
+    font-size: 14px;
+    line-height: normal;
+    cursor: pointer;
+    user-select: none;
+}
+
+.list-picker-dropdown-option-value-disabled {
+    color: var(--tlp-dimmed-color);
+    cursor: not-allowed;
+}
+
+.list-picker-dropdown-option-value {
+    &.list-picker-item-highlighted {
+        background-color: var(--tlp-main-color);
+        color: var(--tlp-white-color);
+    }
+
+    &[aria-selected="true"]::before {
+        content: "\f00c"; // fa-check
+        position: absolute;
+        top: 9px;
+        left: var(--tlp-form-element-padding-horizontal);
+        font-family: "Font Awesome 5 Free";
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    &[aria-selected="true"] {
+        position: relative;
+        padding: 6px var(--tlp-form-element-padding-horizontal) 6px 32px;
+        color: var(--tlp-main-color);
+
+        &.list-picker-item-highlighted {
+            color: var(--tlp-white-color);
+        }
+    }
+}

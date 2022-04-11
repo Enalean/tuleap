@@ -23,19 +23,15 @@
 
 $tlp-badge-radius: var(--tlp-small-radius);
 $tlp-badge-color: var(--tlp-white-color);
-$tlp-badge-font-size: 0.75rem;
-$tlp-badge-line-height: 0.75rem;
-$tlp-badge-font-weight: 600;
-$tlp-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-spacing);
 
 %tlp-badge {
     display: inline-block;
-    padding: $tlp-badge-padding;
+    padding: var(--tlp-badge-padding);
     border-radius: $tlp-badge-radius;
     color: $tlp-badge-color;
-    font-size: $tlp-badge-font-size;
-    font-weight: $tlp-badge-font-weight;
-    line-height: $tlp-badge-line-height;
+    font-size: var(--tlp-badge-font-size);
+    font-weight: var(--tlp-badge-font-weight);
+    line-height: var(--tlp-badge-line-height);
     text-decoration: none;
     vertical-align: middle;
     white-space: nowrap;
