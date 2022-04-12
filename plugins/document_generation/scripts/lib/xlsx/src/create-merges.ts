@@ -37,3 +37,31 @@ export function createMerges(cells: CellObjectWithExtraInfo[][]): Range[] {
         return [];
     });
 }
+
+export function createMergesForWholeRowLine(cells: CellObjectWithExtraInfo[][]): Range[] {
+    return cells.flatMap((rows: CellObjectWithExtraInfo[], row_line: number): Range[] => {
+        if (typeof rows[0] === "undefined") {
+            return [];
+        }
+
+        const merges: Array<Range> = [];
+        let starting_cell = 0;
+        for (const row of rows) {
+            if (row.merge_columns) {
+                merges.push({
+                    s: { r: row_line, c: starting_cell },
+                    e: { r: row_line, c: starting_cell + row.merge_columns },
+                });
+            } else {
+                merges.push({
+                    s: { r: row_line, c: starting_cell },
+                    e: { r: row_line, c: starting_cell },
+                });
+            }
+
+            starting_cell++;
+        }
+
+        return merges;
+    });
+}

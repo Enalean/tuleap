@@ -23,7 +23,7 @@ import type { CellObjectWithExtraInfo } from "@tuleap/plugin-docgen-xlsx";
 import {
     buildSheetEmptyCell,
     buildSheetTextCell,
-    createMerges,
+    createMergesForWholeRowLine,
     fitColumnWidthsToContent,
     fitRowHeightsToContent,
     transformReportCellIntoASheetCell,
@@ -36,7 +36,7 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
     const sheet = utils.aoa_to_sheet(cells);
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
-    sheet["!merges"] = createMerges(cells);
+    sheet["!merges"] = createMergesForWholeRowLine(cells);
     utils.book_append_sheet(book, sheet);
     writeFile(
         book,
