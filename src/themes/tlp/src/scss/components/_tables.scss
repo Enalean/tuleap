@@ -83,19 +83,24 @@ $tlp-table-cell-padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-small-spac
             display: none;
         }
 
+        > tr:nth-child(even) > th,
         > tr:nth-child(even) > td {
             background: var(--tlp-table-row-background-even);
         }
 
+        > tr:nth-child(odd) > th,
         > tr:nth-child(odd) > td {
             background: var(--tlp-table-row-background-odd);
         }
 
+        > tr:hover > th,
         > tr:hover > td,
+        > tr:focus-within > th,
         > tr:focus-within > td {
             background: var(--tlp-main-color-hover-background);
         }
 
+        > tr > th,
         > tr > td {
             padding: $tlp-table-cell-padding;
             line-height: 1.5rem;

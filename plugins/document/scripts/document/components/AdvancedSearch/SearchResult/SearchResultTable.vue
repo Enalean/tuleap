@@ -20,24 +20,20 @@
 
 <template>
     <div class="document-search-table-container-with-pagination">
-        <div class="document-search-table-container">
+        <div class="document-search-table-container" ref="table_container">
             <table class="tlp-table document-search-table">
                 <thead>
                     <tr>
                         <template v-for="column of columns">
                             <th
-                                v-if="column.name === 'title'"
-                                class="document-search-result-icon"
-                                v-bind:key="
-                                    'document-search-result-' + column.name + '-icon-header'
-                                "
-                            ></th>
-                            <th
-                                v-bind:class="{
-                                    'tlp-table-cell-numeric': column.name === 'id',
-                                }"
+                                v-bind:class="th_classes(column)"
                                 v-bind:key="'document-search-result-' + column.name + '-header'"
                             >
+                                <i
+                                    class="fas fa-file-alt tlp-skeleton-icon document-search-result-icon document-search-result-title-header-icon"
+                                    aria-hidden="true"
+                                    v-if="column.name === 'title'"
+                                ></i>
                                 {{ column.label }}
                             </th>
                         </template>
@@ -64,11 +60,11 @@
 <script setup lang="ts">
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
-import type { ItemSearchResult, SearchResult } from "../../../type";
+import type { ItemSearchResult, SearchResult, SearchResultColumnDefinition } from "../../../type";
 import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
-import { computed, ref } from "@vue/composition-api";
+import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 
@@ -86,6 +82,42 @@ const nb_columns = computed((): number => {
 
 const items = computed((): ReadonlyArray<ItemSearchResult> => {
     return props.results?.items || [];
+});
+
+function th_classes(column: SearchResultColumnDefinition): string[] {
+    const classes = ["document-search-result-" + column.name + "-header"];
+
+    if (column.name === "id") {
+        classes.push("tlp-table-cell-numeric");
+    }
+
+    return classes;
+}
+
+const table_container = ref<InstanceType<typeof HTMLElement> | null>(null);
+
+function informIsScrolling(): void {
+    if (!table_container.value) {
+        return;
+    }
+
+    if (table_container.value.scrollLeft === 0) {
+        table_container.value.classList.remove("document-search-table-container-is-scrolling");
+    } else {
+        table_container.value.classList.add("document-search-table-container-is-scrolling");
+    }
+}
+
+onMounted(() => {
+    if (table_container.value) {
+        table_container.value.addEventListener("scroll", informIsScrolling, { passive: true });
+    }
+});
+
+onBeforeUnmount(() => {
+    if (table_container.value) {
+        table_container.value.removeEventListener("scroll", informIsScrolling);
+    }
 });
 </script>
 

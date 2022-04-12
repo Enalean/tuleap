@@ -19,44 +19,38 @@
   -->
 
 <template>
-    <fragment>
-        <td class="document-search-result-icon">
-            <i class="fa fa-fw" v-bind:class="icon_classes" aria-hidden="true"></i>
-        </td>
-        <td
-            class="document-search-result-title-cell"
-            v-bind:class="{ 'document-search-result-title-cell-dropdown-shown': is_dropdown_shown }"
-        >
-            <div class="document-search-result-title">
-                <a
-                    v-if="href"
-                    v-bind:href="href"
-                    class="document-folder-subitem-link"
-                    data-test="link"
-                >
-                    {{ item.title }}
-                </a>
-                <router-link
-                    v-else-if="in_app_link"
-                    v-bind:to="in_app_link"
-                    class="document-folder-subitem-link"
-                    data-test="router-link"
-                >
-                    {{ item.title }}
-                </router-link>
-                <template v-else>{{ item.title }}</template>
-            </div>
-            <search-item-dropdown
-                v-bind:item="item"
-                v-on:dropdown-shown="onDropdownShown"
-                v-on:dropdown-hidden="onDropdownHidden"
-            />
-        </td>
-    </fragment>
+    <th
+        class="document-search-result-title-cell"
+        v-bind:class="{ 'document-search-result-title-cell-dropdown-shown': is_dropdown_shown }"
+    >
+        <search-item-dropdown
+            v-bind:item="item"
+            v-on:dropdown-shown="onDropdownShown"
+            v-on:dropdown-hidden="onDropdownHidden"
+        />
+        <div class="document-search-result-title">
+            <i
+                class="fa fa-fw document-search-result-icon"
+                v-bind:class="icon_classes"
+                aria-hidden="true"
+            ></i>
+            <a v-if="href" v-bind:href="href" class="document-folder-subitem-link" data-test="link">
+                {{ item.title }}
+            </a>
+            <router-link
+                v-else-if="in_app_link"
+                v-bind:to="in_app_link"
+                class="document-folder-subitem-link"
+                data-test="router-link"
+            >
+                {{ item.title }}
+            </router-link>
+            <template v-else>{{ item.title }}</template>
+        </div>
+    </th>
 </template>
 <script setup lang="ts">
 import type { Folder, ItemSearchResult } from "../../../../type";
-import { Fragment } from "vue-frag";
 import { computed, ref } from "@vue/composition-api";
 import {
     ICON_EMBEDDED,

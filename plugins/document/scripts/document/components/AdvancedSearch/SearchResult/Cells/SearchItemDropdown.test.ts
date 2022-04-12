@@ -40,7 +40,6 @@ describe("SearchItemDropdown", () => {
         dispatch: jest.fn(),
     };
     let parent_container: HTMLElement;
-    let addEventListener: jest.SpyInstance;
 
     beforeEach(() => {
         $store = createStoreMock({});
@@ -57,7 +56,6 @@ describe("SearchItemDropdown", () => {
         parent_container = document.createElement("div");
         parent_container.classList.add("document-search-table-container");
         parent_container.appendChild(mount_point);
-        addEventListener = jest.spyOn(parent_container, "addEventListener");
 
         document.body.appendChild(parent_container);
 
@@ -90,12 +88,6 @@ describe("SearchItemDropdown", () => {
 
     it("should observe the resize of the body to adapt the position of trigger button", () => {
         expect(observe).toHaveBeenCalledWith(document.body);
-    });
-
-    it("should observe the scroll of the table container to adapt the position of trigger button", () => {
-        expect(addEventListener).toHaveBeenCalledWith("scroll", expect.anything(), {
-            passive: true,
-        });
     });
 
     it("should display the menu as soon as the user click on the trigger and the real item is loaded", () => {
