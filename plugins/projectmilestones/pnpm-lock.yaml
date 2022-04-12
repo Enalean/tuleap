@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@types/d3-array': ^2.12.1
@@ -35,6 +36,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@types/d3-array': 2.12.1
   '@types/d3-selection': 2.0.0
   '@types/d3-shape': 2.1.0

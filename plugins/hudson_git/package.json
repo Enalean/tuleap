@@ -4,8 +4,8 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "dependencies": {},
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@types/bootstrap": "^3.4.0",
     "@types/jquery": "^3.5.5",
     "jquery": "^3.6.0"

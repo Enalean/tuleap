@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/core': file:../../src
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
   '@tuleap/tlp': file:../../src/themes/tlp
@@ -16,6 +17,7 @@ dependencies:
   sprintf-js: 1.1.2
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/tlp': link:../../src/themes/tlp
 
 packages:

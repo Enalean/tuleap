@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/drag-and-drop': file:../../lib/frontend/drag-and-drop
   '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
   '@tuleap/tlp': file:../../src/themes/tlp
@@ -36,6 +37,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@types/dompurify': 2.3.2
   '@types/fscreen': 1.0.1
   '@types/jquery': 3.5.5

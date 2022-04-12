@@ -1,7 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/filter-inline-table': file:../../lib/frontend/filter-table
 
 dependencies:
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator

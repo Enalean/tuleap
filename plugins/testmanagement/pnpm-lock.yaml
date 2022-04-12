@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/ckeditor-image-upload': file:../../lib/frontend/ckeditor-image-upload
   '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
   '@tuleap/core': file:../../src
@@ -100,6 +101,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@types/node': 14.14.31
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14

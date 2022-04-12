@@ -13,6 +13,7 @@
     "angular-sanitize": "^1.8.2"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "angular-mocks": "^1.8.2"
   },
   "scripts": {

@@ -6,7 +6,7 @@
 
 ## Context and Problem Statement
 
-After upgrade to Tuleap 12.7, some users faced issues with legacy browsers (Chrome 70) because our [browserslist](../tools/utils/scripts/browserslist_config.js)
+After upgrade to Tuleap 12.7, some users faced issues with legacy browsers (Chrome 70) because our [browserslist](../lib/frontend/build-system-configurator/src/browserslist_config.ts)
 was set to "last 2 Chrome versions,last 2 Firefox versions,Firefox ESR,last 2 Edge versions" so:
 * chrome 87, 88, 89
 * edge 88, 89
@@ -26,13 +26,13 @@ In addition to Chrome 70, we also know that usage of Firefox 68 is also widespre
 
 ## Considered Options
 
-* [option 1] Update `browserlist` to add Chrome 70 and Firefox 68.
+* [option 1] Update `browserslist` to add Chrome 70 and Firefox 68.
 * [option 2] Stick with "modern browsers" list.
 * [option 3] Create a "LTS" version of Tuleap with support of vulnerable browsers.
 
 ## Decision Outcome
 
-Chosen option: "[option 1] Update `browserlist` to add Chrome 70 and Firefox 68", because it's the best tradeoff on the table:
+Chosen option: "[option 1] Update `browserslist` to add Chrome 70 and Firefox 68", because it's the best tradeoff on the table:
 * The [official supported version of browsers](https://docs.tuleap.org/user-guide/misc.html#which-browser-should-i-use-to-browse-tuleap) doesn't change: last version of Firefox, Chrome and Edge. That means
   * Chrome and Firefox are actively tested
   * Bugs are fixed.
@@ -51,7 +51,7 @@ Chosen option: "[option 1] Update `browserlist` to add Chrome 70 and Firefox 68"
 
 ### Negative Consequences
 
-* More relax `browserlist` means that more users can experience random bugs due to their legacy browser not supporting features.
+* More relax `browserslist` means that more users can experience random bugs due to their legacy browser not supporting features.
   * Random bugs means more support effort from the development team.
 * Users continue to use vulnerable browsers despite the security risks.
 * Users that does their job of running up to date browsers doesn't benefit from the performance and reduced size of generated assets (Javascript)

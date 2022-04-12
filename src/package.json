@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@shopify/jest-dom-mocks": "^2.10.0",
+    "@tuleap/build-system-configurator": "file:../lib/frontend/build-system-configurator",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
     "@types/d3-scale": "^3.3.0",

@@ -37,6 +37,7 @@
     "angular": "^1.8.0"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator",
     "@types/ckeditor": "^4.9.10",
     "angular": "^1.8.2",
     "angular-mocks": "^1.8.2"

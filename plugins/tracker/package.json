@@ -34,6 +34,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@tuleap/tlp": "file:../../src/themes/tlp",
     "@types/bootstrap": "^4.5.1",
     "@types/ckeditor": "^4.9.10",

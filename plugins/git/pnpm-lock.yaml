@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/core': file:../../src
   '@tuleap/filter-inline-table': file:../../lib/frontend/filter-table
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
@@ -39,6 +40,7 @@ dependencies:
   vuex: 3.6.2_vue@2.6.14
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/tlp': link:../../src/themes/tlp
   '@types/javascript-time-ago': 2.0.1
   '@types/sprintf-js': 1.1.2

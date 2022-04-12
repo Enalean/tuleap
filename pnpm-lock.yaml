@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.11.6
   '@babel/preset-env': ^7.11.5
+  '@tuleap/build-system-configurator': file:lib/frontend/build-system-configurator
   '@types/jest': ^27.4.1
   '@typescript-eslint/eslint-plugin': ^5.18.0
   '@typescript-eslint/parser': ^5.18.0
@@ -16,7 +17,6 @@ specifiers:
   autoprefixer: ^10.4.0
   babel-core: ^7.0.0-bridge.0
   babel-jest: ^27.5.1
-  browserslist: ^4.19.1
   clean-webpack-plugin: ^4.0.0
   copy-webpack-plugin: ^10.2.0
   css-loader: ^6.2.0
@@ -86,6 +86,7 @@ specifiers:
 devDependencies:
   '@babel/core': 7.11.6
   '@babel/preset-env': 7.11.5_@babel+core@7.11.6
+  '@tuleap/build-system-configurator': link:lib/frontend/build-system-configurator
   '@types/jest': 27.4.1
   '@typescript-eslint/eslint-plugin': 5.18.0_f76bd3b698b5acf2440f554528079c82
   '@typescript-eslint/parser': 5.18.0_eslint@8.12.0+typescript@4.6.2
@@ -99,7 +100,6 @@ devDependencies:
   autoprefixer: 10.4.0_postcss@8.4.5
   babel-core: 7.0.0-bridge.0_@babel+core@7.11.6
   babel-jest: 27.5.1_@babel+core@7.11.6
-  browserslist: 4.19.1
   clean-webpack-plugin: 4.0.0_webpack@5.64.4
   copy-webpack-plugin: 10.2.0_webpack@5.64.4
   css-loader: 6.2.0_webpack@5.64.4

@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
   '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/plugin-docgen-docx': file:../document_generation/scripts/lib/docx
@@ -34,6 +35,7 @@ dependencies:
   xlsx: 0.18.5
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/plugin-tracker-rest-api-types': link:../tracker/scripts/lib/rest-api-types
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
