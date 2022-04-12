@@ -54,6 +54,7 @@ export async function createListPicker(
         placeholder_element,
         dropdown_list_element,
         search_field_element,
+        element_attributes_updater,
     } = base_renderer.renderBaseComponent();
 
     const scrolling_manager = new ScrollingManager(wrapper_element);
@@ -140,12 +141,13 @@ export async function createListPicker(
 
     const list_options_observer = new ListOptionsChangesObserver(
         source_select_box,
+        element_attributes_updater,
         items_map_manager,
         dropdown_content_renderer,
         selection_manager,
         event_manager
     );
-    list_options_observer.startWatchingChangesInSelectOptions();
+    list_options_observer.startWatchingChanges();
 
     return {
         destroy: (): void => {

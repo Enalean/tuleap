@@ -32,6 +32,18 @@ import {
 } from "../helpers/keys-helper";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
+const wrapHandlerToExecuteIfSelectBoxIsNotDisabled = <T extends ReadonlyArray<unknown>>(
+    source_select_box: HTMLSelectElement,
+    handler: (...args: T) => void
+) => {
+    return (...args: T): void => {
+        if (source_select_box.disabled) {
+            return;
+        }
+        handler(...args);
+    };
+};
+
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;
     private click_outside_handler!: (event: Event) => void;
@@ -55,10 +67,6 @@ export class EventManager {
     ) {}
 
     public attachEvents(): void {
-        if (this.source_select_box.disabled) {
-            return;
-        }
-
         this.attachOpenCloseEvent();
         this.attachItemListEvent();
         this.attachSourceSelectBoxChangeEvent();
@@ -93,13 +101,17 @@ export class EventManager {
         const handler = (event: Event): void => {
             this.handleClicksOutsideListPicker(event);
         };
-        this.doc.addEventListener("pointerdown", handler);
+        const wrapped_handler = wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
+            this.source_select_box,
+            handler
+        );
+        this.doc.addEventListener("pointerdown", wrapped_handler);
 
-        return handler;
+        return wrapped_handler;
     }
 
     private attachOpenCloseEvent(): void {
-        this.list_picker_element.addEventListener("pointerdown", (event: Event) => {
+        const handler = (event: Event): void => {
             event.preventDefault();
             if (
                 event.target instanceof Element &&
@@ -123,7 +135,11 @@ export class EventManager {
                 this.list_item_highlighter.resetHighlight();
                 this.dropdown_manager.openListPicker();
             }
-        });
+        };
+        this.list_picker_element.addEventListener(
+            "pointerdown",
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, handler)
+        );
     }
 
     private isElementOnWhichClickShouldNotCloseListPicker(element: Element): boolean {
@@ -139,13 +155,20 @@ export class EventManager {
         let mouse_target_id: string | null = null;
 
         items.forEach((item) => {
-            item.addEventListener("pointerup", () => {
+            const pointerup_handler = (): void => {
                 this.selection_manager.processSelection(item);
                 this.resetSearchField();
                 this.dropdown_manager.closeListPicker();
-            });
+            };
+            item.addEventListener(
+                "pointerup",
+                wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
+                    this.source_select_box,
+                    pointerup_handler
+                )
+            );
 
-            item.addEventListener("pointerenter", () => {
+            const pointerenter_handler = (): void => {
                 if (!(item instanceof HTMLElement) || !item.dataset.itemId) {
                     throw new Error("item is not an highlightable item");
                 }
@@ -156,12 +179,19 @@ export class EventManager {
 
                 mouse_target_id = item.dataset.itemId;
                 this.list_item_highlighter.highlightItem(item);
-            });
+            };
+            item.addEventListener(
+                "pointerenter",
+                wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
+                    this.source_select_box,
+                    pointerenter_handler
+                )
+            );
         });
     }
 
     private attachSearchEvent(search_field_element: HTMLInputElement): void {
-        search_field_element.addEventListener("keyup", (event: Event) => {
+        const keyup_handler = (event: Event): void => {
             if (isArrowUp(event) || isArrowDown(event) || isTabKey(event) || isShiftKey(event)) {
                 return;
             }
@@ -181,7 +211,11 @@ export class EventManager {
 
             this.list_item_highlighter.resetHighlight();
             this.dropdown_manager.openListPicker();
-        });
+        };
+        search_field_element.addEventListener(
+            "keyup",
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, keyup_handler)
+        );
 
         if (
             search_field_element.parentElement &&
@@ -189,13 +223,20 @@ export class EventManager {
                 "list-picker-multiple-search-section"
             )
         ) {
-            search_field_element.addEventListener("pointerdown", () => {
+            const pointerdown_handler = (): void => {
                 this.list_item_highlighter.resetHighlight();
                 this.dropdown_manager.openListPicker();
-            });
+            };
+            search_field_element.addEventListener(
+                "pointerdown",
+                wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
+                    this.source_select_box,
+                    pointerdown_handler
+                )
+            );
         }
 
-        search_field_element.addEventListener("keydown", (event: Event) => {
+        const keydown_handler = (event: Event): void => {
             if (isBackspaceKey(event)) {
                 this.selection_manager.handleBackspaceKey(event);
                 event.stopPropagation();
@@ -204,7 +245,11 @@ export class EventManager {
             if (isTabKey(event)) {
                 this.resetSearchField();
             }
-        });
+        };
+        search_field_element.addEventListener(
+            "keydown",
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, keydown_handler)
+        );
     }
 
     private handleClicksOutsideListPicker(event: Event): void {
@@ -244,14 +289,18 @@ export class EventManager {
     }
 
     private attachSourceSelectBoxChangeEvent(): void {
-        this.source_select_box.addEventListener("change", () => {
+        const handler = (): void => {
             const is_valid = this.source_select_box.checkValidity();
             if (!is_valid) {
                 this.wrapper_element.classList.add("list-picker-error");
             } else {
                 this.wrapper_element.classList.remove("list-picker-error");
             }
-        });
+        };
+        this.source_select_box.addEventListener(
+            "change",
+            wrapHandlerToExecuteIfSelectBoxIsNotDisabled(this.source_select_box, handler)
+        );
     }
 
     private attachKeyboardNavigationEvents(): (event: Event) => void {
@@ -287,8 +336,12 @@ export class EventManager {
                 this.keyboard_navigation_manager.navigate(event);
             }
         };
-        this.doc.addEventListener("keydown", handler);
-        return handler;
+        const wrapped_handler = wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
+            this.source_select_box,
+            handler
+        );
+        this.doc.addEventListener("keydown", wrapped_handler);
+        return wrapped_handler;
     }
 
     private preventEnterKeyInSearchFieldToSubmitForm(): (event: Event) => void {
@@ -302,7 +355,11 @@ export class EventManager {
                 event.preventDefault();
             }
         };
-        this.doc.addEventListener("keypress", handler);
-        return handler;
+        const wrapped_handler = wrapHandlerToExecuteIfSelectBoxIsNotDisabled(
+            this.source_select_box,
+            handler
+        );
+        this.doc.addEventListener("keypress", wrapped_handler);
+        return wrapped_handler;
     }
 }

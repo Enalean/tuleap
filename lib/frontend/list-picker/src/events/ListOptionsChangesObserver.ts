@@ -27,6 +27,7 @@ export class ListOptionsChangesObserver {
 
     constructor(
         private readonly source_select_box: HTMLSelectElement,
+        private readonly list_picker_element_attributes_updater: () => void,
         private readonly items_map_manager: ItemsMapManager,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly selection_manager: SelectionManager,
@@ -35,7 +36,7 @@ export class ListOptionsChangesObserver {
         this.observer = new MutationObserver(this.refreshListPickerOnOptionsChanges());
     }
 
-    public startWatchingChangesInSelectOptions(): void {
+    public startWatchingChanges(): void {
         this.observer.observe(this.source_select_box, {
             childList: true,
             subtree: true,
@@ -49,6 +50,7 @@ export class ListOptionsChangesObserver {
 
     private refreshListPickerOnOptionsChanges(): (mutations: Array<MutationRecord>) => void {
         return async (mutations: Array<MutationRecord>): Promise<void> => {
+            this.list_picker_element_attributes_updater();
             if (!this.isChildrenMutation(mutations)) {
                 return;
             }
