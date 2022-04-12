@@ -368,7 +368,7 @@ export interface AdvancedSearchParams {
     readonly update_date: SearchDate | null;
     readonly obsolescence_date: SearchDate | null;
     readonly status: string;
-    readonly [key: AdditionalFieldNumber]: string | SearchDate | undefined;
+    readonly [key: AdditionalFieldNumber]: string | SearchDate | null | undefined;
 }
 
 interface BaseSearchCriterion {

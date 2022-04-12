@@ -28,7 +28,7 @@ import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 
 describe("SearchCriteriaPanel", () => {
-    it("should allow user to search for new terms", () => {
+    it("should allow user to search for new terms", async () => {
         // Need to attach the wrapper to a parent node so that Vue Test Utils can
         // submit the form when clicking on the submit button.
         // See https://github.com/vuejs/vue-test-utils/issues/1030#issuecomment-441166455
@@ -71,6 +71,8 @@ describe("SearchCriteriaPanel", () => {
             },
         });
 
+        await wrapper.vm.$nextTick();
+
         wrapper.findComponent(CriterionGlobalText).vm.$emit("input", "Lorem ipsum");
         wrapper.find("[data-test=criterion-id]").vm.$emit("input", "123");
         wrapper.find("[data-test=criterion-type]").vm.$emit("input", "folder");
@@ -102,7 +104,7 @@ describe("SearchCriteriaPanel", () => {
             obsolescence_date,
             status: "draft",
         };
-        expect(wrapper.emitted()["advanced-search"]).toEqual([[expected_params]]);
+        expect(wrapper.emitted()["advanced-search"]).toStrictEqual([[expected_params]]);
 
         // Avoid memory leaks when attaching to a parent node.
         // See https://vue-test-utils.vuejs.org/api/options.html#attachto
