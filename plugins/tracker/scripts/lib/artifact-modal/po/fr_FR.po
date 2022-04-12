@@ -185,7 +185,10 @@ msgid "Type..."
 msgstr "Ecrivez..."
 
 msgid "Unable to retrieve the linked artifacts: %s"
-msgstr "Impossible de récupérer les artéfacts liés: %s"
+msgstr "Impossible de récupérer les artéfacts liés : %s"
+
+msgid "Unable to retrieve the parent artifact: %s"
+msgstr "Impossible de retrouver l'artéfact parent : %s"
 
 msgid "Unable to upload the file"
 msgstr "Impossible de téléverser le fichier"

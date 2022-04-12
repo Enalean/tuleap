@@ -19,18 +19,29 @@
 
 import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
-import { getLinkFieldFetchErrorMessage } from "../../../gettext-catalog";
-import { isLinkRetrievalFault } from "../../../domain/fields/link-field-v2/LinkRetrievalFault";
+import {
+    getLinkFieldFetchErrorMessage,
+    getParentFetchErrorMessage,
+} from "../../../gettext-catalog";
 
 export type FaultFeedbackPresenter = {
     readonly message: string;
 };
+
+const isLinkRetrievalFault = (fault: Fault): boolean =>
+    typeof fault.isLinkRetrieval === "function" && fault.isLinkRetrieval();
+
+const isParentRetrievalFault = (fault: Fault): boolean =>
+    typeof fault.isParentRetrieval === "function" && fault.isParentRetrieval();
 
 export const FaultFeedbackPresenter = {
     buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
     fromFault: (fault: Fault): FaultFeedbackPresenter => {
         if (isLinkRetrievalFault(fault)) {
             return { message: sprintf(getLinkFieldFetchErrorMessage(), fault) };
+        }
+        if (isParentRetrievalFault(fault)) {
+            return { message: sprintf(getParentFetchErrorMessage(), fault) };
         }
         return { message: String(fault) };
     },

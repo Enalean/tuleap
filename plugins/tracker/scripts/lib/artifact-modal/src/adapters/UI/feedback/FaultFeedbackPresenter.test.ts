@@ -21,6 +21,7 @@ import { Fault } from "@tuleap/fault";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 import { setCatalog } from "../../../gettext-catalog";
 import { LinkRetrievalFault } from "../../../domain/fields/link-field-v2/LinkRetrievalFault";
+import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -44,5 +45,13 @@ describe(`FaultFeedbackPresenter`, () => {
         const fault = LinkRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
         const presenter = FaultFeedbackPresenter.fromFault(fault);
         expect(presenter.message).toContain(FAULT_MESSAGE);
+        expect(presenter.message).not.toBe(FAULT_MESSAGE);
+    });
+
+    it(`translates a message for ParentRetrievalFault`, () => {
+        const fault = ParentRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
+        const presenter = FaultFeedbackPresenter.fromFault(fault);
+        expect(presenter.message).toContain(FAULT_MESSAGE);
+        expect(presenter.message).not.toBe(FAULT_MESSAGE);
     });
 });

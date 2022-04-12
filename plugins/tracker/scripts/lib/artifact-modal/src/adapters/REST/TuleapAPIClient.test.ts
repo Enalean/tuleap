@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifactCollection } from "./TuleapAPIClient";
-import { TuleapAPIClient } from "./TuleapAPIClient";
 import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
+import type { Fault } from "@tuleap/fault";
+import { isFault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+import type { LinkedArtifactCollection } from "./TuleapAPIClient";
+import { TuleapAPIClient } from "./TuleapAPIClient";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { APILinkedArtifact } from "./APILinkedArtifact";
@@ -35,19 +38,36 @@ const SECOND_LINKED_ARTIFACT_ID = 60;
 
 describe(`TuleapAPIClient`, () => {
     describe(`getArtifact()`, () => {
-        const getArtifact = (): Promise<Artifact> => {
+        const getArtifact = (): ResultAsync<Artifact, Fault> => {
             const client = TuleapAPIClient();
             return client.getArtifact(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
-        it(`will return the artifact matching the given id`, () => {
+        it(`will return the artifact matching the given id`, async () => {
             const artifact = { id: ARTIFACT_ID } as Artifact;
             const getSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(getSpy, {
                 return_json: artifact,
             });
 
-            return expect(getArtifact()).resolves.toBe(artifact);
+            const result = await getArtifact();
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            expect(result.value).toBe(artifact);
+        });
+
+        it(`will return a Fault wrapping an Error if it fails`, async () => {
+            const getSpy = jest.spyOn(tlp_fetch, "get");
+            mockFetchError(getSpy, { status: 404, statusText: "Not found" });
+
+            const result = await getArtifact();
+
+            if (!result.isErr()) {
+                throw new Error("Expected an Err");
+            }
+            expect(isFault(result.error)).toBe(true);
         });
     });
 

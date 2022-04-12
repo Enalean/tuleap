@@ -82,3 +82,5 @@ export const getFileDescriptionPlaceholder = (): string =>
 export const getResetLabel = (): string => gettextCatalog.getString("Reset");
 export const getAddFileButtonlabel = (): string => gettextCatalog.getString("Add another file");
 export const getNewArtifactLabel = (): string => gettextCatalog.getString("New artifact");
+export const getParentFetchErrorMessage = (): string =>
+    gettextCatalog.getString("Unable to retrieve the parent artifact: %s");
