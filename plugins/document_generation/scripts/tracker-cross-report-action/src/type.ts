@@ -60,7 +60,6 @@ export interface OrganizedReportsData {
 interface OrganizedReportDataLevel {
     readonly artifact_representations: Map<number, ArtifactResponse>;
     tracker_name: string;
-    report_fields_labels: ReadonlyArray<string>;
 }
 
 export class TextCellWithMerges extends TextCell {

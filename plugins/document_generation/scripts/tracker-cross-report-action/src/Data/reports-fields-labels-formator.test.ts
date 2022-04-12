@@ -19,12 +19,11 @@
 
 import type { ArtifactResponse } from "../../../lib/docx";
 import type { OrganizedReportsData } from "../type";
-import { formatHeaders } from "./headers-formator";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
-import { TextCellWithMerges } from "../type";
+import { formatReportsFieldsLabels } from "./reports-fields-labels-formator";
 
-describe("headers-formator", () => {
-    it("builds the headers TextCell", (): void => {
+describe("reports-fields-labels-formator", () => {
+    it("formats field labels from all selected reports", (): void => {
         const first_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
         first_level_artifact_representations_map.set(74, {
             id: 74,
@@ -121,19 +120,13 @@ describe("headers-formator", () => {
             },
         };
 
-        const formatted_headers = formatHeaders(organized_reports_data);
-        expect(formatted_headers).toStrictEqual({
-            tracker_names: [
-                new TextCellWithMerges("Tracker01", 3),
-                new TextCellWithMerges("Tracker02", 1),
-            ],
-            reports_fields_labels: [
-                new TextCell("Artifact ID"),
-                new TextCell("Field02"),
-                new TextCell("Assigned to"),
-                new TextCell("Artifact ID"),
-            ],
-        });
+        const formatted_headers = formatReportsFieldsLabels(organized_reports_data);
+        expect(formatted_headers).toStrictEqual([
+            new TextCell("Artifact ID"),
+            new TextCell("Field02"),
+            new TextCell("Assigned to"),
+            new TextCell("Artifact ID"),
+        ]);
     });
     it("throws an Error if organized data does not have any ArtifactResponse in first level", (): void => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
@@ -145,7 +138,7 @@ describe("headers-formator", () => {
             },
         };
 
-        expect(() => formatHeaders(organized_reports_data)).toThrowError(
+        expect(() => formatReportsFieldsLabels(organized_reports_data)).toThrowError(
             "This must not happen. Check must be done before."
         );
     });

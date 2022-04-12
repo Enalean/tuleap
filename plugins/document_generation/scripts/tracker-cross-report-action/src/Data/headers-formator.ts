@@ -18,26 +18,17 @@
  */
 
 import type { OrganizedReportsData } from "../type";
-import { TextCell } from "@tuleap/plugin-docgen-xlsx";
+import type { HeadersSection } from "./data-formator";
+import { formatTrackerNames } from "./tracker-names-formattor";
+import { formatReportsFieldsLabels } from "./reports-fields-labels-formator";
 
-export function formatHeader(organized_data: OrganizedReportsData): ReadonlyArray<TextCell> {
-    if (organized_data.first_level.report_fields_labels.length === 0) {
+export function formatHeaders(organized_data: OrganizedReportsData): HeadersSection {
+    if (organized_data.first_level.artifact_representations.size === 0) {
         throw new Error("This must not happen. Check must be done before.");
     }
 
-    const headers_columns: Array<TextCell> = [];
-    for (const field_label of organized_data.first_level.report_fields_labels) {
-        headers_columns.push(new TextCell(field_label));
-    }
-
-    if (
-        organized_data.second_level &&
-        organized_data.second_level.report_fields_labels.length > 0
-    ) {
-        for (const field_label of organized_data.second_level.report_fields_labels) {
-            headers_columns.push(new TextCell(field_label));
-        }
-    }
-
-    return headers_columns;
+    return {
+        reports_fields_labels: formatReportsFieldsLabels(organized_data),
+        tracker_names: formatTrackerNames(organized_data),
+    };
 }

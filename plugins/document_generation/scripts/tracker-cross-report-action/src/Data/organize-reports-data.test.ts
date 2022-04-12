@@ -336,12 +336,10 @@ describe("organize-reports-data", () => {
         expect(organized_reports_data).toStrictEqual({
             first_level: {
                 tracker_name: "tracker01",
-                report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
                 artifact_representations: expected_first_level_artifact_representations_map,
             },
             second_level: {
                 tracker_name: "tracker02",
-                report_fields_labels: ["Artifact ID", "Title", "Assigned to"],
                 artifact_representations: expected_second_level_artifact_representations_map,
             },
         });
@@ -363,7 +361,6 @@ describe("organize-reports-data", () => {
             first_level: {
                 artifact_representations: new Map(),
                 tracker_name: "tracker01",
-                report_fields_labels: [],
             },
         });
     });

@@ -125,12 +125,10 @@ describe("tracker-names-formattor", () => {
             first_level: {
                 artifact_representations: first_level_artifact_representations_map,
                 tracker_name: "tracker01",
-                report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
             },
             second_level: {
                 artifact_representations: second_level_artifact_representations_map,
                 tracker_name: "tracker02",
-                report_fields_labels: ["Artifact ID"],
             },
         };
 
