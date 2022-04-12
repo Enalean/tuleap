@@ -32,31 +32,26 @@ export async function organizeReportsData(
         true
     );
 
-    const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-    const first_level_artifacts_ids_array: Array<number> = [];
+    const first_level_artifacts_representations_map: Map<number, ArtifactResponse> = new Map();
     for (const artifact_response of first_level_report_artifacts_responses) {
-        artifact_representations_map.set(artifact_response.id, artifact_response);
-        first_level_artifacts_ids_array.push(artifact_response.id);
+        first_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
     }
 
     let first_level_report_fields_labels: Array<string> = [];
-    if (first_level_artifacts_ids_array.length > 0) {
+    if (first_level_artifacts_representations_map.size > 0) {
         first_level_report_fields_labels = extractFieldsLabels(
-            artifact_representations_map,
-            first_level_artifacts_ids_array
+            first_level_artifacts_representations_map
         );
     }
 
     let organized_reports_data: OrganizedReportsData = {
-        artifact_representations: artifact_representations_map,
         first_level: {
-            artifact_ids: first_level_artifacts_ids_array,
+            artifact_representations: first_level_artifacts_representations_map,
             tracker_name: export_settings.first_level.tracker_name,
             report_fields_labels: first_level_report_fields_labels,
         },
     };
 
-    const second_level_artifacts_ids_array: Array<number> = [];
     if (export_settings.second_level) {
         const second_level_report_artifacts_responses: ArtifactResponse[] =
             await getReportArtifacts(export_settings.second_level.report_id, true);
@@ -64,7 +59,7 @@ export async function organizeReportsData(
         const linked_artifacts_representations: ArtifactResponse[] = [];
         await limitConcurrencyPool(
             5,
-            first_level_artifacts_ids_array,
+            Array.from(first_level_artifacts_representations_map.keys()),
             async (artifact_id: number): Promise<void> => {
                 for (const artifact_link_type of export_settings.first_level.artifact_link_types) {
                     const linked_artifacts_responses = await getLinkedArtifacts(
@@ -90,23 +85,22 @@ export async function organizeReportsData(
                 )
             );
 
+        const second_level_artifacts_representations_map: Map<number, ArtifactResponse> = new Map();
         for (const artifact_response of matching_second_level_representations) {
-            artifact_representations_map.set(artifact_response.id, artifact_response);
-            second_level_artifacts_ids_array.push(artifact_response.id);
+            second_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
         }
 
         let second_level_report_fields_labels: Array<string> = [];
-        if (second_level_artifacts_ids_array.length > 0) {
+        if (second_level_artifacts_representations_map.size > 0) {
             second_level_report_fields_labels = extractFieldsLabels(
-                artifact_representations_map,
-                second_level_artifacts_ids_array
+                second_level_artifacts_representations_map
             );
         }
 
         organized_reports_data = {
             ...organized_reports_data,
             second_level: {
-                artifact_ids: second_level_artifacts_ids_array,
+                artifact_representations: second_level_artifacts_representations_map,
                 tracker_name: export_settings.second_level.tracker_name,
                 report_fields_labels: second_level_report_fields_labels,
             },

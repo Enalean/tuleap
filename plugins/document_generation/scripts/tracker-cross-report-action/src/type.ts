@@ -53,13 +53,12 @@ export interface LinkedArtifactsResponse {
 }
 
 export interface OrganizedReportsData {
-    readonly artifact_representations: Map<number, ArtifactResponse>;
     readonly first_level: OrganizedReportDataLevel;
     readonly second_level?: OrganizedReportDataLevel;
 }
 
 interface OrganizedReportDataLevel {
-    artifact_ids: ReadonlyArray<number>;
+    readonly artifact_representations: Map<number, ArtifactResponse>;
     tracker_name: string;
     report_fields_labels: ReadonlyArray<string>;
 }
