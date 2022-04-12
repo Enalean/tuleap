@@ -109,7 +109,6 @@ describe("data-formator", () => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
-                report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
                 artifact_representations: artifact_representations_map,
             },
         });
@@ -124,13 +123,15 @@ describe("data-formator", () => {
         });
 
         expect(formatted_data).toStrictEqual({
-            tracker_names: [new TextCellWithMerges("tracker01", 3)],
-            headers: [
-                new TextCell("Artifact ID"),
-                new TextCell("Field02"),
-                new TextCell("Assigned to"),
-            ],
-            rows: [
+            headers: {
+                tracker_names: [new TextCellWithMerges("tracker01", 3)],
+                reports_fields_labels: [
+                    new TextCell("Artifact ID"),
+                    new TextCell("Field02"),
+                    new TextCell("Assigned to"),
+                ],
+            },
+            artifacts_rows: [
                 [new NumberCell(74), new TextCell("value02"), new EmptyCell()],
                 [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
             ],

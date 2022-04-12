@@ -56,35 +56,43 @@ function buildContent(
 ): Array<Array<CellObjectWithExtraInfo>> {
     const content: CellObjectWithExtraInfo[][] = [];
     const report_trackers_names: CellObjectWithExtraInfo[] = [];
-    if (formatted_data.tracker_names && formatted_data.tracker_names.length > 0) {
-        for (const tracker_name of formatted_data.tracker_names) {
-            report_trackers_names.push({
-                ...buildSheetTextCell(tracker_name.value),
-                ...(tracker_name.merges > 0 ? { character_width: 10 } : {}),
-                merge_columns: tracker_name.merges - 1,
-            });
+    if (formatted_data.headers) {
+        if (
+            formatted_data.headers.tracker_names &&
+            formatted_data.headers.tracker_names.length > 0
+        ) {
+            for (const tracker_name of formatted_data.headers.tracker_names) {
+                report_trackers_names.push({
+                    ...buildSheetTextCell(tracker_name.value),
+                    ...(tracker_name.merges > 0 ? { character_width: 10 } : {}),
+                    merge_columns: tracker_name.merges - 1,
+                });
 
-            let empty_cells_to_add = 0;
-            while (empty_cells_to_add < tracker_name.merges - 1) {
-                report_trackers_names.push(buildSheetEmptyCell());
-                empty_cells_to_add++;
+                let empty_cells_to_add = 0;
+                while (empty_cells_to_add < tracker_name.merges - 1) {
+                    report_trackers_names.push(buildSheetEmptyCell());
+                    empty_cells_to_add++;
+                }
             }
+
+            content.push(report_trackers_names);
         }
 
-        content.push(report_trackers_names);
-    }
-
-    const report_columns_label: CellObjectWithExtraInfo[] = [];
-    if (formatted_data.headers && formatted_data.headers.length > 0) {
-        for (const header of formatted_data.headers) {
-            report_columns_label.push(transformReportCellIntoASheetCell(header));
+        const report_columns_label: CellObjectWithExtraInfo[] = [];
+        if (
+            formatted_data.headers.reports_fields_labels &&
+            formatted_data.headers.reports_fields_labels.length > 0
+        ) {
+            for (const header of formatted_data.headers.reports_fields_labels) {
+                report_columns_label.push(transformReportCellIntoASheetCell(header));
+            }
+            content.push(report_columns_label);
         }
-        content.push(report_columns_label);
     }
 
     let artifact_value_rows: CellObjectWithExtraInfo[] = [];
-    if (formatted_data.rows && formatted_data.rows.length > 0) {
-        for (const row of formatted_data.rows) {
+    if (formatted_data.artifacts_rows && formatted_data.artifacts_rows.length > 0) {
+        for (const row of formatted_data.artifacts_rows) {
             artifact_value_rows = [];
             for (const cell of row) {
                 artifact_value_rows.push(transformReportCellIntoASheetCell(cell));

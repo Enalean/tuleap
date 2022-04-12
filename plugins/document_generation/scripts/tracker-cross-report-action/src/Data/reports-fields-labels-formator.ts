@@ -18,28 +18,33 @@
  */
 
 import type { OrganizedReportsData } from "../type";
-import { TextCellWithMerges } from "../type";
+import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { extractFieldsLabels } from "./report-fields-labels-extractor";
 
-export function formatTrackerNames(
+export function formatReportsFieldsLabels(
     organized_data: OrganizedReportsData
-): ReadonlyArray<TextCellWithMerges> {
-    const formatted_tracker_names: Array<TextCellWithMerges> = [];
-    formatted_tracker_names.push(
-        new TextCellWithMerges(
-            organized_data.first_level.tracker_name,
-            extractFieldsLabels(organized_data.first_level.artifact_representations).length
-        )
-    );
-
-    if (organized_data.second_level) {
-        formatted_tracker_names.push(
-            new TextCellWithMerges(
-                organized_data.second_level.tracker_name,
-                extractFieldsLabels(organized_data.second_level.artifact_representations).length
-            )
-        );
+): ReadonlyArray<TextCell> {
+    if (organized_data.first_level.artifact_representations.size === 0) {
+        throw new Error("This must not happen. Check must be done before.");
     }
 
-    return formatted_tracker_names;
+    const report_fields_labels: Array<TextCell> = [];
+    for (const field_label of extractFieldsLabels(
+        organized_data.first_level.artifact_representations
+    )) {
+        report_fields_labels.push(new TextCell(field_label));
+    }
+
+    if (
+        organized_data.second_level &&
+        organized_data.second_level.artifact_representations.size > 0
+    ) {
+        for (const field_label of extractFieldsLabels(
+            organized_data.second_level.artifact_representations
+        )) {
+            report_fields_labels.push(new TextCell(field_label));
+        }
+    }
+
+    return report_fields_labels;
 }

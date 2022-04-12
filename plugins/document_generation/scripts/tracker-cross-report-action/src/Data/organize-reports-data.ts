@@ -22,7 +22,6 @@ import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
 import type { ExportSettings } from "../export-document";
 import type { OrganizedReportsData } from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
-import { extractFieldsLabels } from "./report-fields-labels-extractor";
 
 export async function organizeReportsData(
     export_settings: ExportSettings
@@ -41,7 +40,6 @@ export async function organizeReportsData(
         first_level: {
             artifact_representations: first_level_artifacts_representations_map,
             tracker_name: export_settings.first_level.tracker_name,
-            report_fields_labels: extractFieldsLabels(first_level_artifacts_representations_map),
         },
     };
 
@@ -88,9 +86,6 @@ export async function organizeReportsData(
             second_level: {
                 artifact_representations: second_level_artifacts_representations_map,
                 tracker_name: export_settings.second_level.tracker_name,
-                report_fields_labels: extractFieldsLabels(
-                    second_level_artifacts_representations_map
-                ),
             },
         };
     }
