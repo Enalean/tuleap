@@ -84,7 +84,7 @@ $profile-max-width: 720px;
     $avatar-jumbo-size: 96px;
 
     flex: 1 0 auto;
-    max-width: $profile-max-width - $avatar-jumbo-size - var(--tlp-medium-spacing);
+    max-width: calc(#{$profile-max-width} - #{$avatar-jumbo-size} - var(--tlp-medium-spacing));
 }
 
 .user-profile-status-active {
