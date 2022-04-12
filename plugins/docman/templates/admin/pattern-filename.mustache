@@ -94,6 +94,7 @@
                                value="1"
                                {{# is_enforced }}checked{{/ is_enforced }}
                                id="docman-admin-filename-pattern-enforce"
+                               data-test="docman-enforce-pattern"
                         >
                         {{# dgettext }}tuleap-docman | Enforce filename pattern{{/ dgettext }}
                     </label>
@@ -115,6 +116,7 @@
                            value="{{ pattern }}"
                            pattern=".*\$\{(TITLE|ID)\}.*"
                            title="{{# dgettext }}tuleap-docman | Pattern must contain at least ${TITLE} or ${ID}{{/ dgettext }}"
+                           data-test="docman-pattern"
                     />
                     <p class="tlp-text-info">
                         {{# dgettext }}
@@ -122,10 +124,10 @@
                         {{/ dgettext }}
                     </p>
                 </div>
-                <input type="hidden" name="action" value="admin_change_filename_pattern" />
+                <input type="hidden" name="action" value="admin_change_filename_pattern"/>
             </section>
             <section class="tlp-pane-section tlp-pane-section-submit">
-                <button type="submit" class="tlp-button-primary">
+                <button type="submit" class="tlp-button-primary" data-test="docman-save-pattern-button">
                     <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
                     {{# gettext }}Save{{/ gettext }}
                 </button>

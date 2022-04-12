@@ -232,6 +232,7 @@ abstract class AdminView
 
         $tab = [
             [
+                'id' => "legacy-view",
                 'title' => $interface->isEnhanced()
                     ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
                     : \Docman_View_Admin_View::getTabTitle(),
@@ -243,6 +244,7 @@ abstract class AdminView
                 ),
             ],
             [
+                'id' => "filename-pattern",
                 'title' => Docman_View_Admin_FilenamePattern::getTabTitle(),
                 'description' => Docman_View_Admin_FilenamePattern::getTabDescription(),
                 'url' => DocmanViewURLBuilder::buildUrl(
