@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const { jest_base_config } = require("@tuleap/build-system-configurator");
 module.exports = {
-    ...require("../../tests/jest/jest.base.config.js"),
+    ...jest_base_config,
     displayName: "label",
 };

@@ -19,13 +19,12 @@
 
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const base_config = require("../../tests/jest/jest.base.config.js");
-
+const { jest_base_config } = require("@tuleap/build-system-configurator");
 module.exports = {
-    ...base_config,
+    ...jest_base_config,
     displayName: "document_generation",
     transform: {
-        ...base_config.transform,
+        ...jest_base_config.transform,
         "^.+\\.vue$": "@vue/vue3-jest",
     },
 };

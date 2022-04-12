@@ -19,7 +19,7 @@
 
 const path = require("path");
 
-const base_config = require("./jest.base.config.js");
+const { jest_base_config } = require("@tuleap/build-system-configurator");
 
 module.exports = {
     rootDir: path.resolve(__dirname, "../../"),
@@ -27,5 +27,5 @@ module.exports = {
         "<rootDir>/plugins/*/jest.config.js",
         "<rootDir>/plugins/*/scripts/*/jest.config.js",
     ],
-    collectCoverageFrom: [...base_config.collectCoverageFrom],
+    collectCoverageFrom: [...jest_base_config.collectCoverageFrom],
 };

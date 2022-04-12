@@ -1,7 +1,7 @@
 import "./app.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
 
 describe("DroppedService -", function () {
     let wrapPromise, DroppedService, KanbanService;

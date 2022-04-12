@@ -21,7 +21,7 @@ import testmanagment_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
 
 describe(`JWTService`, () => {
     let JWTService, $q, wrapPromise;
