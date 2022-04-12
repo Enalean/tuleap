@@ -30,6 +30,12 @@
             <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
         </div>
         <div class="tlp-form-element">
+            <artifact-link-types-selector
+                v-model:artifact_link_types="artifact_link_types"
+                v-bind:tracker_id="tracker?.id ?? null"
+            />
+        </div>
+        <div class="tlp-form-element">
             <tracker-report-selector
                 v-model:report="report"
                 v-bind:tracker_id="tracker?.id ?? null"
@@ -43,11 +49,17 @@ import ProjectSelector from "./ProjectSelector.vue";
 import TrackerSelector from "./TrackerSelector.vue";
 import type { SelectedReport, SelectedTracker } from "../type";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
+import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
 
-const props = defineProps<{ tracker: SelectedTracker | null; report: SelectedReport | null }>();
+const props = defineProps<{
+    tracker: SelectedTracker | null;
+    report: SelectedReport | null;
+    artifact_link_types: string[];
+}>();
 const emit = defineEmits<{
     (e: "update:tracker", value: SelectedTracker | null): void;
     (e: "update:report", value: SelectedReport | null): void;
+    (e: "update:artifact_link_types", value: string[]): void;
 }>();
 
 const tracker = computed({
@@ -64,6 +76,14 @@ const report = computed({
     },
     set(value: SelectedReport | null) {
         emit("update:report", value);
+    },
+});
+const artifact_link_types = computed({
+    get(): string[] {
+        return props.artifact_link_types;
+    },
+    set(value: string[]) {
+        emit("update:artifact_link_types", value);
     },
 });
 
