@@ -3,8 +3,6 @@
 exports[`TableBodySkeleton should display skeleton for different types of column 1`] = `
 <tbody>
   <tr>
-    <!---->
-     
     <td
       class="tlp-table-cell-numeric"
     >
@@ -15,14 +13,17 @@ exports[`TableBodySkeleton should display skeleton for different types of column
       />
     </td>
     <td
-      class="document-search-result-icon"
+      class=""
     >
       <i
         aria-hidden="true"
-        class="fas fa-file-alt tlp-skeleton-icon"
+        class="fas tlp-skeleton-icon document-search-result-icon fa-file-alt"
+      />
+       
+      <span
+        class="tlp-skeleton-text"
       />
     </td>
-     
     <td
       class=""
     >
@@ -32,33 +33,18 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
-    <td
-      class=""
-    >
-      <!---->
-       
-      <span
-        class="tlp-skeleton-text"
-      />
-    </td>
-    <!---->
-     
     <td
       class=""
     >
       <i
         aria-hidden="true"
-        class="fas fa-user tlp-skeleton-icon"
+        class="fas tlp-skeleton-icon document-search-result-icon fa-user"
       />
        
       <span
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
     <td
       class=""
     >
@@ -68,8 +54,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
     <td
       class=""
     >
@@ -81,8 +65,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     </td>
   </tr>
   <tr>
-    <!---->
-     
     <td
       class="tlp-table-cell-numeric"
     >
@@ -93,14 +75,17 @@ exports[`TableBodySkeleton should display skeleton for different types of column
       />
     </td>
     <td
-      class="document-search-result-icon"
+      class=""
     >
       <i
         aria-hidden="true"
-        class="fas fa-file-alt tlp-skeleton-icon"
+        class="fas tlp-skeleton-icon document-search-result-icon fa-file-alt"
+      />
+       
+      <span
+        class="tlp-skeleton-text"
       />
     </td>
-     
     <td
       class=""
     >
@@ -110,33 +95,18 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
-    <td
-      class=""
-    >
-      <!---->
-       
-      <span
-        class="tlp-skeleton-text"
-      />
-    </td>
-    <!---->
-     
     <td
       class=""
     >
       <i
         aria-hidden="true"
-        class="fas fa-user tlp-skeleton-icon"
+        class="fas tlp-skeleton-icon document-search-result-icon fa-user"
       />
        
       <span
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
     <td
       class=""
     >
@@ -146,8 +116,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
     <td
       class=""
     >
@@ -159,8 +127,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
     </td>
   </tr>
   <tr>
-    <!---->
-     
     <td
       class="tlp-table-cell-numeric"
     >
@@ -171,14 +137,17 @@ exports[`TableBodySkeleton should display skeleton for different types of column
       />
     </td>
     <td
-      class="document-search-result-icon"
+      class=""
     >
       <i
         aria-hidden="true"
-        class="fas fa-file-alt tlp-skeleton-icon"
+        class="fas tlp-skeleton-icon document-search-result-icon fa-file-alt"
+      />
+       
+      <span
+        class="tlp-skeleton-text"
       />
     </td>
-     
     <td
       class=""
     >
@@ -188,33 +157,18 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
-    <td
-      class=""
-    >
-      <!---->
-       
-      <span
-        class="tlp-skeleton-text"
-      />
-    </td>
-    <!---->
-     
     <td
       class=""
     >
       <i
         aria-hidden="true"
-        class="fas fa-user tlp-skeleton-icon"
+        class="fas tlp-skeleton-icon document-search-result-icon fa-user"
       />
        
       <span
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
     <td
       class=""
     >
@@ -224,8 +178,6 @@ exports[`TableBodySkeleton should display skeleton for different types of column
         class="tlp-skeleton-text"
       />
     </td>
-    <!---->
-     
     <td
       class=""
     >

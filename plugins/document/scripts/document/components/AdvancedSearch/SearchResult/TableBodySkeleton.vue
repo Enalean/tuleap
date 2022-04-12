@@ -23,20 +23,17 @@
         <tr v-for="i in 3" v-bind:key="i">
             <template v-for="column of columns">
                 <td
-                    v-if="column.name === 'title'"
-                    class="document-search-result-icon"
-                    v-bind:key="'document-search-result-' + column.name + '-icon-skeleton'"
-                >
-                    <i class="fas fa-file-alt tlp-skeleton-icon" aria-hidden="true"></i>
-                </td>
-                <td
                     v-bind:class="{ 'tlp-table-cell-numeric': column.name === 'id' }"
                     v-bind:key="'document-search-result-' + column.name + '-skeleton'"
                 >
                     <i
-                        class="fas fa-user tlp-skeleton-icon"
+                        class="fas tlp-skeleton-icon document-search-result-icon"
+                        v-bind:class="{
+                            'fa-file-alt': column.name === 'title',
+                            'fa-user': column.name === 'owner',
+                        }"
+                        v-if="column.name === 'title' || column.name === 'owner'"
                         aria-hidden="true"
-                        v-if="column.name === 'owner'"
                     ></i>
                     <span class="tlp-skeleton-text"></span>
                 </td>

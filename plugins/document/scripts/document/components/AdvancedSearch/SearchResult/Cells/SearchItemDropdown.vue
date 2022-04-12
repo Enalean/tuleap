@@ -97,7 +97,7 @@ const dropdown_button = ref<InstanceType<typeof HTMLButtonElement> | null>(null)
 const dropdown_menu = ref<InstanceType<typeof HTMLElement> | null>(null);
 const dropdown_container = ref<InstanceType<typeof HTMLElement> | null>(null);
 
-let parent_container: HTMLElement | null;
+let table_container: HTMLElement | null;
 let dropdown: null | Dropdown = null;
 
 function setRightPositionOfDropdown(): void {
@@ -105,14 +105,17 @@ function setRightPositionOfDropdown(): void {
         return;
     }
 
-    if (!parent_container) {
+    if (!dropdown_button.value) {
         return;
     }
 
-    const right =
-        parent_container.scrollWidth - parent_container.scrollLeft - parent_container.clientWidth;
+    if (!table_container) {
+        return;
+    }
 
-    dropdown_container.value.style.right = `calc(${right}px + var(--tlp-medium-spacing))`;
+    const left = table_container.clientWidth - dropdown_button.value.clientWidth;
+
+    dropdown_container.value.style.left = `calc(${left}px - var(--tlp-medium-spacing))`;
 }
 
 let resize_observer: ResizeObserver | null;
@@ -137,10 +140,7 @@ onMounted(() => {
     resize_observer = new ResizeObserver(setRightPositionOfDropdown);
     resize_observer.observe(document.body);
 
-    parent_container = dropdown_container.value.closest(".document-search-table-container");
-    if (parent_container) {
-        parent_container.addEventListener("scroll", setRightPositionOfDropdown, { passive: true });
-    }
+    table_container = dropdown_container.value.closest(".document-search-table-container");
 
     dropdown = createDropdown(dropdown_button.value);
     dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, onDropdownShown);
@@ -159,10 +159,6 @@ onBeforeUnmount(() => {
 
     if (resize_observer) {
         resize_observer.unobserve(document.body);
-    }
-
-    if (parent_container) {
-        parent_container.removeEventListener("scroll", setRightPositionOfDropdown);
     }
 
     if (dropdown_menu.value) {
