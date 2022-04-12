@@ -67,5 +67,8 @@ msgstr ""
 "Les artefacts sélectionnés seront les artefacts liés qui ne sont pas filtrés "
 "par un critère du rapport sélectionné."
 
+msgid "Third level"
+msgstr "Troisième niveau"
+
 msgid "Tracker"
 msgstr "Outil de suivi"

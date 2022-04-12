@@ -30,6 +30,7 @@ interface ExportLevelSetting {
 export interface ExportSettings {
     readonly first_level: ExportLevelSetting;
     readonly second_level?: ExportLevelSetting;
+    readonly third_level?: Omit<ExportLevelSetting, "artifact_link_types">;
 }
 
 export async function downloadXLSXDocument(

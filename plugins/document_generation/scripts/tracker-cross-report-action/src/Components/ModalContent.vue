@@ -50,6 +50,10 @@
                 v-model:report="selected_report_level_2"
                 v-model:artifact_link_types="artifact_link_types_level_2"
             />
+            <third-level-selector
+                v-model:tracker="selected_tracker_level_3"
+                v-model:report="selected_report_level_3"
+            />
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -87,6 +91,7 @@ import type { GlobalExportProperties, SelectedReport } from "../type";
 import FirstLevelSelector from "./FirstLevelSelector.vue";
 import ExplanationsExport from "./ExplanationsExport.vue";
 import SecondLevelSelector from "./SecondLevelSelector.vue";
+import ThirdLevelSelector from "./ThirdLevelSelector.vue";
 import type { ExportSettings } from "../export-document";
 import type { SelectedTracker } from "../type";
 
@@ -116,6 +121,9 @@ const selected_tracker_level_2 = ref<SelectedTracker | null>(null);
 const selected_report_level_2 = ref<SelectedReport | null>(null);
 const artifact_link_types_level_2 = ref([]);
 
+const selected_tracker_level_3 = ref<SelectedTracker | null>(null);
+const selected_report_level_3 = ref<SelectedReport | null>(null);
+
 const export_is_ongoing = ref(false);
 async function startExport(): Promise<void> {
     export_is_ongoing.value = true;
@@ -140,6 +148,16 @@ async function startExport(): Promise<void> {
                 report_id: selected_report_level_2.value.id,
                 report_name: selected_report_level_2.value.label,
                 artifact_link_types: artifact_link_types_level_2.value,
+            },
+        };
+    }
+    if (selected_tracker_level_3.value !== null && selected_report_level_3.value !== null) {
+        export_settings = {
+            ...export_settings,
+            third_level: {
+                tracker_name: selected_tracker_level_3.value.label,
+                report_id: selected_report_level_3.value.id,
+                report_name: selected_report_level_3.value.label,
             },
         };
     }
