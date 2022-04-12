@@ -43,6 +43,7 @@
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="$gettext('Create document')"
             v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:data-test="`document-modal-submit-button-create-file`"
         />
     </form>
 </template>

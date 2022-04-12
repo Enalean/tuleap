@@ -44,6 +44,7 @@
             v-bind:submit-button-label="submit_button_label"
             v-bind:aria-labelled-by="aria_labelled_by"
             v-bind:icon-submit-button-class="'fa-pencil'"
+            data-test="document-modal-submit-update-properties"
         />
     </form>
 </template>

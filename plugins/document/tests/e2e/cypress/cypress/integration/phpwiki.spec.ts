@@ -87,6 +87,9 @@ describe("Document PhpWiki integration", () => {
         createAWikiDocument(`private${now}`, `My Wiki & Page document${now}`);
         cy.visitProjectService(project_unixname, "Documents");
         cy.get("[data-test=document-tree-content]").contains("td", `private${now}`).click();
+        // having page reload prevent to do assertions before the quicklook is rendered and prevent flaky test
+        cy.reload();
+
         cy.get("[data-test=go-to-the-wiki-page]").click();
 
         // ignore rule for phpwiki generated content
@@ -123,7 +126,7 @@ describe("Document PhpWiki integration", () => {
         cy.get("[data-test=document-permission-Reader]").select("Project administrators");
         cy.get("[data-test=document-permission-Writer]").select("Project administrators");
         cy.get("[data-test=document-permission-Manager]").select("Project administrators");
-        cy.get("[data-test=document-modal-submit-button]").last().click();
+        cy.get("[data-test=document-modal-submit-update-permissions]").last().click();
 
         cy.log("wiki page have their permissions in wiki service");
 
@@ -164,7 +167,7 @@ function createAWikiDocument(document_title: string, page_name: string): void {
 
         cy.get("[data-test=document-new-item-title]").type(document_title);
         cy.get("[data-test=document-new-item-wiki-page-name]").type(page_name);
-        cy.get("[data-test=document-modal-submit-button]").click();
+        cy.get("[data-test=document-modal-submit-button-create-item]").click();
     });
 }
 
