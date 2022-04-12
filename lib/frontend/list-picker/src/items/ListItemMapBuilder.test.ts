@@ -209,7 +209,7 @@ describe("ListItemBuilder", () => {
         ]);
     });
 
-    it("should ignore options with empty value attribute BUT does not remove them from the source <select> options", async () => {
+    it("should ignore options with empty value attribute and no content BUT does not remove them from the source <select> options", async () => {
         const empty_option = document.createElement("option");
         empty_option.setAttribute("id", "empty-option");
         empty_option.setAttribute("value", "");
@@ -221,6 +221,22 @@ describe("ListItemBuilder", () => {
             return item.value === "";
         });
         expect(item_with_empty_value).toBeUndefined();
+        expect(select.querySelector("option[value='']")).not.toBeNull();
+    });
+
+    it("should NOT ignore options with empty value attribute with content", async () => {
+        const empty_option = document.createElement("option");
+        empty_option.setAttribute("id", "empty-option");
+        empty_option.setAttribute("value", "");
+        empty_option.textContent = "Some label";
+        select.appendChild(empty_option);
+
+        appendSimpleOptionsToSourceSelectBox(select);
+        const map = await builder.buildListPickerItemsMap();
+        const item_with_empty_value = Array.from(map.values()).find((item) => {
+            return item.value === "";
+        });
+        expect(item_with_empty_value).toBeDefined();
         expect(select.querySelector("option[value='']")).not.toBeNull();
     });
 
