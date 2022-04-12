@@ -33,3 +33,15 @@
         background: var(--tlp-white-color);
     }
 }
+
+.document-file-version-filename {
+    width: 100%;
+}
+
+.document-file-version-name {
+    min-width: 125px;
+}
+
+.document-file-version-separator {
+    margin-top: var(--tlp-medium-spacing);
+}

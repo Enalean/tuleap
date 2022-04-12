@@ -36,9 +36,9 @@ import {
     isLink,
     isWiki,
 } from "../helpers/type-check-helper";
-import { getErrorMessage } from "./actions-helpers/handle-errors";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import emitter from "../helpers/emitter";
+import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
 
 export const createNewItem = async (
     context: ActionContext<RootState, RootState>,

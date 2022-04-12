@@ -42,6 +42,7 @@
                     v-bind:item="uploaded_item"
                 />
             </item-update-properties>
+            <file-version-history v-bind:item="item" />
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
@@ -67,10 +68,12 @@ import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
 import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
 import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
 import { TYPE_FILE } from "../../../../constants";
+import FileVersionHistory from "./History/FileVersionHistory.vue";
 
 export default {
     name: "CreateNewVersionFileModal",
     components: {
+        FileVersionHistory,
         PreviewFilenameNewVersion,
         ItemUpdateProperties,
         ModalFeedback,

@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileVersionHistory displays the empty message when there is no version 1`] = `
+<fragment-stub>
+  <hr class="tlp-modal-separator document-file-version-separator">
+  <h2 class="tlp-modal-subtitle" data-msgid="Latest versions" data-current-language="en_US">Latest versions</h2>
+  <p data-msgid="Only the last 5 versions are displayed." data-current-language="en_US">Only the last 5 versions are displayed.</p>
+  <table class="tlp-table">
+    <thead>
+      <tr>
+        <th class="document-file-version-version" data-msgid="Version" data-current-language="en_US">Version</th>
+        <th class="document-file-version-name" data-msgid="Version name" data-current-language="en_US">Version name</th>
+        <th class="document-file-version-filename" data-msgid="Filename" data-current-language="en_US">Filename</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="3" class="tlp-table-cell-empty" data-msgid="No version history" data-current-language="en_US">No version history</td>
+      </tr>
+    </tbody>
+  </table>
+  <!---->
+</fragment-stub>
+`;
+
+exports[`FileVersionHistory displays the error if an error occurred when retrieving the history version 1`] = `
+<fragment-stub>
+  <hr class="tlp-modal-separator document-file-version-separator">
+  <h2 class="tlp-modal-subtitle" data-msgid="Latest versions" data-current-language="en_US">Latest versions</h2>
+  <p data-msgid="Only the last 5 versions are displayed." data-current-language="en_US">Only the last 5 versions are displayed.</p>
+  <!---->
+  <div class="tlp-alert-danger">
+    Some error
+  </div>
+</fragment-stub>
+`;

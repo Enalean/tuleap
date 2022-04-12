@@ -18,7 +18,6 @@
  */
 
 import Vue from "vue";
-import { getErrorMessage } from "./actions-helpers/handle-errors";
 import type { ActionContext } from "vuex";
 import type { ApprovalTable, Embedded, Empty, ItemFile, Link, RootState, Wiki } from "../type";
 import { uploadNewVersion } from "./actions-helpers/upload-new-version";
@@ -37,6 +36,7 @@ import { uploadVersionFromEmpty } from "./actions-helpers/upload-file";
 import type { CreatedItemFileProperties } from "../type";
 import { isEmpty, isFakeItem } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
+import { getErrorMessage } from "../helpers/properties-helpers/error-handler-helper";
 
 export async function createNewFileVersion(
     context: ActionContext<RootState, RootState>,
