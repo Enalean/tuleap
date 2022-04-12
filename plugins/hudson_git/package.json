@@ -4,6 +4,9 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "dependencies": {
+    "@tuleap/gettext": "file:../../lib/frontend/gettext"
+  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@types/bootstrap": "^3.4.0",

@@ -20,7 +20,8 @@
 import type { VueConstructor } from "vue/types/vue";
 import VueGettext from "vue-gettext";
 
-export { getPOFileFromLocale } from "./gettext-init";
+export { getPOFileFromLocale } from "@tuleap/gettext";
+export type { GetText } from "@tuleap/gettext";
 
 interface TranslatedStrings {
     readonly [key: string]: string;

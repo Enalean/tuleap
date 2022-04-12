@@ -42,10 +42,7 @@ export interface POFile {
     };
 }
 
-export {
-    getPOFileFromLocale,
-    getPOFileFromLocaleWithoutExtension,
-} from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/gettext";
 
 export async function initVueGettext(
     create_gettext: typeof createGettext,

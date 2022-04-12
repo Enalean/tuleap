@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 import { initListPickersMilestoneSection } from "./init-list-pickers-milestone-section";
 import * as listPicker from "@tuleap/list-picker";
 import * as disabledPlannableTrackerHelper from "../helper/disabled-plannable-tracker-helper";

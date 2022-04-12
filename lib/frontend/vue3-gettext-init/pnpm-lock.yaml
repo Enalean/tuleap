@@ -2,12 +2,12 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../build-system-configurator
-  '@tuleap/core': file:../../../src
+  '@tuleap/gettext': file:../gettext
   vue: ^3.2.31
   vue3-gettext: ^2.2.1
 
 dependencies:
-  '@tuleap/core': link:../../../src
+  '@tuleap/gettext': link:../gettext
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator

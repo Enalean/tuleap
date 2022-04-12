@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "../../../../../../src/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import type { ArtifactFieldValueStatus } from "@tuleap/plugin-docgen-docx";
 

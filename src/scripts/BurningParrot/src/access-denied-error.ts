@@ -18,8 +18,8 @@
  */
 
 import { createModal } from "tlp";
-import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
-import type GetText from "node-gettext";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import type { GetText } from "@tuleap/gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const button = document.getElementById("button-ask-to-join");

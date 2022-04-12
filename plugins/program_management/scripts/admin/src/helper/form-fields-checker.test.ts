@@ -19,7 +19,7 @@
 
 import { checkAllFieldAreFilledAndSetErrorMessage } from "./form-fields-checker";
 import * as formFieldErrorHelper from "./form-field-error-helper";
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 
 jest.mock("./form-field-error-helper");
 describe("form-fields-checker", function () {

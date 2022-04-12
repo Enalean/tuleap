@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/core': file:../../src
+  '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
@@ -10,7 +10,7 @@ specifiers:
   sprintf-js: ^1.1.2
 
 dependencies:
-  '@tuleap/core': link:../../src
+  '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   mustache: 4.2.0

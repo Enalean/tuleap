@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/core': file:../../src
+  '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
   '@tuleap/list-picker': file:../../lib/frontend/list-picker
   '@tuleap/mention': file:../../lib/frontend/mention
@@ -43,7 +43,7 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@tuleap/core': link:../../src
+  '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/mention': link:../../lib/frontend/mention

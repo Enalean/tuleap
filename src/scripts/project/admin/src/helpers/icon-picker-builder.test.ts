@@ -19,7 +19,7 @@
  */
 
 import { buildIconPicker } from "./icon-picker-builder";
-import type { GetText } from "../../../../tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 
 jest.mock("@joeattardi/emoji-button", () => {
     return {

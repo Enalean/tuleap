@@ -18,21 +18,27 @@
  */
 
 import Gettext from "node-gettext";
+import type { GettextParserPoFile } from "./types";
+import { DEFAULT_LANGUAGE } from "./constants";
 
-export function getPOFileFromLocale(locale) {
+export function getPOFileFromLocale(locale: string): string {
     return getPOFileFromLocaleWithoutExtension(locale) + ".po";
 }
 
-export function getPOFileFromLocaleWithoutExtension(locale) {
+export function getPOFileFromLocaleWithoutExtension(locale: string): string {
     if (!locale.match(/[a-z]{2,3}_[A-Z]{2,3}/)) {
         throw new Error(`${locale} does not not seem to be a locale string`);
     }
     return locale;
 }
 
-export async function initGettext(locale, domain, load_translations_callback) {
+export async function initGettext(
+    locale: string,
+    domain: string,
+    load_translations_callback: (locale: string) => Promise<GettextParserPoFile>
+): Promise<Gettext> {
     const gettext_provider = new Gettext();
-    if (locale !== "en_US") {
+    if (locale !== DEFAULT_LANGUAGE) {
         try {
             gettext_provider.addTranslations(
                 locale,

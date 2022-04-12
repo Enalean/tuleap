@@ -6,7 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@tuleap/core": "file:../../src",
+    "@tuleap/gettext": "file:../../lib/frontend/gettext",
     "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper",
     "@tuleap/list-picker": "file:../../lib/frontend/list-picker",
     "@tuleap/mention": "file:../../lib/frontend/mention",

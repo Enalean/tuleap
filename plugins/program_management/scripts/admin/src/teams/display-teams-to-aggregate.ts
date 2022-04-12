@@ -18,7 +18,7 @@
  */
 
 import { createListPicker } from "@tuleap/list-picker";
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 
 export async function displayTeamsToAggregate(
     gettext_provider: GetText,
