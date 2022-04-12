@@ -41,6 +41,7 @@ export function getTracker(tracker_id: number): Promise<TrackerRepresentation> {
 export interface ArtifactRepresentation {
     readonly id: number;
     readonly title: string;
+    readonly xref: string;
 }
 
 export function getArtifact(artifact_id: number): Promise<ArtifactRepresentation> {
@@ -48,6 +49,12 @@ export function getArtifact(artifact_id: number): Promise<ArtifactRepresentation
         resetError();
         return response.json();
     }, errorHandler);
+}
+
+export function getMatchingArtifact(artifact_id: number): Promise<ArtifactRepresentation> {
+    return get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => {
+        return response.json();
+    });
 }
 
 type EtagValue = string | null;

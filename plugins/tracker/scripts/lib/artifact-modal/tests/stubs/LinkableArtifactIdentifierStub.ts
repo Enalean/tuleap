@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Artifact {
-    readonly id: number;
-    readonly title: string;
-    readonly xref: string;
-}
+import type { LinkableArtifactIdentifier } from "../../src/domain/fields/link-field-v2/LinkableArtifactIdentifier";
+
+export const LinkableArtifactIdentifierStub = {
+    withId: (id: number): LinkableArtifactIdentifier => ({
+        _type: "LinkableArtifactIdentifier",
+        id,
+    }),
+};

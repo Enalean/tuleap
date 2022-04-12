@@ -18,12 +18,12 @@
  */
 
 import french_translations from "../po/fr_FR.po";
-import type { LinkSelector, LinkSelectorOptions } from "./type";
+import type { LinkSelector, LinkSelectorOptions, LinkSelectorSearchFieldCallback } from "./type";
 import * as creator from "./link-selector";
 import { initGettextSync } from "@tuleap/gettext";
 import "../themes/style.scss";
 
-export type { LinkSelector, LinkSelectorOptions };
+export type { LinkSelector, LinkSelectorOptions, LinkSelectorSearchFieldCallback };
 export function createLinkSelector(
     source_select_box: HTMLSelectElement,
     options: LinkSelectorOptions

@@ -35,7 +35,11 @@ describe(`ParentRetriever`, () => {
     });
 
     const getParent = (): ResultAsync<Artifact, Fault> => {
-        const parent_artifact: Artifact = { id: PARENT_ID, title: "tribrachic" };
+        const parent_artifact: Artifact = {
+            id: PARENT_ID,
+            title: "tribrachic",
+            xref: `story #${PARENT_ID}`,
+        };
         const retriever = ParentRetriever(RetrieveArtifactStub.withArtifact(parent_artifact));
         return retriever.getParent(parent_identifier);
     };

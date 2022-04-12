@@ -37,7 +37,11 @@ describe(`ParentFeedbackController`, () => {
 
     beforeEach(() => {
         fault_notifier = NotifyFaultStub.withCount();
-        const parent_artifact: Artifact = { id: PARENT_ARTIFACT_ID, title: "nonhereditary" };
+        const parent_artifact: Artifact = {
+            id: PARENT_ARTIFACT_ID,
+            title: "nonhereditary",
+            xref: `story #${PARENT_ARTIFACT_ID}`,
+        };
         artifact_retriever = RetrieveArtifactStub.withArtifact(parent_artifact);
         parent_identifier = ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID);
     });

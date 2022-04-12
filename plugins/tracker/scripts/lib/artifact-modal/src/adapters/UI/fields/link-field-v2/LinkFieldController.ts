@@ -33,12 +33,15 @@ import { LinkRetrievalFault } from "../../../../domain/fields/link-field-v2/Link
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
+import type { LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
 
 export interface LinkFieldControllerType {
     displayField(): LinkFieldPresenter;
     displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
+    autoComplete(select: HTMLSelectElement): LinkSelectorSearchFieldCallback;
 }
 
 const isCreationModeFault = (fault: Fault): boolean => {
@@ -68,6 +71,7 @@ export const LinkFieldController = (
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
     fault_notifier: NotifyFault,
     field: ArtifactLinkFieldStructure,
+    links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_artifact_reference: ArtifactCrossReference | null
 ): LinkFieldControllerType => ({
@@ -101,5 +105,9 @@ export const LinkFieldController = (
     ): LinkedArtifactCollectionPresenter {
         deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
         return buildPresenter(links_store, deleted_link_verifier);
+    },
+
+    autoComplete(select: HTMLSelectElement): LinkSelectorSearchFieldCallback {
+        return links_autocompleter.autoComplete(select);
     },
 });

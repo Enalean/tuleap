@@ -52,8 +52,6 @@ export const getAutocomputeLabel = (): string => gettextCatalog.getString("Auto-
 export const getAutoComputedValueLabel = (): string => gettextCatalog.getString("(auto-computed)");
 export const getComputedValueLabel = (): string => gettextCatalog.getString("Computed value:");
 export const getEmptyLabel = (): string => gettextCatalog.getString("Empty");
-export const getLinkFieldUnderConstructionPlaceholder = (): string =>
-    gettextCatalog.getString("Field under implementation, please come back later");
 export const getLinkFieldFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the linked artifacts: %s");
 export const getLinkedParentFeedback = (): string =>
@@ -84,3 +82,6 @@ export const getAddFileButtonlabel = (): string => gettextCatalog.getString("Add
 export const getNewArtifactLabel = (): string => gettextCatalog.getString("New artifact");
 export const getParentFetchErrorMessage = (): string =>
     gettextCatalog.getString("Unable to retrieve the parent artifact: %s");
+export const getMatchingArtifactLabel = (): string => gettextCatalog.getString("Matching artifact");
+export const getNoResultFoundEmptyState = (): string => gettextCatalog.getString("No result found");
+export const getLinkSelectorPlaceholderText = (): string => gettextCatalog.getString("Artifact id");

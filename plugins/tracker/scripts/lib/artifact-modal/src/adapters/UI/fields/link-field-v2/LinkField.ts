@@ -23,17 +23,19 @@ import { define, html } from "hybrids";
 import {
     getAddLinkButtonLabel,
     getLinkFieldTableEmptyStateText,
-    getLinkFieldUnderConstructionPlaceholder,
+    getLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { createLinkSelector } from "@tuleap/link-selector";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
+    readonly artifact_link_select: HTMLSelectElement;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
 }
@@ -93,12 +95,29 @@ export const getSkeletonIfNeeded = (
 
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
+    artifact_link_select: ({ content }) => {
+        const select = content().querySelector(`[data-select=artifact-link-select]`);
+        if (!(select instanceof HTMLSelectElement)) {
+            throw new Error("Unable to find the artifact-link-select");
+        }
+
+        return select;
+    },
     controller: {
-        set(host, controller: LinkFieldControllerType) {
+        async set(host, controller: LinkFieldControllerType) {
             host.field_presenter = controller.displayField();
             controller
                 .displayLinkedArtifacts()
                 .then((presenter) => (host.linked_artifacts_presenter = presenter));
+
+            if (host.artifact_link_select !== null) {
+                await createLinkSelector(host.artifact_link_select, {
+                    search_field_callback: controller.autoComplete(host.artifact_link_select),
+                    placeholder: getLinkSelectorPlaceholderText(),
+                    locale: document.body?.dataset.userLocale,
+                });
+            }
+
             return controller;
         },
     },
@@ -124,12 +143,7 @@ export const LinkField = define<LinkField>({
                         ${getTypeSelectorTemplate(host.field_presenter)}
                     </td>
                     <td class="link-field-table-footer-input" colspan="2">
-                        <input
-                            id="${"tracker_field_" + host.field_presenter.field_id}"
-                            type="text"
-                            class="tlp-input tlp-input-small"
-                            placeholder="${getLinkFieldUnderConstructionPlaceholder()}"
-                        />
+                        <select data-select="artifact-link-select"></select>
                     </td>
                     <td class="link-field-table-footer-add-link">
                         <button type="button" class="tlp-button-small tlp-button-primary" disabled>

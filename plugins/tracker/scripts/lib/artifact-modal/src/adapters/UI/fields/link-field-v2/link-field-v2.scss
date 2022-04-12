@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/link-selector";
+
 $link-table-cell-padding: 8px;
 $link-table-cell-border-bottom: 1px solid var(--tlp-background-color-darker-05);
 $link-table-cell-background: transparent;
@@ -62,6 +64,10 @@ $link-table-cell-background: transparent;
 
 .link-field-table-footer-input {
     width: 100%;
+
+    > .link-selector-component-wrapper > .link-selector > .link-selector-selection {
+        height: 32px;
+    }
 }
 
 .link-field-table-footer-type {

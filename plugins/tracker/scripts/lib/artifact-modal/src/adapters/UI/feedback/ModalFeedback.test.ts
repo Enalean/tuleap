@@ -42,6 +42,7 @@ describe(`ModalFeedback`, () => {
         parent_presenter = ParentFeedbackPresenter.fromArtifact({
             id: PARENT_ID,
             title: PARENT_TITLE,
+            xref: `story #${PARENT_ID}`,
         });
         fault_presenter = FaultFeedbackPresenter.fromFault(Fault.fromMessage(FAULT_MESSAGE));
     });

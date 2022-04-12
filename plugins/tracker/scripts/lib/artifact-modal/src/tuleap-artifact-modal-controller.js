@@ -65,6 +65,7 @@ import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldCo
 import { TrackerShortnameProxy } from "./adapters/Caller/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
+import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field-v2/ArtifactLinkSelectorAutoCompleter";
 
 export default ArtifactModalController;
 
@@ -150,6 +151,7 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 fault_feedback_controller,
                 field,
+                ArtifactLinkSelectorAutoCompleter(api_client),
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,
