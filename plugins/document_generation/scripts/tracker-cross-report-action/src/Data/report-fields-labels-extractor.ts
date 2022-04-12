@@ -21,17 +21,13 @@ import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
 
 export function extractFieldsLabels(
-    artifact_representations_map: Map<number, ArtifactResponse>,
-    artifact_ids: Array<number>
+    artifact_representations_map: Map<number, ArtifactResponse>
 ): Array<string> {
-    if (artifact_representations_map.size === 0 || artifact_ids.length === 0) {
+    if (artifact_representations_map.size === 0) {
         throw new Error("This must not happen. Check must be done before.");
     }
 
-    const first_artifact_id_in_first_level = artifact_ids[0];
-    const first_artifact_in_first_level = artifact_representations_map.get(
-        first_artifact_id_in_first_level
-    );
+    const [first_artifact_in_first_level] = artifact_representations_map.values();
 
     if (first_artifact_in_first_level === undefined) {
         throw new Error("This must not happen. Collection must be consistent.");

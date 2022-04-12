@@ -25,30 +25,14 @@ describe("report-fields-labels-extractor", () => {
         const artifact_representations_map: Map<number, ArtifactResponse> =
             buildArtifactRepresentationsMap();
 
-        const fields_labels = extractFieldsLabels(artifact_representations_map, [74, 4]);
+        const fields_labels = extractFieldsLabels(artifact_representations_map);
         expect(fields_labels).toStrictEqual(["Artifact ID", "Field02", "Assigned to"]);
     });
     it("throws an Error if provided data does not have any ArtifactResponse", (): void => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
 
-        expect(() => extractFieldsLabels(artifact_representations_map, [74])).toThrowError(
+        expect(() => extractFieldsLabels(artifact_representations_map)).toThrowError(
             "This must not happen. Check must be done before."
-        );
-    });
-    it("throws an Error if provided data does not have any artifact ids", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> =
-            buildArtifactRepresentationsMap();
-
-        expect(() => extractFieldsLabels(artifact_representations_map, [])).toThrowError(
-            "This must not happen. Check must be done before."
-        );
-    });
-    it("throws an Error if provided data does not have the matching ArtifactResponse in provided artifacts id", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> =
-            buildArtifactRepresentationsMap();
-
-        expect(() => extractFieldsLabels(artifact_representations_map, [8])).toThrowError(
-            "This must not happen. Collection must be consistent."
         );
     });
 });

@@ -24,8 +24,8 @@ import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 
 describe("headers-formator", () => {
     it("builds the headers TextCell", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-        artifact_representations_map.set(74, {
+        const first_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        first_level_artifact_representations_map.set(74, {
             id: 74,
             title: null,
             xref: "story #74",
@@ -58,7 +58,7 @@ describe("headers-formator", () => {
                 },
             ],
         } as ArtifactResponse);
-        artifact_representations_map.set(4, {
+        first_level_artifact_representations_map.set(4, {
             id: 4,
             title: null,
             xref: "story #4",
@@ -91,7 +91,9 @@ describe("headers-formator", () => {
                 },
             ],
         } as ArtifactResponse);
-        artifact_representations_map.set(75, {
+
+        const second_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        second_level_artifact_representations_map.set(75, {
             id: 75,
             title: null,
             xref: "Task #75",
@@ -108,15 +110,14 @@ describe("headers-formator", () => {
         } as ArtifactResponse);
 
         const organized_reports_data: OrganizedReportsData = {
-            artifact_representations: artifact_representations_map,
             first_level: {
                 tracker_name: "Tracker01",
-                artifact_ids: [74, 4],
+                artifact_representations: first_level_artifact_representations_map,
                 report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
             },
             second_level: {
                 tracker_name: "Tracker0é",
-                artifact_ids: [75],
+                artifact_representations: second_level_artifact_representations_map,
                 report_fields_labels: ["Artifact ID"],
             },
         };
@@ -133,10 +134,9 @@ describe("headers-formator", () => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
 
         const organized_reports_data: OrganizedReportsData = {
-            artifact_representations: artifact_representations_map,
             first_level: {
                 tracker_name: "Tracker01",
-                artifact_ids: [],
+                artifact_representations: artifact_representations_map,
                 report_fields_labels: [],
             },
         };

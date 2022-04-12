@@ -24,8 +24,8 @@ import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 describe("tracker-names-formattor", () => {
     it("Formats tracker names", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-        artifact_representations_map.set(74, {
+        const first_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        first_level_artifact_representations_map.set(74, {
             id: 74,
             title: null,
             xref: "bug #74",
@@ -64,7 +64,7 @@ describe("tracker-names-formattor", () => {
                 },
             ],
         } as ArtifactResponse);
-        artifact_representations_map.set(4, {
+        first_level_artifact_representations_map.set(4, {
             id: 4,
             title: null,
             xref: "bug #4",
@@ -103,7 +103,9 @@ describe("tracker-names-formattor", () => {
                 },
             ],
         } as ArtifactResponse);
-        artifact_representations_map.set(4, {
+
+        const second_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        second_level_artifact_representations_map.set(4, {
             id: 75,
             title: null,
             xref: "bug #15",
@@ -120,14 +122,13 @@ describe("tracker-names-formattor", () => {
         } as ArtifactResponse);
 
         const organized_reports_data: OrganizedReportsData = {
-            artifact_representations: artifact_representations_map,
             first_level: {
-                artifact_ids: [74, 4],
+                artifact_representations: first_level_artifact_representations_map,
                 tracker_name: "tracker01",
                 report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
             },
             second_level: {
-                artifact_ids: [75],
+                artifact_representations: second_level_artifact_representations_map,
                 tracker_name: "tracker02",
                 report_fields_labels: ["Artifact ID"],
             },

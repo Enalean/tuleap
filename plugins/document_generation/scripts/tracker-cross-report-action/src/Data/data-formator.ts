@@ -37,14 +37,14 @@ export interface ReportSection {
 export async function formatData(export_settings: ExportSettings): Promise<ReportSection> {
     const organized_reports_data: OrganizedReportsData = await organizeReportsData(export_settings);
 
-    if (organized_reports_data.artifact_representations.size === 0) {
+    if (organized_reports_data.first_level.artifact_representations.size === 0) {
         return {};
     }
 
     const artifact_rows: Array<Array<ReportCell>> = [];
     let artifact_value_rows: Array<ReportCell> = [];
 
-    for (const artifact of organized_reports_data.artifact_representations.values()) {
+    for (const artifact of organized_reports_data.first_level.artifact_representations.values()) {
         artifact_value_rows = [];
 
         for (const field_value of artifact.values) {
@@ -55,6 +55,21 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
             artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
         }
         artifact_rows.push(artifact_value_rows);
+    }
+
+    if (organized_reports_data.second_level) {
+        for (const artifact of organized_reports_data.second_level.artifact_representations.values()) {
+            artifact_value_rows = [];
+
+            for (const field_value of artifact.values) {
+                if (!isFieldTakenIntoAccount(field_value)) {
+                    continue;
+                }
+
+                artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
+            }
+            artifact_rows.push(artifact_value_rows);
+        }
     }
 
     return {

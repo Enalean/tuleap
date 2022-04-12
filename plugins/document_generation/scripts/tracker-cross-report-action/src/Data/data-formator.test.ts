@@ -107,11 +107,10 @@ describe("data-formator", () => {
         } as ArtifactResponse);
 
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
-            artifact_representations: artifact_representations_map,
             first_level: {
-                artifact_ids: [74, 4],
                 tracker_name: "tracker01",
                 report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
+                artifact_representations: artifact_representations_map,
             },
         });
 
@@ -139,7 +138,9 @@ describe("data-formator", () => {
     });
     it("generates empty formatted data if no artifact found", async (): Promise<void> => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
-            artifact_representations: new Map(),
+            first_level: {
+                artifact_representations: new Map(),
+            },
         } as OrganizedReportsData);
 
         const formatted_data = await formatData({

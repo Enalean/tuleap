@@ -216,8 +216,9 @@ describe("organize-reports-data", () => {
             },
         });
 
-        const expected_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-        expected_artifact_representations_map.set(74, {
+        const expected_first_level_artifact_representations_map: Map<number, ArtifactResponse> =
+            new Map();
+        expected_first_level_artifact_representations_map.set(74, {
             id: 74,
             title: null,
             xref: "story #74",
@@ -256,7 +257,7 @@ describe("organize-reports-data", () => {
                 },
             ],
         } as ArtifactResponse);
-        expected_artifact_representations_map.set(4, {
+        expected_first_level_artifact_representations_map.set(4, {
             id: 4,
             title: null,
             xref: "story #4",
@@ -295,7 +296,10 @@ describe("organize-reports-data", () => {
                 },
             ],
         } as ArtifactResponse);
-        expected_artifact_representations_map.set(75, {
+
+        const expected_second_level_artifact_representations_map: Map<number, ArtifactResponse> =
+            new Map();
+        expected_second_level_artifact_representations_map.set(75, {
             id: 75,
             title: null,
             xref: "Task #75",
@@ -329,18 +333,16 @@ describe("organize-reports-data", () => {
             ],
         } as ArtifactResponse);
 
-        expect(organized_reports_data.artifact_representations.size).toBe(3);
         expect(organized_reports_data).toStrictEqual({
-            artifact_representations: expected_artifact_representations_map,
             first_level: {
-                artifact_ids: [74, 4],
                 tracker_name: "tracker01",
                 report_fields_labels: ["Artifact ID", "Field02", "Assigned to"],
+                artifact_representations: expected_first_level_artifact_representations_map,
             },
             second_level: {
-                artifact_ids: [75],
                 tracker_name: "tracker02",
                 report_fields_labels: ["Artifact ID", "Title", "Assigned to"],
+                artifact_representations: expected_second_level_artifact_representations_map,
             },
         });
     });
@@ -358,9 +360,8 @@ describe("organize-reports-data", () => {
         });
 
         expect(organized_reports_data).toStrictEqual({
-            artifact_representations: new Map(),
             first_level: {
-                artifact_ids: [],
+                artifact_representations: new Map(),
                 tracker_name: "tracker01",
                 report_fields_labels: [],
             },
