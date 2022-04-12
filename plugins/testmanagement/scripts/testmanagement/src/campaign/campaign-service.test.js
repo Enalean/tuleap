@@ -20,7 +20,7 @@
 import testmanagement_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("CampaignService", () => {

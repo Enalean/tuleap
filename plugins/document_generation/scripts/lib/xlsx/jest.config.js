@@ -19,7 +19,8 @@
 
 process.env.DISABLE_TS_TYPECHECK = "true";
 
+const { jest_base_config } = require("@tuleap/build-system-configurator");
 module.exports = {
-    ...require("../../../../../tests/jest/jest.base.config.js"),
+    ...jest_base_config,
     displayName: "@tuleap/plugin-docgen-xlsx",
 };

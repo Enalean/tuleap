@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@floating-ui/dom': ^0.4.2
+  '@tuleap/build-system-configurator': file:../../../lib/frontend/build-system-configurator
   '@tuleap/tlp-modal': file:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': file:../../../lib/frontend/tlp-popovers
   '@types/jquery': ^3.5.5
@@ -18,6 +19,7 @@ dependencies:
   select2: 4.0.13
 
 devDependencies:
+  '@tuleap/build-system-configurator': link:../../../lib/frontend/build-system-configurator
   '@types/jquery': 3.5.5
 
 packages:

@@ -19,7 +19,7 @@
 
 import angular from "angular";
 import tuleap_pullrequest_module from "./app.js";
-import { createAngularPromiseWrapper } from "../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
 import "angular-mocks";
 
 describe("UserRestService -", function () {

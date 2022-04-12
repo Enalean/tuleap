@@ -26,6 +26,7 @@
     "socket.io-client": "^4.4.1"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../../../lib/frontend/build-system-configurator",
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0"
   }

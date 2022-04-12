@@ -21,7 +21,7 @@ import planning_module from "../app";
 import angular from "angular";
 import "angular-mocks";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
 
 const expected_headers = { "content-type": "application/json" };
 

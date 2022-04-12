@@ -16,6 +16,7 @@
     "select2": "^4.0.13"
   },
   "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../../../lib/frontend/build-system-configurator",
     "@types/jquery": "^3.5.5"
   },
   "scripts": {

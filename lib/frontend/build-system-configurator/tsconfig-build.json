@@ -4,7 +4,8 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowJs": true
   },
-  "include": ["src/main.ts", "src/webpack/webpack.d.ts"]
+  "include": ["src/main.ts", "src/webpack/webpack.d.ts", "src/jest/*.js"]
 }

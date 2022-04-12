@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
+import path from "path";
 
 const esModules = [
     "d3-selection",
@@ -37,7 +37,7 @@ if (process.env.COVERAGE_BASE_OUTPUT_DIR) {
 
 const is_typechecking_enabled = process.env.DISABLE_TS_TYPECHECK !== "true";
 
-module.exports = {
+export const base_config = {
     testEnvironment: "jsdom",
     transform: {
         "^.+\\.vue$": "@vue/vue2-jest",
@@ -46,13 +46,10 @@ module.exports = {
     },
     moduleNameMapper: {
         "^.+\\.po$": "identity-obj-proxy",
-        "^tlp$": path.resolve(__dirname, "../../src/themes/tlp/src/js/index.ts"),
-        "^@tuleap/tlp$": path.resolve(__dirname, "../../src/themes/tlp/src/js/index.ts"),
+        "^tlp$": path.resolve(__dirname, "../../../../../src/themes/tlp/src/js/index.ts"),
+        "^@tuleap/tlp$": path.resolve(__dirname, "../../../../../src/themes/tlp/src/js/index.ts"),
         // alias to the source TS file to avoid running into "regeneratorRuntime" not defined errors in tests
-        "^@tuleap/tlp-fetch$": path.resolve(
-            __dirname,
-            "../../lib/frontend/tlp-fetch/src/fetch-wrapper.ts"
-        ),
+        "^@tuleap/tlp-fetch$": path.resolve(__dirname, "../../../tlp-fetch/src/fetch-wrapper.ts"),
         "\\.(css|scss)(\\?inline)?$": "identity-obj-proxy",
     },
     setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],

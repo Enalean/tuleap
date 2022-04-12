@@ -184,7 +184,11 @@ module.exports = {
             },
         },
         {
-            files: ["*.test.js", "*.test.ts", "tests/jest/fail-console-error-warning.js"],
+            files: [
+                "*.test.js",
+                "*.test.ts",
+                "lib/frontend/build-system-configurator/src/jest/fail-console-error-warning.js",
+            ],
             extends: ["plugin:jest/recommended"],
             rules: {
                 "jest/consistent-test-it": "error",
@@ -224,7 +228,7 @@ module.exports = {
                 "tools/**/*.js",
                 "jest.config.js",
                 "jest.*.config.js",
-                "tests/jest/*.js",
+                "lib/frontend/build-system-configurator/src/jest/*.js",
             ],
             env: {
                 node: true,

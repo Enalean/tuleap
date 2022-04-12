@@ -19,13 +19,13 @@
 
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const base_config = require("../../tests/jest/jest.base.config.js");
+const { jest_base_config } = require("@tuleap/build-system-configurator");
 
 module.exports = {
-    ...base_config,
+    ...jest_base_config,
     displayName: "pullrequest",
     moduleNameMapper: {
-        ...base_config.moduleNameMapper,
+        ...jest_base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
     },
     testRunner: "jest-jasmine2",

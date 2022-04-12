@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../tests/jest/jest.base.config.js");
+const { jest_base_config } = require("@tuleap/build-system-configurator");
 
 module.exports = {
-    ...base_config,
+    ...jest_base_config,
     displayName: "timetracking",
 };

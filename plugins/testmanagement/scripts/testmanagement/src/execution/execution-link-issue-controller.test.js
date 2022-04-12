@@ -22,7 +22,7 @@ import angular from "angular";
 import "angular-mocks";
 
 import BaseController from "./execution-link-issue-controller.js";
-import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
 
 describe("ExecutionLinkIssueController", () => {
     let $q,
