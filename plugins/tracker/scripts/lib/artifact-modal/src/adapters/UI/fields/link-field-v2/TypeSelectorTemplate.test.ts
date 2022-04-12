@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { UpdateFunction } from "hybrids";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import { setCatalog } from "../../../../gettext-catalog";
-import type { HostElement } from "./LinkField";
+import type { HostElement, LinkField } from "./LinkField";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
+import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 
 function getSelectMainOptionsGroup(target: ShadowRoot): HTMLOptGroupElement {
     const optgroup = target.querySelector("[data-test=link-type-select-optgroup]");
@@ -31,17 +34,17 @@ function getSelectMainOptionsGroup(target: ShadowRoot): HTMLOptGroupElement {
 }
 
 describe("TypeSelectorTemplate", () => {
-    let target: ShadowRoot;
+    let target: ShadowRoot, cross_reference: ArtifactCrossReference | null;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
+        cross_reference = ArtifactCrossReferenceStub.withRef("story #150");
     });
 
-    it("should build the type selector", () => {
-        const host = {} as HostElement;
+    const getTemplate = (): UpdateFunction<LinkField> => {
         const allowed_types = [
             {
                 shortname: "_is_child",
@@ -54,11 +57,22 @@ describe("TypeSelectorTemplate", () => {
                 reverse_label: "Covers",
             },
         ];
-
-        const update = getTypeSelectorTemplate(
-            allowed_types,
-            ArtifactCrossReferenceStub.withRef("story #150")
+        return getTypeSelectorTemplate(
+            LinkFieldPresenter.fromFieldAndCrossReference(
+                {
+                    field_id: 276,
+                    type: "art_link",
+                    label: "Artifact link",
+                    allowed_types,
+                },
+                cross_reference
+            )
         );
+    };
+
+    it("should build the type selector", () => {
+        const host = {} as HostElement;
+        const update = getTemplate();
         update(host, target);
 
         const select = target.querySelector("[data-test=link-type-select]");
@@ -79,7 +93,8 @@ describe("TypeSelectorTemplate", () => {
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {
-        const update = getTypeSelectorTemplate([], null);
+        cross_reference = null;
+        const update = getTemplate();
         update({} as HostElement, target);
 
         expect(getSelectMainOptionsGroup(target).label).toBe("New artifact");

@@ -23,7 +23,7 @@ import { getLinkedArtifactTemplate, getActionButton } from "./LinkedArtifactTemp
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { setCatalog } from "../../../../gettext-catalog";
-import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
@@ -35,6 +35,7 @@ import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/lin
 import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
+import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -144,11 +145,18 @@ describe(`LinkedArtifactTemplate`, () => {
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
                 NotifyFaultStub.withCount(),
-                CurrentArtifactIdentifierStub.withId(72)
+                {
+                    field_id: 457,
+                    label: "Artifact link",
+                    type: "art_link",
+                    allowed_types: [],
+                },
+                CurrentArtifactIdentifierStub.withId(72),
+                ArtifactCrossReferenceStub.withRef("story #72")
             );
 
             return {
-                presenter: LinkFieldPresenter.buildLoadingState(),
+                linked_artifacts_presenter: LinkedArtifactCollectionPresenter.buildLoadingState(),
                 controller,
             } as unknown as HostElement;
         };
@@ -178,7 +186,9 @@ describe(`LinkedArtifactTemplate`, () => {
             button.click();
 
             expect(
-                host.presenter.linked_artifacts.some((artifact) => artifact.is_marked_for_removal)
+                host.linked_artifacts_presenter.linked_artifacts.some(
+                    (artifact) => artifact.is_marked_for_removal
+                )
             ).toBe(true);
         });
 
@@ -196,7 +206,9 @@ describe(`LinkedArtifactTemplate`, () => {
             button.click();
 
             expect(
-                host.presenter.linked_artifacts.some((artifact) => artifact.is_marked_for_removal)
+                host.linked_artifacts_presenter.linked_artifacts.some(
+                    (artifact) => artifact.is_marked_for_removal
+                )
             ).toBe(false);
         });
 

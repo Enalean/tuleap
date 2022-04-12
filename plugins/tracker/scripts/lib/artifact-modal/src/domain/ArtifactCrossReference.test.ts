@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TrackerArtifactCrossReferenceProxy } from "./TrackerArtifactCrossReferenceProxy";
-import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
-import { TrackerShortnameStub } from "../../../tests/stubs/TrackerShortnameStub";
+import { ArtifactCrossReference } from "./ArtifactCrossReference";
+import { CurrentArtifactIdentifierStub } from "../../tests/stubs/CurrentArtifactIdentifierStub";
+import { TrackerShortnameStub } from "../../tests/stubs/TrackerShortnameStub";
 
-describe("TrackerArtifactCrossReferenceProxy", () => {
-    it("Given a valid artifact id and a tracker shortname, Then it will return a TrackerArtifactReference", () => {
-        const reference = TrackerArtifactCrossReferenceProxy.fromArtifactIdentifierAndTracker(
+describe("ArtifactCrossReference", () => {
+    it("Given a valid artifact id and a tracker shortname, Then it will return an ArtifactCrossReference", () => {
+        const reference = ArtifactCrossReference.fromCurrentArtifact(
             CurrentArtifactIdentifierStub.withId(150),
             TrackerShortnameStub.withShortname("story")
         );
@@ -35,8 +35,8 @@ describe("TrackerArtifactCrossReferenceProxy", () => {
         expect(reference.ref).toBe("story #150");
     });
 
-    it("Given no artifact id, Then it will return an empty TrackerArtifactReference", () => {
-        const reference = TrackerArtifactCrossReferenceProxy.fromArtifactIdentifierAndTracker(
+    it("Given no artifact id, Then it will return an empty ArtifactCrossReference", () => {
+        const reference = ArtifactCrossReference.fromCurrentArtifact(
             null,
             TrackerShortnameStub.withShortname("story")
         );

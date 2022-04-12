@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
@@ -30,11 +30,15 @@ import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/lin
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { LinkRetrievalFault } from "../../../../domain/fields/link-field-v2/LinkRetrievalFault";
+import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 
 export interface LinkFieldControllerType {
-    displayLinkedArtifacts(): Promise<LinkFieldPresenter>;
-    markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkFieldPresenter;
-    unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkFieldPresenter;
+    displayField(): LinkFieldPresenter;
+    displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
+    markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
+    unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
 }
 
 const isCreationModeFault = (fault: Fault): boolean => {
@@ -44,7 +48,7 @@ const isCreationModeFault = (fault: Fault): boolean => {
 const buildPresenter = (
     links_store: RetrieveLinkedArtifactsSync,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval
-): LinkFieldPresenter => {
+): LinkedArtifactCollectionPresenter => {
     const presenters = links_store
         .getLinkedArtifacts()
         .map((linked_artifact) =>
@@ -53,7 +57,7 @@ const buildPresenter = (
                 deleted_link_verifier.isMarkedForRemoval(linked_artifact)
             )
         );
-    return LinkFieldPresenter.fromArtifacts(presenters);
+    return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
 };
 
 export const LinkFieldController = (
@@ -63,29 +67,38 @@ export const LinkFieldController = (
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
     fault_notifier: NotifyFault,
-    current_artifact_identifier: CurrentArtifactIdentifier | null
+    field: ArtifactLinkFieldStructure,
+    current_artifact_identifier: CurrentArtifactIdentifier | null,
+    current_artifact_reference: ArtifactCrossReference | null
 ): LinkFieldControllerType => ({
-    displayLinkedArtifacts: (): Promise<LinkFieldPresenter> => {
+    displayField: (): LinkFieldPresenter =>
+        LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
+
+    displayLinkedArtifacts: (): Promise<LinkedArtifactCollectionPresenter> => {
         return links_retriever.getLinkedArtifacts(current_artifact_identifier).then((result) => {
             if (!isFault(result)) {
                 const presenters = result.map((linked_artifact) =>
                     LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
                 );
-                return LinkFieldPresenter.fromArtifacts(presenters);
+                return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
             }
             if (!isCreationModeFault(result)) {
                 fault_notifier.onFault(LinkRetrievalFault(result));
             }
-            return LinkFieldPresenter.forFault();
+            return LinkedArtifactCollectionPresenter.forFault();
         });
     },
 
-    markForRemoval(artifact_identifier: LinkedArtifactIdentifier): LinkFieldPresenter {
+    markForRemoval(
+        artifact_identifier: LinkedArtifactIdentifier
+    ): LinkedArtifactCollectionPresenter {
         deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
         return buildPresenter(links_store, deleted_link_verifier);
     },
 
-    unmarkForRemoval(artifact_identifier: LinkedArtifactIdentifier): LinkFieldPresenter {
+    unmarkForRemoval(
+        artifact_identifier: LinkedArtifactIdentifier
+    ): LinkedArtifactCollectionPresenter {
         deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
         return buildPresenter(links_store, deleted_link_verifier);
     },

@@ -26,24 +26,22 @@ import {
     getLinkFieldUnderConstructionPlaceholder,
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
-import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
-import type { AllowedLinkType } from "../../../../domain/fields/link-field-v2/AllowedLinkType";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 
 export interface LinkField {
-    readonly fieldId: number;
-    readonly label: string;
-    readonly allowedTypes: Array<AllowedLinkType>;
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
-    readonly artifactCrossReference: ArtifactCrossReference | null;
-    presenter: LinkFieldPresenter;
+    field_presenter: LinkFieldPresenter;
+    linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
 }
 export type HostElement = LinkField & HTMLElement;
 
-export const getEmptyStateIfNeeded = (presenter: LinkFieldPresenter): UpdateFunction<LinkField> => {
+export const getEmptyStateIfNeeded = (
+    presenter: LinkedArtifactCollectionPresenter
+): UpdateFunction<LinkField> => {
     if (presenter.linked_artifacts.length > 0 || !presenter.has_loaded_content) {
         return html``;
     }
@@ -57,10 +55,13 @@ export const getEmptyStateIfNeeded = (presenter: LinkFieldPresenter): UpdateFunc
     `;
 };
 
-const getFormattedArtifacts = (presenter: LinkFieldPresenter): UpdateFunction<LinkField>[] =>
-    presenter.linked_artifacts.map(getLinkedArtifactTemplate);
+const getFormattedArtifacts = (
+    presenter: LinkedArtifactCollectionPresenter
+): UpdateFunction<LinkField>[] => presenter.linked_artifacts.map(getLinkedArtifactTemplate);
 
-export const getSkeletonIfNeeded = (presenter: LinkFieldPresenter): UpdateFunction<LinkField> => {
+export const getSkeletonIfNeeded = (
+    presenter: LinkedArtifactCollectionPresenter
+): UpdateFunction<LinkField> => {
     if (!presenter.is_loading) {
         return html``;
     }
@@ -92,38 +93,39 @@ export const getSkeletonIfNeeded = (presenter: LinkFieldPresenter): UpdateFuncti
 
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
-    fieldId: 0,
-    label: "",
-    allowedTypes: {
-        get: (host, types = []) => types,
-        set: (host, types) => [...types],
-    },
-    artifactCrossReference: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
-            controller.displayLinkedArtifacts().then((presenter) => (host.presenter = presenter));
+            host.field_presenter = controller.displayField();
+            controller
+                .displayLinkedArtifacts()
+                .then((presenter) => (host.linked_artifacts_presenter = presenter));
             return controller;
         },
     },
-    presenter: {
-        get: (host, last_value) => last_value ?? LinkFieldPresenter.buildLoadingState(),
+    field_presenter: undefined,
+    linked_artifacts_presenter: {
+        get: (host, last_value) =>
+            last_value ?? LinkedArtifactCollectionPresenter.buildLoadingState(),
         set: (host, presenter) => presenter,
     },
     content: (host) => html`
-        <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">${host.label}</label>
+        <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
+            ${host.field_presenter.label}
+        </label>
         <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
-                ${getFormattedArtifacts(host.presenter)} ${getSkeletonIfNeeded(host.presenter)}
-                ${getEmptyStateIfNeeded(host.presenter)}
+                ${getFormattedArtifacts(host.linked_artifacts_presenter)}
+                ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
+                ${getEmptyStateIfNeeded(host.linked_artifacts_presenter)}
             </tbody>
             <tfoot class="link-field-table-footer">
                 <tr class="link-field-table-row">
                     <td class="link-field-table-footer-type">
-                        ${getTypeSelectorTemplate(host.allowedTypes, host.artifactCrossReference)}
+                        ${getTypeSelectorTemplate(host.field_presenter)}
                     </td>
                     <td class="link-field-table-footer-input" colspan="2">
                         <input
-                            id="${"tracker_field_" + host.fieldId}"
+                            id="${"tracker_field_" + host.field_presenter.field_id}"
                             type="text"
                             class="tlp-input tlp-input-small"
                             placeholder="${getLinkFieldUnderConstructionPlaceholder()}"

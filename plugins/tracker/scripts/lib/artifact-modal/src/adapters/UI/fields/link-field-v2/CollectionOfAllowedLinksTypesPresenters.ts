@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
 } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
-import type { AllowedLinkType } from "../../../../domain/fields/link-field-v2/AllowedLinkType";
 
 export type CollectionOfAllowedLinksTypesPresenters =
     ReadonlyArray<AllowedLinkTypesPresenterContainer>;
@@ -39,9 +39,9 @@ export interface AllowedLinkTypePresenter {
 
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
-        allowed_links_types: AllowedLinkType[]
+        types: ReadonlyArray<AllowedLinkTypeRepresentation>
     ): CollectionOfAllowedLinksTypesPresenters => {
-        return allowed_links_types.map((allowed_type) => {
+        return types.map((allowed_type) => {
             return {
                 forward_type_presenter: {
                     label: allowed_type.forward_label,

@@ -251,7 +251,7 @@ describe("retrieveArtifactsStructure", () => {
                     },
                 ],
                 [11, { field_id: 11, type: "ttmstepexec", label: "Test Execution" }],
-                [12, { field_id: 12, type: "art_link", label: "Artifact link" }],
+                [12, { field_id: 12, type: "art_link", label: "Artifact link", allowed_types: [] }],
             ]),
             disposition: [
                 { id: 3, content: null },

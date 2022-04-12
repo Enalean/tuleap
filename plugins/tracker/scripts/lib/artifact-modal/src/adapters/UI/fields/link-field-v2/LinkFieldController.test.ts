@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
@@ -31,10 +31,47 @@ import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/Ver
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
+import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
+import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 
 const ARTIFACT_ID = 60;
+const FIELD_ID = 714;
 
 describe(`LinkFieldController`, () => {
+    let current_artifact_identifier: CurrentArtifactIdentifier,
+        field: ArtifactLinkFieldStructure,
+        cross_reference: ArtifactCrossReference;
+    beforeEach(() => {
+        field = { field_id: FIELD_ID, type: "art_link", label: "Artifact link", allowed_types: [] };
+        current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
+        cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
+    });
+
+    describe(`displayField()`, () => {
+        const displayField = (): LinkFieldPresenter => {
+            const controller = LinkFieldController(
+                RetrieveAllLinkedArtifactsStub.withoutLink(),
+                RetrieveLinkedArtifactsSyncStub.withoutLink(),
+                AddLinkMarkedForRemovalStub.withCount(),
+                DeleteLinkMarkedForRemovalStub.withCount(),
+                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+                NotifyFaultStub.withCount(),
+                field,
+                current_artifact_identifier,
+                cross_reference
+            );
+            return controller.displayField();
+        };
+
+        it(`returns a presenter for the field and current artifact cross reference`, () => {
+            const presenter = displayField();
+            expect(presenter.field_id).toBe(FIELD_ID);
+        });
+    });
+
     describe(`displayLinkedArtifacts()`, () => {
         let links_retriever: RetrieveAllLinkedArtifacts, fault_notifier: NotifyFaultStub;
 
@@ -44,7 +81,7 @@ describe(`LinkFieldController`, () => {
             fault_notifier = NotifyFaultStub.withCount();
         });
 
-        const displayLinkedArtifacts = (): Promise<LinkFieldPresenter> => {
+        const displayLinkedArtifacts = (): Promise<LinkedArtifactCollectionPresenter> => {
             const controller = LinkFieldController(
                 links_retriever,
                 RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -52,7 +89,9 @@ describe(`LinkFieldController`, () => {
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
                 fault_notifier,
-                CurrentArtifactIdentifierStub.withId(18)
+                field,
+                current_artifact_identifier,
+                cross_reference
             );
             return controller.displayLinkedArtifacts();
         };
@@ -94,7 +133,7 @@ describe(`LinkFieldController`, () => {
             deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
         });
 
-        const markForRemoval = (): LinkFieldPresenter => {
+        const markForRemoval = (): LinkedArtifactCollectionPresenter => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
             const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
             const controller = LinkFieldController(
@@ -104,7 +143,9 @@ describe(`LinkFieldController`, () => {
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
                 NotifyFaultStub.withCount(),
-                CurrentArtifactIdentifierStub.withId(40)
+                field,
+                current_artifact_identifier,
+                cross_reference
             );
             return controller.markForRemoval(identifier);
         };
@@ -127,7 +168,7 @@ describe(`LinkFieldController`, () => {
             deleted_link_remover = DeleteLinkMarkedForRemovalStub.withCount();
         });
 
-        const unmarkForRemoval = (): LinkFieldPresenter => {
+        const unmarkForRemoval = (): LinkedArtifactCollectionPresenter => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
             const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
             const controller = LinkFieldController(
@@ -137,7 +178,9 @@ describe(`LinkFieldController`, () => {
                 deleted_link_remover,
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
                 NotifyFaultStub.withCount(),
-                CurrentArtifactIdentifierStub.withId(80)
+                field,
+                current_artifact_identifier,
+                cross_reference
             );
             return controller.unmarkForRemoval(identifier);
         };
