@@ -24,15 +24,10 @@ export function extractFieldsLabels(
     artifact_representations_map: Map<number, ArtifactResponse>
 ): Array<string> {
     if (artifact_representations_map.size === 0) {
-        throw new Error("This must not happen. Check must be done before.");
+        return [];
     }
 
     const [first_artifact_in_first_level] = artifact_representations_map.values();
-
-    if (first_artifact_in_first_level === undefined) {
-        throw new Error("This must not happen. Collection must be consistent.");
-    }
-
     const fields_labels: Array<string> = [];
     for (const field_value of first_artifact_in_first_level.values) {
         if (!isFieldTakenIntoAccount(field_value)) {

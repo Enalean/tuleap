@@ -37,18 +37,11 @@ export async function organizeReportsData(
         first_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
     }
 
-    let first_level_report_fields_labels: Array<string> = [];
-    if (first_level_artifacts_representations_map.size > 0) {
-        first_level_report_fields_labels = extractFieldsLabels(
-            first_level_artifacts_representations_map
-        );
-    }
-
     let organized_reports_data: OrganizedReportsData = {
         first_level: {
             artifact_representations: first_level_artifacts_representations_map,
             tracker_name: export_settings.first_level.tracker_name,
-            report_fields_labels: first_level_report_fields_labels,
+            report_fields_labels: extractFieldsLabels(first_level_artifacts_representations_map),
         },
     };
 
@@ -90,19 +83,14 @@ export async function organizeReportsData(
             second_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
         }
 
-        let second_level_report_fields_labels: Array<string> = [];
-        if (second_level_artifacts_representations_map.size > 0) {
-            second_level_report_fields_labels = extractFieldsLabels(
-                second_level_artifacts_representations_map
-            );
-        }
-
         organized_reports_data = {
             ...organized_reports_data,
             second_level: {
                 artifact_representations: second_level_artifacts_representations_map,
                 tracker_name: export_settings.second_level.tracker_name,
-                report_fields_labels: second_level_report_fields_labels,
+                report_fields_labels: extractFieldsLabels(
+                    second_level_artifacts_representations_map
+                ),
             },
         };
     }

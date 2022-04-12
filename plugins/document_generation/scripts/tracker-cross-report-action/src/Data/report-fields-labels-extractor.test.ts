@@ -28,12 +28,11 @@ describe("report-fields-labels-extractor", () => {
         const fields_labels = extractFieldsLabels(artifact_representations_map);
         expect(fields_labels).toStrictEqual(["Artifact ID", "Field02", "Assigned to"]);
     });
-    it("throws an Error if provided data does not have any ArtifactResponse", (): void => {
+    it("returns an empty array if provided data does not have any ArtifactResponse", (): void => {
         const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
 
-        expect(() => extractFieldsLabels(artifact_representations_map)).toThrowError(
-            "This must not happen. Check must be done before."
-        );
+        const fields_labels = extractFieldsLabels(artifact_representations_map);
+        expect(fields_labels).toStrictEqual([]);
     });
 });
 
