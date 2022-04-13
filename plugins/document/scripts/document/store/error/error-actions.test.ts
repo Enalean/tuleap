@@ -21,7 +21,7 @@ import * as actions from "./error-actions";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ActionContext } from "vuex";
 import type { ErrorState } from "./module";
-import type { State } from "../../type";
+import type { RootState, State } from "../../type";
 
 describe(`Error module actions`, () => {
     describe(`handleGlobalModalError`, () => {
@@ -98,6 +98,48 @@ describe(`Error module actions`, () => {
             await actions.handleErrorsForLock(context, error);
 
             expect(context.commit).toHaveBeenCalledWith("setLockError", "Internal server error");
+        });
+    });
+
+    describe("handleErrorsForModal", () => {
+        let context: ActionContext<ErrorState, RootState>;
+
+        beforeEach(() => {
+            context = {
+                commit: jest.fn(),
+            } as unknown as ActionContext<ErrorState, RootState>;
+        });
+        it(`when a message is not from FetchWrapperError,
+            it will throw an error`, async () => {
+            const error = new Error();
+            await expect(actions.handleErrorsForModal(context, error)).rejects.toThrowError();
+
+            expect(context.commit).not.toHaveBeenCalledWith("setModalError", "Oh snap");
+        });
+
+        it(`when a message can be extracted from the FetchWrapperError,
+            it will set an error message that will show up in the opened modal`, async () => {
+            const error = new FetchWrapperError("Internal Server Error", {
+                json: () =>
+                    Promise.resolve({
+                        error: { code: 500, message: "Oh snap" },
+                    }),
+            } as Response);
+            await actions.handleErrorsForModal(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalError", "Oh snap");
+        });
+
+        it(`when a message can't be extracted from the FetchWrapperError,
+            it will display the default message in the opened modal`, async () => {
+            const response = {
+                json: () => Promise.reject(),
+            } as Response;
+            const error = new FetchWrapperError("Oh snap", response);
+
+            await actions.handleErrorsForModal(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalError", "Internal server error");
         });
     });
 });
