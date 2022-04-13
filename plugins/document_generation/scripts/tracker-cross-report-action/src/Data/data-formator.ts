@@ -26,6 +26,7 @@ import type { OrganizedReportsData } from "../type";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
 import { formatHeaders } from "./headers-formator";
 import type { TextCellWithMerges } from "../type";
+import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 
 export interface ReportSection {
     readonly headers?: HeadersSection;
@@ -44,39 +45,79 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
         return {};
     }
 
-    const artifact_rows: Array<Array<ReportCell>> = [];
-    let artifact_value_rows: Array<ReportCell> = [];
+    const all_artifact_rows: Array<Array<ReportCell>> = [];
 
-    for (const artifact of organized_reports_data.first_level.artifact_representations.values()) {
-        artifact_value_rows = [];
-
-        for (const field_value of artifact.values) {
-            if (!isFieldTakenIntoAccount(field_value)) {
-                continue;
+    if (
+        organized_reports_data.first_level.linked_artifacts &&
+        organized_reports_data.second_level
+    ) {
+        for (const linked_artifacts_map of organized_reports_data.first_level.linked_artifacts) {
+            const first_level_artifact_id: number = linked_artifacts_map[0];
+            const first_level_artifact_representation =
+                organized_reports_data.first_level.artifact_representations.get(
+                    first_level_artifact_id
+                );
+            if (first_level_artifact_representation === undefined) {
+                throw new Error(
+                    "Artifact " +
+                        first_level_artifact_id +
+                        " representation not found in collection."
+                );
             }
+            const first_level_artifact_cells = transformArtifactRepresentationAsCells(
+                first_level_artifact_representation
+            );
 
-            artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
-        }
-        artifact_rows.push(artifact_value_rows);
-    }
+            const second_level_linked_artifact_ids: ReadonlyArray<number> = linked_artifacts_map[1];
+            if (second_level_linked_artifact_ids.length === 0) {
+                all_artifact_rows.push(first_level_artifact_cells);
+            } else {
+                for (const second_level_linked_artifact_id of second_level_linked_artifact_ids) {
+                    const second_level_artifact_representation =
+                        organized_reports_data.second_level.artifact_representations.get(
+                            second_level_linked_artifact_id
+                        );
+                    if (second_level_artifact_representation === undefined) {
+                        throw new Error(
+                            "Artifact " +
+                                second_level_linked_artifact_id +
+                                " representation not found in collection."
+                        );
+                    }
 
-    if (organized_reports_data.second_level) {
-        for (const artifact of organized_reports_data.second_level.artifact_representations.values()) {
-            artifact_value_rows = [];
-
-            for (const field_value of artifact.values) {
-                if (!isFieldTakenIntoAccount(field_value)) {
-                    continue;
+                    const second_level_artifact_cells = transformArtifactRepresentationAsCells(
+                        second_level_artifact_representation
+                    );
+                    all_artifact_rows.push(
+                        first_level_artifact_cells.concat(second_level_artifact_cells)
+                    );
                 }
-
-                artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
             }
-            artifact_rows.push(artifact_value_rows);
+        }
+    } else {
+        for (const artifact of organized_reports_data.first_level.artifact_representations.values()) {
+            all_artifact_rows.push(transformArtifactRepresentationAsCells(artifact));
         }
     }
 
     return {
         headers: formatHeaders(organized_reports_data),
-        artifacts_rows: artifact_rows,
+        artifacts_rows: all_artifact_rows,
     };
+}
+
+function transformArtifactRepresentationAsCells(
+    artifact_representation: ArtifactResponse
+): Array<ReportCell> {
+    const artifact_value_rows = [];
+
+    for (const field_value of artifact_representation.values) {
+        if (!isFieldTakenIntoAccount(field_value)) {
+            continue;
+        }
+
+        artifact_value_rows.push(transformFieldValueIntoAFormattedCell(field_value));
+    }
+
+    return artifact_value_rows;
 }
