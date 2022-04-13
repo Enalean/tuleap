@@ -53,7 +53,7 @@ import {
     WidthType,
 } from "docx";
 import { TableOfContentsPrefilled } from "./TableOfContents/table-of-contents";
-import type { GetText } from "../../../../../../../src/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 import { sprintf } from "sprintf-js";
 import { triggerBlobDownload } from "../trigger-blob-download";
 import type {

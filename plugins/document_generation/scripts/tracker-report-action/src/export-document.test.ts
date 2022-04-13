@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 import * as document_export_creator from "./DocumentBuilder/create-export-document";
 import { startDownloadExportDocument } from "./export-document";
 import type { GlobalExportProperties } from "./type";

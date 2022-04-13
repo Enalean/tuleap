@@ -23,8 +23,8 @@ import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
 import { escaper } from "@tuleap/html-escaper";
-import { getPOFileFromLocale, initGettext } from "../../../tuleap/gettext/gettext-init";
-import type GetText from "node-gettext";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
+import type { GetText } from "@tuleap/gettext";
 
 let gettext_provider: null | GetText;
 

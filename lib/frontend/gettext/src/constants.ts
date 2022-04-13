@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { POFile } from "./vue-gettext-init";
-import GetText from "node-gettext";
-
-export { GetText };
-
-export function getPOFileFromLocale(locale: string): string;
-export function getPOFileFromLocaleWithoutExtension(locale: string): string;
-
-export function initGettext(
-    locale: string,
-    domain: string,
-    load_translations_callback: (locale: string) => Promise<POFile>
-): Promise<GetText>;
+export const DEFAULT_LANGUAGE = "en_US";

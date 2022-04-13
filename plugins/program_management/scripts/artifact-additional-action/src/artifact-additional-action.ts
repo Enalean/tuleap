@@ -18,7 +18,7 @@
  */
 
 import { patch } from "@tuleap/tlp-fetch";
-import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import { addFeedback, clearAllFeedbacks } from "@tuleap/core/scripts/tuleap/feedback";
 
 export function initArtifactAdditionalAction(mount_point: Document): void {

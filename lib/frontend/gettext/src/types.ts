@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initGettext as init } from "./gettext-init.js";
-
-let gettext_provider;
-
-export async function initGettext(language, domain, load_translations_callback) {
-    if (typeof gettext_provider === "undefined") {
-        // eslint-disable-next-line require-atomic-updates
-        gettext_provider = await init(language, domain, load_translations_callback);
-    }
-
-    return gettext_provider;
+export interface GettextProvider {
+    gettext(msgid: string): string;
 }
 
-export function getGettextProvider() {
-    if (typeof gettext_provider === "undefined") {
-        throw new Error(`You need to initialize the provider first ! Call "initGettext"`);
-    }
+// See https://github.com/smhg/gettext-parser for the file format reference
+interface Translation {
+    readonly msgid: string;
+    readonly msgstr: string;
+}
 
-    return gettext_provider;
+interface TranslatedStrings {
+    readonly [key: string]: Translation;
+}
+
+interface Contexts {
+    readonly [key: string]: TranslatedStrings;
+}
+
+export interface GettextParserPoFile {
+    readonly headers?: {
+        readonly [key: string]: string;
+    };
+    readonly translations: Contexts;
 }

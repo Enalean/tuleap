@@ -18,7 +18,7 @@
  */
 
 import { addGlobalShortcutsGroup } from "@tuleap/keyboard-shortcuts";
-import { initGettext, getPOFileFromLocale } from "../tuleap/gettext/gettext-init";
+import { initGettext, getPOFileFromLocale } from "@tuleap/gettext";
 import { createGlobalShortcutsGroup } from "./src/global-shortcuts";
 import { getServicesShortcutsGroup } from "./src/plugin-access-shortcuts";
 

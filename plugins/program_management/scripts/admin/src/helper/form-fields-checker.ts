@@ -18,7 +18,7 @@
  */
 import { getHTMLSelectElementFromId } from "./HTML_element_extractor";
 import { resetErrorOnSelectField, setErrorMessageOnSelectField } from "./form-field-error-helper";
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 import {
     PERMISSION_PRIORITIZE_ID,
     PLANNABLE_TRACKERS_ID,

@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
-import { initGettext, getPOFileFromLocale } from "./gettext-init.js";
+import {
+    initGettext,
+    getPOFileFromLocale,
+    getPOFileFromLocaleWithoutExtension,
+} from "./gettext-async";
 
 jest.mock("node-gettext");
 
 describe("initGettext", () => {
     beforeEach(() => {
-        Gettext.mockClear();
+        jest.resetModules();
     });
 
     it("instantiates Gettext with given locale and domain", async () => {
@@ -43,19 +46,32 @@ describe("initGettext", () => {
 
     it("calls function to load external translation", async () => {
         const gettext_provider = await initGettext("fr_FR", "my-domain", (locale) =>
-            Promise.resolve({ headers: { Language: locale } })
+            Promise.resolve({ headers: { Language: locale }, translations: {} })
         );
 
         expect(gettext_provider.addTranslations).toHaveBeenCalledWith("fr_FR", "my-domain", {
             headers: { Language: "fr_FR" },
+            translations: {},
         });
     });
 
-    it("does not reject string looking like actual locale ID string", () => {
-        expect(getPOFileFromLocale("fr_FR")).toBe("fr_FR.po");
+    describe(`getPOFileFromLocale`, () => {
+        it("does not reject string looking like actual locale ID string", () => {
+            expect(getPOFileFromLocale("fr_FR")).toBe("fr_FR.po");
+        });
+
+        it("rejects string that does not look like locale ID string", () => {
+            expect(() => getPOFileFromLocale("not_a_locale")).toThrow();
+        });
     });
 
-    it("rejects string that does not look like locale ID string", () => {
-        expect(() => getPOFileFromLocale("not_a_locale")).toThrow();
+    describe(`getPOFileFromLocaleWithoutExtension`, () => {
+        it("does not reject string looking like actual locale ID string", () => {
+            expect(getPOFileFromLocaleWithoutExtension("fr_FR")).toBe("fr_FR");
+        });
+
+        it("rejects string that does not look like locale ID string", () => {
+            expect(() => getPOFileFromLocaleWithoutExtension("not_a_locale")).toThrow();
+        });
     });
 });

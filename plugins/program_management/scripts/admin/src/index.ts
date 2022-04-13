@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import { removeTeam } from "./teams/remove-team";
 import { displayTeamsToAggregate } from "./teams/display-teams-to-aggregate";
 import { addTeamInProgram } from "./teams/add-team";

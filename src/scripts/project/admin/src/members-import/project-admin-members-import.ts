@@ -23,10 +23,10 @@
 
 import { post } from "@tuleap/tlp-fetch";
 import mustache from "mustache";
-import { getPOFileFromLocale, initGettext } from "../../../../tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import import_preview_template from "./project-admin-member-import-preview.mustache";
 import import_spinner from "./members-import-spinner.mustache";
-import type GetText from "node-gettext";
+import type { GetText } from "@tuleap/gettext";
 
 let gettext_provider: GetText | null;
 

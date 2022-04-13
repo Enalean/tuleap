@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/gettext": "file:../../lib/frontend/gettext",
     "@tuleap/plugin-tracker-artifact-modal": "file:../tracker/scripts/lib/artifact-modal",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "d3": "^7.0.0",
@@ -22,8 +23,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@types/node": "^14.14.31",
-    "@types/node-gettext": "^3.0.1"
+    "@types/node": "^14.14.31"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

@@ -6,6 +6,7 @@
     "private": true,
     "dependencies": {
         "@tuleap/core": "file:../../src",
+        "@tuleap/gettext": "file:../../lib/frontend/gettext",
         "sprintf-js": "^1.1.2"
     },
     "devDependencies": {

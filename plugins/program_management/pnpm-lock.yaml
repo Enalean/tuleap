@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/core': file:../../src
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/drag-and-drop': file:../../lib/frontend/drag-and-drop
+  '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/list-picker': file:../../lib/frontend/list-picker
   '@tuleap/project-privacy-helper': file:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp': file:../../src/themes/tlp
@@ -25,6 +26,7 @@ dependencies:
   '@tuleap/core': link:../../src
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
+  '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy

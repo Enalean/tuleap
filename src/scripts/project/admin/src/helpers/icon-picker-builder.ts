@@ -19,9 +19,9 @@
  */
 
 import { EmojiButton } from "@joeattardi/emoji-button";
-import type Gettext from "node-gettext";
+import type { GetText } from "@tuleap/gettext";
 
-export function buildIconPicker(gettext_provider: Gettext, doc: Document): EmojiButton | null {
+export function buildIconPicker(gettext_provider: GetText, doc: Document): EmojiButton | null {
     const project_icons_div = doc.getElementById("form-group-name-icon-input-container");
     const project_icons = project_icons_div?.dataset.allProjectIcons;
     if (!project_icons || project_icons === "") {

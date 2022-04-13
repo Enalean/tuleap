@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const download_docx_module = import("./Exporter/DOCX/download-docx");
 
-        const gettext_module = import("../../../../../src/scripts/tuleap/gettext/gettext-init");
+        const gettext_module = import("@tuleap/gettext");
 
         try {
             const { initGettext, getPOFileFromLocaleWithoutExtension } = await gettext_module;

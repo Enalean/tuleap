@@ -10,6 +10,7 @@
   "dependencies": {
     "@tuleap/angular-tlp": "file:../../../../../lib/frontend/angular-tlp",
     "@tuleap/ckeditor-image-upload": "file:../../../../../lib/frontend/ckeditor-image-upload",
+    "@tuleap/core": "file:../../../../../src",
     "@tuleap/date-helper": "file:../../../../../lib/frontend/date-helper",
     "@tuleap/fault": "file:../../../../../lib/frontend/fault",
     "@tuleap/list-picker": "file:../../../../../lib/frontend/list-picker",

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "../../../../../src/scripts/tuleap/gettext/gettext-init";
+import type { GetText } from "@tuleap/gettext";
 import type { ExportDocument, GlobalExportProperties } from "./type";
 import { createExportDocument } from "./DocumentBuilder/create-export-document";
 import type { DateTimeLocaleInformation } from "@tuleap/plugin-docgen-docx/src";

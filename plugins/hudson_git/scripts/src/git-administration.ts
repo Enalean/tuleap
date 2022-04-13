@@ -19,10 +19,7 @@
 
 import jQuery from "jquery";
 
-import {
-    getPOFileFromLocale,
-    initGettext,
-} from "../../../../src/scripts/tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 
 (async function ($): Promise<void> {
     const language = document.body.dataset.userLocale;

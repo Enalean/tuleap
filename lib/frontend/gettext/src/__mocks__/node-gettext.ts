@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./gettext-async";
-export * from "./synchronous";
-export type { GettextProvider, GettextParserPoFile } from "./types";
-export type { default as GetText } from "node-gettext";
+import type { GettextParserPoFile } from "../types";
+
+type NodeGettextInterface = {
+    setLocale(): void;
+    setTextDomain(): void;
+    addTranslations(locale: string, domain: string, translations: GettextParserPoFile): void;
+};
+
+const GetText = function (): NodeGettextInterface {
+    return {
+        setLocale: jest.fn(),
+        setTextDomain: jest.fn(),
+        addTranslations: jest.fn(),
+    };
+};
+export default GetText;

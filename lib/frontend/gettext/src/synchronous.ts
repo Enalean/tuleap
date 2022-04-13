@@ -18,30 +18,8 @@
  */
 
 import Gettext from "node-gettext";
-
-export interface GettextProvider {
-    gettext(msgid: string): string;
-}
-
-// See https://github.com/smhg/gettext-parser for the file format reference
-interface Translation {
-    readonly msgid: string;
-    readonly msgstr: string;
-}
-
-interface TranslatedStrings {
-    readonly [key: string]: Translation;
-}
-
-export interface Contexts {
-    readonly [key: string]: TranslatedStrings;
-}
-
-export interface GettextParserPoFile {
-    readonly translations: Contexts;
-}
-
-const DEFAULT_LANGUAGE = "en_US";
+import type { GettextParserPoFile, GettextProvider } from "./types";
+import { DEFAULT_LANGUAGE } from "./constants";
 
 export function initGettextSync(
     domain: string,

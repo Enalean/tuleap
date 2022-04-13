@@ -18,7 +18,7 @@
  */
 
 import { createListPicker } from "@tuleap/list-picker";
-import { getPOFileFromLocale, initGettext } from "@tuleap/core/scripts/tuleap/gettext/gettext-init";
+import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = document.body.dataset.userLocale ?? "en_US";
