@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import DocumentTitleLockInfo from "./DocumentTitleLockInfo.vue";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../../constants";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("DocumentTitleLockInfo", () => {
     let document_locked_factory;

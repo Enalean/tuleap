@@ -21,7 +21,7 @@ import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
 import localVue from "../../helpers/local-vue";
 import type { Wrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Embedded, Folder, Item } from "../../type";
 
 describe("DocumentBreadcrumb", () => {

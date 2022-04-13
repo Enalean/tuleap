@@ -20,7 +20,7 @@
 import type { Slots, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import BaseCard from "./BaseCard.vue";
-import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Card, Tracker, User } from "../../../../../type";
 import { TaskboardEvent } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";

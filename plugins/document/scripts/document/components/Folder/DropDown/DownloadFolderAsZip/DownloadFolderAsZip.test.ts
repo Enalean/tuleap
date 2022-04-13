@@ -31,7 +31,7 @@ import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 import * as location_helper from "../../../../helpers/location-helper";
 import * as platform_detector from "../../../../helpers/platform-detector";
 import Vue from "vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("DownloadFolderAsZip", () => {
     let store = {

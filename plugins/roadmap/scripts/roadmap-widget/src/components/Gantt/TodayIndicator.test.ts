@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import TodayIndicator from "./TodayIndicator.vue";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../store/timeperiod/type";
 import type { RootState } from "../../store/type";
 

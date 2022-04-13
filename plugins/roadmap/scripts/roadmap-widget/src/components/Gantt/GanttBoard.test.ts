@@ -25,7 +25,7 @@ import TimePeriodHeader from "./TimePeriod/TimePeriodHeader.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import TimePeriodControl from "./TimePeriod/TimePeriodControl.vue";
 import ScrollingArea from "./ScrollingArea.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { TasksState } from "../../store/tasks/type";
 import SubtaskSkeletonBar from "./Subtask/SubtaskSkeletonBar.vue";

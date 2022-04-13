@@ -23,7 +23,7 @@ import localVue from "../../../../helpers/local-vue";
 import emitter from "../../../../helpers/emitter";
 
 import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp from "tlp";
 
 jest.mock("tlp");

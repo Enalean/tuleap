@@ -25,7 +25,7 @@ import TableBodyEmpty from "./TableBodyEmpty.vue";
 import TableBodyResults from "./TableBodyResults.vue";
 import type { ItemSearchResult, SearchResult } from "../../../type";
 import SearchResultPagination from "./SearchResultPagination.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
 
 describe("SearchResultTable", () => {

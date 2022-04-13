@@ -20,7 +20,7 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import localVue from "../../../helpers/local-vue";
 import FakeCaret from "./FakeCaret.vue";
 import type { Empty, Folder, Item, ItemFile, Link, Wiki } from "../../../type";

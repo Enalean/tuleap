@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import type { QuickLink, UserHistoryEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../../store/type";
 
 describe("RecentItemsEntry", () => {

@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import localVue from "../../../../helpers/local-vue";
 import OtherInformationPropertiesForUpdate from "./OtherInformationPropertiesForUpdate.vue";
 import { TYPE_FILE } from "../../../../constants";

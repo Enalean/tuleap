@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import TrackerFromJira from "./TrackerFromJira.vue";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
 import type { Credentials, JiraImportData, State } from "../../../../../store/type";
-import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TrackerFromJira", () => {
     let wrapper: Wrapper<TrackerFromJira>;

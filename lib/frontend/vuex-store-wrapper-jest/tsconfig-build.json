@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": false,
+    "esModuleInterop": true,
+  },
+  "include": ["src/main.ts"]
+}

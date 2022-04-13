@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import IterationBar from "./IterationBar.vue";
 import type { Iteration, Row } from "../../../type";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../store/type";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import type { TimeperiodState } from "../../../store/timeperiod/type";

@@ -24,7 +24,7 @@ import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 import localVue from "../../support/local-vue.js";
 import module_options from "../../store/transition-modal/module.js";
 import { create } from "../../support/factories.js";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("FilledPreConditionsSection", () => {
     let store;

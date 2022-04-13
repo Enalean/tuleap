@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import TemplateCard from "./TemplateCard.vue";
 import type { TemplateData } from "../../type";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("CardWithChildren", () => {
     const getters = {

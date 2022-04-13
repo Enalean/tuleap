@@ -22,7 +22,7 @@ import VueRouter from "vue-router";
 import localVue from "../../helpers/local-vue";
 
 import FolderContent from "./FolderContent.vue";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("FolderContent", () => {
     let factory, state, store, item;

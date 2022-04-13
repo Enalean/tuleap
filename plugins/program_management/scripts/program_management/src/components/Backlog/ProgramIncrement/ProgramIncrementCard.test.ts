@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import ProgramIncrementCard from "./ProgramIncrementCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 import type { Wrapper } from "@vue/test-utils";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";

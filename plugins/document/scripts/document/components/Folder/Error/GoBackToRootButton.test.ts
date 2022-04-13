@@ -21,7 +21,7 @@ import VueRouter from "vue-router";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
 
 describe("GoBackToRootButton", () => {

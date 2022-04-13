@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import type { RootState } from "../../../store/type";
-import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import * as list_picker from "@tuleap/list-picker";

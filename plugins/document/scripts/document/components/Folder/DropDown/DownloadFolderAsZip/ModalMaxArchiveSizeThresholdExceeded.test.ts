@@ -21,7 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import ModalSizeThresholdExceeded from "./ModalMaxArchiveSizeThresholdExceeded.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("ModalSizeThresholdExceeded", () => {
     function getWrapper(): Wrapper<ModalSizeThresholdExceeded> {

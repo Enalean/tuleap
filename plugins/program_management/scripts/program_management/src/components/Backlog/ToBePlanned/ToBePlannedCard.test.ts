@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Feature } from "../../../type";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ToBePlannedBacklogItems from "./ToBePlannedBacklogItems.vue";
 
 describe("ToBePlannedCard", () => {

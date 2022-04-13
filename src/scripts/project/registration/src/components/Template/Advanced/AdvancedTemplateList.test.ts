@@ -23,7 +23,7 @@ import AdvancedTemplateList from "./AdvancedTemplateList.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../type";
-import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import UserProjectList from "./UserProjectList.vue";
 
 describe("AdvancedTemplateList", () => {

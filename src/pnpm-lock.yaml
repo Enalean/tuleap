@@ -18,6 +18,7 @@ specifiers:
   '@tuleap/tlp-modal': file:../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': file:../lib/frontend/tlp-popovers
   '@tuleap/tooltip': file:../lib/frontend/tooltip
+  '@tuleap/vuex-store-wrapper-jest': file:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.0
   '@types/ckeditor': ^4.9.10
   '@types/d3-scale': ^3.3.0
@@ -62,7 +63,6 @@ specifiers:
   vue-template-compiler: ^2.6.14
   vuex: ^3.6.2
   vuex-class: ^0.3.2
-  vuex-mock-store: ^0.0.8
 
 dependencies:
   '@fortawesome/fontawesome-free': 5.15.4
@@ -109,6 +109,7 @@ dependencies:
 devDependencies:
   '@shopify/jest-dom-mocks': 2.10.0_node-fetch@3.0.0
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
+  '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
   '@types/d3-scale': 3.3.0
@@ -128,7 +129,6 @@ devDependencies:
   vue-property-decorator: 9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5
   vue-template-compiler: 2.6.14
   vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
-  vuex-mock-store: 0.0.8
 
 packages:
 
@@ -1479,10 +1479,6 @@ packages:
       is-buffer: 1.1.6
     dev: true
 
-  /lodash.clonedeep/4.5.0:
-    resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
-    dev: true
-
   /lodash.get/4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
     dev: false
@@ -1824,14 +1820,6 @@ packages:
       vue: 2.6.14
       vue-class-component: 7.2.6_vue@2.6.14
       vuex: 3.6.2_vue@2.6.14
-    dev: true
-
-  /vuex-mock-store/0.0.8:
-    resolution: {integrity: sha512-pRCNdUuS4KRtycDuJKLNFqSJB8vb2XeVilM+QUVPM5Tp6HKFSdAVOmpbwWoMbEnPnJEypkb7s6Ee4fFxp1b32g==}
-    peerDependencies:
-      '@types/jest': '>=24.0.0'
-    dependencies:
-      lodash.clonedeep: 4.5.0
     dev: true
 
   /vuex/3.6.2_vue@2.6.14:

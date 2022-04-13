@@ -31,7 +31,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import type { Modal } from "tlp";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ItemFile, RootState } from "../../type";
 import { EVENT_TLP_MODAL_HIDDEN } from "tlp";
 

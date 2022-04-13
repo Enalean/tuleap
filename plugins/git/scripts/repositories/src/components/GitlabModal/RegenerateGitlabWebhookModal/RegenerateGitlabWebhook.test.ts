@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import RegenerateGitlabWebhook from "./RegenerateGitlabWebhook.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { GitLabData, Repository } from "../../../type";
 import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";

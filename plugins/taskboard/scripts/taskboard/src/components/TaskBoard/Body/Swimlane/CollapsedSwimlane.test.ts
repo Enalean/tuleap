@@ -22,7 +22,7 @@ import type { Wrapper } from "@vue/test-utils";
 import CollapsedSwimlane from "./CollapsedSwimlane.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import type { RootState } from "../../../../store/type";
 

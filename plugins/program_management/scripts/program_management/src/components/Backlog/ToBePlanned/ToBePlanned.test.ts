@@ -21,9 +21,9 @@ import { shallowMount } from "@vue/test-utils";
 import ToBePlanned from "./ToBePlanned.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Feature } from "../../../type";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {

@@ -20,7 +20,7 @@
 import UserStoryDisplayer from "./UserStoryDisplayer.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createProgramManagementLocalVue } from "../../helpers/local-vue-for-test";
 import type { UserStory } from "../../helpers/UserStories/user-stories-retriever";
 import type { Project, TrackerMinimalRepresentation } from "../../type";

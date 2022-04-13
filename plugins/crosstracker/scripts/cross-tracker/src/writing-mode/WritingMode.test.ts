@@ -26,7 +26,7 @@ import {
     TooManyTrackersSelectedError,
 } from "./writing-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Project, Tracker, State } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";

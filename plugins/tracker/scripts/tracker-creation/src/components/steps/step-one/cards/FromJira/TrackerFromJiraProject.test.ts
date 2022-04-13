@@ -29,7 +29,7 @@ import type {
     State,
     TrackerList,
 } from "../../../../../store/type";
-import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TrackerFromJiraProject", () => {
     let state: State;

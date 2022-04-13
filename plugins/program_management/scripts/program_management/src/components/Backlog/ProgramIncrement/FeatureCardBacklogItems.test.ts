@@ -22,14 +22,14 @@ import { shallowMount } from "@vue/test-utils";
 import FeatureCardBacklogItems from "./FeatureCardBacklogItems.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Feature } from "../../../type";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import type { UserStory } from "../../../helpers/UserStories/user-stories-retriever";
 import ErrorDisplayer from "../ErrorDisplayer.vue";
 import UserStoryDisplayer from "../UserStoryDisplayer.vue";
 import type { DefaultData } from "vue/types/options";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { TrackerMinimalRepresentation } from "../../../type";
 
 describe("FeatureCardBacklogItems", () => {

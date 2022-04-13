@@ -19,14 +19,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 
 import IterationUserStoryList from "./IterationUserStoryList.vue";
 import BacklogElementSkeleton from "../../BacklogElementSkeleton.vue";
 import UserStoryCard from "./UserStoryCard.vue";
 
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { UserStory } from "../../../type";
 
 describe("IterationUserStoryList", () => {

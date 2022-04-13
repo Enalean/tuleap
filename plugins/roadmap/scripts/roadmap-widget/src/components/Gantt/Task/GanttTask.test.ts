@@ -28,7 +28,7 @@ import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import { TasksByNature, TasksDependencies } from "../../../type";
 import DependencyArrow from "./DependencyArrow.vue";
 import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
 

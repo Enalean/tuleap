@@ -23,7 +23,7 @@ import DetailsItemButton from "./DetailsItemButton.vue";
 import localVue from "../../../helpers/local-vue";
 import * as location_helper from "../../../helpers/location-helper";
 import type { Empty } from "../../../type";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("DetailsItemButton", () => {
     function createWrapper(): Wrapper<DetailsItemButton> {

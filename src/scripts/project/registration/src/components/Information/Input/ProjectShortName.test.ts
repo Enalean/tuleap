@@ -21,10 +21,10 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectShortName from "./ProjectShortName.vue";
 import type { DefaultData } from "vue/types/options";
-import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import EventBus from "../../../helpers/event-bus";
 
 describe("ProjectShortName", () => {

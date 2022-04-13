@@ -21,7 +21,7 @@
 import LinkCellTitle from "./LinkCellTitle.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import Vuex from "vuex";
 import type { Link, RootState } from "../../../type";
 import type { ConfigurationState } from "../../../store/configuration";

@@ -23,7 +23,7 @@ import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import TimePeriodYears from "./TimePeriodYears.vue";
 import { NbUnitsPerYear } from "../../../type";
 import TimePeriodUnits from "./TimePeriodUnits.vue";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
 

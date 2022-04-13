@@ -18,7 +18,7 @@
  *
  */
 
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../../constants";
 import DisplayModeSwitcher from "./DisplayModeSwitcher.vue";
 import type { Wrapper } from "@vue/test-utils";

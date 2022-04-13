@@ -19,7 +19,7 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../../../store/type";
 import { NONE_YET, TRACKER_TEMPLATE } from "../../../../store/type";
 import TrackerBaseCard from "./TrackerBaseCard.vue";

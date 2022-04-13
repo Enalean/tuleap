@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../store/type";
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "tlp";

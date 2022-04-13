@@ -27,7 +27,7 @@ import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { Task } from "../type";
 import LoadingState from "./LoadingState.vue";
 import type { RootState } from "../store/type";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../store/tasks/type";
 
 describe("App", () => {

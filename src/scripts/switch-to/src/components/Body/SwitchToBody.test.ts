@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SwitchToBody from "./SwitchToBody.vue";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Project, UserHistory } from "../../type";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";

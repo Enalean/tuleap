@@ -21,7 +21,7 @@ import type { ShallowMountOptions } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmptyState from "./EmptyState.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("EmptyState", () => {
     let component_options: ShallowMountOptions<EmptyState>;

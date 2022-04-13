@@ -27,7 +27,7 @@ import IntInput from "./IntInput.vue";
 import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import { DATE_FIELD } from "@tuleap/plugin-tracker-constants";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("SetValueAction", () => {
     let store;

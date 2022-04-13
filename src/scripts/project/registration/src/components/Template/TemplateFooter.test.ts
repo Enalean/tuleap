@@ -23,9 +23,9 @@ import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import * as element_checker from "../../helpers/is-element-in-viewport";
 import VueRouter from "vue-router";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../store/type";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import TemplateFooter from "./TemplateFooter.vue";
 
 describe("TemplateFooter", () => {

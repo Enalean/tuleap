@@ -22,9 +22,9 @@ import ProgramIncrementFeatureList from "./ProgramIncrementFeatureList.vue";
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Feature } from "../../../type";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("ProgramIncrementFeatureList", () => {
     it("Displays the empty state when no features are found", async () => {

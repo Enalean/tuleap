@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 import { formatDateYearMonthDay } from "@tuleap/date-helper/src";
 

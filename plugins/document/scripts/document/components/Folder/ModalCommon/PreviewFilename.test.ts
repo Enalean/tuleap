@@ -21,7 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import PreviewFilename from "./PreviewFilename.vue";
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { DefaultFileItem } from "../../../type";
 

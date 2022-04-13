@@ -19,7 +19,7 @@
 
 import * as drag_drop from "./drag-drop";
 import { createElement } from "./jest/create-dom-element";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 import type { Store } from "vuex";
 import type { State } from "../type";

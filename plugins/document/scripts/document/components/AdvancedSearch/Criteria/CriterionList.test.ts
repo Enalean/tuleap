@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CriterionList from "./CriterionList.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import localVue from "../../../helpers/local-vue";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { SearchCriterionList } from "../../../type";

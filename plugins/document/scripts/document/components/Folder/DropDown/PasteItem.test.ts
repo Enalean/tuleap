@@ -37,7 +37,7 @@ import {
     CLIPBOARD_OPERATION_CUT,
 } from "../../../constants";
 import type { Folder, Item } from "../../../type";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("PasteItem", () => {
     let store = {

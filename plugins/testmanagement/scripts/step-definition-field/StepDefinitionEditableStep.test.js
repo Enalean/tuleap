@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
 import localVue from "./helpers/local-vue.js";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { RichTextEditorFactory } from "@tuleap/plugin-tracker-rich-text-editor";
 import * as tuleap_api from "./api/tuleap-api.js";
 import { TEXT_FORMAT_COMMONMARK, TEXT_FORMAT_HTML } from "@tuleap/plugin-tracker-constants";

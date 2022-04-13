@@ -20,7 +20,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardHeader from "./TaskBoardHeader.vue";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";

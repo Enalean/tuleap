@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ClipboardState } from "../../../store/clipboard/module";
 
 function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformation> {

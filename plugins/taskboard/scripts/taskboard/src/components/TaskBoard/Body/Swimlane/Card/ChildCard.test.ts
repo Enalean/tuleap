@@ -21,7 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ChildCard from "./ChildCard.vue";
 import type { Card, User } from "../../../../../type";
-import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import BaseCard from "./BaseCard.vue";
 
 function getWrapper(card: Card, are_closed_items_displayed: boolean): Wrapper<ChildCard> {

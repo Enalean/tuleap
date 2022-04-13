@@ -21,7 +21,7 @@ import type { Slots, Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DropContainerCell from "./DropContainerCell.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../type";
-import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../../../store/type";
 import AddCard from "../Card/Add/AddCard.vue";
 

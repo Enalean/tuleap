@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import localVue from "../../helpers/local-vue";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../store/configuration";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import type { AdvancedSearchParams, SearchDate } from "../../type";

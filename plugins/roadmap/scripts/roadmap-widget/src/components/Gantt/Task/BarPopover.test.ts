@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import BarPopover from "./BarPopover.vue";
 import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
 import type { Task } from "../../../type";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("BarPopover", () => {
     it("should display the info of the task", async () => {
