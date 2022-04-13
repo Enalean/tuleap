@@ -105,20 +105,32 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
      */
     public function testPostFileDocument(int $root_id): int
     {
-        $file_size = 123;
-        $query     = json_encode(
+        $file_size     = 123;
+        $invalid_query = json_encode(
             [
-                'title'           => 'NEW F',
-                'file_properties' => ['file_name' => 'NEW F', 'file_size' => $file_size],
+                'title' => 'NEW F',
+                'file_properties' => [
+                    'file_name' => 'NEW F',
+                    'file_size' => $file_size,
+                ],
             ]
         );
 
         $post_response_with_rest_read_only_user = $this->getResponseByName(
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
+            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($invalid_query))
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
+        $query     = json_encode(
+            [
+                'title' => 'NEW FILE',
+                'file_properties' => [
+                    'file_name' => 'NEW FILE',
+                    'file_size' => $file_size,
+                ],
+            ]
+        );
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
@@ -126,16 +138,6 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(201, $response1->getStatusCode());
         $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotEmpty($response1_json['file_properties']['upload_href']);
-
-        $response2 = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query))
-        );
-        $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertSame(
-            $response1_json['file_properties']['upload_href'],
-            json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['file_properties']['upload_href']
-        );
 
         $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
@@ -163,6 +165,8 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(200, $file_content_response->getStatusCode());
         $this->assertEquals($file_content, $file_content_response->getBody());
+
+        $this->assertStringContainsString('filename="tuleap-NEW FILE"', $file_content_response->getHeader("Content-Disposition")[0]);
 
         return $response1_json['id'];
     }
