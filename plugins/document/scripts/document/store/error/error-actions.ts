@@ -42,14 +42,14 @@ export async function handleErrorsForModal(
     exception: unknown
 ): Promise<void> {
     if (!(exception instanceof FetchWrapperError) || exception.response === undefined) {
-        context.commit("error/setModalError", message);
+        context.commit("setModalError", message);
         throw exception;
     }
     try {
         const json = await exception.response.json();
-        context.commit("error/setModalError", getErrorMessage(json));
+        context.commit("setModalError", getErrorMessage(json));
     } catch (error) {
-        context.commit("error/setModalError", message);
+        context.commit("setModalError", message);
     }
 }
 
