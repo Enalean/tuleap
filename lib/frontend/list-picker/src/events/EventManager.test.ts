@@ -118,22 +118,6 @@ describe("event manager", () => {
         );
     });
 
-    it("When the source <select> is disabled, then it should not attach any event", () => {
-        jest.spyOn(doc, "addEventListener");
-        jest.spyOn(component_wrapper, "addEventListener");
-        jest.spyOn(search_field, "addEventListener");
-        jest.spyOn(clickable_item, "addEventListener");
-
-        source_select_box.setAttribute("disabled", "disabled");
-
-        manager.attachEvents();
-
-        expect(doc.addEventListener).not.toHaveBeenCalled();
-        expect(component_wrapper.addEventListener).not.toHaveBeenCalled();
-        expect(search_field.addEventListener).not.toHaveBeenCalled();
-        expect(clickable_item.addEventListener).not.toHaveBeenCalled();
-    });
-
     describe("Dropdown opening", () => {
         it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
             const isDropdownOpen = jest.spyOn(dropdown_manager, "isDropdownOpen");
@@ -152,9 +136,10 @@ describe("event manager", () => {
         });
 
         it("Does not open the dropdown when I click on the component root while the source <select> is disabled", () => {
+            manager.attachEvents();
+
             source_select_box.setAttribute("disabled", "disabled");
 
-            manager.attachEvents();
             component_wrapper.dispatchEvent(new MouseEvent("click"));
 
             expect(dropdown_manager.openListPicker).not.toHaveBeenCalled();

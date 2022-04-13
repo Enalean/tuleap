@@ -29,6 +29,7 @@ import {
 
 describe("ListOptionsChangesObserver", () => {
     let source_select_box: HTMLSelectElement,
+        list_picker_element_attributes_updater: jest.Mock,
         items_map_manager: ItemsMapManager,
         dropdown_content_renderer: DropdownContentRenderer,
         selection_manager: SelectionManager,
@@ -37,6 +38,7 @@ describe("ListOptionsChangesObserver", () => {
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
+        list_picker_element_attributes_updater = jest.fn();
         dropdown_content_renderer = {
             renderAfterDependenciesUpdate: jest.fn(),
         } as unknown as DropdownContentRenderer;
@@ -53,6 +55,7 @@ describe("ListOptionsChangesObserver", () => {
 
         list_options_changes_observer = new ListOptionsChangesObserver(
             source_select_box,
+            list_picker_element_attributes_updater,
             items_map_manager,
             dropdown_content_renderer,
             selection_manager,
@@ -62,7 +65,7 @@ describe("ListOptionsChangesObserver", () => {
 
     it("should refresh the list-picker when options are added in the source <select>", async () => {
         await new Promise<void>((done) => {
-            list_options_changes_observer.startWatchingChangesInSelectOptions();
+            list_options_changes_observer.startWatchingChanges();
 
             appendGroupedOptionsToSourceSelectBox(source_select_box);
             done();
@@ -77,7 +80,7 @@ describe("ListOptionsChangesObserver", () => {
     it("should refresh the list-picker when options are removed in the source <select>", async () => {
         await new Promise<void>((done) => {
             appendSimpleOptionsToSourceSelectBox(source_select_box);
-            list_options_changes_observer.startWatchingChangesInSelectOptions();
+            list_options_changes_observer.startWatchingChanges();
 
             source_select_box.innerHTML = "";
             done();
@@ -92,7 +95,7 @@ describe("ListOptionsChangesObserver", () => {
     it("should refresh the list-picker when attribute disabled on children is added", async () => {
         await new Promise<void>((done) => {
             appendSimpleOptionsToSourceSelectBox(source_select_box);
-            list_options_changes_observer.startWatchingChangesInSelectOptions();
+            list_options_changes_observer.startWatchingChanges();
 
             source_select_box.options[0].disabled = true;
             done();
@@ -104,10 +107,21 @@ describe("ListOptionsChangesObserver", () => {
         expect(event_manager.attachItemListEvent).toHaveBeenCalled();
     });
 
+    it("should refresh the list-picker when attribute disabled is added on source select", async () => {
+        await new Promise<void>((done) => {
+            list_options_changes_observer.startWatchingChanges();
+
+            source_select_box.disabled = true;
+            done();
+        });
+
+        expect(list_picker_element_attributes_updater).toHaveBeenCalled();
+    });
+
     it("should not react otherwise", async () => {
         await new Promise<void>((done) => {
             appendSimpleOptionsToSourceSelectBox(source_select_box);
-            list_options_changes_observer.startWatchingChangesInSelectOptions();
+            list_options_changes_observer.startWatchingChanges();
 
             source_select_box.options[0].setAttribute("selected", "selected");
             done();

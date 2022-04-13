@@ -71,6 +71,7 @@ export interface ListPickerComponent {
     placeholder_element: Element;
     dropdown_list_element: Element;
     search_field_element: HTMLInputElement;
+    element_attributes_updater: () => void;
 }
 
 export interface ListPickerSelectionStateSingle {
