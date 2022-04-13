@@ -41,8 +41,8 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-real-name]").clear().type("Heisenberg");
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
+                cy.visit("/account/");
                 cy.get("[data-test=user-real-name]").should("have.value", "Heisenberg");
-                assertFeedbackContainsMessage("Real name successfully updated");
             });
 
             it("Change his email address", () => {
@@ -61,8 +61,8 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
+                cy.visit("/account/");
                 cy.get("[data-test=user-timezone]").should("have.value", "America/Denver");
-                assertFeedbackContainsMessage("Timezone successfully updated");
             });
 
             it("Change his avatar", () => {
@@ -151,9 +151,9 @@ describe("User preferences", () => {
         it("allows user to change the format of the tracker emails to text", () => {
             cy.get("[data-test=user-prefs-text-format]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
-            cy.get("[data-test=user-prefs-text-format]").should("have.checked", "checked");
 
-            assertFeedbackContainsMessage("Email format preference successfully updated");
+            cy.visit("/account/notifications");
+            cy.get("[data-test=user-prefs-text-format]").should("have.checked", "checked");
         });
     });
 
@@ -283,7 +283,6 @@ describe("User preferences", () => {
                 });
                 assertColorPreviewIs("blue");
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
-                assertFeedbackContainsMessage("User preferences successfully updated");
 
                 // eslint-disable-next-line cypress/require-data-selectors
                 cy.get("body").should("have.class", `theme-blue`);
@@ -313,12 +312,8 @@ describe("User preferences", () => {
         describe("in the Enable accessibility mode", () => {
             it("the user can enable the option", () => {
                 cy.get("[data-test=user-preferences-accessibility-selector]").click();
-                cy.get("[data-test=user-preferences-section-appearance-preview]").should(
-                    "not.have.class",
-                    `user-preferences-section-appearance-preview-without-accessibility`
-                );
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
-                assertFeedbackContainsMessage("User preferences successfully updated");
+                cy.visit("/account/appearance");
 
                 cy.get("[data-test=user-preferences-accessibility-selector]").should("be.checked");
                 cy.get("[data-user-has-accessibility-mode]").contains(1);
@@ -329,7 +324,7 @@ describe("User preferences", () => {
             it("the user can choose the way usernames are displayed", () => {
                 cy.get("[data-test=user-prefs-username-display-format-select]").select("2");
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
-                assertFeedbackContainsMessage("User preferences successfully updated");
+                cy.visit("/account/appearance");
 
                 cy.get("[data-test=user-prefs-username-display-format-select]").should(
                     "have.value",
@@ -344,7 +339,7 @@ describe("User preferences", () => {
                     "absolute_first-relative_shown"
                 );
                 cy.get("[data-test=user-prefs-appearance-section-submit]").click();
-                assertFeedbackContainsMessage("User preferences successfully updated");
+                cy.visit("/account/appearance");
 
                 cy.get("[data-test=user-prefs-relative-dates-display-format-select]").should(
                     "have.value",
@@ -364,7 +359,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-tracker-default-format-html]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
-                assertFeedbackContainsMessage("User preferences successfully updated");
+                cy.visit("/account/edition");
 
                 cy.get("[data-test=user-prefs-tracker-default-format-html]").should("be.checked");
             });
@@ -375,7 +370,9 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-csv-separator-semicolon]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
-                assertFeedbackContainsMessage("User preferences successfully updated");
+                cy.visit("/account/edition");
+
+                cy.get("[data-test=user-prefs-csv-separator-semicolon]").should("be.checked");
             });
         });
 
@@ -384,7 +381,7 @@ describe("User preferences", () => {
                 cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").click();
                 cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
 
-                assertFeedbackContainsMessage("User preferences successfully updated");
+                cy.visit("/account/edition");
 
                 cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").should("be.checked");
             });

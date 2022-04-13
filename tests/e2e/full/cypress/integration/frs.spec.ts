@@ -19,6 +19,7 @@
 
 describe("Frs", function () {
     let project_id: string;
+    const now: number = Date.now();
 
     context("Project administrators", function () {
         before(() => {
@@ -38,39 +39,35 @@ describe("Frs", function () {
         });
 
         context("Frs packages", function () {
-            it("can create a new package", function () {
+            it("can CRUD a new package", function () {
                 cy.get("[data-test=create-new-package]").click();
-                cy.get("[data-test=frs-create-package]").type("My first package");
+                cy.get("[data-test=frs-create-package]").type(`package${now}`);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
 
                 cy.visitProjectService("frs-project", "Files");
-                cy.get('[data-test="package-name"]').contains("My first package");
-            });
+                cy.get('[data-test="package-name"]').contains(`package${now}`);
 
-            it("can update a package", function () {
-                cy.get("[data-test=update-package]").click();
-                cy.get("[data-test=frs-create-package]").type(" edited");
+                cy.get("[data-test=update-package]").first().click();
+                cy.get("[data-test=frs-create-package]").clear().type(`edited${now}`);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
 
                 cy.visitProjectService("frs-project", "Files");
-                cy.get('[data-test="package-name"]').contains("My first package edited");
-            });
+                cy.get('[data-test="package-name"]').contains(`edited${now}`);
 
-            it("can delete a package", function () {
-                cy.get("[data-test=remove-package]").click({
+                cy.get("[data-test=remove-package]").first().click({
                     timeout: 60000,
                 });
 
                 cy.visitProjectService("frs-project", "Files");
-                cy.get('[data-test="package-name"]').should("not.exist");
+                cy.get("[data-test=main-content]").should("not.contain", `edited${now}`);
             });
         });
 
-        context("Frs releases", function () {
+        context("Frs CRUD releases", function () {
             it("can create a new release", function () {
                 cy.get("[data-test=create-new-package]").click();
                 cy.get("[data-test=frs-create-package]").type("Package to test release");
@@ -83,48 +80,48 @@ describe("Frs", function () {
                 cy.intercept({
                     url: /file\/admin\/frsajax\.php/,
                 }).as("createRelease");
-                cy.get("[data-test=create-release]").click({ force: true });
+                cy.get("[data-test=create-release]").first().click({ force: true });
 
-                cy.get("[data-test=release-name]").type("My release name");
+                cy.get("[data-test=release-name]").type(`My release${now}`);
                 cy.get("[data-test=create-release-button]").click({
                     timeout: 60000,
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
 
                 cy.visitProjectService("frs-project", "Files");
-                cy.get('[data-test="release-name"]').contains("My release name");
-            });
+                cy.get('[data-test="release-name"]').contains(`My release${now}`);
 
-            it("can update a release", function () {
                 cy.visitProjectService("frs-project", "Files");
 
                 cy.intercept({
                     url: /file\/admin\/frsajax\.php/,
                 }).as("createRelease");
-                cy.get("[data-test=edit-release]").click({ force: true });
-                cy.get("[data-test=release-name]").type(" edited");
+                cy.get("[data-test=edit-release]").first().click({ force: true });
+                cy.get("[data-test=release-name]").clear().type(`Edited${now}`);
                 cy.get("[data-test=create-release-button]").click({
                     timeout: 60000,
                 });
                 cy.wait("@createRelease", { timeout: 60000 });
 
                 cy.visitProjectService("frs-project", "Files");
-                cy.get("[data-test=edit-release]").click({ force: true });
-                cy.get('[data-test="release-name"]').should("have.value", "My release name edited");
-            });
-
-            it("can delete a release", function () {
-                cy.get("[data-test=release-delete-button]").click({ force: true, timeout: 60000 });
+                cy.get("[data-test=edit-release]").first().click({ force: true });
+                cy.get('[data-test="release-name"]').should("have.value", `Edited${now}`);
 
                 cy.visitProjectService("frs-project", "Files");
-                cy.get('[data-test="release-name"]').should("not.exist");
+                cy.get("[data-test=release-delete-button]")
+                    .first()
+                    .click({ force: true, timeout: 60000 });
+
+                cy.visitProjectService("frs-project", "Files");
+                cy.get("[data-test=main-content]").should("not.contain", `edited${now}`);
             });
         });
 
         context("Hidden packages", function () {
             it("can create a new hidden package", function () {
+                cy.visitProjectService("frs-hidden-project", "Files");
                 cy.get("[data-test=create-new-package]").click();
-                cy.get("[data-test=frs-create-package]").type("My hidden package");
+                cy.get("[data-test=frs-create-package]").type(`My hidden package${now}`);
                 cy.get("[data-test=status]").within(() => {
                     // the select is built with legacy `html_build_select_box_from_arrays` function
                     // the best way to retrieve it, is having a selector on div, and then get the select element inside
