@@ -54,12 +54,13 @@ export interface LinkedArtifactsResponse {
 
 export interface OrganizedReportsData {
     readonly first_level: OrganizedReportDataLevel;
-    readonly second_level?: OrganizedReportDataLevel;
+    readonly second_level?: Omit<OrganizedReportDataLevel, "linked_artifacts">;
 }
 
 interface OrganizedReportDataLevel {
     readonly artifact_representations: Map<number, ArtifactResponse>;
     tracker_name: string;
+    linked_artifacts?: Map<number, ReadonlyArray<number>>;
 }
 
 export class TextCellWithMerges extends TextCell {

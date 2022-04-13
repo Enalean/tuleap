@@ -36,6 +36,7 @@ export async function organizeReportsData(
         first_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
     }
 
+    const linked_artifacts_maps: Map<number, ReadonlyArray<number>> = new Map();
     let organized_reports_data: OrganizedReportsData = {
         first_level: {
             artifact_representations: first_level_artifacts_representations_map,
@@ -61,23 +62,34 @@ export async function organizeReportsData(
                         if (linked_artifacts_response.collection.length === 0) {
                             continue;
                         }
+                        const matching_second_level_representations: ArtifactResponse[] =
+                            second_level_report_artifacts_responses.filter(
+                                (value: ArtifactResponse) =>
+                                    linked_artifacts_response.collection.find(
+                                        (element: ArtifactResponse) => value.id === element.id
+                                    )
+                            );
+
                         linked_artifacts_representations.push(
-                            ...linked_artifacts_response.collection
+                            ...matching_second_level_representations
+                        );
+                        linked_artifacts_maps.set(
+                            artifact_id,
+                            matching_second_level_representations.map(
+                                (representation: ArtifactResponse) => {
+                                    return representation.id;
+                                }
+                            )
                         );
                     }
                 }
+
+                organized_reports_data.first_level.linked_artifacts = linked_artifacts_maps;
             }
         );
 
-        const matching_second_level_representations: ArtifactResponse[] =
-            second_level_report_artifacts_responses.filter((value: ArtifactResponse) =>
-                linked_artifacts_representations.find(
-                    (element: ArtifactResponse) => value.id === element.id
-                )
-            );
-
         const second_level_artifacts_representations_map: Map<number, ArtifactResponse> = new Map();
-        for (const artifact_response of matching_second_level_representations) {
+        for (const artifact_response of linked_artifacts_representations) {
             second_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
         }
 

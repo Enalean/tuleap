@@ -337,6 +337,10 @@ describe("organize-reports-data", () => {
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: expected_first_level_artifact_representations_map,
+                linked_artifacts: new Map([
+                    [74, [75]],
+                    [4, [75]],
+                ]),
             },
             second_level: {
                 tracker_name: "tracker02",
