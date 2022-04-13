@@ -26,7 +26,7 @@
             </div>
             <section class="tlp-pane-section search-criteria-panel-criteria-container">
                 <search-criteria-breadcrumb v-if="!is_in_root_folder" />
-                <div class="document-search-criteria">
+                <div class="document-search-criteria" v-if="new_query">
                     <criterion-global-text v-model="new_query.global_search" />
                     <component
                         v-for="criterion in criteria"
@@ -58,7 +58,6 @@ import { namespace } from "vuex-class";
 import type { AdvancedSearchParams, SearchCriteria } from "../../type";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
-import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import CriterionText from "./Criteria/CriterionText.vue";
 import CriterionOwner from "./Criteria/CriterionOwner.vue";
 import CriterionDate from "./Criteria/CriterionDate.vue";
@@ -91,7 +90,7 @@ export default class SearchCriteriaPanel extends Vue {
     @configuration.State
     readonly criteria!: SearchCriteria;
 
-    private new_query: AdvancedSearchParams = buildAdvancedSearchParams({});
+    private new_query: AdvancedSearchParams | null = null;
 
     mounted() {
         this.new_query = this.query;

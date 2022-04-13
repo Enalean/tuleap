@@ -17,16 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { Route } from "vue-router/types/router";
-import type { AdvancedSearchParams, SearchDate, AdditionalFieldNumber } from "../type";
+import type {
+    AdditionalFieldNumber,
+    AdvancedSearchParams,
+    SearchDate,
+    SearchCriteria,
+} from "../type";
 import { AllowedSearchDateOperator, AllowedSearchType } from "../type";
-import {
-    isAdditionalFieldNumber,
-    isAdditionalPropertySeemsToBeADate,
-} from "../helpers/additional-custom-properties";
+import { isAdditionalFieldNumber } from "../helpers/additional-custom-properties";
 
 export function getSearchPropsFromRoute(
     route: Route,
-    root_id: number
+    root_id: number,
+    criteria: SearchCriteria
 ): {
     folder_id: number;
     query: AdvancedSearchParams;
@@ -50,23 +53,26 @@ export function getSearchPropsFromRoute(
             create_date: getCreateDate(route),
             obsolescence_date: getObsolescenceDate(route),
             status: String(route.query.status || ""),
-            ...getCustomProperties(route),
+            ...getCustomProperties(route, criteria),
         },
         offset: Number(route.query.offset || "0"),
     };
 }
 
 function getCustomProperties(
-    route: Route
+    route: Route,
+    criteria: SearchCriteria
 ): Record<AdditionalFieldNumber, string | SearchDate | null> {
     const additional: Record<AdditionalFieldNumber, string | SearchDate | null> = {};
 
-    for (const key of Object.keys(route.query)) {
+    for (const criterion of criteria) {
+        const key = criterion.name;
+
         if (!isAdditionalFieldNumber(key)) {
             continue;
         }
 
-        if (isAdditionalPropertySeemsToBeADate(route, key)) {
+        if (criterion.type === "date") {
             additional[key] = getSearchDate(
                 String(route.query[key] || ""),
                 String(route.query[key + "_op"] || "")

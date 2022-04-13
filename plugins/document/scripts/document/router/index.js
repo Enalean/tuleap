@@ -57,7 +57,12 @@ export function createRouter(store, project_name) {
                 path: "/search/:folder_id?",
                 name: "search",
                 component: SearchContainer,
-                props: (route) => getSearchPropsFromRoute(route, store.state.configuration.root_id),
+                props: (route) =>
+                    getSearchPropsFromRoute(
+                        route,
+                        store.state.configuration.root_id,
+                        store.state.configuration.criteria
+                    ),
             },
         ],
     });
