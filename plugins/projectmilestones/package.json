@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
     "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",
     "@types/d3-array": "^2.12.1",
     "@types/d3-selection": "^2.0.0",

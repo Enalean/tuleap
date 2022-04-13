@@ -1,9 +1,11 @@
 packages:  # all packages in subdirs of packages/ and components/  - 'packages/**'
   - "lib/frontend/**/"
+  - "lib/test-utils/**/"
   - "src/scripts/tlp-doc"
   - "src/"
   - "src/themes/tlp"
   - "src/themes/BurningParrot"
   - "src/themes/FlamingParrot"
   - "plugins/**/"
+  - "tests/e2e/**/"
 shared-workspace-lockfile: false

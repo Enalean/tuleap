@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/cypress-utilities-support': file:../../../../lib/test-utils/cypress-utilities-support
+
+devDependencies:
+  '@tuleap/cypress-utilities-support': link:../../../../lib/test-utils/cypress-utilities-support

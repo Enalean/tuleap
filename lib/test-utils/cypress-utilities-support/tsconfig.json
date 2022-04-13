@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es6",
+    "lib": ["es6", "dom"],
+    "types": ["cypress"],
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": false,
+    "esModuleInterop": true,
+  },
+  "include": ["src/**/*"]
+}
