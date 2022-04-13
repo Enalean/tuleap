@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
 import { NaturesLabels } from "../../type";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../../store/tasks/type";
 import type { RootState } from "../../store/type";
 

@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import DefaultTemplateSection from "./DefaultTemplateSection.vue";
 import type { State, Tracker } from "../../../../../store/type";
-import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("DefaultTemplateSection", () => {
     it("Displays cards for default templates trackers", () => {

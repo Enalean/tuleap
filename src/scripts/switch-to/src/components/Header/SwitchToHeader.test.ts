@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../store/type";
 import SwitchToHeader from "./SwitchToHeader.vue";
 import type { SearchForm } from "../../type";

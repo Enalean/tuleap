@@ -23,7 +23,7 @@ import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-tes
 import UserStoryCard from "./UserStoryCard.vue";
 
 import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Feature } from "../../../type";
 
 describe("UserStoryCard", () => {

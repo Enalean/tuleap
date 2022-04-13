@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TroveCatLink from "./TroveCatLink.vue";
-import { createStoreMock } from "../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import type { State } from "../../store/type";
 

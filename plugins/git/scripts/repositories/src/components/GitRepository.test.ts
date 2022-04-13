@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import GitRepository from "./GitRepository.vue";
 import * as repositoryListPresenter from "../repository-list-presenter";
 import PullRequestBadge from "./PullRequestBadge.vue";
 import * as breadcrumbPresenter from "./../breadcrumb-presenter";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { State } from "../type";

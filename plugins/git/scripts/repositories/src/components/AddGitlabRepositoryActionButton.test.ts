@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
 import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";

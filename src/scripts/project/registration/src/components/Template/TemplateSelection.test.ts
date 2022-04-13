@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import TemplateSelection from "./TemplateSelection.vue";
 import type { ConfigurationState } from "../../store/configuration";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { ExternalTemplateData, TemplateData } from "../../type";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";

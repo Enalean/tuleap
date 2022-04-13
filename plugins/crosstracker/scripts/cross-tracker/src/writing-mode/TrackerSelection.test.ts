@@ -23,7 +23,7 @@ import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
 import TrackerSelection from "./TrackerSelection.vue";
 import * as project_cache from "./projects-cache";
 import * as rest_querier from "../api/rest-querier";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Project, SelectedTracker, State, Tracker } from "../type";
 
 describe("TrackerSelection", () => {

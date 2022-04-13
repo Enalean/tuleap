@@ -20,7 +20,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ExpandButton from "./ExpandButton.vue";
 import type { ColumnDefinition } from "../../../../type";
 import type { RootState } from "../../../../store/type";

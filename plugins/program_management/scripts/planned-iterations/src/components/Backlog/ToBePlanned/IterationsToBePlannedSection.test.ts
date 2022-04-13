@@ -20,7 +20,7 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as retriever from "../../../helpers/increment-unplanned-elements-retriever";
 
 import BacklogElementSkeleton from "./../../BacklogElementSkeleton.vue";

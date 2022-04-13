@@ -16,6 +16,7 @@ specifiers:
   '@tuleap/plugin-tracker-constants': file:../tracker/scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': file:../tracker/scripts/lib/rich-text-editor
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/node': ^14.14.31
   '@types/sprintf-js': ^1.1.2
   '@uirouter/angularjs': ^1.0.29
@@ -102,6 +103,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/node': 14.14.31
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14

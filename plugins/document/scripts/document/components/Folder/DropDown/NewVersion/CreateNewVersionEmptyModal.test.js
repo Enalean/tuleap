@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp from "tlp";
 
 jest.mock("tlp");

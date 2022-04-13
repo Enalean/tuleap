@@ -22,7 +22,7 @@ import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 
 import localVue from "../../../helpers/local-vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("QuickLookDocumentProperties", () => {
     let properties_factory;

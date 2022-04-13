@@ -21,7 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FieldTrackerTemplateId from "./FieldTrackerTemplateId.vue";
 import type { State } from "../../../../store/type";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("FieldTrackerTemplateId", () => {
     function getWrapper(

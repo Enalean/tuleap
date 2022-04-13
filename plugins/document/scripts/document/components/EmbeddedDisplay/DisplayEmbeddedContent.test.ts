@@ -21,7 +21,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import type { RootState } from "../../type";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";

@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import { TYPE_WIKI } from "../../../../constants";
 import WikiCheckbox from "./DeleteAssociatedWikiPageCheckbox.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
 

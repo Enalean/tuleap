@@ -22,7 +22,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
 import GetTextPlugin from "vue-gettext";
 import FilterEmptyState from "./FilterEmptyState.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 interface StoreOption {
     getters?: {

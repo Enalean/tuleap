@@ -21,7 +21,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ModalFeedback from "./ModalFeedback.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ErrorState } from "../../../store/error/module";
 import type { RootState } from "../../../type";
 import localVue from "../../../helpers/local-vue";

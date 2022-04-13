@@ -11,6 +11,7 @@ specifiers:
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': file:../../lib/frontend/vue-breadcrumb-privacy
+  '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.3.0
   sprintf-js: ^1.1.2
@@ -20,7 +21,6 @@ specifiers:
   vue-property-decorator: ^9.1.2
   vuex: ^3.6.2
   vuex-class: ^0.3.2
-  vuex-mock-store: 0.0.8
 
 dependencies:
   '@tuleap/core': link:../../src
@@ -39,12 +39,12 @@ devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.6.14
   vue-class-component: 7.2.6_vue@2.6.14
   vue-property-decorator: 9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5
   vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
-  vuex-mock-store: 0.0.8
 
 packages:
 
@@ -190,10 +190,6 @@ packages:
       is-buffer: 1.1.6
     dev: true
 
-  /lodash.clonedeep/4.5.0:
-    resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
-    dev: true
-
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
@@ -301,14 +297,6 @@ packages:
       vue: 2.6.14
       vue-class-component: 7.2.6_vue@2.6.14
       vuex: 3.6.2_vue@2.6.14
-    dev: true
-
-  /vuex-mock-store/0.0.8:
-    resolution: {integrity: sha512-pRCNdUuS4KRtycDuJKLNFqSJB8vb2XeVilM+QUVPM5Tp6HKFSdAVOmpbwWoMbEnPnJEypkb7s6Ee4fFxp1b32g==}
-    peerDependencies:
-      '@types/jest': '>=24.0.0'
-    dependencies:
-      lodash.clonedeep: 4.5.0
     dev: true
 
   /vuex/3.6.2_vue@2.6.14:

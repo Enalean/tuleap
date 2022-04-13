@@ -19,7 +19,7 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-tests";
 import StepNavigationButtons from "./StepNavigationButtons.vue";
 import type VueRouter from "vue-router";

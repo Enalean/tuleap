@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";

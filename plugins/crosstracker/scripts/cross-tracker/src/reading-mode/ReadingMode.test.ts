@@ -23,7 +23,7 @@ import BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import type { TrackerForInit } from "../backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import type { Report } from "../type";
 import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";

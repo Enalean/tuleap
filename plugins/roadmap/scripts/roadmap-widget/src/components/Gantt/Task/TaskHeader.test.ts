@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import TaskHeader from "./TaskHeader.vue";
 import type { Task } from "../../../type";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../../../store/tasks/type";
 import HeaderLink from "./HeaderLink.vue";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";

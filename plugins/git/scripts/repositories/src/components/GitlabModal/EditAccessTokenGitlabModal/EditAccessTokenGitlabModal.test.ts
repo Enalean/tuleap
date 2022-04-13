@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Wrapper } from "@vue/test-utils";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import EditAccessTokenGitlabModal from "./EditAccessTokenGitlabModal.vue";
@@ -25,7 +25,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("EditAccessTokenGitlabModal", () => {
     let store: Store, localVue;

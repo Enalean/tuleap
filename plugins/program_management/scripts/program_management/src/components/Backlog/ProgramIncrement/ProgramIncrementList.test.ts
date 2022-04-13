@@ -23,7 +23,7 @@ import * as retriever from "../../../helpers/ProgramIncrement/program-increment-
 import { createProgramManagementLocalVue } from "../../../helpers/local-vue-for-test";
 import type { DefaultData } from "vue/types/options";
 import type { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("ProgramIncrementList", () => {
     it("Displays the empty state when no artifact are found", async () => {

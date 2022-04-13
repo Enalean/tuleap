@@ -23,7 +23,7 @@ import SearchItemDropdown from "./SearchItemDropdown.vue";
 import localVue from "../../../../helpers/local-vue";
 import type { Item, ItemSearchResult } from "../../../../type";
 import DropDownMenuTreeView from "../../../Folder/DropDown/DropDownMenuTreeView.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 const observe = jest.fn();
 

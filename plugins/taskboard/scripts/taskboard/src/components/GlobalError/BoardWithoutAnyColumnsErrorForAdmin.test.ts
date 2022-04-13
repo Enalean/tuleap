@@ -21,7 +21,7 @@ import type { Vue } from "vue/types/vue";
 import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("BoardWithoutAnyColumnsError", () => {
     let local_vue: typeof Vue;

@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import ShowClosedControl from "./ShowClosedControl.vue";
 

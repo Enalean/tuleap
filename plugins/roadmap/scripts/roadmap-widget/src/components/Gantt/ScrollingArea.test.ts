@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import ScrollingArea from "./ScrollingArea.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
 import Vue from "vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { TimeperiodState } from "../../store/timeperiod/type";
 

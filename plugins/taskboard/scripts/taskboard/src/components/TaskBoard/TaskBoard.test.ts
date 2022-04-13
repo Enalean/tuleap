@@ -20,7 +20,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TaskBoard from "./TaskBoard.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ColumnDefinition, Swimlane } from "../../type";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import type { RootState } from "../../store/type";

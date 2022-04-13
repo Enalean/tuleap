@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTableRow from "../../components/TimeTrackingOverviewTableRow.vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 const time = {
     id: "16",

@@ -21,7 +21,7 @@ import localVue from "../../../../../helpers/local-vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../../constants";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Folder, Item, ItemFile, State } from "../../../../../type";
 import TitlePropery from "./TitleProperty.vue";
 import emitter from "../../../../../helpers/emitter";

@@ -21,7 +21,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CollapsedLabel from "./CollapsedLabel.vue";
 import type { ColumnDefinition } from "../../../../type";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../../store/type";
 import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 

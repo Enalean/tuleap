@@ -25,7 +25,7 @@ import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../../cons
 import VueRouter from "vue-router";
 import type { Folder, Item, ItemFile, State, Wiki } from "../../../../type";
 import ModalConfirmDeletion from "./ModalConfirmDeletion.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ErrorState } from "../../../../store/error/module";
 
 describe("ModalConfirmDeletion", () => {

@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import type { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../../store/type";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 

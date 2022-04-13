@@ -20,7 +20,7 @@
 import { createLocalVue, RouterLinkStub, shallowMount } from "@vue/test-utils";
 import SearchCriteriaBreadcrumb from "./SearchCriteriaBreadcrumb.vue";
 import type { Folder } from "../../type";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GettextPlugin from "vue-gettext";
 

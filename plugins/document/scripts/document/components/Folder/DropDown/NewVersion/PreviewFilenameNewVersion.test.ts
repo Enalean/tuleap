@@ -20,7 +20,7 @@
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { DefaultFileNewVersionItem, NewVersion } from "../../../../type";
 import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";

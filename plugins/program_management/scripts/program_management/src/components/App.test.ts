@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createProgramManagementLocalVue } from "../helpers/local-vue-for-test";
 import * as drekkenov from "@tuleap/drag-and-drop";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("App", () => {
     async function createWrapper(is_configured: boolean, is_admin: boolean): Promise<Wrapper<App>> {

@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
 import PostAction from "./PostAction.vue";
-import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import AddToBacklogAgileDashboardPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
 import AddToBacklogProgramManagementPostActionOption from "../Externals/AddToBacklogAgileDashboardPostActionOption.vue";
 

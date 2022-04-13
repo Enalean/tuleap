@@ -27,11 +27,11 @@ import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import type { RootState } from "../../store/type";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import EventBus from "../../helpers/event-bus";
 import VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { ProjectProperties, TemplateData } from "../../type";
 import type { ConfigurationState } from "../../store/configuration";
 

@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 import * as date_formatter from "../../../helpers/date-formatter";
 import type { Property } from "../../../type";

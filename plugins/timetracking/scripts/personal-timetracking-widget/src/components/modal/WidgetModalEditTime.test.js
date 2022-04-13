@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 function getWrapperInstance(store) {
     const component_options = {

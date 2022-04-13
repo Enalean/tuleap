@@ -22,7 +22,7 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldDescription from "./FieldDescription.vue";
-import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
 
 describe("FieldDescription -", () => {

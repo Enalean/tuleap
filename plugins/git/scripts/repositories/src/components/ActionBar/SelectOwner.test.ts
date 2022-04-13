@@ -22,7 +22,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import SelectOwner from "./SelectOwner.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as repo_list from "../../repository-list-presenter";
 import type { RepositoryOwner } from "../../type";
 

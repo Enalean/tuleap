@@ -23,7 +23,7 @@ import AddCard from "./AddCard.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import AddButton from "./AddButton.vue";
 import type { ColumnDefinition, Swimlane } from "../../../../../../type";
-import { createStoreMock } from "../../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../../../../store/type";
 import type { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 import type { SwimlaneState } from "../../../../../../store/swimlane/type";

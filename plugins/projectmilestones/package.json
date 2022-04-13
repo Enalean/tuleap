@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",
     "@types/d3-array": "^2.12.1",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.1.0",

@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
 
 import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("QuickLookDocumentAdditionalProperties", () => {
     let properties_factory, state, store;

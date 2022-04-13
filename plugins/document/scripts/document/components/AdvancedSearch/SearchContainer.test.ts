@@ -31,7 +31,7 @@ import SearchResultTable from "./SearchResult/SearchResultTable.vue";
 import SearchCriteriaPanel from "./SearchCriteriaPanel.vue";
 import type { AdvancedSearchParams } from "../../type";
 import VueRouter from "vue-router";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import type { Events } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";

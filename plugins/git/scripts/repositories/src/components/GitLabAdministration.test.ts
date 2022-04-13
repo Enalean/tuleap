@@ -21,11 +21,11 @@
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
 import GitLabAdministration from "./GitLabAdministration.vue";
-import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import type { Repository } from "../type";
-import type { Store } from "vuex-mock-store";
+import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
 jest.mock("tlp");
 

@@ -22,7 +22,7 @@ import InvalidMappingSwimlane from "./InvalidMappingSwimlane.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ParentCell from "./ParentCell.vue";
 import type { RootState } from "../../../../store/type";
 import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";

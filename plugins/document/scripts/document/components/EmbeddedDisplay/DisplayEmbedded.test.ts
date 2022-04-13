@@ -18,7 +18,7 @@
  *
  */
 
-import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import DisplayEmbedded from "./DisplayEmbedded.vue";
