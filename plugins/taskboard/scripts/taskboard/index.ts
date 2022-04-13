@@ -22,10 +22,7 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
-import {
-    initVueGettext,
-    getPOFileFromLocale,
-} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import type { ColumnDefinition, Tracker } from "./src/type";
 import Vuex from "vuex";
 import type { UserState } from "./src/store/user/type";

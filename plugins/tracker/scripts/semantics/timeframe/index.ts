@@ -20,10 +20,7 @@
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
-import {
-    initVueGettext,
-    getPOFileFromLocale,
-} from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("semantic-timeframe-admin-mount-point");

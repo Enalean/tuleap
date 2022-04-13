@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { checkAllFieldAreFilledAndSetErrorMessage } from "../helper/form-fields-checker";
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import type { GetText } from "@tuleap/vue2-gettext-init";
 import { resetRestErrorAlert, setRestErrorMessage } from "../helper/rest-error-helper";
 
 import { saveConfiguration } from "../api/manage-configuration";

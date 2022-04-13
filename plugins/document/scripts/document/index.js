@@ -27,10 +27,7 @@ import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
 
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 

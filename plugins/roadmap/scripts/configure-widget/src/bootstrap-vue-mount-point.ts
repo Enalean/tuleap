@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import Vue from "vue";
 import App from "./components/App.vue";
 

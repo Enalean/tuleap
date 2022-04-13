@@ -31,13 +31,13 @@ interface GettextTranslationsMap {
     [locale: string]: TranslatedStrings;
 }
 
-export interface POFile {
+export interface VueGettextPOFile {
     readonly messages: TranslatedStrings;
 }
 
 export async function initVueGettext(
     vue_instance: VueConstructor,
-    load_translations_callback: (locale: string) => Promise<POFile>
+    load_translations_callback: (locale: string) => Promise<VueGettextPOFile>
 ): Promise<void> {
     const translations: GettextTranslationsMap = {};
     const locale = document.body.dataset.userLocale;

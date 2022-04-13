@@ -23,10 +23,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
 import { createStore } from "./src/store";
 import { setUserLocale } from "./src/helpers/user-locale-helper";
-import {
-    initVueGettext,
-    getPOFileFromLocale,
-} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import type { TrackerAgileDashboard } from "./src/type";
 import { COUNT, EFFORT } from "./src/type";
 

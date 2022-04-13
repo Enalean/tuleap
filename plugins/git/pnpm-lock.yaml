@@ -9,6 +9,7 @@ specifiers:
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': file:../../lib/frontend/vue-breadcrumb-privacy
+  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/javascript-time-ago': ^2.0.1
   '@types/sprintf-js': ^1.1.2
@@ -31,6 +32,7 @@ dependencies:
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   javascript-time-ago: 2.3.4
   node-gettext: 3.0.0
   sprintf-js: 1.1.2

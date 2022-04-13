@@ -20,10 +20,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import App from "./components/App.vue";
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
 import { createStore } from "./store";
 import type { RootState } from "./store/type";

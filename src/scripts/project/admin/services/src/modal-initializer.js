@@ -19,15 +19,16 @@
 
 import { createModal } from "tlp";
 import Vue from "vue";
-import GettextPlugin from "vue-gettext";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
 import { escaper } from "@tuleap/html-escaper";
-import french_translations from "../po/fr.po";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 
-export function setupModalButtons(addModalCallback, editModalCallback) {
-    initVueGettext();
+export async function setupModalButtons(addModalCallback, editModalCallback) {
+    await initVueGettext(Vue, (locale) =>
+        import(/* webpackChunkName: "services-po-" */ "../po/" + getPOFileFromLocale(locale))
+    );
     setupAddButton(addModalCallback);
     setupEditButtons(editModalCallback);
     setupDeleteButtons();
@@ -68,16 +69,6 @@ function setupDeleteButtons() {
             createAndShowModal(delete_button);
         });
     }
-}
-
-function initVueGettext() {
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-    Vue.config.language = document.body.dataset.userLocale;
 }
 
 function createAndShowModal(button) {

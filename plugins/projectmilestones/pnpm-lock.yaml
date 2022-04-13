@@ -4,6 +4,7 @@ specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/d3-array': ^2.12.1
   '@types/d3-selection': ^2.0.0
@@ -26,6 +27,7 @@ specifiers:
 dependencies:
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   d3-array: 3.0.1
   d3-scale: 4.0.0
   d3-selection: 3.0.0

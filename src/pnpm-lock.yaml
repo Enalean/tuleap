@@ -18,6 +18,7 @@ specifiers:
   '@tuleap/tlp-modal': file:../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': file:../lib/frontend/tlp-popovers
   '@tuleap/tooltip': file:../lib/frontend/tooltip
+  '@tuleap/vue2-gettext-init': file:../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.0
   '@types/ckeditor': ^4.9.10
@@ -57,7 +58,6 @@ specifiers:
   vue: ^2.6.14
   vue-class-component: ^7.2.6
   vue-dompurify-html: ^2.5.1
-  vue-gettext: ^2.1.12
   vue-property-decorator: ^9.1.2
   vue-router: ^3.5.3
   vue-template-compiler: ^2.6.14
@@ -80,6 +80,7 @@ dependencies:
   '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../lib/frontend/tlp-popovers
   '@tuleap/tooltip': link:../lib/frontend/tooltip
+  '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   ckeditor4: 4.17.1
   d3-array: 3.0.1
   d3-axis: 3.0.0
@@ -102,7 +103,6 @@ dependencies:
   turndown: 7.1.1
   vue: 2.6.14
   vue-dompurify-html: 2.5.1_vue@2.6.14
-  vue-gettext: 2.1.12
   vue-router: 3.5.3
   vuex: 3.6.2_vue@2.6.14
 
@@ -1778,11 +1778,6 @@ packages:
     dependencies:
       dompurify: 2.3.6
       vue: 2.6.14
-    dev: false
-
-  /vue-gettext/2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
     dev: false
 
   /vue-property-decorator/9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5:

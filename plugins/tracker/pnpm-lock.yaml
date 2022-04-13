@@ -12,6 +12,7 @@ specifiers:
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/tooltip': file:../../lib/frontend/tooltip
+  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.1
   '@types/ckeditor': ^4.9.10
@@ -53,6 +54,7 @@ dependencies:
   '@tuleap/plugin-tracker-rich-text-editor': link:scripts/lib/rich-text-editor
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   codemirror: 5.62.0
   d3-array: 3.0.1
   d3-axis: 3.0.0

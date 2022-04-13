@@ -20,10 +20,7 @@
 import { openTargetModalIdOnClick } from "tlp";
 import App from "./new-thread/src/components/App.vue";
 import Vue from "vue";
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     openTargetModalIdOnClick(document, "forumml-post-new-thread-button");
