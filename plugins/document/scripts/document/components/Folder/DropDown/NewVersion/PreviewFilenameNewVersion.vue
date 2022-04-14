@@ -19,39 +19,25 @@
   -->
 
 <template>
-    <div class="tlp-property" v-if="is_filename_pattern_enforced && isFile(props.item)">
-        <label class="tlp-label">
-            {{ filename_preview_label }}
-            <i v-bind:title="tooltip_text" class="fas fa-question-circle" role="img"></i>
-        </label>
-        <p data-test="preview">{{ preview }}</p>
-    </div>
+    <preview-filename-property v-bind:item="item">
+        {{ preview }}
+    </preview-filename-property>
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { NewVersion } from "../../../../type";
-import { computed, ref } from "@vue/composition-api";
+import { computed } from "@vue/composition-api";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../../helpers/add-original-filename-extension";
-import { isFile } from "../../../../helpers/type-check-helper";
 import type { DefaultFileNewVersionItem } from "../../../../type";
-
-const { $gettext } = useGettext();
-
-const filename_preview_label = ref($gettext("Filename preview"));
+import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
 
 const props = defineProps<{ version: NewVersion; item: DefaultFileNewVersionItem }>();
 
-const tooltip_text = ref(
-    $gettext("Filename will follow a pattern enforced by the document manager configuration.")
-);
-
-const { filename_pattern, is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>(
-    "configuration",
-    ["filename_pattern", "is_filename_pattern_enforced"]
-);
+const { filename_pattern } = useNamespacedState<ConfigurationState>("configuration", [
+    "filename_pattern",
+]);
 
 const preview = computed((): string => {
     return addOriginalFilenameExtension(

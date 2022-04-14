@@ -45,21 +45,6 @@ describe("PreviewFilename", () => {
         });
     }
 
-    it.each([
-        ["enforced", false],
-        ["a file", true],
-    ])(
-        `"should display nothing if filename pattern is not %s"`,
-        (string_display_condition, is_filename_pattern_enforced) => {
-            const wrapper = getWrapper(
-                {} as DefaultFileItem,
-                { is_filename_pattern_enforced, filename_pattern: "" } as ConfigurationState
-            );
-
-            expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
-        }
-    );
-
     it("should update the preview according to item's values", async () => {
         const item = {
             id: 42,
@@ -77,7 +62,7 @@ describe("PreviewFilename", () => {
             filename_pattern: "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
         } as ConfigurationState);
 
-        expect(wrapper.find("[data-test=preview]").text()).toBe(
+        expect(wrapper.text()).toBe(
             // eslint-disable-next-line no-template-curly-in-string
             "${ID}-toto-Lorem ipsum-approved-.json"
         );
@@ -85,7 +70,7 @@ describe("PreviewFilename", () => {
         item.status = "rejected";
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=preview]").text()).toBe(
+        expect(wrapper.text()).toBe(
             // eslint-disable-next-line no-template-curly-in-string
             "${ID}-toto-Lorem ipsum-rejected-.json"
         );
