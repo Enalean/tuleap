@@ -49,6 +49,7 @@ describe("FileVersionHistory", () => {
                     state: {
                         configuration: {
                             is_filename_pattern_enforced,
+                            project_id: 25,
                         },
                     },
                 }),
@@ -82,6 +83,53 @@ describe("FileVersionHistory", () => {
 
         expect(wrapper.findAllComponents(FileVersionHistoryContent)).toHaveLength(2);
         expect(wrapper.findAllComponents(FileVersionHistorySkeleton)).toHaveLength(0);
+    });
+
+    it("displays the latest version text and the file history link", async () => {
+        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        const versions = [
+            {
+                id: 10,
+                name: "Version 1",
+                filename: "huhuhoho.pdf",
+                download_href: "https://example.com/huhuhoho.pdf",
+            },
+            {
+                id: 35,
+                name: "wololo",
+                filename: "convert.pdf",
+                download_href: "https://example.com/convert.pdf",
+            },
+            {
+                id: 45,
+                name: "hearts",
+                filename: "coeurs.pdf",
+                download_href: "https://example.com/coeurs.pdf",
+            },
+            {
+                id: 18,
+                name: "naha",
+                filename: "city.pdf",
+                download_href: "https://example.com/convert.pdf",
+            },
+            {
+                id: 19,
+                name: "Supra",
+                filename: "2jz.pdf",
+                download_href: "https://example.com/convert.pdf",
+            },
+        ];
+        version_history_spy.mockResolvedValue(versions);
+
+        const wrapper = createWrapper();
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findAllComponents(FileVersionHistoryContent)).toHaveLength(5);
+        expect(wrapper.findAllComponents(FileVersionHistorySkeleton)).toHaveLength(0);
+        expect(wrapper.element).toMatchSnapshot();
     });
 
     it("displays the empty message when there is no version", async () => {

@@ -4,7 +4,7 @@ exports[`FileVersionHistory displays the empty message when there is no version 
 <fragment-stub>
   <hr class="tlp-modal-separator document-file-version-separator">
   <h2 class="tlp-modal-subtitle" data-msgid="Latest versions" data-current-language="en_US">Latest versions</h2>
-  <p data-msgid="Only the last 5 versions are displayed." data-current-language="en_US">Only the last 5 versions are displayed.</p>
+  <!---->
   <table class="tlp-table">
     <thead>
       <tr>
@@ -28,10 +28,104 @@ exports[`FileVersionHistory displays the error if an error occurred when retriev
 <fragment-stub>
   <hr class="tlp-modal-separator document-file-version-separator">
   <h2 class="tlp-modal-subtitle" data-msgid="Latest versions" data-current-language="en_US">Latest versions</h2>
-  <p data-msgid="Only the last 5 versions are displayed." data-current-language="en_US">Only the last 5 versions are displayed.</p>
+  <!---->
   <!---->
   <div class="tlp-alert-danger">
     Some error
   </div>
+</fragment-stub>
+`;
+
+exports[`FileVersionHistory displays the latest version text and the file history link 1`] = `
+<fragment-stub>
+  <hr
+    class="tlp-modal-separator document-file-version-separator"
+  />
+   
+  <h2
+    class="tlp-modal-subtitle"
+    data-current-language="en_US"
+    data-msgid="Latest versions"
+  >
+    Latest versions
+  </h2>
+   
+  <p>
+    <translate-stub
+      tag="span"
+    >
+      Only the last 5 versions are displayed.
+    </translate-stub>
+     
+    <a
+      href="/plugins/docman/?group_id=25&id=18&action=details&section=history"
+    >
+      <translate-stub
+        tag="span"
+      >
+        View all versions
+      </translate-stub>
+       
+      <i
+        class="fas fa-long-arrow-alt-right"
+      />
+    </a>
+  </p>
+   
+  <table
+    class="tlp-table"
+  >
+    <thead>
+      <tr>
+        <th
+          class="document-file-version-version"
+          data-current-language="en_US"
+          data-msgid="Version"
+        >
+          Version
+        </th>
+         
+        <th
+          class="document-file-version-name"
+          data-current-language="en_US"
+          data-msgid="Version name"
+        >
+          Version name
+        </th>
+         
+        <th
+          class="document-file-version-filename"
+          data-current-language="en_US"
+          data-msgid="Filename"
+        >
+          Filename
+        </th>
+      </tr>
+    </thead>
+     
+    <tbody>
+      <file-version-history-content-stub
+        version="[object Object]"
+      />
+      <file-version-history-content-stub
+        version="[object Object]"
+      />
+      <file-version-history-content-stub
+        version="[object Object]"
+      />
+      <file-version-history-content-stub
+        version="[object Object]"
+      />
+      <file-version-history-content-stub
+        version="[object Object]"
+      />
+       
+      <!---->
+       
+      <!---->
+    </tbody>
+  </table>
+   
+  <!---->
 </fragment-stub>
 `;

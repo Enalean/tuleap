@@ -284,7 +284,8 @@ msgid ""
 "Filename will follow a pattern enforced by the document manager "
 "configuration."
 msgstr ""
-"Le nom du fichier suivra un modèle défini par la configuration du gestionnaire de document."
+"Le nom du fichier suivra un modèle défini par la configuration du "
+"gestionnaire de document."
 
 msgid "Fixed date"
 msgstr "Date fixe"
@@ -739,6 +740,9 @@ msgstr "Version"
 
 msgid "Version name"
 msgstr "Nom de version"
+
+msgid "View all versions"
+msgstr "Voir toutes les versions"
 
 msgid "We detect you are using OSX"
 msgstr "Nous détectons que vous utilisez OSX"
