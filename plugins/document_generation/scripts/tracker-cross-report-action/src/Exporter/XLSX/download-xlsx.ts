@@ -29,6 +29,7 @@ import {
     transformReportCellIntoASheetCell,
 } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../../export-document";
+import { generateFilename } from "./file-name-generator";
 
 export function downloadXLSX(export_settings: ExportSettings, formatted_data: ReportSection): void {
     const book = utils.book_new();
@@ -38,16 +39,9 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
     sheet["!rows"] = fitRowHeightsToContent(cells);
     sheet["!merges"] = createMergesForWholeRowLine(cells);
     utils.book_append_sheet(book, sheet);
-    writeFile(
-        book,
-        export_settings.first_level.tracker_name +
-            "-" +
-            export_settings.first_level.report_name +
-            ".xlsx",
-        {
-            bookSST: true,
-        }
-    );
+    writeFile(book, generateFilename(export_settings), {
+        bookSST: true,
+    });
 }
 
 function buildContent(
