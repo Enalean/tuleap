@@ -39,6 +39,7 @@ describe("data-formator", () => {
             second_level: {
                 tracker_name: "tracker02",
                 artifact_representations: buildSecondLevelRepresentationsMap(),
+                linked_artifacts: new Map(),
             },
         });
 
@@ -108,6 +109,7 @@ describe("data-formator", () => {
             second_level: {
                 tracker_name: "tracker02",
                 artifact_representations: buildSecondLevelRepresentationsMap(),
+                linked_artifacts: new Map(),
             },
         });
 
@@ -143,6 +145,7 @@ describe("data-formator", () => {
             second_level: {
                 tracker_name: "tracker02",
                 artifact_representations: buildSecondLevelRepresentationsMap(),
+                linked_artifacts: new Map(),
             },
         });
 

@@ -48,7 +48,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
     const all_artifact_rows: Array<Array<ReportCell>> = [];
 
     if (
-        organized_reports_data.first_level.linked_artifacts &&
+        organized_reports_data.first_level.linked_artifacts.size > 0 &&
         organized_reports_data.second_level
     ) {
         for (const linked_artifacts_map of organized_reports_data.first_level.linked_artifacts) {

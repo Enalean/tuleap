@@ -906,6 +906,7 @@ describe("organize-reports-data", () => {
             second_level: {
                 tracker_name: "tracker02",
                 artifact_representations: expected_second_level_artifact_representations_map,
+                linked_artifacts: new Map(),
             },
         });
     });
@@ -926,6 +927,7 @@ describe("organize-reports-data", () => {
             first_level: {
                 artifact_representations: new Map(),
                 tracker_name: "tracker01",
+                linked_artifacts: new Map(),
             },
         });
     });

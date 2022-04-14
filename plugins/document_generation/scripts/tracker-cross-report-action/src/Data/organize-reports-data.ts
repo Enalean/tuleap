@@ -20,7 +20,7 @@
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
 import type { ExportSettings } from "../export-document";
-import type { OrganizedReportsData } from "../type";
+import type { OrganizedReportsData, OrganizedReportDataLevel } from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 
 export async function organizeReportsData(
@@ -42,141 +42,104 @@ export async function organizeReportsData(
         first_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
     }
 
-    const first_level_linked_artifacts_maps: Map<number, ReadonlyArray<number>> = new Map();
+    const first_level_organized_data: OrganizedReportDataLevel = {
+        artifact_representations: first_level_artifacts_representations_map,
+        tracker_name: export_settings_first_level.tracker_name,
+        linked_artifacts: new Map<number, ReadonlyArray<number>>(),
+    };
     let organized_reports_data: OrganizedReportsData = {
-        first_level: {
-            artifact_representations: first_level_artifacts_representations_map,
-            tracker_name: export_settings_first_level.tracker_name,
-        },
+        first_level: first_level_organized_data,
     };
 
     if (export_settings_second_level) {
-        const second_level_report_artifacts_responses: ArtifactResponse[] =
-            await getReportArtifacts(export_settings_second_level.report_id, true);
+        const second_level_organized_data: OrganizedReportDataLevel = {
+            artifact_representations: new Map<number, ArtifactResponse>(),
+            tracker_name: export_settings_second_level.tracker_name,
+            linked_artifacts: new Map<number, ReadonlyArray<number>>(),
+        };
 
-        const linked_artifacts_representations: ArtifactResponse[] = [];
-        await limitConcurrencyPool(
-            5,
-            Array.from(first_level_artifacts_representations_map.keys()),
-            async (artifact_id: number): Promise<void> => {
-                for (const artifact_link_type of export_settings_first_level.artifact_link_types) {
-                    const first_level_linked_artifacts_responses = await getLinkedArtifacts(
-                        artifact_id,
-                        artifact_link_type
-                    );
-                    for (const linked_artifacts_response of first_level_linked_artifacts_responses) {
-                        if (linked_artifacts_response.collection.length === 0) {
-                            continue;
-                        }
-                        const matching_second_level_representations: ArtifactResponse[] =
-                            second_level_report_artifacts_responses.filter(
-                                (value: ArtifactResponse) =>
-                                    linked_artifacts_response.collection.find(
-                                        (element: ArtifactResponse) => value.id === element.id
-                                    )
-                            );
-
-                        linked_artifacts_representations.push(
-                            ...matching_second_level_representations
-                        );
-                        first_level_linked_artifacts_maps.set(
-                            artifact_id,
-                            matching_second_level_representations.map(
-                                (representation: ArtifactResponse) => {
-                                    return representation.id;
-                                }
-                            )
-                        );
-                    }
-                }
-
-                organized_reports_data.first_level.linked_artifacts =
-                    first_level_linked_artifacts_maps;
-            }
+        await retrieveLinkedArtifactsData(
+            export_settings_second_level.report_id,
+            Array.from(first_level_organized_data.artifact_representations.keys()),
+            export_settings_first_level.artifact_link_types,
+            second_level_organized_data.artifact_representations,
+            first_level_organized_data.linked_artifacts
         );
 
-        const second_level_artifacts_representations_map: Map<number, ArtifactResponse> = new Map();
-        for (const artifact_response of linked_artifacts_representations) {
-            second_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
-        }
-
         organized_reports_data = {
-            ...organized_reports_data,
-            second_level: {
-                artifact_representations: second_level_artifacts_representations_map,
-                tracker_name: export_settings_second_level.tracker_name,
-            },
+            first_level: first_level_organized_data,
+            second_level: second_level_organized_data,
         };
 
         if (export_settings_third_level) {
-            const third_level_report_artifacts_responses: ArtifactResponse[] =
-                await getReportArtifacts(export_settings_third_level.report_id, true);
+            const third_level_organized_data: Omit<OrganizedReportDataLevel, "linked_artifacts"> = {
+                artifact_representations: new Map<number, ArtifactResponse>(),
+                tracker_name: export_settings_third_level.tracker_name,
+            };
 
-            const second_level_linked_artifacts_maps: Map<
-                number,
-                ReadonlyArray<number>
-            > = new Map();
-            const linked_artifacts_representations: ArtifactResponse[] = [];
-            await limitConcurrencyPool(
-                5,
-                Array.from(second_level_artifacts_representations_map.keys()),
-                async (artifact_id: number): Promise<void> => {
-                    for (const artifact_link_type of export_settings_second_level.artifact_link_types) {
-                        const second_level_linked_artifacts_responses = await getLinkedArtifacts(
-                            artifact_id,
-                            artifact_link_type
-                        );
-                        for (const linked_artifacts_response of second_level_linked_artifacts_responses) {
-                            if (linked_artifacts_response.collection.length === 0) {
-                                continue;
-                            }
-                            const matching_third_level_representations: ArtifactResponse[] =
-                                third_level_report_artifacts_responses.filter(
-                                    (value: ArtifactResponse) =>
-                                        linked_artifacts_response.collection.find(
-                                            (element: ArtifactResponse) => value.id === element.id
-                                        )
-                                );
-
-                            linked_artifacts_representations.push(
-                                ...matching_third_level_representations
-                            );
-                            second_level_linked_artifacts_maps.set(
-                                artifact_id,
-                                matching_third_level_representations.map(
-                                    (representation: ArtifactResponse) => {
-                                        return representation.id;
-                                    }
-                                )
-                            );
-                        }
-                    }
-
-                    if (organized_reports_data.second_level) {
-                        organized_reports_data.second_level.linked_artifacts =
-                            second_level_linked_artifacts_maps;
-                    }
-                }
+            await retrieveLinkedArtifactsData(
+                export_settings_third_level.report_id,
+                Array.from(second_level_organized_data.artifact_representations.keys()),
+                export_settings_second_level.artifact_link_types,
+                third_level_organized_data.artifact_representations,
+                second_level_organized_data.linked_artifacts
             );
 
-            const third_level_artifacts_representations_map: Map<number, ArtifactResponse> =
-                new Map();
-            for (const artifact_response of linked_artifacts_representations) {
-                third_level_artifacts_representations_map.set(
-                    artifact_response.id,
-                    artifact_response
-                );
-            }
-
             organized_reports_data = {
-                ...organized_reports_data,
-                third_level: {
-                    artifact_representations: third_level_artifacts_representations_map,
-                    tracker_name: export_settings_third_level.tracker_name,
-                },
+                first_level: first_level_organized_data,
+                second_level: second_level_organized_data,
+                third_level: third_level_organized_data,
             };
         }
     }
 
     return organized_reports_data;
+}
+
+async function retrieveLinkedArtifactsData(
+    report_id: number,
+    artifact_ids: ReadonlyArray<number>,
+    artifact_link_types: ReadonlyArray<string>,
+    linked_artifacts_representations: Map<number, ArtifactResponse>,
+    linked_artifacts_maps: Map<number, ReadonlyArray<number>>
+): Promise<void> {
+    const following_level_report_artifacts_responses: ArtifactResponse[] = await getReportArtifacts(
+        report_id,
+        true
+    );
+
+    await limitConcurrencyPool(5, artifact_ids, async (artifact_id: number): Promise<void> => {
+        for (const artifact_link_type of artifact_link_types) {
+            const first_level_linked_artifacts_responses = await getLinkedArtifacts(
+                artifact_id,
+                artifact_link_type
+            );
+            for (const linked_artifacts_response of first_level_linked_artifacts_responses) {
+                if (linked_artifacts_response.collection.length === 0) {
+                    continue;
+                }
+                const matching_following_level_representations: ArtifactResponse[] =
+                    following_level_report_artifacts_responses.filter((value: ArtifactResponse) =>
+                        linked_artifacts_response.collection.find(
+                            (element: ArtifactResponse) => value.id === element.id
+                        )
+                    );
+
+                for (const matching_representation of matching_following_level_representations) {
+                    linked_artifacts_representations.set(
+                        matching_representation.id,
+                        matching_representation
+                    );
+                }
+                linked_artifacts_maps.set(
+                    artifact_id,
+                    matching_following_level_representations.map(
+                        (representation: ArtifactResponse) => {
+                            return representation.id;
+                        }
+                    )
+                );
+            }
+        }
+    });
 }
