@@ -18,15 +18,19 @@
  */
 
 import type { LinkableArtifactIdentifier } from "../../../../domain/fields/link-field-v2/LinkableArtifactIdentifier";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 export const LinkableArtifactIdentifierProxy = {
-    fromQueryString: (query_string: string): LinkableArtifactIdentifier | null => {
+    fromQueryString: (
+        query_string: string,
+        current_artifact_identifier: CurrentArtifactIdentifier | null
+    ): LinkableArtifactIdentifier | null => {
         if (query_string === "" || isNaN(Number(query_string))) {
             return null;
         }
 
         const query_number = Number.parseInt(query_string, 10);
-        if (Number.isNaN(query_number)) {
+        if (Number.isNaN(query_number) || query_number === current_artifact_identifier?.id) {
             return null;
         }
 

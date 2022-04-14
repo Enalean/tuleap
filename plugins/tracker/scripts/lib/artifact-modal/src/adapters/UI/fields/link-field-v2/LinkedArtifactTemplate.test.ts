@@ -141,6 +141,7 @@ describe(`LinkedArtifactTemplate`, () => {
         });
 
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
+            const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
@@ -155,9 +156,10 @@ describe(`LinkedArtifactTemplate`, () => {
                     allowed_types: [],
                 },
                 ArtifactLinkSelectorAutoCompleter(
-                    RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact)
+                    RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact),
+                    current_artifact_identifier
                 ),
-                CurrentArtifactIdentifierStub.withId(72),
+                current_artifact_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72")
             );
 

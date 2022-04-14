@@ -50,7 +50,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         "should clear the source select options when the query is %s",
         async (query_content_type: string, query: string) => {
             const autocompleter = ArtifactLinkSelectorAutoCompleter(
-                RetrieveMatchingArtifactStub.withMatchingArtifact({} as unknown as Artifact)
+                RetrieveMatchingArtifactStub.withMatchingArtifact({} as unknown as Artifact),
+                null
             );
 
             await autocompleter.autoComplete(select)(query);
@@ -68,7 +69,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         };
 
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withMatchingArtifact(artifact)
+            RetrieveMatchingArtifactStub.withMatchingArtifact(artifact),
+            null
         );
 
         await autocompleter.autoComplete(select)("1621");
@@ -83,7 +85,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     it("when an error is returned by the api, then an empty state option is added to the source select", async () => {
         const fault = Fault.fromMessage("Nope");
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withFault(fault)
+            RetrieveMatchingArtifactStub.withFault(fault),
+            null
         );
 
         await autocompleter.autoComplete(select)("1621");

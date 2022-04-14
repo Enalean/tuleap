@@ -18,17 +18,27 @@
  */
 
 import { LinkableArtifactIdentifierProxy } from "./LinkableArtifactIdentifierProxy";
+import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 
 describe("LinkableArtifactIdentifierProxy", () => {
     it.each(["abcd", "10+", "105d", "10^5"])(
         "should return null when there is no valid id in the query string",
         (query: string) => {
-            expect(LinkableArtifactIdentifierProxy.fromQueryString(query)).toBeNull();
+            expect(LinkableArtifactIdentifierProxy.fromQueryString(query, null)).toBeNull();
         }
     );
 
+    it("should return null when the user has entered the current artifact_id", () => {
+        expect(
+            LinkableArtifactIdentifierProxy.fromQueryString(
+                "105",
+                CurrentArtifactIdentifierStub.withId(105)
+            )
+        ).toBeNull();
+    });
+
     it("should return a LinkableArtifactIdentifier", () => {
-        expect(LinkableArtifactIdentifierProxy.fromQueryString("105")).toStrictEqual({
+        expect(LinkableArtifactIdentifierProxy.fromQueryString("105", null)).toStrictEqual({
             _type: "LinkableArtifactIdentifier",
             id: 105,
         });

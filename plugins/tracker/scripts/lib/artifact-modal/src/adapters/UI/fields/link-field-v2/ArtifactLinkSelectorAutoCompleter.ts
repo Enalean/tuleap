@@ -22,6 +22,7 @@ import type { LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
 import { getMatchingArtifactLabel, getNoResultFoundEmptyState } from "../../../../gettext-catalog";
 import type { Artifact } from "../../../../domain/Artifact";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { LinkableArtifactIdentifierProxy } from "./LinkableArtifactIdentifierProxy";
 
 export interface ArtifactLinkSelectorAutoCompleterType {
@@ -29,7 +30,8 @@ export interface ArtifactLinkSelectorAutoCompleterType {
 }
 
 export const ArtifactLinkSelectorAutoCompleter = (
-    retrieve_matching_artifact: RetrieveMatchingArtifact
+    retrieve_matching_artifact: RetrieveMatchingArtifact,
+    current_artifact_identifier: CurrentArtifactIdentifier | null
 ): ArtifactLinkSelectorAutoCompleterType => ({
     autoComplete: (select: HTMLSelectElement): LinkSelectorSearchFieldCallback => {
         const matching_artifact_optgroup = getMatchingArtifactOptionGroup();
@@ -38,7 +40,10 @@ export const ArtifactLinkSelectorAutoCompleter = (
         select.appendChild(matching_artifact_optgroup);
 
         return async (query: string): Promise<void> => {
-            const artifact_identifier = LinkableArtifactIdentifierProxy.fromQueryString(query);
+            const artifact_identifier = LinkableArtifactIdentifierProxy.fromQueryString(
+                query,
+                current_artifact_identifier
+            );
             if (artifact_identifier === null) {
                 clearSelectOptions();
                 return;
