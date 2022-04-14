@@ -280,6 +280,12 @@ msgstr "Nom du fichier"
 msgid "Filename preview"
 msgstr "Prévisualisation du nom de fichier"
 
+msgid ""
+"Filename will follow a pattern enforced by the document manager "
+"configuration."
+msgstr ""
+"Le nom du fichier suivra un modèle défini par la configuration du gestionnaire de document."
+
 msgid "Fixed date"
 msgstr "Date fixe"
 

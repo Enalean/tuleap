@@ -20,7 +20,10 @@
 
 <template>
     <div class="tlp-property" v-if="is_filename_pattern_enforced && isFile(props.item)">
-        <label class="tlp-label">{{ filename_preview_label }}</label>
+        <label class="tlp-label">
+            {{ filename_preview_label }}
+            <i v-bind:title="tooltip_text" class="fas fa-question-circle" role="img"></i>
+        </label>
         <p data-test="preview">{{ preview }}</p>
     </div>
 </template>
@@ -43,6 +46,10 @@ const props = defineProps<{ item: DefaultFileItem }>();
 const { filename_pattern, is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>(
     "configuration",
     ["filename_pattern", "is_filename_pattern_enforced"]
+);
+
+const tooltip_text = ref(
+    $gettext("Filename will follow a pattern enforced by the document manager configuration.")
 );
 
 const preview = computed((): string => {
