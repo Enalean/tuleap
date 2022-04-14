@@ -36,9 +36,12 @@
                     v-bind:key="version.id"
                     v-bind:version="version"
                 />
-                <tr v-if="is_version_history_empty">
+                <tr v-if="is_version_history_empty && !is_loading">
                     <td colspan="3" class="tlp-table-cell-empty" v-translate>No version history</td>
                 </tr>
+                <template v-if="is_loading">
+                    <file-version-history-skeleton v-for="line in 5" v-bind:key="line" />
+                </template>
             </tbody>
         </table>
         <div v-if="has_error" class="tlp-alert-danger">
@@ -56,6 +59,7 @@ import { getVersionHistory } from "../../../../../helpers/version-history-retrie
 import { handleErrorForHistoryVersion } from "../../../../../helpers/properties-helpers/error-handler-helper";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../../store/configuration";
+import FileVersionHistorySkeleton from "./FileVersionHistorySkeleton.vue";
 
 const props = defineProps<{ item: ItemFile }>();
 
@@ -66,14 +70,18 @@ const { is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>(
 let versions = ref<ReadonlyArray<FileHistory>>([]);
 let has_error = ref(false);
 let error_message = ref("");
+let is_loading = ref(false);
 
 onMounted(async (): Promise<void> => {
     if (is_filename_pattern_enforced.value) {
+        is_loading.value = true;
         try {
             versions.value = await getVersionHistory(props.item);
         } catch (exception) {
             has_error.value = true;
             error_message.value = await handleErrorForHistoryVersion(exception);
+        } finally {
+            is_loading.value = false;
         }
     }
 });
