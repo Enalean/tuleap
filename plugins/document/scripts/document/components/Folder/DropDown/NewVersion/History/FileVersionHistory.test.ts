@@ -26,11 +26,13 @@ import { TYPE_FILE } from "../../../../../constants";
 import * as version_history_retriever from "../../../../../helpers/version-history-retriever";
 import type { FileHistory } from "../../../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import FileVersionHistorySkeleton from "./FileVersionHistorySkeleton.vue";
 
 describe("FileVersionHistory", () => {
     function createWrapper(
         has_error = false,
-        is_filename_pattern_enforced = true
+        is_filename_pattern_enforced = true,
+        is_loading = false
     ): Wrapper<FileVersionHistory> {
         return shallowMount(FileVersionHistory, {
             localVue,
@@ -39,6 +41,7 @@ describe("FileVersionHistory", () => {
                 return {
                     has_error,
                     error_message: "Some error",
+                    is_loading,
                 };
             },
             mocks: {
@@ -78,6 +81,7 @@ describe("FileVersionHistory", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findAllComponents(FileVersionHistoryContent)).toHaveLength(2);
+        expect(wrapper.findAllComponents(FileVersionHistorySkeleton)).toHaveLength(0);
     });
 
     it("displays the empty message when there is no version", async () => {
@@ -87,8 +91,10 @@ describe("FileVersionHistory", () => {
 
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.findAllComponents(FileVersionHistoryContent)).toHaveLength(0);
+        expect(wrapper.findAllComponents(FileVersionHistorySkeleton)).toHaveLength(0);
         expect(wrapper).toMatchSnapshot();
     });
 
@@ -101,6 +107,7 @@ describe("FileVersionHistory", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findAllComponents(FileVersionHistoryContent)).toHaveLength(0);
+        expect(wrapper.findAllComponents(FileVersionHistorySkeleton)).toHaveLength(0);
         expect(wrapper).toMatchSnapshot();
     });
 
@@ -115,5 +122,18 @@ describe("FileVersionHistory", () => {
 
         expect(version_history_spy).not.toHaveBeenCalled();
         expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+    });
+    it("displays the skeleton during the loading of the history", async () => {
+        const version_history_spy = jest.spyOn(version_history_retriever, "getVersionHistory");
+        version_history_spy.mockResolvedValue([] as ReadonlyArray<FileHistory>);
+
+        const is_loading = true;
+        const wrapper = createWrapper(false, true, is_loading);
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findAllComponents(FileVersionHistoryContent)).toHaveLength(0);
+        expect(wrapper.findAllComponents(FileVersionHistorySkeleton)).toHaveLength(5);
     });
 });

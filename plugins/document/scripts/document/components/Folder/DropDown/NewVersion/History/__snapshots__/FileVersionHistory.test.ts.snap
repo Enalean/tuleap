@@ -17,6 +17,7 @@ exports[`FileVersionHistory displays the empty message when there is no version 
       <tr>
         <td colspan="3" class="tlp-table-cell-empty" data-msgid="No version history" data-current-language="en_US">No version history</td>
       </tr>
+      <!---->
     </tbody>
   </table>
   <!---->
