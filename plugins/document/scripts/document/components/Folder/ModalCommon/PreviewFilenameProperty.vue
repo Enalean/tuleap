@@ -19,37 +19,38 @@
   -->
 
 <template>
-    <preview-filename-property v-bind:item="item">
-        {{ preview }}
-    </preview-filename-property>
+    <div class="tlp-property" v-if="is_filename_pattern_enforced && isFile(props.item)">
+        <label class="tlp-label">
+            {{ filename_preview_label }}
+            <i v-bind:title="tooltip_text" class="fas fa-question-circle" role="img"></i>
+        </label>
+        <p data-test="preview">
+            <slot></slot>
+        </p>
+    </div>
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { DefaultFileItem } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { ref } from "@vue/composition-api";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
-import { addOriginalFilenameExtension } from "../../../helpers/add-original-filename-extension";
-import PreviewFilenameProperty from "./PreviewFilenameProperty.vue";
+import { isFile } from "../../../helpers/type-check-helper";
+
+const { $gettext } = useGettext();
+
+const filename_preview_label = ref($gettext("Filename preview"));
 
 const props = defineProps<{ item: DefaultFileItem }>();
 
-const { filename_pattern } = useNamespacedState<ConfigurationState>("configuration", [
-    "filename_pattern",
+const { is_filename_pattern_enforced } = useNamespacedState<ConfigurationState>("configuration", [
+    "is_filename_pattern_enforced",
 ]);
 
-const preview = computed((): string => {
-    return addOriginalFilenameExtension(
-        filename_pattern.value
-            // eslint-disable-next-line no-template-curly-in-string
-            .replace("${TITLE}", props.item.title)
-            // eslint-disable-next-line no-template-curly-in-string
-            .replace("${VERSION_NAME}", "")
-            // eslint-disable-next-line no-template-curly-in-string
-            .replace("${STATUS}", props.item.status),
-        props.item.file_properties.file
-    );
-});
+const tooltip_text = ref(
+    $gettext("Filename will follow a pattern enforced by the document manager configuration.")
+);
 </script>
 
 <script lang="ts">

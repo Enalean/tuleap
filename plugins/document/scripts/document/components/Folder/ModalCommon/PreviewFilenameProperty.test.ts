@@ -19,23 +19,21 @@
 
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../../helpers/local-vue";
+import PreviewFilenameProperty from "./PreviewFilenameProperty.vue";
+import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ConfigurationState } from "../../../../store/configuration";
-import type { DefaultFileNewVersionItem, NewVersion } from "../../../../type";
-import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
+import type { ConfigurationState } from "../../../store/configuration";
+import type { DefaultFileItem } from "../../../type";
 
-describe("PreviewFilenameNewVersion", () => {
+describe("PreviewFilenameProperty", () => {
     function getWrapper(
-        item: DefaultFileNewVersionItem,
-        version: NewVersion,
+        item: DefaultFileItem,
         configuration: ConfigurationState
-    ): Wrapper<PreviewFilenameNewVersion> {
-        return shallowMount(PreviewFilenameNewVersion, {
+    ): Wrapper<PreviewFilenameProperty> {
+        return shallowMount(PreviewFilenameProperty, {
             localVue,
             propsData: {
                 item,
-                version,
             },
             mocks: {
                 $store: createStoreMock({
@@ -44,10 +42,13 @@ describe("PreviewFilenameNewVersion", () => {
                     },
                 }),
             },
+            slots: {
+                default: "Lorem ipsum",
+            },
         });
     }
 
-    it("should update the preview according to item and version's values", async () => {
+    it("should display nothing if filename pattern is not enforced", () => {
         const item = {
             id: 42,
             type: "file",
@@ -57,22 +58,41 @@ describe("PreviewFilenameNewVersion", () => {
             file_properties: {
                 file: new File([], "values.json"),
             },
-        } as DefaultFileNewVersionItem;
+        } as DefaultFileItem;
 
-        const version = { title: "wololo", changelog: "" } as NewVersion;
-
-        const wrapper = getWrapper(item, version, {
-            is_filename_pattern_enforced: true,
-            // eslint-disable-next-line no-template-curly-in-string
-            filename_pattern: "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
+        const wrapper = getWrapper(item, {
+            is_filename_pattern_enforced: false,
         } as ConfigurationState);
 
-        expect(wrapper.text()).toBe("42-toto-Lorem ipsum-approved-wololo.json");
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+    });
 
-        item.status = "rejected";
-        version.title = "nope";
-        await wrapper.vm.$nextTick();
+    it("should display nothing if item is not a file is not enforced", () => {
+        const item = {} as DefaultFileItem;
 
-        expect(wrapper.text()).toBe("42-toto-Lorem ipsum-rejected-nope.json");
+        const wrapper = getWrapper(item, {
+            is_filename_pattern_enforced: true,
+        } as ConfigurationState);
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+    });
+
+    it("should display the preview", () => {
+        const item = {
+            id: 42,
+            type: "file",
+            title: "Lorem ipsum",
+            status: "approved",
+            description: "",
+            file_properties: {
+                file: new File([], "values.json"),
+            },
+        } as DefaultFileItem;
+
+        const wrapper = getWrapper(item, {
+            is_filename_pattern_enforced: true,
+        } as ConfigurationState);
+
+        expect(wrapper.find("[data-test=preview]").text()).toBe("Lorem ipsum");
     });
 });
