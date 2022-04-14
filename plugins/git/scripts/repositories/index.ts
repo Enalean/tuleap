@@ -26,10 +26,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
 import { setBreadcrumbSettings } from "./src/breadcrumb-presenter";
 import { build as buildRepositoryListPresenter } from "./src/repository-list-presenter";
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./src/store";
 import { ERROR_TYPE_NO_ERROR, PROJECT_KEY } from "./src/constants";
 import type { State } from "./src/type";

@@ -18,7 +18,7 @@
  */
 
 import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "../../../../../tuleap/gettext/vue-gettext-init";
+import { initVueGettext } from "@tuleap/vue2-gettext-init";
 import type { Vue } from "vue/types/vue";
 
 export async function createProjectAdminBannerLocalVue(): Promise<typeof Vue> {

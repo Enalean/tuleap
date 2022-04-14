@@ -2,8 +2,8 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/core': file:../../src
   '@tuleap/tlp': file:../../src/themes/tlp
+  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@vue/test-utils': ^1.3.0
   vue: ^2.6.14
   vue-class-component: ^7.2.6
@@ -11,7 +11,7 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@tuleap/core': link:../../src
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   vue: 2.6.14
 
 devDependencies:

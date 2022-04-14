@@ -21,6 +21,7 @@
     "@tuleap/tlp-modal": "file:../lib/frontend/tlp-modal",
     "@tuleap/tlp-popovers": "file:../lib/frontend/tlp-popovers",
     "@tuleap/tooltip": "file:../lib/frontend/tooltip",
+    "@tuleap/vue2-gettext-init": "file:../lib/frontend/vue2-gettext-init",
     "ckeditor4": "^4.17.1",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",
@@ -43,7 +44,6 @@
     "turndown": "^7.0.0",
     "vue": "^2.6.14",
     "vue-dompurify-html": "^2.5.1",
-    "vue-gettext": "^2.1.12",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2"
   },

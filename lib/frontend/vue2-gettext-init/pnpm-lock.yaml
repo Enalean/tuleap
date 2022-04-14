@@ -1,0 +1,26 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@tuleap/build-system-configurator': file:../build-system-configurator
+  '@tuleap/gettext': file:../gettext
+  vue: ^2.6.14
+  vue-gettext: ^2.1.12
+
+dependencies:
+  '@tuleap/gettext': link:../gettext
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+  vue: 2.6.14
+  vue-gettext: 2.1.12
+
+packages:
+
+  /vue-gettext/2.1.12:
+    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
+    engines: {npm: '>= 3.0.0'}
+    dev: true
+
+  /vue/2.6.14:
+    resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
+    dev: true

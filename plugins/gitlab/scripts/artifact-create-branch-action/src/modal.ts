@@ -18,10 +18,7 @@
  */
 
 import Vue from "vue";
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import App from "./components/App.vue";
 import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
 

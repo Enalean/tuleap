@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { initVueGettext, getPOFileFromLocale } from "../../../tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import App from "./src/components/App.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {

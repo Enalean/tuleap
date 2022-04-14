@@ -19,7 +19,7 @@
  */
 
 import { submitConfigurationHandler } from "./submit-configuration-handler";
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import type { GetText } from "@tuleap/vue2-gettext-init";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 

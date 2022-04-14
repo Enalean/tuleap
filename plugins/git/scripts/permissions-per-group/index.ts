@@ -19,10 +19,7 @@
 
 import Vue from "vue";
 import GitPermissions from "./src/GitPermissions.vue";
-import {
-    initVueGettext,
-    getPOFileFromLocale,
-} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-permission-per-group");

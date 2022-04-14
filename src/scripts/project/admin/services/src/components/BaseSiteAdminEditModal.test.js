@@ -21,12 +21,12 @@ import { shallowMount } from "@vue/test-utils";
 import BaseSiteAdminEditModal from "./BaseSiteAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import EditableSystemService from "./Service/EditableSystemService.vue";
-import localVue from "../support/local-vue.js";
+import { createLocalVueForTests } from "../support/local-vue.js";
 
-function createWrapper(props, stubs) {
+async function createWrapper(props, stubs) {
     return shallowMount(BaseSiteAdminEditModal, {
         stubs,
-        localVue,
+        localVue: await createLocalVueForTests(),
         propsData: props,
     });
 }
@@ -41,7 +41,7 @@ function createFakeButton(service) {
 
 describe(`BaseSiteAdminEditModal`, () => {
     let wrapper, modal;
-    beforeEach(() => {
+    beforeEach(async () => {
         modal = {
             template: `<div><slot name="content"/></div>`,
             methods: {
@@ -49,7 +49,7 @@ describe(`BaseSiteAdminEditModal`, () => {
             },
         };
 
-        wrapper = createWrapper(
+        wrapper = await createWrapper(
             {
                 project_id: "101",
                 minimal_rank: 10,

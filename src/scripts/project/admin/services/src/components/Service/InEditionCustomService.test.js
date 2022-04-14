@@ -19,11 +19,11 @@
 
 import { shallowMount } from "@vue/test-utils";
 import InEditionCustomService from "./InEditionCustomService.vue";
-import localVue from "../../support/local-vue.js";
+import { createLocalVueForTests } from "../../support/local-vue.js";
 
-function createWrapper(props) {
+async function createWrapper(props) {
     return shallowMount(InEditionCustomService, {
-        localVue,
+        localVue: await createLocalVueForTests(),
         propsData: props,
     });
 }
@@ -54,9 +54,9 @@ describe(`InEditionCustomService`, () => {
     describe(`When the service is already open in an iframe`, () => {
         let iframe_switch;
 
-        beforeEach(() => {
+        beforeEach(async () => {
             props.service.is_in_iframe = true;
-            wrapper = createWrapper(props);
+            wrapper = await createWrapper(props);
 
             iframe_switch = wrapper.get("[data-test=iframe-switch]");
         });
@@ -101,8 +101,8 @@ describe(`InEditionCustomService`, () => {
     });
 
     it(`When the service is not already open in an iframe,
-        the switch input won't be displayed`, () => {
-        wrapper = createWrapper(props);
+        the switch input won't be displayed`, async () => {
+        wrapper = await createWrapper(props);
 
         const iframe_switch = wrapper.find("[data-test=iframe-switch]");
         expect(iframe_switch.exists()).toBe(false);

@@ -8,10 +8,10 @@
     "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
     "@tuleap/plugin-tracker": "file:../tracker",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
     "extendable-error": "^0.1.7",
     "moment": "^2.29.1",
     "vue": "^2.6.14",
-    "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2",
     "vuex-class": "^0.3.2"
   },

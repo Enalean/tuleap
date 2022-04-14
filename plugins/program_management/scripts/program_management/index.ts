@@ -19,10 +19,7 @@
 
 import Vue from "vue";
 import App from "./src/components/App.vue";
-import {
-    getPOFileFromLocale,
-    initVueGettext,
-} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./src/store";
 import type { ConfigurationState } from "./src/store/configuration";
 import VueDOMPurifyHTML from "vue-dompurify-html";

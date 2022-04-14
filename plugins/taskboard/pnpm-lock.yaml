@@ -6,6 +6,7 @@ specifiers:
   '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/dompurify': ^2.3.2
   '@types/fscreen': ^1.0.1
@@ -29,6 +30,7 @@ dependencies:
   '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   dompurify: 2.3.6
   fscreen: 1.2.0
   mustache: 4.2.0

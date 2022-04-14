@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import { initVueGettext, getPOFileFromLocale } from "../../tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import type { VueClass } from "vue-class-component/lib/declarations";
 import type { State } from "./store/type";

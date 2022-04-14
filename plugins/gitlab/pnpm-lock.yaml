@@ -4,21 +4,21 @@ specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@types/bootstrap': ^4.5.1
   '@types/jquery': ^3.5.5
   jquery: ^3.6.0
   neverthrow: ^4.2.1
   vue: ^2.6.14
   vue-class-component: ^7.2.6
-  vue-gettext: ^2.1.12
   vue-property-decorator: ^9.1.2
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   neverthrow: 4.2.1
   vue: 2.6.14
-  vue-gettext: 2.1.12
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
@@ -67,11 +67,6 @@ packages:
     dependencies:
       vue: 2.6.14
     dev: true
-
-  /vue-gettext/2.1.12:
-    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
-    engines: {npm: '>= 3.0.0'}
-    dev: false
 
   /vue-property-decorator/9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5:
     resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}

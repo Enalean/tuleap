@@ -20,10 +20,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import App from "./src/components/App.vue";
-import {
-    initVueGettext,
-    getPOFileFromLocale,
-} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./src/store/index";
 import type {
     CSRFToken,

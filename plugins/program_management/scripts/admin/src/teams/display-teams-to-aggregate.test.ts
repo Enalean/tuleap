@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { displayTeamsToAggregate } from "./display-teams-to-aggregate";
-import type { GetText } from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import type { GetText } from "@tuleap/vue2-gettext-init";
 import * as listPicker from "@tuleap/list-picker";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();

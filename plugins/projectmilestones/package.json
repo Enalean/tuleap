@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
     "d3-array": "^3.0.1",
     "d3-scale": "^4.0.0",
     "d3-selection": "^3.0.0",

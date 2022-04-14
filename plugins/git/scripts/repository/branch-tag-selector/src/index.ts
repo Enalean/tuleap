@@ -19,10 +19,7 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import {
-    initVueGettext,
-    getPOFileFromLocale,
-} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 
 export async function init(mount_point: HTMLDivElement, button: HTMLElement): Promise<void> {
     await initVueGettext(
