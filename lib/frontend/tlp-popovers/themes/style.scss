@@ -32,7 +32,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     flex-direction: column;
     width: 400px;
     transition: opacity $tlp-popover-hover-transition-hide,
-        transform $tlp-popover-hover-transition-hide, box-shadow $tlp-popover-hover-transition-hide;
+        box-shadow $tlp-popover-hover-transition-hide;
     border-radius: $tlp-popover-radius;
     box-shadow: none;
     pointer-events: none;
@@ -41,19 +41,17 @@ $tlp-popover-click-transition: 75ms ease-out;
         display: flex;
         transform: translateY(0);
         transition: opacity $tlp-popover-hover-transition-show,
-            transform $tlp-popover-hover-transition-show,
             box-shadow $tlp-popover-hover-transition-show;
         box-shadow: var(--tlp-flyover-shadow);
         pointer-events: auto;
     }
 
-    &[data-popper-trigger^="click"] {
-        transition: opacity $tlp-popover-click-transition, transform $tlp-popover-click-transition,
-            box-shadow $tlp-popover-click-transition;
+    &[data-popover-trigger="click"] {
+        transition: opacity $tlp-popover-click-transition, box-shadow $tlp-popover-click-transition;
 
         &.tlp-popover-shown {
             transition: opacity $tlp-popover-click-transition,
-                transform $tlp-popover-click-transition, box-shadow $tlp-popover-click-transition;
+                box-shadow $tlp-popover-click-transition;
         }
     }
 }
@@ -159,7 +157,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 }
 
-.tlp-popover[data-popper-placement^="top"] {
+.tlp-popover[data-popover-placement^="top"] {
     > .tlp-popover-arrow {
         bottom: -(math.div($tlp-popover-arrow-size, 2));
         background: var(--tlp-white-color);
@@ -170,7 +168,7 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 }
 
-.tlp-popover[data-popper-placement^="bottom"] {
+.tlp-popover[data-popover-placement^="bottom"] {
     > .tlp-popover-arrow {
         top: -(math.div($tlp-popover-arrow-size, 2));
     }
@@ -180,9 +178,9 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 }
 
-.tlp-popover[data-popper-placement^="right"] {
-    &[data-popper-placement="right"],
-    &[data-popper-placement="right-end"] {
+.tlp-popover[data-popover-placement^="right"] {
+    &[data-popover-placement="right"],
+    &[data-popover-placement="right-end"] {
         > .tlp-popover-arrow {
             background: var(--tlp-white-color);
         }
@@ -197,9 +195,9 @@ $tlp-popover-click-transition: 75ms ease-out;
     }
 }
 
-.tlp-popover[data-popper-placement^="left"] {
-    &[data-popper-placement="left"],
-    &[data-popper-placement="left-end"] {
+.tlp-popover[data-popover-placement^="left"] {
+    &[data-popover-placement="left"],
+    &[data-popover-placement="left-end"] {
         > .tlp-popover-arrow {
             background: var(--tlp-white-color);
         }

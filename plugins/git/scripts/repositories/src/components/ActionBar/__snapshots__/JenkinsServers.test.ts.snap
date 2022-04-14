@@ -4,8 +4,8 @@ exports[`JenkinsServer displays the badge and a basic popover 1`] = `
 <div><span class="tlp-badge-secondary tlp-badge-outline git-repository-list-header-badge"><translate-stub tag="span" translaten="1" translateplural="%{ countJenkinsServers } Jenkins servers setup" translateparams="[object Object]">
             %{ countJenkinsServers } Jenkins server setup
         </translate-stub></span>
-  <section class="tlp-popover git-repository-list-header-popover" style="position: absolute; left: 0px; top: 0px; margin: 0px;">
-    <div class="tlp-popover-arrow" style="position: absolute;"></div>
+  <section class="tlp-popover git-repository-list-header-popover">
+    <div class="tlp-popover-arrow"></div>
     <div class="tlp-popover-header">
       <h1 class="tlp-popover-title" data-msgid="Jenkins servers" data-current-language="en_US">Jenkins servers</h1>
     </div>

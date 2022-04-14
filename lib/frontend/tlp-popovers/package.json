@@ -9,7 +9,7 @@
   "main": "dist/tlp-popovers.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@popperjs/core": "^2.9.2"
+    "@floating-ui/dom": "^0.4.2"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

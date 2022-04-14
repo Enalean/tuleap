@@ -17,15 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Instance, Options, Placement } from "@popperjs/core";
-import { createPopper } from "@popperjs/core";
+import type { Placement } from "@floating-ui/dom";
+import { computePosition, offset, shift, flip, autoUpdate, arrow } from "@floating-ui/dom";
 
 export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 
-export type PopoverOptions = Partial<Options> & {
-    anchor?: HTMLElement | undefined;
-    trigger?: "click" | "hover";
+type Configuration = {
+    readonly anchor: HTMLElement;
+    readonly trigger: Trigger;
+    readonly placement: Placement;
+    readonly middleware: {
+        readonly flip: {
+            readonly fallbackPlacements?: Array<Placement>;
+        };
+        readonly offset: {
+            readonly alignmentAxis?: number;
+        };
+    };
 };
+
+type Trigger = "click" | "hover";
+
+export type PopoverOptions = Partial<Configuration>;
 
 export interface Popover {
     hide(): void;
@@ -38,35 +51,87 @@ export function createPopover(
     popover_content: HTMLElement,
     options: PopoverOptions = {}
 ): Popover {
-    const anchor = options.anchor || popover_trigger;
-    const popper = createPopper(anchor, popover_content, getPopperOptions(anchor, options));
+    const configuration = getConfiguration(popover_trigger, options);
+
+    popover_content.dataset.popoverTrigger = configuration.trigger;
+
+    const updatePositionOfContent = getUpdatePositionOfContentCallback(
+        popover_content,
+        configuration
+    );
+
+    const cleanup = autoUpdate(configuration.anchor, popover_content, updatePositionOfContent);
 
     const dismiss_buttons = popover_content.querySelectorAll('[data-dismiss="popover"]');
+
     const listeners = buildListeners(
         doc,
         popover_trigger,
         popover_content,
         dismiss_buttons,
-        options,
-        popper
+        configuration,
+        updatePositionOfContent
     );
     attachListeners(listeners);
 
     return {
         destroy: (): void => {
             destroyListeners(listeners);
-            popper.destroy();
+            cleanup();
         },
         hide: (): void => {
             popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
+            cleanup();
         },
     };
 }
 
+function getUpdatePositionOfContentCallback(
+    popover_content: HTMLElement,
+    configuration: Configuration
+): () => void {
+    const middleware = [
+        offset({
+            mainAxis: 10,
+            alignmentAxis: configuration.middleware.offset.alignmentAxis ?? -15,
+        }),
+        flip(configuration.middleware.flip),
+        shift({ padding: 16 }),
+    ];
+
+    const arrow_element = popover_content.querySelector<HTMLElement>(".tlp-popover-arrow");
+    if (arrow_element) {
+        middleware.push(
+            arrow({
+                element: arrow_element,
+                padding: 15,
+            })
+        );
+    }
+
+    return (): void => {
+        computePosition(configuration.anchor, popover_content, {
+            placement: configuration.placement,
+            middleware,
+        }).then(({ x, y, placement, middlewareData }) => {
+            Object.assign(popover_content.style, {
+                left: `${x}px`,
+                top: `${y}px`,
+            });
+            popover_content.dataset.popoverPlacement = placement;
+
+            if (arrow_element && middlewareData && middlewareData.arrow) {
+                const { x: arrow_x, y: arrow_y } = middlewareData.arrow;
+                Object.assign(arrow_element.style, {
+                    left: arrow_x !== undefined ? `${arrow_x}px` : "",
+                    top: arrow_y !== undefined ? `${arrow_y}px` : "",
+                });
+            }
+        });
+    };
+}
+
 const allowed_placements = [
-    "auto",
-    "auto-start",
-    "auto-end",
     "top",
     "top-start",
     "top-end",
@@ -84,8 +149,25 @@ const allowed_placements = [
 const isPlacement = (string_to_check: string): string_to_check is Placement =>
     allowed_placements.includes(string_to_check);
 
-function getPopperOptions(anchor: HTMLElement, options: PopoverOptions): Partial<Options> {
-    const placement = options.placement || anchor.dataset.placement || "bottom";
+const isTrigger = (string_to_check: string | undefined): string_to_check is Trigger =>
+    ["hover", "click"].includes(string_to_check ?? "");
+
+function getTrigger(popover_trigger: HTMLElement, options: PopoverOptions): Trigger {
+    if (options.trigger) {
+        return options.trigger;
+    }
+
+    const dataset_trigger = popover_trigger.dataset.trigger;
+    if (isTrigger(dataset_trigger)) {
+        return dataset_trigger;
+    }
+
+    return "hover";
+}
+
+function getConfiguration(popover_trigger: HTMLElement, options: PopoverOptions): Configuration {
+    const anchor = options.anchor ?? popover_trigger;
+    const placement = options.placement ?? anchor.dataset.placement ?? "bottom";
 
     if (!isPlacement(placement)) {
         throw new Error(
@@ -97,29 +179,13 @@ function getPopperOptions(anchor: HTMLElement, options: PopoverOptions): Partial
     }
 
     return {
+        anchor,
         placement,
-        modifiers: [
-            {
-                name: "arrow",
-                options: {
-                    element: ".tlp-popover-arrow",
-                    padding: 15,
-                },
-            },
-            {
-                name: "offset",
-                options: {
-                    offset: [0, 10],
-                },
-            },
-            {
-                name: "computeStyles",
-                options: {
-                    gpuAcceleration: false, // true by default
-                },
-            },
-            ...(options.modifiers || []),
-        ],
+        trigger: getTrigger(popover_trigger, options),
+        middleware: {
+            flip: options.middleware?.flip ?? {},
+            offset: options.middleware?.offset ?? {},
+        },
     };
 }
 
@@ -134,21 +200,25 @@ interface EventListener {
 function buildListeners(
     doc: Document,
     popover_trigger: HTMLElement,
-    popover_content: Element,
+    popover_content: HTMLElement,
     dismiss_buttons: NodeListOf<Element>,
-    options: PopoverOptions,
-    popper: Instance
+    configuration: Configuration,
+    updatePositionOfContent: () => void
 ): EventListener[] {
-    const trigger = options.trigger || popover_trigger.dataset.trigger || "hover";
-    if (trigger === "hover") {
+    if (configuration.trigger === "hover") {
         return [
-            buildMouseOverListener(doc, popover_trigger, popover_content, popper),
+            buildMouseOverListener(doc, popover_trigger, popover_content, updatePositionOfContent),
             buildMouseOutListener(doc, popover_trigger, popover_content),
         ];
     }
-    if (trigger === "click") {
+    if (configuration.trigger === "click") {
         const listeners = [
-            buildTriggerClickListener(doc, popover_trigger, popover_content, popper),
+            buildTriggerClickListener(
+                doc,
+                popover_trigger,
+                popover_content,
+                updatePositionOfContent
+            ),
             buildDocumentClickListener(doc, popover_trigger, popover_content),
             buildEscapeListener(doc, popover_content),
         ];
@@ -176,23 +246,23 @@ function destroyListeners(listeners: EventListener[]): void {
 function buildMouseOverListener(
     doc: Document,
     popover_trigger: HTMLElement,
-    popover_content: Element,
-    popper: Instance
+    popover_content: HTMLElement,
+    updatePositionOfContent: () => void
 ): EventListener {
     return {
         element: popover_trigger,
         type: "mouseover",
         handler(): void {
             hideAllShownPopovers(doc);
-            showPopover(popover_content, popper);
+            showPopover(popover_content, updatePositionOfContent);
         },
     };
 }
 
 function buildMouseOutListener(
     doc: Document,
-    popover_trigger: Element,
-    popover_content: Element
+    popover_trigger: HTMLElement,
+    popover_content: HTMLElement
 ): EventListener {
     return {
         element: popover_trigger,
@@ -206,9 +276,9 @@ function buildMouseOutListener(
 
 function buildTriggerClickListener(
     doc: Document,
-    popover_trigger: Element,
-    popover_content: Element,
-    popper: Instance
+    popover_trigger: HTMLElement,
+    popover_content: HTMLElement,
+    updatePositionOfContent: () => void
 ): EventListener {
     return {
         element: popover_trigger,
@@ -218,7 +288,7 @@ function buildTriggerClickListener(
             hideAllShownPopovers(doc);
             if (!is_shown) {
                 popover_content.setAttribute("x-trigger", "click");
-                showPopover(popover_content, popper);
+                showPopover(popover_content, updatePositionOfContent);
             }
         },
     };
@@ -226,8 +296,8 @@ function buildTriggerClickListener(
 
 function buildDocumentClickListener(
     doc: Document,
-    popover_trigger: Element,
-    popover_content: Element
+    popover_trigger: HTMLElement,
+    popover_content: HTMLElement
 ): EventListener {
     return {
         element: doc,
@@ -247,7 +317,7 @@ function buildDocumentClickListener(
     };
 }
 
-function buildEscapeListener(doc: Document, popover_content: Element): EventListener {
+function buildEscapeListener(doc: Document, popover_content: HTMLElement): EventListener {
     return {
         element: doc,
         type: "keyup",
@@ -278,7 +348,7 @@ function hideAllShownPopovers(doc: Document): void {
     }
 }
 
-async function showPopover(popover_content: Element, popper: Instance): Promise<void> {
+function showPopover(popover_content: HTMLElement, updatePositionOfContent: () => void): void {
     popover_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
-    await popper.update();
+    updatePositionOfContent();
 }

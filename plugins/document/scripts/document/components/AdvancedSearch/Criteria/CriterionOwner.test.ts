@@ -21,6 +21,8 @@ import { shallowMount } from "@vue/test-utils";
 import CriterionOwner from "./CriterionOwner.vue";
 import localVue from "../../../helpers/local-vue";
 
+jest.mock("tlp");
+
 describe("CriterionOwner", () => {
     it("should render the component", async () => {
         const wrapper = shallowMount(CriterionOwner, {

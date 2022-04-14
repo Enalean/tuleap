@@ -22,9 +22,9 @@ import { createPopover } from "tlp";
 export default function initCloneBarPopover(): void {
     const button = document.getElementById("git-repository-clone-popover-button");
     const target = document.getElementById("git-repository-clone-popover");
-    const anchor = document.getElementById("git-repository-clone-popover-caret") || undefined;
+    const anchor = document.getElementById("git-repository-clone-popover-caret");
 
-    if (!button || !target) {
+    if (!button || !target || !anchor) {
         return;
     }
 
