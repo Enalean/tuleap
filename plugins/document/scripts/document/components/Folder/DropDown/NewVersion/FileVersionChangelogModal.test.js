@@ -117,4 +117,17 @@ describe("FileVersionChangelogModal", () => {
 
         expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
     });
+
+    it("Updates the lock", async () => {
+        const wrapper = getWrapper();
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.version.is_file_locked).toBeUndefined();
+        emitter.emit("update-lock", true);
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
+    });
 });

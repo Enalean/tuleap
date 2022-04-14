@@ -119,7 +119,6 @@ import UserBadge from "../User/UserBadge.vue";
 import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";
 import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 import DropDownButton from "./DropDown/DropDownButton.vue";
-import LockProperty from "./DropDown/Lock/LockProperty.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalBadge from "./ApprovalTables/ApprovalBadge.vue";
 import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
@@ -136,7 +135,6 @@ export default {
         DropDownMenuTreeView,
         ApprovalBadge,
         DocumentTitleLockInfo,
-        LockProperty,
         QuickLookButton,
         UserBadge,
         UploadProgressBar,

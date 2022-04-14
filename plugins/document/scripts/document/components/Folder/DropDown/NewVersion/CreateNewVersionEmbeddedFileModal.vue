@@ -99,10 +99,12 @@ export default {
         this.registerEvents();
         emitter.on("update-version-title", this.updateTitleValue);
         emitter.on("update-changelog-property", this.updateChangelogValue);
+        emitter.on("update-lock", this.updateLock);
     },
     beforeDestroy() {
         emitter.off("update-version-title", this.updateTitleValue);
         emitter.off("update-changelog-property", this.updateChangelogValue);
+        emitter.off("update-lock", this.updateLock);
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -161,6 +163,9 @@ export default {
         },
         updateChangelogValue(changelog) {
             this.version.changelog = changelog;
+        },
+        updateLock(is_locked) {
+            this.version.is_file_locked = is_locked;
         },
     },
 };

@@ -18,7 +18,6 @@
   -
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div class="docman-item-update-property">
         <version-title-property
@@ -27,7 +26,6 @@
         />
         <lock-property
             v-if="!isOpenAfterDnd"
-            v-model="version.is_file_locked"
             v-bind:item="item"
             data-test="update-property-lock-version"
         />

@@ -92,4 +92,17 @@ describe("CreateNewVersionFileModal", () => {
 
         expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
     });
+
+    it("Updates the lock", async () => {
+        const wrapper = getWrapper();
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
+        emitter.emit("update-lock", false);
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.version.is_file_locked).toBe(false);
+    });
 });
