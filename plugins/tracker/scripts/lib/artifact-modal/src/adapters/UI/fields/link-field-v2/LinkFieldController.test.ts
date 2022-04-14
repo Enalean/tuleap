@@ -36,6 +36,10 @@ import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
+import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
+import type { Artifact } from "../../../../domain/Artifact";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -43,11 +47,15 @@ const FIELD_ID = 714;
 describe(`LinkFieldController`, () => {
     let current_artifact_identifier: CurrentArtifactIdentifier,
         field: ArtifactLinkFieldStructure,
-        cross_reference: ArtifactCrossReference;
+        cross_reference: ArtifactCrossReference,
+        auto_completer: ArtifactLinkSelectorAutoCompleterType;
     beforeEach(() => {
         field = { field_id: FIELD_ID, type: "art_link", label: "Artifact link", allowed_types: [] };
         current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
+        auto_completer = ArtifactLinkSelectorAutoCompleter(
+            RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact)
+        );
     });
 
     describe(`displayField()`, () => {
@@ -60,6 +68,7 @@ describe(`LinkFieldController`, () => {
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
                 NotifyFaultStub.withCount(),
                 field,
+                auto_completer,
                 current_artifact_identifier,
                 cross_reference
             );
@@ -90,6 +99,7 @@ describe(`LinkFieldController`, () => {
                 VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
                 fault_notifier,
                 field,
+                auto_completer,
                 current_artifact_identifier,
                 cross_reference
             );
@@ -144,6 +154,7 @@ describe(`LinkFieldController`, () => {
                 VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
                 NotifyFaultStub.withCount(),
                 field,
+                auto_completer,
                 current_artifact_identifier,
                 cross_reference
             );
@@ -179,6 +190,7 @@ describe(`LinkFieldController`, () => {
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
                 NotifyFaultStub.withCount(),
                 field,
+                auto_completer,
                 current_artifact_identifier,
                 cross_reference
             );

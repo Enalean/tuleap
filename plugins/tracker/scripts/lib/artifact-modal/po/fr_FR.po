@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-04-05 11:33+0200\n"
+"PO-Revision-Date: 2022-04-13 15:55+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -38,6 +38,9 @@ msgid "An error occurred while uploading this file: {{ file_name }}."
 msgstr ""
 "Une erreur s'est produite pendant le téléversement de ce fichier : "
 "{{ file_name }}."
+
+msgid "Artifact id"
+msgstr "Id d'artéfact"
 
 msgid "Auto-compute"
 msgstr "Calcul automatique"
@@ -75,9 +78,6 @@ msgstr "Entrer des ids d'artefacts séparés par une virgule"
 msgid "Error:"
 msgstr "Erreur :"
 
-msgid "Field under implementation, please come back later"
-msgstr "Champ en cours de construction, revenez plus tard"
-
 msgid "File description"
 msgstr "Description du fichier"
 
@@ -111,6 +111,9 @@ msgstr "Marquer pour suppression"
 msgid "Markdown"
 msgstr "Markdown"
 
+msgid "Matching artifact"
+msgstr "Artéfact correspondant"
+
 msgid "Max allowed upload size: %s"
 msgstr "Taille max d'envoi de fichiers : %s"
 
@@ -119,6 +122,9 @@ msgstr "Nouvel artéfact"
 
 msgid "No follow-ups"
 msgstr "Aucun commentaire"
+
+msgid "No result found"
+msgstr "Aucun résultat trouvé"
 
 msgid "None"
 msgstr "Aucun"

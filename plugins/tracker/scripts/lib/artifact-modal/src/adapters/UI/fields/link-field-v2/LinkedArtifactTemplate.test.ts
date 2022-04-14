@@ -36,6 +36,9 @@ import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/Lin
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
+import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
+import type { Artifact } from "../../../../domain/Artifact";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -151,6 +154,9 @@ describe(`LinkedArtifactTemplate`, () => {
                     type: "art_link",
                     allowed_types: [],
                 },
+                ArtifactLinkSelectorAutoCompleter(
+                    RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact)
+                ),
                 CurrentArtifactIdentifierStub.withId(72),
                 ArtifactCrossReferenceStub.withRef("story #72")
             );
