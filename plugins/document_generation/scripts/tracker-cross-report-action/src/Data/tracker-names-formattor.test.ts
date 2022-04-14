@@ -148,10 +148,12 @@ describe("tracker-names-formattor", () => {
             first_level: {
                 artifact_representations: first_level_artifact_representations_map,
                 tracker_name: "tracker01",
+                linked_artifacts: new Map(),
             },
             second_level: {
                 artifact_representations: second_level_artifact_representations_map,
                 tracker_name: "tracker02",
+                linked_artifacts: new Map(),
             },
             third_level: {
                 artifact_representations: third_level_artifact_representations_map,

@@ -136,10 +136,12 @@ describe("reports-fields-labels-formator", () => {
             first_level: {
                 tracker_name: "Tracker01",
                 artifact_representations: first_level_artifact_representations_map,
+                linked_artifacts: new Map(),
             },
             second_level: {
                 tracker_name: "Tracker02",
                 artifact_representations: second_level_artifact_representations_map,
+                linked_artifacts: new Map(),
             },
             third_level: {
                 tracker_name: "Tracker03",
@@ -164,6 +166,7 @@ describe("reports-fields-labels-formator", () => {
             first_level: {
                 tracker_name: "Tracker01",
                 artifact_representations: artifact_representations_map,
+                linked_artifacts: new Map(),
             },
         };
 
