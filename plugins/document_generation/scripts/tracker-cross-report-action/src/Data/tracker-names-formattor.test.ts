@@ -121,6 +121,29 @@ describe("tracker-names-formattor", () => {
             ],
         } as ArtifactResponse);
 
+        const third_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        third_level_artifact_representations_map.set(4, {
+            id: 80,
+            title: null,
+            xref: "test #80",
+            tracker: { id: 30 },
+            html_url: "/plugins/tracker/?aid=80",
+            values: [
+                {
+                    field_id: 50,
+                    type: "aid",
+                    label: "Artifact ID",
+                    value: 80,
+                },
+                {
+                    field_id: 51,
+                    type: "string",
+                    label: "TestName",
+                    value: "Test 01",
+                },
+            ],
+        } as ArtifactResponse);
+
         const organized_reports_data: OrganizedReportsData = {
             first_level: {
                 artifact_representations: first_level_artifact_representations_map,
@@ -130,12 +153,17 @@ describe("tracker-names-formattor", () => {
                 artifact_representations: second_level_artifact_representations_map,
                 tracker_name: "tracker02",
             },
+            third_level: {
+                artifact_representations: third_level_artifact_representations_map,
+                tracker_name: "tracker03",
+            },
         };
 
         const formatted_tracker_names = formatTrackerNames(organized_reports_data);
         expect(formatted_tracker_names).toStrictEqual([
             new TextCellWithMerges("tracker01", 3),
             new TextCellWithMerges("tracker02", 1),
+            new TextCellWithMerges("tracker03", 2),
         ]);
     });
 });
