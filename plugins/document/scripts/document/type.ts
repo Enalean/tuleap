@@ -445,3 +445,19 @@ export interface SearchResultColumnDefinition {
 }
 
 export type ListOfSearchResultColumnDefinition = ReadonlyArray<SearchResultColumnDefinition>;
+
+export interface FileHistory {
+    readonly id: number;
+    readonly name: string;
+    readonly filename: string;
+    readonly download_href: string;
+}
+
+export interface DocumentJsonError {
+    error: JsonError;
+}
+
+export interface JsonError {
+    message: string;
+    i18n_error_message: string;
+}

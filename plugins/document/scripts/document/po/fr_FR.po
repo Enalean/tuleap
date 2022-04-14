@@ -274,6 +274,9 @@ msgstr "Fichier"
 msgid "File size"
 msgstr "Taille du fichier"
 
+msgid "Filename"
+msgstr "Nom du fichier"
+
 msgid "Filename preview"
 msgstr "Prévisualisation du nom de fichier"
 
@@ -343,6 +346,9 @@ msgstr "Vue large"
 msgid "Last update date"
 msgstr "Mise à jour"
 
+msgid "Latest versions"
+msgstr "Dernières versions"
+
 msgid "Link"
 msgstr "Lien"
 
@@ -409,6 +415,9 @@ msgstr "Suivant"
 msgid "No matching results"
 msgstr "Il n'y a aucun résultat"
 
+msgid "No version history"
+msgstr "Pas d'historique de version"
+
 msgid "None"
 msgstr "Aucun"
 
@@ -429,6 +438,9 @@ msgstr "Le"
 
 msgid "Ongoing upload"
 msgstr "Téléversement en cours"
+
+msgid "Only the last 5 versions are displayed."
+msgstr "Seules les 5 dernières versions sont affichées."
 
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
@@ -715,6 +727,9 @@ msgstr "Avatar de l'utilisateur"
 
 msgid "Validity"
 msgstr "Validité"
+
+msgid "Version"
+msgstr "Version"
 
 msgid "Version name"
 msgstr "Nom de version"

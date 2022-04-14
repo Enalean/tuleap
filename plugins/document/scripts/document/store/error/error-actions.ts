@@ -20,8 +20,8 @@
 import type { ActionContext } from "vuex";
 import type { RootState, State } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { getErrorMessage } from "../actions-helpers/handle-errors";
 import type { ErrorState } from "./module";
+import { getErrorMessage } from "../../helpers/properties-helpers/error-handler-helper";
 
 const message = "Internal server error";
 

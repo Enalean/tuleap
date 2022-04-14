@@ -20,15 +20,7 @@
 import type { Item, RootState } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { Store } from "vuex";
-
-interface DocumentJsonError {
-    error: JsonError;
-}
-
-interface JsonError {
-    message: string;
-    i18n_error_message: string;
-}
+import { getErrorMessage } from "../../helpers/properties-helpers/error-handler-helper";
 
 export async function handleErrors(
     store: {
@@ -105,16 +97,4 @@ export async function handleErrorsForDeletionModal(
     } catch (error) {
         store.commit("error/setModalError", message);
     }
-}
-
-export function getErrorMessage(error_json: DocumentJsonError): string {
-    if (Object.prototype.hasOwnProperty.call(error_json, "error")) {
-        if (Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")) {
-            return error_json.error.i18n_error_message;
-        }
-
-        return error_json.error.message;
-    }
-
-    return "";
 }
