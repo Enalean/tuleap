@@ -54,7 +54,8 @@ export interface LinkedArtifactsResponse {
 
 export interface OrganizedReportsData {
     readonly first_level: OrganizedReportDataLevel;
-    readonly second_level?: Omit<OrganizedReportDataLevel, "linked_artifacts">;
+    readonly second_level?: OrganizedReportDataLevel;
+    readonly third_level?: Omit<OrganizedReportDataLevel, "linked_artifacts">;
 }
 
 interface OrganizedReportDataLevel {

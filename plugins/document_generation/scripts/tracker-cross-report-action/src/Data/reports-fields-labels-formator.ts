@@ -46,5 +46,16 @@ export function formatReportsFieldsLabels(
         }
     }
 
+    if (
+        organized_data.third_level &&
+        organized_data.third_level.artifact_representations.size > 0
+    ) {
+        for (const field_label of extractFieldsLabels(
+            organized_data.third_level.artifact_representations
+        )) {
+            report_fields_labels.push(new TextCell(field_label));
+        }
+    }
+
     return report_fields_labels;
 }

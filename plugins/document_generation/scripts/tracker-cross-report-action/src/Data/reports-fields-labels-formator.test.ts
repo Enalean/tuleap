@@ -109,6 +109,29 @@ describe("reports-fields-labels-formator", () => {
             ],
         } as ArtifactResponse);
 
+        const third_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        third_level_artifact_representations_map.set(4, {
+            id: 80,
+            title: null,
+            xref: "test #80",
+            tracker: { id: 30 },
+            html_url: "/plugins/tracker/?aid=80",
+            values: [
+                {
+                    field_id: 50,
+                    type: "aid",
+                    label: "Artifact Id",
+                    value: 80,
+                },
+                {
+                    field_id: 51,
+                    type: "string",
+                    label: "TestName",
+                    value: "Test 01",
+                },
+            ],
+        } as ArtifactResponse);
+
         const organized_reports_data: OrganizedReportsData = {
             first_level: {
                 tracker_name: "Tracker01",
@@ -118,6 +141,10 @@ describe("reports-fields-labels-formator", () => {
                 tracker_name: "Tracker02",
                 artifact_representations: second_level_artifact_representations_map,
             },
+            third_level: {
+                tracker_name: "Tracker03",
+                artifact_representations: third_level_artifact_representations_map,
+            },
         };
 
         const formatted_headers = formatReportsFieldsLabels(organized_reports_data);
@@ -126,6 +153,8 @@ describe("reports-fields-labels-formator", () => {
             new TextCell("Field02"),
             new TextCell("Assigned to"),
             new TextCell("Artifact ID"),
+            new TextCell("Artifact Id"),
+            new TextCell("TestName"),
         ]);
     });
     it("throws an Error if organized data does not have any ArtifactResponse in first level", (): void => {
