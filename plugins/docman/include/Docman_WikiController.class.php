@@ -30,7 +30,7 @@ class Docman_WikiController extends Docman_Controller
     public function __construct(&$plugin, $pluginPath, $themePath, $request)
     {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
-        $event_manager = $this->_getEventManager();
+        $event_manager = $this->getEventManager();
         $event_manager->addListener('plugin_docman_event_wikipage_update', $this->logger, 'log', true);
         $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true);
     }
@@ -114,7 +114,7 @@ class Docman_WikiController extends Docman_Controller
 
     public function wikiPageUpdated()
     {
-        $event_manager = $this->_getEventManager();
+        $event_manager = $this->getEventManager();
         $item_factory  = $this->getItemFactory();
 
         $wiki_page_name = $this->request->get('wiki_page');

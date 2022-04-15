@@ -40,11 +40,6 @@ class Docman_View_Admin_MetadataDetails extends \Tuleap\Docman\View\Admin\AdminV
         );
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(

@@ -42,11 +42,6 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends \Tuleap\Docman\View\Ad
         );
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $metadata = $params['md'];

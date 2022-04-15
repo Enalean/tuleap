@@ -24,24 +24,47 @@ namespace Tuleap\Document\Tree\Search;
 
 use Tuleap\Docman\REST\v1\Search\SearchColumn;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
+use Tuleap\Document\Config\Project\IRetrieveColumns;
 
 final class ListOfSearchColumnDefinitionPresenterBuilder
 {
-    public function __construct(private SearchColumnCollectionBuilder $column_collection_builder)
-    {
+    public function __construct(
+        private SearchColumnCollectionBuilder $column_collection_builder,
+        private IRetrieveColumns $columns_dao,
+    ) {
     }
 
     /**
      * @return SearchColumnDefinitionPresenter[]
      */
-    public function getColumns(\Docman_MetadataFactory $metadata_factory): array
+    public function getColumns(\Project $project, \Docman_MetadataFactory $metadata_factory): array
     {
         return array_map(
             static fn(SearchColumn $column): SearchColumnDefinitionPresenter => new SearchColumnDefinitionPresenter(
                 $column->getName(),
                 $column->getLabel()
             ),
-            $this->column_collection_builder->getCollection($metadata_factory)->getColumns()
+            $this->getFilteredColumns($project, $metadata_factory)
+        );
+    }
+
+    /**
+     * @return SearchColumn[]
+     */
+    private function getFilteredColumns(\Project $project, \Docman_MetadataFactory $metadata_factory): array
+    {
+        $columns = $this->column_collection_builder->getCollection($metadata_factory)->getColumns();
+
+        $columns_to_display = $this->columns_dao->searchByProjectId((int) $project->getID());
+        if (empty($columns_to_display)) {
+            return $columns;
+        }
+
+        return array_values(
+            array_filter(
+                $columns,
+                static fn(SearchColumn $column) => $column->getName() === \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL || in_array($column->getName(), $columns_to_display, true),
+            )
         );
     }
 }

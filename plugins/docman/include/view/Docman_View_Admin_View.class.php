@@ -49,11 +49,6 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define the default view for the document manager.');
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $sBo    = Docman_SettingsBo::instance($params['group_id']);

@@ -46,11 +46,6 @@ class Docman_View_Admin_Permissions extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define who can administrate the document manager.');
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addCssAsset(

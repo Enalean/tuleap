@@ -1,0 +1,69 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <form action="{{ post_url }}" method="POST" class="tlp-pane-container">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-document | Search view{{/ dgettext }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{# dgettext }}tuleap-document | Search criteria{{/ dgettext }}</h2>
+                <p>
+                    {{# dgettext }}
+                        tuleap-document |
+                        Following criteria will be displayed in the search pane.
+                    {{/ dgettext }}
+
+                    {{# dgettext }}
+                        tuleap-document |
+                        Please note: the Global search criteria will always be displayed.
+                    {{/ dgettext }}
+                </p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="list-picker-criteria">
+                        {{# dgettext }}tuleap-document | Criteria{{/ dgettext }}
+                        <i class="fas fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <select id="list-picker-criteria" name="criteria[]" multiple required>
+                        {{# criteria }}
+                            <option value="{{ name }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
+                        {{/ criteria }}
+                    </select>
+                </div>
+            </section>
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{# dgettext }}tuleap-document | Displayed columns{{/ dgettext }}</h2>
+                <p>
+                    {{# dgettext }}
+                        tuleap-document |
+                        Following columns will be displayed in the results table.
+                    {{/ dgettext }}
+                    {{# dgettext }}
+                        tuleap-document |
+                        Please note: the Title column will always be available.
+                    {{/ dgettext }}
+                </p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="list-picker-columns">
+                        {{# dgettext }}tuleap-document | Columns{{/ dgettext }}
+                        <i class="fas fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <select id="list-picker-columns" name="columns[]" multiple required>
+                        {{# columns }}
+                            <option value="{{ name }}" {{# is_selected }}selected{{/ is_selected }}>
+                                {{ label }}
+                            </option>
+                        {{/ columns }}
+                    </select>
+                </div>
+            </section>
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }}tuleap-document | Save configuration{{/ dgettext }}
+                </button>
+            </section>
+        </form>
+    </section>
+</div>

@@ -24,6 +24,8 @@ namespace Tuleap\Document\Tree;
 
 use Docman_SettingsBo;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Document\Config\Project\IRetrieveCriteria;
+use Tuleap\Document\Config\Project\SearchCriteriaDao;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class ListOfSearchCriterionPresenterBuilderTest extends TestCase
@@ -43,7 +45,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn("1");
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('id', $criteria[0]->name);
@@ -64,7 +66,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn("1");
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('type', $criteria[1]->name);
@@ -92,7 +94,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn("1");
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('type', $criteria[1]->name);
@@ -120,7 +122,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn("1");
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(3, $criteria);
         self::assertEquals('filename', $criteria[2]->name);
@@ -155,7 +157,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         $docman_settings->method('getMetadataUsage')->willReturn("1");
         $status_mapper = new ItemStatusMapper($docman_settings);
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals($metadata_name, $criteria[3]->name);
@@ -199,7 +201,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals('status', $criteria[3]->name);
@@ -233,7 +235,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals('field_2', $criteria[3]->name);
@@ -266,7 +268,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata_foo, $metadata_bar]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(5, $criteria);
         self::assertEquals('Bar', $criteria[3]->label);
@@ -311,9 +313,49 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
             ->willReturn([$metadata]);
         $metadata_factory->method('appendAllListOfValues');
 
-        $criteria = (new ListOfSearchCriterionPresenterBuilder())->getCriteria($metadata_factory, $status_mapper, $project);
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new SearchCriteriaDao()))->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         self::assertCount(4, $criteria);
         self::assertEquals('field_2', $criteria[3]->name);
+    }
+
+    public function testGetSelectedCriteriaReturnsAFilteredList(): void
+    {
+        $metadata_foo = new \Docman_Metadata();
+        $metadata_foo->setSpecial(false);
+        $metadata_foo->setLabel('field_2');
+        $metadata_foo->setName('Foo');
+        $metadata_foo->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+
+        $metadata_bar = new \Docman_Metadata();
+        $metadata_bar->setSpecial(false);
+        $metadata_bar->setLabel('field_3');
+        $metadata_bar->setName('Bar');
+        $metadata_bar->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn(101);
+        $project->method('usesWiki')->willReturn(true);
+
+        $docman_settings = $this->createMock(Docman_SettingsBo::class);
+        $docman_settings->method('getMetadataUsage')->willReturn("1");
+        $status_mapper = new ItemStatusMapper($docman_settings);
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataForGroup')
+            ->with(true)
+            ->willReturn([$metadata_foo, $metadata_bar]);
+        $metadata_factory->method('appendAllListOfValues');
+
+        $criteria = (new ListOfSearchCriterionPresenterBuilder(new class implements IRetrieveCriteria {
+            public function searchByProjectId(int $project_id): array
+            {
+                return ["id", "filename"];
+            }
+        }))->getSelectedCriteria($metadata_factory, $status_mapper, $project);
+
+        self::assertCount(2, $criteria);
+        self::assertEquals('Id', $criteria[0]->label);
+        self::assertEquals('Filename', $criteria[1]->label);
     }
 }

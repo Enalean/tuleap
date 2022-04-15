@@ -84,11 +84,6 @@ class Docman_View_Admin_FilenamePattern extends AdminView
         );
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     public static function getTabTitle(): string
     {
         return dgettext('tuleap-docman', 'Filename pattern');

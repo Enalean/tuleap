@@ -23,7 +23,7 @@ namespace Tuleap\Document\Tree;
 use Project;
 use Tuleap\Request\NotFoundException;
 
-class DocumentTreeProjectExtractor
+class DocumentTreeProjectExtractor implements IExtractProjectFromVariables
 {
     /**
      * @var \ProjectManager

@@ -23,10 +23,33 @@ declare(strict_types=1);
 namespace Tuleap\Document\Tree;
 
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Document\Config\Project\IRetrieveCriteria;
 
 final class ListOfSearchCriterionPresenterBuilder
 {
-    public function getCriteria(\Docman_MetadataFactory $metadata_factory, ItemStatusMapper $status_mapper, \Project $project): array
+    public function __construct(private IRetrieveCriteria $criteria_dao)
+    {
+    }
+
+    public function getSelectedCriteria(\Docman_MetadataFactory $metadata_factory, ItemStatusMapper $status_mapper, \Project $project): array
+    {
+        $selectable_criteria = $this->getAllCriteria($metadata_factory, $status_mapper, $project);
+
+        $selected_criteria_names = $this->criteria_dao->searchByProjectId((int) $project->getID());
+
+        return array_values(
+            array_filter(
+                $selectable_criteria,
+                static fn(SearchCriterionPresenter|SearchCriterionListPresenter $criterion) => in_array(
+                    $criterion->name,
+                    $selected_criteria_names,
+                    true
+                ),
+            ),
+        );
+    }
+
+    public function getAllCriteria(\Docman_MetadataFactory $metadata_factory, ItemStatusMapper $status_mapper, \Project $project): array
     {
         $numeric_type_to_human_readable_type = [
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',

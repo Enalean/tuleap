@@ -46,6 +46,11 @@ class Docman_View_Admin_MetadataImport extends \Tuleap\Docman\View\Admin\AdminVi
         );
     }
 
+    protected function isBurningParrotCompatiblePage(): bool
+    {
+        return false;
+    }
+
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $html = '';

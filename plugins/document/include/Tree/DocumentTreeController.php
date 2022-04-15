@@ -100,12 +100,12 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $this->file_download_limits_builder->build(),
                 $this->modal_display_handler->isChangelogModalDisplayedAfterDragAndDrop((int) $project->getID()),
                 $this->project_flags_builder->buildProjectFlags($project),
-                $this->criteria_builder->getCriteria(
+                $this->criteria_builder->getSelectedCriteria(
                     $metadata_factory,
                     new ItemStatusMapper(new \Docman_SettingsBo($project->getID())),
                     $project
                 ),
-                $this->column_builder->getColumns($metadata_factory),
+                $this->column_builder->getColumns($project, $metadata_factory),
                 $this->filename_pattern_retriever->getPattern((int) $project->getID())
             )
         );

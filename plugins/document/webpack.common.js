@@ -25,6 +25,7 @@ const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 
 const entry_points = {
     document: "./scripts/document/index.js",
+    "admin-search-view": "./scripts/admin-search-view/index.ts",
     "document-style": "./themes/document.scss",
 };
 
