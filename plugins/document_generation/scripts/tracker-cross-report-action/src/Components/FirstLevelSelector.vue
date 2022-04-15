@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <level-selector>
         <h2 class="tlp-modal-subtitle">
             {{ $gettext("First level") }}
         </h2>
@@ -32,13 +32,14 @@
         <div class="tlp-form-element">
             <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker_id" />
         </div>
-    </div>
+    </level-selector>
 </template>
 <script lang="ts" setup>
 import type { SelectedReport } from "../type";
 import { computed } from "vue";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
 import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
+import LevelSelector from "./LevelSelector.vue";
 
 const props = defineProps<{
     tracker_id: number;
