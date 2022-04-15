@@ -26,7 +26,82 @@ import { TextCellWithMerges } from "../type";
 import type { ExportSettings } from "../export-document";
 
 describe("data-formator", () => {
-    it("generates the formatted data that will be used to create the XLSX document", async (): Promise<void> => {
+    it("generates the formatted data with all 3 levels that will be used to create the XLSX document", async (): Promise<void> => {
+        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+            first_level: {
+                tracker_name: "tracker01",
+                artifact_representations: buildFirstLevelRepresentationsMap(),
+                linked_artifacts: new Map([[74, [75]]]),
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                artifact_representations: buildSecondLevelRepresentationsMap(),
+                linked_artifacts: new Map([[75, [80, 81]]]),
+            },
+            third_level: {
+                tracker_name: "tracker03",
+                artifact_representations: buildThirdLevelRepresentationsMap(),
+            },
+        });
+
+        const formatted_data = await formatData({
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: ["_is_child"],
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                report_id: 2,
+                report_name: "report02",
+                artifact_link_types: [],
+            },
+            third_level: {
+                tracker_name: "tracker03",
+                report_id: 3,
+                report_name: "report03",
+            },
+        });
+
+        expect(formatted_data).toStrictEqual({
+            headers: {
+                tracker_names: [
+                    new TextCellWithMerges("tracker01", 3),
+                    new TextCellWithMerges("tracker02", 1),
+                    new TextCellWithMerges("tracker03", 2),
+                ],
+                reports_fields_labels: [
+                    new TextCell("Artifact ID"),
+                    new TextCell("Field02"),
+                    new TextCell("Assigned to"),
+                    new TextCell("Artifact ID"),
+                    new TextCell("Artifact Id"),
+                    new TextCell("Title"),
+                ],
+            },
+            artifacts_rows: [
+                [
+                    new NumberCell(74),
+                    new TextCell("value02"),
+                    new EmptyCell(),
+                    new NumberCell(75),
+                    new NumberCell(80),
+                    new TextCell("Subtask title 01"),
+                ],
+                [
+                    new NumberCell(74),
+                    new TextCell("value02"),
+                    new EmptyCell(),
+                    new NumberCell(75),
+                    new NumberCell(81),
+                    new TextCell("Subtask title 02"),
+                ],
+                [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
+            ],
+        });
+    });
+    it("generates the formatted data with the first 2 levels that will be used to create the XLSX document", async (): Promise<void> => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
@@ -94,43 +169,6 @@ describe("data-formator", () => {
         });
 
         expect(formatted_data).toStrictEqual({});
-    });
-    it("throws an error if first level artifact not found", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
-            first_level: {
-                tracker_name: "tracker01",
-                artifact_representations: buildFirstLevelRepresentationsMap(),
-                linked_artifacts: new Map([
-                    [74, [75]],
-                    [76, []],
-                    [4, []],
-                ]),
-            },
-            second_level: {
-                tracker_name: "tracker02",
-                artifact_representations: buildSecondLevelRepresentationsMap(),
-                linked_artifacts: new Map(),
-            },
-        });
-
-        const export_settings: ExportSettings = {
-            first_level: {
-                tracker_name: "tracker01",
-                report_id: 1,
-                report_name: "report01",
-                artifact_link_types: ["_is_child"],
-            },
-            second_level: {
-                tracker_name: "tracker02",
-                report_id: 2,
-                report_name: "report02",
-                artifact_link_types: [],
-            },
-        };
-
-        await expect(() => formatData(export_settings)).rejects.toThrowError(
-            "Artifact 76 representation not found in collection."
-        );
     });
     it("throws an error if second level artifact not found", async (): Promise<void> => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
@@ -273,4 +311,52 @@ function buildSecondLevelRepresentationsMap(): Map<number, ArtifactResponse> {
     } as ArtifactResponse);
 
     return second_level_artifact_representations_map;
+}
+
+function buildThirdLevelRepresentationsMap(): Map<number, ArtifactResponse> {
+    const third_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+    third_level_artifact_representations_map.set(80, {
+        id: 80,
+        title: null,
+        xref: "subtask #80",
+        tracker: { id: 16 },
+        html_url: "/plugins/tracker/?aid=80",
+        values: [
+            {
+                field_id: 20,
+                type: "aid",
+                label: "Artifact Id",
+                value: 80,
+            },
+            {
+                field_id: 21,
+                type: "string",
+                label: "Title",
+                value: "Subtask title 01",
+            },
+        ],
+    } as ArtifactResponse);
+    third_level_artifact_representations_map.set(81, {
+        id: 81,
+        title: null,
+        xref: "subtask #81",
+        tracker: { id: 16 },
+        html_url: "/plugins/tracker/?aid=81",
+        values: [
+            {
+                field_id: 20,
+                type: "aid",
+                label: "Artifact Id",
+                value: 81,
+            },
+            {
+                field_id: 21,
+                type: "string",
+                label: "Title",
+                value: "Subtask title 02",
+            },
+        ],
+    } as ArtifactResponse);
+
+    return third_level_artifact_representations_map;
 }
