@@ -836,6 +836,9 @@ msgstr ""
 msgid "CHANGESET"
 msgstr "MODIFICATIONS"
 
+msgid "CSV"
+msgstr "CSV"
+
 msgid "CSV Import"
 msgstr "Import CSV"
 
