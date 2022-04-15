@@ -39,12 +39,12 @@
     </div>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import { isFile } from "../../../../helpers/type-check-helper";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "FileProperties",
@@ -72,7 +72,7 @@ export default {
 
             const file = files.item(0);
             if (!this.item.title) {
-                this.item.title = file.name;
+                emitter.emit("update-title-property", file.name);
             }
 
             this.error_message = "";
