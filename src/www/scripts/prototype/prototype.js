@@ -10,20 +10,20 @@
 // Detect "touch" events, and link them with Scriptaculous Drag & Drop features
 // Source of the isEventSupported function : http://kangax.github.com/iseventsupported/
 var isEventSupported = (function(undef) {
-  
+
   var TAGNAMES = {
     'select':'input','change':'input',
     'submit':'form','reset':'form',
     'error':'img','load':'img','abort':'img'
   };
-  
+
   function isEventSupported(eventName, element) {
 
     element = element || document.createElement(TAGNAMES[eventName] || 'div');
     eventName = 'on' + eventName;
-    
+
     var isSupported = (eventName in element);
-    
+
     if (!isSupported) {
       // if it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
       if (!element.setAttribute) {
@@ -40,14 +40,14 @@ var isEventSupported = (function(undef) {
         element.removeAttribute(eventName);
       }
     }
-    
+
     element = null;
     return isSupported;
   }
   return isEventSupported;
 })();
 
- 
+
 var Prototype = {
 
   Version: '1.7.3',
@@ -2209,13 +2209,6 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
     show:    show
   });
 
-
-  function remove(element) {
-    element = $(element);
-    element.parentNode.removeChild(element);
-    return element;
-  }
-
   var SELECT_ELEMENT_INNERHTML_BUGGY = (function(){
     var el = document.createElement("select"),
         isBuggy = true;
@@ -2568,7 +2561,6 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
   }
 
   Object.extend(methods, {
-    remove:  remove,
     update:  update,
     replace: replace,
     insert:  insert,
