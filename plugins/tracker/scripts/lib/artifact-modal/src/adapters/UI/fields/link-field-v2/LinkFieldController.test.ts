@@ -54,7 +54,8 @@ describe(`LinkFieldController`, () => {
         current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
         auto_completer = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact)
+            RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact),
+            current_artifact_identifier
         );
     });
 
