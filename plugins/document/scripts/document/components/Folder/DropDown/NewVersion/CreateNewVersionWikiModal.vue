@@ -30,7 +30,7 @@
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
                 <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model" />
-                <lock-property v-bind:item="item" />
+                <lock-property v-bind:item="wiki_item" v-if="wiki_item !== null" />
             </div>
         </div>
         <modal-footer
@@ -43,7 +43,6 @@
     </form>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import { createModal } from "tlp";
@@ -74,6 +73,7 @@ export default {
             is_loading: false,
             is_displayed: false,
             modal: null,
+            wiki_item: null,
         };
     },
     computed: {
@@ -90,6 +90,7 @@ export default {
     },
     mounted() {
         this.modal = createModal(this.$el);
+        this.wiki_item = this.item;
         this.registerEvents();
 
         this.show();
@@ -109,11 +110,11 @@ export default {
             this.version = {
                 title: "",
                 changelog: "",
-                is_file_locked: this.item.lock_info !== null,
+                is_file_locked: this.wiki_item !== null && this.wiki_item.lock_info !== null,
             };
             this.wiki_model = {
-                type: this.item.type,
-                wiki_properties: this.item.wiki_properties,
+                type: this.wiki_item.type,
+                wiki_properties: this.wiki_item.wiki_properties,
             };
             this.is_displayed = true;
             this.modal.show();
@@ -130,7 +131,7 @@ export default {
             this.$store.commit("error/resetModalError");
 
             await this.$store.dispatch("createNewWikiVersionFromModal", [
-                this.item,
+                this.wiki_item,
                 this.wiki_model.wiki_properties.page_name,
                 this.version.title,
                 this.version.changelog,
@@ -139,8 +140,9 @@ export default {
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.item.wiki_properties.page_name = this.wiki_model.wiki_properties.page_name;
-                this.$store.dispatch("refreshWiki", this.item);
+                this.wiki_item.wiki_properties.page_name =
+                    this.wiki_model.wiki_properties.page_name;
+                this.$store.dispatch("refreshWiki", this.wiki_item);
                 this.wiki_model = {};
                 this.modal.hide();
             }
