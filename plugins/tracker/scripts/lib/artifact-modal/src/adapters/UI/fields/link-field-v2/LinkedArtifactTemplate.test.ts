@@ -119,9 +119,7 @@ describe(`LinkedArtifactTemplate`, () => {
         }
 
         expect(link.href).toBe(presenter.uri);
-        expect(xref.classList.contains(`cross-ref-badge-${presenter.tracker.color_name}`)).toBe(
-            true
-        );
+        expect(xref.classList.contains(`tlp-swatch-${presenter.tracker.color_name}`)).toBe(true);
         expect(xref.textContent?.trim()).toBe(presenter.xref);
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status);

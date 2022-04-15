@@ -56,7 +56,7 @@ export default class ArtifactTableRow extends Vue {
     readonly artifact!: Artifact;
 
     get badge_color(): string {
-        return "cross-ref-badge-" + this.artifact.badge.color;
+        return "tlp-swatch-" + this.artifact.badge.color;
     }
 }
 </script>

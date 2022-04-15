@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/cross-ref-badges";
 @import "logo";
 @import "navbar";
 @import "sidebar";
@@ -48,7 +49,6 @@
 @import "help-dropdown";
 @import "project-privacy-popover";
 @import "cross-ref-tooltip";
-@import "cross-ref-badges";
 @import "bootstrap-overrides";
 @import "invite-buddies";
 @import "browser-deprecation-modal";

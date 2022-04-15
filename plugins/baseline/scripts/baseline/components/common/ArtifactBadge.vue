@@ -38,7 +38,7 @@ export default {
     computed: {
         artifact_badge_class() {
             const normalized_color = this.tracker.color_name.replace("_", "-");
-            return `cross-ref-badge-${normalized_color}`;
+            return `tlp-swatch-${normalized_color}`;
         },
     },
 };

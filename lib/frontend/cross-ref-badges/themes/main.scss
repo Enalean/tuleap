@@ -22,18 +22,18 @@
 @use "sass:color";
 
 $cross-ref-badge-radius: 15px;
-$cross-ref-badge-color: var(--tlp-white-color);
 $cross-ref-badge-font-size: 0.75rem;
 $cross-ref-badge-line-height: 0.75rem;
 $cross-ref-badge-font-weight: 600;
 $cross-ref-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-small-spacing);
 
-%cross-ref-badge {
+.cross-ref-badge {
     display: inline-block;
     padding: $cross-ref-badge-padding;
-    border: 1px solid transparent;
+    border: 1px solid var(--border-color, transparent);
     border-radius: $cross-ref-badge-radius;
-    color: $cross-ref-badge-color;
+    background: var(--secondary-color);
+    color: var(--text-color, var(--tlp-white-color));
     font-size: $cross-ref-badge-font-size;
     font-weight: $cross-ref-badge-font-weight;
     line-height: $cross-ref-badge-line-height;
@@ -57,29 +57,22 @@ $cross-ref-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-sm
 }
 
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
-    .cross-ref-badge-#{$color-name} {
-        @extend %cross-ref-badge;
+    // override tlp-swatch-colors
+    .cross-ref-badge-on-dark-background.tlp-swatch-#{$color-name} {
+        --border-color: #{color.mix(map.get($colors, "primary"), #ffffff, 85%)};
+        --secondary-color: #{color.adjust(map.get($colors, "primary"), $alpha: - 0.85)};
+        --text-color: #{color.mix(map.get($colors, "border"), #ffffff, 90%)};
 
-        border-color: map.get($colors, "border");
-        background: map.get($colors, "secondary");
-        color: map.get($colors, "text");
-
-        &.cross-ref-badge-on-dark-background {
-            border-color: color.mix(map.get($colors, "primary"), #ffffff, 85%);
-            background: color.adjust(map.get($colors, "primary"), $alpha: - 0.85);
-            color: color.mix(map.get($colors, "border"), #ffffff, 90%);
-
-            @if $color-name ==
-                "teddy-brown" or
-                $color-name ==
-                "plum-crazy" or
-                $color-name ==
-                "red-wine" or
-                $color-name ==
-                "army-green"
-            {
-                color: color.mix(map.get($colors, "border"), #ffffff, 70%);
-            }
+        @if $color-name ==
+            "teddy-brown" or
+            $color-name ==
+            "plum-crazy" or
+            $color-name ==
+            "red-wine" or
+            $color-name ==
+            "army-green"
+        {
+            --text-color: #{color.mix(map.get($colors, "border"), #ffffff, 70%)};
         }
     }
 }

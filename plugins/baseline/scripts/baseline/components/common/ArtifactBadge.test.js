@@ -37,6 +37,6 @@ describe("ArtifactBadge", () => {
     });
 
     it("shows tlp badge custom class", () => {
-        expect(wrapper.find(".cross-ref-badge-blue-cyan").exists()).toBeTruthy();
+        expect(wrapper.find(".tlp-swatch-blue-cyan").exists()).toBeTruthy();
     });
 });

@@ -9,7 +9,7 @@ exports[`RecentItemsEntry Displays a link with a cross ref 1`] = `
     data-test="entry-link"
   >
     <span
-      class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background cross-ref-badge-lake-placid-blue"
+      class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
     >
       
             art #123
@@ -35,7 +35,7 @@ exports[`RecentItemsEntry Displays a link with a quick links 1`] = `
     data-test="entry-link"
   >
     <span
-      class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background cross-ref-badge-lake-placid-blue"
+      class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
     >
       
             art #123

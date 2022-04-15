@@ -4,5 +4,6 @@ packages:  # all packages in subdirs of packages/ and components/  - 'packages/*
   - "src/"
   - "src/themes/tlp"
   - "src/themes/BurningParrot"
+  - "src/themes/FlamingParrot"
   - "plugins/**/"
 shared-workspace-lockfile: false

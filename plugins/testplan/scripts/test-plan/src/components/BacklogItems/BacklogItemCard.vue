@@ -90,7 +90,7 @@ function toggle(): void {
 }
 
 const badge_color = computed((): string => {
-    return "cross-ref-badge-" + props.backlog_item.color;
+    return "tlp-swatch-" + props.backlog_item.color;
 });
 
 const caret = computed((): string => {
