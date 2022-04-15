@@ -155,11 +155,9 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGivesFullAccessToAllUsers()
     {
-        $this->assertEquals($this->task_tracker->getPermissionsByUgroupId(), [
-            ProjectUGroup::ANONYMOUS => [
-                Tracker::PERMISSION_FULL,
-            ],
-        ]);
+        self::assertEqualsCanonicalizing([
+            ProjectUGroup::ANONYMOUS => [Tracker::PERMISSION_FULL,],
+        ], $this->task_tracker->getPermissionsByUgroupId());
     }
 
     public function testItHasATitleSemantic()
@@ -170,7 +168,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($field->getLabel(), "Summary");
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
@@ -178,7 +176,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
     public function testItHasAStatusSemantic()
@@ -189,14 +187,14 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($field->getLabel(), "Status");
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
             ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
     public function testItHasOnlyOneOpenValueForStatusSemantic()
@@ -217,7 +215,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals(1, $field->isMultiple());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
@@ -225,7 +223,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
     public function testItHasSubmittedBy()
@@ -236,11 +234,11 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($field->getLabel(), "Submitted by");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
     public function testItHasATextFieldDescription()
@@ -251,7 +249,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($field->getLabel(), "Original Submission");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
@@ -259,7 +257,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
     public function testItHasADateFieldStartDate()
@@ -270,7 +268,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($field->getLabel(), "Start Date");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), [
+        self::assertEqualsCanonicalizing([
             ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ,
             ],
@@ -278,7 +276,7 @@ class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE,
             ],
-        ]);
+        ], $field->getPermissionsByUgroupId());
     }
 
     public function testItHasAnUnusedField()
