@@ -19,28 +19,13 @@
   -->
 
 <template>
-    <div class="explanations-export">
-        {{ $gettext("For each levels: ") }}
-        <ul>
-            <li>
-                {{
-                    $gettext(
-                        "The selected artifacts will be the linked ones that are not filtered by a criteria of the selected report."
-                    )
-                }}
-            </li>
-            <li>
-                {{
-                    $gettext(
-                        "The columns exported are the ones used of the first table of the selected report."
-                    )
-                }}
-            </li>
-        </ul>
+    <div class="level-selector">
+        <slot></slot>
     </div>
 </template>
 <style lang="scss" scoped>
-.explanations-export {
+.level-selector {
     padding: var(--tlp-medium-spacing);
+    background: var(--tlp-white-color);
 }
 </style>

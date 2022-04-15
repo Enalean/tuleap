@@ -20,6 +20,7 @@
 
 <template>
     <div
+        id="config-tracker-cross-report-export-modal"
         ref="modal_element"
         class="tlp-modal"
         role="dialog"
@@ -38,22 +39,24 @@
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
-        <div class="tlp-modal-body">
+        <div id="config-tracker-cross-report-body-export-modal" class="tlp-modal-body">
             <explanations-export />
-            <first-level-selector
-                v-model:report="selected_report_level_1"
-                v-model:artifact_link_types="artifact_link_types_level_1"
-                v-bind:tracker_id="properties.current_tracker_id"
-            />
-            <second-level-selector
-                v-model:tracker="selected_tracker_level_2"
-                v-model:report="selected_report_level_2"
-                v-model:artifact_link_types="artifact_link_types_level_2"
-            />
-            <third-level-selector
-                v-model:tracker="selected_tracker_level_3"
-                v-model:report="selected_report_level_3"
-            />
+            <div class="level-selectors">
+                <first-level-selector
+                    v-model:report="selected_report_level_1"
+                    v-model:artifact_link_types="artifact_link_types_level_1"
+                    v-bind:tracker_id="properties.current_tracker_id"
+                />
+                <second-level-selector
+                    v-model:tracker="selected_tracker_level_2"
+                    v-model:report="selected_report_level_2"
+                    v-model:artifact_link_types="artifact_link_types_level_2"
+                />
+                <third-level-selector
+                    v-model:tracker="selected_tracker_level_3"
+                    v-model:report="selected_report_level_3"
+                />
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -166,3 +169,21 @@ async function startExport(): Promise<void> {
     modal?.hide();
 }
 </script>
+<style lang="scss" scoped>
+#config-tracker-cross-report-export-modal {
+    width: 850px;
+}
+
+#config-tracker-cross-report-body-export-modal {
+    padding: 0;
+}
+
+.level-selectors {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    grid-gap: 1px;
+    border-top: 1px solid var(--tlp-neutral-light-color);
+    background-color: var(--tlp-neutral-light-color);
+}
+</style>
