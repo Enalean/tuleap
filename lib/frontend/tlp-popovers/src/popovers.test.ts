@@ -17,21 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as popper from "@popperjs/core";
 import type { Popover } from "./popovers";
 import { createPopover, POPOVER_SHOWN_CLASS_NAME } from "./popovers";
-import type { Instance } from "@popperjs/core";
-
-jest.mock("@popperjs/core");
+import * as floating_ui from "@floating-ui/dom";
+import type { ComputePositionConfig, ComputePositionReturn } from "@floating-ui/dom";
 
 describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
     let doc: Document;
+    let cleanup: () => void;
+    let computePosition: jest.SpyInstance<Promise<ComputePositionReturn | void>>;
+
     beforeEach(() => {
         doc = createLocalDocument();
         trigger_element = doc.createElement("span");
         content_element = doc.createElement("div");
         doc.body.append(trigger_element, content_element);
+        cleanup = jest.fn();
+        jest.spyOn(floating_ui, "autoUpdate").mockReturnValue(cleanup);
+        computePosition = jest.spyOn(floating_ui, "computePosition");
+        computePosition.mockResolvedValue({
+            x: 10,
+            y: 20,
+            placement: "top",
+        } as ComputePositionReturn);
     });
 
     afterEach(() => {
@@ -40,19 +49,7 @@ describe(`Popovers`, () => {
         jest.clearAllMocks();
     });
 
-    describe(`constructor`, () => {
-        let popperConstructor: jest.SpyInstance;
-        beforeEach(() => {
-            popperConstructor = jest
-                .spyOn(popper, "createPopper")
-                .mockImplementation((): Instance => {
-                    return {
-                        destroy: jest.fn(),
-                        update: jest.fn(),
-                    } as unknown as Instance;
-                });
-        });
-
+    describe(`configuration`, () => {
         it(`when there is an options.anchor,
             it will use it instead of the trigger element as an anchor in popper options`, () => {
             const anchor_element = doc.createElement("div");
@@ -62,8 +59,16 @@ describe(`Popovers`, () => {
             const popover = createPopover(doc, trigger_element, content_element, {
                 anchor: anchor_element,
             });
-            const placement_option = popperConstructor.mock.calls[0][2].placement;
-            expect(placement_option).toBe("right");
+            trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+            expectThePopoverToBeShown(content_element);
+
+            expect(computePosition).toHaveBeenCalledWith(
+                anchor_element,
+                content_element,
+                expect.objectContaining({
+                    placement: "right",
+                })
+            );
 
             popover.destroy();
             anchor_element.remove();
@@ -95,8 +100,16 @@ describe(`Popovers`, () => {
             trigger_element.dataset.placement = "left";
 
             const popover = createPopover(doc, trigger_element, content_element);
-            const placement_option = popperConstructor.mock.calls[0][2].placement;
-            expect(placement_option).toBe("left");
+            trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+            expectThePopoverToBeShown(content_element);
+
+            expect(computePosition).toHaveBeenCalledWith(
+                trigger_element,
+                content_element,
+                expect.objectContaining({
+                    placement: "left",
+                })
+            );
 
             popover.destroy();
         });
@@ -113,21 +126,296 @@ describe(`Popovers`, () => {
         it(`when there is neither options.placement nor data-placement,
             it will default to "bottom" placement`, () => {
             const popover = createPopover(doc, trigger_element, content_element);
-            const placement_option = popperConstructor.mock.calls[0][2].placement;
-            expect(placement_option).toBe("bottom");
+            trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+            expectThePopoverToBeShown(content_element);
+
+            expect(computePosition).toHaveBeenCalledWith(
+                trigger_element,
+                content_element,
+                expect.objectContaining({
+                    placement: "bottom",
+                })
+            );
 
             popover.destroy();
         });
     });
 
+    describe("middleware", () => {
+        it("should provide flip() middleware to ensure the content is not offscreen", () => {
+            return new Promise((done) => {
+                computePosition.mockImplementation(
+                    (
+                        trigger,
+                        content,
+                        options: ComputePositionConfig
+                    ): Promise<ComputePositionReturn | void> => {
+                        if (!options.middleware) {
+                            done(Error("No middleware given"));
+                            return Promise.resolve();
+                        }
+
+                        const flip_middleware = options.middleware.find(
+                            (middleware) => middleware.name === "flip"
+                        );
+                        if (!flip_middleware) {
+                            done(Error("No flip middleware"));
+                            return Promise.resolve();
+                        }
+
+                        expect(flip_middleware.options).toStrictEqual({});
+                        done(Promise.resolve());
+
+                        return Promise.resolve({
+                            x: 10,
+                            y: 20,
+                            placement: "top",
+                        } as ComputePositionReturn);
+                    }
+                );
+
+                const popover = createPopover(doc, trigger_element, content_element);
+                trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+
+                popover.destroy();
+            });
+        });
+
+        it("should accept options for flip() middleware", () => {
+            return new Promise((done) => {
+                computePosition.mockImplementation(
+                    (
+                        trigger,
+                        content,
+                        options: ComputePositionConfig
+                    ): Promise<ComputePositionReturn | void> => {
+                        if (!options.middleware) {
+                            done(Error("No middleware given"));
+                            return Promise.resolve();
+                        }
+
+                        const flip_middleware = options.middleware.find(
+                            (middleware) => middleware.name === "flip"
+                        );
+                        if (!flip_middleware) {
+                            done(Error("No flip middleware"));
+                            return Promise.resolve();
+                        }
+
+                        expect(flip_middleware.options).toStrictEqual({
+                            fallbackPlacements: ["right"],
+                        });
+                        done(Promise.resolve());
+
+                        return Promise.resolve({
+                            x: 10,
+                            y: 20,
+                            placement: "top",
+                        } as ComputePositionReturn);
+                    }
+                );
+
+                const popover = createPopover(doc, trigger_element, content_element, {
+                    middleware: {
+                        flip: {
+                            fallbackPlacements: ["right"],
+                        },
+                        offset: {},
+                    },
+                });
+                trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+
+                popover.destroy();
+            });
+        });
+
+        it("should provide offset() middleware to ensure the content is not glued to the anchor", () => {
+            return new Promise((done) => {
+                computePosition.mockImplementation(
+                    (
+                        trigger,
+                        content,
+                        options: ComputePositionConfig
+                    ): Promise<ComputePositionReturn | void> => {
+                        if (!options.middleware) {
+                            done(Error("No middleware given"));
+                            return Promise.resolve();
+                        }
+
+                        const offset_middleware = options.middleware.find(
+                            (middleware) => middleware.name === "offset"
+                        );
+                        if (!offset_middleware) {
+                            done(Error("No offset middleware"));
+                            return Promise.resolve();
+                        }
+
+                        expect(offset_middleware.options).toStrictEqual({
+                            mainAxis: 10,
+                            alignmentAxis: -15,
+                        });
+                        done(Promise.resolve());
+
+                        return Promise.resolve({
+                            x: 10,
+                            y: 20,
+                            placement: "top",
+                        } as ComputePositionReturn);
+                    }
+                );
+
+                const popover = createPopover(doc, trigger_element, content_element);
+                trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+
+                popover.destroy();
+            });
+        });
+
+        it("should accept options for offset() middleware", () => {
+            return new Promise((done) => {
+                computePosition.mockImplementation(
+                    (
+                        trigger,
+                        content,
+                        options: ComputePositionConfig
+                    ): Promise<ComputePositionReturn | void> => {
+                        if (!options.middleware) {
+                            done(Error("No middleware given"));
+                            return Promise.resolve();
+                        }
+
+                        const offset_middleware = options.middleware.find(
+                            (middleware) => middleware.name === "offset"
+                        );
+                        if (!offset_middleware) {
+                            done(Error("No offset middleware"));
+                            return Promise.resolve();
+                        }
+
+                        expect(offset_middleware.options).toStrictEqual({
+                            mainAxis: 10,
+                            alignmentAxis: 666,
+                        });
+                        done(Promise.resolve());
+
+                        return Promise.resolve({
+                            x: 10,
+                            y: 20,
+                            placement: "top",
+                        } as ComputePositionReturn);
+                    }
+                );
+
+                const popover = createPopover(doc, trigger_element, content_element, {
+                    middleware: {
+                        flip: {},
+                        offset: { alignmentAxis: 666 },
+                    },
+                });
+                trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+
+                popover.destroy();
+            });
+        });
+
+        it("should provide shift() middleware to ensure the content is not glued to the border of the viewport", () => {
+            return new Promise((done) => {
+                computePosition.mockImplementation(
+                    (
+                        trigger,
+                        content,
+                        options: ComputePositionConfig
+                    ): Promise<ComputePositionReturn | void> => {
+                        if (!options.middleware) {
+                            done(Error("No middleware given"));
+                            return Promise.resolve();
+                        }
+
+                        const shift_middleware = options.middleware.find(
+                            (middleware) => middleware.name === "shift"
+                        );
+                        if (!shift_middleware) {
+                            done(Error("No shift middleware"));
+                            return Promise.resolve();
+                        }
+
+                        expect(shift_middleware.options).toStrictEqual({
+                            padding: 16,
+                        });
+                        done(Promise.resolve());
+
+                        return Promise.resolve({
+                            x: 10,
+                            y: 20,
+                            placement: "top",
+                        } as ComputePositionReturn);
+                    }
+                );
+
+                const popover = createPopover(doc, trigger_element, content_element);
+                trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+
+                popover.destroy();
+            });
+        });
+
+        it(`when the popover content has an arrow
+            it should add a corresponding middleware so that the arrow is nicely aligned`, () => {
+            return new Promise((done) => {
+                const arrow_element = doc.createElement("div");
+                arrow_element.classList.add("tlp-popover-arrow");
+                content_element.appendChild(arrow_element);
+
+                computePosition.mockImplementation(
+                    (
+                        trigger,
+                        content,
+                        options: ComputePositionConfig
+                    ): Promise<ComputePositionReturn | void> => {
+                        if (!options.middleware) {
+                            done(Error("No middleware given"));
+                            return Promise.resolve();
+                        }
+
+                        const arrow_middleware = options.middleware.find(
+                            (middleware) => middleware.name === "arrow"
+                        );
+                        if (!arrow_middleware) {
+                            done(Error("No arrow middleware"));
+                            return Promise.resolve();
+                        }
+
+                        expect(arrow_middleware.options).toStrictEqual({
+                            element: arrow_element,
+                            padding: 15,
+                        });
+                        done(Promise.resolve());
+
+                        return Promise.resolve({
+                            x: 10,
+                            y: 20,
+                            placement: "top",
+                        } as ComputePositionReturn);
+                    }
+                );
+
+                const popover = createPopover(doc, trigger_element, content_element);
+                trigger_element.dispatchEvent(new MouseEvent("mouseover"));
+
+                popover.destroy();
+            });
+        });
+    });
+
     describe(`hide()`, () => {
-        it(`when I programmatically hide the popover, it will hide it`, () => {
+        it(`when I programmatically hide the popover, it will hide it and cleanup autoupdate`, () => {
             const popover = createPopover(doc, trigger_element, content_element);
             content_element.classList.add(POPOVER_SHOWN_CLASS_NAME);
 
             popover.hide();
 
             expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(false);
+            expect(cleanup).toHaveBeenCalled();
         });
     });
 

@@ -33,30 +33,30 @@
         background: var(--tlp-dark-color-darker-20);
     }
 
-    &.tlp-popover[data-popper-placement="left-end"],
-    &.tlp-popover[data-popper-placement="right-end"] {
+    &.tlp-popover[data-popover-placement="left-end"],
+    &.tlp-popover[data-popover-placement="right-end"] {
         &.tlp-popover-shown {
             transform: translateY(7px);
         }
     }
 
-    &.tlp-popover[data-popper-placement="left"],
-    &.tlp-popover[data-popper-placement="right"] {
+    &.tlp-popover[data-popover-placement="left"],
+    &.tlp-popover[data-popover-placement="right"] {
         &.tlp-popover-shown {
             transform: translateY(0);
         }
     }
 
-    &.tlp-popover[data-popper-placement="left"],
-    &.tlp-popover[data-popper-placement="right"],
-    &.tlp-popover[data-popper-placement="left-end"],
-    &.tlp-popover[data-popper-placement="right-end"] {
+    &.tlp-popover[data-popover-placement="left"],
+    &.tlp-popover[data-popover-placement="right"],
+    &.tlp-popover[data-popover-placement="left-end"],
+    &.tlp-popover[data-popover-placement="right-end"] {
         > .roadmap-gantt-task-popover-arrow {
             background: var(--tlp-dark-color);
         }
     }
 
-    &.tlp-popover[data-popper-placement^="top"] {
+    &.tlp-popover[data-popover-placement^="top"] {
         &.tlp-popover-shown {
             transform: translateY(0);
         }

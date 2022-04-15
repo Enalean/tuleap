@@ -61,7 +61,11 @@ const popover_content = ref<InstanceType<typeof HTMLElement>>();
 const popover_anchor = ref<InstanceType<typeof HTMLElement>>();
 
 onMounted(() => {
-    if (badge.value !== undefined && popover_content.value !== undefined) {
+    if (
+        badge.value !== undefined &&
+        popover_content.value !== undefined &&
+        popover_anchor.value !== undefined
+    ) {
         createPopover(badge.value, popover_content.value, {
             placement: "right-start",
             anchor: popover_anchor.value,

@@ -1,17 +1,23 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@popperjs/core': ^2.9.2
+  '@floating-ui/dom': ^0.4.2
   '@tuleap/build-system-configurator': file:../build-system-configurator
 
 dependencies:
-  '@popperjs/core': 2.9.2
+  '@floating-ui/dom': 0.4.4
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
 
 packages:
 
-  /@popperjs/core/2.9.2:
-    resolution: {integrity: sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==}
+  /@floating-ui/core/0.6.1:
+    resolution: {integrity: sha512-Y30eVMcZva8o84c0HcXAtDO4BEzPJMvF6+B7x7urL2xbAqVsGJhojOyHLaoQHQYjb6OkqRq5kO+zeySycQwKqg==}
+    dev: false
+
+  /@floating-ui/dom/0.4.4:
+    resolution: {integrity: sha512-0Ulu3B/dqQplUUSqnTx0foSrlYuMN+GTtlJWvNJwt6Fr7/PqmlR/Y08o6/+bxDWr6p3roBJRaQ51MDZsNmEhhw==}
+    dependencies:
+      '@floating-ui/core': 0.6.1
     dev: false

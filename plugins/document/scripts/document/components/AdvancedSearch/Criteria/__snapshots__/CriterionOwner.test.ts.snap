@@ -24,15 +24,10 @@ exports[`CriterionOwner should render the component 1`] = `
       </span>
        
       <section
-        class="tlp-popover popover-search"
-        data-popper-escaped=""
-        data-popper-placement="bottom-start"
-        data-popper-reference-hidden=""
-        style="position: absolute; left: 0px; top: 10px; margin: 0px;"
+        class="tlp-popover"
       >
         <div
           class="tlp-popover-arrow"
-          style="position: absolute; left: 15px;"
         />
          
         <div

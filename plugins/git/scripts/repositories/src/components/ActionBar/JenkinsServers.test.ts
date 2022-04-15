@@ -23,6 +23,8 @@ import JenkinsServer from "./JenkinsServers.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 
+jest.mock("tlp");
+
 describe("JenkinsServer", () => {
     it("displays the badge and a basic popover", () => {
         const localVue = createLocalVue();

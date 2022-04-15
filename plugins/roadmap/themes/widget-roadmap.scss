@@ -18,3 +18,8 @@
  */
 
 @use "gantt-board";
+
+/* stylelint-disable selector-class-pattern */
+.dashboard-widget-content-plugin_roadmap_project_widget {
+    overflow: visible;
+}

@@ -22,6 +22,8 @@ import { shallowMount } from "@vue/test-utils";
 import SearchInformationPopover from "./SearchInformationPopover.vue";
 import localVue from "../../../helpers/local-vue";
 
+jest.mock("tlp");
+
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {
         const wrapper = shallowMount(SearchInformationPopover, { localVue });
