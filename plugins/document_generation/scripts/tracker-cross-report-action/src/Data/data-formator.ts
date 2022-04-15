@@ -56,73 +56,40 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                 first_level_artifact_representation
             );
 
-            const second_level_linked_artifact_ids =
-                organized_reports_data.first_level.linked_artifacts.get(
-                    first_level_artifact_representation.id
-                );
-            if (
-                second_level_linked_artifact_ids === undefined ||
-                second_level_linked_artifact_ids.length === 0
-            ) {
-                all_artifact_rows.push(first_level_artifact_cells);
-            } else {
-                for (const second_level_linked_artifact_id of second_level_linked_artifact_ids) {
-                    const second_level_artifact_representation =
-                        organized_reports_data.second_level.artifact_representations.get(
-                            second_level_linked_artifact_id
-                        );
-                    if (second_level_artifact_representation === undefined) {
-                        throw new Error(
-                            "Artifact " +
-                                second_level_linked_artifact_id +
-                                " representation not found in collection."
-                        );
-                    }
+            const second_level_linked_artifacts_cells: Map<
+                number,
+                Array<ReportCell>
+            > = buildFollowingLevelLinkedArtifactsCells(
+                first_level_artifact_representation.id,
+                organized_reports_data.first_level.linked_artifacts,
+                organized_reports_data.second_level.artifact_representations
+            );
 
-                    const second_level_artifact_cells = transformArtifactRepresentationAsCells(
-                        second_level_artifact_representation
-                    );
+            if (second_level_linked_artifacts_cells.size > 0) {
+                for (const second_level_linked_artifact_cells of second_level_linked_artifacts_cells) {
+                    const second_level_artifact_id = second_level_linked_artifact_cells[0];
+                    const second_level_artifact_cells = second_level_linked_artifact_cells[1];
 
                     if (
                         organized_reports_data.second_level.linked_artifacts.size > 0 &&
                         organized_reports_data.third_level
                     ) {
-                        const third_level_linked_artifact_ids =
-                            organized_reports_data.second_level.linked_artifacts.get(
-                                second_level_linked_artifact_id
-                            );
-                        if (
-                            third_level_linked_artifact_ids === undefined ||
-                            third_level_linked_artifact_ids.length === 0
-                        ) {
+                        const third_level_linked_artifacts_cells: Map<
+                            number,
+                            Array<ReportCell>
+                        > = buildFollowingLevelLinkedArtifactsCells(
+                            second_level_artifact_id,
+                            organized_reports_data.second_level.linked_artifacts,
+                            organized_reports_data.third_level.artifact_representations
+                        );
+
+                        for (const third_level_linked_artifact_cells of third_level_linked_artifacts_cells) {
+                            const third_level_artifact_cells = third_level_linked_artifact_cells[1];
                             all_artifact_rows.push(
-                                first_level_artifact_cells.concat(second_level_artifact_cells)
+                                first_level_artifact_cells
+                                    .concat(second_level_artifact_cells)
+                                    .concat(third_level_artifact_cells)
                             );
-                        } else {
-                            for (const third_level_linked_artifact_id of third_level_linked_artifact_ids) {
-                                const third_level_artifact_representation =
-                                    organized_reports_data.third_level.artifact_representations.get(
-                                        third_level_linked_artifact_id
-                                    );
-                                if (third_level_artifact_representation === undefined) {
-                                    throw new Error(
-                                        "Artifact " +
-                                            third_level_linked_artifact_id +
-                                            " representation not found in collection."
-                                    );
-                                }
-
-                                const third_level_artifact_cells =
-                                    transformArtifactRepresentationAsCells(
-                                        third_level_artifact_representation
-                                    );
-
-                                all_artifact_rows.push(
-                                    first_level_artifact_cells
-                                        .concat(second_level_artifact_cells)
-                                        .concat(third_level_artifact_cells)
-                                );
-                            }
                         }
                     } else {
                         all_artifact_rows.push(
@@ -130,6 +97,8 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                         );
                     }
                 }
+            } else {
+                all_artifact_rows.push(first_level_artifact_cells);
             }
         } else {
             all_artifact_rows.push(
@@ -142,6 +111,40 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
         headers: formatHeaders(organized_reports_data),
         artifacts_rows: all_artifact_rows,
     };
+}
+
+function buildFollowingLevelLinkedArtifactsCells(
+    current_artifact_id: number,
+    current_level_linked_artifacts: Map<number, ReadonlyArray<number>>,
+    following_level_artifacts_representations: Map<number, ArtifactResponse>
+): Map<number, Array<ReportCell>> {
+    const following_level_linked_artifact_ids =
+        current_level_linked_artifacts.get(current_artifact_id);
+    if (
+        following_level_linked_artifact_ids === undefined ||
+        following_level_linked_artifact_ids.length === 0
+    ) {
+        return new Map<number, Array<ReportCell>>();
+    }
+    const linked_artifacts_cells: Map<number, Array<ReportCell>> = new Map();
+    for (const following_level_linked_artifact_id of following_level_linked_artifact_ids) {
+        const following_level_artifact_representation =
+            following_level_artifacts_representations.get(following_level_linked_artifact_id);
+        if (following_level_artifact_representation === undefined) {
+            throw new Error(
+                "Artifact " +
+                    following_level_linked_artifact_id +
+                    " representation not found in collection."
+            );
+        }
+
+        linked_artifacts_cells.set(
+            following_level_linked_artifact_id,
+            transformArtifactRepresentationAsCells(following_level_artifact_representation)
+        );
+    }
+
+    return linked_artifacts_cells;
 }
 
 function transformArtifactRepresentationAsCells(

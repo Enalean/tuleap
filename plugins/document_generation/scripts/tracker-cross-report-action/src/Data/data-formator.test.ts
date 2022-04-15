@@ -152,6 +152,43 @@ describe("data-formator", () => {
             ],
         });
     });
+
+    it("generates the formatted data with the first level that will be used to create the XLSX document", async (): Promise<void> => {
+        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+            first_level: {
+                tracker_name: "tracker01",
+                artifact_representations: buildFirstLevelRepresentationsMap(),
+                linked_artifacts: new Map([
+                    [74, [75]],
+                    [4, []],
+                ]),
+            },
+        });
+
+        const formatted_data = await formatData({
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: ["_is_child"],
+            },
+        });
+
+        expect(formatted_data).toStrictEqual({
+            headers: {
+                tracker_names: [new TextCellWithMerges("tracker01", 3)],
+                reports_fields_labels: [
+                    new TextCell("Artifact ID"),
+                    new TextCell("Field02"),
+                    new TextCell("Assigned to"),
+                ],
+            },
+            artifacts_rows: [
+                [new NumberCell(74), new TextCell("value02"), new EmptyCell()],
+                [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
+            ],
+        });
+    });
     it("generates empty formatted data if no artifact found", async (): Promise<void> => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
@@ -204,6 +241,48 @@ describe("data-formator", () => {
 
         await expect(() => formatData(export_settings)).rejects.toThrowError(
             "Artifact 76 representation not found in collection."
+        );
+    });
+    it("throws an error if third level artifact not found", async (): Promise<void> => {
+        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+            first_level: {
+                tracker_name: "tracker01",
+                artifact_representations: buildFirstLevelRepresentationsMap(),
+                linked_artifacts: new Map([[74, [75]]]),
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                artifact_representations: buildSecondLevelRepresentationsMap(),
+                linked_artifacts: new Map([[75, [80, 82]]]),
+            },
+            third_level: {
+                tracker_name: "tracker03",
+                artifact_representations: buildThirdLevelRepresentationsMap(),
+            },
+        });
+
+        const export_settings: ExportSettings = {
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: ["_is_child"],
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                report_id: 2,
+                report_name: "report02",
+                artifact_link_types: [],
+            },
+            third_level: {
+                tracker_name: "tracker03",
+                report_id: 3,
+                report_name: "report03",
+            },
+        };
+
+        await expect(() => formatData(export_settings)).rejects.toThrowError(
+            "Artifact 82 representation not found in collection."
         );
     });
 });
