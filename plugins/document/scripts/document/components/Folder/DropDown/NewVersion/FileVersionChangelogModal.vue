@@ -34,6 +34,7 @@
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             />
             <preview-filename-new-version v-bind:version="version" v-bind:item="new_version_item" />
+            <file-version-history v-bind:item="updatedFile" />
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
@@ -58,10 +59,12 @@ import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
 import { TYPE_FILE } from "../../../../constants";
 import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
 import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
+import FileVersionHistory from "./History/FileVersionHistory.vue";
 
 export default {
     name: "FileVersionChangelogModal",
     components: {
+        FileVersionHistory,
         PreviewFilenameNewVersion,
         ModalHeader,
         ModalFeedback,
