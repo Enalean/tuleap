@@ -47,29 +47,23 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
 
     const all_artifact_rows: Array<Array<ReportCell>> = [];
 
-    if (
-        organized_reports_data.first_level.linked_artifacts.size > 0 &&
-        organized_reports_data.second_level
-    ) {
-        for (const linked_artifacts_map of organized_reports_data.first_level.linked_artifacts) {
-            const first_level_artifact_id: number = linked_artifacts_map[0];
-            const first_level_artifact_representation =
-                organized_reports_data.first_level.artifact_representations.get(
-                    first_level_artifact_id
-                );
-            if (first_level_artifact_representation === undefined) {
-                throw new Error(
-                    "Artifact " +
-                        first_level_artifact_id +
-                        " representation not found in collection."
-                );
-            }
+    for (const first_level_artifact_representation of organized_reports_data.first_level.artifact_representations.values()) {
+        if (
+            organized_reports_data.first_level.linked_artifacts.size > 0 &&
+            organized_reports_data.second_level
+        ) {
             const first_level_artifact_cells = transformArtifactRepresentationAsCells(
                 first_level_artifact_representation
             );
 
-            const second_level_linked_artifact_ids: ReadonlyArray<number> = linked_artifacts_map[1];
-            if (second_level_linked_artifact_ids.length === 0) {
+            const second_level_linked_artifact_ids =
+                organized_reports_data.first_level.linked_artifacts.get(
+                    first_level_artifact_representation.id
+                );
+            if (
+                second_level_linked_artifact_ids === undefined ||
+                second_level_linked_artifact_ids.length === 0
+            ) {
                 all_artifact_rows.push(first_level_artifact_cells);
             } else {
                 for (const second_level_linked_artifact_id of second_level_linked_artifact_ids) {
@@ -88,15 +82,59 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                     const second_level_artifact_cells = transformArtifactRepresentationAsCells(
                         second_level_artifact_representation
                     );
-                    all_artifact_rows.push(
-                        first_level_artifact_cells.concat(second_level_artifact_cells)
-                    );
+
+                    if (
+                        organized_reports_data.second_level.linked_artifacts.size > 0 &&
+                        organized_reports_data.third_level
+                    ) {
+                        const third_level_linked_artifact_ids =
+                            organized_reports_data.second_level.linked_artifacts.get(
+                                second_level_linked_artifact_id
+                            );
+                        if (
+                            third_level_linked_artifact_ids === undefined ||
+                            third_level_linked_artifact_ids.length === 0
+                        ) {
+                            all_artifact_rows.push(
+                                first_level_artifact_cells.concat(second_level_artifact_cells)
+                            );
+                        } else {
+                            for (const third_level_linked_artifact_id of third_level_linked_artifact_ids) {
+                                const third_level_artifact_representation =
+                                    organized_reports_data.third_level.artifact_representations.get(
+                                        third_level_linked_artifact_id
+                                    );
+                                if (third_level_artifact_representation === undefined) {
+                                    throw new Error(
+                                        "Artifact " +
+                                            third_level_linked_artifact_id +
+                                            " representation not found in collection."
+                                    );
+                                }
+
+                                const third_level_artifact_cells =
+                                    transformArtifactRepresentationAsCells(
+                                        third_level_artifact_representation
+                                    );
+
+                                all_artifact_rows.push(
+                                    first_level_artifact_cells
+                                        .concat(second_level_artifact_cells)
+                                        .concat(third_level_artifact_cells)
+                                );
+                            }
+                        }
+                    } else {
+                        all_artifact_rows.push(
+                            first_level_artifact_cells.concat(second_level_artifact_cells)
+                        );
+                    }
                 }
             }
-        }
-    } else {
-        for (const artifact of organized_reports_data.first_level.artifact_representations.values()) {
-            all_artifact_rows.push(transformArtifactRepresentationAsCells(artifact));
+        } else {
+            all_artifact_rows.push(
+                transformArtifactRepresentationAsCells(first_level_artifact_representation)
+            );
         }
     }
 
