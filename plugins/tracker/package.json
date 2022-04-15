@@ -14,6 +14,7 @@
     "@tuleap/plugin-tracker-constants": "file:scripts/lib/constants",
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/tooltip": "file:../../lib/frontend/tooltip",
     "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
     "codemirror": "^5.62.0",

@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .roadmap-gantt-task-popover {
     &.tlp-popover.tlp-popover-shown {
@@ -71,7 +71,7 @@
     border-top: 4px solid transparent;
     background: var(--tlp-dark-color-darker-20);
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.roadmap-gantt-task-popover-header-#{$color-name} {
             border-top-color: map.get($colors, "primary");
 

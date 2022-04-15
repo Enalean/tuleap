@@ -10,6 +10,7 @@ specifiers:
   '@tuleap/project-privacy-helper': file:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue-breadcrumb-privacy': file:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
@@ -30,6 +31,7 @@ dependencies:
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   sprintf-js: 1.1.2

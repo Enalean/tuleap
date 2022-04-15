@@ -11,6 +11,7 @@
     "@tuleap/gettext": "file:../../lib/frontend/gettext",
     "@tuleap/project-privacy-helper": "file:../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-breadcrumb-privacy": "file:../../lib/frontend/vue-breadcrumb-privacy",
     "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
     "sprintf-js": "^1.1.2",

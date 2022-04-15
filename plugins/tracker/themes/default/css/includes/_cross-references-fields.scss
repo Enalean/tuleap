@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .tracker-cross-reference-hide-referenced-by {
     display: none;
@@ -76,7 +76,7 @@
     font-size: 0.8125rem;
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .tracker-cross-reference-title-icon-#{$color-name} {
         background: map.get($colors, "primary");
     }

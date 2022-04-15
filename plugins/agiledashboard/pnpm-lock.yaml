@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/plugin-tracker-artifact-modal': file:../tracker/scripts/lib/artifact-modal
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
   '@types/node': ^14.14.31
   d3: ^7.0.0
   d3-array: ^3.0.1
@@ -23,6 +24,7 @@ dependencies:
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   d3: 7.0.0
   d3-array: 3.0.1
   d3-axis: 3.0.0

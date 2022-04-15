@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 @use "sass:map";
 @use "sass:color";
 
@@ -56,7 +56,7 @@ $cross-ref-badge-padding: calc(5px - 1px * var(--tlp-is-condensed)) var(--tlp-sm
     font-size: 0.625rem;
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .cross-ref-badge-#{$color-name} {
         @extend %cross-ref-badge;
 

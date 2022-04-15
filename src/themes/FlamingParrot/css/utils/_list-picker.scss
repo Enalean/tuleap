@@ -19,8 +19,8 @@
 
 @use "sass:color";
 @use "sass:map";
-@use "themes/tlp/src/scss/variables/colors/swatch-colors";
-@import "~@tuleap/list-picker";
+@use "@tuleap/tlp-swatch-colors";
+@use "@tuleap/list-picker";
 
 $form-element-border-color: var(--tlp-neutral-dark-color-darker-05);
 $form-element-padding-horizontal: 12px;
@@ -157,7 +157,7 @@ $form-element-small-font-size: 0.8125rem;
     cursor: pointer;
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .list-picker-badge-#{$color-name} {
         border: 1px solid color.adjust(map.get($colors, "primary"), $alpha: - 0.4);
         background: color.adjust(map.get($colors, "primary"), $alpha: - 0.9);
@@ -254,7 +254,7 @@ input.list-picker-search-field {
     vertical-align: middle;
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .list-picker-circular-color-#{$color-name} {
         width: 14px;
         height: 14px;

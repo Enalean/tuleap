@@ -18,6 +18,7 @@
  */
 
 @use "sass:map";
+@use "@tuleap/tlp-swatch-colors";
 
 .demo {
     display: flex;
@@ -183,7 +184,7 @@
             white-space: nowrap;
         }
 
-        @each $color-name, $colors in $tlp-swatch-color-map {
+        @each $color-name, $colors in tlp-swatch-colors.$color-map {
             .doc-color-#{$color-name} {
                 border: 3px solid map.get($colors, "primary");
                 background-color: map.get($colors, "secondary");

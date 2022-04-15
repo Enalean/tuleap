@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .cards {
     margin: 0;
@@ -48,7 +48,7 @@
 
 .card,
 .card-preview {
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.card-style-#{$color-name} {
             border-color: map.get($colors, "border");
             background: map.get($colors, "secondary");
@@ -86,7 +86,7 @@
     }
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     // Specificity added to win over .card.card-style-$color
     div.card.card-accent-#{$color-name} {
         background: map.get($colors, "primary");

@@ -18,10 +18,10 @@
  */
 
 @use "sass:color";
-@use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 @use "./graph";
 
-$remaining-effort-color: swatch-colors.$tlp-swatch-neon-green;
+$remaining-effort-color: tlp-swatch-colors.$neon-green-primary;
 
 .chart-plot-remaining-effort {
     fill: $remaining-effort-color;

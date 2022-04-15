@@ -18,7 +18,7 @@
  *
  */
 @use "statistics";
-@use "../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 $artifact-body-padding: var(--tlp-medium-spacing);
 
@@ -53,7 +53,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
         content: counters(artifact-counter, ".");
         margin-right: 0.3rem;
         padding-right: 0.5rem;
-        border-right: 1px solid swatch-colors.$tlp-swatch-firemist-silver;
+        border-right: 1px solid tlp-swatch-colors.$firemist-silver-primary;
         color: var(--tlp-main-color);
         font-size: 1.3rem;
     }
@@ -66,7 +66,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 }
 
 .baseline-content-artifact-error-message {
-    color: swatch-colors.$tlp-swatch-red-wine-border;
+    color: tlp-swatch-colors.$red-wine-border;
 }
 
 .baseline-content-artifact-depth-reached-message {
@@ -80,7 +80,7 @@ $artifact-body-padding: var(--tlp-medium-spacing);
 .baseline-content-artifact-body-field-label {
     margin-top: var(--tlp-medium-spacing);
     margin-bottom: var(--tlp-small-spacing);
-    color: swatch-colors.$tlp-swatch-firemist-silver;
+    color: tlp-swatch-colors.$firemist-silver-primary;
 }
 
 .baseline-content-artifact-body-field-value {

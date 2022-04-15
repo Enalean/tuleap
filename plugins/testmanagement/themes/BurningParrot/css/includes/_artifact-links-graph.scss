@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "sass:color";
-@use "../../src/themes/common/css/utils/colors";
-@use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .artifact-links-graph-modal {
     height: 70vh;
@@ -29,7 +28,7 @@ circle {
         stroke-width: 5px;
     }
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.#{$color-name} {
             stroke: color.adjust(map.get($colors, "primary"), $lightness: - 20%);
         }
@@ -75,7 +74,7 @@ text {
     }
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .#{$color-name} {
         fill: color.adjust(map.get($colors, "primary"), $lightness: - 20%);
     }

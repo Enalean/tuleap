@@ -8,6 +8,7 @@
     "@tuleap/list-picker": "file:../../lib/frontend/list-picker",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-popovers": "file:../../lib/frontend/tlp-popovers",
+    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
     "current-week-number": "^1.0.7",
     "lit": "^2.0.2",
