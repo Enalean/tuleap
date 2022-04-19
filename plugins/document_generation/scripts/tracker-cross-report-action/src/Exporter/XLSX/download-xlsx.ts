@@ -30,6 +30,7 @@ import {
 } from "@tuleap/plugin-docgen-xlsx";
 import type { ExportSettings } from "../../export-document";
 import { generateFilename } from "./file-name-generator";
+import { generateAutofilterRange } from "./autofilter-generator";
 
 export function downloadXLSX(export_settings: ExportSettings, formatted_data: ReportSection): void {
     const book = utils.book_new();
@@ -38,6 +39,7 @@ export function downloadXLSX(export_settings: ExportSettings, formatted_data: Re
     sheet["!cols"] = fitColumnWidthsToContent(cells);
     sheet["!rows"] = fitRowHeightsToContent(cells);
     sheet["!merges"] = createMergesForWholeRowLine(cells);
+    sheet["!autofilter"] = { ref: generateAutofilterRange(formatted_data) };
     utils.book_append_sheet(book, sheet);
     writeFile(book, generateFilename(export_settings), {
         bookSST: true,
