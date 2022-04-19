@@ -48,7 +48,7 @@ function getColoredTemplate(color_value: string, option_label: string): Template
     if (!is_color_bad && rgb_color_legacy === null) {
         return html`
             <span class="list-picker-option-colored-label-container">
-                <span class="list-picker-circular-color-${color_value}"></span>
+                <span class="tlp-swatch-${color_value} list-picker-circular-color"></span>
                 ${option_label}
             </span>
         `;

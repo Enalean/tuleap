@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "./dropdown";
+@use "./search";
+@use "./option";
+@use "./predefined-template";
+@use "./selection";
+
 /**
 * We can't just display: none or add the attribute type="hidden" because we need the <select> for accessibility purpose.
 * Hence, we shrink it at the maximum.
@@ -39,93 +45,40 @@
     }
 }
 
-.list-picker-dropdown {
-    display: none;
-    position: absolute;
-    z-index: 1000;
-    flex-direction: column;
-    border-radius: 0 0 var(--tlp-medium-radius) var(--tlp-medium-radius);
-    background-color: #ffffff;
-
-    &.list-picker-dropdown-above {
-        border-radius: var(--tlp-medium-radius) var(--tlp-medium-radius) 0 0;
-    }
-
-    &.list-picker-dropdown-over-modal {
-        z-index: 2007;
-    }
-
-    &.list-picker-dropdown-shown {
-        display: flex;
-    }
-}
-
-.list-picker-dropdown-values-list {
-    max-height: 250px;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-    list-style: none;
-}
-
-.list-picker-dropdown-option-value,
-.list-picker-dropdown-option-value-disabled {
-    display: flex;
-    align-items: baseline;
-    padding: 6px 12px 6px 32px;
-    font-size: 14px;
+.list-picker-component-wrapper {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
     line-height: normal;
-    cursor: pointer;
-    user-select: none;
 }
 
-.list-picker-dropdown-option-value-disabled {
+.list-picker {
+    z-index: 2003;
+}
+
+.list-picker-in-multiple-mode {
+    width: 100%;
+}
+
+.list-picker-disabled {
+    border-color: var(--tlp-form-element-border-color);
     cursor: not-allowed;
 }
 
-.list-picker-dropdown-option-group {
-    padding: 0;
-    list-style: none;
-    user-select: none;
-}
+.list-picker-selection,
+.list-picker-search-field {
+    transition: border-color var(--tlp-form-element-border-transition-duration) linear;
 
-.list-picker-multiple > .list-picker-selected-value-remove-button {
-    position: absolute;
-    top: 7px;
-    right: 32px;
-    margin: 2px 0 0;
-}
-
-.list-picker-selected-value-remove-button {
-    position: relative;
-    top: -1px;
-    float: right;
-    font-size: 18px;
-    line-height: 17px;
-    white-space: nowrap;
-}
-
-.list-picker-selected-value {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: default;
-
-    > .list-picker-search-field {
-        width: 100%;
-        border: 0;
-        line-height: 1.5rem;
-        cursor: pointer;
+    &:focus {
+        transition: border-color var(--tlp-form-element-border-transition-duration) linear,
+            box-shadow 350ms;
+        border-color: var(--tlp-main-color);
+        box-shadow: var(--tlp-shadow-focus);
     }
 }
 
-.list-picker-component-wrapper {
-    display: inline-block;
-    width: 100%;
+.list-picker-placeholder {
+    color: var(--tlp-form-element-placeholder-color);
 }
 
 .list-picker-multiple {
@@ -138,42 +91,4 @@
     > .list-picker-badge-custom {
         padding: 2px 8px;
     }
-}
-
-.list-picker-multiple-search-section > .list-picker-search-field {
-    width: 100%;
-    min-width: 100px;
-    margin: 5px 0 0;
-    border: 0;
-    line-height: 1.5rem;
-    cursor: pointer;
-}
-
-.list-picker:not(.list-picker-disabled) {
-    .list-picker-selected-value-remove-button:hover,
-    .list-picker-value-remove-button:hover {
-        opacity: 0.5;
-        cursor: pointer;
-    }
-}
-
-.list-picker-value-remove-button {
-    margin: 0 5px 0 0;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-align: center;
-}
-
-.list-picker-multiple-search-section {
-    flex: 1;
-}
-
-.list-picker-circular-legacy-color {
-    display: flex;
-    box-sizing: border-box; // To have the same round color size in BP and FP.
-    align-items: center;
-    width: 20px;
-    height: 20px;
-    margin: 0 6px 0 0;
-    border-radius: 50%;
 }

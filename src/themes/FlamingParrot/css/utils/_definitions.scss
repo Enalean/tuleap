@@ -18,6 +18,7 @@
  */
 
 @use "@tuleap/cross-ref-badges";
+@use "@tuleap/list-picker";
 @import "logo";
 @import "navbar";
 @import "sidebar";
@@ -52,6 +53,5 @@
 @import "bootstrap-overrides";
 @import "invite-buddies";
 @import "browser-deprecation-modal";
-@import "list-picker";
 @import "cvs";
 @import "mermaid";

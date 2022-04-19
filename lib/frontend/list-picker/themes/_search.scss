@@ -1,0 +1,68 @@
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.list-picker-search-field {
+    width: 100%;
+    box-shadow: none;
+    appearance: none;
+    font-size: var(--tlp-form-element-small-font-size);
+}
+
+.list-picker-single-dropdown-search-section {
+    display: flex;
+    justify-content: space-around;
+    padding: var(--tlp-form-element-padding-horizontal);
+
+    > .list-picker-search-field {
+        height: var(--tlp-form-element-small-height);
+        padding: 0 4px;
+        border-radius: var(--tlp-medium-radius);
+
+        &:focus {
+            border-color: var(--tlp-main-color);
+        }
+    }
+}
+
+.list-picker-multiple-search-section {
+    flex: 1;
+
+    > .list-picker-search-field {
+        min-width: 100px;
+        height: 100%;
+        margin: 5px 0 0;
+        padding: 0;
+        border: 0;
+        line-height: 1.5rem;
+        cursor: pointer;
+    }
+}
+
+.list-picker-single-dropdown-search-section,
+.list-picker-multiple-search-section {
+    // override input[type=search] from bootstrap
+    > .list-picker-search-field:focus {
+        box-shadow: none;
+    }
+}
+
+.list-picker-multiple-search-section-disabled > .list-picker-search-field {
+    background: var(--tlp-white-color);
+    cursor: not-allowed;
+}
