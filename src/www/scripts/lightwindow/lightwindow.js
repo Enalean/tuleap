@@ -568,7 +568,7 @@ lightwindow.prototype = {
 	_clearWindowContents : function(contents) {
 		// If there is an iframe, its got to go
 		if ($('lightwindow_iframe')) {
-			Element.remove($('lightwindow_iframe'));
+			document.getElementById('lightwindow_iframe')?.remove();
 		}
 
 		// Stop playing an object if its still around
@@ -576,7 +576,7 @@ lightwindow.prototype = {
 			try {
 				$('lightwindow_media_primary').Stop();
 			} catch(e) {}
-			Element.remove($('lightwindow_media_primary'));
+			document.getElementById('lightwindow_media_primary')?.remove();
 		}
 
 		// Stop playing an object if its still around		
@@ -584,7 +584,7 @@ lightwindow.prototype = {
 			try {
 				$('lightwindow_media_secondary').Stop();
 			} catch(e) {}
-			Element.remove($('lightwindow_media_secondary'));
+			document.getElementById('lightwindow_media_secondary')?.remove();
 		}
 		
 		this.activeGallery = false;
@@ -1050,7 +1050,7 @@ lightwindow.prototype = {
 	    scrollDiv.style.overflow = 'auto';
     	var withScroll = $('lightwindow_content_scroll_div').offsetWidth;
 
-	   	Element.remove($('lightwindow_scroll_div'));
+		document.getElementById('lightwindow_scroll_div')?.remove();
 
 	    this.scrollbarOffset = noScroll-withScroll;
 	},

@@ -436,7 +436,7 @@ var Draggable = Class.create({
       if (!this._originallyAbsolute)
         Position.relativize(this.element);
       delete this._originallyAbsolute;
-      Element.remove(this._clone);
+      this._clone.remove();
       this._clone = null;
     }
 

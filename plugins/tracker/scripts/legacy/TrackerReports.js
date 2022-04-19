@@ -228,7 +228,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                         'select[name="tracker_aggregate_function_add[' + field_id + ']"]'
                     );
                     if (selectbox) {
-                        var report_id = $F($("tracker_report_query_form")["report"]);
+                        var report_id = $F($("tracker_report_query_form").report);
                         var renderer_id = $("tracker_report_renderer_current").readAttribute(
                             "data-renderer-id"
                         );
@@ -524,11 +524,11 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
         '<img src="' + codendi.imgroot + 'ic/sum--plus.png" style="vertical-align: middle;" />'
     );
 
-    Element.remove(
-        selectbox.insert({
+    selectbox
+        .insert({
             after: handle,
         })
-    );
+        .remove();
     ul.id = selectbox.id;
     handle.insert({
         after: panel.insert(
