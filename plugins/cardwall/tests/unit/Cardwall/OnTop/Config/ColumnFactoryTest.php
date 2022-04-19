@@ -56,6 +56,7 @@ class ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->field->shouldReceive("getBind")->andReturn($bind);
         $this->field->shouldReceive("isNone")->andReturnFalse();
+        $this->field->shouldReceive("getDecorators")->andReturns([]);
         $bind->shouldReceive("getValue")->andThrow(new \Tracker_FormElement_InvalidFieldValueException());
 
         $this->column_factory->getFilteredRendererColumns($this->field, $filter);

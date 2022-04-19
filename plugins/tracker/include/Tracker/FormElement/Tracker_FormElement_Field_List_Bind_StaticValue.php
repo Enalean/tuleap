@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElement_Field_List_BindValue
 {
     /**
@@ -136,6 +137,21 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
     {
         $this->rank = (int) $rank;
         return $this;
+    }
+
+    public function getDataset(Tracker_FormElement_Field_List $field): array
+    {
+        $decorators = $field->getDecorators();
+        $id         = $this->getId();
+
+        if (! empty($decorators) && isset($decorators[$id])) {
+            $purifier = Codendi_HTTPPurifier::instance();
+            return [
+                "data-color-value" => $purifier->purify($decorators[$id]->getCurrentColor()),
+            ];
+        }
+
+        return [];
     }
 
     public function getFullRESTValue(Tracker_FormElement_Field $field)

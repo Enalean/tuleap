@@ -23,9 +23,9 @@ import { sanitize } from "dompurify";
 
 export default ListPickerController;
 
-ListPickerController.$inject = ["$element", "$timeout"];
+ListPickerController.$inject = ["$element", "$timeout", "$scope"];
 
-function ListPickerController($element, $timeout) {
+function ListPickerController($element, $timeout, $scope) {
     var self = this;
 
     Object.assign(self, {
@@ -40,10 +40,18 @@ function ListPickerController($element, $timeout) {
             return;
         }
 
-        if (self.field.bindings.type === "users") {
-            bindUsersAvatars();
-        }
-        buildColorValueOptionDataset();
+        bindOptionsDecorators();
+
+        $scope.$watch(
+            () => self.field.filtered_values,
+            (new_value, old_value) => {
+                if (new_value === old_value) {
+                    return;
+                }
+
+                bindOptionsDecorators();
+            }
+        );
 
         const options = {
             locale: document.body.dataset.userLocale,
@@ -52,6 +60,13 @@ function ListPickerController($element, $timeout) {
         self.destroy = await createListPicker(select, options).then((list_picker) => {
             return list_picker.destroy;
         });
+    }
+
+    function bindOptionsDecorators() {
+        if (self.field.bindings.type === "users") {
+            bindUsersAvatars();
+        }
+        buildColorValueOptionDataset();
     }
 
     function destroy() {
@@ -77,11 +92,19 @@ function ListPickerController($element, $timeout) {
     }
 
     function buildColorValueOptionDataset() {
-        Array.from(select.options).forEach((option, option_index) => {
-            const value = self.field.values[option_index];
-            if (value.value_color) {
-                option.setAttribute("data-color-value", sanitize(value.value_color));
-            }
+        Array.from(select.options).forEach((option) => {
+            const option_value_by_angular = option.value;
+            const value_id = Number(option_value_by_angular.replace(/^number:(\d+)$/, "$1"));
+            self.field.values.some((value_definition) => {
+                if (value_definition.id !== value_id) {
+                    return false;
+                }
+
+                if (value_definition.value_color) {
+                    option.setAttribute("data-color-value", sanitize(value_definition.value_color));
+                }
+                return true;
+            });
         });
     }
 }

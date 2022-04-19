@@ -36,7 +36,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see ArrayAccess
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_null($offset)) {
             $this->columns[] = $value;
@@ -48,7 +48,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see ArrayAccess
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->columns[$offset]);
     }
@@ -56,7 +56,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see ArrayAccess
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->columns[$offset]);
     }
@@ -64,7 +64,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see ArrayAccess
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return isset($this->columns[$offset]) ? $this->columns[$offset] : null;
     }
@@ -72,7 +72,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see IteratorAggregate
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->columns);
     }
@@ -80,7 +80,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     /**
      * @see Countable
      */
-    public function count()
+    public function count(): int
     {
         return count($this->columns);
     }

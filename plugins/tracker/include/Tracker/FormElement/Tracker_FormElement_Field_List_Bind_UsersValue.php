@@ -21,6 +21,7 @@
 
 use Tuleap\User\REST\UserRepresentation;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement_Field_List_BindValue
 {
     protected $id;
@@ -53,7 +54,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getUserHelper()->getDisplayNameFromUserId($this->getId());
     }
 
-    public function getDataset(): array
+    public function getDataset(Tracker_FormElement_Field_List $field): array
     {
         return [
             'data-avatar-url' => $this->getUser()->getAvatarUrl(),
