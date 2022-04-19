@@ -19,6 +19,7 @@
     "@tuleap/plugin-tracker-constants": "file:../tracker/scripts/lib/constants",
     "@tuleap/plugin-tracker-rich-text-editor": "file:../tracker/scripts/lib/rich-text-editor",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@uirouter/angularjs": "^1.0.29",
     "angular": "^1.8.2",
     "angular-breadcrumb": "^0.5.0",

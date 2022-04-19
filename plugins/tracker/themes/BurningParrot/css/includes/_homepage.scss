@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .trackers-homepage-title {
     display: flex;
@@ -37,7 +37,7 @@
 .trackers-homepage-tracker {
     width: 50%;
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.#{$color-name} {
             &:hover {
                 border-color: map.get($colors, "border");

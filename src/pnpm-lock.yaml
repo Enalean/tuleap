@@ -17,6 +17,7 @@ specifiers:
   '@tuleap/tlp-fetch': file:../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': file:../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': file:../lib/frontend/tlp-popovers
+  '@tuleap/tlp-swatch-colors': file:../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': file:../lib/frontend/tooltip
   '@tuleap/vue2-gettext-init': file:../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': file:../lib/frontend/vuex-store-wrapper-jest
@@ -79,6 +80,7 @@ dependencies:
   '@tuleap/tlp-fetch': link:../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../lib/frontend/tlp-popovers
+  '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../lib/frontend/tooltip
   '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   ckeditor4: 4.17.1

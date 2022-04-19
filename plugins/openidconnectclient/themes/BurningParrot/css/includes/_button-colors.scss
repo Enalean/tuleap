@@ -17,25 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "sass:string";
 @use "sass:map";
 @use "sass:color";
-@use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
-
-@function to-snake-case($string) {
-    $index: string.index($string, "-");
-
-    @if $index {
-        @return str-slice($string, 1, $index - 1) + "_" +
-            to-snake-case(str-slice($string, $index + str-length("-")));
-    }
-
-    @return $string;
-}
+@use "../../../case";
+@use "@tuleap/tlp-swatch-colors";
 
 @mixin provider-button-colors() {
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
-        &.#{to-snake-case($color-name)} {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
+        &.#{case.to-snake-case($color-name)} {
             border-color: map.get($colors, "primary");
             background: map.get($colors, "primary") !important;
 

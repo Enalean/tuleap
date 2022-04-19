@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
   d3-array: ^3.0.1
   d3-axis: ^3.0.0
   d3-collection: ^1.0.7
@@ -18,6 +19,7 @@ specifiers:
 
 dependencies:
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   d3-array: 3.0.1
   d3-axis: 3.0.0
   d3-collection: 1.0.7

@@ -10,6 +10,7 @@
     "@tuleap/keyboard-shortcuts": "file:../../lib/frontend/keyboard-shortcuts",
     "@tuleap/project-privacy-helper": "file:../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-breadcrumb-privacy": "file:../../lib/frontend/vue-breadcrumb-privacy",
     "@tuleap/vue2-gettext-composition-helper": "file:../../lib/frontend/vue2-gettext-composition-helpers",
     "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",

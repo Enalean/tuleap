@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../tlp/src/scss/variables/colors/common-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .codendi-tooltip {
     position: absolute;
@@ -160,7 +160,7 @@
     line-height: 12px;
 }
 
-@each $color-name, $colors in common-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .crossref-tooltip-header-prefix-circle-#{$color-name} {
         display: flex;
         align-items: center;

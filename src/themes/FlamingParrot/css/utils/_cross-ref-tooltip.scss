@@ -19,7 +19,7 @@
 
 @use "sass:color";
 @use "sass:map";
-@use "themes/common/css/utils/colors";
+@use "@tuleap/tlp-swatch-colors";
 
 $dimmed-white-over-dark-background: color.adjust(#ffffff, $alpha: - 0.2);
 
@@ -155,7 +155,7 @@ $dimmed-white-over-dark-background: color.adjust(#ffffff, $alpha: - 0.2);
     line-height: 12px;
 }
 
-@each $color-name, $colors in colors.$swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .crossref-tooltip-header-prefix-circle-#{$color-name} {
         display: flex;
         align-items: center;

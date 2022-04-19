@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .project-release-toggle-closed > .project-release-header {
     background: none;
@@ -199,7 +199,7 @@
     height: 3px;
     overflow: hidden;
     border-radius: 3px;
-    background: swatch-colors.$tlp-swatch-firemist-silver;
+    background: tlp-swatch-colors.$firemist-silver-primary;
 }
 
 .release-remaining-progress-value {

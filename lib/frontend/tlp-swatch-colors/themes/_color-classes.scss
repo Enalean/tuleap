@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,15 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
+@use "./swatch-colors";
 
-.select-option-not-colored {
-    padding-left: 16px;
-}
-
-@each $color-name, $colors in tlp-swatch-colors.$color-map {
-    .select-option-colored-#{$color-name} {
-        border-left: 16px solid map.get($colors, "primary");
+@each $color-name, $colors in swatch-colors.$color-map {
+    .tlp-swatch-#{$color-name} {
+        --primary-color: #{map.get($colors, "primary")};
+        --secondary-color: #{map.get($colors, "secondary")};
+        --border-color: #{map.get($colors, "border")};
+        --text-color: #{map.get($colors, "text")};
+        --text-on-dark-color: #{map.get($colors, "text-on-dark")};
+        --accessibility-pattern: "#{map.get($colors, "pattern")}";
     }
-
-    .colorpicker-preview-#{$color-name} {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin: 0;
-        background-color: map.get($colors, "primary");
-        vertical-align: middle;
-    }
-}
-
-.hide-none-value {
-    display: none;
 }

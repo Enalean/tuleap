@@ -17,8 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../../../src/themes/tlp/src/scss/variables/colors/common-colors";
-@import "../../../../tracker/themes/default/css/includes/columns-colors";
+@use "sass:map";
+@use "@tuleap/tlp-swatch-colors";
+
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
+    .cardwall-column-header-color-#{$color-name} {
+        background-color: map.get($colors, "primary");
+    }
+}
 
 /* stylelint-disable selector-class-pattern, selector-id-pattern */
 #cardwall {

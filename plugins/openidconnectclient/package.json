@@ -4,11 +4,14 @@
     "homepage": "https://tuleap.org",
     "license": "GPL-2.0-or-later",
     "private": true,
-    "scripts": {
-        "build": "webpack --config webpack.prod.js",
-        "watch": "webpack --config webpack.dev.js --watch"
+    "dependencies": {
+        "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors"
     },
     "devDependencies": {
         "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator"
+    },
+    "scripts": {
+        "build": "webpack --config webpack.prod.js",
+        "watch": "webpack --config webpack.dev.js --watch"
     }
 }

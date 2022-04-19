@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../../../src/themes/common/css/utils/colors";
+@use "sass:map";
+@use "@tuleap/tlp-swatch-colors";
+@use "../../case";
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 body.openid-connect-link {
@@ -307,7 +309,6 @@ body.openid-connect-link {
         }
     }
 
-    /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
     &.provider-color-selector .select2-choice {
         padding: 0;
         overflow: visible;
@@ -319,77 +320,14 @@ body.openid-connect-link {
             border-bottom-left-radius: var(--tlp-medium-radius);
 
             > span {
+                @extend %colors;
+
                 display: block;
                 height: 100%;
                 margin: 0;
-
-                &.inca_silver {
-                    background: $inca_silver;
-                }
-
-                &.chrome_silver {
-                    background: $chrome_silver;
-                }
-
-                &.fiesta_red {
-                    background: $fiesta_red;
-                }
-
-                &.teddy_brown {
-                    background: $teddy_brown;
-                }
-
-                &.clockwork_orange {
-                    background: $clockwork_orange;
-                }
-
-                &.red_wine {
-                    background: $red_wine;
-                }
-
-                &.acid_green {
-                    background: $acid_green;
-                }
-
-                &.army_green {
-                    background: $army_green;
-                }
-
-                &.sherwood_green {
-                    background: $sherwood_green;
-                }
-
-                &.ocean_turquoise {
-                    background: $ocean_turquoise;
-                }
-
-                &.daphne_blue {
-                    background: $daphne_blue;
-                }
-
-                &.lake_placid_blue {
-                    background: $lake_placid_blue;
-                }
-
-                &.deep_blue {
-                    background: $deep_blue;
-                }
-
-                &.plum_crazy {
-                    background: $plum_crazy;
-                }
-
-                &.peggy_pink {
-                    background: $peggy_pink;
-                }
-
-                &.flamingo_pink {
-                    background: $flamingo_pink;
-                }
             }
         }
     }
-    /* stylelint-enable */
 
     &.select2-dropdown-open .select2-choice > div > b {
         background-position: -16px 4px;
@@ -401,8 +339,8 @@ body.openid-connect-link {
         display: none;
     }
 
-    /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
     > ul.select2-results {
+        // stylelint-disable-line selector-no-qualifying-type
         text-align: center;
 
         > li:first-child {
@@ -410,77 +348,22 @@ body.openid-connect-link {
         }
 
         > li span {
+            @extend %colors;
+
             display: block;
             height: 25px;
-
-            &.inca_silver {
-                background: $inca_silver;
-            }
-
-            &.chrome_silver {
-                background: $chrome_silver;
-            }
-
-            &.fiesta_red {
-                background: $fiesta_red;
-            }
-
-            &.teddy_brown {
-                background: $teddy_brown;
-            }
-
-            &.clockwork_orange {
-                background: $clockwork_orange;
-            }
-
-            &.red_wine {
-                background: $red_wine;
-            }
-
-            &.acid_green {
-                background: $acid_green;
-            }
-
-            &.army_green {
-                background: $army_green;
-            }
-
-            &.sherwood_green {
-                background: $sherwood_green;
-            }
-
-            &.ocean_turquoise {
-                background: $ocean_turquoise;
-            }
-
-            &.daphne_blue {
-                background: $daphne_blue;
-            }
-
-            &.lake_placid_blue {
-                background: $lake_placid_blue;
-            }
-
-            &.deep_blue {
-                background: $deep_blue;
-            }
-
-            &.plum_crazy {
-                background: $plum_crazy;
-            }
-
-            &.peggy_pink {
-                background: $peggy_pink;
-            }
-
-            &.flamingo_pink {
-                background: $flamingo_pink;
-            }
         }
 
         i {
             font-size: 26px;
         }
     }
-    /* stylelint-enable */
+}
+
+%colors {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
+        .#{case.to-snake-case($color-name)} {
+            background: #{map.get($colors, "primary")};
+        }
+    }
 }

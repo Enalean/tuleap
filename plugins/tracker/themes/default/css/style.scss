@@ -20,7 +20,7 @@
 @use "sass:map";
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/hint/show-hint";
-@use "../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 @use "../../../../../src/themes/FlamingParrot/css/utils/variables-common";
 @use "includes/cards";
 @use "includes/field-bound-colors";
@@ -2583,8 +2583,6 @@ body.in_tracker_report .main .content {
     float: right;
 }
 
-@import "../../../../../src/themes/common/css/utils/colors";
-
 #tracker-settings {
     > label {
         margin-top: 20px;
@@ -2652,7 +2650,7 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     padding-left: 200px;
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .#{$color-name} {
         &.fa-circle.tracker_color_info,
         &.tracker_color_selector_container {

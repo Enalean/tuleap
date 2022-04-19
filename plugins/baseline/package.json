@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-breadcrumb-privacy": "file:../../lib/frontend/vue-breadcrumb-privacy",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",

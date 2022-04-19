@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .quick-look-pane-highlighted .document-quick-look-folder-container {
     > .document-quick-look-dropzone-text {
@@ -73,7 +73,7 @@
 
 .document-folder-icon {
     > path {
-        fill: swatch-colors.$tlp-swatch-inca-silver;
+        fill: tlp-swatch-colors.$inca-silver-primary;
     }
 }
 

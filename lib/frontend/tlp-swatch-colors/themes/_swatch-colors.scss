@@ -1,0 +1,447 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:color";
+
+// Business colors - Primaries
+$inca-silver-primary: #5d5d5d;
+$chrome-silver-primary: #8f8f8f;
+$firemist-silver-primary: #c5c5c5;
+$red-wine-primary: #a10202;
+$fiesta-red-primary: #f02727;
+$coral-pink-primary: #ff8a8a;
+$teddy-brown-primary: #9a600d;
+$clockwork-orange-primary: #f18e06;
+$graffiti-yellow-primary: #ffd300;
+$army-green-primary: #5f8347;
+$neon-green-primary: #6abf1d;
+$acid-green-primary: #b9e45d;
+$sherwood-green-primary: #009465;
+$ocean-turquoise-primary: #28c4a0;
+$surf-green-primary: #75e4bf;
+$deep-blue-primary: #0480bf;
+$lake-placid-blue-primary: #1ebade;
+$daphne-blue-primary: #87dbef;
+$plum-crazy-primary: #7c2db3;
+$ultra-violet-primary: #a44ee1;
+$lilac-purple-primary: #ce91fa;
+$panther-pink-primary: #c42887;
+$peggy-pink-primary: #e560b2;
+$flamingo-pink-primary: #edacd4;
+
+// Business colors - Secondaries
+$inca-silver-secondary: #cacaca;
+$chrome-silver-secondary: #dcdcdc;
+$firemist-silver-secondary: #f3f3f3;
+$red-wine-secondary: #f7a9a9;
+$fiesta-red-secondary: #f9d1d1;
+$coral-pink-secondary: #fff2f2;
+$teddy-brown-secondary: #e2c59b;
+$clockwork-orange-secondary: #ffddae;
+$graffiti-yellow-secondary: #fff7d0;
+$army-green-secondary: #b4d49f;
+$neon-green-secondary: #d8efc4;
+$acid-green-secondary: #f3fdde;
+$sherwood-green-secondary: #a1dcc9;
+$ocean-turquoise-secondary: #cbf5ea;
+$surf-green-secondary: #eefdf8;
+$deep-blue-secondary: #acd8ef;
+$lake-placid-blue-secondary: #d4f7ff;
+$daphne-blue-secondary: #eaf9fd;
+$plum-crazy-secondary: #d2abec;
+$ultra-violet-secondary: #edd4ff;
+$lilac-purple-secondary: #f6eaff;
+$panther-pink-secondary: #f9b8e0;
+$peggy-pink-secondary: #ffdcf2;
+$flamingo-pink-secondary: #ffeff5;
+
+// Business colors - Text
+$inca-silver-text: #525252;
+$chrome-silver-text: #5f5f5f;
+$firemist-silver-text: #6f6f6f;
+$red-wine-text: #842f2f;
+$fiesta-red-text: #b70d0d;
+$coral-pink-text: #bf4747;
+$teddy-brown-text: #774a0a;
+$clockwork-orange-text: #945600;
+$graffiti-yellow-text: #8a6c00;
+$army-green-text: #385f1e;
+$neon-green-text: #137900;
+$acid-green-text: #567d00;
+$sherwood-green-text: #006545;
+$ocean-turquoise-text: #00775c;
+$surf-green-text: #1b805e;
+$deep-blue-text: #005f90;
+$lake-placid-blue-text: #007792;
+$daphne-blue-text: #007a96;
+$plum-crazy-text: #6a14a7;
+$ultra-violet-text: #8b21d6;
+$lilac-purple-text: #8e4cbd;
+$panther-pink-text: #9a1d69;
+$peggy-pink-text: #c5007a;
+$flamingo-pink-text: #b7438a;
+
+// See https://www.w3.org/TR/WCAG21/#contrast-minimum
+$lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background: 50%;
+
+// Business colors - Text on dark background
+$inca-silver-text-on-dark-background: color.scale(
+    $inca-silver-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$chrome-silver-text-on-dark-background: color.scale(
+    $chrome-silver-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$firemist-silver-text-on-dark-background: color.scale(
+    $firemist-silver-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$red-wine-text-on-dark-background: color.scale(
+    $red-wine-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background + 12%
+);
+$fiesta-red-text-on-dark-background: color.scale(
+    $fiesta-red-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$coral-pink-text-on-dark-background: color.scale(
+    $coral-pink-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$teddy-brown-text-on-dark-background: color.scale(
+    $teddy-brown-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$clockwork-orange-text-on-dark-background: color.scale(
+    $clockwork-orange-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$graffiti-yellow-text-on-dark-background: color.scale(
+    $graffiti-yellow-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$army-green-text-on-dark-background: color.scale(
+    $army-green-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$neon-green-text-on-dark-background: color.scale(
+    $neon-green-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$acid-green-text-on-dark-background: color.scale(
+    $acid-green-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$sherwood-green-text-on-dark-background: color.scale(
+    $sherwood-green-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$ocean-turquoise-text-on-dark-background: color.scale(
+    $ocean-turquoise-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$surf-green-text-on-dark-background: color.scale(
+    $surf-green-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$deep-blue-text-on-dark-background: color.scale(
+    $deep-blue-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$lake-placid-blue-text-on-dark-background: color.scale(
+    $lake-placid-blue-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$daphne-blue-text-on-dark-background: color.scale(
+    $daphne-blue-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$plum-crazy-text-on-dark-background: color.scale(
+    $plum-crazy-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background + 2%
+);
+$ultra-violet-text-on-dark-background: color.scale(
+    $ultra-violet-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$lilac-purple-text-on-dark-background: color.scale(
+    $lilac-purple-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$panther-pink-text-on-dark-background: color.scale(
+    $panther-pink-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$peggy-pink-text-on-dark-background: color.scale(
+    $peggy-pink-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+$flamingo-pink-text-on-dark-background: color.scale(
+    $flamingo-pink-primary,
+    $lightness: $lightness-amount-to-reach-four-dot-five-aa-ratio-on-dark-background
+);
+
+// Business colors - Borders
+$inca-silver-border: #a5a5a5;
+$chrome-silver-border: #b7b7b7;
+$firemist-silver-border: #c9c9c9;
+$red-wine-border: #da6d70;
+$fiesta-red-border: #f7a0a0;
+$coral-pink-border: #f1c9c9;
+$teddy-brown-border: #b38d57;
+$clockwork-orange-border: #ffc16c;
+$graffiti-yellow-border: #f5d01b;
+$army-green-border: #86ab65;
+$neon-green-border: #94c765;
+$acid-green-border: #c4e6a5;
+$sherwood-green-border: #28c4a0;
+$ocean-turquoise-border: #6be0c5;
+$surf-green-border: #90e0cd;
+$deep-blue-border: #4eb9f1;
+$lake-placid-blue-border: #83daef;
+$daphne-blue-border: #8deaff;
+$plum-crazy-border: #a075bf;
+$ultra-violet-border: #dab7f3;
+$lilac-purple-border: #ddc0f3;
+$panther-pink-border: #e886c3;
+$peggy-pink-border: #e8b7d6;
+$flamingo-pink-border: #ffd0e1;
+
+// Accessibility patterns
+$inca-silver-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQXRGKYphCXIrgiklWCNJJlNUwK4jyDLpivMGDM/gBpiMIC2fsGi0AAAAASUVORK5CYII=";
+$chrome-silver-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCmGKYBbB5ZEVoitCUUyWQpAJRFkNs4ooz+AMLaLDEQDzRQYLoXGuIgAAAABJRU5ErkJggg==";
+$firemist-silver-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAALklEQVQoU2NkIBIwEqmOgSKF/xkYMA1ANxGkCAZQ5LBZTZSJOP1GkWewmkq0iQC0cwMLy6sC+AAAAABJRU5ErkJggg==";
+$red-wine-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAFElEQVQYV2NkgID/UBpEMTIOZUEAOBkKC6eV9MQAAAAASUVORK5CYII=";
+$fiesta-red-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAE0lEQVQYV2NkQID/UCYj41AWBAAQQQoLL2tcTwAAAABJRU5ErkJggg==";
+$coral-pink-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAGElEQVQYV2NkQID/DAwMjCAumICCIScIABBpCgsKzidJAAAAAElFTkSuQmCC";
+$teddy-brown-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJklEQVQoU2NkYGD4z0AEYKSJQiIsZmAAWU0UoI0biQ4eot1IlEIAK5wGBTsO21kAAAAASUVORK5CYII=";
+$clockwork-orange-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAJklEQVQoU2NkYGD4z0AEYCRFIRHmMTCATCQKkGQ10Z4h2mqiFAIAecMEBZ+4TpwAAAAASUVORK5CYII=";
+$graffiti-yellow-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAG0lEQVQoU2NkYGD4z0AEYCRCDVgJbRQOdjcCAOk3AgdaYQEOAAAAAElFTkSuQmCC";
+$army-green-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAANUlEQVQoU2NkwAT/YUKMaHJwCQYGBkZkSRQJkCaYJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqgwJCNMDfv0AAAAASUVORK5CYII=";
+$neon-green-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAMklEQVQoU2NkwAT/oUKMjGhycAmQOLIkigSyJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqxIJCmDTh/IAAAAASUVORK5CYII=";
+$acid-green-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAM0lEQVQoU2NkwAT/GRgYGEHCYAIJwCXQJVEkkCUxJGCSWCWI0glzD047sSpA9wpIEdwEAKs2CQpUckTQAAAAAElFTkSuQmCC";
+$sherwood-green-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAKElEQVQoU2NkIBIwQtX9J6CekWyFMI0wC2A2YZg4gApxeZ50XxMMdgDcMAwL/F/cwAAAAABJRU5ErkJggg==";
+$ocean-turquoise-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAK0lEQVQoU2NkIBIwEqmOAVnhfxyawGrQFaLbANI82BRi8w+GG/GGFNHhCAARkQoLuHVJTgAAAABJRU5ErkJggg==";
+$surf-green-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/9FsgBuEbiJIIUwMmY1hNUkKkW3HaTXOQCDb1zhNBADbdQYL29YF0gAAAABJRU5ErkJggg==";
+$deep-blue-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkwAT/oUKMyFIoHAYGBpgimBq4PLJCdEUoimEKkRVhFQMJYlMEMw0uR5JCkG6irMawBi3EwG4mK3jQTUYxBABt4w4JizXljwAAAABJRU5ErkJggg==";
+$lake-placid-blue-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAP0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQ3SQUPkwhVusYGBjg4iQrBLmJKKthjifKM+iK8QYPzuAHALSADAvR5e1eAAAAAElFTkSuQmCC";
+$daphne-blue-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCkGKYGLIbBQTUSSgpsLFkE0kWiHIEKKshgUAUZ7BGVpEhyMAAbEKCyJQyzEAAAAASUVORK5CYII=";
+$plum-crazy-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMklEQVQoU2NkIBIwQtX9R1KPVYwihdgcwwgzESaJ7ASQGFyeZIXoJqFbD7ea+r4mGOwA3DAMC2da0w8AAAAASUVORK5CYII=";
+$ultra-violet-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAL0lEQVQoU2NkIBIwEqmOAVnhf6gmmBgKnyyFMFegmwwWx+ZGggpp50asIUZ0OAIAEZEKC7CvpQsAAAAASUVORK5CYII=";
+$lilac-purple-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/xkYwJphNNxCbCZiKAKpRldIkolY/Ue2Z3CGFtEmAgB0kQULqk3wPgAAAABJRU5ErkJggg==";
+$panther-pink-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAFklEQVQYV2NkwAEYiZH4j6wIWQeFEgDL2QQDnNTt9AAAAABJRU5ErkJggg==";
+$peggy-pink-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAF0lEQVQYV2NkwAEYKZb4DzWBEd0ouAQALOQCBtacyWUAAAAASUVORK5CYII=";
+$flamingo-pink-pattern: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAFElEQVQYV2NkwAEYaSvxn4GBgREABvABBqnItn8AAAAASUVORK5CYII=";
+
+// Map
+$color-map: (
+    "inca-silver": (
+        primary: $inca-silver-primary,
+        secondary: $inca-silver-secondary,
+        border: $inca-silver-border,
+        text: $inca-silver-text,
+        text-on-dark: $inca-silver-text-on-dark-background,
+        pattern: $inca-silver-pattern,
+    ),
+    "chrome-silver": (
+        primary: $chrome-silver-primary,
+        secondary: $chrome-silver-secondary,
+        border: $chrome-silver-border,
+        text: $chrome-silver-text,
+        text-on-dark: $chrome-silver-text-on-dark-background,
+        pattern: $chrome-silver-pattern,
+    ),
+    "firemist-silver": (
+        primary: $firemist-silver-primary,
+        secondary: $firemist-silver-secondary,
+        border: $firemist-silver-border,
+        text: $firemist-silver-text,
+        text-on-dark: $firemist-silver-text-on-dark-background,
+        pattern: $firemist-silver-pattern,
+    ),
+    "red-wine": (
+        primary: $red-wine-primary,
+        secondary: $red-wine-secondary,
+        border: $red-wine-border,
+        text: $red-wine-text,
+        text-on-dark: $red-wine-text-on-dark-background,
+        pattern: $red-wine-pattern,
+    ),
+    "fiesta-red": (
+        primary: $fiesta-red-primary,
+        secondary: $fiesta-red-secondary,
+        border: $fiesta-red-border,
+        text: $fiesta-red-text,
+        text-on-dark: $fiesta-red-text-on-dark-background,
+        pattern: $fiesta-red-pattern,
+    ),
+    "coral-pink": (
+        primary: $coral-pink-primary,
+        secondary: $coral-pink-secondary,
+        border: $coral-pink-border,
+        text: $coral-pink-text,
+        text-on-dark: $coral-pink-text-on-dark-background,
+        pattern: $coral-pink-pattern,
+    ),
+    "teddy-brown": (
+        primary: $teddy-brown-primary,
+        secondary: $teddy-brown-secondary,
+        border: $teddy-brown-border,
+        text: $teddy-brown-text,
+        text-on-dark: $teddy-brown-text-on-dark-background,
+        pattern: $teddy-brown-pattern,
+    ),
+    "clockwork-orange": (
+        primary: $clockwork-orange-primary,
+        secondary: $clockwork-orange-secondary,
+        border: $clockwork-orange-border,
+        text: $clockwork-orange-text,
+        text-on-dark: $clockwork-orange-text-on-dark-background,
+        pattern: $clockwork-orange-pattern,
+    ),
+    "graffiti-yellow": (
+        primary: $graffiti-yellow-primary,
+        secondary: $graffiti-yellow-secondary,
+        border: $graffiti-yellow-border,
+        text: $graffiti-yellow-text,
+        text-on-dark: $graffiti-yellow-text-on-dark-background,
+        pattern: $graffiti-yellow-pattern,
+    ),
+    "army-green": (
+        primary: $army-green-primary,
+        secondary: $army-green-secondary,
+        border: $army-green-border,
+        text: $army-green-text,
+        text-on-dark: $army-green-text-on-dark-background,
+        pattern: $army-green-pattern,
+    ),
+    "neon-green": (
+        primary: $neon-green-primary,
+        secondary: $neon-green-secondary,
+        border: $neon-green-border,
+        text: $neon-green-text,
+        text-on-dark: $neon-green-text-on-dark-background,
+        pattern: $neon-green-pattern,
+    ),
+    "acid-green": (
+        primary: $acid-green-primary,
+        secondary: $acid-green-secondary,
+        border: $acid-green-border,
+        text: $acid-green-text,
+        text-on-dark: $army-green-text-on-dark-background,
+        pattern: $acid-green-pattern,
+    ),
+    "sherwood-green": (
+        primary: $sherwood-green-primary,
+        secondary: $sherwood-green-secondary,
+        border: $sherwood-green-border,
+        text: $sherwood-green-text,
+        text-on-dark: $sherwood-green-text-on-dark-background,
+        pattern: $sherwood-green-pattern,
+    ),
+    "ocean-turquoise": (
+        primary: $ocean-turquoise-primary,
+        secondary: $ocean-turquoise-secondary,
+        border: $ocean-turquoise-border,
+        text: $ocean-turquoise-text,
+        text-on-dark: $ocean-turquoise-text-on-dark-background,
+        pattern: $ocean-turquoise-pattern,
+    ),
+    "surf-green": (
+        primary: $surf-green-primary,
+        secondary: $surf-green-secondary,
+        border: $surf-green-border,
+        text: $surf-green-text,
+        text-on-dark: $surf-green-text-on-dark-background,
+        pattern: $surf-green-pattern,
+    ),
+    "deep-blue": (
+        primary: $deep-blue-primary,
+        secondary: $deep-blue-secondary,
+        border: $deep-blue-border,
+        text: $deep-blue-text,
+        text-on-dark: $deep-blue-text-on-dark-background,
+        pattern: $deep-blue-pattern,
+    ),
+    "lake-placid-blue": (
+        primary: $lake-placid-blue-primary,
+        secondary: $lake-placid-blue-secondary,
+        border: $lake-placid-blue-border,
+        text: $lake-placid-blue-text,
+        text-on-dark: $lake-placid-blue-text-on-dark-background,
+        pattern: $lake-placid-blue-pattern,
+    ),
+    "daphne-blue": (
+        primary: $daphne-blue-primary,
+        secondary: $daphne-blue-secondary,
+        border: $daphne-blue-border,
+        text: $daphne-blue-text,
+        text-on-dark: $daphne-blue-text-on-dark-background,
+        pattern: $daphne-blue-pattern,
+    ),
+    "plum-crazy": (
+        primary: $plum-crazy-primary,
+        secondary: $plum-crazy-secondary,
+        border: $plum-crazy-border,
+        text: $plum-crazy-text,
+        text-on-dark: $plum-crazy-text-on-dark-background,
+        pattern: $plum-crazy-pattern,
+    ),
+    "ultra-violet": (
+        primary: $ultra-violet-primary,
+        secondary: $ultra-violet-secondary,
+        border: $ultra-violet-border,
+        text: $ultra-violet-text,
+        text-on-dark: $ultra-violet-text-on-dark-background,
+        pattern: $ultra-violet-pattern,
+    ),
+    "lilac-purple": (
+        primary: $lilac-purple-primary,
+        secondary: $lilac-purple-secondary,
+        border: $lilac-purple-border,
+        text: $lilac-purple-text,
+        text-on-dark: $lilac-purple-text-on-dark-background,
+        pattern: $lilac-purple-pattern,
+    ),
+    "panther-pink": (
+        primary: $panther-pink-primary,
+        secondary: $panther-pink-secondary,
+        border: $panther-pink-border,
+        text: $panther-pink-text,
+        text-on-dark: $panther-pink-text-on-dark-background,
+        pattern: $panther-pink-pattern,
+    ),
+    "peggy-pink": (
+        primary: $peggy-pink-primary,
+        secondary: $peggy-pink-secondary,
+        border: $peggy-pink-border,
+        text: $peggy-pink-text,
+        text-on-dark: $peggy-pink-text-on-dark-background,
+        pattern: $peggy-pink-pattern,
+    ),
+    "flamingo-pink": (
+        primary: $flamingo-pink-primary,
+        secondary: $flamingo-pink-secondary,
+        border: $flamingo-pink-border,
+        text: $flamingo-pink-text,
+        text-on-dark: $flamingo-pink-text-on-dark-background,
+        pattern: $flamingo-pink-pattern,
+    ),
+);

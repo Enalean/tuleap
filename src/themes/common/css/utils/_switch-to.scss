@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 $projects-container-width: 400px;
 $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
@@ -396,7 +396,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .switch-to-recent-items-entry-link.#{$color-name} > .switch-to-recent-items-entry-icon {
         color: map.get($colors, "primary");
     }

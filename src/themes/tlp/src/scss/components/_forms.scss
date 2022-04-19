@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 @use "badges";
 @use "avatars";
 
@@ -392,7 +392,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
         cursor: pointer;
     }
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         .list-picker-badge-#{$color-name} {
             @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
         }
@@ -523,13 +523,13 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     margin: 0 4px 0 0;
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .list-picker-badge-#{$color-name} {
         @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
     }
 }
 
-@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
     .list-picker-circular-color-#{$color-name} {
         width: 20px;
         height: 20px;

@@ -2,6 +2,10 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
+  '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
+
+dependencies:
+  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator

@@ -19,7 +19,7 @@
 
 @use "sass:map";
 @use "sass:color";
-@use "../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 $transition-duration: 100ms;
 $transition-delay: 500ms;
@@ -38,7 +38,7 @@ $accessibility-pattern-right-margin: 4px;
     list-style-type: none;
     transition: margin $transition-duration $transition-delay;
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.kanban-item-#{$color-name} {
             --item-type-color: #{map.get($colors, "primary")};
             --text-color: #{map.get($colors, "text")};
@@ -249,7 +249,7 @@ time-info {
     width: $accessibility-pattern-width;
     height: 100%;
 
-    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    @each $color-name, $colors in tlp-swatch-colors.$color-map {
         &.#{$color-name} {
             opacity: 0.5;
             background-color: map.get($colors, "text");

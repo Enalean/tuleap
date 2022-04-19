@@ -1,10 +1,18 @@
-<p>To use those colors, use the following CSS class:</p>
-<pre class="code">
-&lt;span class=&quot;tlp-swatch-inca-silver my-colored-element&quot;&gt;&lt;/span&gt;
+# @tuleap/tlp-swatch-colors
+
+## Usage
+
+A SCSS library to share TLP Business colors. Include color classes in your themes and use "tlp-swatch-*" class names:
+
+```html
+<span class="tlp-swatch-inca-silver my-colored-element"></span>
+```
+```scss
+@use "@tuleap/tlp-swatch-colors";
 
 .my-colored-element {
-  color: var(--text-color);
-  background: var(--primary-color);
+    color: var(--text-color);
+    background: var(--primary-color);
 }
 /* The following CSS custom properties are set:
     --primary-color
@@ -14,10 +22,12 @@
     --text-on-dark-color
     --accessibility-pattern
 */
-</pre>
+```
+## Overriding colors
 
-<p>Only in cases where you need to modify those colors, use the following SCSS snippet:</p>
-<pre class="code">
+Only in cases where you need to modify those colors, use the following SCSS snippet:
+
+```scss
 @use "@tuleap/tlp-swatch-colors";
 @use "sass:map";
 @use "sass:color";
@@ -31,4 +41,4 @@
         // and "pattern" which is an image pattern to help with accessibility
     }
 }
-</pre>
+```

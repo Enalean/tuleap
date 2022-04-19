@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 /* stylelint-disable selector-class-pattern, max-nesting-depth, selector-max-compound-selectors */
 .select2-container {
@@ -30,7 +30,7 @@
                 > .select2-selection__choice {
                     color: var(--tlp-main-color);
 
-                    @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+                    @each $color-name, $colors in tlp-swatch-colors.$color-map {
                         &.select-item-label-color-#{$color-name} {
                             border-color: map.get($colors, "primary");
                             background: map.get($colors, "primary");
@@ -68,14 +68,14 @@
 /* stylelint-disable selector-class-pattern */
 .item-labels-box-select2-results > .select2-results {
     > .select2-results__options > .select2-results__option {
-        @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+        @each $color-name, $colors in tlp-swatch-colors.$color-map {
             &.select-item-label-color-#{$color-name} {
                 color: map.get($colors, "primary");
             }
         }
 
         &.select2-results__option--highlighted {
-            @each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+            @each $color-name, $colors in tlp-swatch-colors.$color-map {
                 &.select-item-label-color-#{$color-name} {
                     background: map.get($colors, "primary");
                     color: var(--tlp-white-color);

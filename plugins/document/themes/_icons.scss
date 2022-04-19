@@ -17,60 +17,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .document-folder-icon {
-    color: swatch-colors.$tlp-swatch-inca-silver;
+    color: tlp-swatch-colors.$inca-silver-primary;
 }
 
 .document-file-icon {
-    color: swatch-colors.$tlp-swatch-chrome-silver;
+    color: tlp-swatch-colors.$chrome-silver-primary;
 }
 
 .document-empty-icon {
-    color: swatch-colors.$tlp-swatch-firemist-silver;
+    color: tlp-swatch-colors.$firemist-silver-primary;
 }
 
 .document-link-icon {
-    color: swatch-colors.$tlp-swatch-flamingo-pink;
+    color: tlp-swatch-colors.$flamingo-pink-primary;
 }
 
 .document-audio-icon {
-    color: swatch-colors.$tlp-swatch-lake-placid-blue;
+    color: tlp-swatch-colors.$lake-placid-blue-primary;
 }
 
 .document-video-icon {
-    color: swatch-colors.$tlp-swatch-ocean-turquoise;
+    color: tlp-swatch-colors.$ocean-turquoise-primary;
 }
 
 .document-image-icon {
-    color: swatch-colors.$tlp-swatch-graffiti-yellow;
+    color: tlp-swatch-colors.$graffiti-yellow-primary;
 }
 
 .document-text-icon {
-    color: swatch-colors.$tlp-swatch-inca-silver;
+    color: tlp-swatch-colors.$inca-silver-primary;
 }
 
 .document-code-icon {
-    color: swatch-colors.$tlp-swatch-daphne-blue;
+    color: tlp-swatch-colors.$daphne-blue-primary;
 }
 
 .document-archive-icon {
-    color: swatch-colors.$tlp-swatch-plum-crazy;
+    color: tlp-swatch-colors.$plum-crazy-primary;
 }
 
 .document-pdf-icon {
-    color: swatch-colors.$tlp-swatch-fiesta-red;
+    color: tlp-swatch-colors.$fiesta-red-primary;
 }
 
 .document-document-icon {
-    color: swatch-colors.$tlp-swatch-deep-blue;
+    color: tlp-swatch-colors.$deep-blue-primary;
 }
 
 .document-presentation-icon {
-    color: swatch-colors.$tlp-swatch-clockwork-orange;
+    color: tlp-swatch-colors.$clockwork-orange-primary;
 }
 
 .document-spreadsheet-icon {
-    color: swatch-colors.$tlp-swatch-sherwood-green;
+    color: tlp-swatch-colors.$sherwood-green-primary;
 }

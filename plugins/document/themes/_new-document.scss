@@ -18,7 +18,7 @@
  *
  */
 
-@use "../../../src/themes/tlp/src/scss/variables/colors/swatch-colors";
+@use "@tuleap/tlp-swatch-colors";
 
 .document-new-item-type-selector {
     display: flex;
@@ -54,27 +54,27 @@
         position: relative;
         z-index: 1;
         background: var(--tlp-white-color);
-        color: swatch-colors.$tlp-swatch-fiesta-red;
+        color: tlp-swatch-colors.$fiesta-red-primary;
     }
 
     &.fa-file-excel-o {
         position: absolute;
         transform: translate(-10px, -7px) rotate(-12deg);
-        color: swatch-colors.$tlp-swatch-sherwood-green;
+        color: tlp-swatch-colors.$sherwood-green-primary;
         font-size: 1.1rem;
     }
 
     &.fa-file-word-o {
         position: absolute;
         transform: translate(-10px, 15px) rotate(-18deg);
-        color: swatch-colors.$tlp-swatch-deep-blue;
+        color: tlp-swatch-colors.$deep-blue-primary;
         font-size: 1.1rem;
     }
 
     &.fa-file-image-o {
         position: absolute;
         transform: translate(13px, 10px) rotate(10deg);
-        color: swatch-colors.$tlp-swatch-graffiti-yellow;
+        color: tlp-swatch-colors.$graffiti-yellow-primary;
         font-size: 1.1rem;
     }
 }
