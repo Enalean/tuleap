@@ -33,7 +33,6 @@
                 v-bind:is-open-after-dnd="true"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             />
-            <preview-filename-new-version v-bind:version="version" v-bind:item="new_version_item" />
             <file-version-history v-bind:item="updatedFile" />
         </div>
         <modal-footer
@@ -55,7 +54,6 @@ import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 import emitter from "../../../../helpers/emitter";
-import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
 import { TYPE_FILE } from "../../../../constants";
 import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
 import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
@@ -65,7 +63,6 @@ export default {
     name: "FileVersionChangelogModal",
     components: {
         FileVersionHistory,
-        PreviewFilenameNewVersion,
         ModalHeader,
         ModalFeedback,
         ModalFooter,

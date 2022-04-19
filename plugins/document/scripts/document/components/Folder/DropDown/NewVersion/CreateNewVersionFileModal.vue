@@ -37,10 +37,6 @@
                     v-model="uploaded_item.file_properties"
                     v-bind:item="uploaded_item"
                 />
-                <preview-filename-new-version
-                    v-bind:version="version"
-                    v-bind:item="uploaded_item"
-                />
             </item-update-properties>
             <file-version-history v-bind:item="item" />
         </div>
@@ -64,7 +60,6 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import emitter from "../../../../helpers/emitter";
-import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
 import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
 import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
 import { TYPE_FILE } from "../../../../constants";
@@ -74,7 +69,6 @@ export default {
     name: "CreateNewVersionFileModal",
     components: {
         FileVersionHistory,
-        PreviewFilenameNewVersion,
         ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,

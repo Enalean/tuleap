@@ -24,6 +24,7 @@
             v-bind:value="version.title"
             data-test="update-property-version-title"
         />
+        <preview-filename-new-version v-bind:version="version" v-bind:item="item" />
         <lock-property
             v-if="!isOpenAfterDnd"
             v-bind:item="item"
@@ -47,10 +48,17 @@ import VersionTitleProperty from "../../PropertiesForCreateOrUpdate/VersionTitle
 import ChangelogProperty from "../../PropertiesForCreateOrUpdate/ChangelogProperty.vue";
 import LockProperty from "../../Lock/LockProperty.vue";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
+import PreviewFilenameNewVersion from "../PreviewFilenameNewVersion.vue";
 
 export default {
     name: "ItemUpdateProperties",
-    components: { LockProperty, ChangelogProperty, VersionTitleProperty, ApprovalUpdateProperties },
+    components: {
+        PreviewFilenameNewVersion,
+        LockProperty,
+        ChangelogProperty,
+        VersionTitleProperty,
+        ApprovalUpdateProperties,
+    },
     props: {
         version: Object,
         item: Object,

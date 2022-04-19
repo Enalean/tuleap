@@ -34,4 +34,8 @@ describe("add-original-filename-extension", () => {
             expect(addOriginalFilenameExtension("myfile", file)).toBe(expected);
         }
     );
+
+    it("does not throw when filename is not defined", () => {
+        expect(addOriginalFilenameExtension("myfile", undefined)).toBe("myfile");
+    });
 });

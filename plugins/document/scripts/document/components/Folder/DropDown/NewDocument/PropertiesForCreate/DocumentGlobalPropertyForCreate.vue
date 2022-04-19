@@ -21,7 +21,7 @@
     <div class="document-properties">
         <div class="document-properties-title-and-status-container">
             <title-property
-                v-bind:value="currentlyUpdatedItem.title"
+                v-bind:value="props.currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="false"
@@ -31,26 +31,23 @@
                 v-bind:parent="parent"
             />
         </div>
+        <preview-filename v-bind:item="currentlyUpdatedItem" />
         <description-property v-bind:value="currentlyUpdatedItem.description" />
         <slot></slot>
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import TitleProperty from "../../PropertiesForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
 import DescriptionProperty from "../../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
 import StatusPropertyWithCustomBindingForDocumentCreate from "./StatusPropertyWithCustomBindingForDocumentCreate.vue";
+import PreviewFilename from "../../../ModalCommon/PreviewFilename.vue";
+import type { Folder, Item } from "../../../../../type";
 
-export default {
-    name: "DocumentGlobalPropertyForCreate",
-    components: {
-        StatusPropertyWithCustomBindingForDocumentCreate,
-        DescriptionProperty,
-        TitleProperty,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
-    },
-};
+const props = defineProps<{ parent: Folder; currentlyUpdatedItem: Item }>();
+</script>
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
