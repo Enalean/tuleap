@@ -536,6 +536,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($current_user->isAnonymous()) {
             return parent::getOptionsMenuItems($current_user);
         }
+
         $my_items            = ['export' => ''];
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
@@ -543,7 +544,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export');
         $my_items['export'] .= ' <span class="caret"></span>';
         $my_items['export'] .= '</a>';
-        $my_items['export'] .= '<ul class="dropdown-menu">';
+        $my_items['export'] .= '<ul class="dropdown-menu" role="menu">';
+        $my_items['export'] .= '<li class="almost-tlp-menu-title">';
+        $my_items['export'] .= dgettext('tuleap-tracker', 'CSV');
+        $my_items['export'] .= '</li>';
         $my_items['export'] .= '<li>';
         $my_items['export'] .= '<a href="' . $this->getExportResultURL(self::EXPORT_LIGHT) . '">';
         $my_items['export'] .= dgettext('tuleap-tracker', 'Export all report columns');

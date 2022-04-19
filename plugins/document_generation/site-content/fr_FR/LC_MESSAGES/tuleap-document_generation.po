@@ -1,6 +1,9 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "DOCX"
+msgstr "DOCX"
+
 msgid "Export Tuleap tracker reports as documents."
 msgstr "Exporter les rapports des outils de suivi en documents."
 
@@ -9,3 +12,6 @@ msgstr "Générer un document multi trackers"
 
 msgid "Generate document"
 msgstr "Générer un document"
+
+msgid "XLSX"
+msgstr "XLSX"
