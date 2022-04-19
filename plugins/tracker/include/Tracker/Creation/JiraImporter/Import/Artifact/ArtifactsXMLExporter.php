@@ -124,7 +124,7 @@ class ArtifactsXMLExporter
         string $jira_issue_type_id,
     ): string {
         $params = [
-            'jql'    => 'project=' . $jira_project_id . ' AND issuetype=' . $jira_issue_type_id,
+            'jql'    => 'project="' . $jira_project_id . '" AND issuetype=' . $jira_issue_type_id,
             'fields' => '*all',
             'expand' => 'renderedFields',
         ];
