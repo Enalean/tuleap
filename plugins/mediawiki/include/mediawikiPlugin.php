@@ -534,7 +534,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $user     = $params['user'];
         $projects = ProjectManager::instance()->getAllProjectsButDeleted();
         foreach ($projects as $project) {
-            if ($project->usesService(self::SERVICE_SHORTNAME)) {
+            if ($project->usesService(self::SERVICE_SHORTNAME) && $this->getDao()->hasDatabase($project)) {
                 $this->getDao()->renameUser($project, $params['old_user_name'], $user->getUnixName());
             }
         }
