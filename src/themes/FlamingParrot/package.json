@@ -1,7 +1,7 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/burningparrot-theme",
-  "description": "Tuleap BurningParrot theme framework",
+  "name": "@tuleap/flamingparrot-theme",
+  "description": "Tuleap FlamingParrot (legacy) theme framework",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,

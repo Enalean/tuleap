@@ -111,12 +111,12 @@ class LatestHeartbeatsCollector
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $tlp_badget_color = $purifier->purify('cross-ref-badge-' . $campaign->getTracker()->getColor()->getName());
-        $campaign_url     = "/plugins/testmanagement/?group_id=" .
+        $tlp_badge_color = $purifier->purify('tlp-swatch-' . $campaign->getTracker()->getColor()->getName());
+        $campaign_url    = "/plugins/testmanagement/?group_id=" .
             urlencode((string) $project->getId()) . "#!/campaigns/" . $campaign->getId();
-        $title            = '
+        $title           = '
             <a href="' . $purifier->purify($campaign_url) . '">
-                <span class="cross-ref-badge ' . $tlp_badget_color . '">
+                <span class="cross-ref-badge ' . $tlp_badge_color . '">
                 ' . $purifier->purify($campaign->getXRef()) . '
                 </span>
                 ' . $purifier->purify($campaign->getTitle()) . '</a>';

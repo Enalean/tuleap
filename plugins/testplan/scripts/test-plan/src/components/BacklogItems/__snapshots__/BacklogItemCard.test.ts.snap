@@ -11,7 +11,7 @@ exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
       class="fa fa-fw test-plan-backlog-item-caret fa-caret-right"
     />
     <span
-      class="cross-ref-badge cross-ref-badge-fiesta-red"
+      class="cross-ref-badge tlp-swatch-fiesta-red"
     >
       bug #123
     </span>

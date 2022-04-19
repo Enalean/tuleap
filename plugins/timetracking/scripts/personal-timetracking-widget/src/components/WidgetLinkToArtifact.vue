@@ -40,7 +40,7 @@ export default {
     },
     computed: {
         badge_color() {
-            return "cross-ref-badge-" + this.artifact.badge_color;
+            return "tlp-swatch-" + this.artifact.badge_color;
         },
     },
 };

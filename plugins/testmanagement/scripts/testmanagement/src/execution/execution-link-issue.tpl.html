@@ -30,7 +30,7 @@
                 <div>
                     <i class="fa fa-spinner fa-spin" ng-if="link_issue_form.issue_id.$pending"></i>
                     <span ng-show="link_issue_form.$valid">
-                        <span class="cross-ref-badge-{{ modal.issue_artifact.tracker.color_name }} cross-ref-badge link-issue-modal-badge">{{ modal.issue_artifact.xref }}</span>
+                        <span class="tlp-swatch-{{ modal.issue_artifact.tracker.color_name }} cross-ref-badge link-issue-modal-badge">{{ modal.issue_artifact.xref }}</span>
                         {{ modal.issue_artifact.title }}
                     </span>
                     <span class="tlp-text-danger"

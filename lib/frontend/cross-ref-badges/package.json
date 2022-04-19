@@ -1,0 +1,13 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/cross-ref-badges",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "main": "themes/main.scss",
+  "style": "themes/main.scss",
+  "dependencies": {
+    "@tuleap/tlp-swatch-colors": "file:../tlp-swatch-colors"
+  }
+}

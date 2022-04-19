@@ -131,7 +131,7 @@
                             href="/plugins/tracker/?aid={{ requirement.id }}"
                             ng-repeat="requirement in execution.definition.all_requirements track by requirement.id"
                         >
-                            <span ng-class="['cross-ref-badge', 'cross-ref-badge-' + requirement.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                            <span ng-class="['cross-ref-badge', 'tlp-swatch-' + requirement.tracker.color_name, 'linked-issues-dropdown-content-badge']">
                                 {{ requirement.xref }}
                             </span> {{ requirement.title }}
                         </a>
@@ -157,7 +157,7 @@
                             href="/plugins/tracker/?aid={{ bug.id }}"
                             ng-repeat="bug in execution.linked_bugs track by bug.id"
                         >
-                            <span ng-class="['cross-ref-badge', 'cross-ref-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                            <span ng-class="['cross-ref-badge', 'tlp-swatch-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
                                 {{ bug.xref }}
                             </span> {{ bug.title }}
                         </a>
@@ -172,7 +172,7 @@
             >
                 <i class="fas fa-fw fa-long-arrow-alt-right current-test-requirement-or-bug-icon" aria-hidden="true"></i>
                 <a href="/plugins/tracker/?aid={{ requirement.id }}">
-                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + requirement.tracker.color_name]">
+                    <span class="current-test-requirement-or-bug-badge cross-ref-badge">
                         {{ requirement.xref }}
                     </span>
                     <span>{{ requirement.title }}</span>
@@ -186,7 +186,7 @@
             >
                 <i class="fas fa-fw fa-bug current-test-requirement-or-bug-icon" aria-hidden="true"></i>
                 <a href="/plugins/tracker/?aid={{ bug.id }}">
-                    <span ng-class="['current-test-requirement-or-bug-badge', 'cross-ref-badge', 'cross-ref-badge-' + bug.tracker.color_name]">
+                    <span class="current-test-requirement-or-bug-badge cross-ref-badge">
                         {{ bug.xref }}
                     </span>
                     <span>{{ bug.title }}</span>

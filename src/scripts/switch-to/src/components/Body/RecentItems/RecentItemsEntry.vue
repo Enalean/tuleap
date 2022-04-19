@@ -100,7 +100,7 @@ export default class RecentItemsEntry extends Vue {
     }
 
     get xref_color(): string {
-        return "cross-ref-badge-" + this.entry.color_name;
+        return "tlp-swatch-" + this.entry.color_name;
     }
 
     get has_quick_links(): boolean {
