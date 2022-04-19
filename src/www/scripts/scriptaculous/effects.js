@@ -119,7 +119,7 @@ var Effect = {
               character == ' ' ? String.fromCharCode(160) : character),
               child);
         });
-        Element.remove(child);
+        child.remove();
       }
     });
   },
@@ -150,7 +150,7 @@ var Effect = {
   toggle: function(element, effect, options) {
     element = $(element);
     effect  = (effect || 'appear').toLowerCase();
-    
+
     return Effect[ Effect.PAIRS[ effect ][ element.visible() ? 1 : 0 ] ](element, Object.extend({
       queue: { position:'end', scope:(element.id || 'global'), limit: 1 }
     }, options || {}));

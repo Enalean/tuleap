@@ -174,7 +174,9 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     var elements = [];
                     var len = element.childNodes.length;
                     for(var i = len - 1 ; i >= 0 ; --i) {
-                        elements.push(Element.remove(element.childNodes[i]));
+                        const child_node = element.childNodes[i];
+                        child_node.remove();
+                        elements.push(child_node);
                     }
                     for(var i = 0 ; i < len ; ++i) {
                         element.appendChild(elements[i]);

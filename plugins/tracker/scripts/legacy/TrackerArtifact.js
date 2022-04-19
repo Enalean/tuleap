@@ -50,7 +50,9 @@ function invertFollowups(followupSection) {
     var elements = [];
     var len = element.childNodes.length;
     for (var i = len - 1; i >= 0; --i) {
-        elements.push(Element.remove(element.childNodes[i]));
+        const child_node = element.childNodes[i];
+        child_node.remove();
+        elements.push(child_node);
     }
     for (var j = 0; j < len; ++j) {
         element.appendChild(elements[j]);
@@ -201,9 +203,9 @@ document.observe("dom:loaded", function () {
             }
             value += sb.getValue();
             $("tracker_followup_comment_new").value = value;
-            if (CKEDITOR.instances && CKEDITOR.instances["tracker_followup_comment_new"]) {
-                CKEDITOR.instances["tracker_followup_comment_new"].setData(
-                    CKEDITOR.instances["tracker_followup_comment_new"].getData() +
+            if (CKEDITOR.instances && CKEDITOR.instances.tracker_followup_comment_new) {
+                CKEDITOR.instances.tracker_followup_comment_new.setData(
+                    CKEDITOR.instances.tracker_followup_comment_new.getData() +
                         "<p>" +
                         value +
                         "</p>"

@@ -257,8 +257,8 @@ function onselectchange(select, number, id, cell_trash, image) {
         //the http mode was selected
         Element.show("file_" + id);
         //Element.hide(select);
-        Element.remove(select);
-        Element.remove("ftp_file_" + id);
+        select.remove();
+        document.getElementById("ftp_file_" + id)?.remove();
         $("processor_" + id).name = "file_processor[]";
         $("type_" + id).name = "file_type[]";
         $("reference_md5_" + id).name = "reference_md5[]";
@@ -274,8 +274,8 @@ function onselectchange(select, number, id, cell_trash, image) {
         //the ftp/scp move was selected, wa change the select box to a readonly text field
         //we add the file to the used_ftp_files list
         //Element.hide(select);
-        Element.remove(select);
-        Element.remove("file_" + id);
+        select.remove();
+        document.getElementById("ftp_file_" + id)?.remove();
         Element.show("ftp_file_" + id);
         $("ftp_file_" + id).value = select.options[select.selectedIndex].value;
         used_ftp_files.push(select.options[select.selectedIndex].value);
@@ -309,7 +309,7 @@ function delete_file(row_id, id) {
                 build_select_file(number);
             });
     }
-    Element.remove(row_id);
+    document.getElementById(row_id)?.remove();
     if (
         (release_mode == "creation" && nb_files == 0) ||
         (release_mode == "edition" && $("nb_files").value == 0 && nb_files == 0)
@@ -331,7 +331,7 @@ function cancel_update_change_log() {
     Element.show("change_log_area");
     Element.show("cl_upload_link");
     //remove the file input and add it just after to set the file value to "" otherwise the file will be upload when saving the release
-    Element.remove("upload_change_log");
+    document.getElementById("upload_change_log")?.remove();
     Element.insert("change_log_title", {
         after: '<TR id="upload_change_log"><TD><input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30"></TD></TR>',
     });
@@ -373,7 +373,7 @@ function cancel_update_notes() {
     Element.show("release_notes_area");
     Element.show("rn_upload_link");
     //remove the file input and add it just after to set the file value to "" otherwise the file will be upload when saving the release
-    Element.remove("upload_notes");
+    document.getElementById("upload_notes")?.parentNode?.removeChild();
     Element.insert("notes_title", {
         after: '<TR id="upload_notes"><TD><input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30"></TD></TR>',
     });
@@ -412,7 +412,7 @@ function refresh_file_list() {
 Event.observe(window, "load", function () {
     //Add new file part
     //Element.hide('row_0');
-    Element.remove("row_0");
+    document.getElementById("row_0")?.remove();
     if (release_mode == "creation" || (release_mode == "edition" && $("nb_files").value == 0)) {
         add_new_file();
     }
