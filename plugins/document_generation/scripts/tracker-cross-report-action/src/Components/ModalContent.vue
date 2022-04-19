@@ -41,6 +41,11 @@
         </div>
         <div id="config-tracker-cross-report-body-export-modal" class="tlp-modal-body">
             <explanations-export />
+            <fake-worksheet
+                v-bind:tracker_name_level_1="props.properties.current_tracker_name"
+                v-bind:tracker_name_level_2="selected_tracker_level_2?.label ?? null"
+                v-bind:tracker_name_level_3="selected_tracker_level_3?.label ?? null"
+            />
             <div class="level-selectors">
                 <first-level-selector
                     v-model:report="selected_report_level_1"
@@ -97,6 +102,7 @@ import SecondLevelSelector from "./SecondLevelSelector.vue";
 import ThirdLevelSelector from "./ThirdLevelSelector.vue";
 import type { ExportSettings } from "../export-document";
 import type { SelectedTracker } from "../type";
+import FakeWorksheet from "./FakeWorksheet.vue";
 
 const modal_element = ref<InstanceType<typeof HTMLElement>>();
 let modal: Modal | null = null;
