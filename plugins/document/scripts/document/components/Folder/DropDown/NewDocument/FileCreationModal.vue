@@ -35,9 +35,7 @@
             <document-global-property-for-create
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
-            >
-                <preview-filename v-bind:item="item" />
-            </document-global-property-for-create>
+            />
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
@@ -57,7 +55,6 @@ import { TYPE_FILE } from "../../../../constants";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
-import PreviewFilename from "../../ModalCommon/PreviewFilename.vue";
 import emitter from "../../../../helpers/emitter";
 import {
     useActions,

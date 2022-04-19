@@ -19,8 +19,12 @@
 
 export function addOriginalFilenameExtension(
     filename: string,
-    file: File | Record<string, never>
+    file: File | Record<string, never> | undefined
 ): string {
+    if (!file) {
+        return filename;
+    }
+
     if (!isFile(file)) {
         return filename;
     }
