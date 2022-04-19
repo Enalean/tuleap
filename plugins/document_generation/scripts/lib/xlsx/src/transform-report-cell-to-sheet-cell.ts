@@ -22,6 +22,8 @@ import type { CellObjectWithExtraInfo } from "./type";
 import type { Comments } from "xlsx";
 
 const CELL_BASE_CHARACTER_WIDTH = 10;
+const CELL_CONTENT_MAX_LENGTH = 32767;
+const CELL_TEXT_CONTENT_TRUNCATED_ENDING = "[...]";
 
 export function transformReportCellIntoASheetCell(
     report_cell: ReportCell
@@ -70,7 +72,14 @@ export function transformReportCellIntoASheetCell(
 }
 
 export function buildSheetTextCell(value: string): CellObjectWithExtraInfo {
-    const text_value = value.replace(/\r\n/g, "\n").trim();
+    let text_value = value.replace(/\r\n/g, "\n").trim();
+    if (text_value.length > CELL_CONTENT_MAX_LENGTH) {
+        text_value =
+            text_value.substring(
+                0,
+                CELL_CONTENT_MAX_LENGTH - CELL_TEXT_CONTENT_TRUNCATED_ENDING.length
+            ) + CELL_TEXT_CONTENT_TRUNCATED_ENDING;
+    }
     const text_value_by_lines = text_value.split("\n");
     const max_length_line = text_value_by_lines.reduce(
         (previous: string, current: string) =>
