@@ -34,5 +34,19 @@ describe("FakeWorksheet", () => {
         });
 
         expect(wrapper.findAllComponents(FakeWorksheetColumn)).toHaveLength(3);
+        expect(wrapper.find(".fake-worksheet-disable-last-separator").exists()).toBe(true);
+    });
+
+    it("activates the last section separator when a level 2 tracker has been selected", () => {
+        const wrapper = shallowMount(FakeWorksheet, {
+            global: getGlobalTestOptions(),
+            props: {
+                tracker_name_level_1: "Tracker 1",
+                tracker_name_level_2: "Tracker 2",
+                tracker_name_level_3: null,
+            },
+        });
+
+        expect(wrapper.find(".fake-worksheet-disable-last-separator").exists()).toBe(false);
     });
 });

@@ -20,7 +20,12 @@
 <template>
     <div class="fake-worksheet-section">
         <div class="fake-worksheet-shadow">
-            <div class="fake-worksheet">
+            <div
+                class="fake-worksheet"
+                v-bind:class="{
+                    'fake-worksheet-disable-last-separator': tracker_name_level_2 === null,
+                }"
+            >
                 <fake-worksheet-column v-bind:tracker_name="tracker_name_level_1" />
                 <fake-worksheet-column v-bind:tracker_name="tracker_name_level_2" />
                 <fake-worksheet-column v-bind:tracker_name="tracker_name_level_3" />
@@ -56,6 +61,14 @@ defineProps<{
     background-color: var(--tlp-success-dark-color);
     clip-path: inset(var(--tlp-medium-spacing) round 4px);
     shape-rendering: crispedges;
+}
+
+.fake-worksheet-disable-last-separator {
+    background-image: linear-gradient(
+        90deg,
+        var(--tlp-success-dark-color) 50%,
+        var(--tlp-illustration-green) 50%
+    );
 }
 
 .fake-worksheet :first-child,
