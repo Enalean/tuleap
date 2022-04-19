@@ -25,15 +25,24 @@ use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\Settings\SettingsDAO;
+use Tuleap\Docman\View\Admin\AdminTabPresenter;
+use Tuleap\Docman\View\Admin\AdminTabsCollector;
 use Tuleap\Docman\View\Admin\DetectEnhancementOfDocmanInterface;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminSaveController;
-use Tuleap\Document\Config\ModalDisplayer;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
+use Tuleap\Document\Config\ModalDisplayer;
+use Tuleap\Document\Config\Project\SearchColumnFilter;
+use Tuleap\Document\Config\Project\SearchColumnsDao;
+use Tuleap\Document\Config\Project\SearchCriteriaDao;
+use Tuleap\Document\Config\Project\SearchCriteriaFilter;
+use Tuleap\Document\Config\Project\SearchView;
+use Tuleap\Document\Config\Project\UpdateSearchView;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
 use Tuleap\Document\DownloadFolderAsZip\ZipStreamerLoggingHelper;
@@ -42,6 +51,7 @@ use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\PermissionDeniedDocumentMailSender;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
+use Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
@@ -78,6 +88,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->addHook(DocmanLinkProvider::NAME);
         $this->addHook(DocmanSettingsTabsPresenterCollection::NAME);
         $this->addHook(DetectEnhancementOfDocmanInterface::NAME);
+        $this->addHook(AdminTabsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -124,9 +135,12 @@ class documentPlugin extends Plugin // phpcs:ignore
             $filename_pattern_retriever,
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
             new \Docman_ItemDao(),
-            new \Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder(),
+            new ListOfSearchCriterionPresenterBuilder(
+                new SearchCriteriaDao(),
+            ),
             new \Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder(
-                new \Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder()
+                new \Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder(),
+                new SearchColumnsDao(),
             ),
             new \Tuleap\Docman\Settings\ForbidWritersSettings($settings_DAO)
         );
@@ -153,6 +167,28 @@ class documentPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    public function routeAdminSearch(): SearchView
+    {
+        $search_criteria_dao = new SearchCriteriaDao();
+        return new SearchView(
+            $this->getProjectExtractor(),
+            new SearchColumnFilter(new SearchColumnCollectionBuilder(), new SearchColumnsDao()),
+            new SearchCriteriaFilter(
+                new ListOfSearchCriterionPresenterBuilder($search_criteria_dao),
+                $search_criteria_dao
+            )
+        );
+    }
+
+    public function routeUpdateAdminSearch(): UpdateSearchView
+    {
+        return new UpdateSearchView(
+            $this->getProjectExtractor(),
+            new SearchColumnsDao(),
+            new SearchCriteriaDao(),
+        );
+    }
+
     public function routeSendRequestMail(): PermissionDeniedDocumentMailSender
     {
         return new PermissionDeniedDocumentMailSender(
@@ -171,6 +207,14 @@ class documentPlugin extends Plugin // phpcs:ignore
             $r->get(
                 '/{project_name:[A-z0-9-]+}/folders/{folder_id:\d+}/download-folder-as-zip',
                 $this->getRouteHandler('routeDownloadFolderAsZip')
+            );
+            $r->get(
+                '/{project_name:[A-z0-9-]+}/admin-search',
+                $this->getRouteHandler('routeAdminSearch')
+            );
+            $r->post(
+                '/{project_name:[A-z0-9-]+}/admin-search',
+                $this->getRouteHandler('routeUpdateAdminSearch')
             );
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
@@ -290,5 +334,15 @@ class documentPlugin extends Plugin // phpcs:ignore
         }
 
         $event->docmanInterfaceIsEnhanced();
+    }
+
+    public function adminTabsCollector(AdminTabsCollector $collector): void
+    {
+        $collector->addTabNearTheBeginning(new AdminTabPresenter(
+            SearchView::getTabTitle(),
+            SearchView::getTabDescription(),
+            SearchView::getUrl($collector->getProject()),
+            $collector->getCurrentViewIdentifier() === SearchView::IDENTIFIER,
+        ));
     }
 }

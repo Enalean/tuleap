@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/core': file:../../src
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': file:../../lib/frontend/list-picker
   '@tuleap/project-privacy-helper': file:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
@@ -40,6 +41,7 @@ dependencies:
   '@tuleap/core': link:../../src
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
+  '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors

@@ -23,6 +23,21 @@ msgstr ""
 msgid "An error occurred while saving configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
+msgid "Columns"
+msgstr "Colonnes"
+
+msgid "Configuration of search view has been updated"
+msgstr "La configuration de l'interface de recherche a été mise à jour"
+
+msgid "Configure search interface"
+msgstr "Configurer l'interface de recherche"
+
+msgid "Criteria"
+msgstr "Critères"
+
+msgid "Displayed columns"
+msgstr "Colonnes affichées"
+
 msgid "Document"
 msgstr "Document"
 
@@ -51,6 +66,12 @@ msgstr "Des fichiers manquent dans l'archive récemment téléchargée"
 msgid "Folder"
 msgstr "Dossier"
 
+msgid "Following columns will be displayed in the results table."
+msgstr "Les colonnes suivantes seront affichées dans la table des résultats."
+
+msgid "Following criteria will be displayed in the search pane."
+msgstr "Les critères suivants seront affichés dans la recherche."
+
 msgid ""
 "Hence, Tuleap will avoid users from forgetting to communicate changes made "
 "in the document."
@@ -67,6 +88,9 @@ msgstr "Cependant, tout son contenu n'a pas pu être ajouté à l'archive."
 msgid "Id"
 msgstr "Id"
 
+msgid "Invalid request"
+msgstr "Requête invalide"
+
 msgid "MB"
 msgstr "Mo"
 
@@ -82,6 +106,12 @@ msgstr "Aucun"
 msgid "Please contact your site administrator."
 msgstr "Veuillez contacter votre administrateur de site."
 
+msgid "Please note: the Global search criteria will always be displayed."
+msgstr "Veuillez noter: le critère Recherche globale sera toujours affiché."
+
+msgid "Please note: the Title column will always be available."
+msgstr "Veuillez note: la colonne Titre sera toujours affichée."
+
 msgid "Project not found"
 msgstr "Projet non trouvé"
 
@@ -93,8 +123,20 @@ msgstr ""
 msgid "Provides a modern interface for the Document Manager service"
 msgstr "Fournit une interface moderne au service de gestion des documents"
 
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
+
 msgid "Save settings"
 msgstr "Enregistrer"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Search criteria"
+msgstr "Critères de recherche"
+
+msgid "Search view"
+msgstr "Interface de recherche"
 
 msgid "Settings have been saved successfully."
 msgstr "Les paramètres ont été sauvegardés avec succès."

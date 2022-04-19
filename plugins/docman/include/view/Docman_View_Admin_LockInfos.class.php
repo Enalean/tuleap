@@ -46,11 +46,6 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'List of locked documents.');
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function displayContent(\TemplateRenderer $renderer, array $params): void
     {
         $html = '<div class="tlp-framed">';

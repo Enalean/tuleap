@@ -42,21 +42,41 @@ abstract class AdminView
             throw new NotFoundException();
         }
 
+        $user = $this->getUserFromParams($params);
+        if (! $user) {
+            throw new NotFoundException();
+        }
+
+        $default_url = $params['default_url'] ?? "";
+
+        $this->displayForProject(
+            $project,
+            $user,
+            $default_url,
+            $params,
+            \Closure::fromCallable(
+                [$this, 'displayContent']
+            )
+        );
+    }
+
+    /**
+     * @psalm-param Closure(\TemplateRenderer, array):void $displayContentCallback
+     */
+    protected function displayForProject(\Project $project, \PFUser $user, string $default_url, array $params, \Closure $displayContentCallback): void
+    {
         $service = $project->getService('docman');
         if (! $service) {
             throw new NotFoundException();
         }
 
-        $user = $this->getUserFromParams($params);
-        if (! $user || $user->isAnonymous()) {
+        if ($user->isAnonymous()) {
             throw new NotFoundException();
         }
 
         if (! $this->userCanAdmin($user, $project)) {
             throw new NotFoundException();
         }
-
-        $default_url = $params['default_url'] ?? "";
 
         $documents_link = new BreadCrumbLink(dgettext('tuleap-docman', 'Documents'), $default_url);
         $documents_link->setDataAttribute('test', 'project-documentation');
@@ -102,12 +122,12 @@ abstract class AdminView
 
         $renderer->renderToPage($template, [
             'title'      => dgettext('tuleap-docman', 'Administration'),
-            'tabs'       => $this->getTabs($default_url),
+            'tabs'       => $this->getTabs($project, $default_url),
             'extra_tabs' => $this->getExtraTabs($default_url, $project),
         ]);
 
         echo '<div class="docman-content">';
-        $this->displayContent($renderer, $params);
+        $displayContentCallback($renderer, $params);
         echo '</div>';
 
         $GLOBALS['Response']->footer($params);
@@ -117,11 +137,13 @@ abstract class AdminView
 
     abstract protected function getTitle(array $params): string;
 
-    abstract protected function displayContent(\TemplateRenderer $renderer, array $params): void;
+    protected function displayContent(\TemplateRenderer $renderer, array $params): void
+    {
+    }
 
     protected function isBurningParrotCompatiblePage(): bool
     {
-        return false;
+        return true;
     }
 
     protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
@@ -168,59 +190,11 @@ abstract class AdminView
     /**
      * @return array[]
      */
-    private function getTabs(string $default_url): array
+    private function getTabs(\Project $project, string $default_url): array
     {
-        return [
-            [
-                'title'       => \Docman_View_Admin_Permissions::getTabTitle(),
-                'description' => \Docman_View_Admin_Permissions::getTabDescription(),
-                'url'         => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_Permissions::IDENTIFIER],
-                    false,
-                ),
-                'is_active'   => $this->getIdentifier() === \Docman_View_Admin_Permissions::IDENTIFIER,
-            ],
-            [
-                'title'       => \Docman_View_Admin_Metadata::getTabTitle(),
-                'description' => \Docman_View_Admin_Metadata::getTabDescription(),
-                'url'         => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_Metadata::IDENTIFIER],
-                    false,
-                ),
-                'is_active'   => in_array(
-                    $this->getIdentifier(),
-                    [
-                        \Docman_View_Admin_Metadata::IDENTIFIER,
-                        \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                        \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
-                        \Docman_View_Admin_MetadataImport::IDENTIFIER,
-                    ],
-                    true
-                ),
-            ],
-            [
-                'title'       => \Docman_View_Admin_Obsolete::getTabTitle(),
-                'description' => \Docman_View_Admin_Obsolete::getTabDescription(),
-                'url'         => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_Obsolete::IDENTIFIER],
-                    false,
-                ),
-                'is_active'   => $this->getIdentifier() === \Docman_View_Admin_Obsolete::IDENTIFIER,
-            ],
-            [
-                'title'       => \Docman_View_Admin_LockInfos::getTabTitle(),
-                'description' => \Docman_View_Admin_LockInfos::getTabDescription(),
-                'url'         => DocmanViewURLBuilder::buildUrl(
-                    $default_url,
-                    ['action' => \Docman_View_Admin_LockInfos::IDENTIFIER],
-                    false,
-                ),
-                'is_active'   => $this->getIdentifier() === \Docman_View_Admin_LockInfos::IDENTIFIER,
-            ],
-        ];
+        return \EventManager::instance()
+            ->dispatch(new AdminTabsCollector($project, $this->getIdentifier(), $default_url))
+            ->getTabs();
     }
 
     /**

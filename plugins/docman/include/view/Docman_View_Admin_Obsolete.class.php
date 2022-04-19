@@ -48,11 +48,6 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'View and update obsolete documents.');
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function includeStylesheets(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addCssAsset(

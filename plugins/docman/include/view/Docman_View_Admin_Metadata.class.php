@@ -48,11 +48,6 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
         return dgettext('tuleap-docman', 'Define the properties of your documents.');
     }
 
-    protected function isBurningParrotCompatiblePage(): bool
-    {
-        return true;
-    }
-
     protected function includeJavascript(\Tuleap\Layout\IncludeAssets $include_assets): void
     {
         $GLOBALS['Response']->addJavascriptAsset(

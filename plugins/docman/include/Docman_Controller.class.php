@@ -28,6 +28,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
+use Tuleap\Docman\View\Admin\AdminTabsCollector;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
@@ -89,7 +90,7 @@ class Docman_Controller extends Controler
 
         $this->feedback = new ResponseFeedbackWrapper();
 
-        $event_manager = $this->_getEventManager();
+        $event_manager = $this->getEventManager();
 
         $this->logger    = new Docman_Log();
         $log_event_adder = new LogEventAdder($event_manager, $this->logger);
@@ -193,7 +194,7 @@ class Docman_Controller extends Controler
         $this->logger->logsDaily($params);
     }
 
-    public function _getEventManager()
+    public function getEventManager(): EventManager
     {
         return EventManager::instance();
     }
@@ -600,6 +601,13 @@ class Docman_Controller extends Controler
                 $this->view = 'Admin_View';
                 break;
             case 'admin':
+                $tabs = $this->getEventManager()
+                    ->dispatch(new AdminTabsCollector($this->getProject(), '', $this->getDefaultUrl()))
+                    ->getTabs();
+                if (! empty($tabs)) {
+                    $GLOBALS['Response']->redirect($tabs[0]->url);
+                }
+                break;
             case \Docman_View_Admin_Permissions::IDENTIFIER:
                 $this->view = 'Admin_Permissions';
                 break;

@@ -23,12 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Document\Tree\Search;
 
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
+use Tuleap\Document\Config\Project\IRetrieveColumns;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 {
     public function testItBuildsPresenters(): void
     {
+        $project = ProjectTestBuilder::aProject()->build();
+
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory
             ->method('getMetadataForGroup')
@@ -42,11 +46,83 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
             ]);
 
-        $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(new SearchColumnCollectionBuilder()))
-            ->getColumns($metadata_factory);
+        $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(
+            new SearchColumnCollectionBuilder(),
+            new class implements IRetrieveColumns {
+                public function searchByProjectId(int $project_id): array
+                {
+                    return [
+                        "title",
+                        "id",
+                        "description",
+                        "owner",
+                        "update_date",
+                        "create_date",
+                        "status",
+                        "obsolescence_date",
+                        "location",
+                    ];
+                }
+            }
+        ))
+            ->getColumns($project, $metadata_factory);
 
         self::assertEquals(
-            ["title", "id", "description", "owner", "update_date", "create_date", "status", "obsolescence_date", "location"],
+            [
+                "title",
+                "id",
+                "description",
+                "owner",
+                "update_date",
+                "create_date",
+                "status",
+                "obsolescence_date",
+                "location",
+            ],
+            array_map(
+                static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
+                $columns,
+            ),
+        );
+    }
+
+    public function testItReturnsOnlyColumnsSelectedByConfigurationIncludingTitle(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory
+            ->method('getMetadataForGroup')
+            ->willReturn([
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
+            ]);
+
+        $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(
+            new SearchColumnCollectionBuilder(),
+            new class implements IRetrieveColumns {
+                public function searchByProjectId(int $project_id): array
+                {
+                    return [
+                        "update_date",
+                        "create_date",
+                    ];
+                }
+            }
+        ))
+            ->getColumns($project, $metadata_factory);
+
+        self::assertEquals(
+            [
+                "title",
+                "update_date",
+                "create_date",
+            ],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
                 $columns,
