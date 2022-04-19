@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import dts from "vite-plugin-dts";
+import type { GroupOfItems } from "../items/GroupCollection";
+import { getGroupId } from "./group-id-helper";
 
-export default vite.defineLibConfig({
-    plugins: [dts({ insertTypesEntry: true })],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "LinkSelector",
-        },
-        rollupOptions: {
-            external: ["lit/html.js"],
-            output: {
-                globals: {
-                    "lit/html.js": "lit/html.js",
-                },
-            },
-        },
-    },
+describe(`group-id-helper`, () => {
+    it(`builds a group ID from a group label`, () => {
+        const group: GroupOfItems = {
+            label: "Matching Items",
+            empty_message: "irrelevant",
+            items: [],
+        };
+        expect(getGroupId(group)).toBe("matchingitems");
+    });
 });

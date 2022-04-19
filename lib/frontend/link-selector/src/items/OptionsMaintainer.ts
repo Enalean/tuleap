@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.po" {
-    import type { GettextParserPoFile } from "@tuleap/gettext";
-    const content: GettextParserPoFile;
-    export default content;
+import type { ItemsMapManager } from "./ItemsMapManager";
+
+export interface OptionsMaintainerType {
+    rebuildOptions(): void;
 }
+
+export const OptionsMaintainer = (
+    select_element: HTMLSelectElement,
+    items_map_manager: ItemsMapManager
+): OptionsMaintainerType => ({
+    rebuildOptions(): void {
+        const options = items_map_manager.getLinkSelectorItems().map((item) => item.target_option);
+        select_element.replaceChildren(...options);
+    },
+});

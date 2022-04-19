@@ -19,12 +19,11 @@
 
 import { KeyboardNavigationManager } from "./KeyboardNavigationManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import type { GettextProvider } from "@tuleap/gettext";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
+import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 
 describe("KeyboardNavigationManager", () => {
     let manager: KeyboardNavigationManager,
@@ -36,30 +35,27 @@ describe("KeyboardNavigationManager", () => {
         expect(dropdown_list.querySelectorAll(".link-selector-item-highlighted")).toHaveLength(1);
     }
 
-    beforeEach(async () => {
-        const source_select_box = document.createElement("select");
-        appendGroupedOptionsToSourceSelectBox(source_select_box);
+    beforeEach(() => {
+        const doc = document.implementation.createHTMLDocument();
+        const source_select_box = doc.createElement("select");
 
         const { dropdown_list_element } = new BaseComponentRenderer(
-            document.implementation.createHTMLDocument(),
+            doc,
             source_select_box,
             ""
         ).renderBaseComponent();
-
-        item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
-        await item_map_manager.refreshItemsMap();
-        const content_renderer = new DropdownContentRenderer(
-            source_select_box,
-            dropdown_list_element,
-            item_map_manager,
-            {
-                gettext: (english: string) => english,
-            } as GettextProvider
-        );
-
         dropdown_list = dropdown_list_element;
 
-        content_renderer.renderLinkSelectorDropdownContent();
+        const groups = GroupCollectionBuilder.withTwoGroups();
+
+        item_map_manager = new ItemsMapManager(new ListItemMapBuilder());
+        item_map_manager.refreshItemsMap(groups);
+        const content_renderer = new DropdownContentRenderer(
+            dropdown_list_element,
+            item_map_manager
+        );
+        content_renderer.renderLinkSelectorDropdownContent(groups);
+
         highlighter = new ListItemHighlighter(dropdown_list_element);
         manager = new KeyboardNavigationManager(dropdown_list_element, highlighter);
 
@@ -83,10 +79,10 @@ describe("KeyboardNavigationManager", () => {
             });
 
             it("When the user reaches the last valid item, then it should keep it highlighted", () => {
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights 2nd
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights 3rd
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights 4th
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // won't highlight 5th since it is disabled
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_1
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_2
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_3
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_4
 
                 expect(
                     item_map_manager.findLinkSelectorItemInItemMap(

@@ -2,13 +2,11 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../build-system-configurator
-  '@tuleap/gettext': file:../gettext
   '@tuleap/po-gettext-plugin': file:../po-gettext-plugin
   '@tuleap/tlp': file:../../../src/themes/tlp
   lit: ^2.0.2
 
 dependencies:
-  '@tuleap/gettext': link:../gettext
   '@tuleap/tlp': link:../../../src/themes/tlp
   lit: 2.0.2
 

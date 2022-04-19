@@ -17,78 +17,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
-
+import type {
+    LinkSelectorSearchFieldCallback,
+    GroupOfItems,
+    GroupCollection,
+    HTMLTemplateStringProcessor,
+} from "@tuleap/link-selector";
+import type { Result } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import { getMatchingArtifactLabel, getNoResultFoundEmptyState } from "../../../../gettext-catalog";
 import type { Artifact } from "../../../../domain/Artifact";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { LinkableArtifactIdentifierProxy } from "./LinkableArtifactIdentifierProxy";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+
+const buildGroupFromResult = (
+    html: typeof HTMLTemplateStringProcessor,
+    result: Result<Artifact, Fault>
+): GroupOfItems => {
+    if (!result.isOk()) {
+        return {
+            label: getMatchingArtifactLabel(),
+            empty_message: getNoResultFoundEmptyState(),
+            items: [],
+        };
+    }
+    const artifact = result.value;
+    return {
+        label: getMatchingArtifactLabel(),
+        empty_message: getNoResultFoundEmptyState(),
+        items: [
+            {
+                value: String(artifact.id),
+                template: html`
+                    <span class="tlp-badge-secondary link-field-xref-badge">${artifact.xref}</span>
+                    ${artifact.title}
+                `,
+            },
+        ],
+    };
+};
 
 export interface ArtifactLinkSelectorAutoCompleterType {
-    autoComplete: (select: HTMLSelectElement) => LinkSelectorSearchFieldCallback;
+    autoComplete: () => LinkSelectorSearchFieldCallback;
 }
 
 export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
     current_artifact_identifier: CurrentArtifactIdentifier | null
 ): ArtifactLinkSelectorAutoCompleterType => ({
-    autoComplete: (select: HTMLSelectElement): LinkSelectorSearchFieldCallback => {
-        const matching_artifact_optgroup = getMatchingArtifactOptionGroup();
-        const empty_state = getEmptyState();
-
-        select.appendChild(matching_artifact_optgroup);
-
-        return async (query: string): Promise<void> => {
+    autoComplete: (): LinkSelectorSearchFieldCallback => {
+        return async (query: string, html): Promise<GroupCollection> => {
             const artifact_identifier = LinkableArtifactIdentifierProxy.fromQueryString(
                 query,
                 current_artifact_identifier
             );
             if (artifact_identifier === null) {
-                clearSelectOptions();
-                return;
+                return [];
             }
 
             const result = await retrieve_matching_artifact.getMatchingArtifact(
                 artifact_identifier
             );
-            if (!result.isOk()) {
-                clearSelectOptions();
-                matching_artifact_optgroup.appendChild(empty_state);
-                return;
-            }
-
-            clearSelectOptions();
-            matching_artifact_optgroup.appendChild(getMatchingArtifactOption(result.value));
+            return [buildGroupFromResult(html, result)];
         };
-
-        function clearSelectOptions(): void {
-            select.options.length = 0;
-        }
     },
 });
-
-function getMatchingArtifactOption(artifact: Artifact): HTMLOptionElement {
-    const option = document.createElement("option");
-    option.value = String(artifact.id);
-    option.textContent = artifact.xref + " - " + artifact.title;
-
-    return option;
-}
-
-function getEmptyState(): HTMLOptionElement {
-    const option = document.createElement("option");
-    option.value = "";
-    option.disabled = true;
-    option.setAttribute("data-link-selector-role", "empty-state");
-    option.textContent = getNoResultFoundEmptyState();
-
-    return option;
-}
-
-function getMatchingArtifactOptionGroup(): HTMLOptGroupElement {
-    const optgroup = document.createElement("optgroup");
-    optgroup.label = getMatchingArtifactLabel();
-
-    return optgroup;
-}

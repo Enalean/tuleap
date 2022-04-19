@@ -21,82 +21,68 @@ import { setCatalog } from "../../../../gettext-catalog";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { Fault } from "@tuleap/fault";
-import type { Artifact } from "../../../../domain/Artifact";
+import type { GroupCollection } from "@tuleap/link-selector";
+import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
+import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+
+const ARTIFACT_ID = 1621;
 
 describe("ArtifactLinkSelectorAutoCompleter", () => {
-    let select: HTMLSelectElement, doc: Document;
-
-    function populateSelect(): void {
-        const option = doc.createElement("option");
-        option.value = "666";
-        option.textContent = "story #666 - A story from Hell";
-
-        select.appendChild(option);
-    }
+    let artifact_retriever: RetrieveMatchingArtifact,
+        current_artifact_identifier: CurrentArtifactIdentifier | null;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
 
-        doc = document.implementation.createHTMLDocument();
-        select = doc.createElement("select");
-
-        populateSelect();
+        const artifact = {
+            id: ARTIFACT_ID,
+            title: "Do some stuff",
+            xref: `story #${ARTIFACT_ID}`,
+        };
+        artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(artifact);
+        current_artifact_identifier = null;
     });
+
+    const autocomplete = (query: string): Promise<GroupCollection> => {
+        const autocompleter = ArtifactLinkSelectorAutoCompleter(
+            artifact_retriever,
+            current_artifact_identifier
+        );
+        return autocompleter.autoComplete()(query, jest.fn());
+    };
 
     it.each([
         ["an empty string", ""],
         ["not a number", "I know I'm supposed to enter a number by I don't care"],
     ])(
-        "should clear the source select options when the query is %s",
+        "will return an empty group collection when the query is %s",
         async (query_content_type: string, query: string) => {
-            const autocompleter = ArtifactLinkSelectorAutoCompleter(
-                RetrieveMatchingArtifactStub.withMatchingArtifact({} as unknown as Artifact),
-                null
-            );
+            const groups = await autocomplete(query);
 
-            await autocompleter.autoComplete(select)(query);
-
-            expect(select.options).toHaveLength(0);
+            expect(groups).toHaveLength(0);
         }
     );
 
-    it("when an artifact is returned by the api, then an option is added to the source select", async () => {
-        const artifact_id = 1621;
-        const artifact = {
-            id: artifact_id,
-            title: "Do some stuff",
-            xref: "story #1621",
-        };
+    it(`when an artifact is returned by the api,
+        then it will return a group with one item holding the matching artifact`, async () => {
+        const groups = await autocomplete(String(ARTIFACT_ID));
 
-        const autocompleter = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withMatchingArtifact(artifact),
-            null
-        );
+        expect(groups).toHaveLength(1);
+        expect(groups[0].items).toHaveLength(1);
 
-        await autocompleter.autoComplete(select)("1621");
+        const first_item = groups[0].items[0];
 
-        expect(select.options).toHaveLength(1);
-
-        const option = select.options[0];
-        expect(option?.value).toBe("1621");
-        expect(option?.innerHTML).toBe("story #1621 - Do some stuff");
+        expect(first_item.value).toBe(String(ARTIFACT_ID));
     });
 
-    it("when an error is returned by the api, then an empty state option is added to the source select", async () => {
+    it(`when an error is returned by the api,
+        then it will return a group with zero items so that link-selector can show the empty state message`, async () => {
         const fault = Fault.fromMessage("Nope");
-        const autocompleter = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withFault(fault),
-            null
-        );
+        artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
+        const groups = await autocomplete(String(ARTIFACT_ID));
 
-        await autocompleter.autoComplete(select)("1621");
-
-        expect(select.options).toHaveLength(1);
-
-        const option = select.options[0];
-        expect(option?.value).toBe("");
-        expect(option?.hasAttribute("disabled")).toBe(true);
-        expect(option?.dataset?.linkSelectorRole).toBe("empty-state");
-        expect(option?.innerHTML).toBe("No result found");
+        expect(groups).toHaveLength(1);
+        expect(groups[0].items).toHaveLength(0);
+        expect(groups[0].empty_message).not.toBe("");
     });
 });

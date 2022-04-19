@@ -41,7 +41,7 @@ export interface LinkFieldControllerType {
     displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
-    autoComplete(select: HTMLSelectElement): LinkSelectorSearchFieldCallback;
+    autoComplete(): LinkSelectorSearchFieldCallback;
 }
 
 const isCreationModeFault = (fault: Fault): boolean => {
@@ -107,7 +107,7 @@ export const LinkFieldController = (
         return buildPresenter(links_store, deleted_link_verifier);
     },
 
-    autoComplete(select: HTMLSelectElement): LinkSelectorSearchFieldCallback {
-        return links_autocompleter.autoComplete(select);
+    autoComplete(): LinkSelectorSearchFieldCallback {
+        return links_autocompleter.autoComplete();
     },
 });

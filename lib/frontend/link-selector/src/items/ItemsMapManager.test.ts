@@ -18,19 +18,17 @@
  */
 
 import { ItemsMapManager } from "./ItemsMapManager";
-import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
-import type { TemplateResult } from "lit/html.js";
+import type { HTMLTemplateResult } from "lit/html.js";
 import { html } from "lit/html.js";
+import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 
 describe("ItemsMapManager", () => {
-    let items_manager: ItemsMapManager, source_select_box: HTMLSelectElement;
+    let items_manager: ItemsMapManager;
 
-    beforeEach(async () => {
-        source_select_box = document.createElement("select");
-        appendGroupedOptionsToSourceSelectBox(source_select_box);
-        items_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
-        await items_manager.refreshItemsMap();
+    beforeEach(() => {
+        items_manager = new ItemsMapManager(new ListItemMapBuilder());
+        items_manager.refreshItemsMap(GroupCollectionBuilder.withTwoGroups());
     });
 
     describe("findLinkSelectorItemInItemMap", () => {
@@ -51,15 +49,14 @@ describe("ItemsMapManager", () => {
 
     describe("getItemWithValue", () => {
         it("should return the corresponding LinkSelectorItem", () => {
-            expect(items_manager.getItemWithValue("value_5")).toEqual({
+            expect(items_manager.getItemWithValue("value_5")).toStrictEqual({
                 element: expect.any(Element),
                 group_id: "group2",
                 id: "link-selector-item-group2-value_5",
-                is_disabled: true,
+                is_disabled: false,
                 is_selected: false,
                 target_option: expect.any(HTMLOptionElement),
                 template: buildTemplateResult("Value 5"),
-                label: "Value 5",
                 value: "value_5",
             });
         });
@@ -72,10 +69,10 @@ describe("ItemsMapManager", () => {
     it("gets link-selector items", () => {
         expect(items_manager.getLinkSelectorItems().length).toBeGreaterThan(0);
     });
-
-    function buildTemplateResult(value: string): TemplateResult {
-        return html`
-            ${value}
-        `;
-    }
 });
+
+function buildTemplateResult(value: string): HTMLTemplateResult {
+    return html`
+        ${value}
+    `;
+}

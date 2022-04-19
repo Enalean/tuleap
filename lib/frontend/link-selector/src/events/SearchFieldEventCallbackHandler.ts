@@ -17,22 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelectorSearchFieldCallback } from "../type";
+import { html as HTMLTemplateStringProcessor } from "lit/html.js";
+import type { DropdownContentRefresher } from "../dropdown/DropdownContentRefresher";
+import type { GroupCollection } from "../items/GroupCollection";
 
 const TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
-export const SearchFieldEventCallbackHandler = {
+export type LinkSelectorSearchFieldCallback = (
+    query: string,
+    html: typeof HTMLTemplateStringProcessor
+) => Promise<GroupCollection>;
+
+export interface SearchFieldEventCallbackHandlerType {
+    init(search_field_element: HTMLInputElement, callback: LinkSelectorSearchFieldCallback): void;
+}
+
+export const SearchFieldEventCallbackHandler = (
+    refresher: DropdownContentRefresher
+): SearchFieldEventCallbackHandlerType => ({
     init: (
         search_field_element: HTMLInputElement,
         callback: LinkSelectorSearchFieldCallback
     ): void => {
         let timeout_id: number | undefined;
         search_field_element.addEventListener("input", () => {
+            // setTimeout + clearTimeout is a trick to "debounce":
+            // we call the callback only once after the delay and _not_ for each input
             clearTimeout(timeout_id);
 
-            timeout_id = setTimeout(() => {
-                callback(search_field_element.value);
+            timeout_id = setTimeout(async () => {
+                const groups = await callback(
+                    search_field_element.value,
+                    HTMLTemplateStringProcessor
+                );
+                refresher.refresh(groups);
             }, TRIGGER_CALLBACK_DELAY_IN_MS);
         });
     },
-};
+});

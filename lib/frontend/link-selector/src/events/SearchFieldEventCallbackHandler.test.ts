@@ -17,9 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SearchFieldEventCallbackHandlerType } from "./SearchFieldEventCallbackHandler";
 import { SearchFieldEventCallbackHandler } from "./SearchFieldEventCallbackHandler";
+import { DropdownContentRefresherStub } from "../../tests/stubs/DropdownContentRefresherStub";
 
 describe("SearchFieldEventCallbackHandler", () => {
+    const getHandler = (): SearchFieldEventCallbackHandlerType => {
+        const handler = SearchFieldEventCallbackHandler(DropdownContentRefresherStub.build());
+        return handler;
+    };
+
     it("should execute the callback after 250ms after the users has stopped typing in the search_field_element", () => {
         const doc = document.implementation.createHTMLDocument();
         const search_field_element = doc.createElement("input");
@@ -27,7 +34,7 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         jest.useFakeTimers();
 
-        SearchFieldEventCallbackHandler.init(search_field_element, callback);
+        getHandler().init(search_field_element, callback);
 
         search_field_element.value = "a query";
         search_field_element.dispatchEvent(new Event("input"));
@@ -38,7 +45,7 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         jest.advanceTimersByTime(1); // 250 ms elapsed
 
-        expect(callback).toHaveBeenCalledWith("a query");
+        expect(callback).toHaveBeenCalledWith("a query", expect.any(Function));
     });
 
     it("should not execute the callback when the user it still typing", () => {
@@ -48,7 +55,7 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         jest.useFakeTimers();
 
-        SearchFieldEventCallbackHandler.init(search_field_element, callback);
+        getHandler().init(search_field_element, callback);
 
         ["nana ", "nana ", "nana ", "BATMAN"].forEach((query) => {
             search_field_element.value += query;
@@ -58,6 +65,6 @@ describe("SearchFieldEventCallbackHandler", () => {
         jest.advanceTimersByTime(250);
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith("nana nana nana BATMAN");
+        expect(callback).toHaveBeenCalledWith("nana nana nana BATMAN", expect.any(Function));
     });
 });
