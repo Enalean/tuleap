@@ -37,6 +37,9 @@ function buildLinks(field) {
     }
     // Then, filter out all the invalid id values (null, undefined, etc)
     const links = all_links.filter((link) => Boolean(link.id));
+    if (parent && parent.id === "") {
+        parent = undefined;
+    }
 
     return { field_id, links, parent };
 }
