@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
     "@tuleap/list-picker": "file:../../lib/frontend/list-picker",
     "@tuleap/tlp": "file:../../src/themes/tlp",
     "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",

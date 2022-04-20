@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
     "@tuleap/gettext": "file:../../lib/frontend/gettext",
     "@tuleap/plugin-tracker-rest-api-types": "file:../tracker/scripts/lib/rest-api-types",
     "@tuleap/po-gettext-plugin": "file:../../lib/frontend/po-gettext-plugin",

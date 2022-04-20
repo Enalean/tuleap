@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
@@ -42,6 +43,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/d3-array': 2.12.1
   '@types/d3-selection': 2.0.0

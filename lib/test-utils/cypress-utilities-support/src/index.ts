@@ -17,4 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "@tuleap/cypress-utilities-support";
+import "./api-helper";
+import "./commands";

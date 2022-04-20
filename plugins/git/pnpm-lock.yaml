@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
   '@tuleap/core': file:../../src
+  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
   '@tuleap/filter-inline-table': file:../../lib/frontend/filter-table
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
   '@tuleap/project-privacy-helper': file:../../lib/frontend/project-privacy-helper
@@ -43,6 +44,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/javascript-time-ago': 2.0.1

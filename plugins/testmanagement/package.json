@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
     "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",
     "@types/node": "^14.14.31",
     "@types/sprintf-js": "^1.1.2",

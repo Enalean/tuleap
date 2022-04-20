@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../../../../../../../tests/e2e/full/cypress/support/index";
+import "@tuleap/cypress-utilities-support";

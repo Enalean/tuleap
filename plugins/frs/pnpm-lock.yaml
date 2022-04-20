@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2
   angular-filter: ^0.5.17
@@ -20,6 +21,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   angular-mocks: 1.8.2
 
 packages:

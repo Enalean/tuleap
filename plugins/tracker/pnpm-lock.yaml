@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
   '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
   '@tuleap/list-picker': file:../../lib/frontend/list-picker
@@ -77,6 +78,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
