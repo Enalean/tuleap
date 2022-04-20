@@ -33,19 +33,8 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
     private const TYPE_PARAM = 'type';
     private const SCRUM_TYPE = 'scrum';
 
-    /**
-     * @var JiraClient
-     */
-    private $client;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(JiraClient $client, LoggerInterface $logger)
+    public function __construct(private JiraClient $client, private LoggerInterface $logger)
     {
-        $this->client = $client;
-        $this->logger = $logger;
     }
 
     /**
@@ -57,30 +46,28 @@ class JiraBoardsRetrieverFromAPI implements JiraBoardsRetriever
         $iterator = JiraCollectionBuilder::iterateUntilIsLast(
             $this->client,
             $this->logger,
-            $this->getBoardUrl(),
+            $this->getBoardUrl($jira_project_key),
             'values',
         );
         foreach ($iterator as $json_board) {
             $this->assertBoardValuesResponseStructure($json_board);
-            if ($json_board['location']['projectKey'] === $jira_project_key) {
-                return new JiraBoard($json_board['id'], $json_board['self'], $json_board['location']['projectId'], $json_board['location']['projectKey']);
-            }
+            return new JiraBoard($json_board['id'], $json_board['self']);
         }
         return null;
     }
 
-    public function getBoardUrl(): string
+    public function getBoardUrl(string $jira_project_key): string
     {
-        return self::BOARD_URL . '?' . http_build_query([self::TYPE_PARAM => self::SCRUM_TYPE]);
+        return self::BOARD_URL . '?' . http_build_query([self::TYPE_PARAM => self::SCRUM_TYPE, 'projectKeyOrId' => $jira_project_key, 'maxResults' => 1]);
     }
 
     /**
-     * @psalm-assert array{id: int, self: string, location: array{projectId: int, projectKey: string}} $json
+     * @psalm-assert array{id: int, self: string} $json
      */
     private function assertBoardValuesResponseStructure(array $json): void
     {
-        if (! isset($json['id'], $json['self'], $json['location']['projectId'], $json['location']['projectKey'])) {
-            throw new \RuntimeException(sprintf('%s route did not return the expected format for `values`: `id`, `location.projectId` or `location.projectKey` are missing', self::BOARD_URL));
+        if (! isset($json['id'], $json['self'])) {
+            throw new \RuntimeException(sprintf('%s route did not return the expected format for `values`: `id` or `self` are missing', self::BOARD_URL));
         }
     }
 }

@@ -311,7 +311,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFetchesSprints(): void
     {
-        $board               = new JiraBoard(1, 'https://example.com', 10000, 'FOO');
+        $board               = new JiraBoard(1, 'https://example.com');
         $jira_agile_importer = new JiraAgileImporter(
             new class ($board) implements JiraSprintRetriever {
                 /**
@@ -643,7 +643,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getJiraBoard(): JiraBoard
     {
-        return new JiraBoard(1, 'https://example.com', 10000, 'FOO');
+        return new JiraBoard(1, 'https://example.com');
     }
 
     private function getJiraSprintRetrieverWithoutSprints(): JiraSprintRetriever
