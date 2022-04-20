@@ -23,15 +23,11 @@
         <h2 class="tlp-modal-subtitle">
             {{ $gettext("First level") }}
         </h2>
-        <div class="tlp-form-element">
-            <artifact-link-types-selector
-                v-model:artifact_link_types="artifact_link_types"
-                v-bind:tracker_id="tracker_id"
-            />
-        </div>
-        <div class="tlp-form-element">
-            <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker_id" />
-        </div>
+        <artifact-link-types-selector
+            v-model:artifact_link_types="artifact_link_types"
+            v-bind:tracker_id="tracker_id"
+        />
+        <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker_id" />
     </level-selector>
 </template>
 <script lang="ts" setup>

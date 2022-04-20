@@ -23,24 +23,13 @@
         <h2 class="tlp-modal-subtitle">
             {{ $gettext("Second level") }}
         </h2>
-        <div class="tlp-form-element">
-            <project-selector v-model:project_id="project_id" />
-        </div>
-        <div class="tlp-form-element">
-            <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
-        </div>
-        <div class="tlp-form-element">
-            <artifact-link-types-selector
-                v-model:artifact_link_types="artifact_link_types"
-                v-bind:tracker_id="tracker?.id ?? null"
-            />
-        </div>
-        <div class="tlp-form-element">
-            <tracker-report-selector
-                v-model:report="report"
-                v-bind:tracker_id="tracker?.id ?? null"
-            />
-        </div>
+        <project-selector v-model:project_id="project_id" />
+        <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
+        <artifact-link-types-selector
+            v-model:artifact_link_types="artifact_link_types"
+            v-bind:tracker_id="tracker?.id ?? null"
+        />
+        <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker?.id ?? null" />
     </level-selector>
 </template>
 <script lang="ts" setup>

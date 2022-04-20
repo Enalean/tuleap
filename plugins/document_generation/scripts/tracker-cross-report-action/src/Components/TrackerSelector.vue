@@ -19,22 +19,27 @@
   -->
 
 <template>
-    <label class="tlp-label">
-        {{ $gettext("Tracker") }}
-        <select
-            v-model="tracker"
-            class="tlp-select"
-            v-bind:disabled="project_id === null || is_processing"
-        >
-            <option
-                v-for="current_tracker in current_trackers"
-                v-bind:key="current_tracker.id"
-                v-bind:value="current_tracker"
+    <div
+        class="tlp-form-element"
+        v-bind:class="{ 'tlp-form-element-disabled': project_id === null }"
+    >
+        <label class="tlp-label">
+            {{ $gettext("Tracker") }}
+            <select
+                v-model="tracker"
+                class="tlp-select"
+                v-bind:disabled="project_id === null || is_processing"
             >
-                {{ current_tracker.label }}
-            </option>
-        </select>
-    </label>
+                <option
+                    v-for="current_tracker in current_trackers"
+                    v-bind:key="current_tracker.id"
+                    v-bind:value="current_tracker"
+                >
+                    {{ current_tracker.label }}
+                </option>
+            </select>
+        </label>
+    </div>
 </template>
 <script lang="ts" setup>
 import { computed } from "vue";

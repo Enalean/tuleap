@@ -19,41 +19,48 @@
   -->
 
 <template>
-    <label class="tlp-label">
-        {{ $gettext("Report") }}
-        <select
-            v-model="report"
-            class="tlp-select"
-            v-bind:disabled="tracker_id === null || is_processing"
-        >
-            <optgroup
-                v-if="personal_reports.length > 0"
-                v-bind:label="
-                    $ngettext('Personal report', 'Personal reports', personal_reports.length)
-                "
+    <div
+        class="tlp-form-element"
+        v-bind:class="{ 'tlp-form-element-disabled': tracker_id === null }"
+    >
+        <label class="tlp-label">
+            {{ $gettext("Report") }}
+            <select
+                v-model="report"
+                class="tlp-select"
+                v-bind:disabled="tracker_id === null || is_processing"
             >
-                <option
-                    v-for="personal_report in personal_reports"
-                    v-bind:key="personal_report.id"
-                    v-bind:value="personal_report"
+                <optgroup
+                    v-if="personal_reports.length > 0"
+                    v-bind:label="
+                        $ngettext('Personal report', 'Personal reports', personal_reports.length)
+                    "
                 >
-                    {{ personal_report.label }}
-                </option>
-            </optgroup>
-            <optgroup
-                v-if="public_reports.length > 0"
-                v-bind:label="$ngettext('Public report', 'Public reports', public_reports.length)"
-            >
-                <option
-                    v-for="public_report in public_reports"
-                    v-bind:key="public_report.id"
-                    v-bind:value="public_report"
+                    <option
+                        v-for="personal_report in personal_reports"
+                        v-bind:key="personal_report.id"
+                        v-bind:value="personal_report"
+                    >
+                        {{ personal_report.label }}
+                    </option>
+                </optgroup>
+                <optgroup
+                    v-if="public_reports.length > 0"
+                    v-bind:label="
+                        $ngettext('Public report', 'Public reports', public_reports.length)
+                    "
                 >
-                    {{ public_report.label }}
-                </option>
-            </optgroup>
-        </select>
-    </label>
+                    <option
+                        v-for="public_report in public_reports"
+                        v-bind:key="public_report.id"
+                        v-bind:value="public_report"
+                    >
+                        {{ public_report.label }}
+                    </option>
+                </optgroup>
+            </select>
+        </label>
+    </div>
 </template>
 <script lang="ts" setup>
 import { computed } from "vue";
