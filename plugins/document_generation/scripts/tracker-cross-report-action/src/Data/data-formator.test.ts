@@ -26,6 +26,101 @@ import { TextCellWithMerges } from "../type";
 import type { ExportSettings } from "../export-document";
 
 describe("data-formator", () => {
+    it("generates the formatted data with all 3 levels that will be used to create the XLSX document with rows without all links", async (): Promise<void> => {
+        const second_level_representation_map = buildSecondLevelRepresentationsMap();
+        second_level_representation_map.set(76, {
+            id: 76,
+            title: null,
+            xref: "Task #76",
+            tracker: { id: 15 },
+            html_url: "/plugins/tracker/?aid=76",
+            values: [
+                {
+                    field_id: 10,
+                    type: "aid",
+                    label: "Artifact ID",
+                    value: 76,
+                },
+            ],
+        } as ArtifactResponse);
+
+        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+            first_level: {
+                tracker_name: "tracker01",
+                artifact_representations: buildFirstLevelRepresentationsMap(),
+                linked_artifacts: new Map([[74, [75, 76]]]),
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                artifact_representations: second_level_representation_map,
+                linked_artifacts: new Map([[75, [80, 81]]]),
+            },
+            third_level: {
+                tracker_name: "tracker03",
+                artifact_representations: buildThirdLevelRepresentationsMap(),
+            },
+        });
+
+        const formatted_data = await formatData({
+            first_level: {
+                tracker_name: "tracker01",
+                report_id: 1,
+                report_name: "report01",
+                artifact_link_types: ["_is_child"],
+            },
+            second_level: {
+                tracker_name: "tracker02",
+                report_id: 2,
+                report_name: "report02",
+                artifact_link_types: [],
+            },
+            third_level: {
+                tracker_name: "tracker03",
+                report_id: 3,
+                report_name: "report03",
+            },
+        });
+
+        expect(formatted_data.artifacts_rows).toBeDefined();
+        expect(formatted_data.artifacts_rows?.length).toBe(4);
+        expect(formatted_data).toStrictEqual({
+            headers: {
+                tracker_names: [
+                    new TextCellWithMerges("tracker01", 3),
+                    new TextCellWithMerges("tracker02", 1),
+                    new TextCellWithMerges("tracker03", 2),
+                ],
+                reports_fields_labels: [
+                    new TextCell("Artifact ID"),
+                    new TextCell("Field02"),
+                    new TextCell("Assigned to"),
+                    new TextCell("Artifact ID"),
+                    new TextCell("Artifact Id"),
+                    new TextCell("Title"),
+                ],
+            },
+            artifacts_rows: [
+                [
+                    new NumberCell(74),
+                    new TextCell("value02"),
+                    new EmptyCell(),
+                    new NumberCell(75),
+                    new NumberCell(80),
+                    new TextCell("Subtask title 01"),
+                ],
+                [
+                    new NumberCell(74),
+                    new TextCell("value02"),
+                    new EmptyCell(),
+                    new NumberCell(75),
+                    new NumberCell(81),
+                    new TextCell("Subtask title 02"),
+                ],
+                [new NumberCell(74), new TextCell("value02"), new EmptyCell(), new NumberCell(76)],
+                [new NumberCell(4), new TextCell("value04"), new EmptyCell()],
+            ],
+        });
+    });
     it("generates the formatted data with all 3 levels that will be used to create the XLSX document", async (): Promise<void> => {
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {

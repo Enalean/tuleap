@@ -83,12 +83,19 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
                             organized_reports_data.third_level.artifact_representations
                         );
 
-                        for (const third_level_linked_artifact_cells of third_level_linked_artifacts_cells) {
-                            const third_level_artifact_cells = third_level_linked_artifact_cells[1];
+                        if (third_level_linked_artifacts_cells.size > 0) {
+                            for (const third_level_linked_artifact_cells of third_level_linked_artifacts_cells) {
+                                const third_level_artifact_cells =
+                                    third_level_linked_artifact_cells[1];
+                                all_artifact_rows.push(
+                                    first_level_artifact_cells
+                                        .concat(second_level_artifact_cells)
+                                        .concat(third_level_artifact_cells)
+                                );
+                            }
+                        } else {
                             all_artifact_rows.push(
-                                first_level_artifact_cells
-                                    .concat(second_level_artifact_cells)
-                                    .concat(third_level_artifact_cells)
+                                first_level_artifact_cells.concat(second_level_artifact_cells)
                             );
                         }
                     } else {
