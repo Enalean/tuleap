@@ -10,6 +10,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "All usable link types have been selected"
+msgstr "Tous les types de liens utilisables ont été sélectionnés"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -33,6 +36,9 @@ msgstr "Type de lien"
 
 msgid "No type"
 msgstr "Sans nature"
+
+msgid "No usable link types have been found"
+msgstr "Aucun type de lien utilisable n'a été trouvé"
 
 msgid "Personal report"
 msgid_plural "Personal reports"

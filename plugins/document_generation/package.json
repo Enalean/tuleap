@@ -14,6 +14,7 @@
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-modal": "file:../../lib/frontend/tlp-modal",
     "@tuleap/vue3-gettext-init": "file:../../lib/frontend/vue3-gettext-init",
+    "@vueform/multiselect": "^2.3.3",
     "docx": "^7.3.0",
     "sprintf-js": "^1.1.2",
     "vue": "^3.2.31",
