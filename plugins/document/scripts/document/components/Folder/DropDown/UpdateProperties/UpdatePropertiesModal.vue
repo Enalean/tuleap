@@ -127,6 +127,7 @@ export default {
         emitter.on("update-title-property", this.updateTitleValue);
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-owner-property", this.updateOwnerValue);
+        emitter.on("update-custom-property", this.updateCustomProperty);
     },
     beforeDestroy() {
         emitter.off(
@@ -137,6 +138,7 @@ export default {
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);
         emitter.off("update-owner-property", this.updateOwnerValue);
+        emitter.off("update-custom-property", this.updateCustomProperty);
     },
     beforeMount() {
         this.item_to_update = JSON.parse(JSON.stringify(this.item));
@@ -200,6 +202,15 @@ export default {
         },
         updateOwnerValue(owner) {
             this.item_to_update.owner.id = owner;
+        },
+        updateCustomProperty(event) {
+            if (!this.formatted_item_properties) {
+                return;
+            }
+            const item_properties = this.formatted_item_properties.find(
+                (property) => property.short_name === event.property_short_name
+            );
+            item_properties.value = event.value;
         },
     },
 };

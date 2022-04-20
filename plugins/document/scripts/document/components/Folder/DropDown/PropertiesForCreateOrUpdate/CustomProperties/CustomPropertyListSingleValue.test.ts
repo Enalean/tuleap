@@ -23,6 +23,9 @@ import CustomPropertyListSingleValue from "./CustomPropertyListSingleValue.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ListValue, Property } from "../../../../../type";
 import localVue from "../../../../../helpers/local-vue";
+import emitter from "../../../../../helpers/emitter";
+
+jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyListSingleValue.vue", () => {
     const store_options = { state: { properties: {} } };
@@ -79,7 +82,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
         expect(wrapper.find("[data-test=document-custom-list-value-102]").exists()).toBeTruthy();
     });
 
-    it(`Given a list propertiy is required
+    it(`Given a list property is required
         Then the input is required`, () => {
         store_options.state.properties = {
             project_properties: [
@@ -154,5 +157,46 @@ describe("CustomPropertyListSingleValue.vue", () => {
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
         expect(wrapper.find("[data-test=document-custom-property-list]").exists()).toBeFalsy();
+    });
+
+    it(`User can choose a list value`, async () => {
+        store_options.state.properties = {
+            project_properties: [
+                {
+                    short_name: "list",
+                    allowed_list_values: [
+                        { id: 101, value: "abcde" },
+                        { id: 102, value: "efgh" },
+                    ],
+                },
+            ],
+        };
+
+        const currentlyUpdatedItemProperty = {
+            short_name: "list",
+            name: "custom list",
+            value: 101,
+            is_required: true,
+            type: "list",
+            is_multiple_value_allowed: false,
+        } as Property;
+        const wrapper = createWrapper(currentlyUpdatedItemProperty);
+
+        const input = wrapper.get("[data-test=document-custom-list-select]");
+        if (!(input.element instanceof HTMLSelectElement)) {
+            throw new Error("Can not find list in DOM");
+        }
+
+        await wrapper.vm.$nextTick();
+
+        wrapper.get("[data-test=document-custom-list-value-102]").setSelected();
+        input.element.dispatchEvent(new Event("input"));
+
+        await wrapper.vm.$nextTick();
+
+        expect(emitter.emit).toHaveBeenCalledWith("update-custom-property", {
+            property_short_name: "list",
+            value: "102",
+        });
     });
 });

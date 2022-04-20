@@ -24,6 +24,9 @@ import CustomPropertyDate from "./CustomPropertyDate.vue";
 import type { Property } from "../../../../../type";
 import localVue from "../../../../../helpers/local-vue";
 import DateFlatPicker from "../DateFlatPicker.vue";
+import emitter from "../../../../../helpers/emitter";
+
+jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyDate", () => {
     function createWrapper(property: Property): Wrapper<CustomPropertyDate> {
@@ -51,11 +54,15 @@ describe("CustomPropertyDate", () => {
             is_required: true,
             name: "date field",
             type: "date",
+            short_name: "custom_date",
         } as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
         wrapper.findComponent(DateFlatPicker).vm.$emit("input", "2019-06-30");
 
-        expect(wrapper.emitted().input).toEqual([["2019-06-30"]]);
+        expect(emitter.emit).toHaveBeenCalledWith("update-custom-property", {
+            property_short_name: "custom_date",
+            value: "2019-06-30",
+        });
     });
 });

@@ -38,7 +38,7 @@
                 v-bind:id="`${currentlyUpdatedItemProperty.short_name}`"
                 v-bind:required="currentlyUpdatedItemProperty.is_required"
                 v-model="value"
-                v-on:input="$emit('input', value)"
+                v-on:input="oninput"
             />
         </div>
     </div>
@@ -48,6 +48,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Property } from "../../../../../type";
 import DateFlatPicker from "../DateFlatPicker.vue";
+import emitter from "../../../../../helpers/emitter";
 
 @Component({ components: { DateFlatPicker } })
 export default class CustomPropertyDate extends Vue {
@@ -55,5 +56,12 @@ export default class CustomPropertyDate extends Vue {
     readonly currentlyUpdatedItemProperty!: Property;
 
     private value = String(this.currentlyUpdatedItemProperty.value);
+
+    oninput(value: string): void {
+        emitter.emit("update-custom-property", {
+            property_short_name: this.currentlyUpdatedItemProperty.short_name,
+            value,
+        });
+    }
 }
 </script>
