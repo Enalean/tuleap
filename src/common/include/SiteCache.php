@@ -136,6 +136,7 @@ class SiteCache
         PluginLoader::restoreOwnershipOnCacheFile($this->logger, $backend);
 
         (new \Tuleap\Cryptography\SecretKeyFileOnFileSystem())->restoreOwnership($this->logger);
+        Admin_Homepage_LogoFinder::restoreOwnershipAndPermissions($this->logger);
     }
 
     private function invalidateCustomizedLogoCache(): void
