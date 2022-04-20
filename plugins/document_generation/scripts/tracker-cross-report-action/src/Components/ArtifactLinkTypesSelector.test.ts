@@ -41,10 +41,6 @@ describe("ArtifactLinkTypesSelector", () => {
 
         await nextTick();
 
-        const selector = wrapper.get("select");
-
-        expect(selector.findAll("option")).toHaveLength(2);
-
         const emitted_input = wrapper.emitted("update:artifact_link_types");
         expect(emitted_input).toBeDefined();
         if (emitted_input === undefined) {
@@ -62,8 +58,6 @@ describe("ArtifactLinkTypesSelector", () => {
             },
         });
 
-        const selector = wrapper.get("select");
-
-        expect(selector.element.disabled).toBe(true);
+        expect(wrapper.find(".tlp-form-element-disabled").exists()).toBe(true);
     });
 });
