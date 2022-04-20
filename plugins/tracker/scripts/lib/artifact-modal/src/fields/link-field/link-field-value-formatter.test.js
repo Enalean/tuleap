@@ -79,5 +79,32 @@ describe(`link-field-value-formatter -`, () => {
                 links: [{ id: 551 }, { id: 404 }],
             });
         });
+
+        it(`when the parent key has an id set to empty string "",
+            then it will set the parent to undefined so that it is not present
+            in the JSON payload`, () => {
+            const field_value = {
+                field_id: 887,
+                type: "art_link",
+                permissions: ["read", "update", "create"],
+                links: [],
+                parent: { id: "" },
+            };
+            const result = formatLinkFieldValue(field_value);
+            expect(result.parent).toBeUndefined();
+        });
+
+        it(`when the parent key has a valid id, then it will preserve it`, () => {
+            const field_value = {
+                field_id: 210,
+                type: "art_link",
+                permissions: ["read", "update", "create"],
+                links: [],
+                parent: { id: "164" },
+            };
+            const result = formatLinkFieldValue(field_value);
+            expect(result.parent).toBeDefined();
+            expect(result.parent.id).toBe("164");
+        });
     });
 });
