@@ -63,7 +63,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { getTrackerReports as getTrackerReportsFromAPI } from "../rest-querier";
 import { usePromise } from "../Helpers/use-promise";
 import type { SelectedReport } from "../type";
@@ -91,19 +91,50 @@ const { is_processing, data } = usePromise(
 
 const report = computed({
     get(): SelectedReport | null {
-        const retrieved_report = data.value.find(
-            (retrieved_report) => retrieved_report.id === props.report?.id
-        );
-        if (retrieved_report !== undefined) {
-            emit("update:report", retrieved_report);
-            return retrieved_report;
-        }
         return props.report;
     },
     set(value: SelectedReport | null) {
         emit("update:report", value);
     },
 });
+
+watch(
+    () => data.value,
+    (report_responses) => {
+        const selected_report = report_responses.find(
+            (report_response) => report_response.id === props.report?.id
+        );
+        if (selected_report) {
+            report.value = selected_report;
+            return;
+        }
+        const default_report = report_responses.find(
+            (report_response) => report_response.is_default
+        );
+        if (default_report) {
+            report.value = default_report;
+            return;
+        }
+
+        const first_public_report = report_responses.find(
+            (report_response) => report_response.is_public
+        );
+        if (first_public_report) {
+            report.value = first_public_report;
+            return;
+        }
+
+        const first_private_report = report_responses.find(
+            (report_response) => !report_response.is_public
+        );
+        if (first_private_report) {
+            report.value = first_private_report;
+            return;
+        }
+
+        report.value = null;
+    }
+);
 
 const public_reports = computed(() => {
     return data.value.filter((report) => report.is_public);

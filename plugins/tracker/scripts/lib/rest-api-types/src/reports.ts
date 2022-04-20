@@ -21,4 +21,5 @@ export interface TrackerReportResponse {
     readonly id: number;
     readonly label: string;
     readonly is_public: boolean;
+    readonly is_default: boolean;
 }

@@ -91,7 +91,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public ?int $parent_report_id;
     public $user_id;
     public $group_id;
-    public $is_default;
+    /**
+     * @readonly
+     * @psalm-allow-private-mutation
+     */
+    public bool $is_default;
     public $tracker_id;
     public $is_query_displayed;
     public bool $is_in_expert_mode;
@@ -1464,9 +1468,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if ($this->getTracker()->userIsAdmin($current_user)) {
                     if ($request->exist('report_default')) {
                         if ($request->get('report_default')) {
-                            $this->is_default = '1';
+                            $this->is_default = true;
                         } else {
-                            $this->is_default = '0';
+                            $this->is_default = false;
                         }
                     }
                     $this->setDefaultReport();
@@ -1549,11 +1553,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
     }
 
-    public function setDefaultReport()
+    public function setDefaultReport(): void
     {
         $default_report = Tracker_ReportFactory::instance()->getDefaultReportByTrackerId($this->tracker_id);
         if ($default_report) {
-            $default_report->is_default = '0';
+            $default_report->is_default = false;
             Tracker_ReportFactory::instance()->save($default_report);
         }
         Tracker_ReportFactory::instance()->save($this);
@@ -1694,12 +1698,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      *
      * @param SimpleXMLElement $roott the node to which the Report is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $roott, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $roott, $xmlMapping): void
     {
         $root = $roott->addChild('report');
         // only add if different from default values
         if (! $this->is_default) {
-            $root->addAttribute('is_default', $this->is_default);
+            $root->addAttribute('is_default', '0');
         }
         if (! $this->is_query_displayed) {
             $root->addAttribute('is_query_displayed', $this->is_query_displayed);
