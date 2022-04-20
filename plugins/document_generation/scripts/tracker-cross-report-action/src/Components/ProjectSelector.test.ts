@@ -28,10 +28,12 @@ const projects: ProjectResponse[] = [
     {
         id: 102,
         label: "Project A",
+        icon: "",
     },
     {
         id: 105,
         label: "Project B",
+        icon: "",
     },
 ];
 

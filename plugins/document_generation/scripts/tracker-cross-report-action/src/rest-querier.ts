@@ -70,10 +70,15 @@ export function getTrackerCurrentlyUsedArtifactLinkTypes(
 export interface ProjectResponse {
     readonly id: number;
     readonly label: string;
+    readonly icon: string;
 }
 
-export function getProjects(): Promise<ProjectResponse[]> {
-    return recursiveGet("/api/v1/projects", { params: { limit: 50 } });
+export async function getProjects(): Promise<ProjectResponse[]> {
+    const projects: ProjectResponse[] = await recursiveGet("/api/v1/projects", {
+        params: { limit: 50 },
+    });
+
+    return projects.sort((a, b) => a.label.localeCompare(b.label));
 }
 
 export function getTrackers(project_id: number): Promise<MinimalTrackerResponse[]> {
