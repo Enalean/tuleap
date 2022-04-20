@@ -23,18 +23,19 @@
         class="tlp-form-element"
         v-bind:class="{ 'tlp-form-element-disabled': tracker_id === null }"
     >
-        <label class="tlp-label">
+        <label class="tlp-label" v-bind:for="select_element_id">
             {{ $gettext("Link type") }}
-            <Multiselect
-                v-model="artifact_link_types"
-                class="multiselect-art-link-types"
-                mode="tags"
-                v-bind:no-results-text="$gettext('All usable link types have been selected')"
-                v-bind:no-options-text="$gettext('No usable link types have been found')"
-                v-bind:options="multiselect_options"
-                v-bind:disabled="tracker_id === null || is_processing"
-            />
         </label>
+        <Multiselect
+            v-bind:id="select_element_id"
+            v-model="artifact_link_types"
+            class="multiselect-art-link-types"
+            mode="tags"
+            v-bind:no-results-text="$gettext('All usable link types have been selected')"
+            v-bind:no-options-text="$gettext('No usable link types have been found')"
+            v-bind:options="multiselect_options"
+            v-bind:disabled="tracker_id === null || is_processing"
+        />
     </div>
 </template>
 <script lang="ts" setup>
@@ -44,6 +45,7 @@ import { usePromise } from "../Helpers/use-promise";
 import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types";
 import Multiselect from "@vueform/multiselect";
 import { useGettext } from "vue3-gettext";
+import { generateElementID } from "../Helpers/id-element-generator";
 
 const NO_TYPE_SHORTNAME = "";
 
@@ -51,6 +53,8 @@ const props = defineProps<{ tracker_id: number | null; artifact_link_types: stri
 const emit = defineEmits<{
     (e: "update:artifact_link_types", value: string[]): void;
 }>();
+
+const select_element_id = generateElementID();
 
 const default_artifact_link_types: TrackerUsedArtifactLinkResponse[] = [];
 function getTrackerCurrentlyUsedArtifactLinkTypes(

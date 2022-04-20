@@ -23,22 +23,23 @@
         class="tlp-form-element"
         v-bind:class="{ 'tlp-form-element-disabled': project_id === null }"
     >
-        <label class="tlp-label">
+        <label class="tlp-label" v-bind:for="select_element_id">
             {{ $gettext("Tracker") }}
-            <select
-                v-model="tracker"
-                class="tlp-select"
-                v-bind:disabled="project_id === null || is_processing"
-            >
-                <option
-                    v-for="current_tracker in current_trackers"
-                    v-bind:key="current_tracker.id"
-                    v-bind:value="current_tracker"
-                >
-                    {{ current_tracker.label }}
-                </option>
-            </select>
         </label>
+        <select
+            v-bind:id="select_element_id"
+            v-model="tracker"
+            class="tlp-select"
+            v-bind:disabled="project_id === null || is_processing"
+        >
+            <option
+                v-for="current_tracker in current_trackers"
+                v-bind:key="current_tracker.id"
+                v-bind:value="current_tracker"
+            >
+                {{ current_tracker.label }}
+            </option>
+        </select>
     </div>
 </template>
 <script lang="ts" setup>
@@ -47,11 +48,14 @@ import { getTrackers as getTrackersFromAPI } from "../rest-querier";
 import type { SelectedTracker } from "../type";
 import type { MinimalTrackerResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 import { usePromise } from "../Helpers/use-promise";
+import { generateElementID } from "../Helpers/id-element-generator";
 
 const props = defineProps<{ project_id: number | null; tracker: SelectedTracker | null }>();
 const emit = defineEmits<{
     (e: "update:tracker", value: SelectedTracker | null): void;
 }>();
+
+const select_element_id = generateElementID();
 
 const default_data_current_trackers: MinimalTrackerResponse[] = [];
 

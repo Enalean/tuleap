@@ -23,43 +23,42 @@
         class="tlp-form-element"
         v-bind:class="{ 'tlp-form-element-disabled': tracker_id === null }"
     >
-        <label class="tlp-label">
+        <label class="tlp-label" v-bind:for="select_element_id">
             {{ $gettext("Report") }}
-            <select
-                v-model="report"
-                class="tlp-select"
-                v-bind:disabled="tracker_id === null || is_processing"
-            >
-                <optgroup
-                    v-if="personal_reports.length > 0"
-                    v-bind:label="
-                        $ngettext('Personal report', 'Personal reports', personal_reports.length)
-                    "
-                >
-                    <option
-                        v-for="personal_report in personal_reports"
-                        v-bind:key="personal_report.id"
-                        v-bind:value="personal_report"
-                    >
-                        {{ personal_report.label }}
-                    </option>
-                </optgroup>
-                <optgroup
-                    v-if="public_reports.length > 0"
-                    v-bind:label="
-                        $ngettext('Public report', 'Public reports', public_reports.length)
-                    "
-                >
-                    <option
-                        v-for="public_report in public_reports"
-                        v-bind:key="public_report.id"
-                        v-bind:value="public_report"
-                    >
-                        {{ public_report.label }}
-                    </option>
-                </optgroup>
-            </select>
         </label>
+        <select
+            v-bind:id="select_element_id"
+            v-model="report"
+            class="tlp-select"
+            v-bind:disabled="tracker_id === null || is_processing"
+        >
+            <optgroup
+                v-if="personal_reports.length > 0"
+                v-bind:label="
+                    $ngettext('Personal report', 'Personal reports', personal_reports.length)
+                "
+            >
+                <option
+                    v-for="personal_report in personal_reports"
+                    v-bind:key="personal_report.id"
+                    v-bind:value="personal_report"
+                >
+                    {{ personal_report.label }}
+                </option>
+            </optgroup>
+            <optgroup
+                v-if="public_reports.length > 0"
+                v-bind:label="$ngettext('Public report', 'Public reports', public_reports.length)"
+            >
+                <option
+                    v-for="public_report in public_reports"
+                    v-bind:key="public_report.id"
+                    v-bind:value="public_report"
+                >
+                    {{ public_report.label }}
+                </option>
+            </optgroup>
+        </select>
     </div>
 </template>
 <script lang="ts" setup>
@@ -68,11 +67,14 @@ import { getTrackerReports as getTrackerReportsFromAPI } from "../rest-querier";
 import { usePromise } from "../Helpers/use-promise";
 import type { SelectedReport } from "../type";
 import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+import { generateElementID } from "../Helpers/id-element-generator";
 
 const props = defineProps<{ tracker_id: number | null; report: SelectedReport | null }>();
 const emit = defineEmits<{
     (e: "update:report", value: SelectedReport | null): void;
 }>();
+
+const select_element_id = generateElementID();
 
 const default_tracker_reports: TrackerReportResponse[] = [];
 function getTrackerReports(tracker_id: number | null): Promise<TrackerReportResponse[]> {
