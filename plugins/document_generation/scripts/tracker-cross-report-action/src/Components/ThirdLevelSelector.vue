@@ -23,18 +23,9 @@
         <h2 class="tlp-modal-subtitle">
             {{ $gettext("Third level") }}
         </h2>
-        <div class="tlp-form-element">
-            <project-selector v-model:project_id="project_id" />
-        </div>
-        <div class="tlp-form-element">
-            <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
-        </div>
-        <div class="tlp-form-element">
-            <tracker-report-selector
-                v-model:report="report"
-                v-bind:tracker_id="tracker?.id ?? null"
-            />
-        </div>
+        <project-selector v-model:project_id="project_id" />
+        <tracker-selector v-model:tracker="tracker" v-bind:project_id="project_id" />
+        <tracker-report-selector v-model:report="report" v-bind:tracker_id="tracker?.id ?? null" />
     </level-selector>
 </template>
 <script lang="ts" setup>

@@ -19,14 +19,20 @@
   -->
 
 <template>
-    <label class="tlp-label">
-        {{ $gettext("Project") }}
-        <select v-model="project_id" class="tlp-select" v-bind:disabled="is_processing">
-            <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
-                {{ project.label }}
-            </option>
-        </select>
-    </label>
+    <div class="tlp-form-element">
+        <label class="tlp-label">
+            {{ $gettext("Project") }}
+            <select v-model="project_id" class="tlp-select" v-bind:disabled="is_processing">
+                <option
+                    v-for="project in projects"
+                    v-bind:key="project.id"
+                    v-bind:value="project.id"
+                >
+                    {{ project.label }}
+                </option>
+            </select>
+        </label>
+    </div>
 </template>
 <script lang="ts" setup>
 import { computed } from "vue";

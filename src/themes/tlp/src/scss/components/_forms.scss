@@ -17,19 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:math";
+
+$tlp-images-basepath: "../images" !default;
 $tlp-form-element-height: 40px;
 $tlp-form-element-small-padding-horizontal: var(--tlp-small-spacing);
 $tlp-form-element-large-font-size: 1rem;
 $tlp-form-element-large-height: 48px;
 $tlp-form-element-large-padding-horizontal: var(--tlp-medium-spacing);
 $tlp-form-element-select-small-background-size: 6px;
-$tlp-form-element-select-background-url: url("../images/field-double-arrows.svg");
-$tlp-form-element-select-small-background-url: url("../images/field-double-arrows-small.svg");
-$tlp-form-element-select-multiple-background-url: url("../images/field-ellipsis.svg");
-$tlp-form-element-select-multiple-small-background-url: url("../images/field-ellipsis-small.svg");
-$tlp-form-element-search-background: url("../images/field-magnifier.svg");
-$tlp-form-element-search-small-background: url("../images/field-magnifier-small.svg");
-$tlp-form-element-search-large-background: url("../images/field-magnifier-large.svg");
+$tlp-form-element-select-background-url: url("#{$tlp-images-basepath}/field-double-arrows.svg");
+$tlp-form-element-select-small-background-url: url("#{$tlp-images-basepath}/field-double-arrows-small.svg");
+$tlp-form-element-select-multiple-background-url: url("#{$tlp-images-basepath}/field-ellipsis.svg");
+$tlp-form-element-select-multiple-small-background-url: url("#{$tlp-images-basepath}/field-ellipsis-small.svg");
+$tlp-form-element-search-background: url("#{$tlp-images-basepath}/field-magnifier.svg");
+$tlp-form-element-search-small-background: url("#{$tlp-images-basepath}/field-magnifier-small.svg");
+$tlp-form-element-search-large-background: url("#{$tlp-images-basepath}/field-magnifier-large.svg");
 
 .tlp-form-element {
     margin: 0 0 var(--tlp-medium-spacing);
@@ -215,7 +218,7 @@ $tlp-form-element-search-large-background: url("../images/field-magnifier-large.
     &.tlp-search-large {
         height: $tlp-form-element-large-height;
         padding: 0 22px 0 40px;
-        border-radius: $tlp-form-element-large-height / 2;
+        border-radius: math.div($tlp-form-element-large-height, 2);
         background: var(--tlp-form-element-background) $tlp-form-element-search-large-background
             no-repeat;
         background-position: 18px center;

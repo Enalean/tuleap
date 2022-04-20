@@ -19,27 +19,32 @@
   -->
 
 <template>
-    <label class="tlp-label">
-        {{ $gettext("Link type") }}
-        <select
-            v-model="artifact_link_types"
-            class="tlp-select"
-            multiple
-            v-bind:disabled="tracker_id === null || is_processing"
-        >
-            <option
-                v-for="art_link in current_tracker_artifact_link_types"
-                v-bind:key="art_link.shortname"
-                v-bind:value="art_link.shortname"
+    <div
+        class="tlp-form-element"
+        v-bind:class="{ 'tlp-form-element-disabled': tracker_id === null }"
+    >
+        <label class="tlp-label">
+            {{ $gettext("Link type") }}
+            <select
+                v-model="artifact_link_types"
+                class="tlp-select"
+                multiple
+                v-bind:disabled="tracker_id === null || is_processing"
             >
-                {{
-                    art_link.shortname === NO_TYPE_SHORTNAME
-                        ? $gettext("No type")
-                        : art_link.forward_label
-                }}
-            </option>
-        </select>
-    </label>
+                <option
+                    v-for="art_link in current_tracker_artifact_link_types"
+                    v-bind:key="art_link.shortname"
+                    v-bind:value="art_link.shortname"
+                >
+                    {{
+                        art_link.shortname === NO_TYPE_SHORTNAME
+                            ? $gettext("No type")
+                            : art_link.forward_label
+                    }}
+                </option>
+            </select>
+        </label>
+    </div>
 </template>
 <script lang="ts" setup>
 import { computed, watch } from "vue";
