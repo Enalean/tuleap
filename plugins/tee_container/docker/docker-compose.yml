@@ -16,6 +16,7 @@ services:
     volumes:
       - ../../../:/usr/share/tuleap:ro,cached
       - tuleap-data:/data
+#      - ${PWD}/../../../geant_ov_rsa_ca_4_usertrust_rsa_certification_authority.pem:/extra_ca.pem:ro,cached
     depends_on:
       - db
       - redis
