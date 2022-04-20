@@ -139,7 +139,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3DprojID+AND+issuetype%3DissueName&expand=editmeta&startAt=0&maxResults=1' => [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22projID%22+AND+issuetype%3DissueName&expand=editmeta&startAt=0&maxResults=1' => [
                     "expand"     => "names,schema",
                     "startAt"    => 0,
                     "maxResults" => 1,
@@ -265,7 +265,7 @@ final class JiraFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                         ],
                     ],
                 ],
-                ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3DprojID+AND+issuetype%3DissueName&expand=editmeta&startAt=0&maxResults=1' => [
+                ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22projID%22+AND+issuetype%3DissueName&expand=editmeta&startAt=0&maxResults=1' => [
                     "expand"     => "names,schema",
                     "startAt"    => 0,
                     "maxResults" => 1,

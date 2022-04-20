@@ -86,7 +86,7 @@ class JiraFieldRetriever
     private function appendFromEditMeta(array $fields_by_id, string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
         $params = [
-            'jql'        => 'project=' . $jira_project_key . ' AND issuetype=' . $jira_issue_type_id,
+            'jql'        => 'project="' . $jira_project_key . '" AND issuetype=' . $jira_issue_type_id,
             'expand'     => 'editmeta',
             'startAt'    => 0,
             'maxResults' => 1,

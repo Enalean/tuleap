@@ -3,8 +3,8 @@ https://belledonne.atlassian.net/rest/api/2/issuetype/10001 0fe13c3af81025ac8e3a
 https://belledonne.atlassian.net/rest/api/2/project/SP/roledetails?currentMember=true c7650583a85218a6e20badf560aa10772988de10 200
 https://belledonne.atlassian.net/rest/api/2/project/SP/statuses 9630a86f9e737c0e1543f9ad324b5d7774e67892 200
 https://belledonne.atlassian.net/rest/api/2/issue/createmeta?projectKeys=SP&issuetypeIds=10001&expand=projects.issuetypes.fields c7dde026c023797cd360f3301d3b6f071e328e5f 200
-https://belledonne.atlassian.net/rest/api/2/search?jql=project%3DSP+AND+issuetype%3D10001&expand=editmeta&startAt=0&maxResults=1 99f83eca311bc2ae4b5d48f7b6ae9e04d2023f8f 200
-https://belledonne.atlassian.net/rest/api/2/search?jql=project%3DSP+AND+issuetype%3D10001&fields=%2Aall&expand=renderedFields&startAt=0 3366146eab44aaacf8c2f771a8f21d2998beb186 200
+https://belledonne.atlassian.net/rest/api/2/search?jql=project%3D%22SP%22+AND+issuetype%3D10001&expand=editmeta&startAt=0&maxResults=1 99f83eca311bc2ae4b5d48f7b6ae9e04d2023f8f 200
+https://belledonne.atlassian.net/rest/api/2/search?jql=project%3D%22SP%22+AND+issuetype%3D10001&fields=%2Aall&expand=renderedFields&startAt=0 3366146eab44aaacf8c2f771a8f21d2998beb186 200
 https://belledonne.atlassian.net/rest/api/2/issue/SP-24/changelog?startAt=0 cf14a43c71cf89140dd60891fdbe3bb5474e5538 200
 https://belledonne.atlassian.net/rest/api/2/issue/SP-24/comment?expand=renderedBody&startAt=0 e85cf388bb1c05a0f911abb76a96071f0e3b9b2d 200
 https://belledonne.atlassian.net/rest/api/2/issue/SP-23/changelog?startAt=0 c2009f91fc6dbcf126db27f9151d980505a96eca 200

@@ -235,7 +235,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
                     'startAt'    => 0,
                     'maxResults' => 50,
                     'total'      => 2,
@@ -343,7 +343,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
                     'startAt'    => 0,
                     'maxResults' => 1,
                     'total'      => 2,
@@ -381,7 +381,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('johndoe@example.com')
             ->andReturn([$john_doe]);
 
-        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
+        $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
                     'startAt'    => 1,
                     'maxResults' => 1,
                     'total'      => 2,
