@@ -22,33 +22,29 @@ import { ParentFeedbackController } from "./ParentFeedbackController";
 import type { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 import type { ParentArtifactIdentifier } from "../../../domain/parent/ParentArtifactIdentifier";
 import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArtifactIdentifierStub";
-import { RetrieveArtifactStub } from "../../../../tests/stubs/RetrieveArtifactStub";
-import type { Artifact } from "../../../domain/Artifact";
-import { ParentRetriever } from "../../../domain/parent/ParentRetriever";
+import { RetrieveParentStub } from "../../../../tests/stubs/RetrieveParentStub";
+import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 import { NotifyFaultStub } from "../../../../tests/stubs/NotifyFaultStub";
-import type { RetrieveArtifact } from "../../../domain/RetrieveArtifact";
+import type { RetrieveParent } from "../../../domain/parent/RetrieveParent";
 
 const PARENT_ARTIFACT_ID = 78;
+const PARENT_TITLE = "nonhereditary";
 
 describe(`ParentFeedbackController`, () => {
     let fault_notifier: NotifyFaultStub,
-        artifact_retriever: RetrieveArtifact,
+        artifact_retriever: RetrieveParent,
         parent_identifier: ParentArtifactIdentifier | null;
 
     beforeEach(() => {
         fault_notifier = NotifyFaultStub.withCount();
-        const parent_artifact: Artifact = {
-            id: PARENT_ARTIFACT_ID,
-            title: "nonhereditary",
-            xref: `story #${PARENT_ARTIFACT_ID}`,
-        };
-        artifact_retriever = RetrieveArtifactStub.withArtifact(parent_artifact);
+        const parent_artifact: ParentArtifact = { title: PARENT_TITLE };
+        artifact_retriever = RetrieveParentStub.withParent(parent_artifact);
         parent_identifier = ParentArtifactIdentifierStub.withId(PARENT_ARTIFACT_ID);
     });
 
     const displayParentFeedback = (): Promise<ParentFeedbackPresenter> => {
         const controller = ParentFeedbackController(
-            ParentRetriever(artifact_retriever),
+            artifact_retriever,
             fault_notifier,
             parent_identifier
         );
@@ -62,12 +58,12 @@ describe(`ParentFeedbackController`, () => {
             if (presenter.parent_artifact === null) {
                 throw new Error("Expected a parent artifact");
             }
-            expect(presenter.parent_artifact.id).toBe(PARENT_ARTIFACT_ID);
+            expect(presenter.parent_artifact.title).toBe(PARENT_TITLE);
         });
 
         it(`when there is a problem while retrieving the parent, it will notify that there has been a fault`, async () => {
             const fault = Fault.fromMessage("Could not retrieve parent");
-            artifact_retriever = RetrieveArtifactStub.withFault(fault);
+            artifact_retriever = RetrieveParentStub.withFault(fault);
 
             const presenter = await displayParentFeedback();
 

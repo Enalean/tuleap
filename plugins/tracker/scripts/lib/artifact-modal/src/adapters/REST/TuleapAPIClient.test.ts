@@ -27,30 +27,32 @@ import { TuleapAPIClient } from "./TuleapAPIClient";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { APILinkedArtifact } from "./APILinkedArtifact";
-import type { Artifact } from "../../domain/Artifact";
+import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
 const ARTIFACT_ID = 90;
 const FIRST_LINKED_ARTIFACT_ID = 40;
 const SECOND_LINKED_ARTIFACT_ID = 60;
+const ARTIFACT_TITLE = "thio";
 
 describe(`TuleapAPIClient`, () => {
-    describe(`getArtifact()`, () => {
-        const getArtifact = (): ResultAsync<Artifact, Fault> => {
+    describe(`getParent()`, () => {
+        const getParent = (): ResultAsync<ParentArtifact, Fault> => {
             const client = TuleapAPIClient();
-            return client.getArtifact(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
+            return client.getParent(ParentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
 
-        it(`will return the artifact matching the given id`, async () => {
-            const artifact = { id: ARTIFACT_ID } as Artifact;
+        it(`will return the parent artifact matching the given id`, async () => {
+            const artifact: ParentArtifact = { title: ARTIFACT_TITLE };
             const getSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchSuccess(getSpy, {
                 return_json: artifact,
             });
 
-            const result = await getArtifact();
+            const result = await getParent();
 
             if (!result.isOk()) {
                 throw new Error("Expected an Ok");
@@ -62,7 +64,7 @@ describe(`TuleapAPIClient`, () => {
             const getSpy = jest.spyOn(tlp_fetch, "get");
             mockFetchError(getSpy, { status: 404, statusText: "Not found" });
 
-            const result = await getArtifact();
+            const result = await getParent();
 
             if (!result.isErr()) {
                 throw new Error("Expected an Err");

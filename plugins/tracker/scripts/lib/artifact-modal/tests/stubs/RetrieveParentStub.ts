@@ -17,9 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ParentArtifact } from "../../src/domain/parent/ParentArtifact";
+import type { RetrieveParent } from "../../src/domain/parent/RetrieveParent";
 
-export const NoParentFault = (): Fault => ({
-    hasNoParent: () => true,
-    ...Fault.fromMessage("Current artifact has no parent"),
-});
+export const RetrieveParentStub = {
+    withParent: (artifact: ParentArtifact): RetrieveParent => ({
+        getParent: (): ResultAsync<ParentArtifact, Fault> => okAsync(artifact),
+    }),
+
+    withFault: (fault: Fault): RetrieveParent => ({
+        getParent: (): ResultAsync<ParentArtifact, Fault> => errAsync(fault),
+    }),
+};
