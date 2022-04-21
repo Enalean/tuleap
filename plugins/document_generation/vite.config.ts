@@ -27,7 +27,14 @@ export default vite.defineAppConfig("document_generation", {
     build: {
         rollupOptions: {
             input: {
-                "tracker-docgen-report-action": path.resolve(__dirname, "scripts/index.ts"),
+                "tracker-docgen-report-action": path.resolve(
+                    __dirname,
+                    "scripts/tracker-report-action/src/index.ts"
+                ),
+                "tracker-docgen-cross-report-action": path.resolve(
+                    __dirname,
+                    "scripts/tracker-cross-report-action/src/index.ts"
+                ),
             },
         },
     },
