@@ -42,6 +42,7 @@ import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
 import LevelSelector from "./LevelSelector.vue";
 
 const props = defineProps<{
+    current_project_id: number;
     tracker: SelectedTracker | null;
     report: SelectedReport | null;
     artifact_link_types: string[];
@@ -77,5 +78,5 @@ const artifact_link_types = computed({
     },
 });
 
-const project_id = ref<number | null>(null);
+const project_id = ref<number>(props.current_project_id);
 </script>

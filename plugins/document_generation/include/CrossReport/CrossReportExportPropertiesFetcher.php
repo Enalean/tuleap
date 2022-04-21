@@ -27,6 +27,7 @@ class CrossReportExportPropertiesFetcher
     public function fetchExportProperties(\Tracker $tracker, \Tracker_Report $tracker_report): CrossReportExportProperties
     {
         return new CrossReportExportProperties(
+            (int) $tracker->getGroupId(),
             $tracker->getId(),
             $tracker->getName(),
             (int) $tracker_report->getId(),

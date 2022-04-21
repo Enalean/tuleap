@@ -53,11 +53,13 @@
                     v-bind:tracker_id="properties.current_tracker_id"
                 />
                 <second-level-selector
+                    v-bind:current_project_id="props.properties.current_project_id"
                     v-model:tracker="selected_tracker_level_2"
                     v-model:report="selected_report_level_2"
                     v-model:artifact_link_types="artifact_link_types_level_2"
                 />
                 <third-level-selector
+                    v-bind:current_project_id="props.properties.current_project_id"
                     v-model:tracker="selected_tracker_level_3"
                     v-model:report="selected_report_level_3"
                 />

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\DocumentGeneration\CrossReport;
 
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -36,7 +37,12 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
 
     public function testFetchesProperties(): void
     {
-        $tracker           = TrackerTestBuilder::aTracker()->withId(789)->withName('Tracker Name')->build();
+        $current_project_id = 999;
+
+        $tracker           = TrackerTestBuilder::aTracker()
+            ->withId(789)->withName('Tracker Name')
+            ->withProject(ProjectTestBuilder::aProject()->withId($current_project_id)->build())
+            ->build();
         $current_report_id = 101;
         $current_report    = self::buildReport($tracker, $current_report_id, 'Public', null);
 
@@ -45,6 +51,7 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
             $current_report,
         );
 
+        self::assertEquals($current_project_id, $props->current_project_id);
         self::assertEquals(789, $props->current_tracker_id);
         self::assertEquals('Tracker Name', $props->current_tracker_name);
         self::assertEquals($current_report_id, $props->current_report_id);
