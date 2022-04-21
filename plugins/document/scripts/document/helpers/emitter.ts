@@ -83,6 +83,7 @@ export type Events = {
     "item-is-being-uploaded": void;
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;
+    "properties-recursion-option": { recursion_option: string };
 };
 
 export default mitt<Events>();

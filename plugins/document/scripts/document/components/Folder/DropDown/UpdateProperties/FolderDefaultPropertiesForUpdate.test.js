@@ -198,49 +198,6 @@ describe("FolderDefaultPropertiesForUpdate", () => {
     });
 
     describe("Apply bindings -", () => {
-        it(`Given recursion option is updated Then the props used for document creation is updated`, () => {
-            store.state = {
-                configuration: { is_status_property_used: true },
-                properties: {
-                    has_loaded_properties: true,
-                },
-            };
-
-            const wrapper = default_property({
-                currentlyUpdatedItem: {
-                    id: 123,
-                    title: "My title",
-                    description: "My description",
-                    owner: {
-                        id: 102,
-                    },
-                    properties: [
-                        {
-                            short_name: "field_",
-                            list_value: [
-                                {
-                                    id: 103,
-                                },
-                            ],
-                        },
-                    ],
-                    status: {
-                        value: "rejected",
-                        recursion: "none",
-                    },
-                },
-                itemProperty: [],
-            });
-
-            wrapper.vm.recursion_option = "all_items";
-
-            expect(
-                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
-            ).toBeTruthy();
-            expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toBe("all_items");
-            expect(wrapper.vm.recursion).toBe("all_items");
-        });
-
         it(`Emit event on check recursion for item`, () => {
             store.state = {
                 configuration: { is_status_property_used: false },
@@ -292,7 +249,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
     });
     describe("The checkbox value according to the recursion option -", () => {
         it(`Given "all_items" recursion option
-        then all properties should be checked`, async () => {
+        then all properties should be checked`, () => {
             store.state = {
                 configuration: { is_status_property_used: true },
                 properties: {
@@ -351,14 +308,14 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 ],
             });
 
-            wrapper.vm.recursion_option = "all_items";
-
             const input = wrapper.get("[data-test=document-custom-property-recursion-option]");
             input.element.value = "all_items";
 
             expect(wrapper.vm.properties_to_update).toEqual([]);
 
-            await wrapper.vm.updateRecursionOption();
+            wrapper
+                .find("[data-test=document-custom-property-recursion-option]")
+                .vm.$emit("input", "all_items");
 
             expect(wrapper.vm.properties_to_update).toEqual([
                 "field_1",
@@ -369,7 +326,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
 
         it(`Given "all_items" recursion option
-        then the status properties is not in the update list if the status is not enabled for the project`, async () => {
+        then the status properties is not in the update list if the status is not enabled for the project`, () => {
             store.state = {
                 configuration: { is_status_property_used: false },
                 properties: {
@@ -428,20 +385,20 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 ],
             });
 
-            wrapper.vm.recursion_option = "all_items";
-
             const input = wrapper.get("[data-test=document-custom-property-recursion-option]");
             input.element.value = "all_items";
 
             expect(wrapper.vm.properties_to_update).toEqual([]);
 
-            await wrapper.vm.updateRecursionOption();
+            wrapper
+                .find("[data-test=document-custom-property-recursion-option]")
+                .vm.$emit("input", "all_items");
 
             expect(wrapper.vm.properties_to_update).toEqual(["field_1", "field_2", "field_3"]);
         });
 
         it(`Given "none" recursion option
-        then the status properties is not in the update list is empty, all the checkbox are unchecked`, async () => {
+        then the status properties is not in the update list is empty, all the checkbox are unchecked`, () => {
             store.state = {
                 configuration: { is_status_property_used: true },
                 properties: {
@@ -487,16 +444,11 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 itemProperty: [],
             });
 
-            wrapper.vm.recursion_option = "none";
-
             wrapper.vm.properties_to_update = ["field_1", "field_3"];
 
-            const input = wrapper.get("[data-test=document-custom-property-recursion-option]");
-            input.element.value = "none";
-
-            expect(wrapper.vm.properties_to_update).toEqual(["field_1", "field_3"]);
-
-            await wrapper.vm.updateRecursionOption();
+            wrapper
+                .find("[data-test=document-custom-property-recursion-option]")
+                .vm.$emit("input", "none");
 
             expect(wrapper.vm.properties_to_update).toEqual([]);
         });

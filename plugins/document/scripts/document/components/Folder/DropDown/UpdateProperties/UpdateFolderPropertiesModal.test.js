@@ -120,7 +120,7 @@ describe("UpdateFolderPropertiesModal", () => {
 
             const wrapper = factory({ item });
             emitter.emit("properties-recursion-option", {
-                detail: { recursion_option: "all_items" },
+                recursion_option: "all_items",
             });
 
             expect(wrapper.vm.recursion_option).toBe("all_items");
