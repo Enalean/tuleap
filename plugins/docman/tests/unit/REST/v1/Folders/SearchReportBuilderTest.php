@@ -38,6 +38,7 @@ use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\Docman\Search\SearchSortPropertyMapper;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -71,7 +72,7 @@ final class SearchReportBuilderTest extends TestCase
         $column_title = new Docman_ReportColumnTitle($metadata);
         $column_factory->method("getColumnFromLabel")->willReturn($column_title);
 
-        $column_report_builder = new ColumnReportAugmenter($column_factory);
+        $column_report_builder = new ColumnReportAugmenter($column_factory, new SearchSortPropertyMapper());
 
         $user_manager = $this->createMock(\UserManager::class);
         $user_manager
