@@ -20,29 +20,33 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label">
+        <label class="tlp-label" v-bind:for="select_element_id">
             {{ $gettext("Project") }}
-            <select v-model="project_id" class="tlp-select" v-bind:disabled="is_processing">
-                <option
-                    v-for="project in projects"
-                    v-bind:key="project.id"
-                    v-bind:value="project.id"
-                >
-                    {{ project.icon }} {{ project.label }}
-                </option>
-            </select>
         </label>
+        <select
+            v-bind:id="select_element_id"
+            v-model="project_id"
+            class="tlp-select"
+            v-bind:disabled="is_processing"
+        >
+            <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
+                {{ project.icon }} {{ project.label }}
+            </option>
+        </select>
     </div>
 </template>
 <script lang="ts" setup>
 import { computed } from "vue";
 import { getProjects } from "../rest-querier";
 import { usePromise } from "../Helpers/use-promise";
+import { generateElementID } from "../Helpers/id-element-generator";
 
 const props = defineProps<{ project_id: number | null }>();
 const emit = defineEmits<{
     (e: "update:project_id", value: number | null): void;
 }>();
+
+const select_element_id = generateElementID();
 
 const { is_processing, data: projects } = usePromise([], getProjects());
 
