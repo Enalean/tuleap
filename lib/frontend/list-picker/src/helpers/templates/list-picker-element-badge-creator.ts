@@ -52,7 +52,7 @@ export function createItemBadgeTemplate(
                 class="list-picker-value-remove-button"
                 @pointerup=${event_listener}
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                ×
             </span>
             ${list_item.template}
         </span>
@@ -73,7 +73,7 @@ function createColoredBadge(
                 class="list-picker-value-remove-button"
                 @pointerup=${event_listener}
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                ×
             </span>
             ${list_item.label}
         </span>
@@ -102,7 +102,7 @@ function createLegacyColoredBadge(
                 class="list-picker-value-remove-button"
                 @pointerup=${event_listener}
             >
-                <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                ×
             </span>
             ${list_item.label}
         </span>
