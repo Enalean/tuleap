@@ -26,7 +26,6 @@ import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
-import type { APILinkedArtifact } from "./APILinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
@@ -181,8 +180,14 @@ describe(`TuleapAPIClient`, () => {
         };
 
         it(`will return an array of linked artifacts`, async () => {
-            const first_artifact = { id: FIRST_LINKED_ARTIFACT_ID } as APILinkedArtifact;
-            const second_artifact = { id: SECOND_LINKED_ARTIFACT_ID } as APILinkedArtifact;
+            const first_artifact = {
+                id: FIRST_LINKED_ARTIFACT_ID,
+                tracker: { color_name: "army-green" },
+            } as ArtifactWithStatus;
+            const second_artifact = {
+                id: SECOND_LINKED_ARTIFACT_ID,
+                tracker: { color_name: "chrome-silver" },
+            } as ArtifactWithStatus;
 
             const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
 

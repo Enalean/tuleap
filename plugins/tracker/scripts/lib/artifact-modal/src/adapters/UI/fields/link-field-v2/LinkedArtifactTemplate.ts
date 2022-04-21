@@ -47,7 +47,7 @@ const getRemoveClass = (artifact: LinkedArtifactPresenter): string =>
     artifact.is_marked_for_removal ? "link-field-link-to-remove" : "";
 
 const getCrossRefClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => {
-    const badge_color = `tlp-swatch-${artifact.tracker.color_name}`;
+    const badge_color = `tlp-swatch-${artifact.xref.color}`;
     const classes: MapOfClasses = {
         "cross-ref-badge": true,
         "link-field-xref-badge": true,
@@ -119,7 +119,7 @@ export const getLinkedArtifactTemplate = (
         <td class="link-field-table-cell-xref ${getRemoveClass(artifact)}">
             <a href="${artifact.uri}" class="link-field-artifact-link" data-test="artifact-link">
                 <span class="${getCrossRefClasses(artifact)}" data-test="artifact-xref">
-                    ${artifact.xref}
+                    ${artifact.xref.ref}
                 </span>
                 <span
                     class="link-field-artifact-title ${getRemoveClass(artifact)}"

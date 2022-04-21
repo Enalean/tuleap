@@ -21,6 +21,7 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 
 const ARTIFACT_ID = 43;
 const TITLE = "divinity";
@@ -43,8 +44,7 @@ describe(`LinkedArtifactPresenter`, () => {
             status: STATUS,
             is_open: true,
             uri: URI,
-            xref: CROSS_REFERENCE,
-            tracker: { color_name: COLOR },
+            xref: ArtifactCrossReferenceStub.withRefAndColor(CROSS_REFERENCE, COLOR),
             link_type,
         });
 
@@ -55,9 +55,9 @@ describe(`LinkedArtifactPresenter`, () => {
         expect(presenter.status).toBe(STATUS);
         expect(presenter.is_open).toBe(true);
         expect(presenter.uri).toBe(URI);
-        expect(presenter.xref).toBe(CROSS_REFERENCE);
+        expect(presenter.xref.ref).toBe(CROSS_REFERENCE);
+        expect(presenter.xref.color).toBe(COLOR);
         expect(presenter.link_type).toEqual(link_type);
-        expect(presenter.tracker.color_name).toBe(COLOR);
         expect(presenter.is_marked_for_removal).toBe(true);
     });
 });

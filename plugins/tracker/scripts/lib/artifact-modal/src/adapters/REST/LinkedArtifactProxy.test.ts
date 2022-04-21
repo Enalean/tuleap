@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { APILinkedArtifact, APITracker } from "./APILinkedArtifact";
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 
@@ -31,15 +31,14 @@ const CROSS_REFERENCE = `${TRACKER_SHORTNAME} #${ARTIFACT_ID}`;
 
 describe(`LinkedArtifactProxy`, () => {
     it(`builds a Linked Artifact from an Artifact representation from the API`, () => {
-        const tracker: APITracker = { color_name: COLOR };
-        const api_artifact: APILinkedArtifact = {
+        const api_artifact: ArtifactWithStatus = {
             id: ARTIFACT_ID,
             title: TITLE,
             status: STATUS,
             is_open: true,
             html_url: HTML_URI,
             xref: CROSS_REFERENCE,
-            tracker,
+            tracker: { color_name: COLOR },
         };
         const link_type: LinkType = {
             shortname: "_is_child",
@@ -47,18 +46,15 @@ describe(`LinkedArtifactProxy`, () => {
             label: "Parent",
         };
 
-        const linked_artifact = LinkedArtifactProxy.fromAPILinkedArtifactAndType(
-            api_artifact,
-            link_type
-        );
+        const linked_artifact = LinkedArtifactProxy.fromAPIArtifactAndType(api_artifact, link_type);
 
         expect(linked_artifact.identifier.id).toBe(ARTIFACT_ID);
         expect(linked_artifact.title).toBe(TITLE);
         expect(linked_artifact.status).toBe(STATUS);
         expect(linked_artifact.is_open).toBe(true);
         expect(linked_artifact.uri).toBe(HTML_URI);
-        expect(linked_artifact.xref).toBe(CROSS_REFERENCE);
-        expect(linked_artifact.link_type).toEqual(link_type);
-        expect(linked_artifact.tracker).toEqual(tracker);
+        expect(linked_artifact.xref.ref).toBe(CROSS_REFERENCE);
+        expect(linked_artifact.xref.color).toBe(COLOR);
+        expect(linked_artifact.link_type).toStrictEqual(link_type);
     });
 });

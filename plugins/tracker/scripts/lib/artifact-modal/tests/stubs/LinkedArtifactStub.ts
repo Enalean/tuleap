@@ -22,6 +22,7 @@ import type {
     LinkType,
 } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
 import { LinkedArtifactIdentifierStub } from "./LinkedArtifactIdentifierStub";
+import { ArtifactCrossReferenceStub } from "./ArtifactCrossReferenceStub";
 
 export const LinkedArtifactStub = {
     withDefaults: (data?: Partial<LinkedArtifact>): LinkedArtifact => ({
@@ -30,13 +31,12 @@ export const LinkedArtifactStub = {
         status: "Todo",
         is_open: true,
         uri: "/plugins/tracker/?aid=8",
-        xref: "tasks #8",
+        xref: ArtifactCrossReferenceStub.withRefAndColor("tasks #8", "clockwork-orange"),
         link_type: {
             shortname: "_is_child",
             direction: "forward",
             label: "Parent",
         },
-        tracker: { color_name: "clockwork-orange" },
         ...data,
     }),
     withLinkType: (link_type: LinkType, data?: Partial<LinkedArtifact>): LinkedArtifact => ({
@@ -45,9 +45,8 @@ export const LinkedArtifactStub = {
         status: "Todo",
         is_open: true,
         uri: "/plugins/tracker/?aid=8",
-        xref: "tasks #8",
+        xref: ArtifactCrossReferenceStub.withRefAndColor("tasks #8", "clockwork-orange"),
         link_type,
-        tracker: { color_name: "clockwork-orange" },
         ...data,
     }),
 };
