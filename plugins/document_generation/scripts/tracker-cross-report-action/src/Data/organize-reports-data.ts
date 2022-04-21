@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { getLinkedArtifacts, getReportArtifacts } from "../rest-querier";
 import type { ExportSettings } from "../export-document";
 import type { OrganizedReportsData, OrganizedReportDataLevel } from "../type";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
+import type { ArtifactForCrossReportDocGen } from "../type";
 
 export async function organizeReportsData(
     export_settings: ExportSettings
@@ -32,12 +32,11 @@ export async function organizeReportsData(
         third_level: export_settings_third_level,
     } = export_settings;
 
-    const first_level_report_artifacts_responses: ArtifactResponse[] = await getReportArtifacts(
-        export_settings_first_level.report_id,
-        true
-    );
+    const first_level_report_artifacts_responses: ArtifactForCrossReportDocGen[] =
+        await getReportArtifacts(export_settings_first_level.report_id, true);
 
-    const first_level_artifacts_representations_map: Map<number, ArtifactResponse> = new Map();
+    const first_level_artifacts_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+        new Map();
     for (const artifact_response of first_level_report_artifacts_responses) {
         first_level_artifacts_representations_map.set(artifact_response.id, artifact_response);
     }
@@ -53,7 +52,7 @@ export async function organizeReportsData(
 
     if (export_settings_second_level) {
         const second_level_organized_data: OrganizedReportDataLevel = {
-            artifact_representations: new Map<number, ArtifactResponse>(),
+            artifact_representations: new Map<number, ArtifactForCrossReportDocGen>(),
             tracker_name: export_settings_second_level.tracker_name,
             linked_artifacts: new Map<number, ReadonlyArray<number>>(),
         };
@@ -73,7 +72,7 @@ export async function organizeReportsData(
 
         if (export_settings_third_level) {
             const third_level_organized_data: Omit<OrganizedReportDataLevel, "linked_artifacts"> = {
-                artifact_representations: new Map<number, ArtifactResponse>(),
+                artifact_representations: new Map<number, ArtifactForCrossReportDocGen>(),
                 tracker_name: export_settings_third_level.tracker_name,
             };
 
@@ -100,13 +99,11 @@ async function retrieveLinkedArtifactsData(
     report_id: number,
     artifact_ids: ReadonlyArray<number>,
     artifact_link_types: ReadonlyArray<string>,
-    linked_artifacts_representations: Map<number, ArtifactResponse>,
+    linked_artifacts_representations: Map<number, ArtifactForCrossReportDocGen>,
     linked_artifacts_maps: Map<number, ReadonlyArray<number>>
 ): Promise<void> {
-    const following_level_report_artifacts_responses: ArtifactResponse[] = await getReportArtifacts(
-        report_id,
-        true
-    );
+    const following_level_report_artifacts_responses: ArtifactForCrossReportDocGen[] =
+        await getReportArtifacts(report_id, true);
 
     await limitConcurrencyPool(5, artifact_ids, async (artifact_id: number): Promise<void> => {
         for (const artifact_link_type of artifact_link_types) {
@@ -118,11 +115,12 @@ async function retrieveLinkedArtifactsData(
                 if (linked_artifacts_response.collection.length === 0) {
                     continue;
                 }
-                const matching_following_level_representations: ArtifactResponse[] =
-                    following_level_report_artifacts_responses.filter((value: ArtifactResponse) =>
-                        linked_artifacts_response.collection.find(
-                            (element: ArtifactResponse) => value.id === element.id
-                        )
+                const matching_following_level_representations: ArtifactForCrossReportDocGen[] =
+                    following_level_report_artifacts_responses.filter(
+                        (value: ArtifactForCrossReportDocGen) =>
+                            linked_artifacts_response.collection.find(
+                                (element: ArtifactForCrossReportDocGen) => value.id === element.id
+                            )
                     );
 
                 for (const matching_representation of matching_following_level_representations) {
@@ -134,7 +132,7 @@ async function retrieveLinkedArtifactsData(
                 linked_artifacts_maps.set(
                     artifact_id,
                     matching_following_level_representations.map(
-                        (representation: ArtifactResponse) => {
+                        (representation: ArtifactForCrossReportDocGen) => {
                             return representation.id;
                         }
                     )

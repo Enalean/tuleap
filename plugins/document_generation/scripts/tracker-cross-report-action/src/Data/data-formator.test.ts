@@ -20,8 +20,7 @@
 import { formatData } from "./data-formator";
 import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
 import * as organized_data from "./organize-reports-data";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
-import type { OrganizedReportsData } from "../type";
+import type { OrganizedReportsData, ArtifactForCrossReportDocGen } from "../type";
 import { TextCellWithMerges } from "../type";
 import type { ExportSettings } from "../export-document";
 
@@ -30,10 +29,6 @@ describe("data-formator", () => {
         const second_level_representation_map = buildSecondLevelRepresentationsMap();
         second_level_representation_map.set(76, {
             id: 76,
-            title: null,
-            xref: "Task #76",
-            tracker: { id: 15 },
-            html_url: "/plugins/tracker/?aid=76",
             values: [
                 {
                     field_id: 10,
@@ -42,7 +37,7 @@ describe("data-formator", () => {
                     value: 76,
                 },
             ],
-        } as ArtifactResponse);
+        } as ArtifactForCrossReportDocGen);
 
         jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
@@ -382,14 +377,11 @@ describe("data-formator", () => {
     });
 });
 
-function buildFirstLevelRepresentationsMap(): Map<number, ArtifactResponse> {
-    const first_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+function buildFirstLevelRepresentationsMap(): Map<number, ArtifactForCrossReportDocGen> {
+    const first_level_artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+        new Map();
     first_level_artifact_representations_map.set(74, {
         id: 74,
-        title: null,
-        xref: "story #74",
-        tracker: { id: 14 },
-        html_url: "/plugins/tracker/?aid=74",
         values: [
             {
                 field_id: 1,
@@ -422,13 +414,9 @@ function buildFirstLevelRepresentationsMap(): Map<number, ArtifactResponse> {
                 values: [],
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
     first_level_artifact_representations_map.set(4, {
         id: 4,
-        title: null,
-        xref: "story #4",
-        tracker: { id: 14 },
-        html_url: "/plugins/tracker/?aid=4",
         values: [
             {
                 field_id: 1,
@@ -461,19 +449,16 @@ function buildFirstLevelRepresentationsMap(): Map<number, ArtifactResponse> {
                 values: [],
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
 
     return first_level_artifact_representations_map;
 }
 
-function buildSecondLevelRepresentationsMap(): Map<number, ArtifactResponse> {
-    const second_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+function buildSecondLevelRepresentationsMap(): Map<number, ArtifactForCrossReportDocGen> {
+    const second_level_artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+        new Map();
     second_level_artifact_representations_map.set(75, {
         id: 75,
-        title: null,
-        xref: "Task #75",
-        tracker: { id: 15 },
-        html_url: "/plugins/tracker/?aid=75",
         values: [
             {
                 field_id: 10,
@@ -482,19 +467,16 @@ function buildSecondLevelRepresentationsMap(): Map<number, ArtifactResponse> {
                 value: 75,
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
 
     return second_level_artifact_representations_map;
 }
 
-function buildThirdLevelRepresentationsMap(): Map<number, ArtifactResponse> {
-    const third_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+function buildThirdLevelRepresentationsMap(): Map<number, ArtifactForCrossReportDocGen> {
+    const third_level_artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+        new Map();
     third_level_artifact_representations_map.set(80, {
         id: 80,
-        title: null,
-        xref: "subtask #80",
-        tracker: { id: 16 },
-        html_url: "/plugins/tracker/?aid=80",
         values: [
             {
                 field_id: 20,
@@ -509,13 +491,9 @@ function buildThirdLevelRepresentationsMap(): Map<number, ArtifactResponse> {
                 value: "Subtask title 01",
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
     third_level_artifact_representations_map.set(81, {
         id: 81,
-        title: null,
-        xref: "subtask #81",
-        tracker: { id: 16 },
-        html_url: "/plugins/tracker/?aid=81",
         values: [
             {
                 field_id: 20,
@@ -530,7 +508,7 @@ function buildThirdLevelRepresentationsMap(): Map<number, ArtifactResponse> {
                 value: "Subtask title 02",
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
 
     return third_level_artifact_representations_map;
 }
