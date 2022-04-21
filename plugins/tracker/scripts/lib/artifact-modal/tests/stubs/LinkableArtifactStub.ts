@@ -26,6 +26,9 @@ export const LinkableArtifactStub = {
         id: 456,
         title: "flocculation",
         xref: ArtifactCrossReferenceStub.withRefAndColor("story #456", "lake-placid-blue"),
+        uri: "/plugins/tracker/?aid=456",
+        status: "Ongoing",
+        is_open: true,
         ...data,
     }),
 
@@ -38,5 +41,8 @@ export const LinkableArtifactStub = {
         id,
         title,
         xref: ArtifactCrossReferenceStub.withRefAndColor(xref, color),
+        uri: "/plugins/tracker/?aid=" + id,
+        status: "Ongoing",
+        is_open: true,
     }),
 };

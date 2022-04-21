@@ -20,7 +20,7 @@
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import {
-    getAddLinkButtonLabel,
+    getDefaultLinkTypeLabel,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
@@ -32,14 +32,23 @@ import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { createLinkSelector } from "@tuleap/link-selector";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
+import type { LinkSelector } from "@tuleap/link-selector";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
     readonly controller: LinkFieldControllerType;
     readonly artifact_link_select: HTMLSelectElement;
+    link_selector: LinkSelector;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
     link_addition_presenter: LinkAdditionPresenter;
+    new_links_presenter: NewLinkCollectionPresenter;
+    current_link_type: LinkType;
 }
 export type HostElement = LinkField & HTMLElement;
 
@@ -105,6 +114,7 @@ export const LinkField = define<LinkField>({
 
         return select;
     },
+    link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
             host.field_presenter = controller.displayField();
@@ -112,19 +122,15 @@ export const LinkField = define<LinkField>({
                 .displayLinkedArtifacts()
                 .then((presenter) => (host.linked_artifacts_presenter = presenter));
 
-            if (host.artifact_link_select !== null) {
-                createLinkSelector(host.artifact_link_select, {
-                    search_field_callback: controller.autoComplete,
-                    templating_callback: getLinkableArtifactTemplate,
-                    selection_callback: (value) => {
-                        const artifact = getLinkableArtifact(value);
-                        host.link_addition_presenter =
-                            controller.onLinkableArtifactSelection(artifact);
-                    },
-                    placeholder: getLinkSelectorPlaceholderText(),
-                });
-            }
-
+            host.link_selector = createLinkSelector(host.artifact_link_select, {
+                search_field_callback: controller.autoComplete,
+                templating_callback: getLinkableArtifactTemplate,
+                selection_callback: (value) => {
+                    const artifact = getLinkableArtifact(value);
+                    host.link_addition_presenter = controller.onLinkableArtifactSelection(artifact);
+                },
+                placeholder: getLinkSelectorPlaceholderText(),
+            });
             return controller;
         },
     },
@@ -134,9 +140,22 @@ export const LinkField = define<LinkField>({
             last_value ?? LinkedArtifactCollectionPresenter.buildLoadingState(),
         set: (host, presenter) => presenter,
     },
-    link_addition_presenter: {
-        get: (host, last_value) => last_value ?? LinkAdditionPresenter.withButtonDisabled(),
+    new_links_presenter: {
+        get: (host, last_value) => last_value ?? NewLinkCollectionPresenter.buildEmpty(),
         set: (host, presenter) => presenter,
+    },
+    link_addition_presenter: {
+        get: (host, last_value) => last_value ?? LinkAdditionPresenter.withoutSelection(),
+        set: (host, presenter) => presenter,
+    },
+    current_link_type: {
+        get: (host, last_value) =>
+            last_value ?? {
+                shortname: UNTYPED_LINK,
+                label: getDefaultLinkTypeLabel(),
+                direction: FORWARD_DIRECTION,
+            },
+        set: (host, value) => value,
     },
     content: (host) => html`
         <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
@@ -150,20 +169,12 @@ export const LinkField = define<LinkField>({
             </tbody>
             <tfoot class="link-field-table-footer">
                 <tr class="link-field-table-row">
-                    <td class="link-field-table-footer-type">
-                        ${getTypeSelectorTemplate(host.field_presenter)}
-                    </td>
+                    <td class="link-field-table-footer-type">${getTypeSelectorTemplate(host)}</td>
                     <td class="link-field-table-footer-input" colspan="2">
                         <select data-select="artifact-link-select"></select>
                     </td>
                     <td class="link-field-table-footer-add-link">
-                        <button
-                            type="button"
-                            class="tlp-button-small tlp-button-primary"
-                            disabled="${host.link_addition_presenter.is_add_button_disabled}"
-                        >
-                            ${getAddLinkButtonLabel()}
-                        </button>
+                        ${getAddLinkButtonTemplate(host)}
                     </td>
                 </tr>
             </tfoot>

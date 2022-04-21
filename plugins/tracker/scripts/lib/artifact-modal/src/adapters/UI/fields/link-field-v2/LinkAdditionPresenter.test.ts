@@ -18,15 +18,19 @@
  */
 
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 describe(`LinkAdditionPresenter`, () => {
-    it(`builds with button disabled`, () => {
-        const presenter = LinkAdditionPresenter.withButtonDisabled();
+    it(`builds without selection`, () => {
+        const presenter = LinkAdditionPresenter.withoutSelection();
         expect(presenter.is_add_button_disabled).toBe(true);
+        expect(presenter.artifact).toBeNull();
     });
 
-    it(`builds with button enabled`, () => {
-        const presenter = LinkAdditionPresenter.withButtonEnabled();
+    it(`builds with an artifact selected`, () => {
+        const artifact = LinkableArtifactStub.withDefaults();
+        const presenter = LinkAdditionPresenter.withArtifactSelected(artifact);
         expect(presenter.is_add_button_disabled).toBe(false);
+        expect(presenter.artifact).toBe(artifact);
     });
 });

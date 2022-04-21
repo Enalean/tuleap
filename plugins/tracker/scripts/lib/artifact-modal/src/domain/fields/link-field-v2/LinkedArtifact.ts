@@ -19,18 +19,10 @@
 
 import type { Identifier } from "../../Identifier";
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
+import type { LinkType } from "./LinkType";
 
 // I identify an artifact linked to the current artifact under edition
 export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
-
-export const FORWARD_DIRECTION = "forward";
-export const REVERSE_DIRECTION = "reverse";
-
-export interface LinkType {
-    readonly shortname: string;
-    readonly direction: string;
-    readonly label: string;
-}
 
 export interface LinkedArtifact {
     readonly identifier: LinkedArtifactIdentifier;

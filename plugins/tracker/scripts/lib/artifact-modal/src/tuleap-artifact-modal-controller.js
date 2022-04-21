@@ -65,6 +65,7 @@ import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field-v2/ArtifactLinkSelectorAutoCompleter";
+import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 
 export default ArtifactModalController;
 
@@ -98,6 +99,7 @@ function ArtifactModalController(
     const api_client = TuleapAPIClient();
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
+    const new_links_store = NewLinksStore();
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
@@ -151,6 +153,8 @@ function ArtifactModalController(
                 fault_feedback_controller,
                 field,
                 ArtifactLinkSelectorAutoCompleter(api_client, current_artifact_identifier),
+                new_links_store,
+                new_links_store,
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,

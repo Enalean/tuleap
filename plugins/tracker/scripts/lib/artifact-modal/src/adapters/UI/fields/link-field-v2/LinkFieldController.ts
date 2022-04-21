@@ -37,6 +37,11 @@ import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelect
 import type { LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
+import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import type { AddNewLink } from "../../../../domain/fields/link-field-v2/AddNewLink";
+import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
+import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 
 export interface LinkFieldControllerType {
     displayField(): LinkFieldPresenter;
@@ -45,6 +50,7 @@ export interface LinkFieldControllerType {
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete: LinkSelectorSearchFieldCallback;
     onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
+    addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
 }
 
 const isCreationModeFault = (fault: Fault): boolean => {
@@ -75,6 +81,8 @@ export const LinkFieldController = (
     fault_notifier: NotifyFault,
     field: ArtifactLinkFieldStructure,
     links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
+    new_link_adder: AddNewLink,
+    new_links_retriever: RetrieveNewLinks,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_artifact_reference: ArtifactCrossReference | null
 ): LinkFieldControllerType => ({
@@ -114,8 +122,13 @@ export const LinkFieldController = (
 
     onLinkableArtifactSelection: (artifact): LinkAdditionPresenter => {
         if (!artifact) {
-            return LinkAdditionPresenter.withButtonDisabled();
+            return LinkAdditionPresenter.withoutSelection();
         }
-        return LinkAdditionPresenter.withButtonEnabled();
+        return LinkAdditionPresenter.withArtifactSelected(artifact);
+    },
+
+    addNewLink(artifact, type): NewLinkCollectionPresenter {
+        new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
+        return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
     },
 });

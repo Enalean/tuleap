@@ -17,21 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import { NewArtifactLinkIdentifier } from "./NewArtifactLinkIdentifier";
+import { LinkableArtifactStub } from "../../../../tests/stubs/LinkableArtifactStub";
 
-export type LinkAdditionPresenter = {
-    readonly artifact: LinkableArtifact | null;
-    readonly is_add_button_disabled: boolean;
-};
+const ARTIFACT_ID = 77;
 
-export const LinkAdditionPresenter = {
-    withoutSelection: (): LinkAdditionPresenter => ({
-        artifact: null,
-        is_add_button_disabled: true,
-    }),
+describe(`NewArtifactLinkIdentifier`, () => {
+    it(`builds an identifier from a LinkableArtifact`, () => {
+        const linkable_artifact = LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID });
 
-    withArtifactSelected: (artifact: LinkableArtifact): LinkAdditionPresenter => ({
-        artifact,
-        is_add_button_disabled: false,
-    }),
-};
+        const identifier = NewArtifactLinkIdentifier.fromLinkableArtifact(linkable_artifact);
+        expect(identifier.id).toBe(ARTIFACT_ID);
+    });
+});

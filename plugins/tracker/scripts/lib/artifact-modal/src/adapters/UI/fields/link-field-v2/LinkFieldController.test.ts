@@ -42,6 +42,12 @@ import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/Retriev
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
+import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
+import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants/src/constants";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -72,6 +78,8 @@ describe(`LinkFieldController`, () => {
                 NotifyFaultStub.withCount(),
                 field,
                 auto_completer,
+                AddNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
                 current_artifact_identifier,
                 cross_reference
             );
@@ -103,6 +111,8 @@ describe(`LinkFieldController`, () => {
                 fault_notifier,
                 field,
                 auto_completer,
+                AddNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
                 current_artifact_identifier,
                 cross_reference
             );
@@ -158,6 +168,8 @@ describe(`LinkFieldController`, () => {
                 NotifyFaultStub.withCount(),
                 field,
                 auto_completer,
+                AddNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
                 current_artifact_identifier,
                 cross_reference
             );
@@ -194,6 +206,8 @@ describe(`LinkFieldController`, () => {
                 NotifyFaultStub.withCount(),
                 field,
                 auto_completer,
+                AddNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
                 current_artifact_identifier,
                 cross_reference
             );
@@ -223,6 +237,8 @@ describe(`LinkFieldController`, () => {
                 NotifyFaultStub.withCount(),
                 field,
                 auto_completer,
+                AddNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
                 current_artifact_identifier,
                 cross_reference
             );
@@ -237,6 +253,47 @@ describe(`LinkFieldController`, () => {
         it(`when an artifact is selected, it will return a presenter with enabled button`, () => {
             const presenter = onSelection(LinkableArtifactStub.withDefaults());
             expect(presenter.is_add_button_disabled).toBe(false);
+        });
+    });
+
+    describe(`addNewLink`, () => {
+        let new_link_adder: AddNewLinkStub;
+
+        beforeEach(() => {
+            new_link_adder = AddNewLinkStub.withCount();
+        });
+
+        const addNewLink = (): NewLinkCollectionPresenter => {
+            const linkable_artifact = LinkableArtifactStub.withDefaults({
+                id: ARTIFACT_ID,
+            });
+            const link_type = LinkTypeStub.buildChildLinkType();
+            const controller = LinkFieldController(
+                RetrieveAllLinkedArtifactsStub.withoutLink(),
+                RetrieveLinkedArtifactsSyncStub.withoutLink(),
+                AddLinkMarkedForRemovalStub.withCount(),
+                DeleteLinkMarkedForRemovalStub.withCount(),
+                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+                NotifyFaultStub.withCount(),
+                field,
+                auto_completer,
+                new_link_adder,
+                RetrieveNewLinksStub.withNewLinks(
+                    NewLink.fromLinkableArtifactAndType(linkable_artifact, link_type)
+                ),
+                current_artifact_identifier,
+                cross_reference
+            );
+            return controller.addNewLink(linkable_artifact, link_type);
+        };
+
+        it(`adds a new link to the stored new links and returns an updated presenter`, () => {
+            const presenter = addNewLink();
+
+            expect(new_link_adder.getCallCount()).toBe(1);
+            expect(presenter.links).toHaveLength(1);
+            expect(presenter.links[0].identifier.id).toBe(ARTIFACT_ID);
+            expect(presenter.links[0].link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
         });
     });
 });

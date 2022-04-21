@@ -22,9 +22,19 @@ import { html } from "hybrids";
 import type { LinkField } from "./LinkField";
 import { getDefaultLinkTypeLabel, getNewArtifactLabel } from "../../../../gettext-catalog";
 import type { AllowedLinkTypesPresenterContainer } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { LinkTypeProxy } from "./LinkTypeProxy";
+
+const onChange = (host: LinkField, event: Event): void => {
+    const new_link_type = LinkTypeProxy.fromChangeEvent(event);
+    if (!new_link_type) {
+        return;
+    }
+    host.current_link_type = new_link_type;
+};
 
 const getOptions = (
+    host: LinkField,
     types_container: AllowedLinkTypesPresenterContainer
 ): UpdateFunction<LinkField> => {
     const { forward_type_presenter } = types_container;
@@ -34,27 +44,38 @@ const getOptions = (
 
     return html`
         <option disabled>–</option>
-        <option value="${forward_link_value}" data-test="link-type-select-option">
+        <option
+            value="${forward_link_value}"
+            selected="${host.current_link_type.shortname === forward_type_presenter.shortname}"
+        >
             ${forward_type_presenter.label}
         </option>
     `;
 };
 
-export const getTypeSelectorTemplate = (
-    presenter: LinkFieldPresenter
-): UpdateFunction<LinkField> => {
+export const getTypeSelectorTemplate = (host: LinkField): UpdateFunction<LinkField> => {
     const current_artifact_xref =
-        presenter.current_artifact_reference === null
+        host.field_presenter.current_artifact_reference === null
             ? getNewArtifactLabel()
-            : presenter.current_artifact_reference.ref;
+            : host.field_presenter.current_artifact_reference.ref;
 
     return html`
-        <select class="tlp-select tlp-select-small" data-test="link-type-select" required>
+        <select
+            class="tlp-select tlp-select-small"
+            data-test="link-type-select"
+            required
+            onchange="${onChange}"
+        >
             <optgroup label="${current_artifact_xref}" data-test="link-type-select-optgroup">
-                <option value="" data-test="link-type-select-option" selected>
+                <option
+                    value=" forward"
+                    selected="${host.current_link_type.shortname === UNTYPED_LINK}"
+                >
                     ${getDefaultLinkTypeLabel()}
                 </option>
-                ${presenter.allowed_types.map((presenter) => getOptions(presenter))}
+                ${host.field_presenter.allowed_types.map((presenter) =>
+                    getOptions(host, presenter)
+                )}
             </optgroup>
         </select>
     `;

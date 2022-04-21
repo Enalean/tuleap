@@ -17,9 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { LinkedArtifact } from "./LinkedArtifact";
+import type { LinkableArtifact } from "./LinkableArtifact";
 import type { LinkType } from "./LinkType";
-import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import { NewArtifactLinkIdentifier } from "./NewArtifactLinkIdentifier";
 
-export interface RetrieveLinkTypes {
-    getAllLinkTypes(current_artifact_identifier: CurrentArtifactIdentifier): Promise<LinkType[]>;
-}
+/**
+ * Alias LinkedArtifact because they both need the same properties
+ */
+export type NewLink = Omit<LinkedArtifact, "identifier"> & {
+    readonly identifier: NewArtifactLinkIdentifier;
+};
+
+export const NewLink = {
+    fromLinkableArtifactAndType: (artifact: LinkableArtifact, type: LinkType): NewLink => ({
+        identifier: NewArtifactLinkIdentifier.fromLinkableArtifact(artifact),
+        title: artifact.title,
+        xref: artifact.xref,
+        uri: artifact.uri,
+        status: artifact.status,
+        is_open: artifact.is_open,
+        link_type: type,
+    }),
+};

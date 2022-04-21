@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { UpdateFunction } from "hybrids";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import { setCatalog } from "../../../../gettext-catalog";
-import type { HostElement, LinkField } from "./LinkField";
+import type { HostElement } from "./LinkField";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
+import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 
-function getSelectMainOptionsGroup(target: ShadowRoot): HTMLOptGroupElement {
-    const optgroup = target.querySelector("[data-test=link-type-select-optgroup]");
+function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupElement {
+    const optgroup = select.querySelector("[data-test=link-type-select-optgroup]");
     if (!(optgroup instanceof HTMLOptGroupElement)) {
         throw new Error("The main <optgroup> can't be found in the target");
     }
@@ -34,17 +36,17 @@ function getSelectMainOptionsGroup(target: ShadowRoot): HTMLOptGroupElement {
 }
 
 describe("TypeSelectorTemplate", () => {
-    let target: ShadowRoot, cross_reference: ArtifactCrossReference | null;
+    let host: HostElement, cross_reference: ArtifactCrossReference | null;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
-        target = document.implementation
-            .createHTMLDocument()
-            .createElement("div") as unknown as ShadowRoot;
         cross_reference = ArtifactCrossReferenceStub.withRef("story #150");
     });
 
-    const getTemplate = (): UpdateFunction<LinkField> => {
+    const render = (): HTMLSelectElement => {
+        const target = document.implementation
+            .createHTMLDocument()
+            .createElement("div") as unknown as ShadowRoot;
         const allowed_types = [
             {
                 shortname: "_is_child",
@@ -57,8 +59,8 @@ describe("TypeSelectorTemplate", () => {
                 reverse_label: "Covers",
             },
         ];
-        return getTypeSelectorTemplate(
-            LinkFieldPresenter.fromFieldAndCrossReference(
+        host = {
+            field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
                 {
                     field_id: 276,
                     type: "art_link",
@@ -66,37 +68,46 @@ describe("TypeSelectorTemplate", () => {
                     allowed_types,
                 },
                 cross_reference
-            )
-        );
-    };
+            ),
+            current_link_type: LinkTypeStub.buildUntyped(),
+        } as HostElement;
 
-    it("should build the type selector", () => {
-        const host = {} as HostElement;
-        const update = getTemplate();
-        update(host, target);
+        const updateFunction = getTypeSelectorTemplate(host);
+        updateFunction(host, target);
 
         const select = target.querySelector("[data-test=link-type-select]");
         if (!(select instanceof HTMLSelectElement)) {
-            throw new Error("Unable to find the link type select in the target");
+            throw new Error("An expected element has not been found in template");
         }
+        return select;
+    };
 
-        const optgroup = getSelectMainOptionsGroup(target);
-        const options = optgroup.querySelectorAll("[data-test=link-type-select-option]");
+    it("should build the type selector", () => {
+        const select = render();
+        const optgroup = getSelectMainOptionsGroup(select);
 
         expect(optgroup.label).toBe("story #150");
-        expect(options).toHaveLength(2);
+        expect(select.options).toHaveLength(3);
 
-        expect(options[0].textContent?.trim()).toBe("Linked to");
-        expect(options[0].hasAttribute("selected")).toBe(true);
+        const [untyped_option, , child_option] = select.options;
+        expect(untyped_option.selected).toBe(true);
+        expect(untyped_option.label).toBe("Linked to");
 
-        expect(options[1].textContent?.trim()).toBe("Child");
+        expect(child_option.label).toBe("Child");
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {
         cross_reference = null;
-        const update = getTemplate();
-        update({} as HostElement, target);
+        const select = render();
 
-        expect(getSelectMainOptionsGroup(target).label).toBe("New artifact");
+        expect(getSelectMainOptionsGroup(select).label).toBe("New artifact");
+    });
+
+    it(`sets the current link type when there's a change in the select`, () => {
+        const select = render();
+        select.value = `${IS_CHILD_LINK_TYPE} ${FORWARD_DIRECTION}`;
+        select.dispatchEvent(new Event("change"));
+
+        expect(host.current_link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
     });
 });

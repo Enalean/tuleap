@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType, LinkedArtifact } from "./LinkedArtifact";
+import type { LinkedArtifact } from "./LinkedArtifact";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
+import type { LinkType } from "./LinkType";
 
 export interface RetrieveLinkedArtifactsByType {
     getLinkedArtifactsByLinkType(

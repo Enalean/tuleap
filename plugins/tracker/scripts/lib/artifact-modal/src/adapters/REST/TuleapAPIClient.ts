@@ -26,7 +26,7 @@ import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field-v2
 import { getArtifact, getMatchingArtifact } from "../../rest/rest-service";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
-import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
@@ -36,6 +36,7 @@ import type { LinkableNumber } from "../../domain/fields/link-field-v2/LinkableN
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
+import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 
 export interface LinkedArtifactCollection {
     readonly collection: ArtifactWithStatus[];

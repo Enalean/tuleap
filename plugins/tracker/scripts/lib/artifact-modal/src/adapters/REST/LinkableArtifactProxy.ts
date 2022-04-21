@@ -26,5 +26,8 @@ export const LinkableArtifactProxy = {
         id: artifact.id,
         title: artifact.title,
         xref: ArtifactCrossReferenceProxy.fromAPIArtifact(artifact),
+        uri: artifact.html_url,
+        status: artifact.status,
+        is_open: artifact.is_open,
     }),
 };

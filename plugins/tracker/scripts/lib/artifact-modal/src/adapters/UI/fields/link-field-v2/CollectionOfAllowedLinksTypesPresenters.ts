@@ -21,7 +21,7 @@ import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-
 import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
-} from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+} from "../../../../domain/fields/link-field-v2/LinkType";
 
 export type CollectionOfAllowedLinksTypesPresenters =
     ReadonlyArray<AllowedLinkTypesPresenterContainer>;

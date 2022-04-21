@@ -18,7 +18,7 @@
  */
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 
 const ARTIFACT_ID = 7;

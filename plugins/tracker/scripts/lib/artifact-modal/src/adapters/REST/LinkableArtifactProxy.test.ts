@@ -25,20 +25,29 @@ const ARTIFACT_ID = 801;
 const TITLE = "chigger";
 const CROSS_REFERENCE = `bugs #${ARTIFACT_ID}`;
 const COLOR: TrackerColorName = "flamingo-pink";
+const STATUS = "Review";
+const HTML_URI = "/plugins/tracker/?aid=" + ARTIFACT_ID;
 
 describe(`LinkableArtifactProxy`, () => {
-    it(`builds a LinkableArtifact from an API payload`, () => {
-        const response = {
+    it(`builds a LinkableArtifact from an Artifact representation from the API`, () => {
+        const api_artifact: ArtifactWithStatus = {
             id: ARTIFACT_ID,
             title: TITLE,
             xref: CROSS_REFERENCE,
             tracker: { color_name: COLOR },
-        } as ArtifactWithStatus;
+            status: STATUS,
+            is_open: false,
+            html_url: HTML_URI,
+        };
 
-        const artifact = LinkableArtifactProxy.fromAPIArtifact(response);
+        const artifact = LinkableArtifactProxy.fromAPIArtifact(api_artifact);
+
         expect(artifact.id).toBe(ARTIFACT_ID);
         expect(artifact.title).toBe(TITLE);
         expect(artifact.xref.ref).toBe(CROSS_REFERENCE);
         expect(artifact.xref.color).toBe(COLOR);
+        expect(artifact.status).toBe(STATUS);
+        expect(artifact.is_open).toBe(false);
+        expect(artifact.uri).toBe(HTML_URI);
     });
 });
