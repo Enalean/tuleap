@@ -10,7 +10,6 @@
   "main": "dist/link-selector.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@tuleap/gettext": "file:../gettext",
     "@tuleap/tlp": "file:../../../src/themes/tlp",
     "lit": "^2.0.2"
   },

@@ -112,9 +112,8 @@ export const LinkField = define<LinkField>({
 
             if (host.artifact_link_select !== null) {
                 await createLinkSelector(host.artifact_link_select, {
-                    search_field_callback: controller.autoComplete(host.artifact_link_select),
+                    search_field_callback: controller.autoComplete(),
                     placeholder: getLinkSelectorPlaceholderText(),
-                    locale: document.body?.dataset.userLocale,
                 });
             }
 

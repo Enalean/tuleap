@@ -20,11 +20,14 @@
 import { SelectionManager } from "./SelectionManager";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
-import type { LinkSelectorItem } from "../type";
+import type { RenderedItem } from "../type";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
+import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
+import type { GroupCollection } from "../items/GroupCollection";
+import type { HTMLTemplateResult } from "lit/html.js";
+import { html } from "lit/html.js";
 
 describe("SelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -34,12 +37,11 @@ describe("SelectionManager", () => {
         manager: SelectionManager,
         items_map_manager: ItemsMapManager,
         dropdown_manager: DropdownManager,
-        item_1: LinkSelectorItem,
-        item_2: LinkSelectorItem;
+        item_1: RenderedItem,
+        item_2: RenderedItem;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         source_select_box = document.createElement("select");
-        appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const { dropdown_element, selection_element, placeholder_element } =
             new BaseComponentRenderer(
@@ -52,7 +54,7 @@ describe("SelectionManager", () => {
         placeholder = placeholder_element;
         dropdown = dropdown_element;
 
-        items_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
+        items_map_manager = new ItemsMapManager(new ListItemMapBuilder());
         dropdown_manager = { openLinkSelector: jest.fn() } as unknown as DropdownManager;
         manager = new SelectionManager(
             source_select_box,
@@ -63,25 +65,12 @@ describe("SelectionManager", () => {
             items_map_manager
         );
         jest.spyOn(source_select_box, "dispatchEvent");
-        await items_map_manager.refreshItemsMap();
+        items_map_manager.refreshItemsMap(GroupCollectionBuilder.withSingleGroup());
         item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-value_1");
         item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-value_2");
     });
 
     describe("initSelection", () => {
-        it("When a value is already selected in the source <select>, then it selects it in the link-selector", () => {
-            item_1.target_option.setAttribute("selected", "selected");
-            manager.initSelection();
-
-            expect(selection_container.contains(placeholder)).toBe(false);
-            expect(
-                selection_container.querySelector(".link-selector-selected-value")
-            ).not.toBeNull();
-            expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
-        });
-
         it("When no value is selected yet in the source <select>, then it does nothing", () => {
             selection_container.appendChild(placeholder);
             source_select_box.value = "";
@@ -205,10 +194,9 @@ describe("SelectionManager", () => {
     });
 
     describe("resetAfterDependenciesUpdate", () => {
-        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", async () => {
+        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", () => {
             manager.processSelection(item_1.element);
-            source_select_box.innerHTML = "";
-            await items_map_manager.refreshItemsMap();
+            items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
             manager.resetAfterDependenciesUpdate();
 
             expect(item_1.is_selected).toBe(false);
@@ -217,25 +205,26 @@ describe("SelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
-        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", async () => {
-            source_select_box.innerHTML = "";
-            await items_map_manager.refreshItemsMap();
+        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", () => {
+            items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
             manager.resetAfterDependenciesUpdate();
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
-        it("when an item has been selected, and is still available in the new options, then it should keep it selected", async () => {
+        it("when an item has been selected, and is still available in the new options, then it should keep it selected", () => {
             manager.processSelection(item_1.element);
 
-            source_select_box.innerHTML = "";
-            const new_option_0 = document.createElement("option");
-            new_option_0.value = "new option 0";
-            const new_option_1 = document.createElement("option");
-            new_option_1.value = item_1.value;
-            source_select_box.appendChild(new_option_0);
-            source_select_box.appendChild(new_option_1);
-
-            await items_map_manager.refreshItemsMap();
+            const groups: GroupCollection = [
+                {
+                    label: "",
+                    empty_message: "irrelevant",
+                    items: [
+                        { value: "new option 0", template: buildTemplateResult("Option Zero") },
+                        { value: item_1.value, template: buildTemplateResult("Option One") },
+                    ],
+                },
+            ];
+            items_map_manager.refreshItemsMap(groups);
             manager.resetAfterDependenciesUpdate();
 
             const new_item_1 = items_map_manager.findLinkSelectorItemInItemMap(item_1.id);
@@ -246,3 +235,9 @@ describe("SelectionManager", () => {
         });
     });
 });
+
+function buildTemplateResult(value: string): HTMLTemplateResult {
+    return html`
+        ${value}
+    `;
+}

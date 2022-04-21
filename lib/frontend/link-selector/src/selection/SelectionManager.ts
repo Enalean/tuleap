@@ -18,7 +18,7 @@
  */
 
 import type { DropdownManager } from "../dropdown/DropdownManager";
-import type { LinkSelectorItem, LinkSelectorSelectionStateSingle } from "../type";
+import type { RenderedItem, LinkSelectorSelectionStateSingle } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import { html, render } from "lit/html.js";
 
@@ -107,7 +107,7 @@ export class SelectionManager {
         }
     }
 
-    private createCurrentSelectionElement(item: LinkSelectorItem): DocumentFragment {
+    private createCurrentSelectionElement(item: RenderedItem): DocumentFragment {
         const document_fragment = document.createDocumentFragment();
         render(
             html`
@@ -125,10 +125,7 @@ export class SelectionManager {
         return document_fragment;
     }
 
-    private replacePlaceholderWithCurrentSelection(
-        item: LinkSelectorItem,
-        placeholder: Element
-    ): void {
+    private replacePlaceholderWithCurrentSelection(item: RenderedItem, placeholder: Element): void {
         const selected_value = this.createCurrentSelectionElement(item);
 
         this.selection_element.appendChild(selected_value);
@@ -148,7 +145,7 @@ export class SelectionManager {
     }
 
     private replacePreviousSelectionWithCurrentOne(
-        newly_selected_item: LinkSelectorItem,
+        newly_selected_item: RenderedItem,
         selection_state: LinkSelectorSelectionStateSingle
     ): void {
         const new_selected_value_element = this.createCurrentSelectionElement(newly_selected_item);
@@ -175,7 +172,7 @@ export class SelectionManager {
         };
     }
 
-    private createRemoveCurrentSelectionButton(item: LinkSelectorItem): Element {
+    private createRemoveCurrentSelectionButton(item: RenderedItem): Element {
         const remove_value_button = document.createElement("span");
         remove_value_button.classList.add("link-selector-selected-value-remove-button");
         remove_value_button.innerText = "×";
@@ -197,7 +194,7 @@ export class SelectionManager {
     }
 
     private replaceCurrentValueWithPlaceholder(
-        item_to_unselect: LinkSelectorItem,
+        item_to_unselect: RenderedItem,
         is_clearing_state = false
     ): void {
         this.selection_element.innerHTML = "";

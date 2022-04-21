@@ -17,19 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelectorItem, LinkSelectorItemMap } from "../type";
+import type { RenderedItem, RenderedItemMap } from "../type";
 import type { ListItemMapBuilder } from "./ListItemMapBuilder";
+import type { GroupCollection } from "./GroupCollection";
 
 export class ItemsMapManager {
-    private items_map!: LinkSelectorItemMap;
+    private items_map!: RenderedItemMap;
 
     constructor(private readonly list_item_builder: ListItemMapBuilder) {}
 
-    public getLinkSelectorItems(): Array<LinkSelectorItem> {
+    public getLinkSelectorItems(): ReadonlyArray<RenderedItem> {
         return [...this.items_map.values()];
     }
 
-    public findLinkSelectorItemInItemMap(item_id: string): LinkSelectorItem {
+    public findLinkSelectorItemInItemMap(item_id: string): RenderedItem {
         const list_item = this.items_map.get(item_id);
         if (!list_item) {
             throw new Error(`Item with id ${item_id} not found in item map`);
@@ -37,11 +38,11 @@ export class ItemsMapManager {
         return list_item;
     }
 
-    public async refreshItemsMap(): Promise<void> {
-        this.items_map = await this.list_item_builder.buildLinkSelectorItemsMap();
+    public refreshItemsMap(groups: GroupCollection): void {
+        this.items_map = this.list_item_builder.buildLinkSelectorItemsMap(groups);
     }
 
-    public getItemWithValue(value: string): LinkSelectorItem | null {
+    public getItemWithValue(value: string): RenderedItem | null {
         return this.getLinkSelectorItems().find((item) => item.value === value) ?? null;
     }
 }

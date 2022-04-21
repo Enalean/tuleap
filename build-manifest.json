@@ -22,10 +22,6 @@
         "project-admin-ugroups": {
             "src": "src/scripts/project/admin/src/",
             "po": "src/scripts/project/admin/po"
-        },
-        "link-selector": {
-            "src": "lib/frontend/link-selector/src",
-            "po": "lib/frontend/link-selector/po"
         }
     },
     "gettext-vue": {

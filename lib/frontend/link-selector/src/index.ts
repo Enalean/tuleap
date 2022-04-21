@@ -17,17 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import french_translations from "../po/fr_FR.po";
-import type { LinkSelector, LinkSelectorOptions, LinkSelectorSearchFieldCallback } from "./type";
+import type { html as HTMLTemplateStringProcessor } from "lit/html.js";
+import type { LinkSelector, LinkSelectorOptions } from "./type";
 import * as creator from "./link-selector";
-import { initGettextSync } from "@tuleap/gettext";
 import "../themes/style.scss";
 
-export type { LinkSelector, LinkSelectorOptions, LinkSelectorSearchFieldCallback };
+export type { HTMLTemplateResult } from "lit/html.js";
+export type { HTMLTemplateStringProcessor, LinkSelector, LinkSelectorOptions };
+export type { LinkSelectorSearchFieldCallback } from "./events/SearchFieldEventCallbackHandler";
+export type { GroupCollection, GroupOfItems } from "./items/GroupCollection";
+
 export function createLinkSelector(
     source_select_box: HTMLSelectElement,
     options: LinkSelectorOptions
 ): Promise<LinkSelector> {
-    const gettext_provider = initGettextSync("link-selector", french_translations, options.locale);
-    return creator.createLinkSelector(source_select_box, gettext_provider, options);
+    return creator.createLinkSelector(source_select_box, options);
 }

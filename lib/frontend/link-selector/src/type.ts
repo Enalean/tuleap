@@ -17,30 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { html as HTMLTemplateStringProcessor, TemplateResult } from "lit/html.js";
+import type { TemplateResult } from "lit/html.js";
+import type { LinkSelectorSearchFieldCallback } from "./events/SearchFieldEventCallbackHandler";
 
 export interface LinkSelector {
     destroy: () => void;
 }
 
 export interface LinkSelectorOptions {
-    readonly locale?: string | undefined;
-    placeholder?: string;
-    items_template_formatter?: (
-        html: typeof HTMLTemplateStringProcessor,
-        value_id: string,
-        item_label: string
-    ) => Promise<TemplateResult>;
+    readonly placeholder?: string;
     search_field_callback: LinkSelectorSearchFieldCallback;
 }
-export type LinkSelectorSearchFieldCallback = (query: string) => void;
 
-export type LinkSelectorItemMap = Map<string, LinkSelectorItem>;
+export type RenderedItemMap = Map<string, RenderedItem>;
 
-export interface LinkSelectorItem {
+export interface RenderedItem {
     id: string;
     template: TemplateResult;
-    label: string;
     value: string;
     is_disabled: boolean;
     is_selected: boolean;
@@ -49,31 +42,19 @@ export interface LinkSelectorItem {
     target_option: HTMLOptionElement;
 }
 
-export interface LinkSelectorItemGroup {
-    id: string;
-    label: string;
-    root_element: Element;
-    list_element: Element;
-}
-
 export interface LinkSelectorComponent {
     wrapper_element: HTMLElement;
     link_selector_element: Element;
     dropdown_element: HTMLElement;
     selection_element: HTMLElement;
     placeholder_element: Element;
-    dropdown_list_element: Element;
+    dropdown_list_element: HTMLElement;
     search_field_element: HTMLInputElement;
 }
 
 export interface LinkSelectorSelectionStateSingle {
-    selected_item: LinkSelectorItem;
+    selected_item: RenderedItem;
     selected_value_element: DocumentFragment;
-}
-
-export interface LinkSelectorSelectionStateMultiple {
-    selected_items: LinkSelectorItemMap;
-    selected_value_elements: Map<string, Element>;
 }
 
 export interface ScrollCoordinates {

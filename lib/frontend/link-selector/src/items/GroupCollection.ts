@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,12 +14,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function getOptionsLabel(option: HTMLOptionElement): string {
-    return option.innerText !== "" && option.innerText !== undefined
-        ? option.innerText
-        : option.label;
-}
+import type { HTMLTemplateResult } from "lit/html.js";
+
+export type LinkSelectorItem = {
+    readonly value: string;
+    readonly template: HTMLTemplateResult;
+};
+
+export type GroupOfItems = {
+    readonly label: string;
+    readonly empty_message: string;
+    readonly items: ReadonlyArray<LinkSelectorItem>;
+};
+
+export type GroupCollection = ReadonlyArray<GroupOfItems>;

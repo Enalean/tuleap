@@ -17,148 +17,61 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelectorItem, LinkSelectorItemMap, LinkSelectorOptions } from "../type";
-import type { TemplateResult, HTMLTemplateResult } from "lit/html.js";
-import { html, render } from "lit/html.js";
-import { getOptionsLabel } from "../helpers/option-label-helper";
+import type { RenderedItem, RenderedItemMap } from "../type";
+import { getRenderedListItem } from "../renderers/DropdownContentRenderer";
+import type { GroupCollection, LinkSelectorItem } from "./GroupCollection";
+import { getGroupId } from "../helpers/group-id-helper";
+
+const getItemId = (value: string, group_id: string): string => {
+    let base_id = "link-selector-item-";
+
+    if (group_id !== "") {
+        base_id += group_id + "-";
+    }
+
+    const option_value = value.includes(" ") ? value.split(" ").join("-") : value;
+
+    return base_id + option_value;
+};
+
+const buildOption = (doc: Document, item: LinkSelectorItem, id: string): HTMLOptionElement => {
+    const option = doc.createElement("option");
+    option.value = item.value;
+    option.setAttribute("data-item-id", id);
+    return option;
+};
+
+const addItemInMap = (
+    doc: Document,
+    group_id: string,
+    item: LinkSelectorItem,
+    accumulator: RenderedItemMap
+): RenderedItemMap => {
+    const id = getItemId(item.value, group_id);
+    const option = buildOption(doc, item, id);
+    const link_selector_item: RenderedItem = {
+        id,
+        group_id,
+        is_disabled: false,
+        is_selected: false,
+        value: item.value,
+        target_option: option,
+        template: item.template,
+        element: getRenderedListItem(id, item.template, false),
+    };
+    accumulator.set(id, link_selector_item);
+    return accumulator;
+};
 
 export class ListItemMapBuilder {
-    private items_templates_cache: Map<string, TemplateResult>;
-
-    constructor(
-        private readonly source_select_box: HTMLSelectElement,
-        private readonly options?: LinkSelectorOptions
-    ) {
-        this.items_templates_cache = new Map();
-    }
-
-    public async buildLinkSelectorItemsMap(): Promise<LinkSelectorItemMap> {
-        const map = new Map();
-        const useless_options = [];
-
-        for (const option of this.source_select_box.options) {
-            if (option.value === "") {
-                // Do not remove, otherwise the default value will be the first value of the list
-                // and no placeholder is shown.
-                continue;
-            }
-
-            if (option.value === "?") {
-                useless_options.push(option);
-                continue;
-            }
-
-            let group_id = "";
-            if (option.parentElement && option.parentElement.nodeName === "OPTGROUP") {
-                const label = option.parentElement.getAttribute("label");
-
-                if (label !== null) {
-                    group_id = label.replace(" ", "").toLowerCase();
-                }
-            }
-
-            const id = this.getItemId(option, group_id);
-            const template = await this.getTemplateForItem(option, id);
-            const is_disabled = Boolean(option.hasAttribute("disabled"));
-            const item: LinkSelectorItem = {
-                id,
-                group_id,
-                value: option.value,
-                template,
-                label: getOptionsLabel(option),
-                is_disabled,
-                is_selected: false,
-                target_option: option,
-                element: this.getRenderedListItem(id, template, is_disabled),
-            };
-            map.set(id, item);
-            option.setAttribute("data-item-id", id);
-        }
-
-        useless_options.forEach((option) => this.source_select_box.removeChild(option));
-        return map;
-    }
-
-    private getRenderedListItem(
-        option_id: string,
-        template: TemplateResult,
-        is_disabled: boolean
-    ): Element {
-        let class_name = "link-selector-dropdown-option-value";
-        if (is_disabled) {
-            class_name = "link-selector-dropdown-option-value-disabled";
-        }
-
-        const document_fragment = document.createDocumentFragment();
-        render(
-            html`
-                <li
-                    role="option"
-                    aria-selected="false"
-                    data-item-id="${option_id}"
-                    class="${class_name}"
-                    data-test="link-selector-item"
-                >
-                    ${template}
-                </li>
-            `,
-            document_fragment
-        );
-
-        const list_item = document_fragment.firstElementChild;
-        if (list_item !== null) {
-            return list_item;
-        }
-
-        throw new Error("Cannot render the list item");
-    }
-
-    private getItemId(option: HTMLOptionElement, group_id: string): string {
-        let base_id = "link-selector-item-";
-        let option_value = option.value.toLowerCase().trim();
-
-        if (option_value === "100" || option_value === "number:100") {
-            return base_id + "100";
-        }
-
-        if (group_id !== "") {
-            base_id += group_id + "-";
-        }
-
-        if (option_value.includes(" ")) {
-            option_value = option_value.split(" ").join("-");
-        }
-
-        return base_id + option_value;
-    }
-
-    private async getTemplateForItem(
-        option: HTMLOptionElement,
-        item_id: string
-    ): Promise<TemplateResult> {
-        const template = this.items_templates_cache.get(item_id);
-        if (template) {
-            return template;
-        }
-
-        const option_label = getOptionsLabel(option);
-        if (this.options && this.options.items_template_formatter) {
-            const custom_template = await this.options.items_template_formatter(
-                html,
-                option.value,
-                option_label
+    public buildLinkSelectorItemsMap(groups: GroupCollection): RenderedItemMap {
+        return groups.reduce((accumulator: RenderedItemMap, group) => {
+            const group_id = getGroupId(group);
+            return group.items.reduce(
+                (inner_accumulator: RenderedItemMap, item) =>
+                    addItemInMap(document, group_id, item, inner_accumulator),
+                accumulator
             );
-            this.items_templates_cache.set(item_id, custom_template);
-
-            return custom_template;
-        }
-
-        return ListItemMapBuilder.buildDefaultTemplateForItem(option_label);
-    }
-
-    public static buildDefaultTemplateForItem(value: string): HTMLTemplateResult {
-        return html`
-            ${value}
-        `;
+        }, new Map());
     }
 }

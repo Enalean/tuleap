@@ -27,28 +27,26 @@ import { hideSourceSelectBox } from "./helpers/hide-selectbox-helper";
 import { KeyboardNavigationManager } from "./navigation/KeyboardNavigationManager";
 import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
 import { ItemsMapManager } from "./items/ItemsMapManager";
-import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver";
 import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
-import type { GettextProvider } from "@tuleap/gettext";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 import { SearchFieldEventCallbackHandler } from "./events/SearchFieldEventCallbackHandler";
+import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
+import { OptionsMaintainer } from "./items/OptionsMaintainer";
 
-export async function createLinkSelector(
+export function createLinkSelector(
     source_select_box: HTMLSelectElement,
-    gettext_provider: GettextProvider,
     options: LinkSelectorOptions
 ): Promise<LinkSelector> {
     hideSourceSelectBox(source_select_box);
 
-    const items_map_manager = new ItemsMapManager(
-        new ListItemMapBuilder(source_select_box, options)
-    );
-    await items_map_manager.refreshItemsMap();
+    const items_map_manager = new ItemsMapManager(new ListItemMapBuilder());
+
+    items_map_manager.refreshItemsMap([]);
     const base_renderer = new BaseComponentRenderer(
         document,
         source_select_box,
-        options?.placeholder ?? ""
+        options.placeholder ?? ""
     );
     const {
         wrapper_element,
@@ -90,13 +88,9 @@ export async function createLinkSelector(
     );
 
     const dropdown_content_renderer = new DropdownContentRenderer(
-        source_select_box,
         dropdown_list_element,
-        items_map_manager,
-        gettext_provider
+        items_map_manager
     );
-
-    dropdown_content_renderer.renderLinkSelectorDropdownContent();
 
     const highlighter = new ListItemHighlighter(dropdown_list_element);
     const keyboard_navigation_manager = new KeyboardNavigationManager(
@@ -117,29 +111,28 @@ export async function createLinkSelector(
         highlighter,
         field_focus_manager
     );
-
-    event_manager.attachEvents();
-    selection_manager.initSelection();
-
-    const list_options_observer = new ListOptionsChangesObserver(
-        source_select_box,
+    const options_maintainer = OptionsMaintainer(source_select_box, items_map_manager);
+    const dropdown_content_refresher = DropdownContentRefresher(
         items_map_manager,
+        options_maintainer,
         dropdown_content_renderer,
         selection_manager,
         event_manager,
         highlighter
     );
-    list_options_observer.startWatchingChangesInSelectOptions();
 
-    SearchFieldEventCallbackHandler.init(search_field_element, options.search_field_callback);
+    event_manager.attachEvents();
+    selection_manager.initSelection();
 
-    return {
+    const search_event_handler = SearchFieldEventCallbackHandler(dropdown_content_refresher);
+    search_event_handler.init(search_field_element, options.search_field_callback);
+
+    return Promise.resolve({
         destroy: (): void => {
-            list_options_observer.stopWatchingChangesInSelectOptions();
             event_manager.removeEventsListenersOnDocument();
             dropdown_manager.destroy();
             document.body.removeChild(dropdown_element);
             field_focus_manager.destroy();
         },
-    };
+    });
 }

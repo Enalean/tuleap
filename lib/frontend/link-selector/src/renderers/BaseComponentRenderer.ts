@@ -69,7 +69,7 @@ export class BaseComponentRenderer {
         };
     }
 
-    private createDropdownListElement(): Element {
+    private createDropdownListElement(): HTMLElement {
         const dropdown_list_element = document.createElement("ul");
         dropdown_list_element.classList.add("link-selector-dropdown-values-list");
         dropdown_list_element.setAttribute("role", "listbox");
