@@ -18,18 +18,25 @@
  */
 
 import CodeMirror from "codemirror";
-import "codemirror/addon/mode/simple.js";
-import "codemirror/addon/hint/show-hint.js";
-import "codemirror/addon/display/placeholder.js";
-import { getHint } from "./autocompleter.js";
+import "codemirror/addon/mode/simple";
+import "codemirror/addon/hint/show-hint";
+import "codemirror/addon/display/placeholder";
+import { getHint } from "./autocompleter";
+import type { TQLDefinition } from "./configuration";
 
 export { initializeTQLMode, codeMirrorify };
 
-function initializeTQLMode(tql_mode_definition) {
+function initializeTQLMode(tql_mode_definition: TQLDefinition): void {
     CodeMirror.defineSimpleMode("tql", tql_mode_definition);
 }
 
-function codeMirrorify(textarea_element, autocomplete_keywords, submitFormCallback) {
+export type TQLCodeMirrorEditor = CodeMirror.Editor;
+
+function codeMirrorify(
+    textarea_element: HTMLTextAreaElement,
+    autocomplete_keywords: ReadonlyArray<string>,
+    submitFormCallback: () => void
+): TQLCodeMirrorEditor {
     CodeMirror.commands.autocomplete = autocomplete;
 
     return CodeMirror.fromTextArea(textarea_element, {
@@ -40,7 +47,7 @@ function codeMirrorify(textarea_element, autocomplete_keywords, submitFormCallba
         readOnly: textarea_element.readOnly ? "nocursor" : false,
     });
 
-    function autocomplete(editor) {
+    function autocomplete(editor: TQLCodeMirrorEditor): void {
         editor.showHint({
             words: autocomplete_keywords,
             hint: getHint,

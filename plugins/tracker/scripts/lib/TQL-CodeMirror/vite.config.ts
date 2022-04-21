@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type CodeMirror from "codemirror";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import dts from "vite-dts";
 
-export function insertAllowedFieldInCodeMirror(
-    event: Event,
-    query_rich_editor: CodeMirror.Editor
-): void;
+export default vite.defineLibConfig({
+    plugins: [dts()],
+    optimizeDeps: {
+        // This is needed since CodeMirror and its addons are only shipped as CommonJS
+        // See https://github.com/codemirror/CodeMirror/issues/5403 https://github.com/codemirror/CodeMirror/issues/6355
+        include: ["codemirror"],
+    },
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "TQLCodeMirror",
+        },
+    },
+});

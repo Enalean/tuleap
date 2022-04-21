@@ -18,23 +18,34 @@
  */
 
 import CodeMirror from "codemirror";
+import type { TQLCodeMirrorEditor } from "./builder";
 
 export { getHint };
 
-function getHint(editor, options) {
+function getHint(
+    editor: TQLCodeMirrorEditor,
+    options: CodeMirror.ShowHintOptions
+): CodeMirror.Hints | undefined {
     const cursor = editor.getCursor(),
         token = editor.getTokenAt(cursor);
 
     if (isAutocompletable(token)) {
         return getAutocompletableHint(editor, options, cursor, token);
     }
+
+    return undefined;
 }
 
-function isAutocompletable(token) {
+function isAutocompletable(token: CodeMirror.Token): boolean {
     return token.type === null || token.type === "variable";
 }
 
-function getAutocompletableHint(editor, options, cursor, token) {
+function getAutocompletableHint(
+    editor: TQLCodeMirrorEditor,
+    options: CodeMirror.ShowHintOptions,
+    cursor: CodeMirror.Position,
+    token: CodeMirror.Token
+): CodeMirror.Hints {
     const start = getStartOfToken(editor);
     const end = cursor.ch;
     const from = CodeMirror.Pos(cursor.line, start);
@@ -42,13 +53,13 @@ function getAutocompletableHint(editor, options, cursor, token) {
     const text = new RegExp(token.string.trim(), "i");
 
     return {
-        list: options.words.filter((field_name) => text.test(field_name)),
+        list: options.words?.filter((field_name: string) => text.test(field_name)) ?? [],
         from,
         to,
     };
 }
 
-function getStartOfToken(editor) {
+function getStartOfToken(editor: TQLCodeMirrorEditor): number {
     const cursor = editor.getCursor();
     const line = editor.getLine(cursor.line);
     let start = cursor.ch;

@@ -10,6 +10,7 @@ specifiers:
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': file:scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-constants': file:scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': file:scripts/lib/rich-text-editor
+  '@tuleap/plugin-tracker-tql-codemirror': file:scripts/lib/TQL-CodeMirror
   '@tuleap/tlp': file:../../src/themes/tlp
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
@@ -18,13 +19,11 @@ specifiers:
   '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.1
   '@types/ckeditor': ^4.9.10
-  '@types/codemirror': ^5.60.1
   '@types/dompurify': ^2.3.2
   '@types/jquery': ^3.5.5
   '@types/mustache': ^4.1.2
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.3.0
-  codemirror: ^5.62.0
   d3-array: ^3.0.1
   d3-axis: ^3.0.0
   d3-scale: ^4.0.0
@@ -54,11 +53,11 @@ dependencies:
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload': link:scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/plugin-tracker-constants': link:scripts/lib/constants
   '@tuleap/plugin-tracker-rich-text-editor': link:scripts/lib/rich-text-editor
+  '@tuleap/plugin-tracker-tql-codemirror': link:scripts/lib/TQL-CodeMirror
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
-  codemirror: 5.62.0
   d3-array: 3.0.1
   d3-axis: 3.0.0
   d3-scale: 4.0.0
@@ -83,7 +82,6 @@ devDependencies:
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
-  '@types/codemirror': 5.60.1
   '@types/dompurify': 2.3.2
   '@types/jquery': 3.5.5
   '@types/mustache': 4.1.2
@@ -107,20 +105,10 @@ packages:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /@types/codemirror/5.60.1:
-    resolution: {integrity: sha512-yV14LQ5VvghnW0uSuCw2bEfZC6NvxHQEckl2w3dEk5l0yPGzQh14dCaWvG5KD/2l3cgFSifR+6nIUD7LDLdUTg==}
-    dependencies:
-      '@types/tern': 0.23.3
-    dev: true
-
   /@types/dompurify/2.3.2:
     resolution: {integrity: sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==}
     dependencies:
       '@types/trusted-types': 2.0.1
-    dev: true
-
-  /@types/estree/0.0.48:
-    resolution: {integrity: sha512-LfZwXoGUDo0C3me81HXgkBg5CTQYb6xzEl+fNmbO4JdRiSKQ8A0GD1OBBvKAIsbCUgoyAty7m99GqqMQe784ew==}
     dev: true
 
   /@types/jquery/3.5.5:
@@ -139,12 +127,6 @@ packages:
 
   /@types/sprintf-js/1.1.2:
     resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
-    dev: true
-
-  /@types/tern/0.23.3:
-    resolution: {integrity: sha512-imDtS4TAoTcXk0g7u4kkWqedB3E4qpjXzCpD2LU5M5NAXHzCDsypyvXSaG7mM8DKYkCRa7tFp4tS/lp/Wo7Q3w==}
-    dependencies:
-      '@types/estree': 0.0.48
     dev: true
 
   /@types/trusted-types/2.0.1:
@@ -177,10 +159,6 @@ packages:
       balanced-match: 1.0.2
       concat-map: 0.0.1
     dev: true
-
-  /codemirror/5.62.0:
-    resolution: {integrity: sha512-Xnl3304iCc8nyVZuRkzDVVwc794uc9QNX0UcPGeNic1fbzkSrO4l4GVXho9tRNKBgPYZXgocUqXyfIv3BILhCQ==}
-    dev: false
 
   /commander/2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}

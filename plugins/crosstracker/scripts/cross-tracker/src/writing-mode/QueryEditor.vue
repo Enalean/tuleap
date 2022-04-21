@@ -70,20 +70,20 @@ import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition,
 } from "./tql-configuration";
-import { insertAllowedFieldInCodeMirror } from "../../../../../tracker/scripts/report/TQL-CodeMirror/allowed-field-inserter";
+import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
 import {
+    insertAllowedFieldInCodeMirror,
     initializeTQLMode,
     codeMirrorify,
-} from "../../../../../tracker/scripts/report/TQL-CodeMirror/builder";
+} from "@tuleap/plugin-tracker-tql-codemirror";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
-import type CodeMirror from "codemirror";
 
 @Component({})
 export default class QueryEditor extends Vue {
     @Prop({ required: true })
     readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
 
-    private code_mirror_instance: null | CodeMirror.Editor = null;
+    private code_mirror_instance: null | TQLCodeMirrorEditor = null;
     private value: string = this.writingCrossTrackerReport.expert_query;
 
     created(): void {

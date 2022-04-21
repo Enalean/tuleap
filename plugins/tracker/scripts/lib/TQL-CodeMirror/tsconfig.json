@@ -1,0 +1,7 @@
+{
+    "extends": "../../../../../tools/utils/scripts/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "lib": ["DOM", "ES5"]
+    },
+    "include": ["src/**/*"]
+}

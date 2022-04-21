@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
     "@tuleap/plugin-tracker": "file:../tracker",
+    "@tuleap/plugin-tracker-tql-codemirror": "file:../tracker/scripts/lib/TQL-CodeMirror",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
     "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
     "extendable-error": "^0.1.7",
@@ -19,7 +20,6 @@
     "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
     "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
     "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",
-    "@types/codemirror": "^5.60.1",
     "@vue/test-utils": "^1.3.0",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2"
