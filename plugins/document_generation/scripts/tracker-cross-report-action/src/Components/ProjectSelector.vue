@@ -28,7 +28,7 @@
                     v-bind:key="project.id"
                     v-bind:value="project.id"
                 >
-                    {{ project.label }}
+                    {{ project.icon }} {{ project.label }}
                 </option>
             </select>
         </label>

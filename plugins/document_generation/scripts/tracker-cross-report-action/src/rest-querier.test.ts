@@ -134,19 +134,20 @@ describe("API querier", () => {
     });
 
     describe("getProjects", () => {
-        it("retrieves projects", async () => {
+        it("retrieves projects sorted on the label", async () => {
             const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
 
-            const projects: ProjectResponse[] = [
-                {
-                    id: 102,
-                    label: "Project A",
-                },
-                {
-                    id: 105,
-                    label: "Project B",
-                },
-            ];
+            const project_a = {
+                id: 102,
+                label: "Project A",
+                icon: "",
+            };
+            const project_b = {
+                id: 105,
+                label: "Project B",
+                icon: "",
+            };
+            const projects: ProjectResponse[] = [project_b, project_a];
             recursive_get_spy.mockResolvedValue(projects);
 
             const received_projects = await getProjects();
@@ -155,6 +156,8 @@ describe("API querier", () => {
                 params: { limit: 50 },
             });
             expect(received_projects).toStrictEqual(projects);
+            expect(received_projects[0]).toStrictEqual(project_a);
+            expect(received_projects[1]).toStrictEqual(project_b);
         });
     });
 });

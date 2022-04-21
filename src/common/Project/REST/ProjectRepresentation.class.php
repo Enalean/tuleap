@@ -21,6 +21,7 @@ namespace Tuleap\Project\REST;
 
 use PFUser;
 use Project;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -53,7 +54,7 @@ class ProjectRepresentation extends MinimalProjectRepresentation
     public $additional_fields;
 
 
-    private function __construct(Project $project, bool $is_member_of, array $resources, array $informations, array $project_field_representations, string $description)
+    private function __construct(Project $project, bool $is_member_of, array $resources, array $informations, array $project_field_representations, string $description, public string $icon)
     {
         parent::__construct($project);
         $this->is_member_of            = $is_member_of;
@@ -72,7 +73,8 @@ class ProjectRepresentation extends MinimalProjectRepresentation
             $resources,
             $informations,
             $project_field_representations,
-            $project->getDescription()
+            $project->getDescription(),
+            EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint())
         );
     }
 
