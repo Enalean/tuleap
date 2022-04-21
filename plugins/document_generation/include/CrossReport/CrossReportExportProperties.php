@@ -29,6 +29,7 @@ namespace Tuleap\DocumentGeneration\CrossReport;
 final class CrossReportExportProperties
 {
     public function __construct(
+        public int $current_project_id,
         public int $current_tracker_id,
         public string $current_tracker_name,
         public int $current_report_id,

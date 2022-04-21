@@ -22,6 +22,7 @@ import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 
 export interface GlobalExportProperties {
+    readonly current_project_id: number;
     readonly current_tracker_id: number;
     readonly current_tracker_name: string;
     readonly current_report_id: number;

@@ -39,6 +39,7 @@ describe("ModalContent", () => {
             global: getGlobalTestOptions(),
             props: {
                 properties: {
+                    current_project_id: 963,
                     current_tracker_id: 147,
                     current_tracker_name: "Name",
                     current_report_id: 130,
