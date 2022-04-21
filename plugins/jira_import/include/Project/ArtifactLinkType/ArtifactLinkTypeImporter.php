@@ -23,11 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateTypeException;
 
 final class ArtifactLinkTypeImporter
 {
@@ -37,11 +40,7 @@ final class ArtifactLinkTypeImporter
     {
     }
 
-    /**
-     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterException
-     * @throws \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateTypeException
-     */
-    public function import(JiraClient $jira_client): void
+    public function import(JiraClient $jira_client, LoggerInterface $logger): void
     {
         $existing_type_names = [];
         foreach ($this->all_natures_retriever->getAllTypes() as $type) {
@@ -56,9 +55,13 @@ final class ArtifactLinkTypeImporter
             if (isset($existing_type_names[$link_type['name']])) {
                 continue;
             }
-            $this->creator->createFromType(
-                TypePresenter::buildVisibleType($link_type['name'], $link_type['outward'], $link_type['inward'])
-            );
+            try {
+                $this->creator->createFromType(
+                    TypePresenter::buildVisibleType($link_type['name'], $link_type['outward'], $link_type['inward'])
+                );
+            } catch (InvalidTypeParameterException | UnableToCreateTypeException $e) {
+                $logger->warning(sprintf('Cannot create link type `%s` (%s). Links between issues will be created without this type.', $link_type['name'], $e->getMessage()));
+            }
         }
     }
 }

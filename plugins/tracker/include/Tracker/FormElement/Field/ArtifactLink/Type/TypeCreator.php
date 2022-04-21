@@ -56,6 +56,10 @@ class TypeCreator implements TypeCreatorInterface
         }
     }
 
+    /**
+     * @throws InvalidTypeParameterException
+     * @throws UnableToCreateTypeException
+     */
     public function createFromType(TypePresenter $type): void
     {
         $this->create($type->shortname, $type->forward_label, $type->reverse_label);
