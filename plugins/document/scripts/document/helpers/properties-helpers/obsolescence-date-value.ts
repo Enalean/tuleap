@@ -19,12 +19,12 @@
  */
 import moment from "moment/moment";
 
-export function getObsolescenceDateValueInput(select_date_value: string): string | null {
+export function getObsolescenceDateValueInput(select_date_value: string): string {
     const current_date = moment();
     let date;
     switch (select_date_value) {
         case "permanent":
-            date = null;
+            date = "";
             break;
         case "today":
             date = current_date.format("YYYY-MM-DD");

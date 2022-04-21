@@ -84,6 +84,7 @@ export type Events = {
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;
     "properties-recursion-option": { recursion_option: string };
+    "update-obsolescence-date-property": string;
 };
 
 export default mitt<Events>();

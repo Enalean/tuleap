@@ -44,6 +44,13 @@ import {
 } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 
+export interface PropertiesActions {
+    readonly loadProjectProperties: typeof loadProjectProperties;
+    readonly updateProperties: typeof updateProperties;
+    readonly updateFolderProperties: typeof updateFolderProperties;
+    readonly getFolderProperties: typeof getFolderProperties;
+}
+
 export const loadProjectProperties = async (
     context: ActionContext<PropertiesState, RootState>
 ): Promise<void> => {

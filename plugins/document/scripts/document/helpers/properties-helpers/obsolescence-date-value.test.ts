@@ -23,20 +23,20 @@ import moment from "moment/moment";
 
 describe("getObsolescenceDateValueInput", () => {
     it(`Given a "permanent" date value
-    Then the returned date should be null`, () => {
+    Then the returned date should be empty`, () => {
         const date_result = getObsolescenceDateValueInput("permanent");
-        expect(null).toEqual(date_result);
+        expect("").toStrictEqual(date_result);
     });
     it(`Given a "today" date value
     Then the returned date should be the current date`, () => {
         const expected_date = moment().format("YYYY-MM-DD");
         const date_result = getObsolescenceDateValueInput("today");
-        expect(expected_date).toEqual(date_result);
+        expect(expected_date).toStrictEqual(date_result);
     });
     it(`Given a number of month after the current date
     Then the returned date should be the current + 6 months`, () => {
         const expected_date = moment().add(6, "M").format("YYYY-MM-DD");
         const date_result = getObsolescenceDateValueInput("6");
-        expect(expected_date).toEqual(date_result);
+        expect(expected_date).toStrictEqual(date_result);
     });
 });

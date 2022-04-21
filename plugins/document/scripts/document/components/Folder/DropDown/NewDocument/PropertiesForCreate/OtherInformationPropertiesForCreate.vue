@@ -37,53 +37,52 @@
         <template v-if="has_loaded_properties">
             <obsolescence-date-property-for-create
                 v-if="is_obsolescence_date_property_used"
-                v-model="obsolescence_date_value"
+                v-bind:value="value"
             />
             <custom-property v-bind:item-property="currentlyUpdatedItem.properties" />
         </template>
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import ObsolescenceDatePropertyForCreate from "./ObsolescenceDatePropertyForCreate.vue";
 import CustomProperty from "../../PropertiesForCreateOrUpdate/CustomProperties/CustomProperty.vue";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../../store/configuration";
+import type { PropertiesState } from "../../../../../store/properties/module";
+import { computed, onMounted } from "@vue/composition-api";
+import type { PropertiesActions } from "../../../../../store/properties/properties-actions";
+import type { Item } from "../../../../../type";
 
-export default {
-    name: "OtherInformationPropertiesForCreate",
-    components: {
-        CustomProperty,
-        ObsolescenceDatePropertyForCreate,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        value: {
-            required: true,
-            type: String,
-        },
-    },
-    computed: {
-        ...mapState("configuration", ["is_obsolescence_date_property_used"]),
-        ...mapState("properties", ["has_loaded_properties"]),
-        has_properties_to_create() {
-            return (
-                this.is_obsolescence_date_property_used ||
-                this.currentlyUpdatedItem.properties !== null
-            );
-        },
-        obsolescence_date_value: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
-        },
-    },
-    mounted() {
-        if (!this.has_loaded_properties) {
-            this.$store.dispatch("properties/loadProjectProperties");
-        }
-    },
-};
+const props = defineProps<{ currentlyUpdatedItem: Item; value: string }>();
+
+const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
+    "loadProjectProperties",
+]);
+
+const { is_obsolescence_date_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_obsolescence_date_property_used">
+>("configuration", ["is_obsolescence_date_property_used"]);
+
+const { has_loaded_properties } = useNamespacedState<
+    Pick<PropertiesState, "has_loaded_properties">
+>("properties", ["has_loaded_properties"]);
+
+onMounted((): void => {
+    if (!has_loaded_properties.value) {
+        loadProjectProperties();
+    }
+});
+
+const has_properties_to_create = computed((): boolean => {
+    return (
+        is_obsolescence_date_property_used.value || props.currentlyUpdatedItem.properties.length > 0
+    );
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

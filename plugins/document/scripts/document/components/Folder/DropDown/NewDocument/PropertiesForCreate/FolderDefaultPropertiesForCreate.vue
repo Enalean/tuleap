@@ -43,32 +43,46 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import StatusPropertyWithCustomBindingForFolderCreate from "./StatusPropertyWithCustomBindingForFolderCreate.vue";
 import CustomProperty from "../../PropertiesForCreateOrUpdate/CustomProperties/CustomProperty.vue";
+import type { Property } from "../../../../../type";
+import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../../store/configuration";
+import type { PropertiesState } from "../../../../../store/properties/module";
+import { computed, onMounted } from "@vue/composition-api";
+import type { PropertiesActions } from "../../../../../store/properties/properties-actions";
 
-export default {
-    name: "FolderDefaultPropertiesForCreate",
-    components: { CustomProperty, StatusPropertyWithCustomBindingForFolderCreate },
-    props: {
-        status_value: String,
-        properties: Array,
-    },
-    computed: {
-        ...mapState("configuration", ["is_status_property_used"]),
-        ...mapState("properties", ["has_loaded_properties"]),
-        has_recursion_property() {
-            return (
-                this.is_status_property_used === true ||
-                (this.properties && this.properties.length > 0)
-            );
-        },
-    },
-    mounted() {
-        if (!this.has_loaded_properties) {
-            this.$store.dispatch("properties/loadProjectProperties");
-        }
-    },
-};
+const props = defineProps<{ status_value: string; properties: Array<Property> }>();
+
+const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("properties", [
+    "loadProjectProperties",
+]);
+
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
+
+const { has_loaded_properties } = useNamespacedState<
+    Pick<PropertiesState, "has_loaded_properties">
+>("properties", ["has_loaded_properties"]);
+
+onMounted((): void => {
+    if (!has_loaded_properties.value) {
+        loadProjectProperties();
+    }
+});
+
+const has_recursion_property = computed((): boolean => {
+    return (
+        is_status_property_used.value === true ||
+        (props.properties !== null && props.properties.length > 0)
+    );
+});
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>

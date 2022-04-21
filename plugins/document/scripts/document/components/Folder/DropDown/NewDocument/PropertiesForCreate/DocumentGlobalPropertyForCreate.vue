@@ -21,7 +21,7 @@
     <div class="document-properties">
         <div class="document-properties-title-and-status-container">
             <title-property
-                v-bind:value="props.currentlyUpdatedItem.title"
+                v-bind:value="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="false"
@@ -44,7 +44,7 @@ import StatusPropertyWithCustomBindingForDocumentCreate from "./StatusPropertyWi
 import PreviewFilename from "../../../ModalCommon/PreviewFilename.vue";
 import type { Folder, Item } from "../../../../../type";
 
-const props = defineProps<{ parent: Folder; currentlyUpdatedItem: Item }>();
+defineProps<{ currentlyUpdatedItem: Item; parent: Folder }>();
 </script>
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
