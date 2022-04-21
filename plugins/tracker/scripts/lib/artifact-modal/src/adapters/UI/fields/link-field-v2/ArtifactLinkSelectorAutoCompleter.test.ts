@@ -24,6 +24,7 @@ import { Fault } from "@tuleap/fault";
 import type { GroupCollection } from "@tuleap/link-selector";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 const ARTIFACT_ID = 1621;
 
@@ -34,11 +35,12 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
 
-        const artifact = {
-            id: ARTIFACT_ID,
-            title: "Do some stuff",
-            xref: `story #${ARTIFACT_ID}`,
-        };
+        const artifact = LinkableArtifactStub.withValues(
+            ARTIFACT_ID,
+            "Do some stuff",
+            `story #${ARTIFACT_ID}`,
+            "army-green"
+        );
         artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(artifact);
         current_artifact_identifier = null;
     });

@@ -26,14 +26,14 @@ import type {
 import type { Result } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { getMatchingArtifactLabel, getNoResultFoundEmptyState } from "../../../../gettext-catalog";
-import type { Artifact } from "../../../../domain/Artifact";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
 
 const buildGroupFromResult = (
     html: typeof HTMLTemplateStringProcessor,
-    result: Result<Artifact, Fault>
+    result: Result<LinkableArtifact, Fault>
 ): GroupOfItems => {
     if (!result.isOk()) {
         return {
@@ -50,7 +50,12 @@ const buildGroupFromResult = (
             {
                 value: String(artifact.id),
                 template: html`
-                    <span class="tlp-badge-secondary link-field-xref-badge">${artifact.xref}</span>
+                    <span
+                        class="tlp-swatch-${artifact.xref
+                            .color} cross-ref-badge link-field-xref-badge"
+                    >
+                        ${artifact.xref.ref}
+                    </span>
                     ${artifact.title}
                 `,
             },
@@ -68,17 +73,15 @@ export const ArtifactLinkSelectorAutoCompleter = (
 ): ArtifactLinkSelectorAutoCompleterType => ({
     autoComplete: (): LinkSelectorSearchFieldCallback => {
         return async (query: string, html): Promise<GroupCollection> => {
-            const artifact_identifier = LinkableNumberProxy.fromQueryString(
+            const linkable_number = LinkableNumberProxy.fromQueryString(
                 query,
                 current_artifact_identifier
             );
-            if (artifact_identifier === null) {
+            if (linkable_number === null) {
                 return [];
             }
 
-            const result = await retrieve_matching_artifact.getMatchingArtifact(
-                artifact_identifier
-            );
+            const result = await retrieve_matching_artifact.getMatchingArtifact(linkable_number);
             return [buildGroupFromResult(html, result)];
         };
     },

@@ -19,9 +19,9 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { Artifact } from "../../Artifact";
 import type { LinkableNumber } from "./LinkableNumber";
+import type { LinkableArtifact } from "./LinkableArtifact";
 
 export interface RetrieveMatchingArtifact {
-    getMatchingArtifact(artifact_identifier: LinkableNumber): ResultAsync<Artifact, Fault>;
+    getMatchingArtifact(artifact_identifier: LinkableNumber): ResultAsync<LinkableArtifact, Fault>;
 }

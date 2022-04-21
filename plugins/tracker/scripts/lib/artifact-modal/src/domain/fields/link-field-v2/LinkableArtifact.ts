@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCrossReference } from "../../src/domain/ArtifactCrossReference";
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
 
-export const ArtifactCrossReferenceStub = {
-    withRef: (ref: string): ArtifactCrossReference => ({
-        ref,
-        color: "lake-placid-blue",
-    }),
-
-    withRefAndColor: (ref: string, color: TrackerColorName): ArtifactCrossReference => ({
-        ref,
-        color,
-    }),
+export type LinkableArtifact = {
+    readonly id: number;
+    readonly title: string | null;
+    readonly xref: ArtifactCrossReference;
 };

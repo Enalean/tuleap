@@ -17,8 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Artifact {
-    readonly id: number;
-    readonly title: string | null;
-    readonly xref: string;
-}
+import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import type { LinkableArtifact } from "../../src/domain/fields/link-field-v2/LinkableArtifact";
+import { ArtifactCrossReferenceStub } from "./ArtifactCrossReferenceStub";
+
+export const LinkableArtifactStub = {
+    withDefaults: (): LinkableArtifact => ({
+        id: 456,
+        title: "flocculation",
+        xref: ArtifactCrossReferenceStub.withRefAndColor("story #456", "lake-placid-blue"),
+    }),
+
+    withValues: (
+        id: number,
+        title: string,
+        xref: string,
+        color: TrackerColorName
+    ): LinkableArtifact => ({
+        id,
+        title,
+        xref: ArtifactCrossReferenceStub.withRefAndColor(xref, color),
+    }),
+};

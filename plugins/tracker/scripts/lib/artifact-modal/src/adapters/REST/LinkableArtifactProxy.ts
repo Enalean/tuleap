@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCrossReference } from "../../src/domain/ArtifactCrossReference";
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
 
-export const ArtifactCrossReferenceStub = {
-    withRef: (ref: string): ArtifactCrossReference => ({
-        ref,
-        color: "lake-placid-blue",
-    }),
-
-    withRefAndColor: (ref: string, color: TrackerColorName): ArtifactCrossReference => ({
-        ref,
-        color,
+export const LinkableArtifactProxy = {
+    fromAPIArtifact: (artifact: ArtifactWithStatus): LinkableArtifact => ({
+        id: artifact.id,
+        title: artifact.title,
+        xref: ArtifactCrossReferenceProxy.fromAPIArtifact(artifact),
     }),
 };
