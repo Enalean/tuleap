@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-import dts from "vite-dts";
+import type { LinkSelector } from "../../src";
 
-export default vite.defineLibConfig({
-    plugins: [dts()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "LinkSelector",
+export const LinkSelectorStub = {
+    build: (): LinkSelector => ({
+        setDropdownContent(): void {
+            // Do nothing
         },
-        rollupOptions: {
-            external: ["lit/html.js"],
-            output: {
-                globals: {
-                    "lit/html.js": "lit/html.js",
-                },
-            },
+        resetSelection(): void {
+            // Do nothing
         },
-    },
-});
+        destroy(): void {
+            // Do nothing
+        },
+    }),
+};

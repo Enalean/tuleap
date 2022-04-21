@@ -19,25 +19,24 @@
 
 import { ItemsMapManager } from "./ItemsMapManager";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
-import type { HTMLTemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
+import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 
 describe("ItemsMapManager", () => {
-    let items_manager: ItemsMapManager;
+    let items_manager: ItemsMapManager, value_5: unknown;
 
     beforeEach(() => {
-        items_manager = new ItemsMapManager(new ListItemMapBuilder());
-        items_manager.refreshItemsMap(GroupCollectionBuilder.withTwoGroups());
+        items_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
+        const groups = GroupCollectionBuilder.withTwoGroups();
+        value_5 = groups[1].items[2].value;
+        items_manager.refreshItemsMap(groups);
     });
 
     describe("findLinkSelectorItemInItemMap", () => {
         it("Given an item map and an item id, Then it should return the corresponding LinkSelectorItem", () => {
-            const item = items_manager.findLinkSelectorItemInItemMap(
-                "link-selector-item-group1-value_2"
-            );
+            const item = items_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-2");
 
-            expect(item.id).toBe("link-selector-item-group1-value_2");
+            expect(item.id).toBe("link-selector-item-group1-2");
         });
 
         it("should throw an error when the given item id does not reference a LinkSelectorItem", () => {
@@ -49,15 +48,14 @@ describe("ItemsMapManager", () => {
 
     describe("getItemWithValue", () => {
         it("should return the corresponding LinkSelectorItem", () => {
-            expect(items_manager.getItemWithValue("value_5")).toStrictEqual({
+            expect(items_manager.getItemWithValue(value_5)).toStrictEqual({
                 element: expect.any(Element),
                 group_id: "group2",
-                id: "link-selector-item-group2-value_5",
+                id: "link-selector-item-group2-5",
                 is_disabled: false,
                 is_selected: false,
-                target_option: expect.any(HTMLOptionElement),
-                template: buildTemplateResult("Value 5"),
-                value: "value_5",
+                template: expect.anything(),
+                value: value_5,
             });
         });
 
@@ -70,9 +68,3 @@ describe("ItemsMapManager", () => {
         expect(items_manager.getLinkSelectorItems().length).toBeGreaterThan(0);
     });
 });
-
-function buildTemplateResult(value: string): HTMLTemplateResult {
-    return html`
-        ${value}
-    `;
-}

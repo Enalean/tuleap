@@ -17,15 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TemplateResult } from "lit/html.js";
-import type { LinkSelectorSearchFieldCallback } from "./events/SearchFieldEventCallbackHandler";
+import type { HTMLTemplateResult, TemplateResult } from "lit/html.js";
+import type { GroupCollection, LinkSelectorItem } from "./items/GroupCollection";
+import type { HTMLTemplateStringProcessor } from "./index";
 
 export interface LinkSelector {
+    setDropdownContent: (groups: GroupCollection) => void;
+    resetSelection: () => void;
     destroy: () => void;
 }
 
+export type LinkSelectorSearchFieldCallback = (link_selector: LinkSelector, query: string) => void;
+
+export type LinkSelectorSelectionCallback = (selected_value: unknown | null) => void;
+
+export type LinkSelectorTemplatingCallback = (
+    html: typeof HTMLTemplateStringProcessor,
+    item: LinkSelectorItem
+) => HTMLTemplateResult;
+
 export interface LinkSelectorOptions {
     readonly placeholder?: string;
+    templating_callback: LinkSelectorTemplatingCallback;
+    selection_callback: LinkSelectorSelectionCallback;
     search_field_callback: LinkSelectorSearchFieldCallback;
 }
 
@@ -34,12 +48,11 @@ export type RenderedItemMap = Map<string, RenderedItem>;
 export interface RenderedItem {
     id: string;
     template: TemplateResult;
-    value: string;
+    value: unknown;
     is_disabled: boolean;
     is_selected: boolean;
     group_id: string;
     element: Element;
-    target_option: HTMLOptionElement;
 }
 
 export interface LinkSelectorComponent {

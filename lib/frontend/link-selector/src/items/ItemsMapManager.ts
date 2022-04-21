@@ -18,13 +18,13 @@
  */
 
 import type { RenderedItem, RenderedItemMap } from "../type";
-import type { ListItemMapBuilder } from "./ListItemMapBuilder";
+import type { ListItemMapBuilderType } from "./ListItemMapBuilder";
 import type { GroupCollection } from "./GroupCollection";
 
 export class ItemsMapManager {
     private items_map!: RenderedItemMap;
 
-    constructor(private readonly list_item_builder: ListItemMapBuilder) {}
+    constructor(private readonly list_item_builder: ListItemMapBuilderType) {}
 
     public getLinkSelectorItems(): ReadonlyArray<RenderedItem> {
         return [...this.items_map.values()];
@@ -42,7 +42,7 @@ export class ItemsMapManager {
         this.items_map = this.list_item_builder.buildLinkSelectorItemsMap(groups);
     }
 
-    public getItemWithValue(value: string): RenderedItem | null {
+    public getItemWithValue(value: unknown): RenderedItem | null {
         return this.getLinkSelectorItems().find((item) => item.value === value) ?? null;
     }
 }

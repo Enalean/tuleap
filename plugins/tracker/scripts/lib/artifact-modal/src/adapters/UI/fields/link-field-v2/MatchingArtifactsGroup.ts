@@ -17,14 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type LinkSelectorItem = {
-    readonly value: unknown;
-};
+import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import { getMatchingArtifactLabel, getNoResultFoundEmptyState } from "../../../../gettext-catalog";
+import type { GroupOfItems } from "@tuleap/link-selector";
 
-export type GroupOfItems = {
-    readonly label: string;
-    readonly empty_message: string;
-    readonly items: ReadonlyArray<LinkSelectorItem>;
+export const MatchingArtifactsGroup = {
+    fromMatchingArtifact: (artifact: LinkableArtifact): GroupOfItems => ({
+        label: getMatchingArtifactLabel(),
+        empty_message: getNoResultFoundEmptyState(),
+        items: [{ value: artifact }],
+    }),
+    buildEmpty: (): GroupOfItems => ({
+        label: getMatchingArtifactLabel(),
+        empty_message: getNoResultFoundEmptyState(),
+        items: [],
+    }),
 };
-
-export type GroupCollection = ReadonlyArray<GroupOfItems>;

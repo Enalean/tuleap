@@ -21,6 +21,7 @@ import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { RenderedItem, LinkSelectorSelectionStateSingle } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import { html, render } from "lit/html.js";
+import type { LinkSelectorSelectionCallback } from "../type";
 
 export class SelectionManager {
     private selection_state: LinkSelectorSelectionStateSingle | null;
@@ -31,7 +32,8 @@ export class SelectionManager {
         private readonly selection_element: Element,
         private readonly placeholder_element: Element,
         private readonly dropdown_manager: DropdownManager,
-        private readonly items_map_manager: ItemsMapManager
+        private readonly items_map_manager: ItemsMapManager,
+        private readonly callback: LinkSelectorSelectionCallback
     ) {
         this.selection_state = null;
     }
@@ -48,7 +50,7 @@ export class SelectionManager {
         }
 
         if (list_item.is_disabled) {
-            this.replaceCurrentValueWithPlaceholder(list_item, true);
+            this.replaceCurrentValueWithPlaceholder(list_item);
             return;
         }
 
@@ -65,32 +67,10 @@ export class SelectionManager {
         throw new Error("Nothing has been selected");
     }
 
-    public initSelection(): void {
-        const item_to_select = this.items_map_manager.getItemWithValue(
-            this.source_select_box.value
-        );
-        if (item_to_select) {
-            this.replacePlaceholderWithCurrentSelection(item_to_select, this.placeholder_element);
-            return;
-        }
-
-        const selected_option = this.source_select_box.querySelector("option[selected]");
-        if (!(selected_option instanceof HTMLElement) || !selected_option.dataset.itemId) {
-            return;
-        }
-
-        this.replacePlaceholderWithCurrentSelection(
-            this.items_map_manager.findLinkSelectorItemInItemMap(selected_option.dataset.itemId),
-            this.placeholder_element
-        );
-    }
-
     public resetAfterDependenciesUpdate(): void {
         const available_items = this.items_map_manager.getLinkSelectorItems();
         if (available_items.length === 0) {
-            if (this.selection_state) {
-                this.replaceCurrentValueWithPlaceholder(this.selection_state.selected_item, true);
-            }
+            this.clearSelection();
             return;
         }
 
@@ -134,9 +114,7 @@ export class SelectionManager {
 
         item.is_selected = true;
         item.element.setAttribute("aria-selected", "true");
-        item.target_option.setAttribute("selected", "selected");
-        item.target_option.selected = true;
-        this.source_select_box.dispatchEvent(new Event("change"));
+        this.callback(item.value);
 
         this.selection_state = {
             selected_item: item,
@@ -152,15 +130,11 @@ export class SelectionManager {
 
         selection_state.selected_item.is_selected = false;
         selection_state.selected_item.element.setAttribute("aria-selected", "false");
-        selection_state.selected_item.target_option.removeAttribute("selected");
-        selection_state.selected_item.target_option.selected = false;
 
         newly_selected_item.is_selected = true;
         newly_selected_item.element.setAttribute("aria-selected", "true");
-        newly_selected_item.target_option.setAttribute("selected", "selected");
-        newly_selected_item.target_option.selected = true;
 
-        this.source_select_box.dispatchEvent(new Event("change"));
+        this.callback(newly_selected_item.value);
         this.selection_element.innerHTML = "";
         this.selection_element.appendChild(new_selected_value_element);
         this.selection_element.appendChild(
@@ -187,28 +161,26 @@ export class SelectionManager {
 
             this.replaceCurrentValueWithPlaceholder(item);
             this.dropdown_manager.openLinkSelector();
-            this.source_select_box.dispatchEvent(new Event("change"));
         });
 
         return remove_value_button;
     }
 
-    private replaceCurrentValueWithPlaceholder(
-        item_to_unselect: RenderedItem,
-        is_clearing_state = false
-    ): void {
+    public clearSelection(): void {
+        if (!this.selection_state) {
+            return;
+        }
+        this.replaceCurrentValueWithPlaceholder(this.selection_state.selected_item);
+    }
+
+    private replaceCurrentValueWithPlaceholder(item_to_unselect: RenderedItem): void {
         this.selection_element.innerHTML = "";
         this.selection_element.appendChild(this.placeholder_element);
         this.source_select_box.selectedIndex = -1;
         item_to_unselect.element.setAttribute("aria-selected", "false");
-        item_to_unselect.target_option.removeAttribute("selected");
-        item_to_unselect.target_option.selected = false;
         item_to_unselect.is_selected = false;
 
-        if (!is_clearing_state) {
-            this.source_select_box.dispatchEvent(new Event("change"));
-        }
-
+        this.callback(null);
         this.selection_state = null;
     }
 }

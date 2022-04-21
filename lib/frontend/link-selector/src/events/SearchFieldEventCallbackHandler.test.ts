@@ -17,24 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SearchFieldEventCallbackHandlerType } from "./SearchFieldEventCallbackHandler";
 import { SearchFieldEventCallbackHandler } from "./SearchFieldEventCallbackHandler";
-import { DropdownContentRefresherStub } from "../../tests/stubs/DropdownContentRefresherStub";
+import { LinkSelectorStub } from "../../tests/stubs/LinkSelectorStub";
+import type { LinkSelector, LinkSelectorSearchFieldCallback } from "../type";
 
 describe("SearchFieldEventCallbackHandler", () => {
-    const getHandler = (): SearchFieldEventCallbackHandlerType => {
-        const handler = SearchFieldEventCallbackHandler(DropdownContentRefresherStub.build());
-        return handler;
+    let search_field_element: HTMLInputElement, link_selector: LinkSelector;
+
+    beforeEach(() => {
+        const doc = document.implementation.createHTMLDocument();
+        search_field_element = doc.createElement("input");
+        link_selector = LinkSelectorStub.build();
+    });
+
+    const init = (callback: LinkSelectorSearchFieldCallback): void => {
+        const handler = SearchFieldEventCallbackHandler(
+            link_selector,
+            search_field_element,
+            callback
+        );
+        return handler.init();
     };
 
     it("should execute the callback after 250ms after the users has stopped typing in the search_field_element", () => {
-        const doc = document.implementation.createHTMLDocument();
-        const search_field_element = doc.createElement("input");
         const callback = jest.fn();
-
         jest.useFakeTimers();
 
-        getHandler().init(search_field_element, callback);
+        init(callback);
 
         search_field_element.value = "a query";
         search_field_element.dispatchEvent(new Event("input"));
@@ -45,17 +54,14 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         jest.advanceTimersByTime(1); // 250 ms elapsed
 
-        expect(callback).toHaveBeenCalledWith("a query", expect.any(Function));
+        expect(callback).toHaveBeenCalledWith(link_selector, "a query");
     });
 
     it("should not execute the callback when the user it still typing", () => {
-        const doc = document.implementation.createHTMLDocument();
-        const search_field_element = doc.createElement("input");
         const callback = jest.fn();
-
         jest.useFakeTimers();
 
-        getHandler().init(search_field_element, callback);
+        init(callback);
 
         ["nana ", "nana ", "nana ", "BATMAN"].forEach((query) => {
             search_field_element.value += query;
@@ -65,6 +71,6 @@ describe("SearchFieldEventCallbackHandler", () => {
         jest.advanceTimersByTime(250);
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith("nana nana nana BATMAN", expect.any(Function));
+        expect(callback).toHaveBeenCalledWith(link_selector, "nana nana nana BATMAN");
     });
 });

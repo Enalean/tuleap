@@ -17,18 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ItemsMapManager } from "./ItemsMapManager";
+import { getLinkableArtifact } from "./LinkableArtifactTemplate";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
-export interface OptionsMaintainerType {
-    rebuildOptions(): void;
-}
+describe(`LinkableArtifactTemplate`, () => {
+    describe(`getLinkableArtifact`, () => {
+        it(`will return null when a given item does not look like a Linkable Artifact`, () => {
+            const item = { not_a_linkable_artifact: true };
+            expect(getLinkableArtifact(item)).toBeNull();
+        });
 
-export const OptionsMaintainer = (
-    select_element: HTMLSelectElement,
-    items_map_manager: ItemsMapManager
-): OptionsMaintainerType => ({
-    rebuildOptions(): void {
-        const options = items_map_manager.getLinkSelectorItems().map((item) => item.target_option);
-        select_element.replaceChildren(...options);
-    },
+        it(`will return the item when it looks like a Linkable Artifact`, () => {
+            const item = LinkableArtifactStub.withDefaults();
+            expect(getLinkableArtifact(item)).toBe(item);
+        });
+    });
 });

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function expectChangeEventToHaveBeenFiredOnSourceSelectBox(
-    source_select_box: HTMLSelectElement,
-    nb_times: number
-): void {
-    if (nb_times === 0) {
-        expect(source_select_box.dispatchEvent).not.toHaveBeenCalled();
-        return;
-    }
+export type LinkAdditionPresenter = {
+    readonly is_add_button_disabled: boolean;
+};
 
-    if (nb_times > 1) {
-        expect(source_select_box.dispatchEvent).toHaveBeenCalledTimes(nb_times);
-    }
+export const LinkAdditionPresenter = {
+    withButtonDisabled: (): LinkAdditionPresenter => ({
+        is_add_button_disabled: true,
+    }),
 
-    expect(source_select_box.dispatchEvent).toHaveBeenCalledWith(new Event("change"));
-}
+    withButtonEnabled: (): LinkAdditionPresenter => ({
+        is_add_button_disabled: false,
+    }),
+};

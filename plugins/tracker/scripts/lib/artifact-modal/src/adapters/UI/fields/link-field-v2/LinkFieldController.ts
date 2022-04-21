@@ -35,13 +35,16 @@ import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
 import type { LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 
 export interface LinkFieldControllerType {
     displayField(): LinkFieldPresenter;
     displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
-    autoComplete(): LinkSelectorSearchFieldCallback;
+    autoComplete: LinkSelectorSearchFieldCallback;
+    onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
 }
 
 const isCreationModeFault = (fault: Fault): boolean => {
@@ -107,7 +110,12 @@ export const LinkFieldController = (
         return buildPresenter(links_store, deleted_link_verifier);
     },
 
-    autoComplete(): LinkSelectorSearchFieldCallback {
-        return links_autocompleter.autoComplete();
+    autoComplete: links_autocompleter.autoComplete,
+
+    onLinkableArtifactSelection: (artifact): LinkAdditionPresenter => {
+        if (!artifact) {
+            return LinkAdditionPresenter.withButtonDisabled();
+        }
+        return LinkAdditionPresenter.withButtonEnabled();
     },
 });

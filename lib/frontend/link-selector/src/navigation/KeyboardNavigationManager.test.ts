@@ -24,6 +24,7 @@ import { ListItemHighlighter } from "./ListItemHighlighter";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
+import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 
 describe("KeyboardNavigationManager", () => {
     let manager: KeyboardNavigationManager,
@@ -48,7 +49,7 @@ describe("KeyboardNavigationManager", () => {
 
         const groups = GroupCollectionBuilder.withTwoGroups();
 
-        item_map_manager = new ItemsMapManager(new ListItemMapBuilder());
+        item_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
         item_map_manager.refreshItemsMap(groups);
         const content_renderer = new DropdownContentRenderer(
             dropdown_list_element,
@@ -72,22 +73,20 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap(
-                        "link-selector-item-group1-value_1"
-                    ).element.classList
+                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-1")
+                        .element.classList
                 ).toContain("link-selector-item-highlighted");
             });
 
             it("When the user reaches the last valid item, then it should keep it highlighted", () => {
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_1
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_2
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_3
-                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights value_4
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights id 1
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights id 2
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights id 3
+                manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights id 4
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap(
-                        "link-selector-item-group2-value_4"
-                    ).element.classList
+                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group2-4")
+                        .element.classList
                 ).toContain("link-selector-item-highlighted");
             });
         });
@@ -98,9 +97,8 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // highlights 1st
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap(
-                        "link-selector-item-group1-value_0"
-                    ).element.classList
+                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-0")
+                        .element.classList
                 ).toContain("link-selector-item-highlighted");
             });
 
@@ -111,9 +109,8 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // same
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap(
-                        "link-selector-item-group1-value_0"
-                    ).element.classList
+                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-0")
+                        .element.classList
                 ).toContain("link-selector-item-highlighted");
             });
         });
