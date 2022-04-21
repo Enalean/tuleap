@@ -27,11 +27,11 @@ import {
     getTrackerReports,
 } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import type {
     TrackerReportResponse,
     TrackerUsedArtifactLinkResponse,
 } from "@tuleap/plugin-tracker-rest-api-types/src";
+import type { ArtifactForCrossReportDocGen } from "./type";
 
 describe("API querier", () => {
     describe("getReportArtifacts", () => {
@@ -40,10 +40,10 @@ describe("API querier", () => {
             const report_has_changed = true;
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
 
-            const artifacts_report_response: ArtifactResponse[] = [
+            const artifacts_report_response: ArtifactForCrossReportDocGen[] = [
                 {
                     id: 74,
-                } as ArtifactResponse,
+                } as ArtifactForCrossReportDocGen,
             ];
             mockFetchSuccess(tlpRecursiveGet, {
                 return_json: {
@@ -64,10 +64,10 @@ describe("API querier", () => {
             const artifact_link_type = "_is_child";
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
 
-            const artifacts_report_response: ArtifactResponse[] = [
+            const artifacts_report_response: ArtifactForCrossReportDocGen[] = [
                 {
                     id: 74,
-                } as ArtifactResponse,
+                } as ArtifactForCrossReportDocGen,
             ];
             mockFetchSuccess(tlpRecursiveGet, {
                 return_json: {

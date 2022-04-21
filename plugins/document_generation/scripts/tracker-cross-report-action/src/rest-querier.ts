@@ -18,30 +18,25 @@
  */
 
 import { recursiveGet } from "@tuleap/tlp-fetch";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
 import type {
     MinimalTrackerResponse,
     TrackerReportResponse,
-} from "@tuleap/plugin-tracker-rest-api-types/src";
-import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
+    TrackerUsedArtifactLinkResponse,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import type { LinkedArtifactsResponse } from "./type";
+import type { ArtifactForCrossReportDocGen } from "./type";
 
-export async function getReportArtifacts(
+export function getReportArtifacts(
     report_id: number,
     report_has_changed: boolean
-): Promise<ArtifactResponse[]> {
-    const report_artifacts: ArtifactResponse[] = await recursiveGet(
-        `/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`,
-        {
-            params: {
-                values: "from_table_renderer",
-                with_unsaved_changes: report_has_changed,
-                limit: 50,
-            },
-        }
-    );
-
-    return report_artifacts;
+): Promise<ArtifactForCrossReportDocGen[]> {
+    return recursiveGet(`/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`, {
+        params: {
+            values: "from_table_renderer",
+            with_unsaved_changes: report_has_changed,
+            limit: 50,
+        },
+    });
 }
 
 export function getLinkedArtifacts(

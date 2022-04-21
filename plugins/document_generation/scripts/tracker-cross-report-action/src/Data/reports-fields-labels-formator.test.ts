@@ -17,20 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse } from "../../../lib/docx";
 import type { OrganizedReportsData } from "../type";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { formatReportsFieldsLabels } from "./reports-fields-labels-formator";
+import type { ArtifactForCrossReportDocGen } from "../type";
 
 describe("reports-fields-labels-formator", () => {
     it("formats field labels from all selected reports", (): void => {
-        const first_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        const first_level_artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+            new Map();
         first_level_artifact_representations_map.set(74, {
             id: 74,
-            title: null,
-            xref: "story #74",
-            tracker: { id: 14 },
-            html_url: "/plugins/tracker/?aid=74",
             values: [
                 {
                     field_id: 1,
@@ -57,13 +54,9 @@ describe("reports-fields-labels-formator", () => {
                     values: [],
                 },
             ],
-        } as ArtifactResponse);
+        } as ArtifactForCrossReportDocGen);
         first_level_artifact_representations_map.set(4, {
             id: 4,
-            title: null,
-            xref: "story #4",
-            tracker: { id: 14 },
-            html_url: "/plugins/tracker/?aid=4",
             values: [
                 {
                     field_id: 1,
@@ -90,15 +83,12 @@ describe("reports-fields-labels-formator", () => {
                     values: [],
                 },
             ],
-        } as ArtifactResponse);
+        } as ArtifactForCrossReportDocGen);
 
-        const second_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        const second_level_artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+            new Map();
         second_level_artifact_representations_map.set(75, {
             id: 75,
-            title: null,
-            xref: "Task #75",
-            tracker: { id: 15 },
-            html_url: "/plugins/tracker/?aid=75",
             values: [
                 {
                     field_id: 10,
@@ -107,15 +97,12 @@ describe("reports-fields-labels-formator", () => {
                     value: 75,
                 },
             ],
-        } as ArtifactResponse);
+        } as ArtifactForCrossReportDocGen);
 
-        const third_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        const third_level_artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
+            new Map();
         third_level_artifact_representations_map.set(4, {
             id: 80,
-            title: null,
-            xref: "test #80",
-            tracker: { id: 30 },
-            html_url: "/plugins/tracker/?aid=80",
             values: [
                 {
                     field_id: 50,
@@ -130,7 +117,7 @@ describe("reports-fields-labels-formator", () => {
                     value: "Test 01",
                 },
             ],
-        } as ArtifactResponse);
+        } as ArtifactForCrossReportDocGen);
 
         const organized_reports_data: OrganizedReportsData = {
             first_level: {
@@ -160,7 +147,7 @@ describe("reports-fields-labels-formator", () => {
         ]);
     });
     it("throws an Error if organized data does not have any ArtifactResponse in first level", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        const artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> = new Map();
 
         const organized_reports_data: OrganizedReportsData = {
             first_level: {

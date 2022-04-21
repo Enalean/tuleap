@@ -17,128 +17,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse } from "../../../lib/docx";
-import type { OrganizedReportsData } from "../type";
+import * as tracker_names_formattor from "./tracker-names-formattor";
+import * as reports_fields_labels_formator from "./reports-fields-labels-formator";
+import type {
+    OrganizedReportsData,
+    ArtifactForCrossReportDocGen,
+    OrganizedReportDataLevel,
+} from "../type";
 import { formatHeaders } from "./headers-formator";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 import { TextCellWithMerges } from "../type";
 
 describe("headers-formator", () => {
     it("builds the headers TextCell", (): void => {
-        const first_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-        first_level_artifact_representations_map.set(74, {
-            id: 74,
-            title: null,
-            xref: "story #74",
-            tracker: { id: 14 },
-            html_url: "/plugins/tracker/?aid=74",
-            values: [
-                {
-                    field_id: 1,
-                    type: "aid",
-                    label: "Artifact ID",
-                    value: 74,
-                },
-                {
-                    field_id: 2,
-                    type: "string",
-                    label: "Field02",
-                    value: "value02",
-                },
-                {
-                    field_id: 3,
-                    type: "sb",
-                    label: "Assigned to",
-                    values: [],
-                },
-                {
-                    field_id: 4,
-                    type: "art_link",
-                    label: "Artifact links",
-                    values: [],
-                },
-            ],
-        } as ArtifactResponse);
-        first_level_artifact_representations_map.set(4, {
-            id: 4,
-            title: null,
-            xref: "story #4",
-            tracker: { id: 14 },
-            html_url: "/plugins/tracker/?aid=4",
-            values: [
-                {
-                    field_id: 1,
-                    type: "aid",
-                    label: "Artifact ID",
-                    value: 4,
-                },
-                {
-                    field_id: 2,
-                    type: "string",
-                    label: "Field02",
-                    value: "value04",
-                },
-                {
-                    field_id: 3,
-                    type: "sb",
-                    label: "Assigned to",
-                    values: [],
-                },
-                {
-                    field_id: 4,
-                    type: "art_link",
-                    label: "Artifact links",
-                    values: [],
-                },
-            ],
-        } as ArtifactResponse);
+        const expected_tracker_names = [
+            new TextCellWithMerges("Tracker01", 1),
+            new TextCellWithMerges("Tracker02", 1),
+        ];
+        jest.spyOn(tracker_names_formattor, "formatTrackerNames").mockReturnValue(
+            expected_tracker_names
+        );
+        const expected_reports_fields_labels = [
+            new TextCell("Artifact ID"),
+            new TextCell("Field02"),
+            new TextCell("Assigned to"),
+            new TextCell("Artifact ID"),
+        ];
+        jest.spyOn(reports_fields_labels_formator, "formatReportsFieldsLabels").mockReturnValue(
+            expected_reports_fields_labels
+        );
 
-        const second_level_artifact_representations_map: Map<number, ArtifactResponse> = new Map();
-        second_level_artifact_representations_map.set(75, {
-            id: 75,
-            title: null,
-            xref: "Task #75",
-            tracker: { id: 15 },
-            html_url: "/plugins/tracker/?aid=75",
-            values: [
-                {
-                    field_id: 10,
-                    type: "aid",
-                    label: "Artifact ID",
-                    value: 75,
-                },
-            ],
-        } as ArtifactResponse);
-
-        const organized_reports_data: OrganizedReportsData = {
+        const fake_organized_reports_data: OrganizedReportsData = {
             first_level: {
                 tracker_name: "Tracker01",
-                artifact_representations: first_level_artifact_representations_map,
-                linked_artifacts: new Map(),
-            },
+                artifact_representations: new Map<number, ArtifactForCrossReportDocGen>([
+                    [1, { id: 1 } as ArtifactForCrossReportDocGen],
+                ]),
+            } as OrganizedReportDataLevel,
             second_level: {
                 tracker_name: "Tracker02",
-                artifact_representations: second_level_artifact_representations_map,
-                linked_artifacts: new Map(),
-            },
+            } as OrganizedReportDataLevel,
         };
 
-        const formatted_headers = formatHeaders(organized_reports_data);
+        const formatted_headers = formatHeaders(fake_organized_reports_data);
         expect(formatted_headers).toStrictEqual({
-            tracker_names: [
-                new TextCellWithMerges("Tracker01", 3),
-                new TextCellWithMerges("Tracker02", 1),
-            ],
-            reports_fields_labels: [
-                new TextCell("Artifact ID"),
-                new TextCell("Field02"),
-                new TextCell("Assigned to"),
-                new TextCell("Artifact ID"),
-            ],
+            tracker_names: expected_tracker_names,
+            reports_fields_labels: expected_reports_fields_labels,
         });
     });
     it("throws an Error if organized data does not have any ArtifactResponse in first level", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        const artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> = new Map();
 
         const organized_reports_data: OrganizedReportsData = {
             first_level: {

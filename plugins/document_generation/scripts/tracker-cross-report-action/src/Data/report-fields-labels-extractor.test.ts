@@ -17,33 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactResponse } from "../../../lib/docx";
 import { extractFieldsLabels } from "./report-fields-labels-extractor";
+import type { ArtifactForCrossReportDocGen } from "../type";
 
 describe("report-fields-labels-extractor", () => {
     it("Extracts the fields labels", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> =
+        const artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> =
             buildArtifactRepresentationsMap();
 
         const fields_labels = extractFieldsLabels(artifact_representations_map);
         expect(fields_labels).toStrictEqual(["Artifact ID", "Field02", "Assigned to"]);
     });
     it("returns an empty array if provided data does not have any ArtifactResponse", (): void => {
-        const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+        const artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> = new Map();
 
         const fields_labels = extractFieldsLabels(artifact_representations_map);
         expect(fields_labels).toStrictEqual([]);
     });
 });
 
-function buildArtifactRepresentationsMap(): Map<number, ArtifactResponse> {
-    const artifact_representations_map: Map<number, ArtifactResponse> = new Map();
+function buildArtifactRepresentationsMap(): Map<number, ArtifactForCrossReportDocGen> {
+    const artifact_representations_map: Map<number, ArtifactForCrossReportDocGen> = new Map();
     artifact_representations_map.set(74, {
         id: 74,
-        title: null,
-        xref: "bug #74",
-        tracker: { id: 14 },
-        html_url: "/plugins/tracker/?aid=74",
         values: [
             {
                 field_id: 1,
@@ -70,13 +66,9 @@ function buildArtifactRepresentationsMap(): Map<number, ArtifactResponse> {
                 values: [],
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
     artifact_representations_map.set(4, {
         id: 4,
-        title: null,
-        xref: "bug #4",
-        tracker: { id: 14 },
-        html_url: "/plugins/tracker/?aid=4",
         values: [
             {
                 field_id: 1,
@@ -103,7 +95,7 @@ function buildArtifactRepresentationsMap(): Map<number, ArtifactResponse> {
                 values: [],
             },
         ],
-    } as ArtifactResponse);
+    } as ArtifactForCrossReportDocGen);
 
     return artifact_representations_map;
 }

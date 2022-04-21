@@ -26,7 +26,7 @@ import type { OrganizedReportsData } from "../type";
 import { isFieldTakenIntoAccount } from "./field-type-checker";
 import { formatHeaders } from "./headers-formator";
 import type { TextCellWithMerges } from "../type";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactForCrossReportDocGen } from "../type";
 
 export interface ReportSection {
     readonly headers?: HeadersSection;
@@ -123,7 +123,7 @@ export async function formatData(export_settings: ExportSettings): Promise<Repor
 function buildFollowingLevelLinkedArtifactsCells(
     current_artifact_id: number,
     current_level_linked_artifacts: Map<number, ReadonlyArray<number>>,
-    following_level_artifacts_representations: Map<number, ArtifactResponse>
+    following_level_artifacts_representations: Map<number, ArtifactForCrossReportDocGen>
 ): Map<number, Array<ReportCell>> {
     const following_level_linked_artifact_ids =
         current_level_linked_artifacts.get(current_artifact_id);
@@ -155,7 +155,7 @@ function buildFollowingLevelLinkedArtifactsCells(
 }
 
 function transformArtifactRepresentationAsCells(
-    artifact_representation: ArtifactResponse
+    artifact_representation: ArtifactForCrossReportDocGen
 ): Array<ReportCell> {
     const artifact_value_rows = [];
 

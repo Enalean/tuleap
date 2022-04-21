@@ -18,8 +18,10 @@
  */
 
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
-import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { ArtifactResponse } from "@tuleap/plugin-tracker-rest-api-types";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
+
+export type ArtifactForCrossReportDocGen = Pick<ArtifactResponse, "id" | "values">;
 
 export interface GlobalExportProperties {
     readonly current_tracker_id: number;
@@ -49,7 +51,7 @@ interface ArtifactReportExtraFieldValue {
 }
 
 export interface LinkedArtifactsResponse {
-    collection: ReadonlyArray<ArtifactResponse>;
+    collection: ReadonlyArray<ArtifactForCrossReportDocGen>;
 }
 
 export interface OrganizedReportsData {
@@ -59,7 +61,7 @@ export interface OrganizedReportsData {
 }
 
 export interface OrganizedReportDataLevel {
-    readonly artifact_representations: Map<number, ArtifactResponse>;
+    readonly artifact_representations: Map<number, ArtifactForCrossReportDocGen>;
     tracker_name: string;
     linked_artifacts: Map<number, ReadonlyArray<number>>;
 }
