@@ -46,6 +46,7 @@ class ReportRepresentation
      */
     public $label;
     public bool $is_public;
+    public bool $is_default;
     /**
      * @var array
      */
@@ -53,11 +54,12 @@ class ReportRepresentation
 
     public function __construct(Tracker_Report $report)
     {
-        $this->id        = JsonCast::toInt($report->getId());
-        $this->uri       = self::ROUTE . '/' . $this->id;
-        $this->label     = $report->getName();
-        $this->is_public = $report->isPublic();
-        $this->resources = [
+        $this->id         = JsonCast::toInt($report->getId());
+        $this->uri        = self::ROUTE . '/' . $this->id;
+        $this->label      = $report->getName();
+        $this->is_public  = $report->isPublic();
+        $this->is_default = $report->is_default;
+        $this->resources  = [
             [
                 'type' => 'artifacts',
                 'uri'  => $this->uri . '/' . ArtifactRepresentation::ROUTE,

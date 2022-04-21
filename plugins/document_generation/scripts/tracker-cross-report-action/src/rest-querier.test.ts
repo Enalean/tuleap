@@ -92,6 +92,7 @@ describe("API querier", () => {
                     id: 741,
                     label: "Report label",
                     is_public: true,
+                    is_default: false,
                 },
             ];
             mockFetchSuccess(recursive_get_spy, {

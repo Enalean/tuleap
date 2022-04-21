@@ -115,4 +115,80 @@ describe("TrackerReportSelector", () => {
         }
         expect(emitted_input[0]).toStrictEqual([expected_report]);
     });
+
+    it("selects the default report when the selected report does not match something in the possible reports", async () => {
+        const expected_report = { id: 101, label: "Private", is_public: false, is_default: true };
+        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+            { id: 100, label: "Public", is_public: true, is_default: false },
+            expected_report,
+        ] as TrackerReportResponse[]);
+
+        const wrapper = shallowMount(TrackerReportSelector, {
+            global: getGlobalTestOptions(),
+            props: {
+                tracker_id: 21,
+                report: null,
+            },
+        });
+
+        await nextTick();
+
+        const emitted_input = wrapper.emitted("update:report");
+        expect(emitted_input).toBeDefined();
+        if (emitted_input === undefined) {
+            throw new Error("Expected an update event to be emitted");
+        }
+        expect(emitted_input[0]).toStrictEqual([expected_report]);
+    });
+
+    it("selects the first public report when no default report is present", async () => {
+        const expected_report = { id: 100, label: "Public", is_public: true, is_default: false };
+        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+            expected_report,
+            { id: 101, label: "Private", is_public: false, is_default: false },
+            { id: 102, label: "Public 2", is_public: true, is_default: false },
+        ] as TrackerReportResponse[]);
+
+        const wrapper = shallowMount(TrackerReportSelector, {
+            global: getGlobalTestOptions(),
+            props: {
+                tracker_id: 21,
+                report: null,
+            },
+        });
+
+        await nextTick();
+
+        const emitted_input = wrapper.emitted("update:report");
+        expect(emitted_input).toBeDefined();
+        if (emitted_input === undefined) {
+            throw new Error("Expected an update event to be emitted");
+        }
+        expect(emitted_input[0]).toStrictEqual([expected_report]);
+    });
+
+    it("selects the first private report when no default report is present and no public reports exist", async () => {
+        const expected_report = { id: 101, label: "Private", is_public: false, is_default: false };
+        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+            expected_report,
+            { id: 102, label: "Private 2", is_public: false, is_default: false },
+        ] as TrackerReportResponse[]);
+
+        const wrapper = shallowMount(TrackerReportSelector, {
+            global: getGlobalTestOptions(),
+            props: {
+                tracker_id: 21,
+                report: null,
+            },
+        });
+
+        await nextTick();
+
+        const emitted_input = wrapper.emitted("update:report");
+        expect(emitted_input).toBeDefined();
+        if (emitted_input === undefined) {
+            throw new Error("Expected an update event to be emitted");
+        }
+        expect(emitted_input[0]).toStrictEqual([expected_report]);
+    });
 });
