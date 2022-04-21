@@ -52,11 +52,6 @@ export function createMergesForWholeRowLine(cells: CellObjectWithExtraInfo[][]):
                     s: { r: row_line, c: starting_cell },
                     e: { r: row_line, c: starting_cell + row.merge_columns },
                 });
-            } else {
-                merges.push({
-                    s: { r: row_line, c: starting_cell },
-                    e: { r: row_line, c: starting_cell },
-                });
             }
 
             starting_cell++;
