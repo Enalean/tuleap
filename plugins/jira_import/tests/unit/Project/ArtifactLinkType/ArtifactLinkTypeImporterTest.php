@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
+use Psr\Log\NullLogger;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 
@@ -32,7 +34,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider getData
      */
-    public function testImportOfArtifactLinkTypes(array $urls, array $types, callable $expectations, callable $tests): void
+    public function testImportOfArtifactLinkTypes(array $urls, array $types, TypeCreatorInterface $creator, callable $expectations, callable $tests): void
     {
         $client       = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
         };
@@ -50,19 +52,10 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        $creator = new class implements TypeCreatorInterface
-        {
-            public array $natures = [];
-            public function createFromType(TypePresenter $type): void
-            {
-                $this->natures[] = $type;
-            }
-        };
-
         $expectations($this);
 
         $importer = new ArtifactLinkTypeImporter($all_natures, $creator);
-        $importer->import($client);
+        $importer->import($client, new NullLogger());
 
         $tests($creator);
     }
@@ -75,26 +68,16 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     'issueLinkTypes' => 'YOU MUST PAY!',
                 ],
                 'types' => [],
+                'creator' => $this->getDefaultCreator(),
                 'expectations' => function (ArtifactLinkTypeImporterTest $test_case) {
                     $test_case->expectException(\RuntimeException::class);
                 },
                 'tests' => fn () => null,
             ],
             'it returns an artifact link type with accurate labels' => [
-                'urls' => [
-                    '/rest/api/2/issueLinkType' => [
-                        'issueLinkTypes' => [
-                            [
-                                "id"      => "10000",
-                                "name"    => "Blocks",
-                                "inward"  => "is blocked by",
-                                "outward" => "blocks",
-                                "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
-                            ],
-                        ],
-                    ],
-                ],
+                'urls' => $this->getDefaultIssueTypeResponse(),
                 'types' => [],
+                'creator' => $this->getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
                     self::assertCount(1, $creator->natures);
@@ -104,25 +87,59 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 },
             ],
             'it does not return anything when type already exists' => [
-                'urls' => [
-                    '/rest/api/2/issueLinkType' => [
-                        'issueLinkTypes' => [
-                            [
-                                "id"      => "10000",
-                                "name"    => "Blocks",
-                                "inward"  => "is blocked by",
-                                "outward" => "blocks",
-                                "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
-                            ],
-                        ],
-                    ],
-                ],
+                'urls' => $this->getDefaultIssueTypeResponse(),
                 'types' => [TypePresenter::buildVisibleType('Blocks', '', '')],
+                'creator' => $this->getDefaultCreator(),
+                'expectations' => fn () => null,
+                'tests' => function (mixed $creator) {
+                    self::assertEmpty($creator->natures);
+                },
+            ],
+            'it skips links that cannot be created' => [
+                'urls' => $this->getDefaultIssueTypeResponse(),
+                'types' => [],
+                'creator' => new class implements TypeCreatorInterface
+                {
+                    public array $natures = [];
+                    public function createFromType(TypePresenter $type): void
+                    {
+                        throw new InvalidTypeParameterException();
+                    }
+                },
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
                     self::assertEmpty($creator->natures);
                 },
             ],
         ];
+    }
+
+    private function getDefaultIssueTypeResponse(): array
+    {
+        return [
+            '/rest/api/2/issueLinkType' => [
+                'issueLinkTypes' => [
+                    [
+                        "id"      => "10000",
+                        "name"    => "Blocks",
+                        "inward"  => "is blocked by",
+                        "outward" => "blocks",
+                        "self"    => "https://jira.example.com/rest/api/3/issueLinkType/10000",
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    private function getDefaultCreator(): TypeCreatorInterface
+    {
+        return new class implements TypeCreatorInterface
+        {
+            public array $natures = [];
+            public function createFromType(TypePresenter $type): void
+            {
+                $this->natures[] = $type;
+            }
+        };
     }
 }

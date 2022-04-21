@@ -218,7 +218,7 @@ final class CreateProjectFromJira
             throw new \RuntimeException("There are no Jira issue types to import");
         }
 
-        $this->artifact_link_type_importer->import($jira_client);
+        $this->artifact_link_type_importer->import($jira_client, $logger);
 
         $platform_configuration_collection = $this->platform_configuration_collection_builder->getJiraPlatformConfiguration(
             $jira_client,

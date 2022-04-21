@@ -25,12 +25,8 @@ class TypeValidator
 {
     public const SHORTNAME_PATTERN = '[a-zA-Z][a-zA-Z_]*';
 
-    /** @var TypeDao */
-    private $dao;
-
-    public function __construct(TypeDao $dao)
+    public function __construct(private TypeDao $dao)
     {
-        $this->dao = $dao;
     }
 
     /** @throws InvalidTypeParameterException */
