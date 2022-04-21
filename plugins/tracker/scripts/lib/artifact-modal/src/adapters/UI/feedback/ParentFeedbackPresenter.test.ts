@@ -18,7 +18,7 @@
  */
 
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
-import type { Artifact } from "../../../domain/Artifact";
+import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 
 describe(`ParentFeedbackPresenter`, () => {
     it(`builds an empty Presenter`, () => {
@@ -27,7 +27,7 @@ describe(`ParentFeedbackPresenter`, () => {
     });
 
     it(`builds a presenter from a parent artifact`, () => {
-        const parent_artifact = { id: 50 } as Artifact;
+        const parent_artifact: ParentArtifact = { title: "tractorist" };
         const presenter = ParentFeedbackPresenter.fromArtifact(parent_artifact);
         expect(presenter.parent_artifact).toBe(parent_artifact);
     });

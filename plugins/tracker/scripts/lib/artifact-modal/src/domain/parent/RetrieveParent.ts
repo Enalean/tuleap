@@ -20,8 +20,8 @@
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { ParentArtifactIdentifier } from "./ParentArtifactIdentifier";
-import type { Artifact } from "../Artifact";
+import type { ParentArtifact } from "./ParentArtifact";
 
 export interface RetrieveParent {
-    getParent(parent_identifier: ParentArtifactIdentifier | null): ResultAsync<Artifact, Fault>;
+    getParent(parent_identifier: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault>;
 }

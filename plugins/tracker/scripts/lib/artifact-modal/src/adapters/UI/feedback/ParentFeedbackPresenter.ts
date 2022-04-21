@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Artifact } from "../../../domain/Artifact";
+import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 
 export interface ParentFeedbackPresenter {
-    readonly parent_artifact: Artifact | null;
+    readonly parent_artifact: ParentArtifact | null;
 }
 
 export const ParentFeedbackPresenter = {
     buildEmpty: (): ParentFeedbackPresenter => ({ parent_artifact: null }),
-    fromArtifact: (parent_artifact: Artifact): ParentFeedbackPresenter => ({
+    fromArtifact: (parent_artifact: ParentArtifact): ParentFeedbackPresenter => ({
         parent_artifact,
     }),
 };

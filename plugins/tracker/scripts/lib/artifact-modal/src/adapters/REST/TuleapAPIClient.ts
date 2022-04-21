@@ -21,7 +21,7 @@ import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import { Fault } from "@tuleap/fault";
 import { ResultAsync } from "neverthrow";
-import type { RetrieveArtifact } from "../../domain/RetrieveArtifact";
+import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
 import { getArtifact, getMatchingArtifact } from "../../rest/rest-service";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
@@ -31,28 +31,28 @@ import type { APILinkedArtifact } from "./APILinkedArtifact";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { Artifact } from "../../domain/Artifact";
+import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 import type { LinkableArtifactIdentifier } from "../../domain/fields/link-field-v2/LinkableArtifactIdentifier";
+import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 
 export interface LinkedArtifactCollection {
     readonly collection: APILinkedArtifact[];
 }
 
-type TuleapAPIClientType = RetrieveArtifact &
+type TuleapAPIClientType = RetrieveParent &
     RetrieveMatchingArtifact &
     RetrieveLinkTypes &
     RetrieveLinkedArtifactsByType;
 
 export const TuleapAPIClient = (): TuleapAPIClientType => ({
-    getArtifact: (
-        artifact_id: CurrentArtifactIdentifier | ParentArtifactIdentifier
-    ): ResultAsync<Artifact, Fault> =>
+    getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
         ResultAsync.fromPromise(getArtifact(artifact_id.id), (error) => {
             if (error instanceof Error) {
                 return Fault.fromError(error);
             }
             return Fault.fromMessage("Unknown error");
-        }),
+        }).mapErr(ParentRetrievalFault),
 
     getMatchingArtifact: (artifact_id: LinkableArtifactIdentifier): ResultAsync<Artifact, Fault> =>
         ResultAsync.fromPromise(getMatchingArtifact(artifact_id.id), (error) => {

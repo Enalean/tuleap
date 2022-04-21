@@ -24,7 +24,6 @@ import { setCatalog } from "../../../gettext-catalog";
 import { ParentFeedbackPresenter } from "./ParentFeedbackPresenter";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 
-const PARENT_ID = 86;
 const PARENT_TITLE = "foreclaw";
 const FAULT_MESSAGE = "An error occurred";
 
@@ -39,11 +38,7 @@ describe(`ModalFeedback`, () => {
         target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
-        parent_presenter = ParentFeedbackPresenter.fromArtifact({
-            id: PARENT_ID,
-            title: PARENT_TITLE,
-            xref: `story #${PARENT_ID}`,
-        });
+        parent_presenter = ParentFeedbackPresenter.fromArtifact({ title: PARENT_TITLE });
         fault_presenter = FaultFeedbackPresenter.fromFault(Fault.fromMessage(FAULT_MESSAGE));
     });
 

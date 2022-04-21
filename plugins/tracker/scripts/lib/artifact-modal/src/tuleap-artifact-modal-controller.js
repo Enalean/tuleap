@@ -39,7 +39,7 @@ import { uploadAllTemporaryFiles } from "./fields/file-field/file-uploader.js";
 import {
     relativeDatePlacement,
     relativeDatePreference,
-} from "../../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+} from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 import {
@@ -54,7 +54,6 @@ import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePicke
 import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
-import { ParentRetriever } from "./domain/parent/ParentRetriever";
 import { LinksMarkedForRemovalStore } from "./adapters/Memory/LinksMarkedForRemovalStore";
 import { LinksStore } from "./adapters/Memory/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
@@ -136,7 +135,7 @@ function ArtifactModalController(
             document.body.dataset.userLocale ?? "en_US"
         ),
         parent_feedback_controller: ParentFeedbackController(
-            ParentRetriever(api_client),
+            api_client,
             fault_feedback_controller,
             ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
         ),
