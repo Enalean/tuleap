@@ -11,12 +11,35 @@
       "dependsOn": [
         "^build"
       ],
+      "inputs": [
+        "package.json",
+        "tsconfig*.json",
+        "pnpm-lock.yaml",
+        "scripts/**/*.ts",
+        "scripts/**/*.tsx",
+        "scripts/**/*.json",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.json"
+      ],
       "outputs": []
     },
     "build": {
       "dependsOn": [
         "typecheck",
         "^build"
+      ],
+      "inputs": [
+        "package.json",
+        "tsconfig*.json",
+        "pnpm-lock.yaml",
+        "webpack*.js",
+        "vite.config.ts",
+        "scripts/**",
+        "src/**",
+        "themes/**",
+        "css/**",
+        "images/**"
       ],
       "outputs": ["dist/**", "frontend-assets/**", "backend-assets/**"]
     },

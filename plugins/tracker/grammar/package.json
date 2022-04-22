@@ -11,6 +11,6 @@
     "phpegjs": "^1.0.0-beta7"
   },
   "scripts": {
-    "build": "node ./generate_parser.js"
+    "build": "rm -rf backend-assets/ && node ./src/generate_parser.js"
   }
 }
