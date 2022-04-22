@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableArtifactIdentifier } from "../../src/domain/fields/link-field-v2/LinkableArtifactIdentifier";
+import type { TrackerShortname } from "src/domain/TrackerShortname";
+import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
 
-export const LinkableArtifactIdentifierStub = {
-    withId: (id: number): LinkableArtifactIdentifier => ({
-        _type: "LinkableArtifactIdentifier",
-        id,
+export const TrackerShortnameProxy = {
+    fromTrackerModel: (tracker: TrackerWithChangesetValues): TrackerShortname => ({
+        shortname: tracker.item_name,
     }),
 };

@@ -28,7 +28,7 @@ import type { Fault } from "@tuleap/fault";
 import { getMatchingArtifactLabel, getNoResultFoundEmptyState } from "../../../../gettext-catalog";
 import type { Artifact } from "../../../../domain/Artifact";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
-import { LinkableArtifactIdentifierProxy } from "./LinkableArtifactIdentifierProxy";
+import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 const buildGroupFromResult = (
@@ -68,7 +68,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
 ): ArtifactLinkSelectorAutoCompleterType => ({
     autoComplete: (): LinkSelectorSearchFieldCallback => {
         return async (query: string, html): Promise<GroupCollection> => {
-            const artifact_identifier = LinkableArtifactIdentifierProxy.fromQueryString(
+            const artifact_identifier = LinkableNumberProxy.fromQueryString(
                 query,
                 current_artifact_identifier
             );

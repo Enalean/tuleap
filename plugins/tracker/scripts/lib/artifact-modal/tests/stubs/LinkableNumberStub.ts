@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type TrackerShortname = {
-    readonly shortname: string;
+import type { LinkableNumber } from "../../src/domain/fields/link-field-v2/LinkableNumber";
+
+export const LinkableNumberStub = {
+    withId: (id: number): LinkableNumber => ({ _type: "LinkableNumber", id }),
 };

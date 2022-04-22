@@ -33,7 +33,7 @@ import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIden
 import type { Artifact } from "../../domain/Artifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
-import type { LinkableArtifactIdentifier } from "../../domain/fields/link-field-v2/LinkableArtifactIdentifier";
+import type { LinkableNumber } from "../../domain/fields/link-field-v2/LinkableNumber";
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 
 export interface LinkedArtifactCollection {
@@ -54,7 +54,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
             return Fault.fromMessage("Unknown error");
         }).mapErr(ParentRetrievalFault),
 
-    getMatchingArtifact: (artifact_id: LinkableArtifactIdentifier): ResultAsync<Artifact, Fault> =>
+    getMatchingArtifact: (artifact_id: LinkableNumber): ResultAsync<Artifact, Fault> =>
         ResultAsync.fromPromise(getMatchingArtifact(artifact_id.id), (error) => {
             if (error instanceof Error) {
                 return Fault.fromError(error);

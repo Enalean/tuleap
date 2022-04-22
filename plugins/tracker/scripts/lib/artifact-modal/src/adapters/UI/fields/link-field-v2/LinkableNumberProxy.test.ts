@@ -17,30 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LinkableArtifactIdentifierProxy } from "./LinkableArtifactIdentifierProxy";
+import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 
-describe("LinkableArtifactIdentifierProxy", () => {
+describe("LinkableNumberProxy", () => {
     it.each(["abcd", "10+", "105d", "10^5"])(
         "should return null when there is no valid id in the query string",
         (query: string) => {
-            expect(LinkableArtifactIdentifierProxy.fromQueryString(query, null)).toBeNull();
+            expect(LinkableNumberProxy.fromQueryString(query, null)).toBeNull();
         }
     );
 
     it("should return null when the user has entered the current artifact_id", () => {
         expect(
-            LinkableArtifactIdentifierProxy.fromQueryString(
-                "105",
-                CurrentArtifactIdentifierStub.withId(105)
-            )
+            LinkableNumberProxy.fromQueryString("105", CurrentArtifactIdentifierStub.withId(105))
         ).toBeNull();
     });
 
-    it("should return a LinkableArtifactIdentifier", () => {
-        expect(LinkableArtifactIdentifierProxy.fromQueryString("105", null)).toStrictEqual({
-            _type: "LinkableArtifactIdentifier",
-            id: 105,
-        });
+    it("should return a LinkableNumber", () => {
+        const linkable_number = LinkableNumberProxy.fromQueryString("105", null);
+        expect(linkable_number?.id).toBe(105);
     });
 });

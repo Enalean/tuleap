@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type TrackerShortname = {
-    readonly shortname: string;
-};
+import type { Identifier } from "../../Identifier";
+
+// I hold a number that is maybe an artifact id that can be linked to the current artifact
+export type LinkableNumber = Identifier<"LinkableNumber">;

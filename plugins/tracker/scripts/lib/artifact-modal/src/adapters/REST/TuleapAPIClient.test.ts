@@ -31,7 +31,7 @@ import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 import type { Artifact } from "../../domain/Artifact";
-import { LinkableArtifactIdentifierStub } from "../../../tests/stubs/LinkableArtifactIdentifierStub";
+import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -79,7 +79,7 @@ describe(`TuleapAPIClient`, () => {
     describe(`getMatchingArtifact()`, () => {
         const getMatching = (): ResultAsync<Artifact, Fault> => {
             const client = TuleapAPIClient();
-            return client.getMatchingArtifact(LinkableArtifactIdentifierStub.withId(ARTIFACT_ID));
+            return client.getMatchingArtifact(LinkableNumberStub.withId(ARTIFACT_ID));
         };
 
         it(`will return an Artifact matching the given number`, async () => {
