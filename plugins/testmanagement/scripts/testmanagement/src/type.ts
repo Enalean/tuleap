@@ -109,4 +109,6 @@ export interface ArtifactFieldValueStepDefinitionEnhancedWithResults {
     readonly result: string;
     readonly attachments: ReadonlyArray<TestExecutionAttachment>;
     readonly linked_bugs: ReadonlyArray<TestExecutionLinkedBug & { readonly html_url: string }>;
+    readonly last_execution_date: string;
+    readonly last_execution_user: string;
 }

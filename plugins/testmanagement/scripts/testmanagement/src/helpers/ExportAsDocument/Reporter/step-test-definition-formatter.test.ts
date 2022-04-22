@@ -207,7 +207,7 @@ describe("step-test-definition-formatter", () => {
 
         const enhanced_step_def_value = format_step_def_builder("https://example.com", field_value);
 
-        expect(enhanced_step_def_value).toEqual({
+        expect(enhanced_step_def_value).toStrictEqual({
             field_name: "Step Definition",
             content_length: "blockttmstepdefenhanced",
             value_type: "string",
@@ -248,6 +248,8 @@ describe("step-test-definition-formatter", () => {
                     html_url: "https://example.com/plugins/tracker/?aid=1001",
                 },
             ],
+            last_execution_date: "2021-11-04T15:30:00+01:00",
+            last_execution_user: "Some name",
         });
     });
 
@@ -319,7 +321,7 @@ describe("step-test-definition-formatter", () => {
 
         const enhanced_step_def_value = format_step_def_builder("https://example.com", field_value);
 
-        expect(enhanced_step_def_value).toEqual({
+        expect(enhanced_step_def_value).toStrictEqual({
             field_name: "Step Definition",
             content_length: "blockttmstepdefenhanced",
             value_type: "string",
@@ -337,6 +339,8 @@ describe("step-test-definition-formatter", () => {
             result: "",
             attachments: [],
             linked_bugs: [],
+            last_execution_date: "",
+            last_execution_user: "",
         });
     });
 
@@ -377,7 +381,7 @@ describe("step-test-definition-formatter", () => {
 
         const enhanced_step_def_value = format_step_def_builder("https://example.com", field_value);
 
-        expect(enhanced_step_def_value).toEqual({
+        expect(enhanced_step_def_value).toStrictEqual({
             field_name: "Step Definition",
             content_length: "blockttmstepdef",
             value_type: "string",
@@ -411,6 +415,8 @@ describe("step-test-definition-formatter", () => {
             result: "",
             attachments: [],
             linked_bugs: [],
+            last_execution_date: "",
+            last_execution_user: "",
         });
     });
 });

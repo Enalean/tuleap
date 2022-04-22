@@ -55,6 +55,8 @@ export function buildStepDefinitionFunction(): TransformStepDefFieldValue<Artifa
             result: "",
             attachments: [],
             linked_bugs: [],
+            last_execution_date: "",
+            last_execution_user: "",
         };
     };
 }
@@ -118,6 +120,9 @@ export function buildStepDefinitionEnhancedWithResultsFunction(
             result: execution_for_test?.previous_result?.result ?? "",
             attachments,
             linked_bugs,
+            last_execution_date: execution_for_test?.previous_result?.submitted_on ?? "",
+            last_execution_user:
+                execution_for_test?.previous_result?.submitted_by.display_name ?? "",
         };
     };
 }

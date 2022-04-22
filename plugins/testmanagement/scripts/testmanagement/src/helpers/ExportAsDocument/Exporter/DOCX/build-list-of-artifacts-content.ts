@@ -648,7 +648,29 @@ async function buildStepDefinitionTestResultParagraphs(
         new Paragraph({
             heading: HeadingLevel.HEADING_5,
             children: [new TextRun(gettext_provider.gettext("Test Results"))],
-        }),
+        })
+    );
+    if (field.last_execution_user !== "" && field.last_execution_date !== "") {
+        paragraphs.push(
+            buildTable([
+                new TableRow({
+                    children: [
+                        buildTableCellLabel(gettext_provider.gettext("Executed By")),
+                        buildTableCellContent(new TextRun(field.last_execution_user)),
+                    ],
+                }),
+                new TableRow({
+                    children: [
+                        buildTableCellLabel(gettext_provider.gettext("Executed On")),
+                        buildTableCellContent(
+                            new TextRun(new Date(field.last_execution_date).toDateString())
+                        ),
+                    ],
+                }),
+            ])
+        );
+    }
+    paragraphs.push(
         new Paragraph({
             heading: HeadingLevel.HEADING_6,
             children: [new TextRun(gettext_provider.gettext("Status"))],
