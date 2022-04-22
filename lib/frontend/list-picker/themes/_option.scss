@@ -35,8 +35,8 @@
 
 .list-picker-dropdown-option-value {
     &.list-picker-item-highlighted {
-        background-color: var(--tlp-main-color);
-        color: var(--tlp-white-color);
+        background: var(--tlp-main-color-hover-background);
+        color: var(--tlp-main-color);
     }
 
     &[aria-selected="true"]::before {
@@ -55,7 +55,8 @@
         color: var(--tlp-main-color);
 
         &.list-picker-item-highlighted {
-            color: var(--tlp-white-color);
+            background: var(--tlp-main-color-hover-background);
+            color: var(--tlp-main-color);
         }
     }
 }
