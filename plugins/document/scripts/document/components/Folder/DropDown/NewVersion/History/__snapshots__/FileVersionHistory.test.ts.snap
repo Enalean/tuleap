@@ -59,6 +59,8 @@ exports[`FileVersionHistory displays the latest version text and the file histor
      
     <a
       href="/plugins/docman/?group_id=25&id=18&action=details&section=history"
+      rel="noopener noreferrer"
+      target="_blank"
     >
       <translate-stub
         tag="span"

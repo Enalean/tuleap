@@ -23,7 +23,7 @@
         <h2 class="tlp-modal-subtitle" v-translate>Latest versions</h2>
         <p v-if="display_latest_version_text">
             <translate>Only the last 5 versions are displayed.</translate>
-            <a v-bind:href="history_url">
+            <a v-bind:href="history_url" target="_blank" rel="noopener noreferrer">
                 <translate>View all versions</translate>
                 <i class="fas fa-long-arrow-alt-right"></i>
             </a>
