@@ -2710,7 +2710,7 @@ msgid "Send notifications to people monitoring these artifacts"
 msgstr "Envoyer les notifications aux personnes suivant ces artefacts"
 
 msgid "Send notifications to selected people"
-msgstr "Envoyer des notifications aux personnes selectionnées"
+msgstr "Envoyer des notifications aux personnes sélectionnées"
 
 msgid "Send notifications:"
 msgstr "Envoyer les notifications :"
