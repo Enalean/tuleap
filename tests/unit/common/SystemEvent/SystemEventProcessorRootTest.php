@@ -40,7 +40,7 @@ use SystemEventProcessor_Root;
 use SystemEventProcessRootDefaultQueue;
 use Tuleap\DB\DBConnection;
 use Tuleap\GlobalSVNPollution;
-use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVNCore\ApacheConfGenerator;
 
 class SystemEventProcessorRootTest extends \Tuleap\Test\PHPUnit\TestCase
 {

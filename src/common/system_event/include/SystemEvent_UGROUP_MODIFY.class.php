@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\svn\Event\UpdateProjectAccessFilesScheduler;
+use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
 
 /**
 * System Event classes

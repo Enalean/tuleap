@@ -30,7 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\SvnCore\Cache\ParameterRetriever;
+use Tuleap\SVNCore\Cache\ParameterRetriever;
 
 final class DisplayTuleapPMParamsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {

@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 class SystemEventProcessor_Factory

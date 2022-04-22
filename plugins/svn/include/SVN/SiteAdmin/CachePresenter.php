@@ -22,7 +22,7 @@
 namespace Tuleap\SVN\SiteAdmin;
 
 use CSRFSynchronizerToken;
-use Tuleap\SvnCore\Cache\Parameters;
+use Tuleap\SVNCore\Cache\Parameters;
 
 /**
  * @psalm-immutable

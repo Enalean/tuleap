@@ -43,7 +43,7 @@ use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigSanitizer;
 use Tuleap\SVN\Repository\HookDao;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\Svn\SHA1CollisionDetector;
+use Tuleap\SVNCore\SHA1CollisionDetector;
 use Tuleap\SVN\SvnAdmin;
 
 $logger          = SvnPlugin::getLogger();

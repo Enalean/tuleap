@@ -28,7 +28,7 @@ use Project;
 use ReferenceManager;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Project\CheckProjectAccess;
-use Tuleap\svn\Event\GetSVNLoginNameEvent;
+use Tuleap\SVNCore\Event\GetSVNLoginNameEvent;
 use Tuleap\SVN\Repository\Repository;
 
 class ViewVCProxy

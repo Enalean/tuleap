@@ -59,7 +59,7 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRedirectsAccessToCoreSubversionIntro(): void
     {
         $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVN\SvnCoreAccess(
+        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/?func=info&group_id=101',
             LayoutBuilder::buildWithInspector($layout_inspector)
@@ -73,7 +73,7 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRedirectsAccessToViewVcRoot(): void
     {
         $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVN\SvnCoreAccess(
+        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/viewvc.php/?root=TestProject',
             LayoutBuilder::buildWithInspector($layout_inspector)
@@ -87,7 +87,7 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRedirectsAccessToViewVcDirectory(): void
     {
         $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVN\SvnCoreAccess(
+        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/viewvc.php/trunk/?root=mozilla',
             LayoutBuilder::buildWithInspector($layout_inspector)
@@ -101,7 +101,7 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRedirectsAccessToViewVcFileLog(): void
     {
         $layout_inspector = new LayoutInspector();
-        $event            = new \Tuleap\SVN\SvnCoreAccess(
+        $event            = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             '/svn/viewvc.php/trunk/README?root=mozilla&view=log',
             LayoutBuilder::buildWithInspector($layout_inspector)
@@ -114,7 +114,7 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItForbidsSOAPAccess(): void
     {
-        $event = new \Tuleap\SVN\SvnCoreAccess(
+        $event = new \Tuleap\SVNCore\SvnCoreAccess(
             $this->project,
             \SVN_SOAPServer::FAKE_URL,
             null

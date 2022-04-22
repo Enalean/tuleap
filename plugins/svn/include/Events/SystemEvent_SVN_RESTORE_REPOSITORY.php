@@ -29,7 +29,7 @@ use SystemEvent;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Repository\Destructor;
-use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\SvnAdmin;

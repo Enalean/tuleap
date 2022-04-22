@@ -27,8 +27,8 @@ use Tuleap\SVN\AccessControl\CannotCreateAccessFileHistoryException;
 use Tuleap\SVN\Migration\RepositoryCopier;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\Svn\SVNRepositoryCreationException;
-use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
+use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
+use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 {

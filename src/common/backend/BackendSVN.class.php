@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVN\GetAllRepositories;
-use Tuleap\SVN\SvnCoreUsage;
-use Tuleap\Svn\SVNRepositoryCreationException;
-use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
-use Tuleap\SvnCore\Cache\ParameterDao;
-use Tuleap\SvnCore\Cache\ParameterRetriever;
+use Tuleap\SVNCore\GetAllRepositories;
+use Tuleap\SVNCore\SvnCoreUsage;
+use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
+use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
+use Tuleap\SVNCore\Cache\ParameterDao;
+use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\URI\URIModifier;
 
 require_once __DIR__ . '/../../www/svn/svn_utils.php';
@@ -984,7 +984,7 @@ class BackendSVN extends Backend
     }
 
     /**
-     * @return \Tuleap\SvnCore\Cache\Parameters
+     * @return \Tuleap\SVNCore\Cache\Parameters
      */
     protected function getSVNCacheParameters()
     {
