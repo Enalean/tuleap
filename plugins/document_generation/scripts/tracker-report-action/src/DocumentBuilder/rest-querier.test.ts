@@ -21,6 +21,7 @@ import * as tlp from "@tuleap/tlp-fetch";
 import { getReportArtifacts } from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { ArtifactResponse } from "@tuleap/plugin-docgen-docx";
+import type { TrackerResponseWithColor } from "@tuleap/plugin-tracker-rest-api-types";
 
 jest.mock("tlp");
 
@@ -36,10 +37,10 @@ describe("API querier", () => {
                     id: 74,
                     xref: "bug #74",
                     title: null,
-                    tracker: {
-                        id: 102,
-                    },
+                    tracker: { id: 102 } as TrackerResponseWithColor,
                     html_url: "/plugins/tracker/?aid=74",
+                    status: "irrelevant",
+                    is_open: true,
                     values: [
                         {
                             field_id: 2,

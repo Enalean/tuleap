@@ -43,6 +43,7 @@ import type {
     TextFieldIdentifier,
     TextFormat,
 } from "@tuleap/plugin-tracker-constants";
+import type { TrackerResponseWithColor } from "./trackers";
 
 interface StaticValueRepresentation {
     readonly id: number;
@@ -216,11 +217,19 @@ export type ChangesetValue =
     | CrossReferenceChangesetValue
     | ArtifactLinkChangesetValue;
 
-export interface ArtifactResponse {
+/**
+ * Do not use this type directly as it contains way too many things.
+ * Instead, create your own type with Pick:
+ * `type Subset = Pick<ArtifactResponseNoInstance, "id" | "title" | "xref">;`
+ */
+export interface ArtifactResponseNoInstance {
+    readonly _pick_what_you_need: never;
     readonly id: number;
     readonly title: string | null;
     readonly xref: string;
-    readonly tracker: { readonly id: number };
+    readonly tracker: TrackerResponseWithColor;
     readonly html_url: string;
+    readonly status: string;
+    readonly is_open: boolean;
     readonly values: ReadonlyArray<ChangesetValue>;
 }

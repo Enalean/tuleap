@@ -30,6 +30,8 @@ import type { APILinkedArtifact } from "./APILinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
+import type { Artifact } from "../../domain/Artifact";
+import { LinkableArtifactIdentifierStub } from "../../../tests/stubs/LinkableArtifactIdentifierStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -37,6 +39,7 @@ const ARTIFACT_ID = 90;
 const FIRST_LINKED_ARTIFACT_ID = 40;
 const SECOND_LINKED_ARTIFACT_ID = 60;
 const ARTIFACT_TITLE = "thio";
+const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
 
 describe(`TuleapAPIClient`, () => {
     describe(`getParent()`, () => {
@@ -65,6 +68,46 @@ describe(`TuleapAPIClient`, () => {
             mockFetchError(getSpy, { status: 404, statusText: "Not found" });
 
             const result = await getParent();
+
+            if (!result.isErr()) {
+                throw new Error("Expected an Err");
+            }
+            expect(isFault(result.error)).toBe(true);
+        });
+    });
+
+    describe(`getMatchingArtifact()`, () => {
+        const getMatching = (): ResultAsync<Artifact, Fault> => {
+            const client = TuleapAPIClient();
+            return client.getMatchingArtifact(LinkableArtifactIdentifierStub.withId(ARTIFACT_ID));
+        };
+
+        it(`will return an Artifact matching the given number`, async () => {
+            const artifact = {
+                id: ARTIFACT_ID,
+                title: ARTIFACT_TITLE,
+                xref: ARTIFACT_XREF,
+            } as Artifact;
+            const getSpy = jest.spyOn(tlp_fetch, "get");
+            mockFetchSuccess(getSpy, {
+                return_json: artifact,
+            });
+
+            const result = await getMatching();
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            const linkable_artifact = result.value;
+            expect(linkable_artifact.id).toBe(ARTIFACT_ID);
+            expect(linkable_artifact.title).toBe(ARTIFACT_TITLE);
+        });
+
+        it(`will return a Fault if it fails`, async () => {
+            const getSpy = jest.spyOn(tlp_fetch, "get");
+            mockFetchError(getSpy, { status: 404, statusText: "Not found" });
+
+            const result = await getMatching();
 
             if (!result.isErr()) {
                 throw new Error("Expected an Err");

@@ -19,6 +19,6 @@
 
 export interface Artifact {
     readonly id: number;
-    readonly title: string;
+    readonly title: string | null;
     readonly xref: string;
 }

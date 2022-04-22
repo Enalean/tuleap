@@ -154,3 +154,29 @@ export const FIELD_PERMISSION_UPDATE: UpdatePermission = "update";
 
 export type IsChildLinkType = "_is_child";
 export const IS_CHILD_LINK_TYPE: IsChildLinkType = "_is_child";
+
+export type TrackerColorName =
+    | "inca-silver"
+    | "chrome-silver"
+    | "firemist-silver"
+    | "red-wine"
+    | "fiesta-red"
+    | "coral-pink"
+    | "teddy-brown"
+    | "clockwork-orange"
+    | "graffiti-yellow"
+    | "army-green"
+    | "neon-green"
+    | "acid-green"
+    | "sherwood-green"
+    | "ocean-turquoise"
+    | "surf-green"
+    | "deep-blue"
+    | "lake-placid-blue"
+    | "daphne-blue"
+    | "plum-crazy"
+    | "ultra-violet"
+    | "lilac-purple"
+    | "panther-pink"
+    | "peggy-pink"
+    | "flamingo-pink";

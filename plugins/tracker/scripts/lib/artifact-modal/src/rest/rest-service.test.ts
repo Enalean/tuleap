@@ -23,6 +23,7 @@ import * as rest_error_state from "./rest-error-state";
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
+import type { ArtifactRepresentation } from "./rest-service";
 
 const noop = (): void => {
     //Do nothing
@@ -69,6 +70,23 @@ describe("rest-service", () => {
 
         expect(artifact).toEqual(return_json);
         expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/792");
+    });
+
+    describe(`getMatchingArtifact()`, () => {
+        it(`will return an artifact matching the given id`, async () => {
+            const return_json: ArtifactRepresentation = {
+                id: 803,
+                title: "needlelike",
+                xref: "bugs #803",
+            };
+            const getSpy = jest.spyOn(tlp_fetch, "get");
+            mockFetchSuccess(getSpy, { return_json });
+
+            const artifact = await RestService.getArtifact(803);
+
+            expect(artifact).toStrictEqual(return_json);
+            expect(getSpy).toHaveBeenCalledWith("/api/v1/artifacts/803");
+        });
     });
 
     it("getArtifactWithCompleteTrackerStructure() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {

@@ -18,10 +18,10 @@
  */
 
 import type { ArtifactReportResponseFieldValue } from "@tuleap/plugin-docgen-docx";
-import type { ArtifactResponse } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ArtifactResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
 import { TextCell } from "@tuleap/plugin-docgen-xlsx";
 
-export type ArtifactForCrossReportDocGen = Pick<ArtifactResponse, "id" | "values">;
+export type ArtifactForCrossReportDocGen = Pick<ArtifactResponseNoInstance, "id" | "values">;
 
 export interface GlobalExportProperties {
     readonly current_project_id: number;
