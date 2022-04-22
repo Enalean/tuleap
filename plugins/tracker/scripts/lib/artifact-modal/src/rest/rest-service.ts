@@ -19,9 +19,9 @@
 
 import { get, recursiveGet, put, post, options } from "@tuleap/tlp-fetch";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
-
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import type { ArtifactResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
 
 const headers = {
     "content-type": "application/json",
@@ -38,11 +38,7 @@ export function getTracker(tracker_id: number): Promise<TrackerRepresentation> {
     }, errorHandler);
 }
 
-export interface ArtifactRepresentation {
-    readonly id: number;
-    readonly title: string;
-    readonly xref: string;
-}
+export type ArtifactRepresentation = Pick<ArtifactResponseNoInstance, "id" | "title" | "xref">;
 
 export function getArtifact(artifact_id: number): Promise<ArtifactRepresentation> {
     return get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => {

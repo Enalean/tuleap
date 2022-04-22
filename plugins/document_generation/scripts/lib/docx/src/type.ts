@@ -19,7 +19,7 @@
 
 import type {
     ArtifactLink,
-    ArtifactResponse as ArtifactResponseWithoutStepDefinition,
+    ArtifactResponseNoInstance as ArtifactResponseWithoutStepDefinition,
     BaseFieldStructure,
     ComputedChangesetValue,
     CrossReferenceChangesetValue,
@@ -36,7 +36,7 @@ import type {
     StructureFormat,
     SubmittedByChangesetValue,
     TextChangesetValue,
-    TrackerResponse,
+    TrackerResponseNoInstance,
     UnknownChangesetValue,
     UserRepresentation,
 } from "@tuleap/plugin-tracker-rest-api-types";
@@ -248,7 +248,8 @@ export type ArtifactReportResponseFieldValue =
     | ChangesetValue
     | ArtifactReportResponseStepDefinitionFieldValue;
 
-export interface ArtifactResponse extends Omit<ArtifactResponseWithoutStepDefinition, "values"> {
+export interface ArtifactResponse
+    extends Omit<ArtifactResponseWithoutStepDefinition, "values" | "_pick_what_you_need"> {
     readonly values: ReadonlyArray<ArtifactReportResponseFieldValue>;
 }
 
@@ -264,7 +265,8 @@ export interface StepExecutionFieldStructure extends BaseFieldStructure {
     label: string;
 }
 
-export interface TrackerDefinition extends Omit<TrackerResponse, "fields"> {
+export interface TrackerDefinition
+    extends Omit<TrackerResponseNoInstance, "fields" | "_pick_what_you_need"> {
     readonly fields: ReadonlyArray<FieldsStructure>;
 }
 

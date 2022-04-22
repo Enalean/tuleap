@@ -31,6 +31,7 @@ describe("tracker-structure-retriever", () => {
             const tracker_definition_response: TrackerDefinition = {
                 id: 102,
                 label: "Label",
+                item_name: "shortname",
                 fields: [{ field_id: 2, type: "date", is_time_displayed: false }],
                 structure: [
                     {
@@ -68,6 +69,7 @@ describe("tracker-structure-retriever", () => {
             const tracker_definition_response: TrackerDefinition = {
                 id: 102,
                 label: "Label",
+                item_name: "shortname",
                 fields: [{ field_id: 2, type: "date", is_time_displayed: false }],
                 structure: [
                     {

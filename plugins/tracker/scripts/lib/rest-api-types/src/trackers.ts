@@ -30,6 +30,7 @@ import type {
     RadioButtonFieldIdentifier,
     SelectBoxFieldIdentifier,
     SubmissionDateFieldIdentifier,
+    TrackerColorName,
 } from "@tuleap/plugin-tracker-constants";
 
 import type { UserGroupRepresentation } from "./artifacts";
@@ -102,7 +103,18 @@ export interface MinimalTrackerResponse {
     readonly label: string;
 }
 
-export interface TrackerResponse extends MinimalTrackerResponse {
+export interface TrackerResponseWithColor extends MinimalTrackerResponse {
+    readonly color_name: TrackerColorName;
+}
+
+/**
+ * Do not use this type directly as it contains way too many things.
+ * Instead, create your own type with Pick:
+ * `type Subset = Pick<TrackerResponseNoInstance, "id" | "label" | "fields">;`
+ */
+export interface TrackerResponseNoInstance extends MinimalTrackerResponse {
+    readonly _pick_what_you_need: never;
+    readonly item_name: string;
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
 }
