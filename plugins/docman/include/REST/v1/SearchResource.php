@@ -50,6 +50,7 @@ use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\Docman\Search\SearchSortPropertyMapper;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use UGroupManager;
@@ -89,11 +90,11 @@ final class SearchResource extends AuthenticatedResource
      * }
      * </pre>
      * </li>
-     * <li><p>All drafts, with a given custom text property matching "lorem\*", created after 2022-01-30:</p>
+     * <li><p>All drafts, with a given custom text property matching "lorem\*", created after 2022-01-30, with the "status" property result ordered by ascending:</p>
      * <pre>
      * {<br>
      *  &nbsp; "properties": [<br>
-     *  &nbsp; &nbsp; {"name": "status", "value": "draft"},<br>
+     *  &nbsp; &nbsp; {"name": "status", "value": "draft", "sort": "ASC"},<br>
      *  &nbsp; &nbsp; {"name": "field_3", "value": "lorem\*"},<br>
      *  &nbsp; &nbsp; {"name": "create_date", "value_date": { "date": "2022-01-30", operator: ">" } },<br>
      *  &nbsp; ]<br>
@@ -193,6 +194,13 @@ final class SearchResource extends AuthenticatedResource
      *
      * <hr>
      *
+     * <p>Order the result of a property:</p>
+     * <ul>
+     * <li>`sort`: `ASC` | `DESC`</li>
+     * </ul>
+     *
+     * <hr>
+     *
      * <p>Allowed patterns for text properties (global_search, title, …):</p>
      * <ul>
      * <li> `lorem`   => exactly "lorem"</li>
@@ -237,7 +245,7 @@ final class SearchResource extends AuthenticatedResource
             new Docman_FilterFactory($project_id),
             new ItemStatusMapper($docman_settings),
             new AlwaysThereColumnRetriever($docman_settings),
-            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id)),
+            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id), new SearchSortPropertyMapper()),
             $user_manager,
         );
         $status_mapper         = new ItemStatusMapper($docman_settings);
