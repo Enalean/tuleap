@@ -30,11 +30,12 @@ import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2
 import type { APILinkedArtifact } from "./APILinkedArtifact";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
-import type { Artifact } from "../../domain/Artifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
 import type { LinkableNumber } from "../../domain/fields/link-field-v2/LinkableNumber";
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
+import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
+import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 
 export interface LinkedArtifactCollection {
     readonly collection: APILinkedArtifact[];
@@ -54,13 +55,13 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
             return Fault.fromMessage("Unknown error");
         }).mapErr(ParentRetrievalFault),
 
-    getMatchingArtifact: (artifact_id: LinkableNumber): ResultAsync<Artifact, Fault> =>
-        ResultAsync.fromPromise(getMatchingArtifact(artifact_id.id), (error) => {
+    getMatchingArtifact: (linkable_number: LinkableNumber): ResultAsync<LinkableArtifact, Fault> =>
+        ResultAsync.fromPromise(getMatchingArtifact(linkable_number.id), (error) => {
             if (error instanceof Error) {
                 return Fault.fromError(error);
             }
             return Fault.fromMessage("Unknown error");
-        }),
+        }).map(LinkableArtifactProxy.fromAPIArtifact),
 
     getAllLinkTypes(artifact_id: CurrentArtifactIdentifier): Promise<LinkType[]> {
         const id = artifact_id.id;

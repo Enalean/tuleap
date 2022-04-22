@@ -22,10 +22,11 @@ import { CurrentArtifactIdentifierStub } from "../../tests/stubs/CurrentArtifact
 import { TrackerShortnameStub } from "../../tests/stubs/TrackerShortnameStub";
 
 describe("ArtifactCrossReference", () => {
-    it("Given a valid artifact id and a tracker shortname, Then it will return an ArtifactCrossReference", () => {
+    it("builds from an artifact id, a tracker shortname and a tracker color name", () => {
         const reference = ArtifactCrossReference.fromCurrentArtifact(
             CurrentArtifactIdentifierStub.withId(150),
-            TrackerShortnameStub.withShortname("story")
+            TrackerShortnameStub.withShortname("story"),
+            "acid-green"
         );
 
         if (reference === null) {
@@ -33,12 +34,14 @@ describe("ArtifactCrossReference", () => {
         }
 
         expect(reference.ref).toBe("story #150");
+        expect(reference.color).toBe("acid-green");
     });
 
-    it("Given no artifact id, Then it will return an empty ArtifactCrossReference", () => {
+    it("Given no artifact id, Then it will return null", () => {
         const reference = ArtifactCrossReference.fromCurrentArtifact(
             null,
-            TrackerShortnameStub.withShortname("story")
+            TrackerShortnameStub.withShortname("story"),
+            "acid-green"
         );
 
         expect(reference).toBeNull();

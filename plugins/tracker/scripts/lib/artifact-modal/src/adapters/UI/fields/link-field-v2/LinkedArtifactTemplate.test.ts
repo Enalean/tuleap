@@ -38,7 +38,7 @@ import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
-import type { Artifact } from "../../../../domain/Artifact";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -154,7 +154,9 @@ describe(`LinkedArtifactTemplate`, () => {
                     allowed_types: [],
                 },
                 ArtifactLinkSelectorAutoCompleter(
-                    RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact),
+                    RetrieveMatchingArtifactStub.withMatchingArtifact(
+                        LinkableArtifactStub.withDefaults()
+                    ),
                     current_artifact_identifier
                 ),
                 current_artifact_identifier,

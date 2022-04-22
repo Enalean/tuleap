@@ -154,7 +154,8 @@ function ArtifactModalController(
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,
-                    TrackerShortnameProxy.fromTrackerModel(modal_model.tracker)
+                    TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
+                    modal_model.tracker.color_name
                 )
             );
         },

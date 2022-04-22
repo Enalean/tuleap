@@ -39,7 +39,7 @@ import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
-import type { Artifact } from "../../../../domain/Artifact";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -54,7 +54,7 @@ describe(`LinkFieldController`, () => {
         current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
         auto_completer = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withMatchingArtifact({} as Artifact),
+            RetrieveMatchingArtifactStub.withMatchingArtifact(LinkableArtifactStub.withDefaults()),
             current_artifact_identifier
         );
     });

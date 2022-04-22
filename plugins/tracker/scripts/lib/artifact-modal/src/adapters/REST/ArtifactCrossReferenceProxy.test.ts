@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactCrossReference } from "../../src/domain/ArtifactCrossReference";
-import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
+import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 
-export const ArtifactCrossReferenceStub = {
-    withRef: (ref: string): ArtifactCrossReference => ({
-        ref,
-        color: "lake-placid-blue",
-    }),
+describe(`ArtifactCrossReferenceProxy`, () => {
+    it(`builds from an artifact JSON payload from the REST API`, () => {
+        const response = {
+            xref: "bug #247",
+            tracker: { color_name: "coral-pink" },
+        } as ArtifactWithStatus;
+        const reference = ArtifactCrossReferenceProxy.fromAPIArtifact(response);
 
-    withRefAndColor: (ref: string, color: TrackerColorName): ArtifactCrossReference => ({
-        ref,
-        color,
-    }),
-};
+        expect(reference.ref).toBe("bug #247");
+        expect(reference.color).toBe("coral-pink");
+    });
+});
