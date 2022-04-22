@@ -27,7 +27,7 @@ import { getArtifact, getMatchingArtifact } from "../../rest/rest-service";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
-import type { APILinkedArtifact } from "./APILinkedArtifact";
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
@@ -38,7 +38,7 @@ import type { LinkableArtifact } from "../../domain/fields/link-field-v2/Linkabl
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 
 export interface LinkedArtifactCollection {
-    readonly collection: APILinkedArtifact[];
+    readonly collection: ArtifactWithStatus[];
 }
 
 type TuleapAPIClientType = RetrieveParent &
@@ -95,7 +95,7 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                 },
                 getCollectionCallback: (payload: LinkedArtifactCollection): LinkedArtifact[] =>
                     payload.collection.map((artifact) =>
-                        LinkedArtifactProxy.fromAPILinkedArtifactAndType(artifact, link_type)
+                        LinkedArtifactProxy.fromAPIArtifactAndType(artifact, link_type)
                     ),
             }
         ).catch(async (error) => {

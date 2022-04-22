@@ -17,17 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { APILinkedArtifact } from "./APILinkedArtifact";
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import { LinkedArtifactIdentifierProxy } from "./LinkedArtifactIdentifierProxy";
 
 const ARTIFACT_ID = 48;
 
 describe(`LinkedArtifactIdentifierFactory`, () => {
     it(`builds an identifier from an Artifact representation from the API`, () => {
-        const api_artifact = { id: ARTIFACT_ID } as APILinkedArtifact;
+        const api_artifact = { id: ARTIFACT_ID } as ArtifactWithStatus;
 
-        const linked_artifact_id =
-            LinkedArtifactIdentifierProxy.fromAPILinkedArtifact(api_artifact);
+        const linked_artifact_id = LinkedArtifactIdentifierProxy.fromAPIArtifact(api_artifact);
         expect(linked_artifact_id.id).toBe(ARTIFACT_ID);
     });
 });

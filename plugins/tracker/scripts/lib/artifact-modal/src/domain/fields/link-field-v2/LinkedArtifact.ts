@@ -18,6 +18,7 @@
  */
 
 import type { Identifier } from "../../Identifier";
+import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
 
 // I identify an artifact linked to the current artifact under edition
 export type LinkedArtifactIdentifier = Identifier<"LinkedArtifactIdentifier">;
@@ -31,16 +32,11 @@ export interface LinkType {
     readonly label: string;
 }
 
-export interface Tracker {
-    readonly color_name: string;
-}
-
 export interface LinkedArtifact {
     readonly identifier: LinkedArtifactIdentifier;
-    readonly xref: string;
-    readonly title: string;
+    readonly title: string | null;
+    readonly xref: ArtifactCrossReference;
     readonly uri: string;
-    readonly tracker: Tracker;
     readonly status: string;
     readonly is_open: boolean;
     readonly link_type: LinkType;

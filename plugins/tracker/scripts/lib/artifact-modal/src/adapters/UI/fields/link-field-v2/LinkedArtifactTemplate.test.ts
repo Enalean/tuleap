@@ -62,11 +62,10 @@ describe(`LinkedArtifactTemplate`, () => {
                 LinkedArtifactStub.withDefaults({
                     identifier: LinkedArtifactIdentifierStub.withId(123),
                     title: "A parent",
-                    xref: "art #123",
+                    xref: ArtifactCrossReferenceStub.withRefAndColor("art #123", "red-wine"),
                     uri: "/url/to/artifact/123",
                     status: "Open",
                     is_open: true,
-                    tracker: { color_name: "red-wine" },
                     link_type: {
                         shortname: "_is_child",
                         direction: "reverse",
@@ -81,11 +80,10 @@ describe(`LinkedArtifactTemplate`, () => {
                 LinkedArtifactStub.withDefaults({
                     identifier: LinkedArtifactIdentifierStub.withId(234),
                     title: "A child",
-                    xref: "art #234",
+                    xref: ArtifactCrossReferenceStub.withRefAndColor("art #234", "surf-green"),
                     uri: "/url/to/artifact/234",
                     status: "Closed",
                     is_open: false,
-                    tracker: { color_name: "surf-green" },
                     link_type: {
                         shortname: "",
                         direction: "forward",
@@ -119,8 +117,8 @@ describe(`LinkedArtifactTemplate`, () => {
         }
 
         expect(link.href).toBe(presenter.uri);
-        expect(xref.classList.contains(`tlp-swatch-${presenter.tracker.color_name}`)).toBe(true);
-        expect(xref.textContent?.trim()).toBe(presenter.xref);
+        expect(xref.classList.contains(`tlp-swatch-${presenter.xref.color}`)).toBe(true);
+        expect(xref.textContent?.trim()).toBe(presenter.xref.ref);
         expect(title.textContent?.trim()).toBe(presenter.title);
         expect(status.textContent?.trim()).toBe(presenter.status);
         expect(type.textContent?.trim()).toBe(expected_type);
