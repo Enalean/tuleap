@@ -40,13 +40,12 @@ final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
             'comment' => "*Comment* {color:#36b37e}*RED*{color}",
         ];
 
-        $worklog = Worklog::buildFromAPIResponse($response);
+        $worklog = Worklog::buildFromJiraCloudAPIResponse($response);
 
         self::assertSame(1612807601, $worklog->getStartDate()->getTimestamp());
         self::assertSame(144000, $worklog->getSeconds());
 
         self::assertSame("What Ever", $worklog->getAuthor()->getDisplayName());
-        self::assertSame("whatever123", $worklog->getAuthor()->getJiraAccountId());
         self::assertSame("whatever@example.com", $worklog->getAuthor()->getEmailAddress());
         self::assertSame("*Comment* {color:#36b37e}*RED*{color}", $worklog->getComment());
     }
@@ -69,7 +68,7 @@ final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(WorklogAPIResponseNotWellFormedException::class);
         $this->expectExceptionMessage("Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`.");
 
-        Worklog::buildFromAPIResponse($response);
+        Worklog::buildFromJiraCloudAPIResponse($response);
 
         $response = [
             "id"               => 10010,
@@ -87,7 +86,7 @@ final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(WorklogAPIResponseNotWellFormedException::class);
         $this->expectExceptionMessage("Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`.");
 
-        Worklog::buildFromAPIResponse($response);
+        Worklog::buildFromJiraCloudAPIResponse($response);
 
         $response = [
             "id"               => 10010,
@@ -103,7 +102,7 @@ final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(WorklogAPIResponseNotWellFormedException::class);
         $this->expectExceptionMessage("Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`.");
 
-        Worklog::buildFromAPIResponse($response);
+        Worklog::buildFromJiraCloudAPIResponse($response);
     }
 
     public function testItThrowsAnExceptionIfMandatoryAuthorInformationIsMissing(): void
@@ -123,7 +122,7 @@ final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(WorklogAPIResponseNotWellFormedException::class);
         $this->expectExceptionMessage("Provided worklog author does not have all the expected content: `displayName` and `accountId`.");
 
-        Worklog::buildFromAPIResponse($response);
+        Worklog::buildFromJiraCloudAPIResponse($response);
 
         $response = [
             "id"               => 10010,
@@ -140,6 +139,6 @@ final class WorklogTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(WorklogAPIResponseNotWellFormedException::class);
         $this->expectExceptionMessage("Provided worklog author does not have all the expected content: `displayName` and `accountId`.");
 
-        Worklog::buildFromAPIResponse($response);
+        Worklog::buildFromJiraCloudAPIResponse($response);
     }
 }

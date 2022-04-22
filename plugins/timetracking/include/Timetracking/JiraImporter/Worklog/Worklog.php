@@ -25,42 +25,19 @@ namespace Tuleap\Timetracking\JiraImporter\Worklog;
 
 use DateTimeImmutable;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraCloudUser;
-use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraCloudUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\ActiveJiraServerUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUser;
 
 /**
  * @psalm-immutable
  */
 class Worklog
 {
-    /**
-     * @var DateTimeImmutable
-     */
-    private $start_date;
-
-    /**
-     * @var int
-     */
-    private $seconds;
-
-    /**
-     * @var JiraCloudUser
-     */
-    private $author;
-
-    /**
-     * @var string
-     */
-    private $comment;
-
-    public function __construct(DateTimeImmutable $start_date, int $seconds, JiraCloudUser $author, string $comment)
+    public function __construct(private DateTimeImmutable $start_date, private int $seconds, private JiraUser $author, private string $comment)
     {
-        $this->start_date = $start_date;
-        $this->seconds    = $seconds;
-        $this->author     = $author;
-        $this->comment    = $comment;
     }
 
-    public static function buildFromAPIResponse(?array $worklog_response): self
+    public static function buildFromJiraCloudAPIResponse(?array $worklog_response): self
     {
         if ($worklog_response === null) {
             throw new WorklogAPIResponseNotWellFormedException(
@@ -105,6 +82,52 @@ class Worklog
         );
     }
 
+    public static function buildFromJiraServerAPIResponse(?array $worklog_response): self
+    {
+        if ($worklog_response === null) {
+            throw new WorklogAPIResponseNotWellFormedException(
+                "Provided worklog response does not have any content."
+            );
+        }
+
+        if (
+            ! isset($worklog_response['started'], $worklog_response['timeSpentSeconds']) || ! isset($worklog_response['author']) || ! is_array(
+                $worklog_response['author']
+            )
+        ) {
+            throw new WorklogAPIResponseNotWellFormedException(
+                "Provided worklog does not have all the expected content: `started`, `timeSpentSeconds` and `author`."
+            );
+        }
+
+
+        if (
+            ! isset($worklog_response['author']['displayName'], $worklog_response['author']['name']) ||
+            ! is_string($worklog_response['author']['displayName']) ||
+            ! is_string($worklog_response['author']['name'])
+        ) {
+            throw new WorklogAPIResponseNotWellFormedException(
+                "Provided worklog author does not have all the expected content: `displayName` and `name`."
+            );
+        }
+
+        $start_date = new DateTimeImmutable($worklog_response['started']);
+        $seconds    = (int) $worklog_response['timeSpentSeconds'];
+        $author     = ActiveJiraServerUser::buildFromPayload($worklog_response['author']);
+
+        $comment = '';
+        if (isset($worklog_response['comment'])) {
+            $comment = $worklog_response['comment'];
+        }
+
+        return new self(
+            $start_date,
+            $seconds,
+            $author,
+            $comment
+        );
+    }
+
     public function getStartDate(): DateTimeImmutable
     {
         return $this->start_date;
@@ -115,7 +138,7 @@ class Worklog
         return $this->seconds;
     }
 
-    public function getAuthor(): JiraCloudUser
+    public function getAuthor(): JiraUser
     {
         return $this->author;
     }

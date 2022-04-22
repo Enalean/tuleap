@@ -31,20 +31,8 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 
 class WorklogRetriever
 {
-    /**
-     * @var JiraClient
-     */
-    private $client;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(JiraClient $client, LoggerInterface $logger)
+    public function __construct(private JiraClient $client, private LoggerInterface $logger)
     {
-        $this->client = $client;
-        $this->logger = $logger;
     }
 
     /**
@@ -62,7 +50,10 @@ class WorklogRetriever
             'worklogs'
         );
         foreach ($iterator as $json_worklog) {
-            $worklogs[] = Worklog::buildFromAPIResponse($json_worklog);
+            $worklogs[] = match ($this->client->isJiraCloud()) {
+                true => Worklog::buildFromJiraCloudAPIResponse($json_worklog),
+                false => Worklog::buildFromJiraServerAPIResponse($json_worklog),
+            };
         }
 
         return $worklogs;
