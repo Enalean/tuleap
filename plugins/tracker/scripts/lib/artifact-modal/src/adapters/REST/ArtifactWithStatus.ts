@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerShortname } from "src/domain/TrackerShortname";
+import type {
+    ArtifactResponseNoInstance,
+    TrackerResponseWithColor,
+} from "@tuleap/plugin-tracker-rest-api-types";
 
-export const TrackerShortnameProxy = {
-    fromString: (tracker_shortname: string): TrackerShortname => {
-        return {
-            shortname: tracker_shortname,
-        };
-    },
-};
+export type ArtifactWithStatus = Pick<
+    ArtifactResponseNoInstance,
+    "id" | "xref" | "title" | "html_url" | "status" | "is_open"
+> & { readonly tracker: Pick<TrackerResponseWithColor, "color_name"> };

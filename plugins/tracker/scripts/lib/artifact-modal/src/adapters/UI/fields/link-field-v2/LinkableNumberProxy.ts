@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableArtifactIdentifier } from "../../../../domain/fields/link-field-v2/LinkableArtifactIdentifier";
+import type { LinkableNumber } from "../../../../domain/fields/link-field-v2/LinkableNumber";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
-export const LinkableArtifactIdentifierProxy = {
+export const LinkableNumberProxy = {
     fromQueryString: (
         query_string: string,
         current_artifact_identifier: CurrentArtifactIdentifier | null
-    ): LinkableArtifactIdentifier | null => {
+    ): LinkableNumber | null => {
         if (query_string === "" || isNaN(Number(query_string))) {
             return null;
         }
@@ -35,7 +35,7 @@ export const LinkableArtifactIdentifierProxy = {
         }
 
         return {
-            _type: "LinkableArtifactIdentifier",
+            _type: "LinkableNumber",
             id: query_number,
         };
     },

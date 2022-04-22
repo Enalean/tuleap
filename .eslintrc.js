@@ -311,6 +311,13 @@ module.exports = {
                                 message:
                                     "Adapters should not depend on other adapter without going through the Domain",
                             },
+                            {
+                                target: "src/adapters/Caller/",
+                                from: "src/adapters/",
+                                except: ["Caller"],
+                                message:
+                                    "Adapters should not depend on other adapter without going through the Domain",
+                            },
                         ],
                     },
                 ],

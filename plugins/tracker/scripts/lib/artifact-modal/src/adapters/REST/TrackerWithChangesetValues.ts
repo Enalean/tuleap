@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TrackerShortnameProxy } from "./TrackerShortnameProxy";
+import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
 
-describe("TrackerShortnameProxy", () => {
-    it("should return a TrackerShortname", () => {
-        const tracker_shortname = TrackerShortnameProxy.fromString("story");
-        expect(tracker_shortname.shortname).toBe("story");
-    });
-});
+// I represent the Tracker JSON representation after it has been transformed in tracker-transformer
+export type TrackerWithChangesetValues = Omit<TrackerResponseNoInstance, "_pick_what_you_need">;

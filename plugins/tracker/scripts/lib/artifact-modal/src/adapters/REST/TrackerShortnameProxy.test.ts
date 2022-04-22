@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Identifier } from "../../Identifier";
+import { TrackerShortnameProxy } from "./TrackerShortnameProxy";
+import type { TrackerWithChangesetValues } from "./TrackerWithChangesetValues";
 
-// I identify an artifact that can be linked to the current artifact
-export type LinkableArtifactIdentifier = Identifier<"LinkableArtifactIdentifier">;
+describe("TrackerShortnameProxy", () => {
+    it("builds from a Tracker model object", () => {
+        const tracker = { item_name: "story" } as TrackerWithChangesetValues;
+        const tracker_shortname = TrackerShortnameProxy.fromTrackerModel(tracker);
+        expect(tracker_shortname.shortname).toBe("story");
+    });
+});

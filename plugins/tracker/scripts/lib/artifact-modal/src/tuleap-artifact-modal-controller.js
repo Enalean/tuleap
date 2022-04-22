@@ -61,7 +61,7 @@ import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaC
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
 import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkFieldValueFormatter";
 import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
-import { TrackerShortnameProxy } from "./adapters/Caller/TrackerShortnameProxy";
+import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field-v2/ArtifactLinkSelectorAutoCompleter";
@@ -154,7 +154,7 @@ function ArtifactModalController(
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,
-                    TrackerShortnameProxy.fromString(modal_model.tracker.item_name)
+                    TrackerShortnameProxy.fromTrackerModel(modal_model.tracker)
                 )
             );
         },
