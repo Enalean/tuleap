@@ -79,7 +79,10 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
         return $types;
     }
 
-    /** @return TypePresenter[] */
+    /**
+     * @return TypePresenter[]
+     * @psalm-return list<TypePresenter>
+     */
     public function getAllUsableTypesInProject(Project $project): array
     {
         $types = $this->getAllTypesEditableInProject($project);
@@ -89,7 +92,7 @@ class TypePresenterFactory implements AllTypesRetriever, IRetrieveAllUsableTypes
             }
         }
 
-        return $types;
+        return array_values($types);
     }
 
     public function getOnlyVisibleTypes()

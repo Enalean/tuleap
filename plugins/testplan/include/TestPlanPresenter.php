@@ -120,6 +120,7 @@ class TestPlanPresenter
 
     /**
      * @param TypePresenter[] $artifact_links_types
+     * @psalm-param list<TypePresenter> $artifact_links_types
      */
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
