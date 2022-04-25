@@ -131,8 +131,8 @@ document.observe("dom:loaded", function () {
                     parameters["artifact[" + field_id + "]"] = value_id;
                 } else {
                     let values = [];
-                    parameters["artifact[field_id]"] =
-                        dragged.readAttribute("data-column-field-id");
+                    const field_id = dragged.readAttribute("data-column-field-id");
+                    parameters["artifact[field_id]"] = field_id;
                     let columns = document.getElementsByClassName(
                         "cardwall_column_mapping_" + value_id + "_" + field_id
                     );
