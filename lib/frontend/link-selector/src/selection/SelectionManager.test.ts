@@ -20,14 +20,12 @@
 import { SelectionManager } from "./SelectionManager";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
-import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
-import type { RenderedItem } from "../type";
+import type { LinkSelectorSelectionCallback, RenderedItem } from "../type";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import type { GroupCollection } from "../items/GroupCollection";
-import type { HTMLTemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
+import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 
 describe("SelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -38,7 +36,8 @@ describe("SelectionManager", () => {
         items_map_manager: ItemsMapManager,
         dropdown_manager: DropdownManager,
         item_1: RenderedItem,
-        item_2: RenderedItem;
+        item_2: RenderedItem,
+        selection_callback: jest.MockedFunction<LinkSelectorSelectionCallback>;
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -54,7 +53,8 @@ describe("SelectionManager", () => {
         placeholder = placeholder_element;
         dropdown = dropdown_element;
 
-        items_map_manager = new ItemsMapManager(new ListItemMapBuilder());
+        selection_callback = jest.fn();
+        items_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
         dropdown_manager = { openLinkSelector: jest.fn() } as unknown as DropdownManager;
         manager = new SelectionManager(
             source_select_box,
@@ -62,38 +62,24 @@ describe("SelectionManager", () => {
             selection_container,
             placeholder,
             dropdown_manager,
-            items_map_manager
+            items_map_manager,
+            selection_callback
         );
         jest.spyOn(source_select_box, "dispatchEvent");
         items_map_manager.refreshItemsMap(GroupCollectionBuilder.withSingleGroup());
-        item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-value_1");
-        item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-value_2");
-    });
-
-    describe("initSelection", () => {
-        it("When no value is selected yet in the source <select>, then it does nothing", () => {
-            selection_container.appendChild(placeholder);
-            source_select_box.value = "";
-            manager.initSelection();
-
-            expect(selection_container.contains(placeholder)).toBe(true);
-            expect(selection_container.querySelector(".link-selector-selected-value")).toBeNull();
-            expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(false);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
-        });
+        item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-1");
+        item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-2");
     });
 
     describe("processSelection", () => {
         it("does nothing if item is already selected", () => {
-            item_1.target_option.setAttribute("selected", "selected");
             item_1.element.setAttribute("aria-selected", "true");
             item_1.is_selected = true;
 
             manager.processSelection(item_1.element);
 
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 0);
+            expect(selection_callback).not.toHaveBeenCalled();
         });
 
         it("reset current value with placeholder if item is disabled", () => {
@@ -104,6 +90,7 @@ describe("SelectionManager", () => {
             );
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(selected_value).toBeNull();
+            expect(selection_callback).toHaveBeenCalledWith(null);
         });
 
         it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
@@ -118,8 +105,7 @@ describe("SelectionManager", () => {
             expect(selected_value?.textContent).toContain("Value 1");
             expect(item_1.is_selected).toBe(true);
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 1);
+            expect(selection_callback).toHaveBeenCalledWith(item_1.value);
         });
 
         it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
@@ -134,13 +120,11 @@ describe("SelectionManager", () => {
 
             expect(item_1.element.getAttribute("aria-selected")).toBe("false");
             expect(item_1.is_selected).toBe(false);
-            expect(item_1.target_option.hasAttribute("selected")).toBe(false);
 
             expect(item_2.element.getAttribute("aria-selected")).toBe("true");
             expect(item_2.is_selected).toBe(true);
-            expect(item_2.target_option.hasAttribute("selected")).toBe(true);
 
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expect(selection_callback).toHaveBeenCalledWith(item_2.value);
         });
     });
 
@@ -155,7 +139,6 @@ describe("SelectionManager", () => {
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
             expect(selection_container.contains(placeholder)).toBe(false);
 
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
             const remove_item_button = selection_container.querySelector(
                 ".link-selector-selected-value-remove-button"
             );
@@ -167,11 +150,10 @@ describe("SelectionManager", () => {
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
             expect(item_1.is_selected).toBe(false);
             expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(false);
             expect(selection_container.contains(placeholder)).toBe(true);
             expect(dropdown_manager.openLinkSelector).toHaveBeenCalled();
 
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
+            expect(selection_callback).toHaveBeenCalledWith(null);
         });
 
         it("should not remove the current selection when the source <select> is disabled", () => {
@@ -187,7 +169,6 @@ describe("SelectionManager", () => {
             remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
             expect(item_1.is_selected).toBe(true);
             expect(item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
             expect(selection_container.contains(placeholder)).toBe(false);
             expect(dropdown_manager.openLinkSelector).not.toHaveBeenCalled();
         });
@@ -201,8 +182,8 @@ describe("SelectionManager", () => {
 
             expect(item_1.is_selected).toBe(false);
             expect(item_1.element.getAttribute("aria-selected")).toBe("false");
-            expect(item_1.target_option.getAttribute("selected")).toBeNull();
             expect(selection_container.contains(placeholder)).toBe(true);
+            expect(selection_callback).toHaveBeenCalledWith(null);
         });
 
         it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", () => {
@@ -218,10 +199,7 @@ describe("SelectionManager", () => {
                 {
                     label: "",
                     empty_message: "irrelevant",
-                    items: [
-                        { value: "new option 0", template: buildTemplateResult("Option Zero") },
-                        { value: item_1.value, template: buildTemplateResult("Option One") },
-                    ],
+                    items: [{ value: { id: 0 } }, { value: item_1.value }],
                 },
             ];
             items_map_manager.refreshItemsMap(groups);
@@ -230,14 +208,7 @@ describe("SelectionManager", () => {
             const new_item_1 = items_map_manager.findLinkSelectorItemInItemMap(item_1.id);
             expect(new_item_1.is_selected).toBe(true);
             expect(new_item_1.element.getAttribute("aria-selected")).toBe("true");
-            expect(new_item_1.target_option.getAttribute("selected")).toBe("selected");
             expect(selection_container.contains(placeholder)).toBe(false);
         });
     });
 });
-
-function buildTemplateResult(value: string): HTMLTemplateResult {
-    return html`
-        ${value}
-    `;
-}

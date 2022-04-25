@@ -32,15 +32,14 @@ import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 import { SearchFieldEventCallbackHandler } from "./events/SearchFieldEventCallbackHandler";
 import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
-import { OptionsMaintainer } from "./items/OptionsMaintainer";
 
 export function createLinkSelector(
     source_select_box: HTMLSelectElement,
     options: LinkSelectorOptions
-): Promise<LinkSelector> {
+): LinkSelector {
     hideSourceSelectBox(source_select_box);
 
-    const items_map_manager = new ItemsMapManager(new ListItemMapBuilder());
+    const items_map_manager = new ItemsMapManager(ListItemMapBuilder(options.templating_callback));
 
     items_map_manager.refreshItemsMap([]);
     const base_renderer = new BaseComponentRenderer(
@@ -84,7 +83,8 @@ export function createLinkSelector(
         selection_element,
         placeholder_element,
         dropdown_manager,
-        items_map_manager
+        items_map_manager,
+        options.selection_callback
     );
 
     const dropdown_content_renderer = new DropdownContentRenderer(
@@ -111,10 +111,8 @@ export function createLinkSelector(
         highlighter,
         field_focus_manager
     );
-    const options_maintainer = OptionsMaintainer(source_select_box, items_map_manager);
     const dropdown_content_refresher = DropdownContentRefresher(
         items_map_manager,
-        options_maintainer,
         dropdown_content_renderer,
         selection_manager,
         event_manager,
@@ -122,17 +120,28 @@ export function createLinkSelector(
     );
 
     event_manager.attachEvents();
-    selection_manager.initSelection();
 
-    const search_event_handler = SearchFieldEventCallbackHandler(dropdown_content_refresher);
-    search_event_handler.init(search_field_element, options.search_field_callback);
-
-    return Promise.resolve({
+    const link_selector_instance: LinkSelector = {
+        setDropdownContent: (groups): void => {
+            dropdown_content_refresher.refresh(groups);
+        },
+        resetSelection: (): void => {
+            selection_manager.clearSelection();
+        },
         destroy: (): void => {
             event_manager.removeEventsListenersOnDocument();
             dropdown_manager.destroy();
             document.body.removeChild(dropdown_element);
             field_focus_manager.destroy();
         },
-    });
+    };
+
+    const search_event_handler = SearchFieldEventCallbackHandler(
+        link_selector_instance,
+        search_field_element,
+        options.search_field_callback
+    );
+    search_event_handler.init();
+
+    return link_selector_instance;
 }

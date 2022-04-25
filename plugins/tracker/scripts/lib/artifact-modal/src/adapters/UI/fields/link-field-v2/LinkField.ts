@@ -19,7 +19,6 @@
 
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
-
 import {
     getAddLinkButtonLabel,
     getLinkFieldTableEmptyStateText,
@@ -31,6 +30,8 @@ import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { createLinkSelector } from "@tuleap/link-selector";
+import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
+import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -38,6 +39,7 @@ export interface LinkField {
     readonly artifact_link_select: HTMLSelectElement;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
+    link_addition_presenter: LinkAdditionPresenter;
 }
 export type HostElement = LinkField & HTMLElement;
 
@@ -112,7 +114,13 @@ export const LinkField = define<LinkField>({
 
             if (host.artifact_link_select !== null) {
                 createLinkSelector(host.artifact_link_select, {
-                    search_field_callback: controller.autoComplete(),
+                    search_field_callback: controller.autoComplete,
+                    templating_callback: getLinkableArtifactTemplate,
+                    selection_callback: (value) => {
+                        const artifact = getLinkableArtifact(value);
+                        host.link_addition_presenter =
+                            controller.onLinkableArtifactSelection(artifact);
+                    },
                     placeholder: getLinkSelectorPlaceholderText(),
                 });
             }
@@ -124,6 +132,10 @@ export const LinkField = define<LinkField>({
     linked_artifacts_presenter: {
         get: (host, last_value) =>
             last_value ?? LinkedArtifactCollectionPresenter.buildLoadingState(),
+        set: (host, presenter) => presenter,
+    },
+    link_addition_presenter: {
+        get: (host, last_value) => last_value ?? LinkAdditionPresenter.withButtonDisabled(),
         set: (host, presenter) => presenter,
     },
     content: (host) => html`
@@ -145,7 +157,11 @@ export const LinkField = define<LinkField>({
                         <select data-select="artifact-link-select"></select>
                     </td>
                     <td class="link-field-table-footer-add-link">
-                        <button type="button" class="tlp-button-small tlp-button-primary" disabled>
+                        <button
+                            type="button"
+                            class="tlp-button-small tlp-button-primary"
+                            disabled="${host.link_addition_presenter.is_add_button_disabled}"
+                        >
                             ${getAddLinkButtonLabel()}
                         </button>
                     </td>

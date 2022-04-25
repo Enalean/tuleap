@@ -5,7 +5,6 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "types": "dist/index.d.ts",
   "module": "dist/link-selector.es.js",
   "main": "dist/link-selector.umd.js",
   "style": "dist/style.css",
@@ -13,14 +12,14 @@
     "@tuleap/tlp": "file:../../../src/themes/tlp",
     "lit": "^2.0.2"
   },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "file:../build-system-configurator",
+    "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "jest"
-  },
-  "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../build-system-configurator",
-    "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
   }
 }

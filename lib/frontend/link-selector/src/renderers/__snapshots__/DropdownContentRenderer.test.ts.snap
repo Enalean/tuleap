@@ -6,17 +6,17 @@ exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
   <li class="link-selector-item-group">
     <strong class="link-selector-group-label">Group 1</strong>
     <ul role="group" class="link-selector-dropdown-option-group" aria-label="Group 1">
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-value_0" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-0" class="link-selector-dropdown-option-value">
 
         Value 0
 
       </li>
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-value_1" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-1" class="link-selector-dropdown-option-value">
 
         Value 1
 
       </li>
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-value_2" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-2" class="link-selector-dropdown-option-value">
 
         Value 2
 
@@ -27,17 +27,17 @@ exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
   <li class="link-selector-item-group">
     <strong class="link-selector-group-label">Group 2</strong>
     <ul role="group" class="link-selector-dropdown-option-group" aria-label="Group 2">
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-value_3" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-3" class="link-selector-dropdown-option-value">
 
         Value 3
 
       </li>
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-value_4" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-4" class="link-selector-dropdown-option-value">
 
         Value 4
 
       </li>
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-value_5" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-5" class="link-selector-dropdown-option-value">
 
         Value 5
 

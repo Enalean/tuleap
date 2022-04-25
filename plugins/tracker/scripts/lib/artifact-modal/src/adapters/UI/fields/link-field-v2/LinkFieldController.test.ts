@@ -40,6 +40,8 @@ import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCom
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import type { LinkAdditionPresenter } from "./LinkAdditionPresenter";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -207,6 +209,34 @@ describe(`LinkFieldController`, () => {
                 (linked_artifact) => linked_artifact.is_marked_for_removal
             );
             expect(is_marked).toBe(false);
+        });
+    });
+
+    describe(`onLinkableArtifactSelection`, () => {
+        const onSelection = (artifact: LinkableArtifact | null): LinkAdditionPresenter => {
+            const controller = LinkFieldController(
+                RetrieveAllLinkedArtifactsStub.withoutLink(),
+                RetrieveLinkedArtifactsSyncStub.withoutLink(),
+                AddLinkMarkedForRemovalStub.withCount(),
+                DeleteLinkMarkedForRemovalStub.withCount(),
+                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+                NotifyFaultStub.withCount(),
+                field,
+                auto_completer,
+                current_artifact_identifier,
+                cross_reference
+            );
+            return controller.onLinkableArtifactSelection(artifact);
+        };
+
+        it(`when selection is null, it will return a presenter with disabled button`, () => {
+            const presenter = onSelection(null);
+            expect(presenter.is_add_button_disabled).toBe(true);
+        });
+
+        it(`when an artifact is selected, it will return a presenter with enabled button`, () => {
+            const presenter = onSelection(LinkableArtifactStub.withDefaults());
+            expect(presenter.is_add_button_disabled).toBe(false);
         });
     });
 });

@@ -24,12 +24,15 @@ import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import type { GroupCollection } from "../items/GroupCollection";
+import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
 
 describe("DropDownContentRenderer", () => {
     let dropdown: Element, dropdown_list: HTMLElement;
 
     const render = (groups: GroupCollection): void => {
-        const items_map_manager = new ItemsMapManager(new ListItemMapBuilder());
+        const items_map_manager = new ItemsMapManager(
+            ListItemMapBuilder(TemplatingCallbackStub.build())
+        );
         items_map_manager.refreshItemsMap(groups);
         const renderer = new DropdownContentRenderer(dropdown_list, items_map_manager);
         return renderer.renderLinkSelectorDropdownContent(groups);

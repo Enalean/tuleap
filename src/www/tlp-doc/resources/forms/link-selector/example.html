@@ -1,13 +1,6 @@
 <div class="tlp-form-element">
     <label class="tlp-label" for="link-selector-sb">Link selector</label>
-    <select id="link-selector-sb" name="list-value" value="">
-        <optgroup id="link-selector-sb-auto-completed-results" label="Auto completed results"></optgroup>
-        <optgroup id="link-selector-sb-filterable-results" label="Filterable results">
-            <option value="101">story #101 - Do this</option>
-            <option value="102">story #102 - Do that</option>
-            <option value="103">story #103 - And that too</option>
-        </optgroup>
-    </select>
+    <select id="link-selector-sb" name="list-value" value=""></select>
     <p class="tlp-text-info"><i class="fas fa-question-circle" aria-hidden="true"></i>
         In this live example, type <code class="code-inline">105</code> in the search field to simulate some content fetched from a distant endpoint.
     </p>
@@ -15,9 +8,22 @@
         import { createLinkSelector } from "@tuleap/link-selector";
 
         createLinkSelector(document.querySelector('#link-selector-sb'), {
-            locale: "en_US",
             placeholder: "Please select an item to link",
-            search_field_callback: filterAndAutoCompleteCallback
+            templating_callback: (html, item) => html`item.id`,
+            selection_callback: (selected_value) => {
+                console.log("Selected value : " + selected_value);
+            },
+            search_field_callback: (link_selector, query) => {
+                console.log("Serach query : " + query);
+                link_selector.setDropdownContent([{
+                    label: "Matching items",
+                    empty_message: "No matching item",
+                    items: [{
+                        value: {id: 105},
+                        option_value: "105",
+                    }]
+                }])
+            }
         });
     </script>
 </div>

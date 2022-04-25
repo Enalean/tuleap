@@ -22,13 +22,14 @@ import type { LinkableArtifact } from "../../src/domain/fields/link-field-v2/Lin
 import { ArtifactCrossReferenceStub } from "./ArtifactCrossReferenceStub";
 
 export const LinkableArtifactStub = {
-    withDefaults: (): LinkableArtifact => ({
+    withDefaults: (data?: Partial<LinkableArtifact>): LinkableArtifact => ({
         id: 456,
         title: "flocculation",
         xref: ArtifactCrossReferenceStub.withRefAndColor("story #456", "lake-placid-blue"),
+        ...data,
     }),
 
-    withValues: (
+    withCrossReference: (
         id: number,
         title: string,
         xref: string,

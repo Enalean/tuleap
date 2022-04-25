@@ -18,163 +18,134 @@
  */
 
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
-import type { HTMLTemplateResult } from "lit/html.js";
-import { html } from "lit/html.js";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
+import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
+import type { RenderedItemMap } from "../type";
+import type { GroupCollection } from "./GroupCollection";
 
 describe("ListItemBuilder", () => {
-    let builder: ListItemMapBuilder;
-
-    beforeEach(() => {
-        builder = new ListItemMapBuilder();
-    });
+    const buildMap = (groups: GroupCollection): RenderedItemMap => {
+        const builder = ListItemMapBuilder(TemplatingCallbackStub.build());
+        return builder.buildLinkSelectorItemsMap(groups);
+    };
 
     it(`flattens a single group and builds a RenderedItem for each item
         and returns a map containing all items`, () => {
-        const map = builder.buildLinkSelectorItemsMap(GroupCollectionBuilder.withSingleGroup());
+        const map = buildMap(GroupCollectionBuilder.withSingleGroup());
 
-        expect(map.size).toBe(5);
+        expect(map.size).toBe(4);
 
-        const [first_entry, second_entry, third_entry, fourth_entry, fifth_entry] = Array.from(
-            map.entries()
-        );
-        expect(first_entry[0]).toBe("link-selector-item-100");
+        const [first_entry, second_entry, third_entry, fourth_entry] = Array.from(map.entries());
+        expect(first_entry[0]).toBe("link-selector-item-0");
         expect(first_entry[1]).toStrictEqual({
-            id: "link-selector-item-100",
-            template: buildTemplateResult("None"),
-            value: "100",
+            id: "link-selector-item-0",
+            template: expect.anything(),
+            value: { id: 0 },
             is_disabled: false,
             group_id: "",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(second_entry[0]).toBe("link-selector-item-value_0");
+        expect(second_entry[0]).toBe("link-selector-item-1");
         expect(second_entry[1]).toStrictEqual({
-            id: "link-selector-item-value_0",
-            template: buildTemplateResult("Value 0"),
-            value: "value_0",
+            id: "link-selector-item-1",
+            template: expect.anything(),
+            value: { id: 1 },
             is_disabled: false,
             group_id: "",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(third_entry[0]).toBe("link-selector-item-value_1");
+        expect(third_entry[0]).toBe("link-selector-item-2");
         expect(third_entry[1]).toStrictEqual({
-            id: "link-selector-item-value_1",
-            template: buildTemplateResult("Value 1"),
-            value: "value_1",
+            id: "link-selector-item-2",
+            template: expect.anything(),
+            value: { id: 2 },
             is_disabled: false,
             group_id: "",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(fourth_entry[0]).toBe("link-selector-item-value_2");
+        expect(fourth_entry[0]).toBe("link-selector-item-3");
         expect(fourth_entry[1]).toStrictEqual({
-            id: "link-selector-item-value_2",
-            template: buildTemplateResult("Value 2"),
-            value: "value_2",
+            id: "link-selector-item-3",
+            template: expect.anything(),
+            value: { id: 3 },
             is_disabled: false,
             group_id: "",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
-        });
-        expect(fifth_entry[0]).toBe("link-selector-item-value_3");
-        expect(fifth_entry[1]).toStrictEqual({
-            id: "link-selector-item-value_3",
-            template: buildTemplateResult("Value 3"),
-            value: "value_3",
-            is_disabled: false,
-            group_id: "",
-            is_selected: false,
-            element: expect.any(Element),
-            target_option: expect.any(Element),
         });
     });
 
     it(`flattens the given groups and builds a RenderedItem for each item of each group
         and returns a map containing all items`, () => {
-        const map = builder.buildLinkSelectorItemsMap(GroupCollectionBuilder.withTwoGroups());
+        const map = buildMap(GroupCollectionBuilder.withTwoGroups());
 
         expect(map.size).toBe(6);
 
         const [first_entry, second_entry, third_entry, fourth_entry, fifth_entry, sixth_entry] =
             Array.from(map.entries());
 
-        expect(first_entry[0]).toBe("link-selector-item-group1-value_0");
+        expect(first_entry[0]).toBe("link-selector-item-group1-0");
         expect(first_entry[1]).toStrictEqual({
-            id: "link-selector-item-group1-value_0",
-            template: buildTemplateResult("Value 0"),
-            value: "value_0",
+            id: "link-selector-item-group1-0",
+            template: expect.anything(),
+            value: { id: 0 },
             is_disabled: false,
             group_id: "group1",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(second_entry[0]).toBe("link-selector-item-group1-value_1");
+        expect(second_entry[0]).toBe("link-selector-item-group1-1");
         expect(second_entry[1]).toStrictEqual({
-            id: "link-selector-item-group1-value_1",
-            template: buildTemplateResult("Value 1"),
-            value: "value_1",
+            id: "link-selector-item-group1-1",
+            template: expect.anything(),
+            value: { id: 1 },
             is_disabled: false,
             group_id: "group1",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(third_entry[0]).toBe("link-selector-item-group1-value_2");
+        expect(third_entry[0]).toBe("link-selector-item-group1-2");
         expect(third_entry[1]).toStrictEqual({
-            id: "link-selector-item-group1-value_2",
-            template: buildTemplateResult("Value 2"),
-            value: "value_2",
+            id: "link-selector-item-group1-2",
+            template: expect.anything(),
+            value: { id: 2 },
             is_disabled: false,
             group_id: "group1",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(fourth_entry[0]).toBe("link-selector-item-group2-value_3");
+        expect(fourth_entry[0]).toBe("link-selector-item-group2-3");
         expect(fourth_entry[1]).toStrictEqual({
-            id: "link-selector-item-group2-value_3",
-            template: buildTemplateResult("Value 3"),
-            value: "value_3",
+            id: "link-selector-item-group2-3",
+            template: expect.anything(),
+            value: { id: 3 },
             is_disabled: false,
             group_id: "group2",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(fifth_entry[0]).toBe("link-selector-item-group2-value_4");
+        expect(fifth_entry[0]).toBe("link-selector-item-group2-4");
         expect(fifth_entry[1]).toStrictEqual({
-            id: "link-selector-item-group2-value_4",
-            template: buildTemplateResult("Value 4"),
-            value: "value_4",
+            id: "link-selector-item-group2-4",
+            template: expect.anything(),
+            value: { id: 4 },
             is_disabled: false,
             group_id: "group2",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
-        expect(sixth_entry[0]).toBe("link-selector-item-group2-value_5");
+        expect(sixth_entry[0]).toBe("link-selector-item-group2-5");
         expect(sixth_entry[1]).toStrictEqual({
-            id: "link-selector-item-group2-value_5",
-            template: buildTemplateResult("Value 5"),
-            value: "value_5",
+            id: "link-selector-item-group2-5",
+            template: expect.anything(),
+            value: { id: 5 },
             is_disabled: false,
             group_id: "group2",
             is_selected: false,
             element: expect.any(Element),
-            target_option: expect.any(Element),
         });
     });
 });
-
-function buildTemplateResult(value: string): HTMLTemplateResult {
-    return html`
-        ${value}
-    `;
-}

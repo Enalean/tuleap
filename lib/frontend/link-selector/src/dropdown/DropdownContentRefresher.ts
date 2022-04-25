@@ -23,7 +23,6 @@ import type { SelectionManager } from "../selection/SelectionManager";
 import type { EventManager } from "../events/EventManager";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import type { GroupCollection } from "../items/GroupCollection";
-import type { OptionsMaintainerType } from "../items/OptionsMaintainer";
 
 export interface DropdownContentRefresher {
     refresh(groups: GroupCollection): void;
@@ -31,7 +30,6 @@ export interface DropdownContentRefresher {
 
 export const DropdownContentRefresher = (
     items_map_manager: ItemsMapManager,
-    options_maintainer: OptionsMaintainerType,
     dropdown_content_renderer: DropdownContentRenderer,
     selection_manager: SelectionManager,
     event_manager: EventManager,
@@ -39,7 +37,6 @@ export const DropdownContentRefresher = (
 ): DropdownContentRefresher => ({
     refresh(groups: GroupCollection): void {
         items_map_manager.refreshItemsMap(groups);
-        options_maintainer.rebuildOptions();
         dropdown_content_renderer.renderLinkSelectorDropdownContent(groups);
         selection_manager.resetAfterDependenciesUpdate();
         event_manager.attachItemListEvent();

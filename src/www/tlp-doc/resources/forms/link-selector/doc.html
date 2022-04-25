@@ -1,52 +1,56 @@
 <p>
-    Link selector allows users to select an artifact to link
+    Link selector displays heterogeneous groups of items with different behaviours and lets users select an item among them.
     <br>
     <br>
-    It is basically a lite version of list-picker, but tailored for a very specific, non-generic use case.
+    It looks visually like list-picker, but tailored to a different use-case.
     <br>
     <br>
     Options:
     <ul>
-        <li><code class="code-inline">locale: string | undefined</code>: A locale string formatted with underscores. For example: "en_US", "fr_FR". It is used to localize link-selector. If undefined, it will fallback to "en_US"</li>
-        <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the field</li>
+        <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the "search" field</li>
         <li>
-            <code class="code-inline">items_template_formatter (default: none)</code>: An asynchronous callback function returning a lit/html template result to customise items templates
+            <code class="code-inline">templating_callback: (html: HTMLTemplateStringProcessor, item: LinkSelectorItem) => HTMLTemplateResult</code>: A callback function returning a lit/html template result to customize item templates
             <br>
-            It takes three parameters:
+            It takes two parameters:
             <ul>
-                <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer to build a secured TemplateResult</li>
-                <li><code class="code-inline">option_value: string</code> The value of the current select box option</li>
-                <li><code class="code-inline">option_label: string</code> The text content of the current select box option</li>
+                <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit/html tag function to help the developer build a secure HTMLTemplateResult.</li>
+                <li><code class="code-inline">item: LinkSelectorItem</code> The item for which to build the template. See below for its definition.</li>
             </ul>
         </li>
         <li>
-            <code class="code-inline">search_field_callback: LinkSelectorSearchFieldCallback (mandatory)</code>: A callback to be executed each time the user types a query in the search input.
+            <code class="code-inline">selection_callback: (selected_value: unknown | null) => void</code>: A callback function to be executed each time the user selects a value or clears the selection.
             <br>
-            This callback takes a <code class="code-inline">query: string</code> in its parameters, which contains the query typed by the user, and returns <code class="code-inline">void</code>.
+            It takes one parameter: <code class="code-inline">selected_value: unknown | null</code>, which holds the <code class="code-inline">value</code> of the item that was just selected or <code class="code-inline">null</code> when the last selection is cleared.
+        </li>
+        <li>
+            <code class="code-inline">search_field_callback: (link_selector: LinkSelector, query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
             <br>
-            In this callback, you are expected to filter the collection of <code class="code-inline">HTMLOptionElement</code> inside the source <code class="code-inline">HTMLSelectElement</code>.
-            <br>
-            To do so, you can:
-            <ol>
-                <li>Clear the source select options</li>
-                <li>Compare the options to the received query or fetch some on a distant endpoint</li>
-                <li>Insert the matching options inside the source select</li>
-                <li>Insert an empty state in the source select if the query did not match any item (see details below)</li>
-            </ol>
+            It takes two parameters:
+            <ul>
+                <li><code class="code-inline">link_selector: LinkSelector</code>: The link selector instance. It allows the developer to call <code class="code-inline">setDropdownContent()</code> to refresh the groups of items.</li>
+                <li><code class="code-inline">query: string</code>: The query typed by the user.</li>
+            </ul>
         </li>
     </ul>
     <br>
-    Empty state:
     <br>
-    <br>
-    There is a special select option that will be identified and used by the link-selector as an empty state.
-    <br>
-    <br>
-    This option should have the following attributes and values:
-    <ul>
-        <li><code class="code-inline">value="" (no value)</code>. Link-selector will ignore this option as it has no value.</li>
-        <li><code class="code-inline">disabled</code> to prevent it to be selected.</li>
-        <li><code class="code-inline">data-link-selector-role="empty-state"</code> to mark the option as an empty state.</li>
-    </ul>
-    <strong>Please note that these empty states are only supported in optgroups.</strong>
+    Methods:
+<ul>
+    <li>
+        <code class="code-inline">setDropdownContent(groups: GroupsOfItems[]) => void</code>: define the contents of the dropdown by giving it a list of <code class="code-inline">GroupOfItems</code>.
+        <br>
+        Each <code class="code-inline">GroupOfItems</code> has these properties:
+        <ul>
+            <li><code class="code-inline">label: string</code>: The label of the group. Think of it as the text content of an &lt;optgroup&gt;.</li>
+            <li><code class="code-inline">empty_message: string</code>: The translated message that will be shown when there are no items. It is the "empty state" of the group.</li>
+            <li><code class="code-inline">items: LinkSelectorItem[]</code>: the items of the group.</li>
+        </ul>
+        Each <code class="code-inline">LinkSelectorItem</code> has these properties:
+        <ul>
+            <li><code class="code-inline">value: unknown</code>: The value that will be passed to <code class="code-inline">selection_callback</code>. It can be any type, usually it's an object.</li>
+        </ul>
+    </li>
+    <li><code class="code-inline">resetSelection() => void</code>: reset the current selection.</li>
+    <li><code class="code-inline">destroy() => void</code>: destroy link-selector and remove all event handlers.</li>
+</ul>
 </p>

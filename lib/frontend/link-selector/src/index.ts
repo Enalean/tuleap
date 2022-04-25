@@ -24,12 +24,12 @@ import "../themes/style.scss";
 
 export type { HTMLTemplateResult } from "lit/html.js";
 export type { HTMLTemplateStringProcessor, LinkSelector, LinkSelectorOptions };
-export type { LinkSelectorSearchFieldCallback } from "./events/SearchFieldEventCallbackHandler";
-export type { GroupCollection, GroupOfItems } from "./items/GroupCollection";
+export type { LinkSelectorSelectionCallback, LinkSelectorSearchFieldCallback } from "./type";
+export type { GroupCollection, GroupOfItems, LinkSelectorItem } from "./items/GroupCollection";
 
 export function createLinkSelector(
     source_select_box: HTMLSelectElement,
     options: LinkSelectorOptions
-): Promise<LinkSelector> {
+): LinkSelector {
     return creator.createLinkSelector(source_select_box, options);
 }
