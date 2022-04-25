@@ -94,7 +94,10 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->retrieved_plugins['by_id'][$id];
     }
 
-    public function getPluginByName($name)
+    /**
+     * @psalm-ignore-falsable-return
+     */
+    public function getPluginByName($name): Plugin|false
     {
         if (! isset($this->retrieved_plugins['by_name'][$name])) {
             $dar = $this->plugin_dao->searchByName($name);

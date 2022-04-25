@@ -42,7 +42,6 @@ use GitRepositoryAlreadyExistsException;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use PFUser;
-use PluginFactory;
 use ProjectHistoryDao;
 use ProjectManager;
 use SystemEventManager;
@@ -183,7 +182,8 @@ class RepositoryResource extends AuthenticatedResource
             $fine_grained_retriever
         );
 
-        $git_plugin  = \PluginFactory::instance()->getPluginByName('git');
+        $git_plugin = \PluginFactory::instance()->getPluginByName('git');
+        assert($git_plugin instanceof \GitPlugin);
         $url_manager = new \Git_GitRepositoryUrlManager($git_plugin);
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
@@ -332,9 +332,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $status_retriever   = new CommitStatusRetriever(new CommitStatusDAO());
         $metadata_retriever = new CommitMetadataRetriever($status_retriever, $this->user_manager);
-        $url_manager        = new Git_GitRepositoryUrlManager(
-            PluginFactory::instance()->getPluginByName('git')
-        );
+        $url_manager        = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->commit_representation_builder = new GitCommitRepresentationBuilder($metadata_retriever, $url_manager);
     }
