@@ -80,13 +80,16 @@ describe(`Planning view Explicit Backlog`, function () {
             cy.get("[data-test=create-new-item]").first().click();
 
             cy.get("[data-test=summary]").type("New Art");
+            cy.intercept(`*func=submit-artifact*`).as("createArtifact");
+
             cy.get("[data-test=artifact-submit-button]").click();
+            cy.wait("@createArtifact", { timeout: 60000 });
 
             cy.location().should((loc) => {
                 expect(loc.href).contains("pane=details");
             });
 
-            cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
+            cy.get("[data-test=release-overview]").contains("New Art");
         });
 
         it("open the pv2 modal", function () {
