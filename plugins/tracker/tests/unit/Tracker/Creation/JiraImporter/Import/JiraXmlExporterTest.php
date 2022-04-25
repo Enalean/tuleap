@@ -30,6 +30,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
@@ -228,13 +229,6 @@ class JiraXmlExporterTest extends TestCase
             }
         };
 
-        $all_types_retriever = new class implements AllTypesRetriever {
-            public function getAllTypes(): array
-            {
-                return [];
-            }
-        };
-
         $exporter = new JiraXmlExporter(
             $logger,
             $jira_client,
@@ -276,7 +270,14 @@ class JiraXmlExporterTest extends TestCase
                         new FieldChangeArtifactLinksBuilder(
                             new XML_SimpleXMLCDATAFactory(),
                         ),
-                        $all_types_retriever,
+                        new ArtifactLinkTypeConverter(
+                            new class implements AllTypesRetriever {
+                                public function getAllTypes(): array
+                                {
+                                    return [];
+                                }
+                            },
+                        ),
                     ),
                     new IssueSnapshotCollectionBuilder(
                         $changelog_entries_builder,

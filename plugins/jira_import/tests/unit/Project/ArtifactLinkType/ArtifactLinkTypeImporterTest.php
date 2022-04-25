@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
 use Psr\Log\NullLogger;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\GetMissingArtifactLinkTypes;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
@@ -34,27 +34,27 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @dataProvider getData
      */
-    public function testImportOfArtifactLinkTypes(array $urls, array $types, TypeCreatorInterface $creator, callable $expectations, callable $tests): void
+    public function testImportOfArtifactLinkTypes(array $urls, ?TypePresenter $type, TypeCreatorInterface $creator, callable $expectations, callable $tests): void
     {
         $client       = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
         };
         $client->urls = $urls;
 
-        $all_natures = new class ($types) implements AllTypesRetriever
+        $type_converter = new class ($type) implements GetMissingArtifactLinkTypes
         {
-            public function __construct(public array $types)
+            public function __construct(public ?TypePresenter $type)
             {
             }
 
-            public function getAllTypes(): array
+            public function getMissingArtifactLinkTypes(array $json_representation): ?TypePresenter
             {
-                return $this->types;
+                return $this->type;
             }
         };
 
         $expectations($this);
 
-        $importer = new ArtifactLinkTypeImporter($all_natures, $creator);
+        $importer = new ArtifactLinkTypeImporter($type_converter, $creator);
         $importer->import($client, new NullLogger());
 
         $tests($creator);
@@ -67,7 +67,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'urls' => [
                     'issueLinkTypes' => 'YOU MUST PAY!',
                 ],
-                'types' => [],
+                'missing_type' => null,
                 'creator' => $this->getDefaultCreator(),
                 'expectations' => function (ArtifactLinkTypeImporterTest $test_case) {
                     $test_case->expectException(\RuntimeException::class);
@@ -76,7 +76,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'it returns an artifact link type with accurate labels' => [
                 'urls' => $this->getDefaultIssueTypeResponse(),
-                'types' => [],
+                'missing_type' => TypePresenter::buildVisibleType('Blocks', 'blocks', 'is blocked by'),
                 'creator' => $this->getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
@@ -88,7 +88,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'it does not return anything when type already exists' => [
                 'urls' => $this->getDefaultIssueTypeResponse(),
-                'types' => [TypePresenter::buildVisibleType('Blocks', '', '')],
+                'missing_type' => null,
                 'creator' => $this->getDefaultCreator(),
                 'expectations' => fn () => null,
                 'tests' => function (mixed $creator) {
@@ -97,7 +97,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'it skips links that cannot be created' => [
                 'urls' => $this->getDefaultIssueTypeResponse(),
-                'types' => [],
+                'missing_type' => null,
                 'creator' => new class implements TypeCreatorInterface
                 {
                     public array $natures = [];

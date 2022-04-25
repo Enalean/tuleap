@@ -30,6 +30,7 @@ use Psr\Log\NullLogger;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypes;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
@@ -290,7 +291,7 @@ class CurrentSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     [
                         'type' => [
-                            'name' => '_is_child',
+                            'name' => GetExistingArtifactLinkTypes::FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN,
                         ],
                         'outwardIssue' => [
                             'id' => '10005',

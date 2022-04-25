@@ -30,6 +30,7 @@ use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
@@ -93,9 +94,11 @@ final class jira_importPlugin extends Plugin
                         new XMLImportHelper($user_manager),
                         new JiraTrackerBuilder(),
                         new ArtifactLinkTypeImporter(
-                            new TypePresenterFactory(
-                                $nature_dao,
-                                $artifact_link_usage_dao,
+                            new ArtifactLinkTypeConverter(
+                                new TypePresenterFactory(
+                                    $nature_dao,
+                                    $artifact_link_usage_dao,
+                                ),
                             ),
                             new TypeCreator(
                                 $nature_dao,
