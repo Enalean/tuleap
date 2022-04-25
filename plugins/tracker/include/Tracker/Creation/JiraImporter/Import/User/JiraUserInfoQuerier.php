@@ -61,6 +61,6 @@ class JiraUserInfoQuerier
             $params = ['accountId' => $unique_account_identifier];
             return ClientWrapper::JIRA_CORE_BASE_URL . '/user?' . http_build_query($params);
         }
-        return ClientWrapper::JIRA_CORE_BASE_URL . '/user?username=' . $unique_account_identifier;
+        return ClientWrapper::JIRA_CORE_BASE_URL . '/user?key=' . $unique_account_identifier;
     }
 }

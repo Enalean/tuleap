@@ -54,7 +54,7 @@ final class JiraUserInfoQuerierTest extends TestCase
     {
         $client  = new class extends JiraServerClientStub {
             public array $urls = [
-                '/rest/api/2/user?username=john.doe%40example.com' => [
+                '/rest/api/2/user?key=john.doe%40example.com' => [
                     'self' => 'https://jira.example.com/rest/api/2/user?username=john.doe%40example.com',
                     'displayName' => 'Jeannot',
                     'name' => 'john.doe%40example.com',
