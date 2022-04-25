@@ -48,7 +48,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\svn\Event\GetSVNLoginNameEvent;
+use Tuleap\SVNCore\Event\GetSVNLoginNameEvent;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\AccountInformationCollection;

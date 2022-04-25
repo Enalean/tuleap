@@ -22,8 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Svn\ApacheConfGenerator;
-use Tuleap\Svn\SvnrootUpdater;
+use Tuleap\SVNCore\ApacheConfGenerator;
+use Tuleap\SVNCore\SvnrootUpdater;
 
 class SystemEventProcessor_Root extends SystemEventProcessor
 {

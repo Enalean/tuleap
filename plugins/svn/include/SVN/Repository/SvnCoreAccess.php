@@ -46,7 +46,7 @@ final class SvnCoreAccess
         $this->dao = $dao;
     }
 
-    public function process(\Tuleap\SVN\SvnCoreAccess $svn_core_access): void
+    public function process(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access): void
     {
         $repo_id = $this->dao->getCoreRepositoryId($svn_core_access->project);
         if ($repo_id !== null && ($uri = $this->getMatchingUri($svn_core_access, $repo_id))) {
@@ -54,7 +54,7 @@ final class SvnCoreAccess
         }
     }
 
-    private function getMatchingUri(\Tuleap\SVN\SvnCoreAccess $svn_core_access, int $repo_id): ?string
+    private function getMatchingUri(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access, int $repo_id): ?string
     {
         if ($svn_core_access->requested_uri === \SVN_SOAPServer::FAKE_URL) {
             return 'access forbidden';
@@ -73,12 +73,12 @@ final class SvnCoreAccess
         return null;
     }
 
-    private function getMatchingUriView(\Tuleap\SVN\SvnCoreAccess $svn_core_access, int $repo_id): string
+    private function getMatchingUriView(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access, int $repo_id): string
     {
         return (CoreRepository::buildActiveRepository($svn_core_access->project, $repo_id))->getHtmlPath();
     }
 
-    private function getMatchingUriAdmin(array $query, \Tuleap\SVN\SvnCoreAccess $svn_core_access, int $repo_id): ?string
+    private function getMatchingUriAdmin(array $query, \Tuleap\SVNCore\SvnCoreAccess $svn_core_access, int $repo_id): ?string
     {
         if (isset($query['func'], self::ADMIN_URI_MATCH[$query['func']])) {
             return SVN_BASE_URL . '/?' . http_build_query(
@@ -98,7 +98,7 @@ final class SvnCoreAccess
         );
     }
 
-    private function getMatchingUriViewVc(\Tuleap\SVN\SvnCoreAccess $svn_core_access, string $path, string $query): string
+    private function getMatchingUriViewVc(\Tuleap\SVNCore\SvnCoreAccess $svn_core_access, string $path, string $query): string
     {
         $directory = substr($path, strlen(self::CORE_VIEWVC_URI_BASE_PATH));
         return SVN_BASE_URL . '/' . $directory . '?' . $query;

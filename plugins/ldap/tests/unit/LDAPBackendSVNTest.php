@@ -81,7 +81,7 @@ class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_manager = new EventManager();
         $event_manager->addListener(Event::SVN_APACHE_AUTH, $plugin, Event::SVN_APACHE_AUTH, false);
 
-        $cache_parameters = new \Tuleap\SvnCore\Cache\Parameters(15, 20);
+        $cache_parameters = new \Tuleap\SVNCore\Cache\Parameters(15, 20);
 
         $factory = new SVN_Apache_Auth_Factory($event_manager, $cache_parameters);
 

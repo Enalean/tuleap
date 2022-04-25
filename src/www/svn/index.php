@@ -3,7 +3,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
-use Tuleap\SVN\SvnCoreAccess;
+use Tuleap\SVNCore\SvnCoreAccess;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../svn/svn_data.php';

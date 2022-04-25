@@ -21,7 +21,7 @@
  *
  */
 
-use Tuleap\svn\Event\UpdateProjectAccessFilesScheduler;
+use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
 
 /**
 * System Event classes

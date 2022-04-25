@@ -29,7 +29,7 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\SvnCore\Cache\ParameterSaver;
+use Tuleap\SVNCore\Cache\ParameterSaver;
 
 final class UpdateTuleapPMParamsController implements DispatchableWithRequest
 {

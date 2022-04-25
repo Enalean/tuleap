@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Repository;
 
-use Tuleap\SVN\GetAllRepositories;
+use Tuleap\SVNCore\GetAllRepositories;
 
 final class ApacheRepositoriesCollector
 {

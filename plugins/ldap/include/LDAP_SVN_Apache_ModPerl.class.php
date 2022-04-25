@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\SvnCore\Cache\Parameters;
+use Tuleap\SVNCore\Cache\Parameters;
 
 class LDAP_SVN_Apache_ModPerl extends SVN_Apache_ModPerl
 {

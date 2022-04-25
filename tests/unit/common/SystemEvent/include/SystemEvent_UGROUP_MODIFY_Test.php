@@ -107,7 +107,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('usesSVN')->andReturns(true);
         $evt->shouldReceive('getProject')->with(1)->andReturns($project);
 
-        $scheduler = Mockery::mock(\Tuleap\svn\Event\UpdateProjectAccessFilesScheduler::class);
+        $scheduler = Mockery::mock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
         $scheduler->shouldReceive('scheduleUpdateOfProjectAccessFiles')->once();
         $evt->injectDependencies($scheduler);
 
@@ -156,7 +156,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
         $ugroupbinding->shouldReceive('getUGroupsByBindingSource')->andReturns($projects);
         $evt->shouldReceive('getUgroupBinding')->andReturns($ugroupbinding);
 
-        $scheduler = Mockery::mock(\Tuleap\svn\Event\UpdateProjectAccessFilesScheduler::class);
+        $scheduler = Mockery::mock(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler::class);
         $scheduler->shouldReceive('scheduleUpdateOfProjectAccessFiles')->times(3);
         $evt->injectDependencies($scheduler);
 

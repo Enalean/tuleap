@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Svn\SHA1CollisionDetector;
+use Tuleap\SVNCore\SHA1CollisionDetector;
 
 try {
     /** @psalm-suppress MissingFile This file is deployed under /usr/lib/tuleap/, an absolute path is needed */

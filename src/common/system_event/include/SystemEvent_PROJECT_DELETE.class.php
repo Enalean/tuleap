@@ -21,7 +21,7 @@
  *
  */
 
-use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
+use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 
 /**
 * System Event classes

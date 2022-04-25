@@ -76,14 +76,14 @@ use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
-use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\DiskUsage\DiskUsageCollector;
 use Tuleap\SVN\DiskUsage\DiskUsageDao;
 use Tuleap\SVN\DiskUsage\DiskUsageRetriever;
-use Tuleap\svn\Event\UpdateProjectAccessFilesEvent;
+use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
 use Tuleap\SVN\Events\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\SVN\Events\SystemEvent_SVN_IMPORT_CORE_REPOSITORY;
@@ -91,7 +91,7 @@ use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\SVN\Explorer\ExplorerController;
 use Tuleap\SVN\Explorer\RepositoryBuilder;
 use Tuleap\SVN\Explorer\RepositoryDisplayController;
-use Tuleap\SVN\GetAllRepositories;
+use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVN\Logs\DBWriter;
 use Tuleap\SVN\Logs\QueryBuilder;
 use Tuleap\SVN\Migration\BareRepositoryCreator;
@@ -129,8 +129,8 @@ use Tuleap\SVN\SiteAdmin\DisplayTuleapPMParamsController;
 use Tuleap\SVN\SiteAdmin\UpdateMaxFileSizeController;
 use Tuleap\SVN\SiteAdmin\UpdateTuleapPMParamsController;
 use Tuleap\SVN\SvnAdmin;
-use Tuleap\SVN\SvnCoreAccess;
-use Tuleap\SVN\SvnCoreUsage;
+use Tuleap\SVNCore\SvnCoreAccess;
+use Tuleap\SVNCore\SvnCoreUsage;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\SvnRouter;
 use Tuleap\SVN\Admin\UpdateMigrateFromCoreController;
@@ -139,9 +139,9 @@ use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
-use Tuleap\SvnCore\Cache\ParameterDao;
-use Tuleap\SvnCore\Cache\ParameterRetriever;
-use Tuleap\SvnCore\Cache\ParameterSaver;
+use Tuleap\SVNCore\Cache\ParameterDao;
+use Tuleap\SVNCore\Cache\ParameterRetriever;
+use Tuleap\SVNCore\Cache\ParameterSaver;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SvnPlugin extends Plugin implements PluginWithConfigKeys
@@ -225,7 +225,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys
     {
         $this->addHook(StatisticsCollectorSVN::NAME);
         $this->addHook(LastMonthStatisticsCollectorSVN::NAME);
-        $this->addHook(\Tuleap\svn\Event\UpdateProjectAccessFilesEvent::NAME);
+        $this->addHook(\Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(GetAllRepositories::NAME);

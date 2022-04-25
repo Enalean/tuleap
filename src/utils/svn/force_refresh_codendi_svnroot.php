@@ -21,6 +21,6 @@
 
 require_once __DIR__ . '/../../www/include/pre.php';
 
-use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVNCore\ApacheConfGenerator;
 
 ApacheConfGenerator::build()->generate();

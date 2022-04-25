@@ -72464,13 +72464,13 @@
       <code>$wsdl_url</code>
     </MissingParamType>
   </file>
-  <file src="src/common/svn/ApacheConfGenerator.php">
+  <file src="src/common/SVNCore/ApacheConfGenerator.php">
     <MissingReturnType occurrences="2">
       <code>build</code>
       <code>generate</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/CommitMessageValidator.class.php">
+  <file src="src/common/SVNCore/CommitMessageValidator.class.php">
     <MissingParamType occurrences="1">
       <code>$commit_message</code>
     </MissingParamType>
@@ -72478,7 +72478,7 @@
       <code>assertCommitMessageIsValid</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/Event/GetSVNLoginNameEvent.php">
+  <file src="src/common/SVNCore/Event/GetSVNLoginNameEvent.php">
     <MissingParamType occurrences="1">
       <code>$username</code>
     </MissingParamType>
@@ -72486,12 +72486,12 @@
       <code>setUsername</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SHA1CollisionDetector.php">
+  <file src="src/common/SVNCore/SHA1CollisionDetector.php">
     <MissingParamType occurrences="1">
       <code>$handle_resource</code>
     </MissingParamType>
   </file>
-  <file src="src/common/svn/SVNAccessFile.class.php">
+  <file src="src/common/SVNCore/SVNAccessFile.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>$currentSection</code>
     </InvalidReturnStatement>
@@ -72525,12 +72525,12 @@
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/common/svn/SVNAuthenticationCacheInvalidator.php">
+  <file src="src/common/SVNCore/SVNAuthenticationCacheInvalidator.php">
     <MissingReturnType occurrences="1">
       <code>invalidateProjectCache</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_AccessFile_DAO.class.php">
+  <file src="src/common/SVNCore/SVN_AccessFile_DAO.class.php">
     <DeprecatedMethod occurrences="22">
       <code>DataAccessObject</code>
       <code>commit</code>
@@ -72575,13 +72575,13 @@
       <code>updateAccessFileVersionInProject</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_AccessFile_NoFilePresenter.php">
+  <file src="src/common/SVNCore/SVN_AccessFile_NoFilePresenter.php">
     <MissingReturnType occurrences="2">
       <code>access_form_title</code>
       <code>repo_not_created_label</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_AccessFile_Presenter.php">
+  <file src="src/common/SVNCore/SVN_AccessFile_Presenter.php">
     <MissingParamType occurrences="4">
       <code>$content</code>
       <code>$current_version_title</code>
@@ -72603,7 +72603,7 @@
       <code>version_number</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_AccessFile_Writer.class.php">
+  <file src="src/common/SVNCore/SVN_AccessFile_Writer.class.php">
     <MissingParamType occurrences="4">
       <code>$contents</code>
       <code>$contents</code>
@@ -72624,7 +72624,7 @@
       <code>write_with_defaults</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_Apache_SvnrootConf.class.php">
+  <file src="src/common/SVNCore/SVN_Apache_SvnrootConf.class.php">
     <MissingPropertyType occurrences="1">
       <code>$apacheConfHeaders</code>
     </MissingPropertyType>
@@ -72633,12 +72633,12 @@
       <code>getApacheConfHeaders</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_DAO.class.php">
+  <file src="src/common/SVNCore/SVN_DAO.class.php">
     <MissingReturnType occurrences="1">
       <code>searchSvnRepositories</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_Hooks.class.php">
+  <file src="src/common/SVNCore/SVN_Hooks.class.php">
     <MissingParamType occurrences="1">
       <code>$parameters</code>
     </MissingParamType>
@@ -72646,7 +72646,7 @@
       <code>getMessageFromSvnLook</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_LogDao.class.php">
+  <file src="src/common/SVNCore/SVN_LogDao.class.php">
     <DeprecatedMethod occurrences="17">
       <code>DataAccessObject</code>
       <code>count</code>
@@ -72688,7 +72688,7 @@
       <code>getRow</code>
     </PossiblyFalseReference>
   </file>
-  <file src="src/common/svn/SVN_LogFactory.class.php">
+  <file src="src/common/SVNCore/SVN_LogFactory.class.php">
     <DeprecatedFunction occurrences="2">
       <code>db_es(substr($no_access, 1))</code>
       <code>db_fetch_array($raw_revisions)</code>
@@ -72705,7 +72705,7 @@
       <code>getTopModifiedFiles</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_PermissionsManager.class.php">
+  <file src="src/common/SVNCore/SVN_PermissionsManager.class.php">
     <MissingParamType occurrences="1">
       <code>$svnpath</code>
     </MissingParamType>
@@ -72713,7 +72713,7 @@
       <code>userCanRead</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_RepositoryListing.class.php">
+  <file src="src/common/SVNCore/SVN_RepositoryListing.class.php">
     <MissingParamType occurrences="9">
       <code>$date_based_path</code>
       <code>$line</code>
@@ -72736,7 +72736,7 @@
       <code>splitHistory</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_RevisionPathInfo.class.php">
+  <file src="src/common/SVNCore/SVN_RevisionPathInfo.class.php">
     <MissingParamType occurrences="4">
       <code>$author_id</code>
       <code>$commit_message</code>
@@ -72754,7 +72754,7 @@
       <code>getTimestamp</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_SOAPServer.class.php">
+  <file src="src/common/SVNCore/SVN_SOAPServer.class.php">
     <InvalidArgument occurrences="2">
       <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
       <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
@@ -72792,7 +72792,7 @@
       <code>ArrayOfSvnPathInfo</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/svn/SVN_Svnlook.class.php">
+  <file src="src/common/SVNCore/SVN_Svnlook.class.php">
     <InvalidScalarArgument occurrences="2">
       <code>$revision</code>
       <code>$transaction</code>
@@ -72814,7 +72814,7 @@
       <code>getTree</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/SVN_SvnlookException.class.php">
+  <file src="src/common/SVNCore/SVN_SvnlookException.class.php">
     <MissingParamType occurrences="3">
       <code>$command</code>
       <code>$output</code>
@@ -72826,7 +72826,7 @@
       <code>$returnValue</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/svn/SvnNotification.class.php">
+  <file src="src/common/SVNCore/SvnNotification.class.php">
     <DeprecatedMethod occurrences="5">
       <code>current</code>
       <code>isError</code>
@@ -72844,13 +72844,13 @@
       <code>$this-&gt;_dao</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="src/common/svn/SvnrootUpdater.php">
+  <file src="src/common/SVNCore/SvnrootUpdater.php">
     <MissingReturnType occurrences="2">
       <code>listen</code>
       <code>push</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/cache/ParameterDao.php">
+  <file src="src/common/SVNCore/Cache/ParameterDao.php">
     <DeprecatedMethod occurrences="7">
       <code>DataAccessObject</code>
       <code>getDa</code>
@@ -72869,7 +72869,7 @@
       <code>search</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/cache/ParameterSaver.php">
+  <file src="src/common/SVNCore/Cache/ParameterSaver.php">
     <MissingParamType occurrences="4">
       <code>$lifetime</code>
       <code>$lifetime</code>
@@ -72880,7 +72880,7 @@
       <code>save</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/general-settings/SVN_GeneralSettingsPresenter.php">
+  <file src="src/common/SVNCore/general-settings/SVN_GeneralSettingsPresenter.php">
     <MissingReturnType occurrences="16">
       <code>btn_submit</code>
       <code>mandatory_ref_comment</code>
@@ -72900,7 +72900,7 @@
       <code>tracking_title</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/hook/PostRevPropset.class.php">
+  <file src="src/common/SVNCore/hook/PostRevPropset.class.php">
     <InvalidScalarArgument occurrences="2">
       <code>$project-&gt;getID()</code>
       <code>$user-&gt;getId()</code>
@@ -72914,7 +72914,7 @@
       <code>update</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/hook/PreCommit.class.php">
+  <file src="src/common/SVNCore/hook/PreCommit.class.php">
     <MissingParamType occurrences="7">
       <code>$immutable_path</code>
       <code>$immutable_path</code>
@@ -72940,7 +72940,7 @@
       <code>$this-&gt;logger</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/common/svn/hook/PreRevPropset.class.php">
+  <file src="src/common/SVNCore/hook/PreRevPropset.class.php">
     <MissingParamType occurrences="2">
       <code>$action</code>
       <code>$propname</code>
@@ -72951,7 +72951,7 @@
       <code>assertPropsetIsOnLog</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/immutable_tags/SVN_Immutable_Tags_DAO.php">
+  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_DAO.php">
     <DeprecatedMethod occurrences="9">
       <code>DataAccessObject</code>
       <code>escapeInt</code>
@@ -72976,7 +72976,7 @@
       <code>saveImmutableTagsForProject</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/immutable_tags/SVN_Immutable_Tags_Handler.php">
+  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Handler.php">
     <MissingParamType occurrences="5">
       <code>$path</code>
       <code>$project_id</code>
@@ -72990,7 +72990,7 @@
       <code>saveImmutableTagsForProject</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/immutable_tags/SVN_Immutable_Tags_Presenter.php">
+  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Presenter.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>json_encode($existing_tree)</code>
     </InvalidPropertyAssignmentValue>
@@ -73026,7 +73026,7 @@
       <code>whitelist</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/intro/SVN_IntroPresenter.php">
+  <file src="src/common/SVNCore/intro/SVN_IntroPresenter.php">
     <MissingParamType occurrences="3">
       <code>$ldap_row</code>
       <code>$svn_url</code>
@@ -73049,7 +73049,7 @@
       <code>warning_ldap</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/tokens/SVN_Token.class.php">
+  <file src="src/common/SVNCore/tokens/SVN_Token.class.php">
     <MissingParamType occurrences="6">
       <code>$comment</code>
       <code>$generated_date</code>
@@ -73076,7 +73076,7 @@
       <code>getUser</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/tokens/SVN_TokenDao.class.php">
+  <file src="src/common/SVNCore/tokens/SVN_TokenDao.class.php">
     <DeprecatedMethod occurrences="17">
       <code>DataAccessObject</code>
       <code>escapeInt</code>
@@ -73116,7 +73116,7 @@
       <code>setProjectAuthorizesTokens</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/tokens/SVN_TokenHandler.class.php">
+  <file src="src/common/SVNCore/tokens/SVN_TokenHandler.class.php">
     <MissingParamType occurrences="3">
       <code>$comment</code>
       <code>$svn_token_data</code>
@@ -73127,7 +73127,7 @@
       <code>instantiateFromRow</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/tokens/SVN_TokenPresenter.class.php">
+  <file src="src/common/SVNCore/tokens/SVN_TokenPresenter.class.php">
     <MissingPropertyType occurrences="6">
       <code>$comment</code>
       <code>$generated_date</code>
@@ -73143,7 +73143,7 @@
       <code>setDateForUser</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/svn/viewvc/ViewVCProxy.php">
+  <file src="src/common/SVNCore/ViewVC/ViewVCProxy.php">
     <InvalidScalarArgument occurrences="1">
       <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>

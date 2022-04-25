@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Commit;
 
 use Tuleap\SVN\Repository\Repository;
-use Tuleap\Svn\SHA1CollisionDetector;
-use Tuleap\Svn\SHA1CollisionException;
+use Tuleap\SVNCore\SHA1CollisionDetector;
+use Tuleap\SVNCore\SHA1CollisionException;
 
 final class CollidingSHA1Validator implements PathValidator
 {

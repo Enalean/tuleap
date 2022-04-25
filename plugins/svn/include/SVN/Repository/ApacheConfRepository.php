@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVN\Repository;
 
-final class ApacheConfRepository implements \Tuleap\SVN\ApacheConfRepository
+final class ApacheConfRepository implements \Tuleap\SVNCore\ApacheConfRepository
 {
     /**
      * @var Repository

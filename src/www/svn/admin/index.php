@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVN\SvnCoreAccess;
+use Tuleap\SVNCore\SvnCoreAccess;
 
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../svn_data.php';

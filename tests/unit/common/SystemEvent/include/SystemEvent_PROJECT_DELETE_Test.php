@@ -22,7 +22,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalSVNPollution;
-use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
+use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 
 /**
  * Test for project delete system event

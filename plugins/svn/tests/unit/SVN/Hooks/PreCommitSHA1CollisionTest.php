@@ -25,7 +25,7 @@ use Psr\Log\NullLogger;
 use Tuleap\SVN\Commit\CollidingSHA1Validator;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Repository\Repository;
-use Tuleap\Svn\SHA1CollisionException;
+use Tuleap\SVNCore\SHA1CollisionException;
 
 class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +36,7 @@ class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public $svnlook;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Svn\SHA1CollisionDetector
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVNCore\SHA1CollisionDetector
      */
     public $sha1_collision_detector;
     /**
@@ -50,7 +50,7 @@ class PreCommitSHA1CollisionTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->svnlook = Mockery::spy(\Tuleap\SVN\Commit\Svnlook::class);
         $this->svnlook->shouldReceive('getMessageFromTransaction')->andReturn(["COMMIT MSG"]);
-        $this->sha1_collision_detector = Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
+        $this->sha1_collision_detector = Mockery::spy(\Tuleap\SVNCore\SHA1CollisionDetector::class);
 
         $this->pre_commit_hook = new PreCommit(
             $this->svnlook,

@@ -21,7 +21,7 @@
 namespace Tuleap\SystemEvent;
 
 use SystemEvent;
-use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
+use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 
 class SystemEventSVNAuthenticationCacheRefresh extends SystemEvent
 {

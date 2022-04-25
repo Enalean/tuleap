@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TruncateLevelLogger;
 use Tuleap\CLI\ConsoleLogger;
 use Tuleap\DB\DBFactory;
-use Tuleap\Svn\SvnrootUpdater;
+use Tuleap\SVNCore\SvnrootUpdater;
 use Tuleap\System\DaemonLocker;
 
 class WorkerSVNRootUpdateCommand extends Command

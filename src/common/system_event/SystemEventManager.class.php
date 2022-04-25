@@ -21,9 +21,9 @@
 
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
-use Tuleap\svn\Event\UpdateProjectAccessFilesScheduler;
-use Tuleap\svn\Event\UpdateProjectAccessFileSystemEvent;
-use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
+use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
+use Tuleap\SVNCore\Event\UpdateProjectAccessFileSystemEvent;
+use Tuleap\SVNCore\SVNAuthenticationCacheInvalidator;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\SystemEventInstrumentation;

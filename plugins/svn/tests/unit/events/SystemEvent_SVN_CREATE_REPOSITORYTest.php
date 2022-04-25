@@ -23,8 +23,8 @@ namespace Tuleap\SVN\Events;
 use Mockery;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\Repository\Repository;
-use Tuleap\Svn\SVNRepositoryCreationException;
-use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
+use Tuleap\SVNCore\Exception\SVNRepositoryCreationException;
+use Tuleap\SVNCore\Exception\SVNRepositoryLayoutInitializationException;
 
 class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
