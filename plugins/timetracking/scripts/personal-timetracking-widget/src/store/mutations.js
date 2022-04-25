@@ -54,6 +54,10 @@ export default {
         state.user_id = user_id;
     },
 
+    initUserLocale(state, user_locale) {
+        state.user_locale = user_locale.replace(/_/g, "-");
+    },
+
     setAddMode(state, is_add_mode) {
         state.is_add_mode = is_add_mode;
         if (

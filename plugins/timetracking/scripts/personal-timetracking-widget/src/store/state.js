@@ -24,6 +24,7 @@ const state = {
     end_date: DateTime.local().toISODate(),
     reading_mode: true,
     total_times: 0,
+    user_locale: null,
     pagination_offset: 0,
     pagination_limit: 50,
     is_loaded: false,

@@ -52,17 +52,21 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { formatDateDayMonthYear } from "../../../../time-formatters.js";
+import { mapGetters, mapState } from "vuex";
+import { formatDateUsingPreferredUserFormat } from "../../../../time-formatters.js";
 export default {
     name: "WidgetModalArtifactInfo",
     computed: {
         ...mapGetters(["current_artifact", "current_project"]),
+        ...mapState(["user_locale"]),
         project_link() {
             return "/projects/" + this.current_project.shortname;
         },
         submission_date() {
-            return formatDateDayMonthYear(this.current_artifact.submission_date);
+            return formatDateUsingPreferredUserFormat(
+                this.current_artifact.submission_date,
+                this.user_locale
+            );
         },
     },
 };

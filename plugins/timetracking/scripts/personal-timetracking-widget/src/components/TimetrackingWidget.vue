@@ -40,12 +40,14 @@ export default {
     },
     props: {
         userId: Number,
+        userLocale: String,
     },
     computed: {
         ...mapState(["reading_mode"]),
     },
     created() {
         this.$store.commit("initUserId", this.userId);
+        this.$store.commit("initUserLocale", this.userLocale);
     },
 };
 </script>

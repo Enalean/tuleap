@@ -23,7 +23,12 @@
 
 import { Duration, DateTime } from "luxon";
 
-export { formatMinutes, formatDatetimeToISO, formatDateDayMonthYear, sortTimesChronologically };
+export {
+    formatMinutes,
+    formatDatetimeToISO,
+    formatDateUsingPreferredUserFormat,
+    sortTimesChronologically,
+};
 
 function formatMinutes(minutes) {
     return Duration.fromObject({ minutes }).toFormat("hh:mm");
@@ -37,8 +42,8 @@ function formatDatetimeToISO(string_date) {
     });
 }
 
-function formatDateDayMonthYear(date) {
-    return DateTime.fromISO(date).toLocaleString();
+function formatDateUsingPreferredUserFormat(date, user_locale) {
+    return new Intl.DateTimeFormat(user_locale).format(new Date(date));
 }
 
 function sortTimesChronologically(times) {

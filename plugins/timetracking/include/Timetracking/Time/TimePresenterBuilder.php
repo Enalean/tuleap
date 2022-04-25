@@ -51,7 +51,7 @@ class TimePresenterBuilder
 
         return [
             'id'                   => $time->getId(),
-            'day'                  => $time->getDay(),
+            'day'                  => date($GLOBALS['Language']->getText('system', 'datefmt_short'), strtotime($time->getDay())),
             'user'                 => $this->getUserPresenter($user),
             'time'                 => $this->date_formatter->formatMinutes($time->getMinutes()),
             'step'                 => $time->getStep(),
