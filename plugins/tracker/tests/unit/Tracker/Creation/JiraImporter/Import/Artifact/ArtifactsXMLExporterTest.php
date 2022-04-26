@@ -30,6 +30,7 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
@@ -119,13 +120,6 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $forge_user
         );
 
-        $all_types_retriever = new class implements AllTypesRetriever {
-            public function getAllTypes(): array
-            {
-                return [];
-            }
-        };
-
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
         $this->exporter                      = new ArtifactsXMLExporter(
             $this->wrapper,
@@ -154,7 +148,14 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     new FieldChangeArtifactLinksBuilder(
                         new XML_SimpleXMLCDATAFactory(),
                     ),
-                    $all_types_retriever,
+                    new ArtifactLinkTypeConverter(
+                        new class implements AllTypesRetriever {
+                            public function getAllTypes(): array
+                            {
+                                return [];
+                            }
+                        },
+                    ),
                 ),
                 new IssueSnapshotCollectionBuilder(
                     new JiraCloudChangelogEntriesBuilder(

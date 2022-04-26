@@ -28,6 +28,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfiguration;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConverter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
@@ -192,9 +193,11 @@ class JiraXmlExporter
                         new FieldChangeArtifactLinksBuilder(
                             new XML_SimpleXMLCDATAFactory(),
                         ),
-                        new TypePresenterFactory(
-                            new TypeDao(),
-                            new ArtifactLinksUsageDao()
+                        new ArtifactLinkTypeConverter(
+                            new TypePresenterFactory(
+                                new TypeDao(),
+                                new ArtifactLinksUsageDao()
+                            ),
                         ),
                     ),
                     new IssueSnapshotCollectionBuilder(

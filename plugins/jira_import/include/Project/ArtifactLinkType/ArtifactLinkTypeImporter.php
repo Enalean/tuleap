@@ -25,42 +25,35 @@ namespace Tuleap\JiraImport\Project\ArtifactLinkType;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\GetMissingArtifactLinkTypes;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\InvalidTypeParameterException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreatorInterface;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\UnableToCreateTypeException;
 
 final class ArtifactLinkTypeImporter
 {
     private const ISSUE_LINK_TYPE_URL = 'issueLinkType';
 
-    public function __construct(private AllTypesRetriever $all_natures_retriever, private TypeCreatorInterface $creator)
+    public function __construct(private GetMissingArtifactLinkTypes $link_type_converter, private TypeCreatorInterface $creator)
     {
     }
 
     public function import(JiraClient $jira_client, LoggerInterface $logger): void
     {
-        $existing_type_names = [];
-        foreach ($this->all_natures_retriever->getAllTypes() as $type) {
-            $existing_type_names[$type->shortname] = true;
-        }
-
         $issue_link_types = $jira_client->getUrl(ClientWrapper::JIRA_CORE_BASE_URL . '/' . self::ISSUE_LINK_TYPE_URL);
         if (! isset($issue_link_types['issueLinkTypes']) || ! is_array($issue_link_types['issueLinkTypes'])) {
             throw new \RuntimeException('Payload returned by Jira ' . self::ISSUE_LINK_TYPE_URL . ' endpoint was not expected `issueLinkTypes` must be present and must be an array');
         }
-        foreach ($issue_link_types['issueLinkTypes'] as $link_type) {
-            if (isset($existing_type_names[$link_type['name']])) {
-                continue;
-            }
+        foreach ($issue_link_types['issueLinkTypes'] as $jira_link_type) {
             try {
-                $this->creator->createFromType(
-                    TypePresenter::buildVisibleType($link_type['name'], $link_type['outward'], $link_type['inward'])
-                );
+                $tuleap_link_type = $this->link_type_converter->getMissingArtifactLinkTypes($jira_link_type);
+                if ($tuleap_link_type === null) {
+                    continue;
+                }
+                $this->creator->createFromType($tuleap_link_type);
             } catch (InvalidTypeParameterException | UnableToCreateTypeException $e) {
-                $logger->warning(sprintf('Cannot create link type `%s` (%s). Links between issues will be created without this type.', $link_type['name'], $e->getMessage()));
+                $logger->warning(sprintf('Cannot create link type `%s` (%s). Links between issues will be created without this type.', $jira_link_type['name'], $e->getMessage()));
             }
         }
     }

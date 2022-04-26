@@ -33,7 +33,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InvalidMapping
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -45,11 +44,6 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
 class FieldChangeXMLExporter
 {
-    /**
-     * @var array<string, bool>
-     */
-    private array $supported_link_types = [];
-
     public function __construct(
         private LoggerInterface $logger,
         private FieldChangeDateBuilder $field_change_date_builder,
@@ -59,11 +53,8 @@ class FieldChangeXMLExporter
         private FieldChangeListBuilder $field_change_list_builder,
         private FieldChangeFileBuilder $field_change_file_builder,
         private FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder,
-        AllTypesRetriever $all_types_retriever,
+        private GetExistingArtifactLinkTypes $link_type_converter,
     ) {
-        foreach ($all_types_retriever->getAllTypes() as $type) {
-            $this->supported_link_types[$type->shortname] = true;
-        }
     }
 
     public function exportFieldChanges(
@@ -202,11 +193,14 @@ class FieldChangeXMLExporter
             $field_values = [];
             foreach ($value->issuelinks as $link) {
                 if (isset($link['outwardIssue'])) {
-                    $tuleap_link_type = $this->getTuleapLinkType($link['type']['name']);
-                    if ($tuleap_link_type !== $link['type']['name']) {
-                        $this->logger->warning(sprintf('Issue is linked to issue %s with type %s but this type does\'t exist on Tuleap yet. Type skipped.', $link['outwardIssue']['key'], $tuleap_link_type));
+                    $artifact_link_type = $this->link_type_converter->getExistingArtifactLinkTypes($link['type']);
+                    if (! $artifact_link_type) {
+                        $artifact_link_type_shortname = '';
+                        $this->logger->warning(sprintf('Issue is linked to issue %s with type %s but this type doesn\'t exist on Tuleap yet. Type skipped.', $link['outwardIssue']['id'], $link['type']['name']));
+                    } else {
+                        $artifact_link_type_shortname = $artifact_link_type->shortname;
                     }
-                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id'], $tuleap_link_type);
+                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id'], $artifact_link_type_shortname);
                 }
             }
             foreach ($value->subtasks as $link) {
@@ -214,18 +208,5 @@ class FieldChangeXMLExporter
             }
             $this->field_change_artifact_links_builder->build($changeset_node, $mapping->getFieldName(), $field_values);
         }
-    }
-
-    private function getTuleapLinkType(string $type_name): string
-    {
-        if ($this->isTypeKnown($type_name)) {
-            return $type_name;
-        }
-        return '';
-    }
-
-    private function isTypeKnown(string $type_name): bool
-    {
-        return isset($this->supported_link_types[$type_name]);
     }
 }

@@ -29,7 +29,6 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\AllTypesRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\XML\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
@@ -60,18 +59,19 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_manager;
 
-    private AllTypesRetriever $all_types_retriever;
+    private GetExistingArtifactLinkTypes $type_converter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user_manager        = Mockery::mock(UserManager::class);
-        $this->all_types_retriever = new class implements AllTypesRetriever {
-            public array $types = [];
-            public function getAllTypes(): array
+        $this->user_manager   = Mockery::mock(UserManager::class);
+        $this->type_converter = new class implements GetExistingArtifactLinkTypes {
+            public ?TypePresenter $type = null;
+
+            public function getExistingArtifactLinkTypes(array $json_representation): ?TypePresenter
             {
-                return $this->types;
+                return $this->type;
             }
         };
     }
@@ -106,7 +106,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             new FieldChangeArtifactLinksBuilder(
                 new XML_SimpleXMLCDATAFactory(),
             ),
-            $this->all_types_retriever,
+            $this->type_converter,
         );
     }
 
@@ -504,7 +504,7 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsTheLinkedIssues(): void
     {
-        $this->all_types_retriever->types[] = new TypePresenter('Relates', '...', '...', true);
+        $this->type_converter->type = new TypePresenter('Relates', 'relates to', 'relates to', true);
 
         $mapping = new ScalarFieldMapping(
             AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
@@ -559,6 +559,65 @@ class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertCount(1, $field_change_node->value);
         self::assertSame('10089', (string) $field_change_node->value[0]);
         self::assertSame('Relates', (string) $field_change_node->value[0]['nature']);
+    }
+
+    public function testItExportsTheLinkedIssuesWithTransformedLinkType(): void
+    {
+        $this->type_converter->type = new TypePresenter('Problem_Incident', 'causes', 'is caused by', true);
+
+        $mapping = new ScalarFieldMapping(
+            AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
+            '?',
+            '?',
+            '?',
+            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    new ArtifactLinkValue(
+                        [
+                            [
+                                'id' => '10030',
+                                'self' => '...',
+                                'type' => [
+                                    'id'   => '10003',
+                                    'name' => 'Problem/Incident',
+                                    'inward' => 'causes',
+                                    'outward' => 'is caused by',
+                                    'self' => '...',
+                                ],
+                                'outwardIssue' => [
+                                    'id' => '10089',
+                                    'key' => 'JUS-1',
+                                    'self' => '...',
+                                    'fields' => [],
+
+                                ],
+                            ],
+                        ],
+                        [],
+                    ),
+                    null
+                ),
+            ],
+            null
+        );
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertCount(1, $field_change_node->value);
+        self::assertSame('10089', (string) $field_change_node->value[0]);
+        self::assertSame('Problem_Incident', (string) $field_change_node->value[0]['nature']);
     }
 
     public function testItExportsTheSubTasksAsChildren(): void

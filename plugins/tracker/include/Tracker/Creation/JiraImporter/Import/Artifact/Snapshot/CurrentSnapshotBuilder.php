@@ -28,6 +28,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\GetExistingArtifactLinkTypes;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
@@ -155,7 +156,7 @@ class CurrentSnapshotBuilder
             foreach ($linked_issues_collection->getChildren($issue_api_representation->getKey()) as $child) {
                 $added_values[] = [
                     'type' => [
-                        'name' => '_is_child',
+                        'name' => GetExistingArtifactLinkTypes::FAKE_JIRA_TYPE_TO_RECREATE_CHILDREN,
                     ],
                     'outwardIssue' => [
                         'id' => $child,
