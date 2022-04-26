@@ -38,7 +38,6 @@ use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Docman\Search\FilterFilename;
 use Tuleap\Docman\Search\FilterItemId;
-use Tuleap\Docman\Search\InvalidSortTypeException;
 use Tuleap\REST\I18NRestException;
 
 class SearchReportBuilder
@@ -76,11 +75,7 @@ class SearchReportBuilder
 
         $deduplicated_column_names = array_flip(array_flip([...$always_there_columns_names, ...$additional_columns_names]));
 
-        try {
-            $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report, $search->properties);
-        } catch (InvalidSortTypeException $e) {
-            throw new RestException(400, $e->getMessage());
-        }
+        $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report);
 
         return $report;
     }

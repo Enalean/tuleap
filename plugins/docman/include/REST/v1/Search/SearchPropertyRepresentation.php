@@ -41,9 +41,4 @@ final class SearchPropertyRepresentation
      * @var SearchDateRepresentation {@type \Tuleap\Docman\REST\v1\Search\SearchDateRepresentation} {@required false}
      */
     public ?SearchDateRepresentation $value_date = null;
-
-    /**
-     * @var string {@type string} {@required false} {@choice ASC,DESC}
-     */
-    public ?string $sort = null;
 }

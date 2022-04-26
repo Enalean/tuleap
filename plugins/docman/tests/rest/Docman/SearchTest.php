@@ -94,42 +94,6 @@ final class SearchTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testItSearchInFolderUsingProperties(int $root_id): void
-    {
-        $root_folder   = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $folder_search = $this->findItemByTitle($root_folder, 'Search');
-
-        assert($folder_search !== null);
-        $folder_search_id = $folder_search['id'];
-
-        $query = [
-            'limit' => 50,
-            'offset' => 0,
-            'global_search' => '',
-            'properties' => [['name' => 'title', 'value' => '*.txt', 'sort' => 'ASC']],
-        ];
-
-        $search_response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'docman_search/' . $folder_search_id)
-                ->withBody($this->stream_factory->createStream(json_encode($query)))
-        );
-
-        $this->assertSame(200, $search_response->getStatusCode());
-        $found_items = json_decode($search_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $item_titles = [];
-        foreach ($found_items as $item) {
-            $item_titles[] = $item['title'];
-        }
-
-        $this->assertEqualsCanonicalizing(["bar.txt", "foo.txt"], $item_titles);
-
-        $this->assertCount(2, $found_items);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
     public function testOptionsSearchId($id): void
     {
         $response = $this->getResponse(

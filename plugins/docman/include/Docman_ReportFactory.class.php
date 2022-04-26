@@ -23,7 +23,6 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
-use Tuleap\Docman\Search\SearchSortPropertyMapper;
 
 class Docman_ReportFactory
 {
@@ -213,7 +212,7 @@ class Docman_ReportFactory
         $columnsOnReport = $retriever->getColumns();
 
         $colFactory = new Docman_ReportColumnFactory($this->groupId);
-        $augmenter  = new ColumnReportAugmenter($colFactory, new SearchSortPropertyMapper());
+        $augmenter  = new ColumnReportAugmenter($colFactory);
         $augmenter->addColumnsFromRequest($request, $columnsOnReport, $report);
     }
 
