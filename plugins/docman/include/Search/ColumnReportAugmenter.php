@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Search;
 
 use Docman_ReportColumnFactory;
-use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 
 final class ColumnReportAugmenter
 {
-    public function __construct(private Docman_ReportColumnFactory $column_factory, private SearchSortPropertyMapper $property_mapper)
+    public function __construct(private Docman_ReportColumnFactory $column_factory)
     {
     }
 
@@ -57,21 +56,14 @@ final class ColumnReportAugmenter
 
     /**
      * @param string[] $report_columns
-     * @param SearchPropertyRepresentation[] $properties
-     * @throws InvalidSortTypeException
      */
-    public function addColumnsFromArray(array $report_columns, \Docman_Report $report, array $properties): void
+    public function addColumnsFromArray(array $report_columns, \Docman_Report $report): void
     {
         $keep_ref_on_update_date = null;
         $is_there_a_sort         = false;
 
         foreach ($report_columns as $column_label) {
-            $column                 = $this->column_factory->getColumnFromLabel($column_label);
-            $column_search_property = $this->getSearchPropertyByColumnLabel($column_label, $properties);
-
-            if ($column_search_property !== null && $column_search_property->sort !== null) {
-                $column->setSort($this->property_mapper->convertToLegacySort($column_search_property->sort));
-            }
+            $column = $this->column_factory->getColumnFromLabel($column_label);
 
             if ($column_label === 'update_date') {
                 $keep_ref_on_update_date = $column;
@@ -92,18 +84,5 @@ final class ColumnReportAugmenter
         if (! $is_there_a_sort && $keep_ref_on_update_date !== null) {
             $keep_ref_on_update_date->setSort(PLUGIN_DOCMAN_SORT_DESC);
         }
-    }
-
-    /**
-     * @param SearchPropertyRepresentation[] $properties
-     */
-    private function getSearchPropertyByColumnLabel(string $report_column_name, array $properties): ?SearchPropertyRepresentation
-    {
-        foreach ($properties as $property) {
-            if ($property->name === $report_column_name && $property->sort !== null) {
-                return $property;
-            }
-        }
-        return null;
     }
 }
