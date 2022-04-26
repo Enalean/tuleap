@@ -28,13 +28,27 @@
                             <th
                                 v-bind:class="th_classes(column)"
                                 v-bind:key="'document-search-result-' + column.name + '-header'"
+                                v-on:click="toggleSort(column)"
+                                v-bind:data-test="`sort-${column.name}`"
                             >
+                                {{ column.label }}
                                 <i
                                     class="fas fa-file-alt tlp-skeleton-icon document-search-result-icon document-search-result-title-header-icon"
                                     aria-hidden="true"
                                     v-if="column.name === 'title'"
                                 ></i>
-                                {{ column.label }}
+                                <i
+                                    class="fas fa-caret-down"
+                                    v-if="hasAscSort(column)"
+                                    role="img"
+                                    v-bind:title="getAscendingSortMessage(column)"
+                                ></i>
+                                <i
+                                    class="fas fa-caret-up"
+                                    v-if="hasDescSort(column)"
+                                    role="img"
+                                    v-bind:title="getDescendingSortMessage(column)"
+                                ></i>
                             </th>
                         </template>
                     </tr>
@@ -60,15 +74,25 @@
 <script setup lang="ts">
 import TableBodySkeleton from "./TableBodySkeleton.vue";
 import TableBodyEmpty from "./TableBodyEmpty.vue";
-import type { ItemSearchResult, SearchResult, SearchResultColumnDefinition } from "../../../type";
+import type {
+    ItemSearchResult,
+    SearchResult,
+    SearchResultColumnDefinition,
+    SortParams,
+} from "../../../type";
 import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
 import SearchResultPagination from "./SearchResultPagination.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
+import { useRouter, useRoute } from "../../../helpers/use-router";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const props = defineProps<{ is_loading: boolean; results: SearchResult | null }>();
+const { interpolate, $gettext } = useGettext();
+
+const props =
+    defineProps<{ is_loading: boolean; results: SearchResult | null; sort: SortParams }>();
 
 const limit = ref(SEARCH_LIMIT);
 
@@ -84,12 +108,63 @@ const items = computed((): ReadonlyArray<ItemSearchResult> => {
     return props.results?.items || [];
 });
 
+const router = useRouter();
+const route = useRoute();
+
+function hasAscSort(column: SearchResultColumnDefinition): boolean {
+    return props.sort && props.sort.name === column.name && props.sort.order === "asc";
+}
+
+function hasDescSort(column: SearchResultColumnDefinition): boolean {
+    return props.sort && props.sort.name === column.name && props.sort.order === "desc";
+}
+
+function toggleSort(column: SearchResultColumnDefinition): void {
+    if (column.name === "location" || column.is_multiple_value_allowed) {
+        return;
+    }
+
+    let parameters = props.sort;
+    let stringify_parameters: Array<string> = [];
+
+    if (parameters && parameters.order === "asc") {
+        stringify_parameters.push(column.name + ":desc");
+    } else {
+        stringify_parameters.push(column.name);
+    }
+
+    let route_query = route.query;
+    route_query.sort = stringify_parameters.join();
+
+    // the two cal to router replace is a quick fix for following issue:
+    // issue: https://github.com/vuejs/vue-router/issues/2624
+    // the first replace update the url, so when we'll do the push with parameters
+    // the page will be reloaded and ask back to sort
+    router.replace({
+        name: "search",
+    });
+    router.push({
+        name: "search",
+        query: route_query,
+    });
+}
+
+function getAscendingSortMessage(column: SearchResultColumnDefinition): string {
+    return interpolate($gettext("Ascending sort on %{label}."), { label: column.label });
+}
+
+function getDescendingSortMessage(column: SearchResultColumnDefinition): string {
+    return interpolate($gettext("Descending sort on %{label}."), { label: column.label });
+}
+
 function th_classes(column: SearchResultColumnDefinition): string[] {
     const classes = ["document-search-result-" + column.name + "-header"];
 
     if (column.name === "id") {
         classes.push("tlp-table-cell-numeric");
     }
+
+    classes.push("document-search-column-is-sortable");
 
     return classes;
 }

@@ -41,6 +41,7 @@ describe("get-rest-body-from-search-params", () => {
             update_date: null,
             obsolescence_date: null,
             status: "",
+            sort: null,
         };
         expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
     });

@@ -22,6 +22,7 @@ import type {
     AdvancedSearchParams,
     SearchDate,
     SearchCriteria,
+    SortParams,
 } from "../type";
 import { AllowedSearchDateOperator, AllowedSearchType } from "../type";
 import { isAdditionalFieldNumber } from "../helpers/additional-custom-properties";
@@ -38,7 +39,6 @@ export function getSearchPropsFromRoute(
     const user_submitted_type = String(route.query.type || "");
 
     const type = isAllowedType(user_submitted_type) ? user_submitted_type : "";
-
     return {
         folder_id: route.params.folder_id ? Number(route.params.folder_id) : root_id,
         query: {
@@ -54,6 +54,7 @@ export function getSearchPropsFromRoute(
             obsolescence_date: getObsolescenceDate(route),
             status: String(route.query.status || ""),
             ...getCustomProperties(route, criteria),
+            sort: getSort(route),
         },
         offset: Number(route.query.offset || "0"),
     };
@@ -83,6 +84,30 @@ function getCustomProperties(
     }
 
     return additional;
+}
+
+function getSort(route: Route): SortParams | null {
+    const additional: SortParams | null = null;
+
+    if (!route.query.sort) {
+        return additional;
+    }
+
+    const sort_list = route.query.sort;
+    if (Array.isArray(sort_list)) {
+        return additional;
+    }
+
+    const sort_criterion = sort_list.split(":");
+
+    let order = "asc";
+    let name = sort_list;
+    if (sort_criterion.length === 2) {
+        name = sort_criterion[0];
+        order = sort_criterion[1];
+    }
+
+    return { name, order };
 }
 
 function isAllowedType(type: string): type is AllowedSearchType {

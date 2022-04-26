@@ -18,6 +18,7 @@
  */
 import type { Route } from "vue-router";
 import { getCurrentInstance } from "@vue/composition-api";
+import type VueRouter from "vue-router";
 
 export function useRoute(): Route {
     const instance = getCurrentInstance();
@@ -26,4 +27,13 @@ export function useRoute(): Route {
     }
 
     return instance.proxy.$route;
+}
+
+export function useRouter(): VueRouter {
+    const instance = getCurrentInstance();
+    if (!instance) {
+        throw Error("useRouter must be called in setup script");
+    }
+
+    return instance.proxy.$router;
 }

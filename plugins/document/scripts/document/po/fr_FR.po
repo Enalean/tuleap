@@ -123,6 +123,9 @@ msgstr "Approuvé"
 msgid "Archive size warning threshold reached"
 msgstr "Seuil d'avertissement de taille d'archive atteint"
 
+msgid "Ascending sort on %{label}."
+msgstr "Tri ascendant sur %{label}."
+
 msgid "Before"
 msgstr "Avant"
 
@@ -208,6 +211,9 @@ msgid ""
 msgstr ""
 "En fonction de la vitesse de votre réseau, cela peut prendre un certain "
 "temps. Voulez-vous continuer ?"
+
+msgid "Descending sort on %{label}."
+msgstr "Tri décroissant sur {label}."
 
 msgid "Description"
 msgstr "Description"

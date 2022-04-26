@@ -51,8 +51,8 @@ final class SearchColumnCollectionBuilderTest extends TestCase
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
-                $this->getCustomMetadata("field_1"),
-                $this->getCustomMetadata("field_2"),
+                $this->getCustomMetadata("field_1", true),
+                $this->getCustomMetadata("field_2", false),
             ]);
 
         $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
@@ -85,12 +85,13 @@ final class SearchColumnCollectionBuilderTest extends TestCase
         return $metadata;
     }
 
-    private function getCustomMetadata(string $label): \Docman_Metadata
+    private function getCustomMetadata(string $label, bool $is_multiple_value_allowed): \Docman_Metadata
     {
         $metadata = new \Docman_Metadata();
         $metadata->setLabel($label);
         $metadata->setName(\ucfirst($label));
         $metadata->setSpecial(false);
+        $metadata->setIsMultipleValuesAllowed($is_multiple_value_allowed);
 
         return $metadata;
     }

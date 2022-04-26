@@ -296,6 +296,10 @@ tr:focus-within {
     width: 100%;
 }
 
+.document-search-column-is-sortable {
+    cursor: pointer;
+}
+
 @media (max-height: 900px) {
     .document-search-container {
         min-height: 0;

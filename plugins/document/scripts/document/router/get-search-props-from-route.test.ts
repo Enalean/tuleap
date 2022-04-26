@@ -263,4 +263,30 @@ describe("get-search-props-from-route", () => {
             expect(query).toStrictEqual(buildAdvancedSearchParams({}));
         });
     });
+
+    describe("sort", () => {
+        it("sort title in ascending order by default", () => {
+            const { query } = getSearchPropsFromRoute(
+                {
+                    params: {},
+                    query: { sort: "title" },
+                } as unknown as Route,
+                101,
+                []
+            );
+            expect(query.sort).toStrictEqual({ name: "title", order: "asc" });
+        });
+
+        it("sort title in descending order", () => {
+            const { query } = getSearchPropsFromRoute(
+                {
+                    params: {},
+                    query: { sort: "title:desc" },
+                } as unknown as Route,
+                101,
+                []
+            );
+            expect(query.sort).toStrictEqual({ name: "title", order: "desc" });
+        });
+    });
 });

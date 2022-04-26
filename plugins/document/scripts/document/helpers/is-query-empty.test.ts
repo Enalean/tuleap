@@ -40,6 +40,7 @@ describe("isQueryEmpty", () => {
             update_date: null,
             obsolescence_date: null,
             status: "",
+            sort: null,
         };
         expect(isQueryEmpty(query_params)).toBe(true);
     });

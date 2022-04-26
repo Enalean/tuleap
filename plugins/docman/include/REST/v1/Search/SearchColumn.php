@@ -27,18 +27,23 @@ namespace Tuleap\Docman\REST\v1\Search;
  */
 final class SearchColumn
 {
-    private function __construct(private string $name, private string $label, private bool $is_custom_property)
+    private function __construct(private string $name, private string $label, private bool $is_custom_property, private bool $is_multiple_value_allowed)
     {
     }
 
-    public static function buildForCustomProperty(string $name, string $label): self
+    public static function buildForSingleValueCustomProperty(string $name, string $label): self
     {
-        return new self($name, $label, true);
+        return new self($name, $label, true, false);
+    }
+
+    public static function buildForMultipleValuesCustomProperty(string $name, string $label): self
+    {
+        return new self($name, $label, true, true);
     }
 
     public static function buildForHardcodedProperty(string $name, string $label): self
     {
-        return new self($name, $label, false);
+        return new self($name, $label, false, false);
     }
 
     public function getName(): string
@@ -54,5 +59,10 @@ final class SearchColumn
     public function isCustomProperty(): bool
     {
         return $this->is_custom_property;
+    }
+
+    public function isMultipleValueAllowed(): bool
+    {
+        return $this->is_multiple_value_allowed;
     }
 }

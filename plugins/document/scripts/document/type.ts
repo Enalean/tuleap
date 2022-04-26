@@ -368,7 +368,15 @@ export interface AdvancedSearchParams {
     readonly update_date: SearchDate | null;
     readonly obsolescence_date: SearchDate | null;
     readonly status: string;
+
     readonly [key: AdditionalFieldNumber]: string | SearchDate | null | undefined;
+
+    readonly sort: SortParams | null;
+}
+
+export interface SortParams {
+    readonly name: string;
+    readonly order: string;
 }
 
 interface BaseSearchCriterion {
@@ -437,11 +445,13 @@ export type ListOfSearchBodyProperties = ReadonlyArray<
 export interface SearchBodyRest {
     readonly global_search?: string;
     readonly properties?: ListOfSearchBodyProperties;
+    readonly sort?: Array<SortParams>;
 }
 
 export interface SearchResultColumnDefinition {
     readonly name: string;
     readonly label: string;
+    readonly is_multiple_value_allowed: boolean;
 }
 
 export type ListOfSearchResultColumnDefinition = ReadonlyArray<SearchResultColumnDefinition>;
