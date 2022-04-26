@@ -20,7 +20,7 @@
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
 import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { LinkFieldValueFormat } from "./LinkFieldValueFormat";
-import { FORWARD_DIRECTION } from "./LinkedArtifact";
+import { FORWARD_DIRECTION } from "./LinkType";
 import { FormattedLinkArtifactFactory } from "./FormattedLinkArtifactFactory";
 
 interface FormatLinkFieldValue {

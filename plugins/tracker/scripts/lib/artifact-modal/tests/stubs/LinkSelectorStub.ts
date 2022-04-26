@@ -21,7 +21,12 @@ import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
 
 export interface LinkSelectorStub extends LinkSelector {
     getGroupCollection(): GroupCollection | undefined;
+    getCallCount(): number;
 }
+
+const noop = (): void => {
+    // Do nothing
+};
 
 export const LinkSelectorStub = {
     withDropdownContentRecord: (): LinkSelectorStub => {
@@ -35,13 +40,24 @@ export const LinkSelectorStub = {
                 return recorded_argument;
             },
 
+            getCallCount: () => 0,
+            resetSelection: noop,
+            destroy: noop,
+        };
+    },
+
+    withResetSelectionCallCount: (): LinkSelectorStub => {
+        let call_count = 0;
+        return {
             resetSelection(): void {
-                // Do nothing
+                call_count++;
             },
 
-            destroy(): void {
-                // Do nothing
-            },
+            getCallCount: () => call_count,
+
+            setDropdownContent: noop,
+            getGroupCollection: () => undefined,
+            destroy: noop,
         };
     },
 };

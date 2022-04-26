@@ -19,12 +19,13 @@
 
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
-import type { LinkedArtifact, LinkType } from "./LinkedArtifact";
+import type { LinkedArtifact } from "./LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 import { Fault, isFault } from "@tuleap/fault";
 import { NoLinksInCreationModeFault } from "./NoLinksInCreationModeFault";
 import type { AddLinkedArtifactCollection } from "./AddLinkedArtifactCollection";
+import type { LinkType } from "./LinkType";
 
 export const LinksRetriever = (
     types_retriever: RetrieveLinkTypes,

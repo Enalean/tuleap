@@ -23,4 +23,7 @@ export type LinkableArtifact = {
     readonly id: number;
     readonly title: string | null;
     readonly xref: ArtifactCrossReference;
+    readonly uri: string;
+    readonly status: string;
+    readonly is_open: boolean;
 };

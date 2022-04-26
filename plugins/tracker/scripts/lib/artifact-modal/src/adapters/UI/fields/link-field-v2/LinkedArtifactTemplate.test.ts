@@ -39,6 +39,8 @@ import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactC
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
+import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -157,6 +159,8 @@ describe(`LinkedArtifactTemplate`, () => {
                     ),
                     current_artifact_identifier
                 ),
+                AddNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
                 current_artifact_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72")
             );

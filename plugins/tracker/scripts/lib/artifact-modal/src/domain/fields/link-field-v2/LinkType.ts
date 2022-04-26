@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+export const FORWARD_DIRECTION = "forward";
+export const REVERSE_DIRECTION = "reverse";
 
-export type LinkAdditionPresenter = {
-    readonly artifact: LinkableArtifact | null;
-    readonly is_add_button_disabled: boolean;
-};
-
-export const LinkAdditionPresenter = {
-    withoutSelection: (): LinkAdditionPresenter => ({
-        artifact: null,
-        is_add_button_disabled: true,
-    }),
-
-    withArtifactSelected: (artifact: LinkableArtifact): LinkAdditionPresenter => ({
-        artifact,
-        is_add_button_disabled: false,
-    }),
-};
+export interface LinkType {
+    readonly shortname: string;
+    readonly direction: "forward" | "reverse";
+    readonly label: string;
+}

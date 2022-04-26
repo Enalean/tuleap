@@ -25,13 +25,14 @@ import type { ResultAsync } from "neverthrow";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
 import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
 import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";

@@ -17,17 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
+import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import {
+    FORWARD_DIRECTION,
+    REVERSE_DIRECTION,
+} from "../../src/domain/fields/link-field-v2/LinkType";
 
 export const LinkTypeStub = {
+    buildUntyped: (): LinkType => ({
+        shortname: UNTYPED_LINK,
+        direction: FORWARD_DIRECTION,
+        label: "Linked to",
+    }),
     buildChildLinkType: (): LinkType => ({
-        shortname: "_is_child",
-        direction: "forward",
+        shortname: IS_CHILD_LINK_TYPE,
+        direction: FORWARD_DIRECTION,
         label: "Child",
     }),
     buildParentLinkType: (): LinkType => ({
-        shortname: "_is_child",
-        direction: "reverse",
+        shortname: IS_CHILD_LINK_TYPE,
+        direction: REVERSE_DIRECTION,
         label: "Parent",
     }),
 };

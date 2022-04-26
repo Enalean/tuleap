@@ -19,7 +19,7 @@
 
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 

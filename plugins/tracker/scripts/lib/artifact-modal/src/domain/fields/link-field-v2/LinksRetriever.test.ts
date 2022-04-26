@@ -20,7 +20,7 @@
 import { LinksRetriever } from "./LinksRetriever";
 import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
 import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
-import type { LinkedArtifact, LinkType } from "./LinkedArtifact";
+import type { LinkedArtifact } from "./LinkedArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
@@ -28,6 +28,7 @@ import { isFault } from "@tuleap/fault";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import { AddLinkedArtifactCollectionStub } from "../../../../tests/stubs/AddLinkedArtifactCollectionStub";
+import type { LinkType } from "./LinkType";
 
 describe(`LinksRetriever`, () => {
     let parent_type: LinkType,

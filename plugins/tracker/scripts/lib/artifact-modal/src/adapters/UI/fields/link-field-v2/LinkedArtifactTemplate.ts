@@ -25,9 +25,9 @@ import {
     getMarkForRemovalLabel,
     getDefaultLinkTypeLabel,
 } from "../../../../gettext-catalog";
-import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { LinkField } from "./LinkField";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 
 type MapOfClasses = Record<string, boolean>;
 

@@ -18,7 +18,7 @@
  */
 
 import type { RetrieveLinkTypes } from "../../src/domain/fields/link-field-v2/RetrieveLinkTypes";
-import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
 
 export const RetrieveLinkTypesStub = {
     withTypes: (link_type: LinkType, ...other_link_types: LinkType[]): RetrieveLinkTypes => {

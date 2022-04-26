@@ -18,9 +18,10 @@
  */
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { LinkedArtifact, LinkType } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import { LinkedArtifactIdentifierProxy } from "./LinkedArtifactIdentifierProxy";
 import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
+import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 
 export const LinkedArtifactProxy = {
     fromAPIArtifactAndType: (

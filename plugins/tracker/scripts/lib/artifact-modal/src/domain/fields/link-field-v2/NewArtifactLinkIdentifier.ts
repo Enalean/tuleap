@@ -17,21 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "./LinkableArtifact";
+import type { Identifier } from "../../Identifier";
 
-export type LinkAdditionPresenter = {
-    readonly artifact: LinkableArtifact | null;
-    readonly is_add_button_disabled: boolean;
-};
+/**
+ * I identify an artifact that is about to be linked to the current artifact under edition.
+ * Contrary to LinkedArtifact, I exist only in the frontend. The backend has not saved the link yet.
+ */
+export type NewArtifactLinkIdentifier = Identifier<"NewArtifactLinkIdentifier">;
 
-export const LinkAdditionPresenter = {
-    withoutSelection: (): LinkAdditionPresenter => ({
-        artifact: null,
-        is_add_button_disabled: true,
-    }),
-
-    withArtifactSelected: (artifact: LinkableArtifact): LinkAdditionPresenter => ({
-        artifact,
-        is_add_button_disabled: false,
+export const NewArtifactLinkIdentifier = {
+    fromLinkableArtifact: (artifact: LinkableArtifact): NewArtifactLinkIdentifier => ({
+        _type: "NewArtifactLinkIdentifier",
+        id: artifact.id,
     }),
 };

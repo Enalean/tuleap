@@ -17,21 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import type { AddNewLink } from "../../src/domain/fields/link-field-v2/AddNewLink";
 
-export type LinkAdditionPresenter = {
-    readonly artifact: LinkableArtifact | null;
-    readonly is_add_button_disabled: boolean;
-};
+export interface AddNewLinkStub extends AddNewLink {
+    getCallCount(): number;
+}
 
-export const LinkAdditionPresenter = {
-    withoutSelection: (): LinkAdditionPresenter => ({
-        artifact: null,
-        is_add_button_disabled: true,
-    }),
-
-    withArtifactSelected: (artifact: LinkableArtifact): LinkAdditionPresenter => ({
-        artifact,
-        is_add_button_disabled: false,
-    }),
+export const AddNewLinkStub = {
+    withCount(): AddNewLinkStub {
+        let call_count = 0;
+        return {
+            addNewLink(): void {
+                call_count++;
+            },
+            getCallCount: () => call_count,
+        };
+    },
 };
