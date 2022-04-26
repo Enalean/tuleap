@@ -34,10 +34,19 @@ describe(`MatchingArtifactsGroup`, () => {
 
         expect(group.items).toHaveLength(1);
         expect(group.items[0].value).toBe(artifact);
+        expect(group.is_loading).toBe(false);
     });
 
     it(`builds an empty group so that Link-selector will show an empty state message`, () => {
         const group = MatchingArtifactsGroup.buildEmpty();
         expect(group.items).toHaveLength(0);
+        expect(group.is_loading).toBe(false);
+    });
+
+    it(`builds an empty loading group so that Link-selector will show a spinner`, () => {
+        const group = MatchingArtifactsGroup.buildLoadingState();
+        expect(group.items).toHaveLength(0);
+        expect(group.is_loading).toBe(true);
+        expect(group.empty_message).toBe("");
     });
 });

@@ -26,10 +26,18 @@ export const MatchingArtifactsGroup = {
         label: getMatchingArtifactLabel(),
         empty_message: getNoResultFoundEmptyState(),
         items: [{ value: artifact }],
+        is_loading: false,
     }),
     buildEmpty: (): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
         empty_message: getNoResultFoundEmptyState(),
         items: [],
+        is_loading: false,
+    }),
+    buildLoadingState: (): GroupOfItems => ({
+        label: getMatchingArtifactLabel(),
+        empty_message: "",
+        items: [],
+        is_loading: true,
     }),
 };

@@ -200,6 +200,7 @@ describe("SelectionManager", () => {
                     label: "",
                     empty_message: "irrelevant",
                     items: [{ value: { id: 0 } }, { value: item_1.value }],
+                    is_loading: false,
                 },
             ];
             items_map_manager.refreshItemsMap(groups);

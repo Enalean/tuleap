@@ -121,6 +121,10 @@
     text-transform: uppercase;
 }
 
+.link-selector-loading-group-spinner {
+    margin: 0 0 0 var(--tlp-small-spacing);
+}
+
 .link-selector-empty-dropdown-state {
     padding: var(--tlp-form-element-padding-horizontal);
     color: var(--tlp-dimmed-color);

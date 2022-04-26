@@ -20,7 +20,9 @@
 import type { GroupCollection } from "../../src";
 
 export const GroupCollectionBuilder = {
-    withEmptyGroup: (): GroupCollection => [{ label: "", empty_message: "irrelevant", items: [] }],
+    withEmptyGroup: (): GroupCollection => [
+        { label: "", empty_message: "irrelevant", items: [], is_loading: false },
+    ],
 
     withSingleGroup: (): GroupCollection => [
         {
@@ -32,6 +34,7 @@ export const GroupCollectionBuilder = {
                 { value: { id: 2 } },
                 { value: { id: 3 } },
             ],
+            is_loading: false,
         },
     ],
 
@@ -40,11 +43,13 @@ export const GroupCollectionBuilder = {
             label: "Group 1",
             empty_message: "irrelevant",
             items: [{ value: { id: 0 } }, { value: { id: 1 } }, { value: { id: 2 } }],
+            is_loading: false,
         },
         {
             label: "Group 2",
             empty_message: "irrelevant",
             items: [{ value: { id: 3 } }, { value: { id: 4 } }, { value: { id: 5 } }],
+            is_loading: false,
         },
     ],
 };

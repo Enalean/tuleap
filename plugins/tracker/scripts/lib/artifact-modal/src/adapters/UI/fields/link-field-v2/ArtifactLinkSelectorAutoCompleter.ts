@@ -42,7 +42,10 @@ export const ArtifactLinkSelectorAutoCompleter = (
             return;
         }
 
+        link_selector.setDropdownContent([MatchingArtifactsGroup.buildLoadingState()]);
+
         const result = await retrieve_matching_artifact.getMatchingArtifact(linkable_number);
+
         link_selector.setDropdownContent([
             result.match(
                 MatchingArtifactsGroup.fromMatchingArtifact,
