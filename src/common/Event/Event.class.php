@@ -466,25 +466,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 
     /**
-     * Event raised when admin define project to authorize SVN tokens
-     *
-     * Paramters:
-     *     'group_id' => The id of the project
-     *
-     * Expected results:
-     *     Void
-     */
-    public const SVN_AUTHORIZE_TOKENS = 'svn_authorize_tokens';
-
-    /**
-     * Event raised when admin revoke project authorization for SVN tokens
-     *
-     * Expected results:
-     *     Void
-     */
-    public const SVN_REVOKE_TOKENS = 'svn_revoke_tokens';
-
-    /**
      * Event raised when an admin changes the SVN authentication cache parameters
      */
     public const SVN_AUTH_CACHE_CHANGE = 'svn_auth_cache_change';

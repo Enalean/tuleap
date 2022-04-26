@@ -61,8 +61,6 @@ abstract class SystemEvent
     public const TYPE_COMPUTE_MD5SUM                           = "COMPUTE_MD5SUM";
     public const TYPE_MASSMAIL                                 = "MASSMAIL";
     public const TYPE_SVN_UPDATE_HOOKS                         = "SVN_UPDATE_HOOKS";
-    public const TYPE_SVN_AUTHORIZE_TOKENS                     = "SVN_AUTHORIZE_TOKENS";
-    public const TYPE_SVN_REVOKE_TOKENS                        = "SVN_REVOKE_TOKENS";
     public const TYPE_SVN_AUTH_CACHE_CHANGE                    = "SVN_AUTH_CACHE_CHANGE";
     public const TYPE_MOVE_FRS_FILE                            = "MOVE_FRS_FILE";
     public const TYPE_UPDATE_ALIASES                           = "UPDATE_ALIASES";

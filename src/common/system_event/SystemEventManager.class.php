@@ -57,8 +57,6 @@ class SystemEventManager
             Event::COMPUTE_MD5SUM,
             Event::MASSMAIL,
             Event::SVN_UPDATE_HOOKS,
-            Event::SVN_AUTHORIZE_TOKENS,
-            Event::SVN_REVOKE_TOKENS,
             Event::SVN_AUTH_CACHE_CHANGE,
             Event::UPDATE_ALIASES,
             'approve_pending_project',
@@ -367,22 +365,6 @@ class SystemEventManager
                 );
                 break;
 
-            case Event::SVN_AUTHORIZE_TOKENS:
-                $this->createEvent(
-                    SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS,
-                    $params['group_id'],
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-
-            case Event::SVN_REVOKE_TOKENS:
-                $this->createEvent(
-                    SystemEvent::TYPE_SVN_REVOKE_TOKENS,
-                    $params['project_ids'],
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-
             case Event::SVN_AUTH_CACHE_CHANGE:
                 $this->createEvent(
                     SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE,
@@ -543,8 +525,6 @@ class SystemEventManager
                 $klass_params = [new UpdateProjectAccessFilesScheduler($this)];
                 break;
             case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
-            case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
-            case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
             case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
                 $klass        = $this->getClassForType($row['type']);
                 $klass_params = [Backend::instance(Backend::SVN)];
