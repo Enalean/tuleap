@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean 2022 -  Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,38 +19,20 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Docman\REST\v1\Search;
-
-use Tuleap\Docman\REST\v1\SearchResource;
 
 /**
  * @psalm-immutable
  */
-final class PostSearchRepresentation
+final class SearchSortRepresentation
 {
     /**
-     * @var string search in all string properties {@from body} {@required false}
+     * @var string {@from body} {@required true}
      */
-    public string $global_search = '';
-    /**
-     * @var array {@type \Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation} {@from body} {@required false}
-     */
-    public array $properties = [];
+    public string $name;
 
     /**
-     * @var array {@type \Tuleap\Docman\REST\v1\Search\SearchSortRepresentation} {@from body} {@required false}
+     * @var string {@from body} {@required true} {@from path}{@choice asc,desc}
      */
-    public array $sort = [];
-
-    /**
-     * @var int limit {@from body} {@required false} {@min 0} {@max 50}
-     */
-    public int $limit = SearchResource::MAX_LIMIT;
-
-    /**
-     * @var int offset {@from body} {@required false} {@min 0}
-     */
-    public int $offset = 0;
+    public string $order;
 }

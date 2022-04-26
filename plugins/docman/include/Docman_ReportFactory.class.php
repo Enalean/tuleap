@@ -207,12 +207,12 @@ class Docman_ReportFactory
      */
     public function initColumns(Docman_Report $report, Codendi_Request $request): void
     {
-        $settingsBo      =  Docman_SettingsBo::instance($this->groupId);
+        $settingsBo      = Docman_SettingsBo::instance($this->groupId);
         $retriever       = new AlwaysThereColumnRetriever($settingsBo);
         $columnsOnReport = $retriever->getColumns();
 
         $colFactory = new Docman_ReportColumnFactory($this->groupId);
-        $augmenter  = new ColumnReportAugmenter($colFactory);
+        $augmenter  = new ColumnReportAugmenter($colFactory, new \Tuleap\Docman\Search\SearchSortPropertyMapper());
         $augmenter->addColumnsFromRequest($request, $columnsOnReport, $report);
     }
 

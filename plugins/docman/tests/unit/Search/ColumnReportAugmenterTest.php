@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Search;
 
 use Docman_Metadata;
 use Docman_ReportColumnTitle;
+use Tuleap\Docman\REST\v1\Search\SearchSortRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ColumnReportAugmenterTest extends TestCase
@@ -39,7 +40,7 @@ final class ColumnReportAugmenterTest extends TestCase
     protected function setUp(): void
     {
         $this->column_factory = $this->createMock(\Docman_ReportColumnFactory::class);
-        $this->builder        = new ColumnReportAugmenter($this->column_factory);
+        $this->builder        = new ColumnReportAugmenter($this->column_factory, new SearchSortPropertyMapper());
 
         $this->request = new \Codendi_Request(
             [
@@ -116,7 +117,7 @@ final class ColumnReportAugmenterTest extends TestCase
         $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromArray(["title"], $report);
+        $this->builder->addColumnsFromArray(["title"], $report, []);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertNull($report->columns[0]->getSort());
@@ -130,8 +131,13 @@ final class ColumnReportAugmenterTest extends TestCase
         $column_title->setSort('sort_' . $metadata->getLabel());
         $this->column_factory->method("getColumnFromLabel")->with("title")->willReturn($column_title);
 
+        $sort        = new SearchSortRepresentation();
+        $sort->name  = "GR";
+        $sort->order = "asc";
+        $sort_list   = [$sort];
+
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromArray(["title"], $report);
+        $this->builder->addColumnsFromArray(["title"], $report, $sort_list);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame($column_title->getSort(), $report->columns[0]->getSort());
@@ -145,7 +151,7 @@ final class ColumnReportAugmenterTest extends TestCase
         $this->column_factory->method("getColumnFromLabel")->with("update_date")->willReturn($column_title);
 
         $report = new \Docman_Report();
-        $this->builder->addColumnsFromArray(["update_date"], $report);
+        $this->builder->addColumnsFromArray(["update_date"], $report, []);
 
         self::assertSame($metadata->getLabel(), $report->columns[0]->md->getLabel());
         self::assertSame(0, $report->columns[0]->getSort());
