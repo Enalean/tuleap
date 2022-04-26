@@ -64,6 +64,7 @@ describe("DropDownContentRenderer", () => {
                     label: "Group 1",
                     empty_message: empty_state_text,
                     items: [],
+                    is_loading: false,
                 },
             ];
 
@@ -76,6 +77,25 @@ describe("DropDownContentRenderer", () => {
                 throw new Error("The empty state has not been found in the dropdown");
             }
             expect(empty_state.textContent?.trim()).toBe(empty_state_text);
+        });
+
+        it("renders a spinner next to the group title when it is loading", () => {
+            const empty_state_text = "I am loading, wait a second!";
+            const groups: GroupCollection = [
+                {
+                    label: "A group still loading",
+                    empty_message: empty_state_text,
+                    items: [],
+                    is_loading: true,
+                },
+            ];
+
+            render(groups);
+
+            const spinner = dropdown_list.querySelector(
+                "[data-test=link-selector-loading-group-spinner]"
+            );
+            expect(spinner).toBeDefined();
         });
     });
 

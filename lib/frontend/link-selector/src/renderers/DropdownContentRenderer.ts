@@ -22,6 +22,7 @@ import type { HTMLTemplateResult } from "lit/html.js";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { GroupCollection } from "../items/GroupCollection";
 import { getGroupId } from "../helpers/group-id-helper";
+import type { GroupOfItems } from "../items/GroupCollection";
 
 export const getRenderedListItem = (
     option_id: string,
@@ -69,6 +70,24 @@ const createEmptyDropdownState = (dropdown_message: string): HTMLTemplateResult 
         </li>
     `;
 
+const getGroupLabel = (group: GroupOfItems): HTMLTemplateResult => {
+    if (group.is_loading) {
+        return html`
+            <strong class="link-selector-group-label">
+                ${group.label}
+                <i
+                    class="fas fa-spin fa-circle-notch link-selector-loading-group-spinner"
+                    data-test="link-selector-loading-group-spinner"
+                ></i>
+            </strong>
+        `;
+    }
+
+    return html`
+        <strong class="link-selector-group-label">${group.label}</strong>
+    `;
+};
+
 export class DropdownContentRenderer {
     constructor(
         private readonly dropdown_list_element: HTMLElement,
@@ -89,7 +108,7 @@ export class DropdownContentRenderer {
 
             return html`
                 <li class="link-selector-item-group">
-                    <strong class="link-selector-group-label">${group.label}</strong>
+                    ${getGroupLabel(group)}
                     <ul
                         role="group"
                         aria-label="${group.label}"

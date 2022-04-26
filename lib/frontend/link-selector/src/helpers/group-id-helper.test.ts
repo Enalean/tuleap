@@ -26,6 +26,7 @@ describe(`group-id-helper`, () => {
             label: "Matching Items",
             empty_message: "irrelevant",
             items: [],
+            is_loading: false,
         };
         expect(getGroupId(group)).toBe("matchingitems");
     });
