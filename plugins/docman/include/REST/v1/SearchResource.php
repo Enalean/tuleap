@@ -50,6 +50,7 @@ use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
+use Tuleap\Docman\Search\SearchSortPropertyMapper;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use UGroupManager;
@@ -74,11 +75,12 @@ final class SearchResource extends AuthenticatedResource
      * }
      * </pre>
      * </li>
-     * <li><p>All folders matching "lorem\*":</p>
+     * <li><p>All folders matching "lorem\*" sorted by `title` ascending:</p>
      * <pre>
      * {<br>
      *  &nbsp; "global_search": "lorem\*",<br>
      *  &nbsp; "properties": [ {"name": "type", "value": "folder"} ]<br>
+     *  &nbsp; "sort": [ {"name": "ttle", "order": "asc"} ]<br>
      * }
      * </pre>
      * </li>
@@ -185,6 +187,13 @@ final class SearchResource extends AuthenticatedResource
      *
      * <hr>
      *
+     * <p>`sort` is an array of:</p>
+     * <ul>
+     * <li>`{ "name": "field_2", "order": "asc" }` accepted value for `order` are `asc` and `desc`</li>
+     * </ul>
+     *
+     * <hr>
+     *
      * <p>Search date format:</p>
      * <ul>
      * <li>`operator`: `<` | `>` | `=`</li>
@@ -237,7 +246,7 @@ final class SearchResource extends AuthenticatedResource
             new Docman_FilterFactory($project_id),
             new ItemStatusMapper($docman_settings),
             new AlwaysThereColumnRetriever($docman_settings),
-            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id)),
+            new ColumnReportAugmenter(new Docman_ReportColumnFactory($project_id), new SearchSortPropertyMapper()),
             $user_manager,
         );
         $status_mapper         = new ItemStatusMapper($docman_settings);

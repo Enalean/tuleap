@@ -75,7 +75,7 @@ class SearchReportBuilder
 
         $deduplicated_column_names = array_flip(array_flip([...$always_there_columns_names, ...$additional_columns_names]));
 
-        $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report);
+        $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report, $search->sort);
 
         return $report;
     }
