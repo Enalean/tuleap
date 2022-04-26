@@ -95,6 +95,26 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    public function testAllServicesAreAvailableButExtraIsNotActivated(): void
+    {
+        $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);
+        $this->event->shouldReceive('getAvailableServices')->andReturn(
+            [
+                \trackerPlugin::SERVICE_SHORTNAME       => true,
+                \GitPlugin::SERVICE_SHORTNAME           => true,
+                \AgileDashboardPlugin::PLUGIN_SHORTNAME => true,
+            ]
+        );
+
+        $this->plugin_factory
+            ->method('getPluginByName')
+            ->willReturn(false);
+
+        $this->assertFalse(
+            $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
+        );
+    }
+
     public function testAllServicesAndExtraPluginsAreAvailable(): void
     {
         $this->event_manager->shouldReceive('processEvent')->withArgs([$this->event]);

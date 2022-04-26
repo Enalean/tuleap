@@ -290,7 +290,9 @@ class PullRequestsResource extends AuthenticatedResource
             new GitPullRequestReferenceNamespaceAvailabilityChecker()
         );
 
-        $this->git_plugin = PluginFactory::instance()->getPluginByName('git');
+        $git_plugin = PluginFactory::instance()->getPluginByName('git');
+        assert($git_plugin instanceof \GitPlugin);
+        $this->git_plugin = $git_plugin;
         $url_manager      = new Git_GitRepositoryUrlManager($this->git_plugin);
 
         $this->status_retriever              = new CommitStatusRetriever(new CommitStatusDAO());
