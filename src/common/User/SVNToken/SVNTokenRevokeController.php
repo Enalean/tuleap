@@ -60,11 +60,8 @@ final class SVNTokenRevokeController implements DispatchableWithRequest
 
         $this->csrf_token->check(DisplayKeysTokensController::URL);
 
-        if ($this->token_handler->deleteSVNTokensForUser($user, $request->get('svn-tokens-selected'))) {
-            $layout->addFeedback(\Feedback::INFO, _('SVN tokens have been successfully deleted'));
-        } else {
-            $layout->addFeedback(\Feedback::ERROR, _('An error occurred during the SVN token deletion'));
-        }
+        $this->token_handler->deleteSVNTokensForUser($user, $request->get('svn-tokens-selected'));
+        $layout->addFeedback(\Feedback::INFO, _('SVN tokens have been successfully deleted'));
 
         $layout->redirect(DisplayKeysTokensController::URL);
     }

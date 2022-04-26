@@ -67,12 +67,8 @@ final class SVNTokenCreateController implements DispatchableWithRequest
 
         $this->csrf_token->check(DisplayKeysTokensController::URL);
 
-        $token = $this->token_handler->generateSVNTokenForUser($user, $request->get('svn-token-description'));
-        if ($token === null) {
-            $layout->addFeedback(\Feedback::ERROR, _('An error occurred during the SVN token generation.'));
-        } else {
-            $_SESSION['last_svn_token'] = SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
-        }
+        $token                      = $this->token_handler->generateSVNTokenForUser($user, $request->get('svn-token-description'));
+        $_SESSION['last_svn_token'] = SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
 
         $layout->redirect(DisplayKeysTokensController::URL);
     }
