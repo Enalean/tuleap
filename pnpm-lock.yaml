@@ -20,7 +20,7 @@ specifiers:
   clean-webpack-plugin: ^4.0.0
   copy-webpack-plugin: ^10.2.0
   css-loader: ^6.2.0
-  cypress: ^9.4.1
+  cypress: ^9.6.0
   esbuild-loader: ^2.18.0
   eslint: ^8.12.0
   eslint-config-prettier: ^8.5.0
@@ -103,7 +103,7 @@ devDependencies:
   clean-webpack-plugin: 4.0.0_webpack@5.64.4
   copy-webpack-plugin: 10.2.0_webpack@5.64.4
   css-loader: 6.2.0_webpack@5.64.4
-  cypress: 9.4.1
+  cypress: 9.6.0
   esbuild-loader: 2.18.0_webpack@5.64.4
   eslint: 8.12.0
   eslint-config-prettier: 8.5.0_eslint@8.12.0
@@ -4144,8 +4144,8 @@ packages:
     resolution: {integrity: sha512-RSU6Hyeg14am3Ah4VZEmeX8H7kLwEEirXe6aU2IPfKNvhXwTflK5HQRDNI0ypQXoqmm+QPyG2IaPuQE5zMwSIQ==}
     dev: true
 
-  /cypress/9.4.1:
-    resolution: {integrity: sha512-+JgMG9uT+QFx97JU9kOHE3jO3+0UdkQ9H1oCBiC7A74qme7Jkdy2sYDBCPjjGczutnWnGUTMRlwiNMP/Uq6LrQ==}
+  /cypress/9.6.0:
+    resolution: {integrity: sha512-nNwt9eBQmSENamwa8LxvggXksfyzpyYaQ7lNBLgks3XZ6dPE/6BCQFBzeAyAPt/bNXfH3tKPkAyhiAZPYkWoEg==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     requiresBuild: true
@@ -4182,7 +4182,7 @@ packages:
       listr2: 3.10.0_enquirer@2.3.6
       lodash: 4.17.21
       log-symbols: 4.0.0
-      minimist: 1.2.5
+      minimist: 1.2.6
       ospath: 1.2.2
       pretty-bytes: 5.6.0
       proxy-from-env: 1.0.0
