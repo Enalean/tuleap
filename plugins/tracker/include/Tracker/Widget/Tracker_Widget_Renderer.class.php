@@ -58,12 +58,8 @@ abstract class Tracker_Widget_Renderer extends Widget
         $store_in_session = false;
         $arrf             = Tracker_Report_RendererFactory::instance();
         $renderer         = $arrf->getReportRendererById($this->renderer_id, null, $store_in_session);
-        if ($renderer) {
-            $tracker = $renderer->report->getTracker();
-            $project = $tracker->getProject();
-            if ($tracker->isActive() && $project->isActive()) {
-                return $renderer;
-            }
+        if ($renderer && $renderer->report->getTracker()->userCanView()) {
+            return $renderer;
         }
         return null;
     }
