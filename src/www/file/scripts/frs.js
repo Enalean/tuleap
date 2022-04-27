@@ -275,7 +275,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         //we add the file to the used_ftp_files list
         //Element.hide(select);
         select.remove();
-        document.getElementById("ftp_file_" + id)?.remove();
+        document.getElementById("file_" + id)?.remove();
         Element.show("ftp_file_" + id);
         $("ftp_file_" + id).value = select.options[select.selectedIndex].value;
         used_ftp_files.push(select.options[select.selectedIndex].value);
