@@ -36,6 +36,9 @@ final class ListOfSearchCriterionPresenterBuilder
         $selectable_criteria = $this->getAllCriteria($metadata_factory, $status_mapper, $project);
 
         $selected_criteria_names = $this->criteria_dao->searchByProjectId((int) $project->getID());
+        if (! $selected_criteria_names) {
+            return $selectable_criteria;
+        }
 
         return array_values(
             array_filter(
