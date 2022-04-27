@@ -121,6 +121,7 @@
 .document-search-table-container-with-pagination {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     gap: var(--tlp-medium-spacing);
     min-width: 0;
     min-height: 0;
