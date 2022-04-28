@@ -242,13 +242,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         return UserManager::instance()->getCurrentUser();
     }
 
-    public function addUserAutocompleteOn($element_id, $multiple = false)
-    {
-        $jsbool = $multiple ? "true" : "false";
-        $js     = "new UserAutoCompleter('" . $element_id . "', '" . util_get_dir_image_theme() . "', " . $jsbool . ");";
-        $this->includeFooterJavascriptSnippet($js);
-    }
-
     public function includeCalendarScripts()
     {
         $this->includeJavascriptSnippet("var useLanguage = '" . Codendi_HTMLPurifier::instance()->purify(substr($this->getUser()->getLocale(), 0, 2), CODENDI_PURIFIER_JS_QUOTE) . "';");
@@ -256,7 +249,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         return $this;
     }
 
-    public function _getFeedback()
+    public function _getFeedback(): string //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $feedback = '';
         if (trim($GLOBALS['feedback']) !== '') {
@@ -282,15 +275,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo '</div>';
     }
 
-    public function getDropdownPanel($id, $content)
-    {
-        $html  = '';
-        $html .= '<table id="' . $id . '" class="dropdown_panel"><tr><td>';
-        $html .= $content;
-        $html .= '</td></tr></table>';
-        return $html;
-    }
-
     /**
      * Box Top, equivalent to html_box1_top()
      *
@@ -310,25 +294,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         } else {
                 return $return;
         }
-    }
-
-    /**
-     * Box Middle, equivalent to html_box1_middle()
-     *
-     * @see Widget_Static
-     * @deprecated You should consider using Widget_Static instead
-     */
-    public function box1_middle($title, $bgcolor = '', $cols = 2) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-            return '
-                                </TD>
-                        </TR>
-
-                        <TR class="boxtitle">
-                                <TD colspan="' . $cols . '"><SPAN class=titlebar>' . $title . '</SPAN></TD>
-                        </TR>
-                        <TR class="boxitem">
-                                <TD colspan="' . $cols . '">';
     }
 
     /**
@@ -742,15 +707,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo "\n</body></html>";
     }
 
-    /**
-     * @return string
-     */
-    protected function getClassnamesForBodyTag($params = [])
-    {
-        $body_class = isset($params['body_class']) ? $params['body_class'] : [];
-
-        return implode(' ', $body_class);
-    }
 
     /**
      * This method generates header for pages embbeded in overlay like LiteWindow
