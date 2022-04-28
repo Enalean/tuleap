@@ -255,6 +255,7 @@ const webpack_config_for_burning_parrot_code = {
             "./scripts/project/admin/header-background/admin-index.ts",
         "mailing-lists-administration": "./scripts/project/admin/mailing-list/administration.ts",
         "mailing-lists-homepage": "./scripts/project/admin/mailing-list/homepage.ts",
+        "collect-frontend-errors": "./scripts/tuleap/collect-frontend-errors.ts",
     },
     context,
     output,
