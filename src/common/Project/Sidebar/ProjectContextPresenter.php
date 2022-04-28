@@ -26,6 +26,7 @@ use Codendi_HTMLPurifier;
 use Project;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagPresenter;
+use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\REST\v1\ProjectSidebarDataRepresentation;
 
 /**
@@ -47,6 +48,7 @@ final class ProjectContextPresenter
      */
     private function __construct(
         Project $project,
+        public ProjectPrivacyPresenter $privacy,
         array $project_flags,
         ?BannerDisplay $banner,
         string $purified_banner,
@@ -74,6 +76,7 @@ final class ProjectContextPresenter
         }
         return new self(
             $project,
+            ProjectPrivacyPresenter::fromProject($project),
             $project_flags,
             $banner,
             $purified_banner,

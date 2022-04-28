@@ -22,6 +22,7 @@ import { init as initNavbarDropdown } from "../../navbar-dropdowns/navbar-dropdo
 import { initSidebarPosition } from "../../tuleap/sidebar-position";
 import { initMainPosition } from "../../tuleap/main-position";
 import { initHeaderPosition } from "../../tuleap/header-position";
+import { init as initProjectPrivacy } from "./project-privacy";
 import { init as initNavbarPinned } from "../../tuleap/navbar-pinned";
 import { init as initSidebar } from "./sidebar";
 import { initHelpDropdown } from "./help-dropdown";
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initNavbarDropdown(createPopover);
     initSidebar();
     initHelpDropdown();
+    initProjectPrivacy();
     initInviteBuddies();
 });
 
