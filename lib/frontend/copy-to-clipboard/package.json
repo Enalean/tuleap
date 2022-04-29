@@ -1,0 +1,25 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/copy-to-clipboard",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/copy-to-clipboard.es.js",
+  "main": "dist/copy-to-clipboard.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/copy-to-clipboard.es.js",
+      "require": "./dist/copy-to-clipboard.umd.js"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

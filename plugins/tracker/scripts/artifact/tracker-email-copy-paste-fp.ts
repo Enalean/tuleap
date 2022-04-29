@@ -20,7 +20,7 @@
 
 import jQuery from "jquery";
 import { setupEmailCopyModalInteractions } from "./tracker-email-copy-paste";
-import "../../../../src/scripts/tuleap/custom-elements/copy-to-clipboard";
+import "@tuleap/copy-to-clipboard";
 
 document.addEventListener("DOMContentLoaded", () => {
     setupEmailCopyModalInteractions(document, (target: HTMLElement) =>

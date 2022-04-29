@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,16 +14,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
-import { setupEmailCopyModalInteractions } from "./tracker-email-copy-paste";
-import "@tuleap/copy-to-clipboard";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import dts from "vite-dts";
 
-document.addEventListener("DOMContentLoaded", () => {
-    setupEmailCopyModalInteractions(document, (target: HTMLElement) =>
-        createModal(target).toggle()
-    );
+export default vite.defineLibConfig({
+    plugins: [dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "CopyToClipboard",
+        },
+    },
 });

@@ -8,6 +8,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
     "@joeattardi/emoji-button": "^4.6.2",
+    "@tuleap/copy-to-clipboard": "link:../lib/frontend/copy-to-clipboard",
     "@tuleap/date-helper": "file:../lib/frontend/date-helper",
     "@tuleap/filter-inline-table": "file:../lib/frontend/filter-table",
     "@tuleap/gettext": "file:../lib/frontend/gettext",

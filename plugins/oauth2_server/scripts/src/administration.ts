@@ -28,7 +28,7 @@ import {
     buildRegenerationReplaceBallback,
     hiddenInputReplaceCallback,
 } from "./replacers";
-import "@tuleap/core/scripts/tuleap/custom-elements/copy-to-clipboard";
+import "@tuleap/copy-to-clipboard";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
 

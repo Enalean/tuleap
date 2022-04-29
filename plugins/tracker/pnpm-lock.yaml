@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
+  '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
   '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
   '@tuleap/gettext': file:../../lib/frontend/gettext
   '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
@@ -46,6 +47,7 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
+  '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
