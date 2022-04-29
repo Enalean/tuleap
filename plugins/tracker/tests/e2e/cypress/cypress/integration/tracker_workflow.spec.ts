@@ -121,5 +121,194 @@ describe(`Tracker Workflow`, () => {
                 cy.get("[data-test=confirm-button]").click();
             });
         });
+
+        context("Workflow switch mode", () => {
+            it(`User can switch mode to use simple mode`, function () {
+                cy.visitProjectService("workflow", "Trackers");
+                cy.get("[data-test=tracker-link-workflow_simple_mode]").click();
+                cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+                cy.get("[data-test=workflow]").click();
+                cy.get("[data-test=transitions]").click();
+
+                cy.log("Warns user that they can lose part of configuration");
+
+                cy.get("[data-test=switch-mode]").then(($switch_mode) => {
+                    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+                    if (($switch_mode[0] as HTMLInputElement).checked) {
+                        cy.get("[data-test=switch-button-mode]").click();
+                        cy.get("[data-test=button-switch-to-simple-configuration]").click();
+                    }
+                });
+
+                cy.log("Pre condition for open status are correct");
+                cy.get("[data-test=configure-state").first().click();
+                cy.get("[data-test=authorized-ugroups-select]")
+                    .find("option:selected")
+                    .should("contain", "Project members");
+
+                cy.get("[data-test=not-empty-field-select]")
+                    .find("option:selected")
+                    .should("contain", "Summary");
+                cy.get("[data-test=post-action-type-select]")
+                    .first()
+                    .find("option:selected")
+                    .should("contain", "Change the value of a field");
+
+                cy.get("[data-test=field]")
+                    .first()
+                    .find("option:selected")
+                    .should("contain", "Close date");
+
+                cy.get("[data-test=field]")
+                    .last()
+                    .find("option:selected")
+                    .should("contain", "Effort");
+                cy.get("[data-test=cancel-button]").click();
+
+                cy.log("Pre condition for closed status are correct");
+                cy.get("[data-test=configure-state").last().click();
+                cy.get("[data-test=authorized-ugroups-select]")
+                    .find("option:selected")
+                    .should("contain", "Project members");
+
+                cy.get("[data-test=not-empty-field-select]")
+                    .find("option:selected")
+                    .should("contain", "Original Submission");
+                cy.get("[data-test=post-action-type-select]")
+                    .first()
+                    .find("option:selected")
+                    .should("contain", "Change the value of a field");
+
+                cy.get("[data-test=field]")
+                    .first()
+                    .find("option:selected")
+                    .should("contain", "Close date");
+
+                cy.get("[data-test=post-action-type-select]")
+                    .last()
+                    .find("option:selected")
+                    .contains("Launch a CI job");
+            });
+        });
+    });
+
+    context("Project member", () => {
+        before(function () {
+            cy.clearSessionCookie();
+            cy.projectMemberLogin();
+        });
+
+        it(`Workflow hidden fieldset`, function () {
+            cy.log("Everything is visible at artifact creation");
+            cy.visitProjectService("workflow", "Trackers");
+            cy.get('[data-test="tracker-link-bugs_hidden"]').click();
+            cy.get("[data-test=new-artifact]").click();
+            cy.get("[data-test=summary]").type("My artifact");
+
+            getFieldsetWithLabel("Access Information (Fieldset should be hidden)").should(
+                "be.visible"
+            );
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+
+            cy.log("`Access Information` fieldset is hidden at update");
+            selectLabelInListPickerDropdown("On going");
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+
+            getFieldsetWithLabel("Access Information (Fieldset should be hidden)").should(
+                "not.be.visible"
+            );
+        });
+
+        it(`Workflow frozen fields`, function () {
+            cy.log("Every field can be updated at artifact creation");
+            cy.visitProjectService("workflow", "Trackers");
+            cy.get("[data-test=tracker-link-frozen_fields]").click();
+            cy.get("[data-test=new-artifact]").click();
+            cy.get("[data-test=title]").type("My artifact");
+            cy.get("[data-test=points]").type("10");
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+
+            cy.log("`fields points` and `title` can no longer be updated");
+            cy.get("[data-test=edit-field-title]").should("not.exist");
+            cy.get("[data-test=edit-field-points]").should("not.exist");
+            cy.get("[data-test=edit-field-status]").should("exist");
+        });
+
+        it(`Workflow required comment`, function () {
+            cy.log("Comment is not required at creation");
+            cy.visitProjectService("workflow", "Trackers");
+            cy.get("[data-test=tracker-link-required]").click();
+            cy.get("[data-test=new-artifact]").click();
+            cy.get("[data-test=title]").type("My artifact");
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+
+            cy.log("Comments are required at update");
+            cy.get('[data-test="edit-field-title"]').click();
+            cy.get("[data-test=title]").clear().type("My artifact updated");
+            selectLabelInListPickerDropdown("Done");
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=feedback]").contains("Comment must not be empty");
+
+            cy.get('[data-test="artifact_followup_comment"]').type("My comment");
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=feedback]").contains("Successfully Updated");
+        });
+
+        it(`Workflow required fields`, function () {
+            cy.log("Fields are not required a submission");
+            cy.visitProjectService("workflow", "Trackers");
+            cy.get("[data-test=tracker-link-required_fields]").click();
+            cy.get("[data-test=new-artifact]").click();
+            cy.get("[data-test=title]").type("My artifact");
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+
+            cy.log("Field are required at update");
+            cy.get('[data-test="edit-field-title"]').click();
+            cy.get("[data-test=title]").clear().type("My artifact updated");
+            selectLabelInListPickerDropdown("Done");
+
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=feedback]").contains("Invalid condition: the field");
+
+            cy.get("[data-test=required_by_workflow]").type("required");
+            cy.get("[data-test=artifact-submit-options]").click();
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=feedback]").contains("Successfully Updated");
+        });
     });
 });
+
+function selectLabelInListPickerDropdown(label: string): void {
+    cy.get("[data-test=edit-field-status]").click();
+    cy.get("[data-test=list-picker-selection]").first().click();
+    cy.root().within(() => {
+        cy.get("[data-test-list-picker-dropdown-open]").within(() => {
+            cy.get("[data-test=list-picker-item]").contains(label).click();
+        });
+    });
+}
+
+function getFieldsetWithLabel(label: string): Cypress.Chainable<JQuery<HTMLElement>> {
+    cy.get("[data-test=fieldset-label]").contains(label).parent();
+    return cy
+        .get("[data-test=fieldset-label]")
+        .contains(label)
+        .parents("[data-test=fieldset]")
+        .within(() => {
+            return cy.get("[data-test=fieldset-content]");
+        });
+}

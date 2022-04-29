@@ -49,6 +49,7 @@
                 class="tlp-button-warning tlp-modal-action"
                 v-on:click="props.confirm()"
                 v-bind:disabled="props.is_operation_running"
+                data-test="button-switch-to-simple-configuration"
             >
                 <i
                     v-if="props.is_operation_running"

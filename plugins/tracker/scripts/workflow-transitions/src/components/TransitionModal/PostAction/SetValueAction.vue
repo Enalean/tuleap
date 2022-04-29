@@ -29,6 +29,7 @@
                 v-bind:id="field_id_input_id"
                 class="tlp-select"
                 data-test-type="field"
+                data-test="field"
                 v-model="post_action_field"
                 required
                 v-bind:disabled="is_modal_save_running"
