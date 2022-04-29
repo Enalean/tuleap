@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getJSON } from "@tuleap/fetch-result";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import { Fault } from "@tuleap/fault";
 import { ResultAsync } from "neverthrow";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
 import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
-import { getArtifact, getMatchingArtifact } from "../../rest/rest-service";
+import { getArtifact } from "../../rest/rest-service";
 import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
@@ -57,12 +58,9 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
         }).mapErr(ParentRetrievalFault),
 
     getMatchingArtifact: (linkable_number: LinkableNumber): ResultAsync<LinkableArtifact, Fault> =>
-        ResultAsync.fromPromise(getMatchingArtifact(linkable_number.id), (error) => {
-            if (error instanceof Error) {
-                return Fault.fromError(error);
-            }
-            return Fault.fromMessage("Unknown error");
-        }).map(LinkableArtifactProxy.fromAPIArtifact),
+        getJSON<ArtifactWithStatus>(`/api/v1/artifacts/${linkable_number.id}`).map(
+            LinkableArtifactProxy.fromAPIArtifact
+        ),
 
     getAllLinkTypes(artifact_id: CurrentArtifactIdentifier): Promise<LinkType[]> {
         const id = artifact_id.id;
