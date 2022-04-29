@@ -122,10 +122,7 @@ import DropDownButton from "./DropDown/DropDownButton.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalBadge from "./ApprovalTables/ApprovalBadge.vue";
 import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
-import {
-    relativeDatePlacement,
-    relativeDatePreference,
-} from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 

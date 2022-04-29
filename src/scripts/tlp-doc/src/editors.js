@@ -22,7 +22,7 @@ import CodeMirror from "codemirror";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
-import "../../tuleap/custom-elements/relative-date";
+import "@tuleap/tlp-relative-date";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { createListPicker } from "@tuleap/list-picker";
 import { createLinkSelector } from "@tuleap/link-selector";

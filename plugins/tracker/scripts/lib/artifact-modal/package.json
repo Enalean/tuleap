@@ -21,6 +21,7 @@
     "@tuleap/plugin-tracker-rich-text-editor": "file:../rich-text-editor",
     "@tuleap/tlp": "file:../../../../../src/themes/tlp",
     "@tuleap/tlp-fetch": "file:../../../../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-relative-date": "link:../../../../../lib/frontend/tlp-relative-date",
     "@tuleap/tooltip": "file:../../../../../lib/frontend/tooltip",
     "angular-custom-elements": "^2.1.0",
     "angular-gettext": "^2.4.2",

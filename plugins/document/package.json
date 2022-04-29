@@ -5,12 +5,12 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "file:../../src",
     "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
     "@tuleap/keyboard-shortcuts": "file:../../lib/frontend/keyboard-shortcuts",
     "@tuleap/list-picker": "file:../../lib/frontend/list-picker",
     "@tuleap/project-privacy-helper": "file:../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-relative-date": "link:../../lib/frontend/tlp-relative-date",
     "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-breadcrumb-privacy": "file:../../lib/frontend/vue-breadcrumb-privacy",
     "@tuleap/vue2-gettext-composition-helper": "file:../../lib/frontend/vue2-gettext-composition-helpers",

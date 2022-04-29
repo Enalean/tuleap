@@ -2,13 +2,13 @@ lockfileVersion: 5.3
 
 specifiers:
   '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/core': file:../../src
   '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': file:../../lib/frontend/date-helper
   '@tuleap/keyboard-shortcuts': file:../../lib/frontend/keyboard-shortcuts
   '@tuleap/list-picker': file:../../lib/frontend/list-picker
   '@tuleap/project-privacy-helper': file:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue-breadcrumb-privacy': file:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-composition-helper': file:../../lib/frontend/vue2-gettext-composition-helpers
@@ -39,12 +39,12 @@ specifiers:
   vuex-shared-mutations: ^1.0.2
 
 dependencies:
-  '@tuleap/core': link:../../src
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers

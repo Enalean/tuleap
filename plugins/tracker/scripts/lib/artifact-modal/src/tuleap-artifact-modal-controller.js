@@ -36,10 +36,7 @@ import {
     setIsNotUploadingInCKEditor,
 } from "./fields/file-field/is-uploading-in-ckeditor-state";
 import { uploadAllTemporaryFiles } from "./fields/file-field/file-uploader.js";
-import {
-    relativeDatePlacement,
-    relativeDatePreference,
-} from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 import {

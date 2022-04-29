@@ -27,7 +27,6 @@ describe("relative-date element", () => {
         const doc = document.implementation.createHTMLDocument();
         const container = document.createElement("div");
 
-        // eslint-disable-next-line no-unsanitized/property
         container.innerHTML = `<tlp-relative-date
                     date="${date_in_the_past.toISOString()}"
                     absolute-date="${absolute_date}"

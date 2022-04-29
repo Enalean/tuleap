@@ -24,7 +24,7 @@ import french_translations from "../po/fr_FR.po";
 
 import angular_custom_elements_module from "angular-custom-elements";
 
-import "@tuleap/core/scripts/tuleap/custom-elements/relative-date";
+import "@tuleap/tlp-relative-date";
 import { STRUCTURAL_FIELDS } from "@tuleap/plugin-tracker-constants";
 import { setCatalog } from "./gettext-catalog";
 
