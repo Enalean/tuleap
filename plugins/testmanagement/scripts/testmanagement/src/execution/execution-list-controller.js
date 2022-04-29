@@ -22,7 +22,7 @@ import angular from "angular";
 
 import { sortAlphabetically } from "../ksort.js";
 import { setError } from "../feedback-state.js";
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import { KeyboardShortcuts } from "../keyboard-navigation/setup-shortcuts";
 
 export default ExecutionListCtrl;

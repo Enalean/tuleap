@@ -12,6 +12,7 @@ specifiers:
   '@tuleap/plugin-tracker-rest-api-types': workspace:*
   '@tuleap/po-gettext-plugin': workspace:*
   '@tuleap/project-background': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
   '@tuleap/vue3-gettext-init': workspace:*
   '@tuleap/vuex-store-wrapper-jest': workspace:*
@@ -30,6 +31,7 @@ dependencies:
   '@tuleap/plugin-docgen-xlsx': link:../document_generation/scripts/lib/xlsx
   '@tuleap/plugin-testmanagement': link:../testmanagement
   '@tuleap/project-background': link:../../lib/frontend/project-background
+  '@tuleap/tlp-dropdown': link:../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
   docx: 7.3.0

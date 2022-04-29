@@ -19,7 +19,7 @@
 
 import ExportError from "./ExportError.vue";
 
-jest.mock("tlp");
+jest.mock("@tuleap/tlp-dropdown");
 
 const downloadXlsxExportDocument = jest.fn();
 jest.mock("../../helpers/ExportAsSpreadsheet/download-export-document", () => {

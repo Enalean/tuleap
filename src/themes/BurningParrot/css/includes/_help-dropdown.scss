@@ -18,6 +18,7 @@
  */
 
 @use "sass:map";
+@use "@tuleap/tlp-dropdown";
 
 /* stylelint-disable selector-no-qualifying-type */
 body.reduce-help-button .help-dropdown {
@@ -51,8 +52,11 @@ body.reduce-help-button .help-dropdown {
     }
 }
 
-.help-dropdown {
+.help-dropdown.tlp-dropdown {
     position: fixed;
+}
+
+.help-dropdown {
     z-index: 1000;
     right: var(--tlp-medium-spacing);
     bottom: var(--tlp-medium-spacing);
@@ -107,7 +111,7 @@ body.reduce-help-button .help-dropdown {
         }
     }
 
-    .tlp-dropdown-menu {
+    > .tlp-dropdown-menu {
         border-color: var(--tlp-dark-color);
         background: var(--tlp-dark-color);
 
@@ -119,7 +123,7 @@ body.reduce-help-button .help-dropdown {
             border-top-color: var(--tlp-dark-color);
         }
 
-        .help-dropdown-link {
+        > .help-dropdown-link {
             &.tlp-dropdown-menu-item {
                 background: var(--tlp-dark-color);
                 color: var(--tlp-neutral-dark-color);
@@ -135,12 +139,12 @@ body.reduce-help-button .help-dropdown {
             }
         }
 
-        .tlp-dropdown-menu-separator {
+        > .tlp-dropdown-menu-separator {
             opacity: 0.1;
             background: var(--tlp-neutral-dark-color);
         }
 
-        .tlp-dropdown-menu-item-alt {
+        > .tlp-dropdown-menu-item-alt {
             display: flex;
             align-items: baseline;
             padding: 10px 20px;

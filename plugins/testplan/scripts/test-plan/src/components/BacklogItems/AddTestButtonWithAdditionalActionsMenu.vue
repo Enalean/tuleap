@@ -57,7 +57,7 @@ import {
     buildCreateNewTestDefinitionLink,
     buildEditBacklogItemLink,
 } from "../../helpers/BacklogItems/url-builder";
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 
 const props = defineProps<{
     backlog_item: BacklogItem;

@@ -92,7 +92,7 @@ import { useState } from "vuex-composition-helpers";
 import type { State } from "../../../store/type";
 import type { BacklogItem, TestDefinition } from "../../../type";
 import { computed, onMounted, ref } from "vue";
-import { createDropdown } from "tlp";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import {
     buildEditTestDefinitionItemLink,
     buildGoToTestExecutionLink,

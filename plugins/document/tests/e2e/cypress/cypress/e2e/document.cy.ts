@@ -388,6 +388,10 @@ describe("Document new UI", () => {
     });
 
     context("Writers", function () {
+        beforeEach(() => {
+            disableSpecificErrorThrownByCkeditor();
+        });
+
         it("have specifics permissions", function () {
             cy.clearSessionCookie();
             cy.projectAdministratorLogin();

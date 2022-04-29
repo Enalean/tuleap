@@ -8,6 +8,7 @@ specifiers:
   '@tuleap/plugin-agiledashboard-card-fields': workspace:*
   '@tuleap/plugin-agiledashboard-shared': workspace:*
   '@tuleap/plugin-tracker-artifact-modal': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
   angular: ^1.8.2
   angular-gettext: ^2.4.2
@@ -36,6 +37,7 @@ dependencies:
   '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
   '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
   '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
+  '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   angular: 1.8.2
   angular-gettext: 2.4.2

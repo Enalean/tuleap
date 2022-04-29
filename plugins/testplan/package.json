@@ -10,6 +10,7 @@
     "@tuleap/plugin-docgen-xlsx": "workspace:*",
     "@tuleap/plugin-testmanagement": "workspace:*",
     "@tuleap/project-background": "workspace:*",
+    "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "docx": "^7.3.0",

@@ -17,7 +17,9 @@
 </div>
 
 <script>
-    const dropdown = tlp.createDropdown(document.getElementById("dropdown-example"));
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    const dropdown = createDropdown(document.getElementById("dropdown-example"));
 
     dropdown.addEventListener("tlp-dropdown-shown", callback);
     dropdown.addEventListener("tlp-dropdown-hidden", callback);
@@ -69,7 +71,9 @@
 </div>
 
 <script>
-    tlp.createDropdown(
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(
         document.getElementById("dropdown-example-options"),
         {
             keyboard: false,
@@ -104,7 +108,9 @@
 </div>
 
 <script>
-    tlp.createDropdown(
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(
         document.getElementById("dropdown-disable-options"),
         {
             keyboard: false,
@@ -133,13 +139,17 @@ Check out this top aligned dropdown menu <span class="tlp-text-danger">with icon
 </div>
 
 <script>
-    tlp.createDropdown(document.getElementById("dropdown-top-example"));
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(document.getElementById("dropdown-top-example"));
 </script>
 <br>
 <br>
 
 <script>
-    tlp.createDropdown(document.getElementById("dropdown-top-right-example"));
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(document.getElementById("dropdown-top-right-example"));
 </script>
 
 <br>
@@ -159,7 +169,9 @@ the trigger of the dropdown is a unique icon like this: <div class="tlp-dropdown
 </div>
 
 <script>
-    tlp.createDropdown(document.getElementById("dropdown-icon-right-example"));
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(document.getElementById("dropdown-icon-right-example"));
 </script>
 
 <br>
@@ -186,7 +198,9 @@ Checkout this dropdown
 </div>
 
 <script>
-    tlp.createDropdown(document.getElementById("dropdown-with-tabs-example"));
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(document.getElementById("dropdown-with-tabs-example"));
 </script>
 
 <br>
@@ -217,7 +231,9 @@ Split button dropdown
     </div>
 </div>
 <script>
-    tlp.createDropdown(
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(
         document.getElementById("dropdown-split-example"),
         {dropdown_menu: document.getElementById("dropdown-split-example-menu")}
     );
@@ -245,7 +261,9 @@ Split button dropdown
     </div>
 </div>
 <script>
-    tlp.createDropdown(
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(
         document.getElementById("dropdown-split-example2"),
         {dropdown_menu: document.getElementById("dropdown-split-example2-menu")}
     );
@@ -277,7 +295,9 @@ Split large button dropdown
     </div>
 </div>
 <script>
-    tlp.createDropdown(
+    import { createDropdown } from "@tuleap/tlp-dropdown";
+
+    createDropdown(
         document.getElementById("dropdown-large-split-example"),
         {dropdown_menu: document.getElementById("dropdown-large-split-example-menu")}
     );

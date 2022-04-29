@@ -9,6 +9,7 @@ specifiers:
   '@tuleap/fault': workspace:*
   '@tuleap/fetch-result': workspace:*
   '@tuleap/potentially-dangerous-bidirectional-characters': workspace:*
+  '@tuleap/tlp-dropdown': workspace:*
   '@tuleap/tlp-fetch': workspace:*
   '@tuleap/tlp-relative-date': workspace:*
   '@tuleap/tooltip': workspace:*
@@ -37,6 +38,7 @@ dependencies:
   '@tuleap/fault': link:../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/potentially-dangerous-bidirectional-characters': link:../../../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/tlp-dropdown': link:../../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/tooltip': link:../../../../lib/frontend/tooltip

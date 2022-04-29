@@ -21,11 +21,9 @@ import execution_module from "../../execution.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./step-controller.js";
-import * as tlp from "tlp";
+import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import * as feedback_state from "../../../feedback-state.js";
 import * as execution_with_steps_updater from "./execution-with-steps-updater.js";
-
-jest.mock("tlp");
 
 describe("StepController", () => {
     let $q,
@@ -44,7 +42,7 @@ describe("StepController", () => {
             show: jest.fn(),
         };
 
-        jest.spyOn(tlp, "createDropdown").mockReturnValue(fake_dropdown_object);
+        jest.spyOn(tlp_dropdown, "createDropdown").mockReturnValue(fake_dropdown_object);
 
         setError = jest.spyOn(feedback_state, "setError");
         resetError = jest.spyOn(feedback_state, "resetError");

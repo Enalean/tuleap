@@ -12,6 +12,7 @@
     "@tuleap/plugin-agiledashboard-card-fields": "workspace:*",
     "@tuleap/plugin-agiledashboard-shared": "workspace:*",
     "@tuleap/plugin-tracker-artifact-modal": "workspace:*",
+    "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",
