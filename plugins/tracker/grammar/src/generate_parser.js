@@ -1,10 +1,11 @@
 /* eslint-env node */
 
+const path = require("path");
 const fs = require("fs");
 const pegjs = require("pegjs");
 const phpegjs = require("phpegjs");
 
-fs.readFile("tql.pegjs", function (err, data) {
+fs.readFile(path.join(__dirname, "tql.pegjs"), function (err, data) {
     if (err) {
         throw err;
     }
@@ -17,7 +18,10 @@ fs.readFile("tql.pegjs", function (err, data) {
         },
     });
 
-    const output_dir = "./backend-assets/Tracker/Report/Query/Advanced/Grammar/";
+    const output_dir = path.join(
+        __dirname,
+        "../backend-assets/Tracker/Report/Query/Advanced/Grammar/"
+    );
     fs.mkdirSync(output_dir, { recursive: true });
     fs.writeFile(output_dir + "Parser.php", parser, function (err) {
         if (err) {
