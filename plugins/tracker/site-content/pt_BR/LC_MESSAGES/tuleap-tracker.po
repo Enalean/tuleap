@@ -215,11 +215,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<p>The <strong>title</strong> summarizes an artifact and will be used in RSS "
-"feeds or in the widget MyArtifact.</p>"
-msgstr ""
-
-msgid ""
 "<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
 "em> yet.</p>"
 msgstr ""
@@ -643,6 +638,9 @@ msgid "Available types"
 msgstr ""
 
 msgid "Average"
+msgstr ""
+
+msgid "Back to semantics"
 msgstr ""
 
 msgid "Bad field_id attribute format: int expected."
@@ -1375,6 +1373,9 @@ msgid "Field type successfully changed for the field and all its target fields"
 msgstr ""
 
 msgid "Field updated"
+msgstr ""
+
+msgid "Field used by semantic"
 msgstr ""
 
 msgid "Field value cannot be empty"
@@ -2340,6 +2341,9 @@ msgstr ""
 msgid "Save report as"
 msgstr ""
 
+msgid "Save semantic"
+msgstr ""
+
 msgid "Save webhook"
 msgstr ""
 
@@ -2407,6 +2411,12 @@ msgid ""
 msgstr ""
 
 msgid "Semantic title and/or description are not configured"
+msgstr ""
+
+msgid "Semantic title unset"
+msgstr ""
+
+msgid "Semantic title updated"
 msgstr ""
 
 msgid "Semantics"
@@ -3108,8 +3118,14 @@ msgstr ""
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr ""
 
-#, php-format
-msgid "The title is now: %1$s"
+msgid ""
+"The title summarizes an artifact and will be used in various places: "
+"widgets, artifact links, email notifications, ..."
+msgstr ""
+
+msgid ""
+"The title summarizes an artifact and will be used in various places: "
+"widgets, artifact links, email notifications, …"
 msgstr ""
 
 msgid ""
@@ -3396,9 +3412,6 @@ msgstr ""
 msgid "Title"
 msgstr "Título"
 
-msgid "Title semantic has been unset"
-msgstr ""
-
 msgid "Today"
 msgstr "Hoje"
 
@@ -3637,6 +3650,9 @@ msgid "Update Field '%1$s'"
 msgstr ""
 
 msgid "Update reminder"
+msgstr ""
+
+msgid "Update semantic"
 msgstr ""
 
 msgid "Update to overridable computed field"

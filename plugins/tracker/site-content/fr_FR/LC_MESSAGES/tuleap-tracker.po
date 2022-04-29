@@ -268,13 +268,6 @@ msgstr ""
 "de l'artéfact.</p>"
 
 msgid ""
-"<p>The <strong>title</strong> summarizes an artifact and will be used in RSS "
-"feeds or in the widget MyArtifact.</p>"
-msgstr ""
-"<p>Le <strong>titre</strong> décrit un artéfact et sera utilisé dans les "
-"flux RSS ou dans le widget Mes Artefacts.</p>"
-
-msgid ""
 "<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
 "em> yet.</p>"
 msgstr ""
@@ -763,6 +756,9 @@ msgstr "Nature disponibles"
 
 msgid "Average"
 msgstr "Moyenne"
+
+msgid "Back to semantics"
+msgstr "Retour aux sémantiques"
 
 msgid "Bad field_id attribute format: int expected."
 msgstr "L'attribut field_id a un mauvais format : numérique attendu."
@@ -1567,6 +1563,9 @@ msgstr ""
 
 msgid "Field updated"
 msgstr "Champ mis à jour"
+
+msgid "Field used by semantic"
+msgstr "Champ utilisé par cette sémantique"
 
 msgid "Field value cannot be empty"
 msgstr "La valeur du champ ne peux pas être vide"
@@ -2623,6 +2622,9 @@ msgstr "Enregistrer"
 msgid "Save report as"
 msgstr "Enregistrer sous"
 
+msgid "Save semantic"
+msgstr "Sauvegarder la sémantique"
+
 msgid "Save webhook"
 msgstr "Sauvegarder le webhook"
 
@@ -2699,6 +2701,12 @@ msgstr ""
 
 msgid "Semantic title and/or description are not configured"
 msgstr "La sémantique titre et/ou description ne sont pas configurées"
+
+msgid "Semantic title unset"
+msgstr "La sémantique title a été retirée"
+
+msgid "Semantic title updated"
+msgstr "La sémantique title a été mise à jour"
 
 msgid "Semantics"
 msgstr "Sémantiques"
@@ -3518,9 +3526,19 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 
-#, php-format
-msgid "The title is now: %1$s"
-msgstr "Le titre est maintenant : %1$s"
+msgid ""
+"The title summarizes an artifact and will be used in various places: "
+"widgets, artifact links, email notifications, ..."
+msgstr ""
+"Le titre décrit un artéfact et sera utilisé dans les flux RSS ou dans le "
+"widget Mes Artefacts."
+
+msgid ""
+"The title summarizes an artifact and will be used in various places: "
+"widgets, artifact links, email notifications, …"
+msgstr ""
+"Le titre décrit un artéfact et sera utilisé dans de nombreux endrits : les "
+"widgets, les liens d'artéfacts, les notifications emails ..."
 
 msgid ""
 "The tracker %s is implicated in cross-tracker triggers. You will not be able "
@@ -3865,9 +3883,6 @@ msgstr ""
 msgid "Title"
 msgstr "Titre"
 
-msgid "Title semantic has been unset"
-msgstr "La sémantique titre a été réinitialisée."
-
 msgid "Today"
 msgstr "Date du jour"
 
@@ -4117,6 +4132,9 @@ msgstr "Modifier le champ '%1$s'"
 
 msgid "Update reminder"
 msgstr "Modifier le rappel"
+
+msgid "Update semantic"
+msgstr "Mettre à jour la sémantique"
 
 msgid "Update to overridable computed field"
 msgstr "Mettre à jour vers champ calculé modifiable"
@@ -4802,7 +4820,3 @@ msgstr ""
 
 msgid "« Go back to semantic overview"
 msgstr "« Retour à l'administration de la sémantique"
-
-#, php-format
-#~ msgid "The user '%s' doesn't exist, in the field '%s'."
-#~ msgstr "L'utilisateur '%s' n’existe pas, pour le champ ‘%s’."

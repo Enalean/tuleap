@@ -442,7 +442,9 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         parse_str($_SERVER['QUERY_STRING'], $query_string);
 
         if (array_keys($query_string) !== ['tracker', 'func']) {
-            return false;
+            if (! isset($query_string['semantic']) || $query_string['semantic'] !== "title") {
+                return false;
+            }
         }
 
         return $query_string['func'] === 'admin-semantic';

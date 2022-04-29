@@ -1,0 +1,65 @@
+<div class="tlp-framed">
+    <p>
+         <a href="{{ tracker_admin_semantic_url }}" class="back-to-semantics">
+            <i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i>
+            {{# dgettext }} tuleap-tracker | Back to semantics {{/ dgettext }}
+         </a>
+    </p>
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{ label }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                {{^ has_possible_titles }}
+                    {{# dgettext }}
+                        tuleap-tracker | You cannot define the <em>title</em> semantic since there isn't any text field in the tracker
+                    {{/ dgettext }}
+                {{/ has_possible_titles }}
+                {{# has_possible_titles }}
+                    <form method="POST" action="{{ semantic_title_url }}">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <div class="tlp-form-element">
+                            <p>{{# dgettext }} tuleap-tracker | The title summarizes an artifact and will be used in various places: widgets, artifact links, email notifications, … {{/ dgettext }}</p>
+                            <label class="tlp-label" for="semantic-title">
+                                 {{# dgettext }} tuleap-tracker | Field used by semantic {{/ dgettext }}
+                             </label>
+                            <select name="text_field_id" id="semantic-title" class="tlp-select tlp-select-adjusted">
+                                {{^ has_selected_title }}
+                                    <option value="-1" selected="selected">
+                                        {{# dgettext }}
+                                            tuleap-tracker | Choose a field...
+                                        {{/ dgettext }}
+                                     </option>
+                                {{/ has_selected_title }}
+                                {{# possible_titles }}
+                                     <option value="{{ id }}" {{# selected }} selected{{/ selected }}>{{ title }}</option>
+                                {{/ possible_titles }}
+                            </select>
+                        </div>
+
+                        <div class="tlp-pane-section-submit">
+                            {{^ has_selected_title }}
+                                <button type="submit" class="tlp-button-primary" name="update">
+                                    {{# dgettext }} tuleap-tracker | Save semantic {{/ dgettext }}
+                                </button>
+                            {{/ has_selected_title }}
+                            {{# has_selected_title }}
+                                <button type="submit" class="tlp-button-primary" name="update" id="tracker-admin-set-semantic-button">
+                                    {{# dgettext }} tuleap-tracker | Update semantic {{/ dgettext }}
+                                </button>
+                                <button type="submit" class="tlp-button-danger tlp-button-outline" name="delete">
+                                    {{# dgettext }} tuleap-tracker | Unset this semantic {{/ dgettext }}
+                                </button>
+                            {{/ has_selected_title }}
+                        </div>
+                    </form>
+                {{/ has_possible_titles }}
+            </section>
+        </div>
+    </section>
+</div>
