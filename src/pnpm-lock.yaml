@@ -5,6 +5,7 @@ specifiers:
   '@joeattardi/emoji-button': ^4.6.2
   '@shopify/jest-dom-mocks': ^2.10.0
   '@tuleap/build-system-configurator': file:../lib/frontend/build-system-configurator
+  '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': file:../lib/frontend/date-helper
   '@tuleap/filter-inline-table': file:../lib/frontend/filter-table
   '@tuleap/gettext': file:../lib/frontend/gettext
@@ -68,6 +69,7 @@ specifiers:
 dependencies:
   '@fortawesome/fontawesome-free': 5.15.4
   '@joeattardi/emoji-button': 4.6.2
+  '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
   '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
   '@tuleap/gettext': link:../lib/frontend/gettext
