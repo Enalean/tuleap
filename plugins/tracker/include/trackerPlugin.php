@@ -421,21 +421,19 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event): void
     {
-        $request = HTTPRequest::instance();
-
         if (
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0 ||
             $this->isInTrackersHomepage() ||
             $this->isInDashboard() ||
-            $this->isInAdminSemanticsHomepage()
+            $this->isAConvertedSemanticPage()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
 
-    private function isInAdminSemanticsHomepage(): bool
+    private function isAConvertedSemanticPage(): bool
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) !== 0) {
             return false;
@@ -444,7 +442,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         parse_str($_SERVER['QUERY_STRING'], $query_string);
 
         if (array_keys($query_string) !== ['tracker', 'func']) {
-            if (! isset($query_string['semantic']) || $query_string['semantic'] !== "title") {
+            if (! isset($query_string['semantic']) || ($query_string['semantic'] !== "title" && $query_string['semantic'] !== "description")) {
                 return false;
             }
         }

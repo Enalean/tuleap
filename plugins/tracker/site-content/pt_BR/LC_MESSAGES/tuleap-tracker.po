@@ -210,11 +210,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"<p>The <strong>description</strong> is a free-text account of the content.</"
-"p>"
-msgstr ""
-
-msgid ""
 "<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
 "em> yet.</p>"
 msgstr ""
@@ -1092,9 +1087,6 @@ msgstr ""
 
 msgid "Description"
 msgstr "Descrição"
-
-msgid "Description semantic has been unset"
-msgstr ""
 
 msgid "Description:"
 msgstr ""
@@ -2387,6 +2379,12 @@ msgstr ""
 msgid "Semantic Timeframe is not configured for tracker %s."
 msgstr ""
 
+msgid "Semantic description unset"
+msgstr ""
+
+msgid "Semantic description updated"
+msgstr ""
+
 msgid "Semantic has been deleted successfully"
 msgstr ""
 
@@ -2756,8 +2754,7 @@ msgstr ""
 msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 
-#, php-format
-msgid "The description is now: %1$s"
+msgid "The description is a free-text account of the artifact."
 msgstr ""
 
 msgid "The email has been copied to clipboard"
@@ -3914,11 +3911,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"You cannot define the <em>description</em> semantic since there isn't any "
-"text field in the tracker"
-msgstr ""
-
-msgid ""
 "You cannot define the <em>status</em> semantic since there isn't any list "
 "field in the tracker"
 msgstr ""
@@ -3926,6 +3918,11 @@ msgstr ""
 msgid ""
 "You cannot define the <em>title</em> semantic since there isn't any text "
 "field in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot define the description semantic since there isn't any text field "
+"in the tracker"
 msgstr ""
 
 msgid ""

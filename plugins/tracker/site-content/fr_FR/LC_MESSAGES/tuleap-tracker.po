@@ -261,13 +261,6 @@ msgstr ""
 "responsable(s) du travail à effectuer pour la fermeture de cet artéfact.</p>"
 
 msgid ""
-"<p>The <strong>description</strong> is a free-text account of the content.</"
-"p>"
-msgstr ""
-"<p>La <strong>description</strong> est un résumé ou un texte libre à propos "
-"de l'artéfact.</p>"
-
-msgid ""
 "<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
 "em> yet.</p>"
 msgstr ""
@@ -1252,9 +1245,6 @@ msgstr "Supprimer une nature"
 
 msgid "Description"
 msgstr "Description"
-
-msgid "Description semantic has been unset"
-msgstr "La sémantique description a été réinitialisée."
 
 msgid "Description:"
 msgstr "Description :"
@@ -2674,6 +2664,12 @@ msgstr ""
 msgid "Semantic Timeframe is not configured for tracker %s."
 msgstr "La sémantique Plage de temps n'est pas configurée pour le tracker %s."
 
+msgid "Semantic description unset"
+msgstr "La sémantique description a été retirée"
+
+msgid "Semantic description updated"
+msgstr "La sémantique description a été mise à jour"
+
 msgid "Semantic has been deleted successfully"
 msgstr "La sémantique a été supprimée avec succès"
 
@@ -3082,9 +3078,8 @@ msgstr ""
 msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ date '%s' ne peut pas être comparé à la chaîne '%s'."
 
-#, php-format
-msgid "The description is now: %1$s"
-msgstr "La description est maintenant : %1$s"
+msgid "The description is a free-text account of the artifact."
+msgstr "La description est un résumé ou un texte libre à propos de l'artéfact."
 
 msgid "The email has been copied to clipboard"
 msgstr "L'adresse a été copiée dans votre presse-papier"
@@ -4463,13 +4458,6 @@ msgstr ""
 "aucun champ liste d'utilisateur dans votre outil de suivi"
 
 msgid ""
-"You cannot define the <em>description</em> semantic since there isn't any "
-"text field in the tracker"
-msgstr ""
-"Vous ne pouvez pas définir la sémantique <em>description</em> car il n'y a "
-"aucun champ texte dans votre outil de suivi."
-
-msgid ""
 "You cannot define the <em>status</em> semantic since there isn't any list "
 "field in the tracker"
 msgstr ""
@@ -4481,6 +4469,13 @@ msgid ""
 "field in the tracker"
 msgstr ""
 "Vous ne pouvez pas définir la sémantique <em>titre</em> car il n'y a aucun "
+"champ texte dans votre outil de suivi."
+
+msgid ""
+"You cannot define the description semantic since there isn't any text field "
+"in the tracker"
+msgstr ""
+"Vous ne pouvez pas définir la sémantique description car il n'y a aucun "
 "champ texte dans votre outil de suivi."
 
 msgid ""
