@@ -19,6 +19,7 @@
 
 @use "@tuleap/cross-ref-badges";
 @use "@tuleap/list-picker";
+@use "help-dropdown";
 @import "logo";
 @import "navbar";
 @import "sidebar";
@@ -47,7 +48,6 @@
 @import "project-background";
 @import "project";
 @import "typography";
-@import "help-dropdown";
 @import "project-privacy-popover";
 @import "cross-ref-tooltip";
 @import "bootstrap-overrides";

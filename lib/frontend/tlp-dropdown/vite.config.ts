@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...jest_base_config,
-    displayName: "TLP",
-};
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import dts from "vite-dts";
+
+export default vite.defineLibConfig({
+    plugins: [dts()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "TlpDropdown",
+        },
+        rollupOptions: {
+            external: ["@floating-ui/dom"],
+            output: {
+                globals: {
+                    "@floating-ui/dom": "FloatingUIDOM",
+                },
+            },
+        },
+    },
+});

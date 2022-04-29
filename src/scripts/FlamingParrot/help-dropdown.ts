@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import type { Dropdown } from "../../themes/tlp/src/js/dropdowns";
-import { createDropdown } from "../../themes/tlp/src/js/dropdowns";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 import { post } from "@tuleap/tlp-fetch";
 import { actionsOnHelpMenuOpened } from "../user/actions-help-menu-opened";
 
 document.addEventListener("DOMContentLoaded", () => {
     const help_button = document.getElementById("help");
     if (help_button) {
-        const help_dropdown: Dropdown = createDropdown(document, help_button);
+        const help_dropdown: Dropdown = createDropdown(help_button);
         help_dropdown.addEventListener("tlp-dropdown-shown", async function (): Promise<void> {
             await actionsOnHelpMenuOpened(help_button, post);
         });

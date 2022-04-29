@@ -1,0 +1,23 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@floating-ui/dom': ^0.4.2
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+
+dependencies:
+  '@floating-ui/dom': 0.4.5
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+
+packages:
+
+  /@floating-ui/core/0.6.2:
+    resolution: {integrity: sha512-jktYRmZwmau63adUG3GKOAVCofBXkk55S/zQ94XOorAHhwqFIOFAy1rSp2N0Wp6/tGbe9V3u/ExlGZypyY17rg==}
+    dev: false
+
+  /@floating-ui/dom/0.4.5:
+    resolution: {integrity: sha512-b+prvQgJt8pieaKYMSJBXHxX/DYwdLsAWxKYqnO5dO2V4oo/TYBZJAUQCVNjTWWsrs6o4VDrNcP9+E70HAhJdw==}
+    dependencies:
+      '@floating-ui/core': 0.6.2
+    dev: false

@@ -18,6 +18,7 @@
  */
 
 @use "sass:map";
+@use "@tuleap/tlp-dropdown";
 
 .dropdown-menu-item {
     padding: 8px 16px;
@@ -36,32 +37,16 @@
 }
 
 .tlp-dropdown-menu {
-    display: flex;
-    position: absolute;
-    z-index: 1000;
-    flex-direction: column;
-    margin: 10px 0 0;
-    padding: 8px 0;
     transform: translateY(-10px);
     transition: opacity 75ms ease-out;
     border: 1px solid #e3e5ed;
-    border-bottom: 0;
-    border-radius: var(--tlp-large-radius);
     opacity: 0;
     background: var(--tlp-dark-color);
     font-size: 13px;
     font-weight: 400;
     line-height: 14px;
-    pointer-events: none;
 
     &::after {
-        content: "";
-        display: block;
-        position: absolute;
-        left: 20px;
-        width: 0;
-        height: 0;
-        margin: 0 (-10px);
         border: 10px solid transparent;
         border-top-color: var(--tlp-dark-color);
     }
@@ -89,8 +74,6 @@
     &.tlp-dropdown-shown {
         transform: translateY(0);
         opacity: 1;
-        box-shadow: var(--tlp-flyover-shadow);
-        pointer-events: auto;
     }
 
     .dropdown-menu-separator {

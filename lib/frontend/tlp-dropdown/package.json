@@ -1,0 +1,23 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tlp-dropdown",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/tlp-dropdown.es.js",
+  "main": "dist/tlp-dropdown.umd.js",
+  "style": "dist/style.css",
+  "dependencies": {
+    "@floating-ui/dom": "^0.4.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

@@ -18,6 +18,7 @@
     "@tuleap/mention": "file:../lib/frontend/mention",
     "@tuleap/project-privacy-helper": "file:../lib/frontend/project-privacy-helper",
     "@tuleap/project-sidebar-internal": "file:../lib/frontend/project-sidebar-internal",
+    "@tuleap/tlp-dropdown": "link:../lib/frontend/tlp-dropdown",
     "@tuleap/tlp-fetch": "file:../lib/frontend/tlp-fetch",
     "@tuleap/tlp-modal": "file:../lib/frontend/tlp-modal",
     "@tuleap/tlp-popovers": "file:../lib/frontend/tlp-popovers",

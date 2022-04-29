@@ -8,7 +8,7 @@
   "version": "0.0.0",
   "module": "./src/js/index.ts",
   "dependencies": {
-    "@floating-ui/dom": "^0.4.2",
+    "@tuleap/tlp-dropdown": "link:../../../lib/frontend/tlp-dropdown",
     "@tuleap/tlp-modal": "file:../../../lib/frontend/tlp-modal",
     "@tuleap/tlp-popovers": "file:../../../lib/frontend/tlp-popovers",
     "flatpickr": "^4.6.9",
@@ -20,7 +20,6 @@
     "@types/jquery": "^3.5.5"
   },
   "scripts": {
-    "build": "echo 'I exist only to make pnpm build things that depend on me in the right order'",
-    "test": "jest"
+    "build": "echo 'I exist only to make pnpm build things that depend on me in the right order'"
   }
 }

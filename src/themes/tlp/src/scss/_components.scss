@@ -19,6 +19,7 @@
 
 @use "@tuleap/tlp-popovers";
 @use "@tuleap/tlp-modal";
+@use "@tuleap/tlp-dropdown";
 @use "./components/fonts";
 @use "./components/layout";
 @use "./components/typography";
@@ -34,7 +35,7 @@
 @use "./components/tabs";
 @use "./components/forms";
 @use "./components/forms-select2";
-@use "./components/dropdowns";
+@use "./components/datepicker";
 @use "./components/tooltips";
 @use "./components/switch";
 @use "./components/illustration";
