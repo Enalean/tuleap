@@ -23,7 +23,7 @@
         <div class="document-search-table-container" ref="table_container">
             <table class="tlp-table document-search-table">
                 <thead>
-                    <tr>
+                    <tr data-test="document-search-table-columns">
                         <template v-for="column of columns">
                             <th
                                 v-bind:class="th_classes(column)"
