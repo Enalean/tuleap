@@ -18,8 +18,7 @@
  */
 
 @use "sass:map";
-@use "codemirror/lib/codemirror";
-@use "codemirror/addon/hint/show-hint";
+@use "@tuleap/plugin-tracker-tql-codemirror";
 @use "@tuleap/tlp-swatch-colors";
 @use "../../../../../src/themes/FlamingParrot/css/utils/variables-common";
 @use "includes/cards";

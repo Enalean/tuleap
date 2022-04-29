@@ -18,15 +18,18 @@
  */
 
 import codendi from "codendi";
-import CodeMirror from "codemirror";
 import { post } from "@tuleap/tlp-fetch";
-import { buildModeDefinition, TQL_autocomplete_keywords } from "./TQL-CodeMirror/configuration.js";
-import { insertAllowedFieldInCodeMirror } from "./TQL-CodeMirror/allowed-field-inserter.js";
-import { initializeTQLMode, codeMirrorify } from "./TQL-CodeMirror/builder.js";
+import {
+    buildModeDefinition,
+    TQL_autocomplete_keywords,
+    insertAllowedFieldInCodeMirror,
+    initializeTQLMode,
+    codeMirrorify,
+} from "@tuleap/plugin-tracker-tql-codemirror";
 
 export { init };
 
-let query_rich_editor;
+let query_rich_editor = null;
 
 function init() {
     initializeTrackerReportQuery();
@@ -109,7 +112,7 @@ function codeMirrorifyQueryArea() {
     const tracker_query = document.getElementById("tracker-report-expert-query-textarea");
     const allowed_fields = JSON.parse(tracker_query.dataset.allowedFields);
 
-    if (query_rich_editor instanceof CodeMirror) {
+    if (query_rich_editor !== null) {
         query_rich_editor.refresh();
     } else {
         const autocomplete_keywords = TQL_autocomplete_keywords.concat(allowed_fields);

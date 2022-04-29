@@ -65,7 +65,13 @@ const variable_definition = {
     token: "variable",
 };
 
-function buildModeDefinition({ additional_keywords = [] }) {
+export type TQLDefinition = typeof TQL_mode_definition;
+
+export function buildModeDefinition({
+    additional_keywords = [],
+}: {
+    additional_keywords: string[];
+}): TQLDefinition {
     if (additional_keywords.length > 0) {
         const keywords_regex = additional_keywords.join("|");
         const additional_keywords_definition = {
@@ -78,7 +84,7 @@ function buildModeDefinition({ additional_keywords = [] }) {
     return TQL_mode_definition;
 }
 
-const TQL_autocomplete_keywords = [
+export const TQL_autocomplete_keywords = [
     "AND",
     "OR",
     "BETWEEN(",
@@ -88,5 +94,3 @@ const TQL_autocomplete_keywords = [
     "MYSELF()",
     "@comments",
 ];
-
-export { buildModeDefinition, TQL_autocomplete_keywords };

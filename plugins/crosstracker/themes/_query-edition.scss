@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import "../../tracker/node_modules/codemirror/lib/codemirror";
-@import "../../tracker/node_modules/codemirror/addon/hint/show-hint";
+
+@use "@tuleap/plugin-tracker-tql-codemirror";
 
 $expert-query-area-height: 75px;
 
