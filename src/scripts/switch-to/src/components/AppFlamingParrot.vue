@@ -19,7 +19,13 @@
   -->
 
 <template>
-    <div class="modal hide fade" id="switch-to-modal" role="dialog" v-bind:aria-label="aria_label">
+    <div
+        class="modal hide fade"
+        id="switch-to-modal"
+        data-test="switch-to-modal"
+        role="dialog"
+        v-bind:aria-label="aria_label"
+    >
         <switch-to-header class="modal-header" v-bind:modal="null" />
         <switch-to-body class="modal-body" />
     </div>

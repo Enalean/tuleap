@@ -116,6 +116,8 @@ describe("Tracker artifacts", function () {
 
         beforeEach(function () {
             cy.preserveSessionCookies();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").as("body");
         });
 
         describe("Artifact manipulation", function () {
@@ -129,6 +131,13 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=current-artifact-id]").should(($input) => {
                     artifact_id = String($input.val());
                 });
+
+                cy.log("Created artifact must be in recent elements");
+                cy.get("@body").type("{s}");
+                cy.get("[data-test=switch-to-modal]").should("be.visible");
+
+                cy.get("[data-test=switch-to-filter]").type("My new bug");
+                cy.get("[data-test=switch-to-recent-items]").should("contain", "My new bug");
             });
 
             it("must be able to copy new artifact", function () {

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="switch-to-recent-items">
+    <div class="switch-to-recent-items" data-test="switch-to-recent-items">
         <template v-if="has_history">
             <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
             <template v-if="has_filtered_history">
