@@ -1,0 +1,231 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add Azure Active Directory provider"
+msgstr ""
+
+msgid "Add provider"
+msgstr ""
+
+#, php-format
+msgid "An error occurred while removing the link with %1$s."
+msgstr ""
+
+msgid "An error occurred, please retry"
+msgstr ""
+
+msgid ""
+"Any users with a work/school account from Azure Active Directory or a "
+"personal Microsoft account"
+msgstr ""
+
+msgid "Authenticate users with OpenID Connect"
+msgstr ""
+
+msgid "Authentication allowed for"
+msgstr ""
+
+msgid "Authorization endpoint"
+msgstr ""
+
+msgid ""
+"Be sure that your provider can provide the profile and email scopes "
+"otherwise users will not have an account created automatically."
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Client ID"
+msgstr ""
+
+msgid "Client secret"
+msgstr ""
+
+msgid "Color"
+msgstr "Cor"
+
+msgid "Create the provider"
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Delete a provider"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Edit provider"
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid ""
+"Following information have to be generated on the OpenID Connect provider "
+"side. You'll need to give a callback url to do that, here it is:"
+msgstr ""
+
+msgid "Icon"
+msgstr "Ícone"
+
+msgid "If you no longer trust one of those provider, you can unlink it."
+msgstr ""
+
+msgid "JWKS endpoint"
+msgstr ""
+
+msgid "Last login date"
+msgstr ""
+
+msgid "Link an account"
+msgstr ""
+
+msgid "List all OpenID Connect providers you authorized for authentication."
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "No provider"
+msgstr ""
+
+msgid "Only users with a personal Microsoft account"
+msgstr ""
+
+msgid "Only users with a work/school account from Azure Active Directory"
+msgstr ""
+
+msgid "OpenID Connect"
+msgstr ""
+
+msgid "OpenID Connect Client"
+msgstr ""
+
+msgid "OpenID Connect provider last login information."
+msgstr ""
+
+msgid "OpenID Connect providers"
+msgstr ""
+
+msgid "Preview"
+msgstr "Pré-visualização"
+
+msgid "Preview of the login page button"
+msgstr ""
+
+msgid "Provider"
+msgstr ""
+
+msgid "Register a new account"
+msgstr ""
+
+msgid "Request seems invalid, please retry"
+msgstr ""
+
+msgid "Tenant ID"
+msgstr ""
+
+msgid "The data you provided are not valid."
+msgstr ""
+
+#, php-format
+msgid "The link with %1$s have been removed."
+msgstr ""
+
+#, php-format
+msgid "The new provider %1$s have been successfully created."
+msgstr ""
+
+#, php-format
+msgid "The provider %1$s have been removed."
+msgstr ""
+
+#, php-format
+msgid "The provider %1$s have been successfully updated."
+msgstr ""
+
+msgid "There are no authorized providers yet"
+msgstr ""
+
+msgid "This provider is the only authentication method."
+msgstr ""
+
+msgid "Token endpoint"
+msgstr ""
+
+msgid "Unique authentication source"
+msgstr ""
+
+msgid "Unlink"
+msgstr ""
+
+msgid "Update the provider"
+msgstr ""
+
+msgid "User information endpoint"
+msgstr ""
+
+msgid "Users from your specific Azure Active Directory"
+msgstr ""
+
+msgid ""
+"You are about to delete a provider. This action is irreversible. Do you "
+"confirm this deletion?"
+msgstr ""
+
+msgid ""
+"You can only enable this provider as unique authentication method if you are "
+"yourself linked to it."
+msgstr ""
+
+#, php-format
+msgid ""
+"You have successfully been authenticated by %1$s. The only remaining step is "
+"to create a link with an existing %2$s account or register a new one."
+msgstr ""
+
+#, php-format
+msgid ""
+"You have successfully been authenticated by %1$s. The only remaining step is "
+"to create a link with an existing %2$s account."
+msgstr ""
+
+msgid "You must link another account to be able to remove this link"
+msgstr ""
+
+#, php-format
+msgid "Your account has been successfully linked to %1$s"
+msgstr ""
+
+msgid ""
+"Your account have been created but needs to be approved by an administrator"
+msgstr ""
+
+msgid ""
+"Your account is linked to an OpenID Connect provider, you must use it to "
+"authenticate"
+msgstr ""
+
+#, php-format
+msgid "Your new user account will be linked with %1$s."
+msgstr ""
+
+msgid "https://"
+msgstr ""
+
+msgid "or"
+msgstr "ou"
+
+msgid "or login with"
+msgstr ""
+
+msgid "to OpenID Connect"
+msgstr ""

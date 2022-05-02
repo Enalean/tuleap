@@ -1,0 +1,771 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "\"%{ title }\" is being copied…"
+msgstr ""
+
+msgid "\"%{ title }\" is being moved…"
+msgstr ""
+
+msgid ""
+"%{ filename } has been locked for edition by <a href=\"%{ lock_owner_url }\">"
+"%{ lock_owner_name }</a>.\n"
+"                You can't upload a new version of this file until the lock "
+"is released."
+msgstr ""
+
+msgid "%{ from } – %{ to } of %{ total }"
+msgstr ""
+
+msgid "*lorem => finishing by \"lorem\""
+msgstr ""
+
+msgid "1 warning"
+msgid_plural "%{ nb_warnings } warnings"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "12 months"
+msgstr ""
+
+msgid "3 months"
+msgstr ""
+
+msgid "6 months"
+msgstr ""
+
+msgid "A document already exists with the same title."
+msgstr ""
+
+msgid ""
+"A document already exists with the same title. However you can create a new "
+"version of\n"
+"        this document by dropping the item on the file you want to update."
+msgstr ""
+
+msgid "A folder already exists with the same title."
+msgstr ""
+
+msgid "Accepted input is the user id or its username."
+msgstr ""
+
+msgid "Actions in Documents service"
+msgstr ""
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid "Advanced"
+msgstr ""
+
+msgid "After"
+msgstr ""
+
+msgid ""
+"All the properties values that you define here will be proposed as default "
+"values\n"
+"            for the items that will be created within this folder."
+msgstr ""
+
+msgid "An error has occurred, please contact your administrator"
+msgstr ""
+
+msgid "An error occurred while searching for results."
+msgstr ""
+
+msgid "Any"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Apply new values on this folder and all its content"
+msgstr ""
+
+msgid "Apply new values on this folder and its subfolders only"
+msgstr ""
+
+msgid "Apply same permissions to all sub-items of this folder"
+msgstr ""
+
+msgid "Approval table"
+msgstr ""
+
+msgid "Approval table status"
+msgstr ""
+
+msgid "Approval tables"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "Archive size warning threshold reached"
+msgstr ""
+
+msgid "Before"
+msgstr ""
+
+msgid "Begin"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cancel upload"
+msgstr ""
+
+msgid "Changelog"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid ""
+"Contact your administrator or try to reorganize this folder, then try again."
+msgstr ""
+
+msgid "Content"
+msgstr "Conteúdo"
+
+msgid "Continue"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy the previous approval table."
+msgstr ""
+
+msgid "Corrupted"
+msgstr ""
+
+msgid "Create a new document"
+msgstr ""
+
+msgid "Create a new empty approval table."
+msgstr ""
+
+msgid "Create a new file"
+msgstr ""
+
+msgid "Create a new folder"
+msgstr ""
+
+msgid "Create a new version of document"
+msgstr ""
+
+msgid "Create document"
+msgstr ""
+
+msgid "Create folder"
+msgstr ""
+
+msgid "Create new version"
+msgstr ""
+
+msgid "Creation"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Default properties"
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgctxt "keyboard key"
+msgid "Delete"
+msgstr ""
+
+msgid ""
+"Depending on the speed of your network, it can take some time to complete.\n"
+"                    Do you want to continue?"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Document locked by %{username}."
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download anyway"
+msgstr ""
+
+msgid "Download as zip"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Drop one file to upload it to %{folder}s (max size is %{size}s)."
+msgid_plural ""
+"Drop up to %{nb_files}s files to upload them to %{folder}s (max size is "
+"%{size}s)."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Drop to upload a new version"
+msgstr ""
+
+msgid "Drop to upload in folder"
+msgstr ""
+
+msgid "Dropping files in %s is forbidden."
+msgstr ""
+
+msgid "Edit \"%s\" permissions"
+msgstr ""
+
+msgid "Edit \"%s\" properties"
+msgstr ""
+
+msgid "Embedded"
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "End"
+msgstr ""
+
+msgid "File"
+msgstr "Arquivo"
+
+msgid "File size"
+msgstr ""
+
+msgid "Filename"
+msgstr ""
+
+msgid "Filename preview"
+msgstr ""
+
+msgid ""
+"Filename will follow a pattern enforced by the document manager "
+"configuration."
+msgstr ""
+
+msgid "Fixed date"
+msgstr ""
+
+msgid "Focus the document search bar"
+msgstr ""
+
+msgid "Global search"
+msgstr ""
+
+msgid "Global search information"
+msgstr ""
+
+msgid ""
+"Global search will search in all text properties of document (but does not "
+"look\n"
+"                inside the document)."
+msgstr ""
+
+msgid "Go to Document manager home page"
+msgstr ""
+
+msgid "Go to my home page"
+msgstr ""
+
+msgid "Go to parent folder"
+msgstr ""
+
+msgid "Go to the wiki page"
+msgstr ""
+
+msgid "Got it"
+msgstr ""
+
+msgid "History"
+msgstr "Histórico"
+
+msgid "Hold on a second!"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "It seems an action you tried to perform can't be done."
+msgstr ""
+
+msgid "It seems the content of this element can't be loaded."
+msgstr ""
+
+msgid "It's time to add new documents!"
+msgstr ""
+
+msgid "Keep lock?"
+msgstr ""
+
+msgid "Keep reviewers, comments and commitments."
+msgstr ""
+
+msgid "Large view"
+msgstr ""
+
+msgid "Last update date"
+msgstr ""
+
+msgid "Latest versions"
+msgstr ""
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Lock"
+msgstr ""
+
+msgid "Lock and unlock document"
+msgstr ""
+
+msgid "Lock new version"
+msgstr ""
+
+msgid "Mail content is required"
+msgstr ""
+
+msgid "Manager"
+msgstr ""
+
+msgid "Maximum archive size allowed: %{ max_archive_size } MB"
+msgstr ""
+
+msgid "Maximum archive size threshold exceeded"
+msgstr ""
+
+msgid "My content..."
+msgstr ""
+
+msgid "My document"
+msgstr ""
+
+msgid "My new version name"
+msgstr ""
+
+msgid "My useful document description"
+msgstr ""
+
+msgid "My wiki page"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Name, description..."
+msgstr ""
+
+msgid "Narrow view"
+msgstr ""
+
+msgid "Navigation in Documents service"
+msgstr ""
+
+msgid "New document"
+msgstr ""
+
+msgid "New folder"
+msgstr ""
+
+msgid "New version for \"%s\""
+msgstr ""
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "No matching results"
+msgstr ""
+
+msgid "No version history"
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Not yet"
+msgstr ""
+
+msgid "Notifications"
+msgstr "Notificações"
+
+msgid "Obsolescence date"
+msgstr ""
+
+msgid "Obsolete today"
+msgstr ""
+
+msgid "On"
+msgstr ""
+
+msgid "Ongoing upload"
+msgstr ""
+
+msgid "Only the last 5 versions are displayed."
+msgstr ""
+
+msgid ""
+"Only the table structure will be kept. Reviewer comments and commitments "
+"will be\n"
+"                discarded."
+msgstr ""
+
+msgid "Oops, there's an issue."
+msgstr ""
+
+msgid "Oops…"
+msgstr ""
+
+msgid "Oops… Unable to upload file"
+msgid_plural "Oops… Unable to upload files"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Open approval tables"
+msgstr ""
+
+msgid "Open dropdown menu"
+msgstr ""
+
+msgid "Open history"
+msgstr ""
+
+msgid "Open link"
+msgstr ""
+
+msgid "Open notifications settings"
+msgstr ""
+
+msgid "Open permissions settings"
+msgstr ""
+
+msgid "Other information"
+msgstr ""
+
+msgid "Owner"
+msgstr "Proprietário"
+
+msgid "Owner search information"
+msgstr ""
+
+msgid "Parent folders are not displayed to not clutter the interface"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Permanent"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Please describe the changes of the new version here"
+msgstr ""
+
+msgid "Please enter a reason for why you need to access this document."
+msgstr ""
+
+msgid ""
+"Please note that if you check this option, the referenced wiki page will no\n"
+"                longer exist in the wiki service too."
+msgstr ""
+
+msgid ""
+"Please note that the OSX archive extraction tool might not succeed in\n"
+"                    opening it."
+msgstr ""
+
+msgid "Please start again."
+msgstr ""
+
+msgid "Please wait until the ongoing upload is finished."
+msgstr ""
+
+msgid "Please write something meaningful for the admin."
+msgstr "Por favor escreva algo significativo para o admin."
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Project documentation"
+msgstr ""
+
+msgid "Propagate deletion to wiki service"
+msgstr ""
+
+msgid "Quick look"
+msgstr ""
+
+msgid "Reader"
+msgstr ""
+
+msgid "Recursion option"
+msgstr ""
+
+msgid "Rejected"
+msgstr ""
+
+msgid "Reload the page"
+msgstr ""
+
+msgid "Reset the approval cycle."
+msgstr ""
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Search allowed pattern:"
+msgstr ""
+
+msgid "Search criteria"
+msgstr ""
+
+msgid "Search in whole project documentation"
+msgstr ""
+
+msgid "Searching in"
+msgstr ""
+
+msgid "Select bottom item"
+msgstr ""
+
+msgid "Select next item"
+msgstr ""
+
+msgid "Select previous item"
+msgstr ""
+
+msgid "Select top item"
+msgstr ""
+
+msgid "Send mail"
+msgstr ""
+
+msgid ""
+"Shortcuts will apply to the selected document or folder. If there is no "
+"selected item they will apply to the current folder."
+msgstr ""
+
+msgid "Show error details"
+msgstr ""
+
+msgid "Size of the archive to be downloaded: %{ size_in_MB } MB"
+msgstr ""
+
+msgid "Some files are being uploaded, click here to see the whole list."
+msgstr ""
+
+msgid "Start over with a completely new approval table."
+msgstr ""
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Switch to old user interface"
+msgstr ""
+
+msgid ""
+"The archive you want to download has a size greater than %{\n"
+"                    warning_threshold } MB."
+msgstr ""
+
+msgid ""
+"The archive you want to download has a size greater than or equal to 4GB or\n"
+"                    contains more than 64000 files."
+msgstr ""
+
+msgid "The current date is the same or before the obsolescence date"
+msgstr ""
+
+msgid "The document has been created below."
+msgstr ""
+
+msgid "The folder has been created below."
+msgstr ""
+
+msgid "The item has been deleted successfully."
+msgstr ""
+
+msgid ""
+"The item you have dropped is not a file. If you want to upload a folder, we "
+"advise you\n"
+"        to create a new folder first, then upload its content inside in a "
+"second time."
+msgid_plural ""
+"The items you have dropped contain an item which is not a file. If you want "
+"to upload a folder, we advise you to create a new folder first, then upload "
+"its content inside in a second time."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"The size of the zip file you are attempting to download is exceeding the "
+"threshold\n"
+"            defined by the site administrators."
+msgstr ""
+
+msgid "There are no items here or you don't have permissions to see them."
+msgstr ""
+
+msgid "There is no upload in progress"
+msgstr ""
+
+msgid "This document is currently locked by"
+msgstr ""
+
+msgid "This folder is empty"
+msgstr ""
+
+msgid "This is a private folder"
+msgstr ""
+
+msgid ""
+"This page is asking you to confirm that you want to leave - data you have "
+"entered may not be saved. Do you want to leave this page?"
+msgstr ""
+
+msgid "This wiki has a approval table, you can't update it."
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Today"
+msgstr "Hoje"
+
+msgid "Toggle selected folder open and closed"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Unlock"
+msgstr ""
+
+msgid "Update permissions"
+msgstr ""
+
+msgid "Update properties"
+msgstr ""
+
+msgid "Upload error"
+msgstr ""
+
+msgid "Uploading documents"
+msgstr ""
+
+msgid "User avatar"
+msgstr "Avatar do Usuário"
+
+msgid "Validity"
+msgstr ""
+
+msgid "Version"
+msgstr "Versão"
+
+msgid "Version name"
+msgstr ""
+
+msgid "View all versions"
+msgstr ""
+
+msgid "We detect you are using OSX"
+msgstr ""
+
+msgid ""
+"When a filename pattern is set, you are not allowed to drag 'n drop more "
+"than 1 file at\n"
+"        once."
+msgstr ""
+
+msgid ""
+"When a filename pattern is set, you are not allowed to drag 'n drop more "
+"than 1 file at once."
+msgstr ""
+
+msgid ""
+"When you delete a folder, all its content is also deleted. Please think "
+"wisely!"
+msgstr ""
+
+msgid "Wiki page"
+msgstr ""
+
+msgid ""
+"Write your message below and click on the button to send your\n"
+"                            request to the project administrators"
+msgstr ""
+
+msgid "Writer"
+msgstr ""
+
+msgid "You are about to delete \"%s\" permanently. Please confirm your action."
+msgstr ""
+
+msgid ""
+"You are currently copying \"%{ title }\". You can paste it in a folder you "
+"are allowed to\n"
+"        write into using the folder action drop-down."
+msgstr ""
+
+msgid ""
+"You are currently moving \"%{ title }\". You can paste it in a folder you "
+"are allowed to\n"
+"        write into using the folder action drop-down. You also cannot move "
+"the item somewhere\n"
+"        where the name is already used by another item."
+msgstr ""
+
+msgid "You are not allowed to drag 'n drop more than %{ nb } file at once."
+msgid_plural ""
+"You are not allowed to drag 'n drop more than %{ nb } files at once."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "You are not allowed to upload a new version of this file"
+msgstr ""
+
+msgid "You are not allowed to upload files bigger than %s."
+msgstr "Você não está autorizado a carregar arquivos maiores que %s."
+
+msgid "You are not allowed to write in this folder"
+msgstr ""
+
+msgid "You can search documents owned by a user."
+msgstr ""
+
+msgid "You don't have read permission for this item"
+msgstr ""
+
+msgid "You may only access documents you are granted read permission on."
+msgstr ""
+
+msgid ""
+"You should also be aware that the following wiki documents referencing page "
+"\"%s\" will no longer be valid if you choose to propagate the deletion to "
+"the wiki service:"
+msgstr ""
+
+msgid "lorem => exactly \"lorem\""
+msgstr ""
+
+msgid "lorem* => starting by \"lorem\""
+msgstr ""

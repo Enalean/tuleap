@@ -1,0 +1,95 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Closed"
+msgstr ""
+
+msgid "Create GitLab branch"
+msgstr ""
+
+msgid "GitLab"
+msgstr ""
+
+msgid "GitLab Branch"
+msgstr ""
+
+msgid "GitLab Tag"
+msgstr ""
+
+msgid "GitLab branch"
+msgstr ""
+
+msgid "GitLab commit"
+msgstr ""
+
+msgid "GitLab integration"
+msgstr ""
+
+msgid "GitLab merge request"
+msgstr ""
+
+msgid "GitLab tag"
+msgstr ""
+
+msgid "Merged"
+msgstr ""
+
+#, php-format
+msgid ""
+"New secret has been generated, but we could not update the GitLab hooks. "
+"GitLab server error: %s"
+msgstr ""
+
+msgid "No credentials found to contact the GitLab server."
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Provides an integration GitLab to Tuleap."
+msgstr ""
+
+msgid "Reference to a GitLab branch"
+msgstr ""
+
+msgid "Reference to a GitLab commit"
+msgstr ""
+
+msgid "Reference to a GitLab merge request"
+msgstr ""
+
+msgid "Reference to a GitLab tag"
+msgstr ""
+
+msgid "The GitLab repository integration cannot be found."
+msgstr ""
+
+#, php-format
+msgid ""
+"The project reference based on the keyword '%s' is overriding the system "
+"reference used by the GitLab plugin."
+msgstr ""
+
+#, php-format
+msgid ""
+"Unable to contact the server with the provided token. Please ensure that "
+"token has \"api\" scope. GitLab server error: %s"
+msgstr ""
+
+msgid ""
+"We managed to contact the server, but couldn't parse the response. We are "
+"not confident enough to update the token."
+msgstr ""
+
+msgid ""
+"We managed to generate a new secret and to send it to the server, but "
+"couldn't parse the response. You should check that everything is ok."
+msgstr ""
+
+msgid "close artifacts"
+msgstr ""

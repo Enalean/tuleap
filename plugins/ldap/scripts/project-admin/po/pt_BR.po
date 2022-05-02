@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, javascript-format
+msgid "%d user not impacted."
+msgid_plural "%d users not impacted."
+msgstr[0] "%d usuário não impactado."
+msgstr[1] "%d usuários não impactados."
+
+#, javascript-format
+msgid "%d user to add."
+msgid_plural "%d users to add."
+msgstr[0] "%d usuário a adicionar."
+msgstr[1] "%d usuários a adicionar."
+
+#, javascript-format
+msgid "%d user to remove."
+msgid_plural "%d users to remove."
+msgstr[0] "%d usuário a remover."
+msgstr[1] "%d usuários a remover."
+
+#, javascript-format
+msgid "Binding %s to directory group %s"
+msgstr "Ligando %s ao grupo de diretórios %s"
+
+#, javascript-format
+msgid "Directory group %s does not exist."
+msgstr "O grupo de diretório %s não existe."
+
+msgid "There aren't any users to add nor to remove."
+msgstr "Não há nenhum usuário para adicionar ou remover."

@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Unable to upload the file"
+msgstr "Impossível carregar o arquivo"
+
+msgid "You are not allowed to paste images here"
+msgstr "Você não está autorizado a colar imagens aqui"
+
+#, javascript-format
+msgid "You are not allowed to upload files bigger than %s."
+msgstr "Você não está autorizado a carregar arquivos maiores que %s."
+
+msgid "You can drag 'n drop or paste image directly in the editor."
+msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."

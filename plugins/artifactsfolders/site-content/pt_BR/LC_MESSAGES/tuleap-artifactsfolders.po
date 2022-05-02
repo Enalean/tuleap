@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add a \"Folder\" tab in an artifact"
+msgstr ""
+
+msgid "Artifacts Folders"
+msgstr ""
+
+msgid "Currently in folder:"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "Folder Content"
+msgstr ""
+
+msgid "In folder"
+msgstr ""
+
+msgid "Not in a folder"
+msgstr ""
+
+#, php-format
+msgid ""
+"The link between the artifact and the folder <a href=\"%s\">%s</a> won't be "
+"copied."
+msgstr ""
+
+msgid "There isn't any artifact in this folder."
+msgstr ""

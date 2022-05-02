@@ -1,0 +1,4217 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "\"Attachment\" type field cannot be modified during artifact copy."
+msgstr ""
+
+msgid "\"duration\" field is empty or invalid"
+msgstr ""
+
+msgid "\"duration\" must be greater than 1 to display burndown graph."
+msgstr ""
+
+msgid "\"end date\" field is empty or invalid"
+msgstr ""
+
+msgid "\"start date\" field is empty or invalid"
+msgstr ""
+
+#, php-format
+msgid "%1$s : artifact #%2$s does not exist."
+msgstr ""
+
+#, php-format
+msgid "%1$s Artifact(s) created"
+msgstr ""
+
+#, php-format
+msgid "%1$s Artifact(s) updated"
+msgstr ""
+
+#, php-format
+msgid "%1$s can contain neiher carriage return nor null char."
+msgstr ""
+
+#, php-format
+msgid "%1$s can not contain more than %2$s characters."
+msgstr ""
+
+#, php-format
+msgid "%1$s contains a value which is not a login or an email."
+msgstr ""
+
+#, php-format
+msgid "%1$s contains a value which is not a user group."
+msgstr ""
+
+#, php-format
+msgid "%1$s day(s) %2$s"
+msgstr ""
+
+#, php-format
+msgid "%1$s has just updated the artifact"
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a date."
+msgstr ""
+
+#, php-format
+msgid ""
+"%1$s is not a datetime, format should be %2$s hh:mm or %2$s hh:mm:ss (in the "
+"later case, seconds will be ingored)."
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a string."
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a text."
+msgstr ""
+
+#, php-format
+msgid ""
+"%1$s was asked to remind you today that the '%2$s' in the artifact below is "
+"%3$s."
+msgstr ""
+
+#, php-format
+msgid "%1$s: %2$s is not an artifact id."
+msgstr ""
+
+#, php-format
+msgid "%1s - open %2s"
+msgstr ""
+
+msgid "%s administration"
+msgstr ""
+
+#, php-format
+msgid "%s has been created"
+msgstr ""
+
+#, php-format
+msgid "%s has been created by %s"
+msgstr ""
+
+#, php-format
+msgid "%s has been successfully moved to %s"
+msgstr ""
+
+#, php-format
+msgid "%s has been successfully moved to %s in %s"
+msgstr ""
+
+#, php-format
+msgid "%s has been updated"
+msgstr ""
+
+#, php-format
+msgid "%s has been updated by %s"
+msgstr ""
+
+#, php-format
+msgid "%s tracker"
+msgstr ""
+
+#, php-format
+msgid "%s working day"
+msgid_plural "%s working days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "'%s' is not supported for the operator %s."
+msgstr ""
+
+msgid "(HTML tags allowed)"
+msgstr ""
+
+#, php-format
+msgid ""
+"(The maximum upload file size is %1$s Mb. The file must be encoded in UTF-8)"
+msgstr ""
+
+msgid ""
+"* denotes user groups that may not have access to the tracker (no <a href="
+"\"%s\">tracker permission</a> set)."
+msgstr ""
+
+msgid "-"
+msgstr ""
+
+msgid "-- Choose source field"
+msgstr ""
+
+msgid "-- Choose target field"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>Confirm deletion of date reminder</h3><p>You are going to delete this "
+"date reminder:</p><p>%1$s</p><p>Are you sure that you want to continue?</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>You are about to delete permanently the artifact \"%1$s\".</"
+"h3><p><strong>There is no way to restore the artifact.</strong></p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h4><i class=\"fa fa-exclamation-triangle\"></i> Your local.inc file is "
+"outdated!</h4><p>It appears that your local.inc file contains definitions of "
+"variables that are unused and it may lead to confusion.</p><p>Please edit "
+"<code>%1$s</code> and remove the following variable: <code>"
+"$sys_enable_reply_by_mail</code>.</p>"
+msgstr ""
+
+msgid ""
+"<h5>Please update this computed field</h5><p>The legacy Computed fields will "
+"be gone in Tuleap 9.4.<br/>Upon update, the following changes will take "
+"effect:</p><ul><li>The computation will take into account all linked "
+"artifacts recursively, regardless of link type.</li><li>The target field "
+"will no longer be configurable, the field's name will now be used instead.</"
+"li><li>Permissions will not be taken into account.</li></ul><p>For example, "
+"a user can see artifact A linked to B and C. Artifact A has a computed field "
+"called \"Remaining effort\".<br/>Even if user cannot access artifacts B or "
+"C, the \"Remaining effort\" field in A will sum the values from the "
+"\"Remaining Effort\" fields in B and C.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>An artifact is considered to be <strong>open</strong> when its field "
+"<strong>%1$s</strong> will have one of the following values:</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>One will be considered as a contributor/assignee of this artifact if her "
+"name appears in the field <strong>%1$s</strong>.</p>"
+msgstr ""
+
+msgid ""
+"<p>Someone updated this artifact while you were editing it.</p><p>Please "
+"acknowledge all notifications before submit.</p><p>Beware, on submit, your "
+"modifications will be applied on top of previous changes.</p>"
+msgstr ""
+
+msgid ""
+"<p>The <strong>contributor(s)/assignee(s)</strong> are the person(s) who are "
+"responsible for the work needed to complete the artifact.</p>"
+msgstr ""
+
+msgid ""
+"<p>The <strong>description</strong> is a free-text account of the content.</"
+"p>"
+msgstr ""
+
+msgid ""
+"<p>The <strong>title</strong> summarizes an artifact and will be used in RSS "
+"feeds or in the widget MyArtifact.</p>"
+msgstr ""
+
+msgid ""
+"<p>The artifacts of this tracker does not have any <em>contributor/assignee</"
+"em> yet.</p>"
+msgstr ""
+
+msgid ""
+"<p>The artifacts of this tracker does not have any <em>description</em> yet."
+"</p>"
+msgstr ""
+
+msgid ""
+"<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>"
+msgstr ""
+
+msgid ""
+"<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>The artifacts of this tracker will be described by the field <strong>"
+"%1$s</strong>.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>The artifacts of this tracker will be summarized by the field <strong>"
+"%1$s</strong>.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<strong><span class=\"highlight\">You Are NOT Logged In<br />Please <a href="
+"\"%1$s\">log in,</a> so update notifications can be emailed to you.</span></"
+"strong><br />If you don't have a user account, then enter your email address "
+"instead:"
+msgstr ""
+
+msgid "A"
+msgstr ""
+
+msgid "A Line to separate elements"
+msgstr ""
+
+msgid "A field needed for the format cannot be formatted."
+msgstr ""
+
+msgid "A field which accepts only floats"
+msgstr ""
+
+msgid "A single line text"
+msgstr ""
+
+msgid "A static rich text element"
+msgstr ""
+
+msgid "A textfield wich accept only integers"
+msgstr ""
+
+#, php-format
+msgid ""
+"A tracker creation from Jira is being processed for %s. Your new tracker "
+"will appear as soon as the import is completed."
+msgid_plural ""
+"Some tracker creations from Jira are being processed for %s. Your new "
+"trackers will appear as soon as the import is completed."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "A workflow already exists on the given tracker."
+msgstr ""
+
+msgid "ARTIFACT"
+msgstr ""
+
+msgid "AS"
+msgstr ""
+
+msgid "Access Permissions"
+msgstr ""
+
+msgid "Access denied. You don't have permissions to perform this action."
+msgstr ""
+
+msgid "Access permissions"
+msgstr ""
+
+msgid "Access to all tracker artifacts"
+msgstr ""
+
+msgid "Access to an artifact"
+msgstr ""
+
+msgid "Access to tracker artifacts assigned to group"
+msgstr ""
+
+msgid "Access to tracker artifacts submitted by group"
+msgstr ""
+
+msgid "Access to tracker artifacts the user submitted"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Activate artifact links types for all the trackers of this project?"
+msgstr ""
+
+msgid "Add a field to the tooltip:"
+msgstr ""
+
+msgid "Add a follow-up comment"
+msgstr ""
+
+msgid "Add a new"
+msgstr ""
+
+#, php-format
+msgid "Add a new %s"
+msgstr ""
+
+msgid "Add a new comment..."
+msgstr ""
+
+msgid "Add a new file:"
+msgstr ""
+
+msgid "Add a new rule"
+msgstr ""
+
+msgid "Add a new trigger"
+msgstr ""
+
+msgid ""
+"Add a target which will be called everytime an artifact is created or "
+"updated. The URL will be called using HTTP POST method."
+msgstr ""
+
+msgid "Add new values"
+msgstr ""
+
+msgid "Add notification"
+msgstr ""
+
+msgid "Add one value per row"
+msgstr ""
+
+msgid "Add reminder"
+msgstr ""
+
+msgid "Add to dashboard"
+msgstr ""
+
+msgid "Add to my dashboard"
+msgstr ""
+
+msgid "Add to project dashboard"
+msgstr ""
+
+msgid "Add type"
+msgstr ""
+
+msgid "Add webhook"
+msgstr ""
+
+#, php-format
+msgid "Added %s: %s"
+msgstr ""
+
+#, php-format
+msgid "Added: %s"
+msgstr ""
+
+msgid "Admin of the tracker"
+msgstr ""
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid "After"
+msgstr ""
+
+msgid ""
+"After artifact edition, all the disabled types used will be cleared without "
+"removing the existing link."
+msgstr ""
+
+msgid ""
+"Allow to permanently delete an artifact. Warning: <strong>There is no way to "
+"restore the artifact</strong>. This operation should be an exception."
+msgstr ""
+
+msgid "Allow user to give permissions to an artefact"
+msgstr ""
+
+msgid "Allow user to interact with trackers by email."
+msgstr ""
+
+msgid "Allowed fields"
+msgstr ""
+
+msgid "Allows user to select a date with a calendar"
+msgstr ""
+
+msgid "Alpha Ranking updated"
+msgstr ""
+
+#, php-format
+msgid "An action on the field '%1$s' already exists."
+msgstr ""
+
+msgid ""
+"An artifact could be considered <strong>done</strong> only if a semantic "
+"status is defined."
+msgstr ""
+
+msgid ""
+"An artifact is considered to be <strong>done</strong> when its field %s will "
+"have one of the following closed values:"
+msgstr ""
+
+msgid ""
+"An email not truncated will be sent at the end of the migration process."
+msgstr ""
+
+#, php-format
+msgid "An error has occurred during the deletion of the type: %1$s"
+msgstr ""
+
+msgid "An error has occurred, the workflow couldn't be created."
+msgstr ""
+
+msgid "An error has occurred, the workflow couldn't be reset."
+msgstr ""
+
+msgid "An error has occurred, the workflow couldn't be updated."
+msgstr ""
+
+#, php-format
+msgid "An error occured while creating a copy of the artifact #%1$s."
+msgstr ""
+
+msgid "An error occured while creating the tracker."
+msgstr ""
+
+msgid "An error occurred while clearing done values."
+msgstr ""
+
+msgid "An error occurred while deleting the semantic"
+msgstr ""
+
+#, php-format
+msgid "An error occurred while trying to delete the tracker %s"
+msgstr ""
+
+msgid "An error occurred while updating done values."
+msgstr ""
+
+msgid "An error occurred while updating the timeframe semantic"
+msgstr ""
+
+msgid "An invisible Line Break"
+msgstr ""
+
+msgid ""
+"Archive deleted items plugin is enabled. Each deleted artifact will be "
+"archived in the folder defined in the plugin configuration."
+msgstr ""
+
+msgid ""
+"Archive deleted items plugin is not installed or enabled. Each deleted "
+"artifact will be exported and placed in the temporary folder defined in the "
+"local.inc file. They will be purged automatically accordingly to the "
+"settings of the machine on which the server is running."
+msgstr ""
+
+msgid "Are you sure that you want to delete it?"
+msgstr ""
+
+msgid "Are you sure you want to change the type of this field?"
+msgstr ""
+
+msgid "Artifact"
+msgstr ""
+
+#, php-format
+msgid "Artifact #%1$s was not updated."
+msgstr ""
+
+#, php-format
+msgid "Artifact %1$s doesn't exist or doesn't belong to current tracker"
+msgstr ""
+
+#, php-format
+msgid "Artifact %1$s has more than one parent: %2$s"
+msgstr ""
+
+#, php-format
+msgid "Artifact %1$s successfully deleted"
+msgstr ""
+
+#, php-format
+msgid ""
+"Artifact %s was linked as child of the current artifact but is not part of "
+"hierarchy. It will not be taken into account in triggers."
+msgstr ""
+
+#, php-format
+msgid "Artifact (%s) does not belong to this tracker."
+msgstr ""
+
+msgid "Artifact ID"
+msgstr ""
+
+#, php-format
+msgid "Artifact Id %1$s does not exist"
+msgstr ""
+
+msgid "Artifact Link"
+msgstr ""
+
+msgid "Artifact Links Types"
+msgstr ""
+
+#, php-format
+msgid "Artifact Successfully Created (%1$s)"
+msgstr ""
+
+msgid "Artifact id(s)"
+msgstr ""
+
+msgid "Artifact is not found or not accessible by user."
+msgstr ""
+
+msgid "Artifact link types has been enabled."
+msgstr ""
+
+msgid "Artifact links"
+msgstr ""
+
+msgid "Artifact links count based"
+msgstr ""
+
+msgid "Artifact links types"
+msgstr ""
+
+msgid "Artifact submitters"
+msgstr ""
+
+#, php-format
+msgid "Artifact was moved from '%s' tracker in '%s' project."
+msgstr ""
+
+#, php-format
+msgid "Artifact with the title \"%1$s\" was not created."
+msgstr ""
+
+msgid "Artifacts"
+msgstr ""
+
+msgid "Artifacts Data Import"
+msgstr ""
+
+msgid ""
+"Artifacts cannot be considered <strong>done</strong> because there is no "
+"value selected for this semantic."
+msgstr ""
+
+msgid "Artifacts deletion"
+msgstr ""
+
+msgid "Artifacts deletion configuration"
+msgstr ""
+
+msgid "Artifacts fields"
+msgstr ""
+
+msgid "Artifacts with artifact links can not be moved."
+msgstr ""
+
+msgid ""
+"As a tracker administrator, you can choose the e-mail notifications level in "
+"this tracker."
+msgstr ""
+
+msgid ""
+"As a tracker administrator, you can provide email addresses to which new "
+"Artifact submissions (and possibly updates) will be systematically sent."
+msgstr ""
+
+msgid "As of"
+msgstr ""
+
+msgid ""
+"As trackers can be fully customized, you may want to define what is the "
+"title of your artifacts, or when you consider an artifact to be open or "
+"close. This information is used in the application to display artifact "
+"summary, and tooltip for instance."
+msgstr ""
+
+msgid "Assigned to"
+msgstr ""
+
+msgid "Assigned to me"
+msgstr ""
+
+msgid "Assignee"
+msgstr ""
+
+#, php-format
+msgid "Attachment #%1$s has not been saved:"
+msgstr ""
+
+msgid "Auto-compute"
+msgstr ""
+
+#, php-format
+msgid "Automatic change triggered by an update of <a href=\"%2$s\">%1$s</a>."
+msgstr ""
+
+msgid "Available types"
+msgstr ""
+
+msgid "Average"
+msgstr ""
+
+msgid "Bad field_id attribute format: int expected."
+msgstr ""
+
+msgid "Bad field_ids attribute format: array of integer expected."
+msgstr ""
+
+msgid "Bad fieldset_ids attribute format: array of integer expected."
+msgstr ""
+
+#, php-format
+msgid "Bad format: '%s'. Array expected"
+msgstr ""
+
+msgid "Bad job_url attribute format: string expected."
+msgstr ""
+
+msgid "Bad value attribute format: float expected."
+msgstr ""
+
+msgid "Bad value attribute format: integer expected."
+msgstr ""
+
+msgid "Bad value attribute format: string expected."
+msgstr ""
+
+msgid ""
+"Be careful, all the artifact content is sent in the payload without "
+"permission checks."
+msgstr ""
+
+msgid ""
+"Be careful: An artifact deletion is an action hardly reversible. Choose "
+"wisely."
+msgstr ""
+
+msgid "Before"
+msgstr ""
+
+msgid "Below is a catalog of preconfigured elements ready for use."
+msgstr ""
+
+msgid "Bind to user groups"
+msgstr ""
+
+msgid "Bind to users"
+msgstr ""
+
+msgid "Browse instructions"
+msgstr ""
+
+msgid "Burndown Chart"
+msgstr ""
+
+msgid "Burndown is under calculation. It will be available in a few minutes."
+msgstr ""
+
+msgid "Burndown is under calculation. It will be available in few minutes."
+msgstr ""
+
+msgid "CHANGESET"
+msgstr ""
+
+msgid "CSV"
+msgstr ""
+
+msgid "CSV Import"
+msgstr ""
+
+msgid "CSV import"
+msgstr ""
+
+#, php-format
+msgid ""
+"CSV separator not found (%1$s). Either you want to import only one field, or "
+"you're using the wrong separator.<br />If so, you can <a href=\"/account/"
+"\">change the CSV import/export separator</a>"
+msgstr ""
+
+msgid "Can make the transition"
+msgstr ""
+
+#, php-format
+msgid "Can not connect to Jira server, please check your Jira credentials."
+msgstr ""
+
+msgid "Can only share static selectbox fields"
+msgstr ""
+
+msgid "Can read tracker field"
+msgstr ""
+
+msgid "Can submit"
+msgstr ""
+
+msgid "Can submit tracker field"
+msgstr ""
+
+msgid "Can update tracker field"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cancellation of your Jira import"
+msgstr ""
+
+msgid "Canned responses"
+msgstr ""
+
+#, php-format
+msgid "Cannot add new date reminder on the field %1$s for the tracker %2$s"
+msgstr ""
+
+msgid ""
+"Cannot be formatted because at least one field needed for the format is "
+"missing."
+msgstr ""
+
+#, php-format
+msgid "Cannot delete the date reminder %1$s"
+msgstr ""
+
+#, php-format
+msgid "Cannot update conditions of transition with id '%d'"
+msgstr ""
+
+#, php-format
+msgid "Cannot update permissions of transition with id '%d'"
+msgstr ""
+
+#, php-format
+msgid "Cannot update the date reminder %1$s"
+msgstr ""
+
+msgid "Change the value of a date field"
+msgstr ""
+
+msgid "Change the value of a float field"
+msgstr ""
+
+msgid "Change the value of an int field"
+msgstr ""
+
+#, php-format
+msgid "Changed type from %s to %s: %s"
+msgstr ""
+
+msgid "Changes are displayed"
+msgstr ""
+
+msgid "Changeset is not found."
+msgstr ""
+
+#, php-format
+msgid "Changing %1$s artifact(s):"
+msgstr ""
+
+msgid "Check permissions?"
+msgstr ""
+
+msgid "CheckBox"
+msgstr ""
+
+msgid "Checkbox"
+msgstr ""
+
+msgid "Child"
+msgstr ""
+
+msgid "Children"
+msgstr ""
+
+msgid "Choose a field..."
+msgstr ""
+
+msgid "Choose a method..."
+msgstr ""
+
+msgid "Choose values"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Closed"
+msgstr ""
+
+msgid "Color"
+msgstr "Cor"
+
+msgid "Column"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+#, php-format
+msgid "Columns using type will not be taken into account during import : %1$s."
+msgstr ""
+
+msgid "Comment"
+msgstr "Comente"
+
+msgid "Comment has been cleared"
+msgstr ""
+
+msgid "Comment must be empty or at least 4 characters length"
+msgstr ""
+
+msgid "Comment must not be empty."
+msgstr ""
+
+msgid "Commenter"
+msgstr ""
+
+msgid "Comments are in reversed order"
+msgstr ""
+
+msgid ""
+"Compute value (sum of numerical field) from linked artifacts."
+"<p><strong>Note</strong>: <ul><li>Calculation will not check linked "
+"artifacts permissions AND will only calculate the field values of linked "
+"artifacts that have the same field name.</li></ul>"
+msgstr ""
+
+msgid "Computed value"
+msgstr ""
+
+msgid "Computed value:"
+msgstr ""
+
+msgid "Configure semantic"
+msgstr ""
+
+msgid "Configure trackers"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Confirm deletion"
+msgstr ""
+
+msgid "Congratulations!"
+msgstr ""
+
+msgid "Congratulations! The Jira import initiated on %s has just finished."
+msgstr ""
+
+msgid "Continue configuration"
+msgstr ""
+
+msgid "Contributor/assignee"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy of"
+msgstr ""
+
+#, php-format
+msgid "Copy of %1$s"
+msgstr ""
+
+#, php-format
+msgid "Copy of %1$s #%2$s is finished."
+msgstr ""
+
+msgid "Copy the email"
+msgstr ""
+
+msgid "Copy to clipboard"
+msgstr ""
+
+msgid "Copy with children"
+msgstr ""
+
+msgid "Could not match an user with your email."
+msgstr ""
+
+msgid "Count"
+msgstr "Contagem"
+
+msgid "Count (group by)"
+msgstr ""
+
+msgid "Create Report"
+msgstr ""
+
+msgid "Create a %s"
+msgstr ""
+
+msgid "Create a New Tracker"
+msgstr ""
+
+msgid "Create a new one"
+msgstr ""
+
+msgid "Create a new response"
+msgstr ""
+
+msgid "Create a new tracker"
+msgstr ""
+
+msgid "Create a new {{ parent_label }}"
+msgstr ""
+
+msgid "Create artifact by email"
+msgstr ""
+
+msgid "Create artifact by mail is <b>not</b> possible:"
+msgstr ""
+
+msgid "Create by email..."
+msgstr ""
+
+msgid "Create new trigger"
+msgstr ""
+
+msgid ""
+"Creating artifact by mail is not possible due to the current configuration "
+"of the tracker."
+msgstr ""
+
+msgid ""
+"Creating canned responses can save a lot of time if you frequently give the "
+"same answers to your users."
+msgstr ""
+
+msgid "Creation"
+msgstr ""
+
+msgid "Criteria"
+msgstr ""
+
+msgid "Cross References"
+msgstr ""
+
+msgid "Current Full Hierarchy"
+msgstr ""
+
+msgid "Current artifact children satisfy the following condition(s):"
+msgstr ""
+
+msgid "Custom columns based on..."
+msgstr ""
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Date Reminder successfully added"
+msgstr ""
+
+msgid "Date Reminder successfully deleted"
+msgstr ""
+
+msgid "Date Reminder successfully updated"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Default Tuleap notifications"
+msgstr ""
+
+msgid ""
+"Default Tuleap notifications (people will get notified when they are "
+"submitter, assignee, commenter or CC)"
+msgstr ""
+
+msgid "Default notifications"
+msgstr ""
+
+msgid "Default value"
+msgstr ""
+
+msgid "Default value type"
+msgstr ""
+
+msgid "Define cross-tracker triggers"
+msgstr ""
+
+msgid "Define dependencies"
+msgstr ""
+
+#, php-format
+msgid ""
+"Define dependencies between <b>%1$s</b> as source and <b>%2$s</b> as target:"
+msgstr ""
+
+msgid "Define global date rules"
+msgstr ""
+
+msgid "Define the closed status that are considered Done"
+msgstr ""
+
+msgid "Define the contributor/assignee of an artifact"
+msgstr ""
+
+msgid "Define the description of an artifact"
+msgstr ""
+
+msgid "Define the field to use to compute artifacts timeframes."
+msgstr ""
+
+msgid ""
+"Define the method and the fields to use to compute artifacts progression."
+msgstr ""
+
+msgid "Define the status of an artifact"
+msgstr ""
+
+msgid "Define the title of an artifact"
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Delete artifacts"
+msgstr ""
+
+msgid "Delete canceled"
+msgstr ""
+
+msgid "Delete permanently the field"
+msgstr ""
+
+msgid "Delete the reference?"
+msgstr ""
+
+msgid "Delete the value"
+msgstr ""
+
+#, php-format
+msgid "Delete this Canned Response : %1$s ?"
+msgstr ""
+
+msgid "Delete this tracker"
+msgstr ""
+
+msgid "Delete tracker"
+msgstr ""
+
+msgid "Delete type"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Description semantic has been unset"
+msgstr ""
+
+msgid "Description:"
+msgstr ""
+
+msgid "Destination id does not exist."
+msgstr ""
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Disable all notifications"
+msgstr ""
+
+msgid ""
+"Disable all notifications, regardless of user preferences and regardless of "
+"\"Global Email Notifications\" below."
+msgstr ""
+
+msgid "Disable email gateway"
+msgstr ""
+
+msgid "Disable multisort"
+msgstr ""
+
+msgid "Disable notifications"
+msgstr ""
+
+msgid "Display artifacts:"
+msgstr ""
+
+msgid "Display in & out references"
+msgstr ""
+
+msgid "Display original email"
+msgstr ""
+
+msgid "Display reverse artifact links"
+msgstr ""
+
+msgid "Display settings"
+msgstr ""
+
+msgid ""
+"Display the artifact rank in the context of a milestone. The value is given "
+"by the AgileDashboard plugin. Please note that this field will evolve in the "
+"future."
+msgstr ""
+
+msgid "Display the burndown chart for the artifact"
+msgstr ""
+
+msgid "Display the cross references for the artifact"
+msgstr ""
+
+msgid "Display the date the artifact was submitted on"
+msgstr ""
+
+msgid "Display the id of the artifact"
+msgstr ""
+
+msgid "Display the in-tracker numerotation"
+msgstr ""
+
+msgid "Display the last update date of the artifact"
+msgstr ""
+
+msgid "Display the user who submitted the artifact"
+msgstr ""
+
+msgid "Display time"
+msgstr ""
+
+msgid ""
+"Do you really want to force burndown cache generation? Cache generation will "
+"end up on a non availability of burndown for few minutes."
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Done values successfully cleared."
+msgstr ""
+
+msgid "Done values successfully updated."
+msgstr ""
+
+msgid "Duplicate this artifact"
+msgstr ""
+
+msgid "Dynamic fields"
+msgstr ""
+
+msgid ""
+"E.g. for the fixed_in type, a bug is fixed in a release so the reverse label "
+"will be \"Fixed\" (the release has \"Fixed\" bugs)."
+msgstr ""
+
+msgid ""
+"E.g. for the fixed_in type, a bug will be fixed in a release so the forward "
+"label will be \"Fixed in\"."
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Edit children of %1$s"
+msgstr ""
+
+msgid "Edit permissions of this field"
+msgstr ""
+
+#, php-format
+msgid "Edit the field \"%1$s\""
+msgstr ""
+
+msgid "Edit type"
+msgstr ""
+
+msgid "Edit webhook"
+msgstr ""
+
+msgid "Editer le champ"
+msgstr ""
+
+msgid "Editing system types is disallowed."
+msgstr ""
+
+msgid "Effort based"
+msgstr ""
+
+msgid "Email Gateway"
+msgstr ""
+
+msgid "Email Gateway configuration"
+msgstr ""
+
+msgid "Email Notification Settings"
+msgstr ""
+
+msgid "Email Notifications Settings"
+msgstr ""
+
+msgid "Email subject customisation"
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "Enable custom sender fields for email notifications"
+msgstr ""
+
+msgid "Enable multisort"
+msgstr ""
+
+msgid "Enable notifications"
+msgstr ""
+
+msgid ""
+"Enable notifications for this tracker, you will be able to choose the "
+"notifications level once enabled."
+msgstr ""
+
+msgid "Enable to create/reply to artifacts by mail"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "Enter artifact ids separated with a comma"
+msgstr ""
+
+msgid "Enter description..."
+msgstr ""
+
+msgid "Error during parsing expert query"
+msgstr ""
+
+#, php-format
+msgid "Error in CSV file at line %1$s"
+msgstr ""
+
+msgid "Error in your Jira import"
+msgstr ""
+
+#, php-format
+msgid "Error on the date value : %1$s must be %2$s to %3$s."
+msgstr ""
+
+#, php-format
+msgid "Error while updating the parent artifact %1$s: %2$s"
+msgstr ""
+
+#, php-format
+msgid "Error with the field '%s'. The user '%s' does not exist."
+msgstr ""
+
+msgid "Example: (field_1 = 'value' OR field_2 = 'value') AND field_3 = 'value'"
+msgstr ""
+
+msgid "Existing Responses:"
+msgstr ""
+
+msgid "Existing triggers"
+msgstr ""
+
+#, php-format
+msgid ""
+"Expected date format is <strong>%1$s</strong>. <a href=\"/account/edition"
+"\">Change import/export date format</a>"
+msgstr ""
+
+msgid "Expert mode"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Export all columns"
+msgstr ""
+
+msgid "Export all report columns"
+msgstr ""
+
+#, php-format
+msgid "Fail to retrieve information of user having the accountId %s."
+msgstr ""
+
+msgid ""
+"Fail to retrieve the full collection of issue changelogs in selected tracker."
+msgstr ""
+
+msgid ""
+"Fail to retrieve the full collection of issue comments in selected tracker."
+msgstr ""
+
+msgid "Fail to retrieve the full collection of issues in selected tracker."
+msgstr ""
+
+msgid "Fail to retrieve the full collection of projects."
+msgstr ""
+
+msgid "Fast computation"
+msgstr ""
+
+msgid "Feel free to choose one:"
+msgstr ""
+
+msgid "Field"
+msgstr ""
+
+msgid "Field added to the form"
+msgstr ""
+
+msgid "Field deleted"
+msgstr ""
+
+msgid "Field dependencies"
+msgstr ""
+
+msgid "Field not found."
+msgstr ""
+
+msgid "Field removed"
+msgstr ""
+
+msgid "Field type could not be changed"
+msgstr ""
+
+msgid "Field type could not be changed for a target field"
+msgstr ""
+
+msgid "Field type successfully changed"
+msgstr ""
+
+msgid "Field type successfully changed for the field and all its target fields"
+msgstr ""
+
+msgid "Field updated"
+msgstr ""
+
+msgid "Field value cannot be empty"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Fields are not valid"
+msgstr ""
+
+msgid "Fields permissions"
+msgstr ""
+
+msgid "Fieldset"
+msgstr ""
+
+msgid "File not found"
+msgstr ""
+
+msgid "File upload"
+msgstr ""
+
+msgid "File:"
+msgstr ""
+
+msgid "First, select a template you want to start from"
+msgstr ""
+
+msgid "Fixed"
+msgstr ""
+
+msgid "Fixed in"
+msgstr ""
+
+msgid "Float"
+msgstr ""
+
+msgid "Follow-ups"
+msgstr ""
+
+msgid "Force cache regeneration"
+msgstr ""
+
+msgid "Force notification configuration usage to all users"
+msgstr ""
+
+msgid "Forward label"
+msgstr ""
+
+msgid "From a Tracker v3"
+msgstr ""
+
+msgid "General settings"
+msgstr ""
+
+msgid "Global Email Notification"
+msgstr ""
+
+msgid "Global Rules"
+msgstr ""
+
+msgid "Global Tracker Administrator"
+msgstr ""
+
+msgid "Global rules"
+msgstr ""
+
+msgid "Global rules are not respected"
+msgstr ""
+
+msgid "Go back to semantic overview"
+msgstr ""
+
+msgid "Go see this tracker"
+msgstr ""
+
+msgid "Go to diff"
+msgstr ""
+
+msgid "Go to report"
+msgstr ""
+
+msgid "Go to the administration of the cross-tracker triggers."
+msgstr ""
+
+#, php-format
+msgid "Group '%s' couldn't be added."
+msgid_plural "Groups '%s' couldn't be added."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Group fields in a column"
+msgstr ""
+
+msgid "Group fields in a set"
+msgstr ""
+
+msgid "Hidden fieldsets:"
+msgstr ""
+
+msgid "Hierarchy"
+msgstr ""
+
+msgid "Hint"
+msgstr ""
+
+msgid "Id of the artifact to delete:"
+msgstr ""
+
+msgid ""
+"If you know the artifact id, feel free to enter it manually in the text "
+"field below. Use a comma to separate each ids if you have more than one."
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import / Export"
+msgstr ""
+
+msgid "Import Artifacts"
+msgstr ""
+
+msgid "Import Format"
+msgstr ""
+
+msgid "Import failed."
+msgstr ""
+
+msgid "Import succeed."
+msgstr ""
+
+msgid "Imported in xml by <a href=\"%s\">%s</a> on %s"
+msgstr ""
+
+msgid "Impossible to delete this field (field dependencies)"
+msgstr ""
+
+#, php-format
+msgid "Impossible to delete this field (used by: %s)"
+msgstr ""
+
+msgid "Impossible to delete this field (used in triggers)"
+msgstr ""
+
+msgid "Impossible to delete this field (used in workflow)"
+msgstr ""
+
+#, php-format
+msgid ""
+"In case you have inadvertently deleted this tracker and want it to be "
+"restored, please contact the <a href=\"mailto:%1$s\">Site Administrator</a> "
+"within the next 10 days."
+msgstr ""
+
+#, php-format
+msgid ""
+"In order to edit artifact links, please <a href=\"%1$s\">switch to the full "
+"edit mode</a>."
+msgstr ""
+
+msgid ""
+"Include [Assigned to me] flag in subject for people who are assigned to the "
+"artifact"
+msgstr ""
+
+msgid "Include week-ends"
+msgstr ""
+
+msgid "Insecure email gateway"
+msgstr ""
+
+msgid "Instantiate for new projects"
+msgstr ""
+
+msgid "Integer"
+msgstr ""
+
+msgid "Invalid color tracker name"
+msgstr ""
+
+#, php-format
+msgid "Invalid condition: the field '%1$s'must not be empty"
+msgstr ""
+
+msgid "Invalid name for a report"
+msgstr ""
+
+#, php-format
+msgid ""
+"Invalid name: %s. Please use only alphanumerical characters or an unreserved "
+"reference."
+msgstr ""
+
+msgid "Invalid project template."
+msgstr ""
+
+#, php-format
+msgid ""
+"Invalid short name: %s. Please use only alphanumerical characters or an "
+"unreserved reference."
+msgstr ""
+
+msgid "Invalid tracker template."
+msgstr ""
+
+#, php-format
+msgid "Invalid value %s for field %s."
+msgid_plural "Invalid values %s for field %s."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Is enabled"
+msgstr ""
+
+msgid "Is promoted"
+msgstr ""
+
+msgid "It encountered the following error:"
+msgstr ""
+
+msgid "It is inherited from a tracker of another project, this is not allowed"
+msgstr ""
+
+msgid "Items"
+msgstr ""
+
+msgid "Items per page :"
+msgstr ""
+
+msgid "Jira import is finished"
+msgstr ""
+
+msgid "Jira issue type"
+msgstr ""
+
+msgid "Jira project id"
+msgstr ""
+
+msgid "Jira server"
+msgstr ""
+
+msgid "Jira users identified on Tuleap:"
+msgstr ""
+
+msgid ""
+"Jira users who are sharing their email address, but not matching with any "
+"Tuleap user:"
+msgstr ""
+
+#, php-format
+msgid "Job build launch succeeded (%1$s)"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Last Update Date"
+msgstr ""
+
+msgid "Last Updated By"
+msgstr ""
+
+msgid "Last artifact created"
+msgstr ""
+
+msgid "Last push"
+msgstr ""
+
+msgid "Last update"
+msgstr ""
+
+msgid "Latest modifications"
+msgstr ""
+
+msgid "Launch a continuous integration build"
+msgstr ""
+
+msgid "Lets the user attach files to the artifact"
+msgstr ""
+
+msgid "Limit"
+msgstr ""
+
+msgid "Limit successfully updated."
+msgstr ""
+
+msgid "Line Break"
+msgstr ""
+
+msgid ""
+"Links between artifacts may have a type for a better semantics between "
+"artifacts. Here is the list of allowed types for this platform."
+msgstr ""
+
+msgid "Links to other artifacts"
+msgstr ""
+
+msgid "List artifacts you have submitted or assigned to you, by project."
+msgstr ""
+
+msgid "Load artifacts"
+msgstr ""
+
+msgid "Log priority changes in follow-up comments"
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "Logs for %s"
+msgstr ""
+
+msgid "Mail configuration"
+msgstr ""
+
+msgid "Manage Field Usage"
+msgstr ""
+
+msgid "Manage Fields Permissions"
+msgstr ""
+
+msgid "Manage Semantic"
+msgstr ""
+
+msgid "Manage Tracker Permissions"
+msgstr ""
+
+msgid "Manage field dependencies"
+msgstr ""
+
+msgid "Manage hierarchy of tracker"
+msgstr ""
+
+msgid "Manage tooltip"
+msgstr ""
+
+msgid ""
+"Mandatory attribute field_id not found in action with type \"set_field_value"
+"\"."
+msgstr ""
+
+msgid ""
+"Mandatory attribute field_ids not found in action with type \"frozen_fields"
+"\"."
+msgstr ""
+
+msgid ""
+"Mandatory attribute fieldset_ids not found in action with type "
+"\"hidden_fieldsets\"."
+msgstr ""
+
+msgid "Mandatory attribute job_url not found in CI build action."
+msgstr ""
+
+msgid "Mandatory attribute value not found in with type \"set_field_value\"."
+msgstr ""
+
+msgid "Manually"
+msgstr ""
+
+msgid "Mark all links to be removed"
+msgstr ""
+
+msgid "Mass Change"
+msgstr ""
+
+#, php-format
+msgid "Mass Change All (%1$s artifacts)"
+msgstr ""
+
+msgid "Mass Change Checked"
+msgstr ""
+
+msgid "Masschange information"
+msgstr ""
+
+#, php-format
+msgid "Matching artifacts: <strong>%1$s</strong>"
+msgstr ""
+
+msgid "Max. characters"
+msgstr ""
+
+msgid "Maximum"
+msgstr ""
+
+msgid ""
+"Maximum number of artifacts users can delete or move from the REST API on a "
+"24 hours sliding window."
+msgstr ""
+
+msgid "Message Body:"
+msgstr ""
+
+msgid "Migrate a Tracker v3 content for test"
+msgstr ""
+
+msgid "Migrate a Tracker v3 content keeping original ids"
+msgstr ""
+
+msgid "Minimum"
+msgstr ""
+
+msgid "Missing Parameters"
+msgstr ""
+
+msgid "Missing field in data:"
+msgstr ""
+
+#, php-format
+msgid "Missing required field: %1$s"
+msgstr ""
+
+#, php-format
+msgid "Missing value on a required field: %1$s"
+msgstr ""
+
+msgid "Modify Canned Response"
+msgstr ""
+
+msgid "Move this artifact"
+msgstr ""
+
+msgid "Multi Select Box"
+msgstr ""
+
+msgid ""
+"Multiples users match your email, it must be unique on the platform to edit "
+"artifact by email."
+msgstr ""
+
+msgid "My Artifacts"
+msgstr ""
+
+msgid "My notifications"
+msgstr ""
+
+msgid "N/A"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Name is mandatory"
+msgstr ""
+
+msgid "Name, color, and short name are required."
+msgstr ""
+
+#, php-format
+msgid "New %s"
+msgstr ""
+
+msgid "New tracker"
+msgstr ""
+
+msgid "No Tracker pending for Deletion"
+msgstr ""
+
+msgid "No activity yet"
+msgstr ""
+
+msgid "No artifact links"
+msgstr ""
+
+msgid "No artifacts have been selected"
+msgstr ""
+
+msgid "No canned responses set up yet for this tracker"
+msgstr ""
+
+#, php-format
+msgid "No changes for artifact %1$s"
+msgstr ""
+
+msgid "No comment"
+msgstr ""
+
+msgid "No data to import"
+msgstr ""
+
+msgid "No element selected."
+msgstr ""
+
+msgid "No logs yet"
+msgstr ""
+
+msgid "No notification set"
+msgstr ""
+
+msgid "No notifications"
+msgstr ""
+
+msgid "No notifications at all"
+msgstr ""
+
+msgid ""
+"No possible value found regarding your configuration. Please check your "
+"transition and field dependencies."
+msgstr ""
+
+msgid "No reports available"
+msgstr ""
+
+msgid "No semantic defined in this tracker."
+msgstr ""
+
+msgid "No trackers have been set up, or you are not allowed to view them."
+msgstr ""
+
+msgid "No type"
+msgstr ""
+
+msgid "No user group has access to this tracker"
+msgstr ""
+
+msgid "No users have unsubscribed."
+msgstr ""
+
+msgid "No value has been set"
+msgstr ""
+
+msgid "No webhooks defined"
+msgstr ""
+
+msgid "No workflow defined on the given tracker."
+msgstr ""
+
+msgid "No, I do not want to delete it"
+msgstr ""
+
+msgid "Non authorized dependency.Please, select other fields."
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid ""
+"None of the reports for this tracker are public, please ensure that at least "
+"one report is public! Tracker access should be managed via the permission "
+"settings."
+msgstr ""
+
+msgid "Normal mode"
+msgstr ""
+
+msgid "Not allowed to delete a fieldset used in workflow."
+msgstr ""
+
+msgid "Not allowed to delete non-empty field set."
+msgstr ""
+
+msgid "Notification settings"
+msgstr ""
+
+msgid "Notification successfully deleted."
+msgstr ""
+
+msgid "Notification successfully saved."
+msgstr ""
+
+msgid "Notifications"
+msgstr "Notificações"
+
+msgid "Notified people"
+msgstr ""
+
+msgid ""
+"Notify me on all updates of artifacts I'm involved (assigned, submitter, cc, "
+"comment)"
+msgstr ""
+
+msgid "Notify me on every change"
+msgstr ""
+
+msgid "Notify me on status change"
+msgstr ""
+
+msgid "Notify me when artifacts are created"
+msgstr ""
+
+msgid "Number of open artifacts"
+msgstr ""
+
+msgid "OK, got it!"
+msgstr ""
+
+msgid "On all updates?"
+msgstr ""
+
+#, php-format
+msgid "One id or more could not be found: '%s'"
+msgstr ""
+
+#, php-format
+msgid "One tracker or more are not found: %s"
+msgstr ""
+
+#, php-format
+msgid "One tracker or more is duplicated in list: %s"
+msgstr ""
+
+msgid ""
+"Only artifacts linked with the type \"Child\" will be taken into account in "
+"the computation of the progress."
+msgstr ""
+
+msgid ""
+"Only children that are part of the defined hierarchy will be taken into "
+"account by triggers."
+msgstr ""
+
+msgid ""
+"Only fields selected in title or description semantic can be required if you "
+"want to create artifacts by email."
+msgstr ""
+
+msgid ""
+"Only formatting have been changed, you should switch to markup to see the "
+"changes"
+msgstr ""
+
+msgid ""
+"Only letters and underscore are allowed for shortname (must start with a "
+"letter though)."
+msgstr ""
+
+msgid "Only text fields are supported for diff."
+msgstr ""
+
+msgid ""
+"Oops. Something weird occured. Unable to create the tracker. Please try "
+"again."
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Open List"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Or select an existing field dependency"
+msgstr ""
+
+msgid "Or you can migrate a Tracker v3..."
+msgstr ""
+
+msgid "Other Jira users:"
+msgstr ""
+
+msgid "Other fields than title or description cannot be required"
+msgstr ""
+
+msgid "Other groups"
+msgstr ""
+
+msgid "Other users Tuleap could not identify, replaced by Tracker Importer"
+msgstr ""
+
+msgid "Others"
+msgstr ""
+
+#, php-format
+msgid ""
+"Override link type \"%2$s\" to artifact #%1$s with type \"%3$s\" returned by "
+"another service"
+msgstr ""
+
+msgid "Paragraph, long text field"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Parent artifact:"
+msgstr ""
+
+msgid "Paste the patch here (text only)"
+msgstr ""
+
+msgid "Per tracker id"
+msgstr ""
+
+msgid "Permission Denied"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Permissions on artifact"
+msgstr ""
+
+msgid "Personal report"
+msgid_plural "Personal reports"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Pick artifacts to be linked from your recently viewed items:"
+msgstr ""
+
+msgid ""
+"Please <a href=\"{{ tracker_fields_admin_url }}\">add an artifact link "
+"field</a> to your tracker first."
+msgstr ""
+
+msgid "Please avoid spaces and punctuation in short names"
+msgstr ""
+
+msgid ""
+"Please note that project administrators and tracker administrators are "
+"granted full access to the tracker."
+msgstr ""
+
+msgid ""
+"Please note that the image above is rendered in real time so it represents "
+"burndown as of today, not as when the email was sent."
+msgstr ""
+
+msgid "Please provide a valid limit."
+msgstr ""
+
+msgid "Please provide a valid query."
+msgstr ""
+
+msgid "Please select a tracker"
+msgstr ""
+
+msgid "Please try again or contact your administrator."
+msgstr ""
+
+msgid "Please, check your data before importing, especially the dates."
+msgstr ""
+
+msgid "Preview"
+msgstr "Pré-visualização"
+
+msgid "Preview:"
+msgstr ""
+
+msgid "Progress"
+msgstr ""
+
+msgid "Progress semantic is not properly configured."
+msgstr ""
+
+#, php-format
+msgid ""
+"Progress semantic is not properly configured: Link type %s is not activated "
+"in the project or does not exist."
+msgstr ""
+
+msgid ""
+"Progress semantic is not properly configured: Only links of type \"Child\" "
+"are supported."
+msgstr ""
+
+#, php-format
+msgid ""
+"Progress semantic is not properly configured: Unable to find an artifact "
+"link field in tracker %s."
+msgstr ""
+
+msgid ""
+"Progress semantic is not properly configured: total effort and remaining "
+"effort fields have to be two different fields."
+msgstr ""
+
+msgid ""
+"Progress semantic is not properly configured: unable to find the remaining "
+"effort field."
+msgstr ""
+
+msgid ""
+"Progress semantic is not properly configured: unable to find the total "
+"effort field."
+msgstr ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid ""
+"Project admins can also <a href=\"/project/admin/ugroup.php?group_id=%s"
+"\">create or modify</a> user groups."
+msgstr ""
+
+msgid "Promote %s in the +New dropdown across the project"
+msgstr ""
+
+msgid "Provided computation method does not exist"
+msgstr ""
+
+msgid "Provides a textbox containing a list of values, with autocompletion"
+msgstr ""
+
+msgid "Public"
+msgstr "Público"
+
+msgid "Public report"
+msgid_plural "Public reports"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Query"
+msgstr ""
+
+msgid "Radio button"
+msgstr ""
+
+msgid "Rank"
+msgstr ""
+
+msgid "Read only"
+msgstr ""
+
+msgid "Read only access to information about trackers"
+msgstr ""
+
+#, php-format
+msgid ""
+"Ready to import %1$s artifact(s): %2$s new artifact(s), %3$s existing "
+"artifact(s)"
+msgstr ""
+
+msgid "Receive notifications for this artifact"
+msgstr ""
+
+msgid "Recent artifacts"
+msgstr ""
+
+msgid "Referenced by {{ artifact_xref }}"
+msgstr ""
+
+msgid "References list is empty"
+msgstr ""
+
+msgid "Referencing {{ artifact_xref }}"
+msgstr ""
+
+msgid "Remaining effort"
+msgstr ""
+
+msgid "Remaining effort cannot be greater than total effort."
+msgstr ""
+
+msgid "Remaining effort cannot be negative."
+msgstr ""
+
+#, php-format
+msgid "Reminder: '%1$s' %2$s for '%3$s'"
+msgstr ""
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "Remove %s from +New dropdown"
+msgstr ""
+
+msgid "Remove the field from the tooltip"
+msgstr ""
+
+#, php-format
+msgid "Removed: %s"
+msgstr ""
+
+msgid "Renderer id"
+msgstr ""
+
+msgid "Renderer name is mandatory."
+msgstr ""
+
+msgid "Reply artifact by email"
+msgstr ""
+
+msgid "Reply to artifact by mail is possible"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Report configuration"
+msgstr ""
+
+#, php-format
+msgid ""
+"Report has been modified by <span class=\"tracker_report_updated_by\">%1$s</"
+"span>. You can either:"
+msgstr ""
+
+msgid "Report has been modified. You can either"
+msgstr ""
+
+msgid "Report name:"
+msgstr ""
+
+msgid "Report:"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Required fields are properly configured"
+msgstr ""
+
+msgid "Reset sort"
+msgstr ""
+
+msgid "Reset this semantic"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Restrict access to this artifact for the following user groups:"
+msgstr ""
+
+msgid "Return type"
+msgstr ""
+
+msgid "Reverse artifact links"
+msgstr ""
+
+msgid "Reverse label"
+msgstr ""
+
+msgid "Revert"
+msgstr ""
+
+msgid "Rows"
+msgstr ""
+
+msgid "Rule successfully created"
+msgstr ""
+
+msgid "Rule(s) successfully deleted"
+msgstr ""
+
+msgid "Rule(s) successfully updated"
+msgstr ""
+
+msgid "S"
+msgstr ""
+
+msgid "Salome"
+msgstr ""
+
+msgid "Save"
+msgstr "Gravar"
+
+msgid "Save as..."
+msgstr ""
+
+msgid "Save configuration"
+msgstr "Salvar configuração"
+
+msgid "Save new report"
+msgstr ""
+
+msgid "Save report as"
+msgstr ""
+
+msgid "Save webhook"
+msgstr ""
+
+msgid "Save your modifications"
+msgstr ""
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Search artifacts"
+msgstr ""
+
+msgid ""
+"See the {{ tracker_name_from_which_we_imply_the_semantic }} tracker "
+"configuration"
+msgstr ""
+
+msgid "Select Box"
+msgstr ""
+
+msgid "Select a parent"
+msgstr ""
+
+msgid ""
+"Select a source field and a target field to edit dependencies between them."
+msgstr ""
+
+msgid "Select artifacts to link to&nbsp;"
+msgstr ""
+
+msgid "Select default value"
+msgstr ""
+
+msgid "Selectbox"
+msgstr ""
+
+msgid "Selected values are invalid because some are not closed values anymore."
+msgstr ""
+
+#, php-format
+msgid "Semantic Timeframe is not configured for tracker %s."
+msgstr ""
+
+msgid "Semantic has been deleted successfully"
+msgstr ""
+
+msgid "Semantic has been saved successfully"
+msgstr ""
+
+msgid "Semantic is properly configured"
+msgstr ""
+
+msgid "Semantic status is not defined."
+msgstr ""
+
+msgid "Semantic timeframe reset successfully"
+msgstr ""
+
+msgid "Semantic timeframe updated successfully"
+msgstr ""
+
+msgid ""
+"Semantic title and description for creating an artifact by mail are not "
+"defined."
+msgstr ""
+
+msgid "Semantic title and/or description are not configured"
+msgstr ""
+
+msgid "Semantics"
+msgstr ""
+
+msgid "Send an email to"
+msgstr ""
+
+msgid "Send notifications to people monitoring these artifacts"
+msgstr ""
+
+msgid "Send notifications to selected people"
+msgstr ""
+
+msgid "Send notifications:"
+msgstr ""
+
+msgid "Separator"
+msgstr ""
+
+msgid "Server url is invalid"
+msgstr ""
+
+msgid ""
+"Set a limit on expert queries to avoid too complex ones. Be careful, higher "
+"the limit is, higher the time to process the query by the server can be."
+msgstr ""
+
+msgid "Short name"
+msgstr ""
+
+msgid "Shortcuts"
+msgstr ""
+
+msgid "Shortname"
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Show Format"
+msgstr ""
+
+msgid "Show diff"
+msgstr ""
+
+msgid "Show items referenced by {{ artifact_xref }}"
+msgstr ""
+
+msgid "Show/hide this value"
+msgstr ""
+
+msgid "Simple columns"
+msgstr ""
+
+msgid "Size"
+msgstr "Tamanho"
+
+msgid "Snapshot"
+msgstr ""
+
+msgid ""
+"Some child trackers don't have a \"remaining_effort\" Integer or Float or "
+"Computed field:"
+msgstr ""
+
+msgid ""
+"Some migrations are being processed. Your new trackers will appear as soon "
+"as the migrations are completed."
+msgstr ""
+
+msgid ""
+"Some selected values was not saved because they are used in another semantic."
+msgstr ""
+
+msgid ""
+"Some trackers inherit their semantics timeframe from the current tracker:"
+msgstr ""
+
+msgid "Something went wrong, the follow up content couldn't be loaded"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr ""
+
+msgid "Sort by:"
+msgstr ""
+
+msgid "Source id does not exist."
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start using my tracker"
+msgstr ""
+
+msgid "Static Text"
+msgstr ""
+
+msgid "Static value"
+msgstr ""
+
+msgid "Static values"
+msgstr ""
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Status change notifications"
+msgstr ""
+
+msgid ""
+"Status change notifications (people will get notified when they are "
+"submitter, assignee, commenter or CC and artifact status is updated)"
+msgstr ""
+
+msgid "Std deviation"
+msgstr ""
+
+msgid "Stop receiving notifications for this artifact"
+msgstr ""
+
+msgid "String"
+msgstr ""
+
+msgid ""
+"String fields are no longer supported for description semantic. Please "
+"update."
+msgstr ""
+
+msgid "Structural elements"
+msgstr ""
+
+msgid "Structure XML export"
+msgstr ""
+
+msgid "Submit"
+msgstr "Enviar para"
+
+msgid "Submit Changes"
+msgstr ""
+
+msgid "Submit instructions"
+msgstr ""
+
+msgid "Submit permissions"
+msgstr ""
+
+msgid "Submitted By"
+msgstr ""
+
+msgid "Submitted On"
+msgstr ""
+
+msgid "Submitter"
+msgstr ""
+
+msgid "Successfully Updated"
+msgstr ""
+
+#, php-format
+msgid "Successfully Updated (%1$s)"
+msgstr ""
+
+msgid "Successfully updated, the modification will be active in a few minutes."
+msgstr ""
+
+msgid "Successfully updated."
+msgstr "Atualizado com sucesso."
+
+msgid "Sum"
+msgstr ""
+
+msgid "Summary"
+msgstr "Resumo"
+
+msgid "Switch to markup diff"
+msgstr ""
+
+msgid "Switch to new tracker creation flow"
+msgstr ""
+
+msgid "Switch to:"
+msgstr ""
+
+msgid "Table"
+msgstr ""
+
+msgid "Target URL"
+msgstr ""
+
+msgid "Target field"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "That tracker does not exist."
+msgstr ""
+
+msgid "The 'job_url' attribute must be a valid URL."
+msgstr ""
+
+msgid "The <strong>%s</strong> tracker has been successfully created."
+msgstr ""
+
+#, php-format
+msgid "The @comments metadata cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The @comments metadata cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The @comments metadata cannot be compared to OPEN()."
+msgstr ""
+
+msgid ""
+"The Jira import initiated on %s cannot be completed. It has been canceled."
+msgstr ""
+
+msgid ""
+"The Jira import initiated on %s is in queue since too long. It seems that "
+"something prevented its execution. It has been canceled."
+msgstr ""
+
+#, php-format
+msgid "The artifact #%d is not located in an active project."
+msgstr ""
+
+msgid "The artifact cannot be created because there are several errors:"
+msgstr ""
+
+msgid ""
+"The artifact doesn't have an artifact link field or you have not the "
+"permission to modify it, please reconfigure your tracker"
+msgstr ""
+
+#, php-format
+msgid "The artifact has too many children (limit is set to %1$s)."
+msgstr ""
+
+msgid "The artifact is not linked to any changeset."
+msgstr ""
+
+#, php-format
+msgid "The artifact link type \"%s\" cannot be disabled"
+msgstr ""
+
+#, php-format
+msgid ""
+"The artifact link type \"%s\" cannot be used to link artifact #%s manually"
+msgstr ""
+
+#, php-format
+msgid ""
+"The artifact link type \"%s\" is disabled and cannot be used to link "
+"artifact #%s"
+msgstr ""
+
+#, php-format
+msgid "The artifact link type \"%s\" is now disabled"
+msgstr ""
+
+#, php-format
+msgid "The artifact link type \"%s\" is now enabled"
+msgstr ""
+
+msgid "The artifact link type does not exist"
+msgstr ""
+
+msgid "The artifact was not created"
+msgstr ""
+
+msgid "The artifact was not updated"
+msgstr ""
+
+#, php-format
+msgid "The artifact will be linked to %1$s"
+msgstr ""
+
+msgid "The changeset cannot be stored."
+msgstr ""
+
+msgid "The comment cannot be stored."
+msgstr ""
+
+msgid "The computation of the progression will be"
+msgstr ""
+
+#, php-format
+msgid "The contributor/assignee is now: %1$s"
+msgstr ""
+
+msgid ""
+"The copy of the children will be done \"as is\", you won't be able to edit "
+"them during the copy process."
+msgstr ""
+
+#, php-format
+msgid "The date field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The date field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with < operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with <= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with > operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with >= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+
+#, php-format
+msgid "The date field '%s' cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The description is now: %1$s"
+msgstr ""
+
+msgid "The email has been copied to clipboard"
+msgstr ""
+
+msgid "The feature is deactivated, nobody can interact with trackers by email."
+msgstr ""
+
+#, php-format
+msgid "The field \"%1$s\" cannot be stored."
+msgstr ""
+
+#, php-format
+msgid "The field \"%1$s\" will not be taken into account."
+msgstr ""
+
+#, php-format
+msgid "The field %1$s is required."
+msgstr ""
+
+#, php-format
+msgid "The field '%1$s' will be automatically cleared"
+msgstr ""
+
+#, php-format
+msgid "The field '%1$s' will be automatically set to %2$s"
+msgstr ""
+
+#, php-format
+msgid "The field '%s' is not supported for the operator %s."
+msgstr ""
+
+#, php-format
+msgid ""
+"The field '%s' is not supported. Please\n"
+"                    refer to the documentation for the allowed types."
+msgstr ""
+
+#, php-format
+msgid ""
+"The field '%u' is used for the workflow and cannot be defined in frozen "
+"fields actions."
+msgstr ""
+
+msgid ""
+"The field for semantic status cannot be updated because semantic done is "
+"defined for this tracker."
+msgstr ""
+
+msgid "The field is automatically set to artifact submission date"
+msgstr ""
+
+msgid "The field is automatically set to artifact submission user"
+msgstr ""
+
+msgid "The field is automatically set to last artifact update date"
+msgstr ""
+
+msgid ""
+"The field is automatically set to the last person who modified the artifact"
+msgstr ""
+
+msgid "The field you submitted is not a list field"
+msgstr ""
+
+msgid "The field you submitted is not a text field"
+msgstr ""
+
+msgid "The field you submitted is not a user list field"
+msgstr ""
+
+#, php-format
+msgid ""
+"The field_id value '%u' does not match a date field in use in the tracker."
+msgstr ""
+
+#, php-format
+msgid "The field_id value '%u' does not match a field in use in the tracker."
+msgstr ""
+
+#, php-format
+msgid ""
+"The field_id value '%u' does not match a float field in use in the tracker."
+msgstr ""
+
+#, php-format
+msgid ""
+"The field_id value '%u' does not match an int field in use in the tracker."
+msgstr ""
+
+#, php-format
+msgid "The field_id value '%u' is used in a field dependency in the tracker."
+msgstr ""
+
+#, php-format
+msgid ""
+"The fieldset_id value '%u' does not match a fieldset in use in the tracker."
+msgstr ""
+
+#, php-format
+msgid "The file field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The file field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The file field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid "The file field '%s' cannot be compared to the value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The float field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The float field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The float field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with < operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with <= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with > operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with >= operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The float field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+
+#, php-format
+msgid "The float field '%s' cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The following artifacts were not updated (%1$s)"
+msgstr ""
+
+msgid "The following fields will be displayed in the tooltip:"
+msgstr ""
+
+msgid ""
+"The following trackers cannot be displayed (data seems missing in database):"
+msgstr ""
+
+#, php-format
+msgid ""
+"The following trackers cannot be imported due to invalid data, name or short "
+"name already in use: %1$s"
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with < "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with <= "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with > "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with >= "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The integer field '%s' cannot be compared to the empty string with BETWEEN() "
+"operator."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to the float value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The integer field '%s' cannot be compared to the string value '%s'."
+msgstr ""
+
+msgid "The label will not appear in form."
+msgstr ""
+
+msgid "The last person to update the artifact"
+msgstr ""
+
+msgid "The limit value is incorrect."
+msgstr ""
+
+#, php-format
+msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
+msgstr ""
+
+#, php-format
+msgid "The list field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The list field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid ""
+"The list field '%s' cannot be compared to the empty string with IN() "
+"operator."
+msgstr ""
+
+#, php-format
+msgid ""
+"The list field '%s' cannot be compared to the empty string with NOT IN() "
+"operator."
+msgstr ""
+
+msgid "The notification could not be deleted."
+msgstr ""
+
+msgid "The notification could not be saved."
+msgstr ""
+
+msgid "The priority has been"
+msgstr ""
+
+#, php-format
+msgid ""
+"The progress of artifacts is based on effort and will be computed by "
+"dividing the current value of the \"%s\" field by the current value of the "
+"\"%s\" field."
+msgstr ""
+
+msgid ""
+"The progress of artifacts will be based on the ratio of nb open/nb total of "
+"children artifacts."
+msgstr ""
+
+msgid ""
+"The progress will be computed by dividing the total number of direct "
+"children by the number of closed direct children."
+msgstr ""
+
+msgid ""
+"The provided field can't be shared with this tracker because the project it "
+"comes from is not active."
+msgstr ""
+
+msgid "The provided file is not a valid file"
+msgstr ""
+
+msgid ""
+"The query is considered too complex to be executed by the server.\n"
+"                                Please simplify it (e.g remove comparisons) "
+"to continue."
+msgstr ""
+
+msgid ""
+"The rank of an artifact only exists in the context of a milestone. You must "
+"filter by milestone to view artifact ranks."
+msgstr ""
+
+msgid ""
+"The report was sorted against this column. This column can not be used to "
+"sort a report, the sort has been ignored. Please choose another column."
+msgstr ""
+
+msgid "The request is not valid"
+msgstr ""
+
+msgid "The request is not valid."
+msgstr ""
+
+msgid "The same value cannot be source and destination at the same time."
+msgstr ""
+
+msgid "The selected values will define the artifact as done:"
+msgstr ""
+
+msgid ""
+"The semantic done cannot be defined because the semantic status is not "
+"defined."
+msgstr ""
+
+msgid ""
+"The semantic status cannot de deleted because the semantic done is defined "
+"for this tracker."
+msgstr ""
+
+msgid ""
+"The semantic status cannot de deleted because tracker notifications is set "
+"to \"Status change notifications\"."
+msgstr ""
+
+msgid "The start date field and the end date field cannot be the same."
+msgstr ""
+
+#, php-format
+msgid "The status is now bind to: %1$s"
+msgstr ""
+
+msgid "The submitted URL is not valid."
+msgstr ""
+
+#, php-format
+msgid "The template id %s used for tracker creation was not found."
+msgstr ""
+
+#, php-format
+msgid "The text field '%s' cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The text field '%s' cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The text field '%s' cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid "The title is now: %1$s"
+msgstr ""
+
+msgid ""
+"The tracker %s is implicated in cross-tracker triggers. You will not be able "
+"to remove this tracker from the hierarchy until the triggers implicating it "
+"are removed."
+msgid_plural ""
+"The trackers %s are implicated in cross-tracker triggers. You will not be "
+"able to remove those trackers from the hierarchy until the triggers "
+"implicating them are removed."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"The tracker '%1$s' cannot be created. Use '--update' to update an existing "
+"tracker."
+msgstr ""
+
+#, php-format
+msgid "The tracker '%1$s' has been properly restored"
+msgstr ""
+
+#, php-format
+msgid ""
+"The tracker '%s' cannot be updated because it doesn't exist. Try again "
+"without \"--update\""
+msgstr ""
+
+msgid ""
+"The tracker does not seem to have the create/reply by mail feature enabled."
+msgstr ""
+
+msgid ""
+"The tracker doesn't have a \"capacity\" Integer or Computed field or you "
+"don't have the permission to access it."
+msgstr ""
+
+msgid ""
+"The tracker doesn't have a \"capacity\" Integer or Float or Computed field "
+"or you don't have the permission to access it."
+msgstr ""
+
+msgid ""
+"The tracker doesn't have a \"duration\" Integer field or you don't have the "
+"permission to access it."
+msgstr ""
+
+msgid ""
+"The tracker doesn't have a \"end_date\" Date field or you don't have the "
+"permission to access it."
+msgstr ""
+
+msgid ""
+"The tracker doesn't have a \"start_date\" Date field or you don't have the "
+"permission to access it."
+msgstr ""
+
+#, php-format
+msgid "The tracker name %s is already used. Please use another one."
+msgstr ""
+
+#, php-format
+msgid "The tracker short name %s is already used. Please use another one."
+msgstr ""
+
+msgid "The transition has not been updated."
+msgstr ""
+
+msgid "The transition is not valid."
+msgstr ""
+
+#, php-format
+msgid "The transition to the value \"%1$s\" is not valid."
+msgstr ""
+
+msgid "The transition to the value \"None\" is not valid."
+msgstr ""
+
+msgid "The triggers definitions are based on the tracker hierarchy."
+msgstr ""
+
+msgid "The triggers will be applied on each creation/update of artifacts."
+msgstr ""
+
+msgid "The two fields must be different"
+msgstr ""
+
+#, php-format
+msgid "The type %1$s has been successfully created."
+msgstr ""
+
+#, php-format
+msgid "The type %1$s has been successfully updated."
+msgstr ""
+
+msgid "The type has been successfully deleted."
+msgstr ""
+
+msgid "The unsubscribe list has been successfully updated."
+msgstr ""
+
+msgid "The user can choose one value among others"
+msgstr ""
+
+msgid "The user can choose some values among others"
+msgstr ""
+
+#, php-format
+msgid "The value '%s' doesn't exist for the list field '%s'."
+msgstr ""
+
+msgid "Then the tracker field"
+msgstr ""
+
+msgid "Then, fill the name, description and short name of this new tracker:"
+msgstr ""
+
+msgid "There are no child trackers defined for this tracker"
+msgstr ""
+
+#, php-format
+msgid ""
+"There is a hierarchy defined between \"%s\" and \"%s\" but the link between "
+"this artifact and %s is not parent/child."
+msgstr ""
+
+#, php-format
+msgid "There is no field with ID:%1$s"
+msgstr ""
+
+msgid "There is no remaining effort."
+msgstr ""
+
+msgid "There is no total effort."
+msgstr ""
+
+msgid "There isn't any fields in the tooltip yet."
+msgstr ""
+
+msgid "There isn't any trackers yet"
+msgstr ""
+
+msgid "There isn't anymore fields left to add to the tooltip"
+msgstr ""
+
+msgid "There must be at least one authorized user group."
+msgstr ""
+
+msgid "There no artifact links types"
+msgstr ""
+
+msgid "There should not be duplicate field_ids for 'frozen_fields' actions."
+msgstr ""
+
+msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'date'."
+msgstr ""
+
+msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'float'."
+msgstr ""
+
+msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'int'."
+msgstr ""
+
+msgid ""
+"There should not be duplicate fieldset_ids for 'hidden_fieldsets' actions."
+msgstr ""
+
+#, php-format
+msgid "This artifact (of %2$s) will be linked to %1$s"
+msgstr ""
+
+msgid "This artifact does not exist."
+msgstr ""
+
+#, php-format
+msgid ""
+"This artifact doesn't respect tracker's rules. It will not be imported : "
+"CSV's line %s."
+msgstr ""
+
+#, php-format
+msgid "This field is shared from tracker <a href=\"%s\">%s</a> from project %s"
+msgstr ""
+
+msgid ""
+"This field is the title of the artifact. It is not allowed to masschange it."
+msgstr ""
+
+msgid "This field is used by the following trackers:"
+msgstr ""
+
+msgid "This file has been removed meantime."
+msgstr ""
+
+msgid ""
+"This page is deprecated and will be removed soon. You should switch to the "
+"new tracker creation flow."
+msgstr ""
+
+msgid ""
+"This permission grants tracker administration rights on all trackers on all "
+"projects"
+msgstr ""
+
+msgid "This report does not exist."
+msgstr ""
+
+msgid "This semantic has invalid configuration: "
+msgstr ""
+
+msgid "This semantic is not defined yet."
+msgstr ""
+
+#, php-format
+msgid "This semantic is only used in %s at the moment."
+msgstr ""
+
+#, php-format
+msgid ""
+"This semantic is only used in %s at the moment. In longer-term, we plan to "
+"use it in %s as well."
+msgstr ""
+
+msgid "This semantic is unused at the moment."
+msgstr ""
+
+#, php-format
+msgid ""
+"This semantic is unused at the moment. In longer-term, we plan to use it in "
+"%s."
+msgstr ""
+
+msgid "This semantic will be used in:"
+msgstr ""
+
+msgid "This template does not use trackers"
+msgstr ""
+
+msgid "This tracker does not exist."
+msgstr ""
+
+msgid "This tracker has no workflow."
+msgstr ""
+
+msgid "This tracker is deleted"
+msgstr ""
+
+msgid "This transition already exists."
+msgstr ""
+
+msgid "This type can't be deleted because it is or has been already used."
+msgstr ""
+
+msgid "Those rules will be applied on each creation/update of artifacts."
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Timeframe"
+msgstr ""
+
+#, php-format
+msgid ""
+"Timeframe is based on start date field \"%s\" and duration field \"%s\"."
+msgstr ""
+
+#, php-format
+msgid ""
+"Timeframe is based on start date field \"%s\" and end date field \"%s\"."
+msgstr ""
+
+#, php-format
+msgid "Timeframes will be inherited from %s linking artifacts of this tracker."
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Title semantic has been unset"
+msgstr ""
+
+msgid "Today"
+msgstr "Hoje"
+
+msgid "Toggle an aggregate function"
+msgstr ""
+
+msgid "Token based email gateway"
+msgstr ""
+
+msgid "Tooltip"
+msgstr ""
+
+msgid "Total effort"
+msgstr ""
+
+msgid "Total effort cannot be negative."
+msgstr ""
+
+msgid "Total number of artifacts"
+msgstr ""
+
+msgid "Tracker"
+msgstr ""
+
+#, php-format
+msgid "Tracker %1$s not duplicated"
+msgstr ""
+
+#, php-format
+msgid "Tracker %s : field %s (%s) has no permission"
+msgstr ""
+
+#, php-format
+msgid "Tracker %s has been successfully deleted"
+msgstr ""
+
+#, php-format
+msgid ""
+"Tracker %s will now appear in the +New dropdown on every pages of the project"
+msgstr ""
+
+#, php-format
+msgid ""
+"Tracker %s won't appear anymore in the +New dropdown on every pages of the "
+"project"
+msgstr ""
+
+msgid "Tracker (read only)"
+msgstr ""
+
+msgid ""
+"Tracker configuration permission and artifacts permissions are not listed."
+msgstr ""
+
+msgid "Tracker does not exist"
+msgstr ""
+
+msgid "Tracker global administration"
+msgstr ""
+
+msgid "Tracker hierarchy"
+msgstr ""
+
+msgid "Tracker hierarchy is Cyclic"
+msgstr ""
+
+msgid "Tracker id"
+msgstr ""
+
+msgid "Tracker name"
+msgstr ""
+
+msgid "Tracker not in hierarchy"
+msgstr ""
+
+msgid "Tracker permissions"
+msgstr ""
+
+msgid "Tracker renderer"
+msgstr ""
+
+msgid "Tracker semantic done"
+msgstr ""
+
+msgid "Tracker service is disabled."
+msgstr ""
+
+msgid "Tracker shortname"
+msgstr ""
+
+msgid "Tracker shortname length must be inferior to 25 characters."
+msgstr ""
+
+msgid "Tracker successfully updated."
+msgstr ""
+
+msgid "Trackers"
+msgstr "Rastreadores"
+
+msgid "Trackers Pending for Deletion"
+msgstr ""
+
+msgid "Trackers new generation"
+msgstr ""
+
+msgid "Transition not found."
+msgstr ""
+
+msgid "Transition permissions are not respected"
+msgstr ""
+
+msgid "Transition rules"
+msgstr ""
+
+#, php-format
+msgid "Transition with id '%d' has no workflow"
+msgstr ""
+
+msgid "Transitions Rules"
+msgstr ""
+
+msgid "Transitions updated"
+msgstr ""
+
+msgid "Triggers"
+msgstr ""
+
+msgid "Type"
+msgstr "Tipo"
+
+#, php-format
+msgid ""
+"Type '%s' does not exist. This field is ignored. (Name : '%s', ID: '%s')."
+msgstr ""
+
+#, php-format
+msgid "Type is missing for artifact #%1$s."
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid ""
+"Unable to change the name of the element, it is already in use by another one"
+msgstr ""
+
+msgid "Unable to create artifact"
+msgstr ""
+
+#, php-format
+msgid "Unable to create the requested type: %1$s"
+msgstr ""
+
+#, php-format
+msgid "Unable to edit the requested type: %1$s"
+msgstr ""
+
+#, php-format
+msgid "Unable to open file %1$s"
+msgstr ""
+
+msgid "Unable to render the chart"
+msgstr ""
+
+#, php-format
+msgid ""
+"Unable to retrieve the time period: Too many artifacts from tracker %s are "
+"linking artifact #%d. There should only be one."
+msgstr ""
+
+msgid "Unable to save the contributor/assignee"
+msgstr ""
+
+msgid "Unable to save the description"
+msgstr ""
+
+msgid "Unable to save the status"
+msgstr ""
+
+msgid "Unable to save the title"
+msgstr ""
+
+#, php-format
+msgid "Unable to update artifact %1$s"
+msgstr ""
+
+msgid "Unable to update the artifact"
+msgstr ""
+
+msgid "Unchanged"
+msgstr ""
+
+#, php-format
+msgid "Unknown artifact %1$s"
+msgstr ""
+
+#, php-format
+msgid "Unknown field: %1$s"
+msgstr ""
+
+#, php-format
+msgid "Unknown post action '%s'."
+msgstr ""
+
+#, php-format
+msgid "Unknown value: \"%1$s\" for field \"%2$s\""
+msgstr ""
+
+msgid "Unset this semantic"
+msgstr ""
+
+msgid "Unsubscribe"
+msgstr ""
+
+msgid "Unsubscribe a user"
+msgstr ""
+
+msgid "Unsubscribe me from these artifacts' notifications"
+msgstr ""
+
+msgid "Unsubscribers"
+msgstr ""
+
+#, php-format
+msgid "Unsupported value attribute content: '%s'. Allowed contents are: '%s'"
+msgstr ""
+
+msgid "Unused elements"
+msgstr ""
+
+msgid "Update"
+msgstr "Atualizar"
+
+#, php-format
+msgid "Update Field '%1$s'"
+msgstr ""
+
+msgid "Update reminder"
+msgstr ""
+
+msgid "Update to overridable computed field"
+msgstr ""
+
+msgid "Update type"
+msgstr ""
+
+#, php-format
+msgid "Updated %1$s"
+msgstr ""
+
+msgid "Updated comment:"
+msgstr ""
+
+msgid "Use"
+msgstr ""
+
+msgid "Use \"capacity\" field for ideal initial effort"
+msgstr ""
+
+msgid "Use a Canned Response:"
+msgstr ""
+
+msgid "Use cache"
+msgstr ""
+
+#, php-format
+msgid "User '%s' couldn't be added."
+msgid_plural "Users '%s' couldn't be added."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "User Group"
+msgstr ""
+
+msgid "User groups"
+msgstr ""
+
+msgid "User, group, email"
+msgstr ""
+
+msgid "User..."
+msgstr ""
+
+msgid ""
+"Users can interact with trackers by email. Authentication is done through "
+"token that is injected in the headers of the email. This decreases the risk "
+"of a forged email, we can moderately trust the sender.<br>As of today, only "
+"reply (add a follow-up comment) by email is supported by this option."
+msgstr ""
+
+msgid ""
+"Users can interact with trackers by email. Authentication is not done at all."
+"<span class=\"text-error\"><i class=\"fas fa-exclamation-triangle\"></i> "
+"With this option we <strong>cannot trust the sender of the email</strong>. "
+"This means that villains can easily forge an email and pretend to be someone "
+"they are not.</span><br>As of today, users can create artifacts and reply "
+"(add a follow-up comment) by email with this option."
+msgstr ""
+
+msgid "Users having unsubscribed from the notifications"
+msgstr ""
+
+msgid "Users mapping"
+msgstr ""
+
+#, php-format
+msgid "Value %s deleted"
+msgstr ""
+
+msgid "Values"
+msgstr ""
+
+msgid "Values added by users"
+msgstr ""
+
+msgid "Wait a minute..."
+msgstr ""
+
+msgid "Warning : use that field only once."
+msgstr ""
+
+msgid "Warning: concurrent edit"
+msgstr ""
+
+msgid ""
+"We are unable to update the computed field. The target field should be equal "
+"to the computed field's name."
+msgstr ""
+
+#, php-format
+msgid ""
+"We cannot search on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed comparisons."
+msgid_plural ""
+"We cannot search on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed comparisons."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Webhook sucessfully created"
+msgstr ""
+
+msgid "Webhook sucessfully deleted"
+msgstr ""
+
+msgid "Webhook sucessfully updated"
+msgstr ""
+
+msgid "Webhooks"
+msgstr ""
+
+msgid "When"
+msgstr ""
+
+msgid "When more than one parent, we cannot display rest of hierarchy."
+msgstr ""
+
+msgid "Workflow"
+msgstr ""
+
+#, php-format
+msgid "Workflow mode is incompatible with PostAction of type %s"
+msgstr ""
+
+msgid "XML file doesn't have correct format"
+msgstr ""
+
+msgid "Yes, I am sure!"
+msgstr ""
+
+msgid ""
+"You are about to delete a type. This action is action is irreversible. Do "
+"you confirm this deletion?"
+msgstr ""
+
+msgid "You are about to delete the tracker %s. Please, confirm your action."
+msgstr ""
+
+msgid "You are about to remove the notification. Please confirm your action."
+msgstr ""
+
+msgid ""
+"You are about to remove the user from the unsubscriber list. Please confirm "
+"your action."
+msgstr ""
+
+msgid "You are about to remove the webhook. Please confirm your action."
+msgstr ""
+
+#, php-format
+msgid "You are currently copying the artifact %1$s."
+msgstr ""
+
+msgid "You are not allowed to access this field."
+msgstr ""
+
+#, php-format
+msgid "You are not allowed to update the field %1$s."
+msgstr ""
+
+msgid "You are not logged in."
+msgstr ""
+
+msgid "You are now receiving notifications for this artifact"
+msgstr ""
+
+#, php-format
+msgid "You are unsubscribed from notifications of artifacts %1$s"
+msgstr ""
+
+#, php-format
+msgid "You can access the artifact <a href=\"%1$s\">here</a>."
+msgstr ""
+
+#, php-format
+msgid "You can access the artifact here: %1$s"
+msgstr ""
+
+#, php-format
+msgid ""
+"You can also reply to this artifact <a href=\"#\" class=\"email-tracker "
+"email-tracker-reply\" data-email=\"%1$s\"><span>by email</span></a>."
+msgstr ""
+
+msgid "You can choose the notification mode you wish for this tracker."
+msgstr ""
+
+msgid ""
+"You can define several webhooks that will be processed after each artifact "
+"creation and updates."
+msgstr ""
+
+msgid "You can retrieve the imported data here:"
+msgstr ""
+
+msgid ""
+"You can send an email to the following email address in order to create an "
+"artifact:"
+msgstr ""
+
+msgid ""
+"You can send an email to the following email address in order to reply to "
+"this artifact:"
+msgstr ""
+
+msgid ""
+"You can use variables to customize the sender field. The available variables "
+"are %%realname and %%username.\n"
+"    These will be replaced by the full name and username of the user who "
+"updated the artifact."
+msgstr ""
+
+msgid ""
+"You can use: AND, OR, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN(), "
+"parenthesis. Autocomplete is activated with Ctrl + Space."
+msgstr ""
+
+msgid ""
+"You can't add values in this semantic because all possible values are "
+"defined as open in semantic status."
+msgstr ""
+
+msgid ""
+"You can't choose your notifications level for this tracker because tracker "
+"administrator has suspended all notifications."
+msgstr ""
+
+msgid ""
+"You can't delete this tracker because it has at least one source shared "
+"field."
+msgstr ""
+
+#, php-format
+msgid "You can't delete this tracker because it is used in: %1$s"
+msgstr ""
+
+msgid ""
+"You can't hide this value since it is used in a semantic, in workflow, in "
+"transitions or in field dependency"
+msgstr ""
+
+msgid ""
+"You can't submit an artifact because you do not have the right to submit all "
+"required fields"
+msgstr ""
+
+msgid "You cannot access to this tracker"
+msgstr ""
+
+msgid ""
+"You cannot define the <em>contributor/assignee</em> semantic since there "
+"isn't any user list field in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot define the <em>description</em> semantic since there isn't any "
+"text field in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot define the <em>status</em> semantic since there isn't any list "
+"field in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot define the <em>title</em> semantic since there isn't any text "
+"field in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot remove a field used in a trigger. Please update trigger rules "
+"before deleting field."
+msgstr ""
+
+msgid ""
+"You cannot reset this semantic because some trackers inherit their own "
+"semantic timeframe from this one."
+msgstr ""
+
+msgid "You do not have the necessary right to edit this artifact."
+msgstr ""
+
+msgid "You don't have any artifacts yet"
+msgstr ""
+
+msgid "You don't have permissions to see user groups."
+msgstr "Você não tem permissão para visualizar os grupos de usuários."
+
+msgid "You don't have the permissions to view this artifact."
+msgstr ""
+
+#, php-format
+msgid ""
+"You don't have the permissions to view this artifact. Given that you are "
+"anonymous, please try to <a href=\"%1$s\">login</a>."
+msgstr ""
+
+msgid "You don't have the permissions to view this tracker."
+msgstr ""
+
+#, php-format
+msgid ""
+"You don't have the permissions to view this tracker. Given that you are "
+"anonymous, please try to <a href=\"%1$s\">login</a>."
+msgstr ""
+
+msgid ""
+"You have too many columns, the sort won't work. Please remove some columns "
+"(and refresh the page) to be able to sort."
+msgstr ""
+
+msgid ""
+"You may <a href=\"%s\">switch to the 'field' view</a> by clicking on a field "
+"label in the table below."
+msgstr ""
+
+msgid ""
+"You may <a href=\"%s\">switch to the 'group' view</a> by clicking on a field "
+"label in the table below."
+msgstr ""
+
+msgid "You must be tracker administrator to access this resource."
+msgstr ""
+
+msgid ""
+"You must configure a status semantic if you want to use the \"status change "
+"notifications\" notification level for this tracker."
+msgstr ""
+
+msgid "You must provide a valid Jira server, user email and token"
+msgstr ""
+
+#, php-format
+msgid ""
+"You should set a <a href=\"%1$s\">%2$s semantic</a> before defining "
+"'assigned to group' permission"
+msgstr ""
+
+msgid "You will no-longer receive notifications for this artifact"
+msgstr ""
+
+#, php-format
+msgid ""
+"You will not able to edit by hand the field \"%1$s\" since no update and "
+"submit permissions will be granted."
+msgstr ""
+
+msgid ""
+"Your file is not encoded in UTF-8, we are not able to parse it safely. "
+"Please save it with UTF-8 encoding before uploading it."
+msgstr ""
+
+msgid "Your notification settings have been successfully updated"
+msgstr ""
+
+msgid ""
+"Your request contains invalid data, cowardly doing nothing (children "
+"parameter)"
+msgstr ""
+
+#, php-format
+msgid "a type with %1$s as shortname already exists."
+msgstr ""
+
+msgid "added"
+msgstr ""
+
+#, php-format
+msgid "all of <strong>%1$s %2$s</strong> are set to <strong>%3$s</strong>"
+msgstr ""
+
+msgid "alphabetically sort values"
+msgstr ""
+
+msgid "and"
+msgstr ""
+
+msgid "and it's now placed after"
+msgstr ""
+
+msgid "and it's now placed before"
+msgstr ""
+
+msgid "are admin of the tracker"
+msgstr ""
+
+msgid "assigned to me [A]"
+msgstr ""
+
+msgid "assigned to or submitted by me [AS]"
+msgstr ""
+
+#, php-format
+msgid "at least one <strong>%1$s %2$s</strong> equals <strong>%3$s</strong>"
+msgstr ""
+
+msgid "autocomputed"
+msgstr ""
+
+msgid "cancel"
+msgstr ""
+
+msgid "cannot hide"
+msgstr ""
+
+msgid "changed from"
+msgstr ""
+
+#, php-format
+msgid "changed from %s to %s"
+msgstr ""
+
+#, php-format
+msgid "changed from %s to autocomputed"
+msgstr ""
+
+#, php-format
+msgid "changed from autocomputed to %s"
+msgstr ""
+
+msgid ""
+"changed. (But text is too long, we are unable to compute the differences in "
+"a reasonable amount of time.)"
+msgstr ""
+
+msgid "cleared"
+msgstr ""
+
+#, php-format
+msgid "cleared values: %s"
+msgstr ""
+
+msgid "day(s)"
+msgstr ""
+
+msgid "decreased"
+msgstr ""
+
+msgid ""
+"error while playing with the database.  Help us improve your experience by "
+"sending an error report."
+msgstr ""
+
+msgid "field_ids attribute must not be empty."
+msgstr ""
+
+msgid "fieldset_ids attribute must not be empty."
+msgstr ""
+
+msgid "fixed_in"
+msgstr ""
+
+msgid "go back to semantic overview"
+msgstr ""
+
+msgid "have access to all artifacts"
+msgstr ""
+
+msgid "have access to artifacts assigned to group"
+msgstr ""
+
+msgid "have access to artifacts assigned to or submitted by group"
+msgstr ""
+
+msgid "have access to artifacts submitted by group"
+msgstr ""
+
+msgid "have access to artifacts they submitted"
+msgstr ""
+
+msgid "in"
+msgstr ""
+
+msgid "is not a float."
+msgstr ""
+
+msgid "is not an integer."
+msgstr ""
+
+msgid "last edited by:"
+msgstr ""
+
+msgid "missing forward label"
+msgstr ""
+
+msgid "missing reverse label"
+msgstr ""
+
+msgid "missing shortname"
+msgstr ""
+
+msgid "name"
+msgstr ""
+
+msgid "no type"
+msgstr ""
+
+msgid "of"
+msgstr ""
+
+msgid "of type"
+msgstr ""
+
+msgid "open"
+msgstr ""
+
+msgid "or"
+msgstr "ou"
+
+msgid "raised"
+msgstr ""
+
+msgid "removed"
+msgstr ""
+
+msgid "select child tracker field"
+msgstr ""
+
+msgid "select child tracker name"
+msgstr ""
+
+msgid "select current tracker field"
+msgstr ""
+
+msgid "select value"
+msgstr ""
+
+#, php-format
+msgid "semantic %s"
+msgstr ""
+
+#, php-format
+msgid "semantic %s of tracker %s"
+msgstr ""
+
+#, php-format
+msgid "semantic %s of tracker %s in project %s"
+msgstr ""
+
+msgid "set to"
+msgstr ""
+
+#, php-format
+msgid "set to %s"
+msgstr ""
+
+msgid "submitted by me [S]"
+msgstr ""
+
+msgid "the project's backlog"
+msgstr ""
+
+msgid "to"
+msgstr "para"
+
+msgid "total"
+msgstr ""
+
+msgid "type can't be deleted because it is or has been already used."
+msgstr ""
+
+msgid "will be set to"
+msgstr ""
+
+msgid ""
+"{{ jira_display_name }} identified as {{ tuleap_user_real_name }} (<a href="
+"\"{{ tuleap_user_profile_url }}\">@{{ tuleap_user_username }}</a>)"
+msgstr ""
+
+msgid ""
+"{{ jira_display_name }} identified as {{ tuleap_user_real_name }} "
+"(@{{ tuleap_user_username }})"
+msgstr ""
+
+msgid "« Go back to semantic overview"
+msgstr ""

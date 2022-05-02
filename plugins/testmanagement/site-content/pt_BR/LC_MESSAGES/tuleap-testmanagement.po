@@ -1,0 +1,244 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%s has been updated"
+msgstr ""
+
+#, php-format
+msgid "%s has been updated by %s"
+msgstr ""
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid "Campaigns"
+msgstr ""
+
+msgid "Configuration incomplete"
+msgstr ""
+
+msgid "Covered by"
+msgstr ""
+
+msgid "Covers"
+msgstr ""
+
+msgid ""
+"Current campaign does not have any job configured to launch automated tests"
+msgstr ""
+
+msgid ""
+"Current tracker is not configured to be a test definition tracker in "
+"TestManagement, but is using a \"Step definition\" field: you may remove the "
+"field from the tracker."
+msgstr ""
+
+msgid ""
+"Current tracker is not configured to be a test execution tracker in "
+"TestManagement, but is using a \"Step execution\" field: you may remove the "
+"field from the tracker."
+msgstr ""
+
+msgid "Definition of a step"
+msgstr ""
+
+msgid ""
+"Direct edition of steps results is not allowed. Please use TestManagement "
+"service instead."
+msgstr ""
+
+msgid "Enter the tracker id..."
+msgstr ""
+
+msgid "Execution result of a step"
+msgstr ""
+
+msgid "Expected results"
+msgstr ""
+
+msgid ""
+"Go in the Test Management administration to set manually the trackers or let "
+"us do it for you."
+msgstr ""
+
+msgid "Go to administration"
+msgstr ""
+
+msgid "Issue Tracker"
+msgstr ""
+
+msgid "Job URL is invalid"
+msgstr ""
+
+msgid "Permission denied"
+msgstr "Permissão negada"
+
+msgid "Please come back later."
+msgstr ""
+
+msgid "See graph of dependencies"
+msgstr ""
+
+#, php-format
+msgid ""
+"Service %s cannot be activated because the artifact link type \"%s\" is not "
+"activated"
+msgstr ""
+
+msgid "Start TestManagement"
+msgstr ""
+
+msgid "Step definition"
+msgstr ""
+
+msgid "Step execution"
+msgstr ""
+
+msgid "Submit"
+msgstr "Enviar para"
+
+msgid "Test Campaigns Tracker"
+msgstr ""
+
+msgid "Test Definitions Tracker"
+msgstr ""
+
+msgid "Test Executions Tracker"
+msgstr ""
+
+msgid "Test Management"
+msgstr ""
+
+msgid "Test Management is not fully set up"
+msgstr ""
+
+msgid "Test Management service is not active in this project"
+msgstr ""
+
+msgid "Test management tool"
+msgstr ""
+
+msgid "Tests campaign"
+msgstr ""
+
+msgid "Tests executions"
+msgstr ""
+
+#, php-format
+msgid "The campaign %s is now closed."
+msgstr ""
+
+#, php-format
+msgid "The campaign %s is now open."
+msgstr ""
+
+#, php-format
+msgid "The campaign cannot be closed : %s"
+msgstr ""
+
+#, php-format
+msgid "The campaign cannot be open : %s"
+msgstr ""
+
+msgid "The campaign is closed."
+msgstr ""
+
+msgid ""
+"The post actions cannot be saved because this tracker is used in "
+"TestManagement and \"frozen fields\" are defined on an artifact link field."
+msgstr ""
+
+msgid ""
+"The post actions cannot be saved because this tracker is used in "
+"TestManagement and \"hidden fieldsets\" are defined."
+msgstr ""
+
+#, php-format
+msgid "The submitted administration configuration is not valid."
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s does not have artifact links field"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s does not have step definition field"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s does not have step execution field"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s is deleted"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s is not a valid id"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s is not part of this project"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s not found"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s uses frozen fields workflow post action"
+msgstr ""
+
+#, php-format
+msgid "The tracker id %1$s uses hidden fieldsets workflow post action"
+msgstr ""
+
+msgid ""
+"The tracker is using a field \"Step definition\" that is only available in "
+"the context of Test Management. However this service is not enabled in the "
+"project: you may remove the field from the tracker."
+msgstr ""
+
+msgid ""
+"The tracker is using a field \"Step execution\" that is only available in "
+"the context of Test Management. However this service is not enabled in the "
+"project: you may remove the field from the tracker."
+msgstr ""
+
+msgid ""
+"This tracker is a technical base for Test Management. Changing configuration "
+"(fields, workflow, ...) should be avoided because it may leads to "
+"inconsistencies."
+msgstr ""
+
+msgid ""
+"This tracker uses the Step definition field, which can only be used with\n"
+"          TestManagement. Please <a href=\"%s\">remove the field</a> before "
+"choosing another tracker."
+msgstr ""
+
+msgid ""
+"This tracker uses the Step execution field, which can only be used with\n"
+"          TestManagement. Please <a href=\"%s\">remove the field</a> before "
+"choosing another tracker."
+msgstr ""
+
+msgid "We configured Test Management for you. Enjoy!"
+msgstr ""
+
+#, php-format
+msgid ""
+"We tried to configure Test Management for you but an existing tracker (%1$s) "
+"is using Tracker Engine v3 and prevented it."
+msgstr ""
+
+msgid ""
+"We tried to configure Test Management for you but an internal error "
+"prevented it."
+msgstr ""

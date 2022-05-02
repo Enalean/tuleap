@@ -1,0 +1,176 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"Above this limit, the archive is considered big enough to display a warning "
+"to the user. The archive can still be downloaded."
+msgstr ""
+
+msgid "An error occurred while saving configuration."
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Configuration of search view has been updated"
+msgstr ""
+
+msgid "Configure search interface"
+msgstr ""
+
+msgid "Criteria"
+msgstr ""
+
+msgid "Displayed columns"
+msgstr ""
+
+msgid "Document"
+msgstr ""
+
+msgid "Document manager"
+msgstr ""
+
+#, php-format
+msgid "Documents service is not activated in project %s"
+msgstr ""
+
+msgid "Embedded file"
+msgstr ""
+
+msgid "File"
+msgstr "Arquivo"
+
+msgid "File download limits"
+msgstr ""
+
+msgid "Filename"
+msgstr ""
+
+msgid "Files missing in your latest archive download"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "Following columns will be displayed in the results table."
+msgstr ""
+
+msgid "Following criteria will be displayed in the search pane."
+msgstr ""
+
+msgid ""
+"Hence, Tuleap will avoid users from forgetting to communicate changes made "
+"in the document."
+msgstr ""
+
+msgid "History enforcement"
+msgstr ""
+
+msgid "However, all its content could not have been included in the archive."
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Invalid request"
+msgstr ""
+
+msgid "MB"
+msgstr ""
+
+msgid "Maximum file size of the archive"
+msgstr ""
+
+msgid "Megabytes"
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Please contact your site administrator."
+msgstr ""
+
+msgid ""
+"Please note: the  <span class=\"tlp-badge-secondary\"> Title </span> column "
+"will always be available."
+msgstr ""
+
+msgid ""
+"Please note: the <span class=\"tlp-badge-secondary\"> Global search </span> "
+"criteria will always be displayed."
+msgstr ""
+
+msgid "Project not found"
+msgstr ""
+
+msgid "Propose changelog after new file version drag and drop"
+msgstr ""
+
+msgid "Provides a modern interface for the Document Manager service"
+msgstr ""
+
+msgid "Save configuration"
+msgstr "Salvar configuração"
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Search criteria"
+msgstr ""
+
+msgid "Search view"
+msgstr ""
+
+msgid "Settings have been saved successfully."
+msgstr ""
+
+msgid ""
+"Submitted maximum file size should be an unsigned integer greater than zero."
+msgstr ""
+
+msgid ""
+"Submitted warning threshold should be an unsigned integer greater than zero."
+msgstr ""
+
+msgid "There was a problem and the following files could not be downloaded:"
+msgstr ""
+
+msgid ""
+"This limit prevents a user from downloading a folder with a total size "
+"exceeding x MB."
+msgstr ""
+
+msgid "Those settings apply when downloading a folder as a zip archive."
+msgstr ""
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Unable to find the root folder of project"
+msgstr ""
+
+msgid "Warning threshold"
+msgstr ""
+
+msgid ""
+"When this option is enabled, a changelog modal will open each time a user "
+"creates a new version of a file by drag and drop."
+msgstr ""
+
+#, php-format
+msgid ""
+"You have recently downloaded the folder \"%s\" (id: %d) in the project %s."
+msgstr ""
+
+msgid ""
+"You will find a file named TULEAP_ERRORS.txt at the root of the archive, "
+"listing all the impacted files."
+msgstr ""

@@ -1,0 +1,295 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$d day ago"
+msgid_plural "%1$d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d hour ago"
+msgid_plural "%1$d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d min ago"
+msgid_plural "%1$d min ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d month ago"
+msgid_plural "%1$d months ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d sec ago"
+msgid_plural "%1$d sec ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d week ago"
+msgid_plural "%1$d weeks ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d year ago"
+msgid_plural "%1$d years ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$s is attempting directory traversal"
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a directory"
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a git repository"
+msgstr ""
+
+#, php-format
+msgid "%1$s is outside of the projectroot"
+msgstr ""
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Author name, description, …"
+msgstr ""
+
+msgid "Binary file"
+msgstr ""
+
+#, php-format
+msgid "Binary files %1$s and %2$s differ"
+msgstr ""
+
+msgid "Blame"
+msgstr ""
+
+msgid "Blob"
+msgstr ""
+
+msgid "Browse"
+msgstr ""
+
+msgid "Browse repository at this commit"
+msgstr ""
+
+msgid "Commit"
+msgstr ""
+
+msgid "Committer"
+msgstr ""
+
+#, php-format
+msgid "Could not create tmpdir %1$s"
+msgstr ""
+
+msgid "Deselect"
+msgstr ""
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Diff"
+msgstr "Diff"
+
+msgid "Diff with selected"
+msgstr ""
+
+msgid "Display rendered file"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download commit as plain text file"
+msgstr ""
+
+msgid "Download file"
+msgstr ""
+
+msgid "Files"
+msgstr "Arquivos"
+
+msgid "Go to diff"
+msgstr ""
+
+msgid "Hash"
+msgstr ""
+
+msgid "History"
+msgstr "Histórico"
+
+msgid "Inline diff"
+msgstr ""
+
+#, php-format
+msgid "Invalid hash %1$s"
+msgstr ""
+
+msgid "Invalid search type"
+msgstr ""
+
+msgid "It can't be previewed in Tuleap yet."
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Modified Files"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "No commits"
+msgstr ""
+
+msgid "No matches for \"%1\""
+msgstr ""
+
+msgid "No tmpdir defined"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Parents"
+msgstr ""
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Project is required"
+msgstr ""
+
+msgid "Reference"
+msgstr ""
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Search has been disabled"
+msgstr ""
+
+msgid "Search text of at least 2 characters"
+msgstr ""
+
+msgid "Select for diff"
+msgstr ""
+
+msgid "Selected for diff"
+msgstr ""
+
+msgid "Show source"
+msgstr ""
+
+msgid "Side by side diff"
+msgstr ""
+
+msgid "Snapshot"
+msgstr ""
+
+#, php-format
+msgid "Specified tmpdir %1$s is not a directory"
+msgstr ""
+
+#, php-format
+msgid "Specified tmpdir %1$s is not writable"
+msgstr ""
+
+msgid "Tag"
+msgstr ""
+
+msgid "Terms"
+msgstr ""
+
+msgid "The requested resource cannot be found."
+msgstr ""
+
+msgid "This file is a binary file"
+msgstr ""
+
+msgid "This file is handled by Git LFS"
+msgstr ""
+
+msgid "Tree"
+msgstr "Árvore"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Unknown object"
+msgstr ""
+
+#, php-format
+msgid "You must enter search text of at least %1$d character"
+msgid_plural "You must enter search text of at least %1$d characters"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "blame"
+msgstr ""
+
+msgid "blob"
+msgstr ""
+
+msgid "blobdiff"
+msgstr ""
+
+msgid "commit"
+msgstr ""
+
+msgid "commitdiff"
+msgstr ""
+
+msgid "directory"
+msgstr ""
+
+msgid "file"
+msgstr ""
+
+msgid "history"
+msgstr ""
+
+msgid "log"
+msgstr ""
+
+msgid "right now"
+msgstr ""
+
+msgid "search"
+msgstr ""
+
+msgid "snapshot"
+msgstr ""
+
+msgid "symlink"
+msgstr ""
+
+msgid "tag"
+msgstr ""
+
+msgid "tree"
+msgstr ""
+
+msgid "unknown"
+msgstr ""

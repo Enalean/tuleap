@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Integration between the agiledashboard and the testmanagement plugins"
+msgstr ""
+
+msgid "Milestone not found."
+msgstr ""
+
+msgid "Project does not use agile dashboard."
+msgstr ""
+
+msgid ""
+"Test plan cannot be displayed. Maybe you don't have enough rights to view it."
+msgstr ""
+
+msgid "TestPlan"
+msgstr ""
+
+msgid "Tests"
+msgstr ""
+
+msgid "Unable to link the backlog item to the new artifact"
+msgstr ""
+
+#, php-format
+msgid "You are creating a new test that will cover: %s"
+msgstr ""
+
+#, php-format
+msgid "You are editing a backlog item included in the milestone: %s"
+msgstr ""
+
+#, php-format
+msgid "You are editing a test covering: %s"
+msgstr ""

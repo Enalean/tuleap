@@ -1,0 +1,159 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%s templates"
+msgstr "Modelos em %s"
+
+msgid "API Token (or password for Jira Server)"
+msgstr ""
+
+msgid "Avoid spaces and punctuation"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Choose a project..."
+msgstr ""
+
+msgid "Choose a starting point"
+msgstr "Escolha um ponto de partida"
+
+msgid "Choose a tracker..."
+msgstr ""
+
+msgid "Choose an issue type..."
+msgstr ""
+
+msgid "Choose one tracker template among ones available in your platform."
+msgstr ""
+
+msgid "Chosen template"
+msgstr ""
+
+msgid "Color"
+msgstr "Cor"
+
+msgid "Connect"
+msgstr ""
+
+msgid "Create my tracker"
+msgstr ""
+
+msgid "Create your new tracker and import its issues from Jira server"
+msgstr ""
+
+msgid "Create your new tracker based on a tracker template XML file."
+msgstr ""
+
+msgid ""
+"Create your new tracker by replicating the configuration of an existing one."
+msgstr ""
+
+msgid "Create your new tracker without any configuration."
+msgstr ""
+
+msgid "Custom templates"
+msgstr "Modelos personalizados"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid ""
+"Don't worry, you will still be able to modify your tracker after it has been "
+"created."
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "For advanced users"
+msgstr "Para usuários avançados"
+
+msgid "From Jira"
+msgstr ""
+
+msgid "Give your tracker some basic info"
+msgstr "Dê ao seu rastreador algumas informações básicas"
+
+msgid "I want to migrate a tracker v3"
+msgstr ""
+
+msgid "Information"
+msgstr ""
+
+msgid "Issue type"
+msgstr ""
+
+msgid "My %{ tracker_name } tracker description..."
+msgstr "Meu %{nome_do_rastreador } descrição do rastreador..."
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Shortname"
+msgstr ""
+
+msgid "Source project"
+msgstr ""
+
+msgid "Template"
+msgstr "Modelo"
+
+msgid ""
+"The chosen name already exist in this project, please choose another one."
+msgstr ""
+
+msgid ""
+"The chosen shortname already exist in this project, please choose another "
+"one."
+msgstr ""
+
+msgid "The provided file is not a valid XML file"
+msgstr ""
+
+msgid ""
+"The tracker shortname must have a length between 1 and 25 characters. It can "
+"only\n"
+"            contain alphanumerical characters and underscores."
+msgstr ""
+
+msgid ""
+"The tracker template you will select provides preconfigured fields, "
+"permissions,\n"
+"        workflow..."
+msgstr ""
+
+msgid "Tracker XML file"
+msgstr ""
+
+msgid "Tracker from another project"
+msgstr ""
+
+msgid "Tracker shortname:"
+msgstr ""
+
+msgid "Trackers from template projects"
+msgstr ""
+
+msgid "Tuleap template"
+msgid_plural "Tuleap templates"
+msgstr[0] "Modelo Tuleap"
+msgstr[1] "Modelos Tuleap"
+
+msgid "User email (or jira login for Jira Server)"
+msgstr ""
+
+msgid "Your Jira server url"
+msgstr ""

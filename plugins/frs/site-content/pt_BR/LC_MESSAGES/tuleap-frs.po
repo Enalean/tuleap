@@ -1,0 +1,47 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "An error occured while saving new linked artifact id."
+msgstr ""
+
+msgid "An error occurred while deleting the file"
+msgstr ""
+
+#, php-format
+msgid "Artifact #%1$s does not exist."
+msgstr ""
+
+msgid "Artifact id:"
+msgstr ""
+
+msgid "Artifact linked to a Files release cannot be moved"
+msgstr ""
+
+msgid ""
+"Extends file release system included into the Tuleap core with new features"
+msgstr ""
+
+msgid "File release"
+msgstr ""
+
+msgid "File release system"
+msgstr ""
+
+#, php-format
+msgid "Release %s - Release Notes"
+msgstr ""
+
+msgid "Release not found."
+msgstr ""
+
+msgid "The parent release cannot be found."
+msgstr ""
+
+msgid ""
+"The provided artifact id is not an integer. Linked artifact not updated."
+msgstr ""

@@ -1,0 +1,143 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%{label_submilestone} Planning"
+msgstr ""
+
+msgid "%{nb_backlog_items} item in the backlog."
+msgid_plural "%{ nb_backlog_items } items in the backlog."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{nb_past} past %{label_tracker}"
+msgid_plural "%{nb_past} past %{label_tracker}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{nb_upcoming_releases} upcoming %{label_tracker}."
+msgid_plural "%{nb_upcoming_releases} upcoming %{label_tracker}."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{total_closed_sprint} closed %{tracker_label}"
+msgid_plural "%{ total_closed_sprint } closed %{tracker_label}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "'%s' field is empty or invalid."
+msgstr ""
+
+msgid "Blocked"
+msgstr ""
+
+msgid "Burndown"
+msgstr ""
+
+msgid "Burndown is under calculation. It will be available in a few minutes."
+msgstr ""
+
+msgid "Burnup"
+msgstr ""
+
+msgid "Burnup is under calculation. It will be available in a few minutes."
+msgstr ""
+
+msgid "Capacity: %{capacity}"
+msgstr ""
+
+msgid "Capacity: N/A"
+msgstr ""
+
+msgid "Cardwall"
+msgstr ""
+
+msgid "Content"
+msgstr "Conteúdo"
+
+msgid "Failed"
+msgstr ""
+
+msgid "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
+msgstr ""
+
+msgid "Initial effort equal at 0."
+msgstr ""
+
+msgid "Initial effort: %{initialEffort}"
+msgstr ""
+
+msgid "Initial effort: N/A"
+msgstr ""
+
+msgid "Loading data..."
+msgstr ""
+
+msgid "No end date defined."
+msgstr ""
+
+msgid "No initial effort defined."
+msgstr ""
+
+msgid "No remaining effort defined."
+msgstr ""
+
+msgid "No start date defined."
+msgstr ""
+
+msgid "Not run"
+msgstr ""
+
+msgid "Oops, an error occurred!"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Passed"
+msgstr ""
+
+msgid "Past"
+msgstr ""
+
+msgid "Recently closed"
+msgstr ""
+
+msgid "Roadmap"
+msgstr ""
+
+msgid "Start Planning"
+msgstr ""
+
+msgid "Tests Results"
+msgstr ""
+
+msgid "There is no item nor milestone in the %{ name } backlog yet."
+msgstr ""
+
+msgid "What's hot"
+msgstr ""
+
+msgid "day to go"
+msgid_plural "days to go"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "pt done"
+msgid_plural "pts done"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "pt to go"
+msgid_plural "pts to go"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "test"
+msgid_plural "tests"
+msgstr[0] ""
+msgstr[1] ""

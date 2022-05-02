@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Encrypt tracker datas."
+msgstr ""
+
+msgid "Encrypted field"
+msgstr ""
+
+msgid ""
+"Please add a public key in the tracker administration in order to use "
+"encrypted field."
+msgstr ""
+
+msgid ""
+"Please add a valid RSA public key.This key will be used to encrypt form "
+"elements of type \"encrypted\" that belongs to this tracker."
+msgstr ""
+
+msgid "Public key is not a valid one."
+msgstr ""
+
+msgid "Tracker Encryption"
+msgstr ""
+
+msgid "Tracker key"
+msgstr ""
+
+msgid ""
+"Unable to encrypt data. Please add a valid public RSA key in the tracker "
+"administration to be able to encrypt data."
+msgstr ""
+
+msgid ""
+"You are about to update your key, You will lost all your encrypted fields "
+"values for this tracker if you do this."
+msgstr ""

@@ -1,0 +1,185 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%s cannot be compared to '%s'."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to NOW() with the operator %s."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to OPEN()."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to the empty string with %s operator."
+msgstr ""
+
+#, php-format
+msgid "%s cannot be compared to the string value '%s'."
+msgstr ""
+
+#, php-format
+msgid "%s is not supported for the operator %s."
+msgstr ""
+
+msgid ""
+"'limit' and 'offset' are required parameters. Please add them in the query."
+msgstr ""
+
+msgid "Cross trackers search"
+msgstr ""
+
+msgid "Error while parsing the query"
+msgstr ""
+
+msgid "Invalid value for 'limit'. It must be an integer"
+msgstr ""
+
+msgid "Invalid value for 'offset'. It must be an integer"
+msgstr ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not expose a last update by "
+"field. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not expose a last update by "
+"field. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not expose a last update date "
+"field. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not expose a last update date "
+"field. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not expose a submitted by "
+"field. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not expose a submitted by field. "
+"Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not expose a submitted on "
+"field. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not expose a submitted on field. "
+"Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic "
+"contributor/assignee defined.\n"
+"                    Please refine your query or check the configuration of "
+"the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic "
+"contributor/assignee defined.\n"
+"                    Please refine your query or check the configuration of "
+"the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic "
+"description defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic "
+"description defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic status "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic status "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid ""
+"One of the trackers involved in the query does not have the semantic title "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgid_plural ""
+"%d of the trackers involved in the query do not have the semantic title "
+"defined. Please refine\n"
+"                    your query or check the configuration of the trackers."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Project not found"
+msgstr ""
+
+#, php-format
+msgid "Report with id %d not found"
+msgstr ""
+
+msgid "Search artifacts that are in different trackers"
+msgstr ""
+
+msgid "Search into multiple trackers and multiple projects."
+msgstr ""
+
+#, php-format
+msgid "The maximum value for 'limit' is %d"
+msgstr ""
+
+msgid "You cannot access all projects of the search"
+msgstr ""
+
+msgid "You cannot access all the columns displayed in this search"
+msgstr ""
+
+msgid "You cannot access all the fields used to filter the search"
+msgstr ""
+
+msgid "You cannot access all trackers of the search"
+msgstr ""
+
+msgid "You don't have permission to access this project"
+msgstr ""

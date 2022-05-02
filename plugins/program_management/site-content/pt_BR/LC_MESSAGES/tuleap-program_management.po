@@ -1,0 +1,515 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%s - Iterations - %s"
+msgstr ""
+
+msgid "%s of project %s"
+msgstr ""
+
+msgid ""
+"<a href='%s'>Title semantic</a> of tracker %s of project %s is using field "
+"%s and have an incorrect type it must be a string field."
+msgstr ""
+
+msgid ""
+"<a href='%s'>Tracker %s</a> of tracker %s of project does not have an "
+"artifact link field"
+msgstr ""
+
+msgid "Add to top backlog"
+msgstr "Adicionar ao backlog principal"
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid ""
+"Aggregate others projects to have an overall view of your Program "
+"activities. These projects will be considered as Teams."
+msgstr ""
+
+msgid "Aggregate project"
+msgstr ""
+
+msgid "Aggregated projects"
+msgstr ""
+
+msgid ""
+"Align several teams to a shared mission applying the principles of the "
+"Essential SAFe(R). Manage Agile Release Train, Program Increments and "
+"Roadmap. This template has to be used with the Tuleap template \"Essential "
+"SAFe(R) - Scrum Team\""
+msgstr ""
+
+msgid "Can prioritize features"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid ""
+"Configuration is incorrect, you won't be able to create new program "
+"increments."
+msgstr ""
+
+msgid "Configure the teams"
+msgstr ""
+
+#, php-format
+msgid "Could not add feature #%d to program increment #%d"
+msgstr ""
+
+#, php-format
+msgid "Could not find feature with id #%d"
+msgstr ""
+
+#, php-format
+msgid "Could not find the iteration #%d"
+msgstr ""
+
+#, php-format
+msgid "Could not find the program of iteration #%d"
+msgstr ""
+
+#, php-format
+msgid "Could not find the program of program increment #%d"
+msgstr ""
+
+#, php-format
+msgid "Could not remove feature #%d from all program increments"
+msgstr ""
+
+msgid "Custom name for a milestone of type of Iteration"
+msgstr ""
+
+msgid "Custom name for a milestone of type of Program Increment"
+msgstr ""
+
+msgid "Custom name for the Iterations section"
+msgstr ""
+
+msgid "Custom name for the Program Increments section"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid ""
+"Enables managing several related projects, synchronizing teams and milestones"
+msgstr ""
+
+msgid "Essential SAFe(R) - Agile Release Train"
+msgstr ""
+
+msgid "Essential SAFe(R) - Scrum Team"
+msgstr ""
+
+#, php-format
+msgid ""
+"Expected tracker with id #%d to have a %s field associated to its TimeFrame "
+"semantic, but this field was not found"
+msgstr ""
+
+#, php-format
+msgid ""
+"Expected tracker with id %d to have a field associated to its %s semantic, "
+"but this field was not found"
+msgstr ""
+
+#, php-format
+msgid "Feature #%d cannot be planned in program increment #%d"
+msgstr ""
+
+#, php-format
+msgid "Feature #%d does not exist in program increment #%d"
+msgstr ""
+
+msgid "Feature cannot be ranked with itself"
+msgstr ""
+
+msgid ""
+"Field <a href='%s'>%s</a> of tracker %s of project %s is required but cannot "
+"be synchronized"
+msgstr ""
+
+msgid ""
+"Following trackers are using a synchronized field in a <a href='%s'>workflow "
+"date</a> rule (global rules) {{ tracker_label }} of project "
+"{{ project_label }}"
+msgstr ""
+
+msgid ""
+"Following trackers are using a synchronized field in a <a href='%s'>workflow "
+"list</a> rule (field dependencies) {{ tracker_label }} of project "
+"{{ project_label }}"
+msgstr ""
+
+msgid ""
+"Following trackers are using a synchronized field in a <a href='%s'>workflow "
+"transition</a> rule {{ tracker_label }} of project {{ project_label }}"
+msgstr ""
+
+msgid "Good to know:"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
+msgid ""
+"Helps cross-functional teams to deliver an increment of value based on Scrum "
+"approach. This template has to be used with the Tuleap template \"Essential "
+"SAFe(R) - Agile Release Train\""
+msgstr ""
+
+msgid "Iteration configuration is incorrect:"
+msgstr ""
+
+msgid "Iteration tracker id must not be contained into plannable tracker ids"
+msgstr ""
+
+#, php-format
+msgid "Iteration tracker in program %d is not found"
+msgstr ""
+
+msgid "Iterations"
+msgstr ""
+
+msgid "M d"
+msgstr ""
+
+msgid ""
+"Manage sets of applications and products into a portfolio to align strategy "
+"to execution. This template has to be used with the 2 Essential SAFe(R) "
+"templates."
+msgstr ""
+
+msgid "Milestones"
+msgstr ""
+
+msgid "Mirror of"
+msgstr ""
+
+msgid "Mirrored by"
+msgstr ""
+
+msgid ""
+"Modification of the milestone tracker of this planning is prohibited because "
+"this project is part of a program backlog."
+msgstr ""
+
+#, php-format
+msgid ""
+"No matching value found for value %s in field #%d of tracker #%d by duck "
+"typing."
+msgstr ""
+
+msgid "No project have been aggregated yet."
+msgstr ""
+
+msgid "Permission"
+msgstr "Permissão"
+
+msgid "Plannable tracker id cannot be empty"
+msgstr ""
+
+msgid "Please confirm your action."
+msgstr "Por favor, confirme a sua ação."
+
+msgid "Plural. Leave it blank to keep default label \"Iterations\"."
+msgstr ""
+
+msgid "Plural. Leave it blank to keep default label \"Program Increments\"."
+msgstr ""
+
+msgid "Portfolio SAFe(R)"
+msgstr ""
+
+#, php-format
+msgid ""
+"Post action of type %s can only be defined for plannable tracker of a plan."
+msgstr ""
+
+msgid "Preview"
+msgstr "Pré-visualização"
+
+msgid "Program"
+msgstr ""
+
+#, php-format
+msgid "Program %d can not be a Program and a Team in the same time"
+msgstr ""
+
+#, php-format
+msgid "Program Increment artifact #%d could not be found"
+msgstr ""
+
+msgid ""
+"Program Increment tracker id must not be contained into plannable tracker ids"
+msgstr ""
+
+msgid "Program Increments"
+msgstr ""
+
+msgid "Program Increments, Iterations"
+msgstr ""
+
+msgid "Program Management"
+msgstr ""
+
+msgid "Program administration"
+msgstr ""
+
+msgid "Program increment configuration is incorrect:"
+msgstr ""
+
+msgid ""
+"Program increment tracker and Iteration tracker must not be the same tracker."
+msgstr ""
+
+msgid "Program management service is disabled."
+msgstr ""
+
+msgid "Program service cannot be enabled for Team projects."
+msgstr ""
+
+msgid ""
+"Program service cannot be enabled when project have a Scrum configuration in "
+"AgileDashboard service."
+msgstr ""
+
+#, php-format
+msgid ""
+"Project #%d cannot be a Team because it is not in the explicit backlog mode"
+msgstr ""
+
+#, php-format
+msgid ""
+"Project #%d is defined as a Program project. It can not be used as Team."
+msgstr ""
+
+#, php-format
+msgid ""
+"Project #%d is defined as a Team project. It cannot be used as a Program"
+msgstr ""
+
+#, php-format
+msgid "Project #%d is not a Program. Please use a project defined as a Program"
+msgstr ""
+
+msgid "Project is defined as a Team project. It can not be used as a Program."
+msgstr ""
+
+msgid "Remove from top backlog"
+msgstr "Remover do backlog principal"
+
+msgid "Remove team"
+msgstr ""
+
+msgid "Remove team from program"
+msgstr ""
+
+msgid "SAFe(R)"
+msgstr ""
+
+msgid "Save milestones configuration"
+msgstr ""
+
+msgid ""
+"Second-level planning not found in project <a href='/plugins/agiledashboard/?"
+"group_id=%s&action=admin'>%s</a> or you can't access it"
+msgstr ""
+
+msgid ""
+"Semantic '%s' is not well configured. Please check semantic of following "
+"trackers:"
+msgstr ""
+
+msgid ""
+"Semantic 'status' is not well configured. Please check semantic of following "
+"trackers:"
+msgstr ""
+
+msgid ""
+"Singular and lowercase. Leave it blank to keep default label \"iteration\"."
+msgstr ""
+
+msgid ""
+"Singular and lowercase. Leave it blank to keep default label \"program "
+"increment\"."
+msgstr ""
+
+msgid "Some plannable tracker have incorrect configuration:"
+msgstr ""
+
+msgid "Source tracker for Iterations"
+msgstr ""
+
+msgid "Source tracker for Program Increments"
+msgstr ""
+
+msgid ""
+"Status semantic is not defined, the artifact cannot be added to the top "
+"backlog"
+msgstr ""
+
+msgid ""
+"Status semantic is not linked to a field in program tracker <a href='%s'>#"
+"%s</a>:"
+msgstr ""
+
+msgid ""
+"Team project <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>%s</"
+"a> has no root planning or you can't access it"
+msgstr ""
+
+msgid "Teams"
+msgstr ""
+
+#, php-format
+msgid ""
+"The feature with id #%d cannot be unplanned because some linked user stories "
+"are planned in Teams project."
+msgstr ""
+
+msgid ""
+"The post action cannot be saved because this tracker is not a plannable "
+"tracker of a plan."
+msgstr ""
+
+#, php-format
+msgid ""
+"The title field with id #%d in tracker #%d has an incorrect type, it must be "
+"a string type"
+msgstr ""
+
+#, php-format
+msgid "The user group %s does not exist in the Program"
+msgstr ""
+
+msgid "Timeframe"
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid ""
+"Title semantic is not defined, the artifact cannot be added to the top "
+"backlog"
+msgstr ""
+
+msgid "To be planned"
+msgstr ""
+
+msgid "To be planned by Teams"
+msgstr ""
+
+msgid "Top backlog actions"
+msgstr ""
+
+#, php-format
+msgid "Tracker #%d does not belong to project #%d"
+msgstr ""
+
+#, php-format
+msgid "Tracker #%d is not found"
+msgstr ""
+
+#, php-format
+msgid "Tracker id #%d is not a plannable tracker"
+msgstr ""
+
+#, php-format
+msgid "Tracker with id #%d has no artifact link field"
+msgstr ""
+
+msgid "Unchanged"
+msgstr ""
+
+#, php-format
+msgid "User #%d cannot manipulate the top backlog of the Program #%d"
+msgstr ""
+
+#, php-format
+msgid ""
+"User #%d does not have permission to prioritize features in the program "
+"increment #%d"
+msgstr ""
+
+#, php-format
+msgid "User %s can not access to Program #%d"
+msgstr ""
+
+msgid "User can not submit artifact in Team tracker #%s"
+msgstr ""
+
+msgid ""
+"User can not submit the field <a href='%s'>%s</a> of tracker %s of project %s"
+msgstr ""
+
+msgid ""
+"User can not update the field <a href='%s'>%s</a> of tracker %s of project %s"
+msgstr ""
+
+msgid "Values '%s' are not found in every tracker, please check tracker"
+msgstr ""
+
+msgid "Which tracker's artifacts can be planned in Program increments?"
+msgstr ""
+
+msgid "Who can prioritize and plan items into Program Increments?"
+msgstr ""
+
+msgid "You are about to remove Team {{ public_name }} from this Program."
+msgstr ""
+
+msgid ""
+"You are creating a new iteration, it will create associated milestones in "
+"team projects."
+msgstr ""
+
+msgid ""
+"You are creating a new program increment, it will create associated "
+"milestones in team projects."
+msgstr ""
+
+msgid ""
+"You are editing an iteration, it will update associated milestones in team "
+"projects."
+msgstr ""
+
+msgid ""
+"You are updating a program increment, it will update associated milestones "
+"in team projects."
+msgstr ""
+
+msgid "You must be administrator of the projects you want aggregate."
+msgstr ""
+
+#, php-format
+msgid "You must be project administrator of project #%d  to define it as Team."
+msgstr ""
+
+msgid ""
+"You need to be project administrator to access to program administration."
+msgstr ""
+
+msgid "`add` and `order` must not both be null"
+msgstr ""
+
+msgid "iteration"
+msgstr ""
+
+msgid "program increment"
+msgstr ""
+
+msgid "{{ user_group_name }} has no permission"
+msgstr ""

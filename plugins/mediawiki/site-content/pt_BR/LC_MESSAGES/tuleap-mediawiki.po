@@ -1,0 +1,202 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Access control"
+msgstr "Controle de acesso"
+
+msgid "Administrator / sysop"
+msgstr ""
+
+msgid ""
+"All projects where upgraded to Mediawiki 1.23. This is a one-way process so "
+"it's not possible downgrade."
+msgstr ""
+
+msgid "Anonymous"
+msgstr ""
+
+msgid "Apply defaults"
+msgstr ""
+
+msgid "Available languages"
+msgstr ""
+
+msgid "Bot"
+msgstr ""
+
+msgid "Bureaucrat"
+msgstr ""
+
+msgid "Changes have been saved."
+msgstr ""
+
+msgid "Currently, there are no projects that uses Mediawiki 1.23."
+msgstr ""
+
+msgid "Global Mediawiki Administrator"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
+#, php-format
+msgid "Here you can map groups between %1$s and MediaWiki"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "List of migrated projects"
+msgstr ""
+
+msgid "MediaWiki"
+msgstr ""
+
+msgid "Mediawiki"
+msgstr ""
+
+msgid "Mediawiki Administration"
+msgstr ""
+
+msgid "Mediawiki groups mapping"
+msgstr ""
+
+msgid "Mediawiki integration in the forge"
+msgstr ""
+
+msgid "Mediawiki permissions"
+msgstr ""
+
+msgid "Migrate"
+msgstr ""
+
+msgid "Migrate all projects to Mediawiki 1.23"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Options"
+msgstr ""
+
+msgid "Options and groups mapping have been restored."
+msgstr ""
+
+msgid "Permission"
+msgstr "Permissão"
+
+msgid "Permissions"
+msgstr ""
+
+msgid ""
+"Please choose a language for your Mediawiki. Among other things it will "
+"define which page will be used for welcome page."
+msgstr ""
+
+msgid ""
+"Please note that upgrading to Mediawiki 1.23 is a one-way process there is "
+"no way to revert this process. This progressive migration was meant to "
+"mitigate the risks of errors during upgrade process. Please ask the upgraded "
+"projects if they noticed any troubles and to report related issues."
+msgstr ""
+
+msgid "Plugin Mediawiki"
+msgstr ""
+
+msgid "Project id or project name"
+msgstr ""
+
+msgid "Project name"
+msgstr "Nome do projeto"
+
+msgid "Projects that use Mediawiki 1.23 (LTS)"
+msgstr ""
+
+msgid "Read"
+msgstr ""
+
+msgid "Readers"
+msgstr ""
+
+msgid "Save all changes"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Something went wrong during the update."
+msgstr ""
+
+msgid ""
+"Submitted project will be converted to Mediawiki 1.23 shortly (check System "
+"Events)."
+msgstr ""
+
+#, php-format
+msgid "The language %1$s is not supported."
+msgstr ""
+
+msgid ""
+"The two MediaWiki groups \"Anonymous\" and \"User\" groups are hardcoded to "
+"\"All users\" and \"Registered users\". In this project (public) it means "
+"that all users will be able to browse the wiki content and all Registered "
+"users will be able to edit and create page (see the detailed list of "
+"permissions in the User Rights page)."
+msgstr ""
+
+msgid ""
+"The two MediaWiki groups \"Anonymous\" and \"User\" groups are hardcoded to "
+"\"Nobody\" and \"Registered users\". In this project (private) it means that "
+"only project members can access the wiki and they will be able to edit and "
+"create pages (see the detailed list of permissions in the User Rights page)."
+msgstr ""
+
+msgid ""
+"This permission grants mediawiki administration rights for each mediawiki of "
+"every project"
+msgstr ""
+
+msgid ""
+"This section allows you to define the user groups that can read and/or write "
+"content in this Mediawiki."
+msgstr ""
+
+msgid ""
+"Tick this box if you want to activate Mediawiki in full screen. This "
+"compatibility mode will let you use WikiEditor extension, not available in "
+"standard embedded view."
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Write"
+msgstr ""
+
+msgid "Writers"
+msgstr ""
+
+#, php-format
+msgid ""
+"You can find more informations on what MediaWiki groups can do here: <a href="
+"\"%1$s\">Special:User groups rights</a>"
+msgstr ""
+
+msgid ""
+"You've been redirected here since no language has been set for your "
+"Mediawiki instance."
+msgstr ""
+
+msgid "or"
+msgstr "ou"
+
+msgid "{{ user_group_name }} has no permission for Mediawiki"
+msgstr ""

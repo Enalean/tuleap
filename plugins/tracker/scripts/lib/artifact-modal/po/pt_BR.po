@@ -1,0 +1,204 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%(usage)s of %(quota)s"
+msgstr ""
+
+msgid "(auto-computed)"
+msgstr ""
+
+msgid "...to get"
+msgstr "...para obter"
+
+msgid "Add another file"
+msgstr ""
+
+msgid "Add link"
+msgstr "Adicionar link"
+
+msgid "An error occurred while saving the artifact."
+msgstr ""
+
+msgid "An error occurred while uploading this file: {{ file_name }}."
+msgstr ""
+
+msgid "Artifact id"
+msgstr ""
+
+msgid "Auto-compute"
+msgstr ""
+
+msgid "By: %s"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Comment"
+msgstr "Comente"
+
+msgid "Computed value:"
+msgstr ""
+
+msgid "Confirm to apply your modifications"
+msgstr ""
+
+msgid "Create a new {{ modal.title }}"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Edited by"
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "Enter artifact ids separated by a comma"
+msgstr ""
+
+msgid "Error:"
+msgstr ""
+
+msgid "File description"
+msgstr ""
+
+msgid "File upload quota allowed"
+msgstr ""
+
+msgid "Follow-ups"
+msgstr ""
+
+msgid "For your information..."
+msgstr "Para sua informação..."
+
+msgid "HTML"
+msgstr ""
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Hidden fieldsets:"
+msgstr ""
+
+msgid "Keep the file"
+msgstr ""
+
+msgid "Linked to"
+msgstr ""
+
+msgid "Mark for removal"
+msgstr ""
+
+msgid "Markdown"
+msgstr ""
+
+msgid "Matching artifact"
+msgstr ""
+
+msgid "Max allowed upload size: %s"
+msgstr ""
+
+msgid "New artifact"
+msgstr ""
+
+msgid "No follow-ups"
+msgstr ""
+
+msgid "No result found"
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Only comments are displayed"
+msgstr ""
+
+msgid "Parent artifact"
+msgstr ""
+
+msgid "Please choose a parent…"
+msgstr ""
+
+msgid "Please select a date"
+msgstr ""
+
+msgid "Please select an item in the list"
+msgstr ""
+
+msgid "Preview"
+msgstr "Pré-visualização"
+
+msgid "References list is empty."
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Restrict access to this artifact for the following user groups:"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Select parent"
+msgstr ""
+
+msgid "Size: %s"
+msgstr ""
+
+msgid ""
+"Someone updated this artifact while you were editing it. Please note that "
+"your modifications will be applied on top of previous changes. You need to "
+"confirm your action to submit your modification."
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "The artifact will be linked to %s"
+msgstr ""
+
+msgid "There is no link yet"
+msgstr ""
+
+msgid "There was an error in the Markdown preview:"
+msgstr "Houve um erro na pré-visualização do Markdown:"
+
+msgid "Type..."
+msgstr "Digite..."
+
+msgid "Unable to retrieve the linked artifacts: %s"
+msgstr ""
+
+msgid "Unable to retrieve the parent artifact: %s"
+msgstr ""
+
+msgid "Unable to upload the file"
+msgstr "Impossível carregar o arquivo"
+
+msgid "Undo removal"
+msgstr ""
+
+msgid "You are not allowed to paste images here"
+msgstr "Você não está autorizado a colar imagens aqui"
+
+msgid "You are not allowed to upload files bigger than %s."
+msgstr "Você não está autorizado a carregar arquivos maiores que %s."
+
+msgid "You can drag 'n drop or paste image directly in the editor."
+msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."
+
+msgid ""
+"You exceeded your current file upload quota. Please remove existing "
+"temporary files or wait until they are cleaned up."
+msgstr ""
+
+msgid "{{ project_label }} - open {{ tracker_label }}"
+msgstr ""

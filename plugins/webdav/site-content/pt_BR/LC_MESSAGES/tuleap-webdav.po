@@ -1,0 +1,32 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"Access document manager and file release system files via the WebDAV server"
+msgstr ""
+
+msgid "Anonymous access to webdav is forbidden"
+msgstr ""
+
+msgid "Item exists but cannot be displayed over webdav (link, wiki, empty)"
+msgstr ""
+
+msgid "WebDAV"
+msgstr ""
+
+msgid ""
+"WebDAV is currently activated and is not compatible with filename pattern "
+"usage. If you choose to enforce a filename pattern, you will not be able to "
+"interact with your documents via WebDAV."
+msgstr ""
+
+msgid ""
+"WebDAV is currently activated and is not compatible with filename pattern "
+"usage. Since you are currently enforcing a filename pattern, you are not "
+"able to interact with your documents via WebDAV."
+msgstr ""

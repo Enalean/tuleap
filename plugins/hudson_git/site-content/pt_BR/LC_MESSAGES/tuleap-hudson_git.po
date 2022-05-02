@@ -1,0 +1,187 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$s jobs triggered"
+msgstr ""
+
+msgid ""
+"A Jenkins server has been defined globally for the project and will be "
+"triggered after git pushes."
+msgid_plural ""
+"Some Jenkins servers have been defined globally for the project and will be "
+"triggered after git pushes."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Add Jenkins hook"
+msgstr ""
+
+msgid "Add Jenkins webhook"
+msgstr ""
+
+msgid "Add a Jenkins server"
+msgstr ""
+
+msgid "Add a Jenkins webhook"
+msgstr ""
+
+msgid "Branch source plugin:"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid ""
+"Configuration of Jenkins servers that will be triggered at each push in any "
+"repository of the project."
+msgstr ""
+
+msgid "Confirm deletion"
+msgstr ""
+
+msgid "Continuous Integration for Git plugin"
+msgstr ""
+
+msgid "Continuous Integration with Hudson/Jenkins for Git plugin"
+msgstr ""
+
+msgid "Do not send commit's SHA-1 to Jenkins"
+msgstr ""
+
+msgid "Edit the Jenkins webhook"
+msgstr ""
+
+msgid "Error while saving Job data"
+msgstr ""
+
+msgid "Expected Jenkins server ID not found"
+msgstr ""
+
+msgid "Expected Jenkins server URL not found"
+msgstr ""
+
+msgid "Git plugin triggered jobs:"
+msgstr ""
+
+msgid "Invalid repository"
+msgstr ""
+
+msgid "Jenkins URL"
+msgstr ""
+
+msgid "Jenkins documentation"
+msgstr ""
+
+msgid "Jenkins hook"
+msgstr ""
+
+msgid "Jenkins server"
+msgstr ""
+
+msgid "Jenkins server is not reachable."
+msgstr ""
+
+msgid "Jenkins server is reachable."
+msgstr ""
+
+msgid ""
+"Jenkins server will be notified about git activity on any repository in the "
+"project."
+msgstr ""
+
+msgid ""
+"Jenkins server will be notified about git activity on this repository and "
+"will trigger git polling. More details on"
+msgstr ""
+
+msgid "Jenkins webhook successfully removed"
+msgstr ""
+
+msgid "Jenkins webhook successfully saved"
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "Logs for %s"
+msgstr ""
+
+msgid "No Jenkins server URL provided."
+msgstr ""
+
+msgid "No Jenkins server configured yet."
+msgstr ""
+
+msgid "No logs yet"
+msgstr ""
+
+msgid "No triggered jobs"
+msgstr ""
+
+msgid "Nothing has been triggered for this push."
+msgstr ""
+
+msgid "Only one Jenkins hook can be configured"
+msgstr ""
+
+msgid "Provided job does not belong to the Jenkins server's project."
+msgstr ""
+
+msgid "Push date"
+msgstr ""
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "Repository"
+msgstr ""
+
+msgid "Save"
+msgstr "Gravar"
+
+msgid "Save Jenkins webhook"
+msgstr ""
+
+msgid "Test the server"
+msgstr ""
+
+msgid "The Jenkins server URL provided is not well formed."
+msgstr ""
+
+msgid "The Jenkins server has successfully been Removed."
+msgstr ""
+
+msgid "The Jenkins server has successfully been added."
+msgstr ""
+
+msgid "The Jenkins server is already defined in project."
+msgstr ""
+
+msgid ""
+"To work around the fact Jenkins doesn't poll the repositories when sha1 "
+"parameter is given."
+msgstr ""
+
+msgid "Unable to save Jenkins webhook"
+msgstr ""
+
+msgid "User is not Git administrator."
+msgstr ""
+
+msgid "You are about to remove the Jenkins server. Please confirm your action."
+msgstr ""
+
+msgid "You can define one Jenkins webhook and several generic webhooks."
+msgstr ""

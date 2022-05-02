@@ -1,0 +1,199 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "<a title='needs link type first'>**</a>"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Add a project link type"
+msgstr ""
+
+msgid "Add new project:"
+msgstr ""
+
+msgid "Additional &amp; Modified project link types"
+msgstr ""
+
+msgid "Additional links to other projects"
+msgstr ""
+
+msgid "Cancel Changes"
+msgstr ""
+
+msgid "Change Project Link Type Definition"
+msgstr ""
+
+#, php-format
+msgid "Click %1$s to add the links from the template"
+msgstr ""
+
+msgid "Create links between projects."
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Delete project link"
+msgstr ""
+
+msgid "Delete project link type (including all links of this type)"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Link Type"
+msgstr ""
+
+msgid "Link URI (template)"
+msgstr ""
+
+msgid "Links"
+msgstr "Links"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "No project link found."
+msgstr ""
+
+msgid "Parent Projects"
+msgstr ""
+
+msgid "Project Link Types"
+msgstr ""
+
+msgid "Project Links"
+msgstr ""
+
+msgid "Project Links Configuration"
+msgstr ""
+
+msgid "Project link deleted OK"
+msgstr ""
+
+msgid "Project name (search as you type)"
+msgstr ""
+
+msgid "Projects in the programme"
+msgstr ""
+
+msgid "Projects using similar technology or sharing resources"
+msgstr ""
+
+msgid "Re-Synchronise Project Links with Template"
+msgstr ""
+
+msgid "Related Projects"
+msgstr ""
+
+msgid "Replace all details in this form with the default values"
+msgstr ""
+
+msgid "Reverse Links"
+msgstr ""
+
+msgid "Reverse Name"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Set to defaults"
+msgstr ""
+
+msgid "Sub-Projects"
+msgstr ""
+
+msgid ""
+"That change would create a duplicate link name or reverse-name - link type "
+"not updated"
+msgstr ""
+
+#, php-format
+msgid ""
+"To enable project linking, you must first define at least one project link "
+"type - click <i>%1$s</i> to get started."
+msgstr ""
+
+#, php-format
+msgid "Update cancelled (it would create a duplicate link to \"%1$s\")"
+msgstr ""
+
+msgid "add"
+msgstr ""
+
+#, php-format
+msgid "link added: %1$s"
+msgstr ""
+
+msgid "matched"
+msgstr ""
+
+#, php-format
+msgid ""
+"means that the link cannot be added because there is no matching link type "
+"defined in the project. Create the link type by clicking on <i>%1$s</i> in "
+"<i>%2$s</i>."
+msgstr ""
+
+#, php-format
+msgid "must be %1$s"
+msgstr ""
+
+msgid "must be a number"
+msgstr ""
+
+msgid "must be a valid email address"
+msgstr ""
+
+msgid "must be checked"
+msgstr ""
+
+msgid "must be completed"
+msgstr ""
+
+#, php-format
+msgid "must be greater than %1$s"
+msgstr ""
+
+#, php-format
+msgid "must be less than %1$s"
+msgstr ""
+
+msgid "project"
+msgstr "projeto"
+
+msgid "template"
+msgstr ""
+
+msgid "template project"
+msgstr ""
+
+msgid "update"
+msgstr ""
+
+msgid "update OK"
+msgstr ""
+
+#, php-format
+msgid "update OK (%1$s)"
+msgstr ""
+
+msgid "update details"
+msgstr ""
+
+#, php-format
+msgid "update failed (MySQL reason: \"%1$s\")"
+msgstr ""
+
+#, php-format
+msgid "update failed [%2$s] (MySQL reason: \"%1$s\")"
+msgstr ""

@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "An error occurred while loading branches"
+msgstr ""
+
+msgid "An error occurred while loading tags"
+msgstr ""
+
+msgid "Branch name"
+msgstr "Nome da branch"
+
+msgid "Branches"
+msgstr ""
+
+msgid "Tag name"
+msgstr "Nome da tag"
+
+msgid "Tags"
+msgstr ""
+
+msgid "There isn't any branches defined yet"
+msgstr ""
+
+msgid "There isn't any matching branches"
+msgstr ""
+
+msgid "There isn't any matching tags"
+msgstr ""
+
+msgid "There isn't any tags defined yet"
+msgstr ""
+
+msgid "default"
+msgstr ""

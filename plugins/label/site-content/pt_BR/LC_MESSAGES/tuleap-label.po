@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Adds a project widget to search for labeled items"
+msgstr ""
+
+msgid "An exception occurred while saving data."
+msgstr ""
+
+msgid ""
+"Displays items with configured labels in the project. For example you can "
+"search all Pull Requests labeled \"Emergency\" and \"v3.0\""
+msgstr ""
+
+msgid "Error: label does not belong to project or does not exist."
+msgstr ""
+
+msgid "Error: one projects label is invalid."
+msgstr ""
+
+msgid "Error: you should specify at least one project label."
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Labeled Items"
+msgstr ""
+
+msgid "Select labels"
+msgstr ""

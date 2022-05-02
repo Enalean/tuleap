@@ -1,0 +1,226 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%{ nb } blocked"
+msgid_plural "%{ nb } blocked"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{ nb } failed"
+msgid_plural "%{ nb } failed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{ nb } not run"
+msgid_plural "%{ nb } not run"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{ nb } passed"
+msgid_plural "%{ nb } passed"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{ nb } planned test"
+msgid_plural "%{ nb } planned tests"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{ nb } test"
+msgid_plural "%{ nb } tests"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "All tests"
+msgstr ""
+
+msgid "All tests in %{ milestone_title }"
+msgstr ""
+
+msgid "An error occurred while creating the campaign."
+msgstr ""
+
+msgid "An error occurred while loading the backlog items"
+msgstr ""
+
+msgid "An error occurred while loading the campaigns."
+msgstr ""
+
+msgid "An error occurred while loading the tests."
+msgstr ""
+
+msgid "An error occurred while retrieving information of the new campaign."
+msgstr ""
+
+msgid "Blocked"
+msgstr ""
+
+msgid "Campaign ID"
+msgstr ""
+
+msgid "Campaign Name"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Create a new test"
+msgstr ""
+
+msgid "Create campaign"
+msgstr ""
+
+msgid "Create new campaign"
+msgstr ""
+
+msgid "Edit %{ item_type } #%{ item_id }"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Export as document"
+msgstr ""
+
+msgid "Export as spreadsheet"
+msgstr ""
+
+msgid "Exported by"
+msgstr ""
+
+msgid "Exported on"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "From %{ tracker_name } tracker report"
+msgid_plural "From %{ tracker_name } tracker reports"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Go to the last execution in release %{ release_name }"
+msgstr ""
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Justification comment"
+msgstr ""
+
+msgid "Justifications (for planned tests that are not-run, failed, blocked)"
+msgstr ""
+
+msgid "Milestone"
+msgstr ""
+
+msgid "Milestone URL"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "New campaign"
+msgstr ""
+
+msgid "No tests"
+msgstr ""
+
+msgid "Not planned in release %{ release_name }"
+msgstr ""
+
+msgid "Not run"
+msgstr ""
+
+msgid "Oops, there's an issue"
+msgstr ""
+
+msgid "Passed"
+msgstr ""
+
+msgid "Platform"
+msgstr ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Report extracted by"
+msgstr ""
+
+msgid "Report extracted on"
+msgstr ""
+
+msgid "Requirements"
+msgstr ""
+
+msgid "Test Report %{ milestone_title }"
+msgstr ""
+
+msgid "Test Results (planned tests)"
+msgstr ""
+
+msgid "Test campaigns"
+msgstr ""
+
+msgid "Test case ID"
+msgstr ""
+
+msgid "Test case title"
+msgstr ""
+
+msgid "Test execution ID"
+msgstr ""
+
+msgid "Test execution date"
+msgstr ""
+
+msgid "Test execution runner"
+msgstr ""
+
+msgid "Test execution status"
+msgstr ""
+
+msgid "Test plan"
+msgstr ""
+
+msgid "Tests"
+msgstr ""
+
+msgid "Tests status"
+msgstr ""
+
+msgid "The export did not succeed, please try again."
+msgstr ""
+
+msgid ""
+"The retrieval of the test definition tracker reports has failed, try again "
+"later"
+msgstr ""
+
+msgid "There is no backlog item yet"
+msgstr ""
+
+msgid "There is no test campaign yet"
+msgstr ""
+
+msgid "This item isn't covered yet"
+msgstr ""
+
+msgid ""
+"This requirement have multiple fields with this label, only one value is "
+"visible"
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Type"
+msgstr "Tipo"

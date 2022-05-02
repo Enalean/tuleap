@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%s has no permission for any repository in this project"
+msgstr "O %s não tem permissão para qualquer repositório neste projeto"
+
+msgid "Branch"
+msgstr "Branch"
+
+msgid "No repository found for project"
+msgstr "Não foi encontrado nenhum repositório para o projeto"
+
+msgid "Readers"
+msgstr ""
+
+msgid "Repository"
+msgstr ""
+
+msgid "Repository name"
+msgstr "Nome do Repositório"
+
+msgid "Repository permissions"
+msgstr ""
+
+msgid "Rewinders"
+msgstr ""
+
+msgid "See all repositories permissions"
+msgstr ""
+
+msgid "Tag"
+msgstr ""
+
+msgid "There isn't any matching repository"
+msgstr "Não há nenhum repositório correspondente"
+
+msgid "Writers"
+msgstr ""

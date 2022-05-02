@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Activate the banner on this project"
+msgstr ""
+
+msgid "An error occurred: %{ error_message }"
+msgstr ""
+
+msgid "Choose a banner message"
+msgstr "Escolha uma mensagem para o banner"
+
+msgid "Message"
+msgstr "Mensagem"
+
+msgid "Message is mandatory"
+msgstr "A mensagem é obrigatória"
+
+msgid "Save the configuration"
+msgstr ""
+
+msgid "The banner has been successfully modified"
+msgstr ""
+
+msgid "Your message will be condensed to one line"
+msgstr ""

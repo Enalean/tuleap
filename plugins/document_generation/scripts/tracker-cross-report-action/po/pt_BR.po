@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "All usable link types have been selected"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Export"
+msgstr ""
+
+msgid "Export a cross tracker report document as .xlsx"
+msgstr ""
+
+msgid "First level"
+msgstr ""
+
+msgid "For each levels: "
+msgstr ""
+
+msgid "Link type"
+msgstr ""
+
+msgid "No type"
+msgstr ""
+
+msgid "No usable link types have been found"
+msgstr ""
+
+msgid "Personal report"
+msgid_plural "Personal reports"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Public report"
+msgid_plural "Public reports"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Second level"
+msgstr ""
+
+msgid ""
+"The columns exported are the ones used of the first table of the selected "
+"report."
+msgstr ""
+
+msgid ""
+"The selected artifacts will be the linked ones that are not filtered by a "
+"criteria of the selected report."
+msgstr ""
+
+msgid "Third level"
+msgstr ""
+
+msgid "Tracker"
+msgstr ""

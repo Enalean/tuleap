@@ -1,0 +1,102 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid ""
+"%s commented on #%d: %s in %s:\n"
+"\n"
+"%s\n"
+"\n"
+"%s"
+msgstr ""
+
+#, php-format
+msgid "%s commented on #%d: %s."
+msgstr ""
+
+#, php-format
+msgid "%s has abandoned the pull request #%d: %s"
+msgstr ""
+
+#, php-format
+msgid "%s has merged the pull request #%d: %s into %s"
+msgstr ""
+
+#, php-format
+msgid "%s pushed %d commit updating the pull request #%d: %s."
+msgid_plural "%s pushed %d commits updating the pull request #%d: %s."
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%s requested your review on #%d: %s"
+msgstr ""
+
+msgid "<a href=\"%s\">%s</a> commented on <a href=\"%s\">#%s</a>: %s in %s:"
+msgstr ""
+
+msgid "<a href=\"%s\">%s</a> commented on <a href=\"%s\">#%s</a>: %s."
+msgstr ""
+
+msgid ""
+"<a href=\"%s\">%s</a> has abandoned the pull request <a href=\"%s\">#%s</a>: "
+"%s"
+msgstr ""
+
+msgid ""
+"<a href=\"%s\">%s</a> has merged the pull request <a href=\"%s\">#%s</a>: %s "
+"into %s"
+msgstr ""
+
+msgid ""
+"<a href=\"%s\">%s</a> pushed %s commit updating the pull request <a href=\"%s"
+"\">#%s</a>: %s."
+msgid_plural ""
+"<a href=\"%s\">%s</a> pushed %s commits updating the pull request <a href="
+"\"%s\">#%s</a>: %s."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"<a href=\"%s\">%s</a> requested your review on <a href=\"%s\">#%s</a>: %s"
+msgstr ""
+
+msgid "Abandonned"
+msgstr ""
+
+msgid ""
+"Default (Will fast-forward when possible, fallback to merge when not "
+"possible)"
+msgstr ""
+
+msgid "Default pull requests settings updated"
+msgstr ""
+
+msgid "Fast-forward only"
+msgstr ""
+
+msgid "Merge"
+msgstr ""
+
+msgid "Merged"
+msgstr ""
+
+msgid "Pull request"
+msgstr ""
+
+msgid "Pull requests"
+msgstr ""
+
+msgid "Pull requests settings updated"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "The pull request is not accessible anymore"
+msgstr ""

@@ -1,0 +1,52 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"Artifacts of the selected tracker will appear in the upper part of the "
+"Roadmap, below\n"
+"        the Quarters/Months/Weeks."
+msgstr ""
+
+msgid "Default timescale"
+msgstr ""
+
+msgid "Level 2 is expected to be a sub-division of level 1."
+msgstr ""
+
+msgid "Month"
+msgstr "Mês"
+
+msgid "Please choose a tracker"
+msgstr ""
+
+msgid "Quarter"
+msgstr ""
+
+msgid "Roadmap"
+msgstr ""
+
+msgid ""
+"Selected trackers are expected to have continuous time (i.e. artifacts "
+"timeframe do not\n"
+"        overlap)."
+msgstr ""
+
+msgid "Show progress of"
+msgstr ""
+
+msgid "Timeframe ribbon, level 1 (eg. Release)"
+msgstr ""
+
+msgid "Timeframe ribbon, level 2 (eg. Sprint)"
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Week"
+msgstr "Semana"

@@ -53,6 +53,7 @@ be added.
 * Aurélien Tisné
 * Karim Beji
 * Seif Eddine Gamoudi
+* Fábio F. Silva
 
 ### Previous contributors (no longer active commiters)
 

@@ -1,0 +1,25 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "API Explorer"
+msgstr ""
+
+msgid ""
+"The recommended way to interact with Tuleap is to leverage on the REST\n"
+"    API. REST API has broad test coverage in Tuleap developers test suite "
+"and\n"
+"    there is a large number of end points. Modern features (Kanban, Scrum "
+"Planning,\n"
+"    etc) are using those APIs."
+msgstr ""
+
+msgid "Web API Explorer"
+msgstr ""
+
+msgid "You can <a href=\"%s\">get started</a> from the documentation."
+msgstr ""

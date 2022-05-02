@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "You are about to delete %s. Please, confirm your action."
+msgstr ""
+
+msgid ""
+"You are about to generate a new Client Secret for %s.\n"
+"        Make sure to replace it in %s's configuration, otherwise it will not "
+"be allowed to access Tuleap!\n"
+"        Please, confirm your action."
+msgstr ""
+
+msgid "You are about to revoke access to %s. Please, confirm your action."
+msgstr ""

@@ -1,0 +1,139 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%s by project %s wants to connect to your Tuleap account."
+msgstr ""
+
+msgid "%s wants to connect to your Tuleap account."
+msgstr ""
+
+msgid "Access has been revoked."
+msgstr ""
+
+msgid "Add an App"
+msgstr ""
+
+msgid "App"
+msgstr ""
+
+msgid "App name"
+msgstr ""
+
+msgid "Application (client) ID"
+msgstr ""
+
+msgid "Authorization not found for this App, aborting revocation."
+msgstr ""
+
+msgid "Authorize"
+msgstr ""
+
+msgid "Authorize application"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Client secret copied!"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Copy the client secret"
+msgstr ""
+
+msgid "Delegate access to Tuleap resources"
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Delete App"
+msgstr ""
+
+msgid "Deny"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Edit an App"
+msgstr ""
+
+msgid "Force PKCE usage?"
+msgstr ""
+
+msgid "Force usage of PKCE to authenticate"
+msgstr ""
+
+msgid "Generate a new client secret"
+msgstr ""
+
+msgid ""
+"Here is the generated secret for your app %s. Make sure to copy it. You "
+"won't be able to see it again!"
+msgstr ""
+
+msgid "My REST API consumer App"
+msgstr ""
+
+msgid "No App have been defined yet. Start by adding one."
+msgstr ""
+
+msgid "OAuth2 Apps"
+msgstr ""
+
+msgid "OAuth2 Server"
+msgstr ""
+
+msgid "OAuth2 apps common to the whole instance"
+msgstr ""
+
+msgid "Please review the permissions you are about to give to %s:"
+msgstr ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Redirect endpoint"
+msgstr ""
+
+msgid ""
+"Redirect endpoint must use HTTPS. It must not include a fragment component "
+"(#anchor)"
+msgstr ""
+
+msgid "Revoke access"
+msgstr ""
+
+msgid "Revoke access to this App"
+msgstr ""
+
+msgid "Revoke authorization"
+msgstr ""
+
+msgid "Scopes"
+msgstr ""
+
+msgid "The App has been successfully deleted."
+msgstr ""
+
+msgid "The App's ID is required."
+msgstr ""
+
+msgid "The provided app data is not valid."
+msgstr ""
+
+msgid ""
+"This is a list of OAuth2 apps you have authorized access to Tuleap on your "
+"behalf."
+msgstr ""
+
+msgid "You did not authorize any OAuth2 App yet."
+msgstr ""

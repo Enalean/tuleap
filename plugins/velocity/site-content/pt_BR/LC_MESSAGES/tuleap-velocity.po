@@ -1,0 +1,128 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"<b>Done</b> semantic is needed since Velocity computation is made over "
+"<b>done</b> artifacts. Please select a <a href=\"%s\">Done</a> semantic "
+"first."
+msgstr ""
+
+msgid ""
+"<b>Done</b> semantic is needed since Velocity computation is made over "
+"<b>done</b> artifacts. Please select a Done semantic first."
+msgstr ""
+
+msgid ""
+"<b>Status</b> semantic should be a select box or a radiobutton, status must "
+"have only one possible value."
+msgstr ""
+
+msgid "Adds velocity chart into Agiledashboard"
+msgstr ""
+
+msgid ""
+"Artifact velocity will always be set to 0, because no backlog tracker have "
+"the following semantic:"
+msgid_plural ""
+"Artifact velocity will always be set to 0, because no backlog tracker have "
+"the following semantics:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Choose a field"
+msgstr ""
+
+msgid "Define the field to use to compute velocity."
+msgstr ""
+
+msgid "Field used for velocity computation:"
+msgstr ""
+
+msgid ""
+"Following artifact won't be displayed because it doesn't have a start date:"
+msgid_plural ""
+"Following artifacts won't be displayed because they don't have a start date:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Following tracker should have <b>velocity</b> semantic:"
+msgid_plural "Following trackers should have <b>velocity</b> semantic:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "No field defined for velocity computation."
+msgstr ""
+
+msgid ""
+"Only integers and float fields are listed. By choosing one of these fields, "
+"it will be automatically computed in order to give you the velocity value."
+msgstr ""
+
+msgid "Save your change"
+msgstr ""
+
+msgid "Semantic done is not defined."
+msgstr ""
+
+msgid "Semantic updated successfully."
+msgstr ""
+
+msgid "Semantic velocity unset with success"
+msgstr ""
+
+msgid ""
+"The <i>velocity</i> of this tracker will be represented in the Agile "
+"Dashboard by the field"
+msgstr ""
+
+#, php-format
+msgid "The field %s will be automatically set to %s"
+msgstr ""
+
+msgid "The following semantic is not defined:"
+msgid_plural "The following semantics are not defined:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The request is not valid."
+msgstr ""
+
+msgid "The velocity chart only displays the last 7 artifacts found."
+msgstr ""
+
+msgid "This tracker does not have a <i>velocity</i> field yet."
+msgstr ""
+
+msgid "Tracker %s does not have a configured Timeframe semantic"
+msgstr ""
+
+msgid "Tracker semantic velocity"
+msgstr ""
+
+msgid "Unset this semantic"
+msgstr ""
+
+msgid "Velocity"
+msgstr ""
+
+msgid ""
+"Velocity chart represents the sum of <b>initial effort</b> of <b>done</b> "
+"backlog elements of %s."
+msgstr ""
+
+msgid "Velocity semantic"
+msgstr ""
+
+msgid "Velocity semantic successfully updated."
+msgstr ""
+
+msgid "go back to semantic overview"
+msgstr ""
+
+msgid "or"
+msgstr "ou"

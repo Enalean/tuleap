@@ -1,0 +1,87 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid "Backlog"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid ""
+"Configuration can be done in <a href='%s' data-test='program-go-to-"
+"administration'>administration</a> of service."
+msgstr ""
+
+msgid "Configuration can be done in administration of service."
+msgstr ""
+
+msgid "Create the first %{ program_increment_sub_label }"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "It seems an action you tried to perform can not be done."
+msgstr ""
+
+msgid "New %{ program_increment_sub_label }"
+msgstr ""
+
+msgid "Oops, an error occurred!"
+msgstr ""
+
+msgid "Oops, there's an issue"
+msgstr ""
+
+msgid "Plan %s"
+msgstr ""
+
+msgid "Program"
+msgstr ""
+
+msgid "Program configuration is incomplete"
+msgstr ""
+
+msgid "Reload the page"
+msgstr ""
+
+msgid "Show error details"
+msgstr ""
+
+msgid ""
+"The feature has elements planned in team project, it can not be unplanned."
+msgstr ""
+
+msgid ""
+"The feature is not plannable, user does not have permission to update "
+"artifact or field link."
+msgstr ""
+
+msgid "The retrieval of the elements to be planned in program has failed"
+msgstr ""
+
+msgid "The retrieval of the program increments has failed"
+msgstr ""
+
+msgid "There are no program increments yet"
+msgstr ""
+
+msgid "There is nothing to plan"
+msgstr ""
+
+msgid "To Be Planned"
+msgstr ""
+
+msgid "You are not allowed to plan in this program increment."
+msgstr ""
+
+msgid "You cannot plan items"
+msgstr ""

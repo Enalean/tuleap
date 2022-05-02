@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Actually there isn't any children you can see here."
+msgstr ""
+
+msgid "An error occurred while retrieving the children."
+msgstr ""
+
+msgid "Displayed artifacts don't have any links to each other."
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "End date is lesser than start date!"
+msgstr ""
+
+msgid "Linked to"
+msgstr ""
+
+msgid "Links"
+msgstr "Links"
+
+msgid "Month"
+msgstr "Mês"
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Ok, got it"
+msgstr ""
+
+msgid "Oops, something went wrong."
+msgstr ""
+
+msgid "Please come back later."
+msgstr ""
+
+msgid "Progress"
+msgstr ""
+
+msgid "Q%{ quarter }"
+msgstr ""
+
+msgid "Quarter"
+msgstr ""
+
+msgid "Quarter %{ quarter } of %{ year }"
+msgstr ""
+
+msgid "Show closed items"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "There is no data to show."
+msgstr ""
+
+msgid "Timescale"
+msgstr ""
+
+msgid "Today: %{ date }"
+msgstr ""
+
+msgid "Undefined"
+msgstr ""
+
+msgid "W%{ week }"
+msgstr ""
+
+msgid "Week"
+msgstr "Semana"
+
+msgid "Week %{ week } of %{ year }"
+msgstr ""

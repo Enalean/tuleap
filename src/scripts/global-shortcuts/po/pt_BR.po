@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Focus first sidebar service"
+msgstr "Foco no serviço da primeira barra lateral"
+
+msgid "Global shortcuts"
+msgstr "Atalhos globais"
+
+msgid "Go to %s"
+msgstr "Ir para %s"
+
+msgid "Go to personal dashboard"
+msgstr "Ir para o dashboard pessoal"
+
+msgid "Open the \"+ New\" dropdown"
+msgstr "Abra o \"+ Novo\" dropdown"
+
+msgid "Open the \"Switch to...\" modal"
+msgstr "Abrir o modal \"Mudar para...\"."
+
+msgid "Open this window"
+msgstr "Abra esta janela"
+
+msgid "Services quick access"
+msgstr "Acesso rápido aos Serviços"
