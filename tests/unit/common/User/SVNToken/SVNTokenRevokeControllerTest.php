@@ -67,7 +67,9 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->svn_token_handler->shouldReceive('deleteSVNTokensForUser');
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->withId(120)->build())->build(),
+            HTTPRequestBuilder::get()
+                ->withUser(UserTestBuilder::aUser()->withId(120)->build())
+                ->withParam('svn-tokens-selected', [])->build(),
             LayoutBuilder::build(),
             []
         );
@@ -91,28 +93,6 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $feedback = $layout_inspector->getFeedback();
         $this->assertCount(1, $feedback);
         $this->assertEquals(Feedback::INFO, $feedback[0]['level']);
-        $this->assertEquals('/account/keys-tokens', $layout_inspector->getRedirectUrl());
-    }
-
-
-    public function testItFailsAtDeletingSelectedToken(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(120)->build();
-        $this->csrf_token->shouldReceive('check');
-
-        $this->svn_token_handler->shouldReceive('deleteSVNTokensForUser')->andReturnFalse();
-
-        $layout_inspector = new LayoutInspector();
-
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('svn-tokens-selected', ['2', '5'])->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
-
-        $feedback = $layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::ERROR, $feedback[0]['level']);
         $this->assertEquals('/account/keys-tokens', $layout_inspector->getRedirectUrl());
     }
 }

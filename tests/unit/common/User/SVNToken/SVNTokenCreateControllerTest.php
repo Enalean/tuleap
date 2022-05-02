@@ -29,7 +29,6 @@ use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
-use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SVNTokenCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -72,7 +71,9 @@ final class SVNTokenCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItChecksCSRFToken(): void
     {
         $this->csrf_token->shouldReceive('check')->with('/account/keys-tokens')->once();
-        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser');
+        $key = new EncryptionKey(new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $this->key_factory->shouldReceive('getEncryptionKey')->andReturn($key);
+        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser')->andReturn(new ConcealedString(''));
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser(UserTestBuilder::aUser()->withId(120)->build())->build(),
@@ -98,27 +99,5 @@ final class SVNTokenCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals('tlp-tk-blabla', SymmetricCrypto::decrypt($_SESSION['last_svn_token'], $key));
-    }
-
-    public function testKeyGenerationFails(): void
-    {
-        $user = UserTestBuilder::aUser()->withId(120)->build();
-        $this->csrf_token->shouldReceive('check');
-
-        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser')->andReturnNull();
-
-        $layout_inspector = new LayoutInspector();
-
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($user)->withParam('svn-token-description', 'Some comment')->build(),
-            LayoutBuilder::buildWithInspector($layout_inspector),
-            []
-        );
-
-        $feedback = $layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(\Feedback::ERROR, $feedback[0]['level']);
-
-        $this->assertEquals('/account/keys-tokens', $layout_inspector->getRedirectUrl());
     }
 }

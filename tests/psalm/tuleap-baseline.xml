@@ -73049,7 +73049,7 @@
       <code>warning_ldap</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/tokens/SVN_Token.class.php">
+  <file src="src/common/SVNCore/Tokens/SVN_Token.class.php">
     <MissingParamType occurrences="6">
       <code>$comment</code>
       <code>$generated_date</code>
@@ -73076,7 +73076,7 @@
       <code>getUser</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/tokens/SVN_TokenDao.class.php">
+  <file src="src/common/SVNCore/Tokens/SVN_TokenDao.class.php">
     <DeprecatedMethod occurrences="17">
       <code>DataAccessObject</code>
       <code>escapeInt</code>
@@ -73116,7 +73116,7 @@
       <code>setProjectAuthorizesTokens</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/tokens/SVN_TokenHandler.class.php">
+  <file src="src/common/SVNCore/Tokens/SVN_TokenHandler.class.php">
     <MissingParamType occurrences="3">
       <code>$comment</code>
       <code>$svn_token_data</code>
@@ -73127,7 +73127,7 @@
       <code>instantiateFromRow</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/tokens/SVN_TokenPresenter.class.php">
+  <file src="src/common/SVNCore/Tokens/SVN_TokenPresenter.class.php">
     <MissingPropertyType occurrences="6">
       <code>$comment</code>
       <code>$generated_date</code>

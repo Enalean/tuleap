@@ -591,12 +591,6 @@ msgstr ""
 "Un changement d'adresse de courriel a été demandé, vérifiez vos messages "
 "pour finaliser le changement."
 
-msgid "An error occurred during the SVN token deletion"
-msgstr "Une erreur est survenue lors de la suppression des jetons SVN"
-
-msgid "An error occurred during the SVN token generation."
-msgstr "Une erreur est survenue lors de la suppression des jetons SVN."
-
 msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
 msgstr ""

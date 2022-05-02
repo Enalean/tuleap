@@ -57,7 +57,7 @@ class SVN_TokenHandler
      */
     public function getSVNTokensForUser(PFUser $user): array
     {
-        $rows       = $this->token_dao->getSVNTokensForUser($user->getId());
+        $rows       = $this->token_dao->getSVNTokensForUser((int) $user->getId());
         $svn_tokens = [];
 
         foreach ($rows as $row) {
@@ -67,21 +67,19 @@ class SVN_TokenHandler
         return $svn_tokens;
     }
 
-    public function generateSVNTokenForUser(PFUser $user, $comment): ?ConcealedString
+    public function generateSVNTokenForUser(PFUser $user, $comment): ConcealedString
     {
         $token          = $this->generateRandomToken();
         $token_computed = $this->password_handler->computeUnixPassword($token);
 
-        if ($this->token_dao->generateSVNTokenForUser($user->getId(), $token_computed, $comment)) {
-            return $token;
-        } else {
-            return null;
-        }
+        $this->token_dao->generateSVNTokenForUser((int) $user->getId(), $token_computed, $comment);
+
+        return $token;
     }
 
-    public function deleteSVNTokensForUser(PFUser $user, $svn_token_ids)
+    public function deleteSVNTokensForUser(PFUser $user, array $svn_token_ids): void
     {
-        return $this->token_dao->deleteSVNTokensForUser($user->getId(), $svn_token_ids);
+        $this->token_dao->deleteSVNTokensForUser((int) $user->getId(), $svn_token_ids);
     }
 
     private function generateRandomToken(): ConcealedString
