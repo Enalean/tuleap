@@ -14,6 +14,7 @@ let
     };
 
     dontPatchShebangs = true;
+    separateDebugInfo = false;
 
     makeFlags = oldAttrs.makeFlags or [] ++ [ "prefix=${tuleapGitBinBasePath}" ];
 
@@ -25,7 +26,7 @@ let
     # deploy additional helpers like shell completions files. It is not something we need for our context and it cannot
     # work without modification because it expects to find files under $out and not under $out/$tuleapGitBinBasePath.
     postInstall = "";
-  })).override { openssh = "/usr"; };
+  }));
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-git-bin";
   src = ./tuleap-git-bin.spec;

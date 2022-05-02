@@ -1,5 +1,5 @@
 ARG DOCKER_REGISTRY=docker.io
-FROM ${DOCKER_REGISTRY}/nixos/nix:2.7.0@sha256:3a2c7a7e5ca8b7f4c128174e3fe018811640e7a549cd1aed4b1f1a20ed7786a5
+FROM ${DOCKER_REGISTRY}/nixos/nix:2.8.0@sha256:1d13ae379fb8caf3f859c5ce7ec6002643d60cf8b7b6147b949cc34880c93bac
 RUN mkdir -p /output/store
 COPY . /
 
