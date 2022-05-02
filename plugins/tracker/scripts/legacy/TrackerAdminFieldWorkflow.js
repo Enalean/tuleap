@@ -81,10 +81,10 @@ document.observe("dom:loaded", function () {
 
         var trigger = new tuleap.trackers.trigger(),
             existing_triggers_table = $("triggers_existing").down("tbody"),
-            triggering_field_template = existing_triggers_table
-                .down(".trigger_description_triggering_field")
-                .remove(),
-            trigger_template = existing_triggers_table.down("tr").remove();
+            triggering_field_template = detachElement(
+                existing_triggers_table.down(".trigger_description_triggering_field")
+            ),
+            trigger_template = detachElement(existing_triggers_table.down("tr"));
 
         function displayExistingTriggers() {
             if (tuleap.trackers.trigger.existing.size() == 0) {
@@ -94,6 +94,11 @@ document.observe("dom:loaded", function () {
             tuleap.trackers.trigger.existing.each(function (trigger) {
                 displayTrigger(trigger);
             });
+        }
+
+        function detachElement(element) {
+            element.remove();
+            return element;
         }
 
         function displayTrigger(trigger_as_JSON) {
@@ -172,7 +177,7 @@ document.observe("dom:loaded", function () {
                     new Ajax.Request(
                         codendi.tracker.base_url +
                             "?tracker=" +
-                            query_params["tracker"] +
+                            query_params.tracker +
                             "&id=" +
                             trigger_id +
                             "&func=admin-workflow-delete-trigger",
