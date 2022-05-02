@@ -29,7 +29,6 @@
     $$:readonly
     Class:readonly
     Prototype:readonly
-    $F:readonly
     TableKit:readonly
     Sortable:readonly
 */
@@ -222,18 +221,6 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                     //eval scripts now (prototype defer scripts eval but we need them now for decorators)
                     //transport.responseText.evalScripts();
-
-                    //load aggregates
-                    var selectbox = $("tracker_report_table").down(
-                        'select[name="tracker_aggregate_function_add[' + field_id + ']"]'
-                    );
-                    if (selectbox) {
-                        var report_id = $F($("tracker_report_query_form").report);
-                        var renderer_id = $("tracker_report_renderer_current").readAttribute(
-                            "data-renderer-id"
-                        );
-                        codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
-                    }
 
                     codendi.tracker.report.setHasChanged();
 
@@ -468,80 +455,6 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
     }
 };
 
-//Aggregates
-codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer_id) {
-    var prefix = "tracker_aggregate_function_add_",
-        parameters = {
-            func: "renderer",
-            report: report_id,
-            renderer: renderer_id,
-        },
-        field_id = selectbox.name.split("[")[1].gsub(/\]/, ""),
-        toggle = function (evt) {
-            var li = evt.element();
-            li.addClassName(prefix + "waiting");
-            parameters["renderer_table[add_aggregate][" + field_id + "]"] =
-                li.id.match(/\d_(\w+)$/)[1];
-            new Ajax.Request(location.href, {
-                method: "POST",
-                parameters: parameters,
-                onComplete: function () {
-                    window.location.reload(true);
-                },
-            });
-        }.bindAsEventListener();
-
-    function buildCol(id, className, label) {
-        return new Element("li", {
-            id: prefix + id,
-        })
-            .addClassName(className)
-            .update(label)
-            .observe("click", toggle);
-    }
-
-    var panel = new Element("table").addClassName("dropdown_panel").setStyle({
-        textAlign: "left",
-        opacity: 0.9,
-    });
-    var ul = new Element("ul");
-    var btn_label = "";
-    selectbox.childElements().each(function (el, index) {
-        if (index) {
-            if (el.tagName.toLowerCase() === "option") {
-                ul.appendChild(buildCol(field_id + "_" + el.value, el.className, el.innerHTML));
-            }
-        } else {
-            //the first one, "-- Add column". don't need it.
-            btn_label = el.text.gsub(/^--\s*/, "");
-        }
-    });
-    var handle = new Element("a", {
-        href: "#",
-        title: btn_label,
-        style: "font-size: 0.8em;",
-    }).update(
-        '<img src="' + codendi.imgroot + 'ic/sum--plus.png" style="vertical-align: middle;" />'
-    );
-
-    selectbox
-        .insert({
-            after: handle,
-        })
-        .remove();
-    ul.id = selectbox.id;
-    handle.insert({
-        after: panel.insert(
-            new Element("tbody").insert(
-                new Element("tr").insert(
-                    new Element("td").insert(new Element("strong").update(btn_label)).insert(ul)
-                )
-            )
-        ),
-    });
-    new codendi.DropDownPanel(panel, handle);
-};
-
 document.observe("dom:loaded", function () {
     if ($("tracker_query")) {
         $$("img.tracker_report_criteria_advanced_toggle").map(
@@ -643,7 +556,6 @@ document.observe("dom:loaded", function () {
                     })
                         .addClassName("btn btn-mini")
                         .observe("click", function (evt) {
-                            codendi.dropdown_panels.invoke("reset");
                             $$(".tracker_report_table_masschange").invoke("show");
                             mc_panel
                                 .up(".tracker_report_renderer")
@@ -748,10 +660,6 @@ document.observe("dom:loaded", function () {
                 });
             });
         }
-
-        $$("select[name^=tracker_aggregate_function_add]").each(function (selectbox) {
-            codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
-        });
     }
 
     if ($("tracker_report_updater_delete")) {
