@@ -17,18 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { okAsync, errAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { RetrieveLinkTypes } from "../../src/domain/fields/link-field-v2/RetrieveLinkTypes";
 import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
 
 export const RetrieveLinkTypesStub = {
-    withTypes: (link_type: LinkType, ...other_link_types: LinkType[]): RetrieveLinkTypes => {
+    withTypes: (
+        link_type: LinkType,
+        ...other_link_types: readonly LinkType[]
+    ): RetrieveLinkTypes => {
         const types = [link_type, ...other_link_types];
         return {
-            getAllLinkTypes: (): Promise<LinkType[]> => Promise.resolve(types),
+            getAllLinkTypes: () => okAsync(types),
         };
     },
 
-    withError: (error_message: string): RetrieveLinkTypes => ({
-        getAllLinkTypes: (): Promise<never> => Promise.reject(new Error(error_message)),
+    withFault: (fault: Fault): RetrieveLinkTypes => ({
+        getAllLinkTypes: () => errAsync(fault),
     }),
 };

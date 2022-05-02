@@ -17,23 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ResultAsync } from "neverthrow";
 import { LinksRetriever } from "./LinksRetriever";
 import { RetrieveLinkTypesStub } from "../../../../tests/stubs/RetrieveLinkTypesStub";
 import { RetrieveLinkedArtifactsByTypeStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsByTypeStub";
 import type { LinkedArtifact } from "./LinkedArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
-import type { Fault } from "@tuleap/fault";
-import { isFault } from "@tuleap/fault";
+import { Fault } from "@tuleap/fault";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import { AddLinkedArtifactCollectionStub } from "../../../../tests/stubs/AddLinkedArtifactCollectionStub";
-import type { LinkType } from "./LinkType";
+import { LinkedArtifactStub } from "../../../../tests/stubs/LinkedArtifactStub";
+import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
+
+const isCreationMode = (fault: Fault): boolean =>
+    "isCreationMode" in fault && fault.isCreationMode() === true;
 
 describe(`LinksRetriever`, () => {
-    let parent_type: LinkType,
-        child_type: LinkType,
-        first_parent: LinkedArtifact,
+    let first_parent: LinkedArtifact,
         second_parent: LinkedArtifact,
         first_child: LinkedArtifact,
         second_child: LinkedArtifact,
@@ -45,34 +47,14 @@ describe(`LinksRetriever`, () => {
     beforeEach(() => {
         artifact_identifier = CurrentArtifactIdentifierStub.withId(64);
 
-        parent_type = {
-            shortname: "_is_child",
-            direction: "forward",
-            label: "Parent",
-        };
-        child_type = {
-            shortname: "_is_child",
-            direction: "reverse",
-            label: "Child",
-        };
+        const parent_type = LinkTypeStub.buildParentLinkType();
+        const child_type = LinkTypeStub.buildChildLinkType();
         types_retriever = RetrieveLinkTypesStub.withTypes(parent_type, child_type);
 
-        first_parent = {
-            title: "A parent",
-            link_type: child_type,
-        } as LinkedArtifact;
-        second_parent = {
-            title: "Another parent",
-            link_type: child_type,
-        } as LinkedArtifact;
-        first_child = {
-            title: "A child",
-            link_type: parent_type,
-        } as LinkedArtifact;
-        second_child = {
-            title: "Another child",
-            link_type: parent_type,
-        } as LinkedArtifact;
+        first_parent = LinkedArtifactStub.withLinkType(child_type, { title: "A parent" });
+        second_parent = LinkedArtifactStub.withLinkType(child_type, { title: "Another parent" });
+        first_child = LinkedArtifactStub.withLinkType(parent_type, { title: "A child" });
+        second_child = LinkedArtifactStub.withLinkType(parent_type, { title: "Another child " });
         linked_artifacts_retriever =
             RetrieveLinkedArtifactsByTypeStub.withSuccessiveLinkedArtifacts(
                 [first_child, second_child],
@@ -82,17 +64,19 @@ describe(`LinksRetriever`, () => {
         links_adder = AddLinkedArtifactCollectionStub.withCount();
     });
 
-    const getLinkedArtifacts = (): Promise<Fault | LinkedArtifact[]> => {
+    const getLinkedArtifacts = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
         const retriever = LinksRetriever(types_retriever, linked_artifacts_retriever, links_adder);
         return retriever.getLinkedArtifacts(artifact_identifier);
     };
 
     it(`fetches all types of links from the given artifact id
         and will return all artifacts linked to it`, async () => {
-        const artifacts = await getLinkedArtifacts();
-        if (isFault(artifacts)) {
-            throw new Error("Expected to get a list of linked artifacts");
+        const result = await getLinkedArtifacts();
+
+        if (!result.isOk()) {
+            throw new Error("Expected an Ok");
         }
+        const artifacts = result.value;
         expect(artifacts).toHaveLength(4);
         expect(artifacts).toContain(first_child);
         expect(artifacts).toContain(second_child);
@@ -104,18 +88,23 @@ describe(`LinksRetriever`, () => {
     it(`when the modal is in creation mode, it will return a Fault`, async () => {
         artifact_identifier = null;
         const result = await getLinkedArtifacts();
-        expect(isFault(result)).toBe(true);
+        if (!result.isErr()) {
+            throw new Error("Expected an Err");
+        }
+        expect(isCreationMode(result.error)).toBe(true);
     });
 
     it(`when there is an error during retrieval of the types, it will return a Fault`, async () => {
-        types_retriever = RetrieveLinkTypesStub.withError("Network error");
+        types_retriever = RetrieveLinkTypesStub.withFault(Fault.fromMessage("Network error"));
         const result = await getLinkedArtifacts();
-        expect(isFault(result)).toBe(true);
+        expect(result.isErr()).toBe(true);
     });
 
     it(`when there is an error during retrieval of the linked artifacts, it will return a Fault`, async () => {
-        linked_artifacts_retriever = RetrieveLinkedArtifactsByTypeStub.withError("Network error");
+        linked_artifacts_retriever = RetrieveLinkedArtifactsByTypeStub.withFault(
+            Fault.fromMessage("Network error")
+        );
         const result = await getLinkedArtifacts();
-        expect(isFault(result)).toBe(true);
+        expect(result.isErr()).toBe(true);
     });
 });

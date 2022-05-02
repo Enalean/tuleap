@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { okAsync, errAsync } from "neverthrow";
 import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 import type { Fault } from "@tuleap/fault";
@@ -24,17 +25,16 @@ import type { Fault } from "@tuleap/fault";
 export const RetrieveAllLinkedArtifactsStub = {
     withLinkedArtifacts: (
         artifact: LinkedArtifact,
-        ...other_artifacts: LinkedArtifact[]
+        ...other_artifacts: readonly LinkedArtifact[]
     ): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> =>
-            Promise.resolve([artifact, ...other_artifacts]),
+        getLinkedArtifacts: () => okAsync([artifact, ...other_artifacts]),
     }),
 
     withoutLink: (): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<LinkedArtifact[]> => Promise.resolve([]),
+        getLinkedArtifacts: () => okAsync([]),
     }),
 
     withFault: (fault: Fault): RetrieveAllLinkedArtifacts => ({
-        getLinkedArtifacts: (): Promise<Fault | LinkedArtifact[]> => Promise.resolve(fault),
+        getLinkedArtifacts: () => errAsync(fault),
     }),
 };

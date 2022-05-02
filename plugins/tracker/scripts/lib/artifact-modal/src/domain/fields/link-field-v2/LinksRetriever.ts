@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { errAsync, combine } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 import type { RetrieveLinkTypes } from "./RetrieveLinkTypes";
 import type { RetrieveLinkedArtifactsByType } from "./RetrieveLinkedArtifactsByType";
 import type { LinkedArtifact } from "./LinkedArtifact";
 import type { RetrieveAllLinkedArtifacts } from "./RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../CurrentArtifactIdentifier";
-import { Fault, isFault } from "@tuleap/fault";
+import type { Fault } from "@tuleap/fault";
 import { NoLinksInCreationModeFault } from "./NoLinksInCreationModeFault";
 import type { AddLinkedArtifactCollection } from "./AddLinkedArtifactCollection";
 import type { LinkType } from "./LinkType";
@@ -32,29 +34,26 @@ export const LinksRetriever = (
     artifacts_retriever: RetrieveLinkedArtifactsByType,
     links_adder: AddLinkedArtifactCollection
 ): RetrieveAllLinkedArtifacts => ({
-    async getLinkedArtifacts(
+    getLinkedArtifacts(
         current_artifact_identifier: CurrentArtifactIdentifier | null
-    ): Promise<Fault | LinkedArtifact[]> {
+    ): ResultAsync<readonly LinkedArtifact[], Fault> {
         if (current_artifact_identifier === null) {
-            return Promise.resolve(NoLinksInCreationModeFault());
+            return errAsync(NoLinksInCreationModeFault());
         }
-        const link_types = await types_retriever
+        return types_retriever
             .getAllLinkTypes(current_artifact_identifier)
-            .catch(Fault.fromError);
-        if (isFault(link_types)) {
-            return Promise.resolve(link_types);
-        }
-        const promises = link_types.map((type: LinkType) => {
-            return artifacts_retriever.getLinkedArtifactsByLinkType(
-                current_artifact_identifier,
-                type
-            );
-        });
-
-        return Promise.all(promises).then((collections) => {
-            const all_links = collections.flat();
-            links_adder.addLinkedArtifacts(all_links);
-            return all_links;
-        }, Fault.fromError);
+            .andThen((link_types) => {
+                const promises = link_types.map((type: LinkType) =>
+                    artifacts_retriever.getLinkedArtifactsByLinkType(
+                        current_artifact_identifier,
+                        type
+                    )
+                );
+                return combine(promises).map((collections) => {
+                    const all_links = collections.flat();
+                    links_adder.addLinkedArtifacts(all_links);
+                    return all_links;
+                });
+            });
     },
 });
