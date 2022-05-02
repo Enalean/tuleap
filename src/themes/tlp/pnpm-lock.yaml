@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@floating-ui/dom': ^0.4.2
   '@tuleap/build-system-configurator': file:../../../lib/frontend/build-system-configurator
+  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': file:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': file:../../../lib/frontend/tlp-popovers
   '@types/jquery': ^3.5.5
@@ -11,7 +11,7 @@ specifiers:
   select2: ^4.0.13
 
 dependencies:
-  '@floating-ui/dom': 0.4.2
+  '@tuleap/tlp-dropdown': link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-modal': link:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers': link:../../../lib/frontend/tlp-popovers
   flatpickr: 4.6.9
@@ -23,16 +23,6 @@ devDependencies:
   '@types/jquery': 3.5.5
 
 packages:
-
-  /@floating-ui/core/0.6.1:
-    resolution: {integrity: sha512-Y30eVMcZva8o84c0HcXAtDO4BEzPJMvF6+B7x7urL2xbAqVsGJhojOyHLaoQHQYjb6OkqRq5kO+zeySycQwKqg==}
-    dev: false
-
-  /@floating-ui/dom/0.4.2:
-    resolution: {integrity: sha512-2/4vOhMAujkMmGqGX1Gut84phe5MNfk1kGeM+RSTJCpeR0SWR2/RR+/f1r1msOvTQa28wn7HEhxGe71CjYY/vw==}
-    dependencies:
-      '@floating-ui/core': 0.6.1
-    dev: false
 
   /@types/jquery/3.5.5:
     resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}

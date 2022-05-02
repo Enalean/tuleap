@@ -28,10 +28,10 @@ export default vite.defineLibConfig({
             name: "TlpPopovers",
         },
         rollupOptions: {
-            external: ["popper.js"],
+            external: ["@floating-ui/dom"],
             output: {
                 globals: {
-                    "popper.js": "popper.js",
+                    "@floating-ui/dom": "FloatingUIDOM",
                 },
             },
         },

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "@tuleap/tlp-popovers";
-export * from "@tuleap/tlp-modal";
-export * from "@tuleap/tlp-dropdown";
+import "../themes/style.scss";
+import type { Dropdown, DropdownOptions } from "./dropdowns";
+import { createDropdown as createDropdownImplementation } from "./dropdowns";
 
-export { default as locale } from "./default_locale";
-
-import jQuery from "jquery";
-// Many scripts still depend on jQuery being on window
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-window.jQuery = jQuery;
-
-export * from "../vendor-overrides/select2";
-export * from "../vendor-overrides/flatpickr";
+export { EVENT_TLP_DROPDOWN_HIDDEN, EVENT_TLP_DROPDOWN_SHOWN } from "./dropdowns";
+export type { Dropdown, DropdownOptions };
+// Apply partially the dropdowns creation function to pass document
+export const createDropdown = (trigger: Element, options?: DropdownOptions): Dropdown =>
+    createDropdownImplementation(document, trigger, options);
