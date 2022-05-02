@@ -16,6 +16,7 @@
     "@tuleap/plugin-tracker-rich-text-editor": "file:scripts/lib/rich-text-editor",
     "@tuleap/plugin-tracker-tql-codemirror": "file:scripts/lib/TQL-CodeMirror",
     "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-relative-date": "link:../../lib/frontend/tlp-relative-date",
     "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/tooltip": "file:../../lib/frontend/tooltip",
     "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",

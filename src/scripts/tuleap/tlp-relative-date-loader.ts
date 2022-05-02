@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RelativeDateElement } from "./relative-date-element";
-
-if (!window.customElements.get("tlp-relative-date")) {
-    window.customElements.define("tlp-relative-date", RelativeDateElement);
-}
+import "@tuleap/tlp-relative-date";

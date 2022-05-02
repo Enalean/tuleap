@@ -37,10 +37,7 @@ import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed } from "@vue/composition-api";
 import { formatDateUsingPreferredUserFormat } from "../../../../helpers/date-formatter";
-import {
-    relativeDatePlacement,
-    relativeDatePreference,
-} from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 
 const props = defineProps<{ date: string }>();
 

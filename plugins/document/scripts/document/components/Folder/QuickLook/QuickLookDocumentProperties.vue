@@ -102,10 +102,7 @@ import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-format
 import UserBadge from "../../User/UserBadge.vue";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
 import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
-import {
-    relativeDatePlacement,
-    relativeDatePreference,
-} from "@tuleap/core/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { isFile, isFolder } from "../../../helpers/type-check-helper";
 
 export default {
