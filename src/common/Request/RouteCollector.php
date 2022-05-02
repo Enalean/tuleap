@@ -68,6 +68,7 @@ use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\date\Admin\RelativeDatesDisplayController;
 use Tuleap\date\Admin\RelativeDatesDisplaySaveController;
 use Tuleap\date\SelectedDateDisplayPreferenceValidator;
+use Tuleap\Error\FrontendErrorCollectorController;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
@@ -927,6 +928,19 @@ class RouteCollector
         );
     }
 
+    public static function postFrontendErrorCollectorController(): FrontendErrorCollectorController
+    {
+        return new FrontendErrorCollectorController(
+            HTTPFactoryBuilder::responseFactory(),
+            \BackendLogger::getDefaultLogger('frontend_error'),
+            Prometheus::instance(),
+            \UserManager::instance(),
+            new SapiEmitter(),
+            new \Tuleap\Http\Server\SessionWriteCloseMiddleware(),
+            new \Tuleap\Http\Server\DisableCacheMiddleware(),
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1091,6 +1105,8 @@ class RouteCollector
                 $r->post('/token/revoke', [OAuth2ServerRoutes::class, 'routeTokenRevocation']);
             }
         );
+
+        $r->post('/collect-frontend-errors', [self::class, 'postFrontendErrorCollectorController']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);
