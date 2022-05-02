@@ -1,0 +1,101 @@
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { setCatalog } from "../../../../gettext-catalog";
+import type { HostElement } from "./LinkField";
+import { getNewLinkTemplate } from "./NewLinkTemplate";
+import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
+import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
+import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants/src/constants";
+import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+
+describe(`NewLinkTemplate`, () => {
+    let target: ShadowRoot;
+    beforeEach(() => {
+        setCatalog({ getString: (msgid) => msgid });
+        target = document.implementation
+            .createHTMLDocument()
+            .createElement("div") as unknown as ShadowRoot;
+    });
+
+    const render = (link: NewLink): void => {
+        const host = {} as HostElement;
+
+        const updateFunction = getNewLinkTemplate(link);
+        updateFunction(host, target);
+    };
+
+    it.each([
+        [
+            "open artifact",
+            NewLinkStub.withDefaults(196, {
+                title: "brangle",
+                xref: ArtifactCrossReferenceStub.withRefAndColor("release #196", "plum-crazy"),
+                uri: "/plugins/tracker/?aid=196",
+                status: "On Going",
+                is_open: true,
+                link_type: LinkTypeStub.buildUntyped(),
+            }),
+        ],
+        [
+            "closed artifact",
+            NewLinkStub.withDefaults(246, {
+                title: "catoptrite",
+                xref: ArtifactCrossReferenceStub.withRefAndColor("release #246", "plum-crazy"),
+                uri: "/plugins/tracker/?aid=246",
+                status: "Delivered",
+                is_open: false,
+                link_type: LinkTypeStub.buildParentLinkType(),
+            }),
+        ],
+    ])(`will render an artifact about to be linked (a new link)`, (_type_of_link, new_link) => {
+        render(new_link);
+
+        const row = target.querySelector("[data-test=link-row]");
+        const link = target.querySelector("[data-test=link-link]");
+        const xref = target.querySelector("[data-test=link-xref]");
+        const title = target.querySelector("[data-test=link-title]");
+        const status = target.querySelector("[data-test=link-status]");
+        const type = target.querySelector("[data-test=link-type]");
+        if (
+            !(row instanceof HTMLElement) ||
+            !(link instanceof HTMLAnchorElement) ||
+            !(xref instanceof HTMLElement) ||
+            !(title instanceof HTMLElement) ||
+            !(status instanceof HTMLElement) ||
+            !(type instanceof HTMLElement)
+        ) {
+            throw new Error("An expected element has not been found in template");
+        }
+        const expected_type =
+            new_link.link_type.shortname === UNTYPED_LINK ? "Linked to" : new_link.link_type.label;
+
+        expect(link.href).toBe(new_link.uri);
+        expect(xref.classList.contains(`tlp-swatch-${new_link.xref.color}`)).toBe(true);
+        expect(xref.textContent?.trim()).toBe(new_link.xref.ref);
+        expect(title.textContent?.trim()).toBe(new_link.title);
+        expect(status.textContent?.trim()).toBe(new_link.status);
+        expect(type.textContent?.trim()).toBe(expected_type);
+
+        expect(row.classList.contains("link-field-table-row-new")).toBe(true);
+        expect(status.classList.contains("tlp-badge-secondary")).toBe(!new_link.is_open);
+        expect(status.classList.contains("tlp-badge-success")).toBe(new_link.is_open);
+    });
+});

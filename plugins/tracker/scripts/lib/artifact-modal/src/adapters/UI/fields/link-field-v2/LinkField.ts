@@ -29,6 +29,7 @@ import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPre
 import { getLinkedArtifactTemplate } from "./LinkedArtifactTemplate";
 import { getTypeSelectorTemplate } from "./TypeSelectorTemplate";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
+import type { LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
@@ -37,7 +38,7 @@ import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkT
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
-import type { LinkSelector } from "@tuleap/link-selector";
+import { getNewLinkTemplate } from "./NewLinkTemplate";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -52,10 +53,12 @@ export interface LinkField {
 }
 export type HostElement = LinkField & HTMLElement;
 
-export const getEmptyStateIfNeeded = (
-    presenter: LinkedArtifactCollectionPresenter
-): UpdateFunction<LinkField> => {
-    if (presenter.linked_artifacts.length > 0 || !presenter.has_loaded_content) {
+export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
+    if (
+        host.linked_artifacts_presenter.linked_artifacts.length > 0 ||
+        host.new_links_presenter.links.length > 0 ||
+        !host.linked_artifacts_presenter.has_loaded_content
+    ) {
         return html``;
     }
 
@@ -67,10 +70,6 @@ export const getEmptyStateIfNeeded = (
         </tr>
     `;
 };
-
-const getFormattedArtifacts = (
-    presenter: LinkedArtifactCollectionPresenter
-): UpdateFunction<LinkField>[] => presenter.linked_artifacts.map(getLinkedArtifactTemplate);
 
 export const getSkeletonIfNeeded = (
     presenter: LinkedArtifactCollectionPresenter
@@ -163,9 +162,10 @@ export const LinkField = define<LinkField>({
         </label>
         <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
-                ${getFormattedArtifacts(host.linked_artifacts_presenter)}
+                ${host.linked_artifacts_presenter.linked_artifacts.map(getLinkedArtifactTemplate)}
+                ${host.new_links_presenter.links.map(getNewLinkTemplate)}
                 ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
-                ${getEmptyStateIfNeeded(host.linked_artifacts_presenter)}
+                ${getEmptyStateIfNeeded(host)}
             </tbody>
             <tfoot class="link-field-table-footer">
                 <tr class="link-field-table-row">

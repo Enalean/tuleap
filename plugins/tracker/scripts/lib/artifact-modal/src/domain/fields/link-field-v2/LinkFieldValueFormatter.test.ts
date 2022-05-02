@@ -21,64 +21,111 @@ import { LinkFieldValueFormatter } from "./LinkFieldValueFormatter";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { LinkedArtifactStub } from "../../../../tests/stubs/LinkedArtifactStub";
-import { LinkedArtifactIdentifierStub } from "../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
-import type { LinkedArtifact } from "./LinkedArtifact";
+import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
+import type { LinkFieldValueFormat } from "./LinkFieldValueFormat";
+import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
+import { RetrieveNewLinksStub } from "../../../../tests/stubs/RetrieveNewLinksStub";
+import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
+import type { RetrieveNewLinks } from "./RetrieveNewLinks";
+import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 
-const field_id = 1060;
-
-function createChildLinkedArtifact(artifact_id: number): LinkedArtifact {
-    return LinkedArtifactStub.withLinkType(LinkTypeStub.buildChildLinkType(), {
-        identifier: LinkedArtifactIdentifierStub.withId(artifact_id),
-    });
-}
+const FIELD_ID = 1060;
+const FIRST_LINKED_ARTIFACT_ID = 666;
+const SECOND_LINKED_ARTIFACT_ID = 667;
+const THIRD_LINKED_ARTIFACT_ID = 668;
+const FIRST_NEW_LINK_ID = 985;
+const SECOND_NEW_LINK_ID = 111;
 
 describe("LinkFieldValueFormatter", () => {
-    it("should remove the links to be deleted from the list", () => {
-        const artifact_link_to_delete = createChildLinkedArtifact(666);
-        const formatter = LinkFieldValueFormatter(
-            RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(artifact_link_to_delete),
-            VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval()
-        );
-        const formatted_value = formatter.getFormattedValuesByFieldId(field_id);
+    let links_retriever: RetrieveLinkedArtifactsSync,
+        new_links_retriever: RetrieveNewLinks,
+        verifier: VerifyLinkIsMarkedForRemoval;
 
-        expect(formatted_value).toEqual({
-            field_id,
+    beforeEach(() => {
+        links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
+            LinkedArtifactStub.withIdAndType(
+                FIRST_LINKED_ARTIFACT_ID,
+                LinkTypeStub.buildChildLinkType()
+            ),
+            LinkedArtifactStub.withIdAndType(
+                SECOND_LINKED_ARTIFACT_ID,
+                LinkTypeStub.buildChildLinkType()
+            ),
+            LinkedArtifactStub.withIdAndType(THIRD_LINKED_ARTIFACT_ID, LinkTypeStub.buildUntyped())
+        );
+        new_links_retriever = RetrieveNewLinksStub.withNewLinks(
+            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildUntyped()),
+            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildChildLinkType())
+        );
+
+        verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
+    });
+
+    const format = (): LinkFieldValueFormat => {
+        const formatter = LinkFieldValueFormatter(links_retriever, verifier, new_links_retriever);
+        return formatter.getFormattedValuesByFieldId(FIELD_ID);
+    };
+
+    it("should remove the links to be deleted from the list", () => {
+        const artifact_link_to_delete = LinkedArtifactStub.withIdAndType(
+            666,
+            LinkTypeStub.buildChildLinkType()
+        );
+        links_retriever =
+            RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(artifact_link_to_delete);
+        verifier = VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
+        new_links_retriever = RetrieveNewLinksStub.withoutLink();
+
+        expect(format()).toStrictEqual({
+            field_id: FIELD_ID,
             links: [],
         });
     });
 
-    it("should format the field value", () => {
-        const artifact_link_1 = createChildLinkedArtifact(666);
-        const artifact_link_2 = createChildLinkedArtifact(667);
-        const artifact_link_3 = createChildLinkedArtifact(668);
-        const formatter = LinkFieldValueFormatter(
-            RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-                artifact_link_1,
-                artifact_link_2,
-                artifact_link_3
-            ),
-            VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval()
-        );
-
-        const formatted_value = formatter.getFormattedValuesByFieldId(field_id);
-
-        expect(formatted_value).toEqual({
-            field_id,
+    it("formats the existing links and the new links into a single array", () => {
+        expect(format()).toStrictEqual({
+            field_id: FIELD_ID,
             links: [
-                {
-                    id: 666,
-                    type: "_is_child",
-                },
-                {
-                    id: 667,
-                    type: "_is_child",
-                },
-                {
-                    id: 668,
-                    type: "_is_child",
-                },
+                { id: FIRST_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
+                { id: SECOND_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
+                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK },
+                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK },
+                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE },
             ],
         });
+    });
+
+    it(`adds only new links when there are no existing links`, () => {
+        links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
+
+        expect(format()).toStrictEqual({
+            field_id: FIELD_ID,
+            links: [
+                { id: FIRST_NEW_LINK_ID, type: UNTYPED_LINK },
+                { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE },
+            ],
+        });
+    });
+
+    it(`adds only existing links when there are no new links`, () => {
+        new_links_retriever = RetrieveNewLinksStub.withoutLink();
+
+        expect(format()).toStrictEqual({
+            field_id: FIELD_ID,
+            links: [
+                { id: FIRST_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
+                { id: SECOND_LINKED_ARTIFACT_ID, type: IS_CHILD_LINK_TYPE },
+                { id: THIRD_LINKED_ARTIFACT_ID, type: UNTYPED_LINK },
+            ],
+        });
+    });
+
+    it(`returns an empty array when there are neither existing links nor new links`, () => {
+        links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
+        new_links_retriever = RetrieveNewLinksStub.withoutLink();
+
+        const value = format();
+        expect(value.links).toHaveLength(0);
     });
 });

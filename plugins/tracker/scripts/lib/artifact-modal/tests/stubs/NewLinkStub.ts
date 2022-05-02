@@ -20,8 +20,15 @@
 import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
 import { NewLink } from "../../src/domain/fields/link-field-v2/NewLink";
 import { LinkableArtifactStub } from "./LinkableArtifactStub";
+import { LinkTypeStub } from "./LinkTypeStub";
 
 export const NewLinkStub = {
+    withDefaults: (id?: number, data?: Partial<NewLink>): NewLink =>
+        NewLink.fromLinkableArtifactAndType(
+            LinkableArtifactStub.withDefaults({ ...data, id: id ?? 806 }),
+            data?.link_type ?? LinkTypeStub.buildUntyped()
+        ),
+
     withIdAndType: (id: number, type: LinkType): NewLink =>
         NewLink.fromLinkableArtifactAndType(LinkableArtifactStub.withDefaults({ id }), type),
 };

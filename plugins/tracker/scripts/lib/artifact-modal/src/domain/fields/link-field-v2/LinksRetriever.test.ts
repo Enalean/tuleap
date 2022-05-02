@@ -51,10 +51,19 @@ describe(`LinksRetriever`, () => {
         const child_type = LinkTypeStub.buildChildLinkType();
         types_retriever = RetrieveLinkTypesStub.withTypes(parent_type, child_type);
 
-        first_parent = LinkedArtifactStub.withLinkType(child_type, { title: "A parent" });
-        second_parent = LinkedArtifactStub.withLinkType(child_type, { title: "Another parent" });
-        first_child = LinkedArtifactStub.withLinkType(parent_type, { title: "A child" });
-        second_child = LinkedArtifactStub.withLinkType(parent_type, { title: "Another child " });
+        first_parent = LinkedArtifactStub.withDefaults({
+            title: "A parent",
+            link_type: child_type,
+        });
+        second_parent = LinkedArtifactStub.withDefaults({
+            title: "Another parent",
+            link_type: child_type,
+        });
+        first_child = LinkedArtifactStub.withDefaults({ title: "A child", link_type: parent_type });
+        second_child = LinkedArtifactStub.withDefaults({
+            title: "Another child",
+            link_type: parent_type,
+        });
         linked_artifacts_retriever =
             RetrieveLinkedArtifactsByTypeStub.withSuccessiveLinkedArtifacts(
                 [first_child, second_child],
