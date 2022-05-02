@@ -128,24 +128,6 @@ class LegacyReferenceAdministrationBrowsingRenderer
         $this->displayCustomReferencesWarningsIfAny($references);
     }
 
-    private function getReferenceDescription(Reference $ref): string
-    {
-        $description = '';
-        if (strpos($ref->getDescription(), "_desc_key") !== false) {
-            $matches = [];
-            if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
-                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                    $description = $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
-                }
-            } else {
-                $description = $GLOBALS['Language']->getOverridableText('project_reference', $ref->getDescription());
-            }
-        } else {
-            $description = $ref->getDescription();
-        }
-        return $description;
-    }
-
     private function displayReferenceRow(\Reference $ref, bool $is_template_project): void
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -163,7 +145,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
             return; // 'None' reference
         }
 
-        $description = $purifier->purify($this->getReferenceDescription($ref));
+        $description = $purifier->purify($ref->getResolvedDescription());
 
         $available_nature = $this->nature_collection->getNatureFromIdentifier($ref->getNature());
         if ($available_nature) {

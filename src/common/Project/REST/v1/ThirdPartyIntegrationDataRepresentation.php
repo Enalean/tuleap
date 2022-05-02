@@ -22,15 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Reference\REST\ReferenceRepresentation;
 
 /**
  * @psalm-immutable
  */
 final class ThirdPartyIntegrationDataRepresentation
 {
+    /**
+     * @param ReferenceRepresentation[] $references
+     */
     public function __construct(
         public ProjectSidebarDataRepresentation $project_sidebar,
         public ThirdPartyIntegrationStylesRepresentation $styles,
+        public array $references,
     ) {
     }
 }

@@ -89,6 +89,7 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentationWithAdditionalInformation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupAdditionalInformationEvent;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\Reference\REST\ReferenceRepresentationBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -1313,9 +1314,12 @@ class ProjectResource extends AuthenticatedResource
             $currently_active_service
         );
 
+        $reference_representation_builder = new ReferenceRepresentationBuilder(\ReferenceManager::instance(), $event_manager);
+
         return new ThirdPartyIntegrationDataRepresentation(
             ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser($config, $current_user),
-            ThirdPartyIntegrationStylesRepresentation::fromUser($current_user)
+            ThirdPartyIntegrationStylesRepresentation::fromUser($current_user),
+            $reference_representation_builder->getProjectReferences($project),
         );
     }
 
