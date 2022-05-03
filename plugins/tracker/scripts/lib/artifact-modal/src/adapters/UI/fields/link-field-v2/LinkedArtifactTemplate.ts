@@ -20,7 +20,7 @@
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import { getUndoRemovalLabel, getMarkForRemovalLabel } from "../../../../gettext-catalog";
+import { getRestoreLabel, getUnlinkLabel } from "../../../../gettext-catalog";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { LinkField } from "./LinkField";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
@@ -71,8 +71,8 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
                 onclick="${markForRemoval}"
                 data-test="action-button"
             >
-                <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
-                ${getMarkForRemovalLabel()}
+                <i class="fas fa-unlink tlp-button-icon" aria-hidden="true"></i>
+                ${getUnlinkLabel()}
             </button>
         `;
     }
@@ -88,7 +88,7 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
             data-test="action-button"
         >
             <i class="fas fa-undo-alt tlp-button-icon" aria-hidden="true"></i>
-            ${getUndoRemovalLabel()}
+            ${getRestoreLabel()}
         </button>
     `;
 };

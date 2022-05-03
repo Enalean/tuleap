@@ -149,7 +149,6 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
                 fault_feedback_controller,
-                field,
                 ArtifactLinkSelectorAutoCompleter(
                     api_client,
                     fault_feedback_controller,
@@ -158,6 +157,8 @@ function ArtifactModalController(
                 ),
                 new_links_store,
                 new_links_store,
+                new_links_store,
+                field,
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,

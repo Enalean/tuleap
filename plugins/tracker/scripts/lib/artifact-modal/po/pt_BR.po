@@ -141,7 +141,13 @@ msgstr "Pré-visualização"
 msgid "References list is empty."
 msgstr ""
 
+msgid "Remove"
+msgstr ""
+
 msgid "Reset"
+msgstr ""
+
+msgid "Restore"
 msgstr ""
 
 msgid "Restrict access to this artifact for the following user groups:"
@@ -186,7 +192,7 @@ msgstr ""
 msgid "Unable to upload the file"
 msgstr "Impossível carregar o arquivo"
 
-msgid "Undo removal"
+msgid "Unlink"
 msgstr ""
 
 msgid "You are not allowed to paste images here"

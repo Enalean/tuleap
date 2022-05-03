@@ -42,13 +42,14 @@ import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/L
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
-import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants/src/constants";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
+import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
+import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -61,7 +62,8 @@ describe(`LinkFieldController`, () => {
         deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
         fault_notifier: NotifyFaultStub,
         new_link_adder: AddNewLinkStub,
-        new_links_retriever: RetrieveNewLinks;
+        new_links_retriever: RetrieveNewLinks,
+        new_link_remover: DeleteNewLinkStub;
 
     beforeEach(() => {
         links_retriever = RetrieveAllLinkedArtifactsStub.withoutLink();
@@ -72,6 +74,7 @@ describe(`LinkFieldController`, () => {
         fault_notifier = NotifyFaultStub.withCount();
         new_link_adder = AddNewLinkStub.withCount();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
+        new_link_remover = DeleteNewLinkStub.withCount();
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -84,12 +87,6 @@ describe(`LinkFieldController`, () => {
             deleted_link_remover,
             deleted_link_verifier,
             fault_notifier,
-            {
-                field_id: FIELD_ID,
-                type: "art_link",
-                label: "Artifact link",
-                allowed_types: [],
-            },
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     LinkableArtifactStub.withDefaults()
@@ -99,7 +96,14 @@ describe(`LinkFieldController`, () => {
                 current_artifact_identifier
             ),
             new_link_adder,
+            new_link_remover,
             new_links_retriever,
+            {
+                field_id: FIELD_ID,
+                type: "art_link",
+                label: "Artifact link",
+                allowed_types: [],
+            },
             current_artifact_identifier,
             cross_reference
         );
@@ -214,7 +218,7 @@ describe(`LinkFieldController`, () => {
             });
             const link_type = LinkTypeStub.buildChildLinkType();
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-                NewLink.fromLinkableArtifactAndType(linkable_artifact, link_type)
+                NewLinkStub.withIdAndType(ARTIFACT_ID, link_type)
             );
             return getController().addNewLink(linkable_artifact, link_type);
         };
@@ -226,6 +230,21 @@ describe(`LinkFieldController`, () => {
             expect(presenter.links).toHaveLength(1);
             expect(presenter.links[0].identifier.id).toBe(ARTIFACT_ID);
             expect(presenter.links[0].link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
+        });
+    });
+
+    describe(`removeNewLink`, () => {
+        const removeNewLink = (): NewLinkCollectionPresenter => {
+            const new_link = NewLinkStub.withDefaults();
+            new_links_retriever = RetrieveNewLinksStub.withoutLink();
+            return getController().removeNewLink(new_link);
+        };
+
+        it(`deletes a new link and returns an updated presenter`, () => {
+            const presenter = removeNewLink();
+
+            expect(new_link_remover.getCallCount()).toBe(1);
+            expect(presenter.links).toHaveLength(0);
         });
     });
 });

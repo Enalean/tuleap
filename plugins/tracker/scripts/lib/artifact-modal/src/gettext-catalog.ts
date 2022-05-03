@@ -60,7 +60,8 @@ export const getAddLinkButtonLabel = (): string => gettextCatalog.getString("Add
 export const getLinkFieldTableEmptyStateText = (): string =>
     gettextCatalog.getString("There is no link yet");
 export const getMarkForRemovalLabel = (): string => gettextCatalog.getString("Mark for removal");
-export const getUndoRemovalLabel = (): string => gettextCatalog.getString("Undo removal");
+export const getUnlinkLabel = (): string => gettextCatalog.getString("Unlink");
+export const getRestoreLabel = (): string => gettextCatalog.getString("Restore");
 export const getFieldDateRequiredAndEmptyMessage = (): string =>
     gettextCatalog.getString("Please select a date");
 export const getEmptyCrossReferencesCollectionText = (): string =>
@@ -87,3 +88,4 @@ export const getNoResultFoundEmptyState = (): string => gettextCatalog.getString
 export const getLinkSelectorPlaceholderText = (): string => gettextCatalog.getString("Artifact id");
 export const getMatchingArtifactErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the artifact to link: %s");
+export const getRemoveLabel = (): string => gettextCatalog.getString("Remove");

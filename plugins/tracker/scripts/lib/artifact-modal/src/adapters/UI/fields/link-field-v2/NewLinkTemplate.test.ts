@@ -25,6 +25,22 @@ import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactC
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants/src/constants";
 import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import { LinkFieldController } from "./LinkFieldController";
+import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
+import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
+import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
+import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
+import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
+import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
+import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
+import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
+import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
+import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -97,5 +113,63 @@ describe(`NewLinkTemplate`, () => {
         expect(row.classList.contains("link-field-table-row-new")).toBe(true);
         expect(status.classList.contains("tlp-badge-secondary")).toBe(!new_link.is_open);
         expect(status.classList.contains("tlp-badge-success")).toBe(new_link.is_open);
+    });
+
+    describe(`action button`, () => {
+        const getHost = (new_link: NewLink): HostElement => {
+            const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
+            const fault_notifier = NotifyFaultStub.withCount();
+            const controller = LinkFieldController(
+                RetrieveAllLinkedArtifactsStub.withoutLink(),
+                RetrieveLinkedArtifactsSyncStub.withoutLink(),
+                AddLinkMarkedForRemovalStub.withCount(),
+                DeleteLinkMarkedForRemovalStub.withCount(),
+                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+                fault_notifier,
+                ArtifactLinkSelectorAutoCompleter(
+                    RetrieveMatchingArtifactStub.withMatchingArtifact(
+                        LinkableArtifactStub.withDefaults()
+                    ),
+                    fault_notifier,
+                    ClearFaultNotificationStub.withCount(),
+                    current_artifact_identifier
+                ),
+                AddNewLinkStub.withCount(),
+                DeleteNewLinkStub.withCount(),
+                RetrieveNewLinksStub.withoutLink(),
+                {
+                    field_id: 525,
+                    label: "Artifact link",
+                    type: "art_link",
+                    allowed_types: [],
+                },
+                current_artifact_identifier,
+                ArtifactCrossReferenceStub.withRef("bug #22")
+            );
+
+            return {
+                new_links_presenter: NewLinkCollectionPresenter.fromLinks([new_link]),
+                controller,
+            } as HostElement;
+        };
+
+        const render = (host: HostElement, new_link: NewLink): void => {
+            const update = getNewLinkTemplate(new_link);
+            update(host, target);
+        };
+
+        it(`will delete the new link`, () => {
+            const new_link = NewLinkStub.withDefaults();
+            const host = getHost(new_link);
+            render(host, new_link);
+            const button = target.querySelector("[data-test=action-button]");
+
+            if (!(button instanceof HTMLButtonElement)) {
+                throw new Error("An expected element has not been found in template");
+            }
+            button.click();
+
+            expect(host.new_links_presenter.links).toHaveLength(0);
+        });
     });
 });

@@ -22,7 +22,7 @@ import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { NewLinkStub } from "../../../tests/stubs/NewLinkStub";
 
 describe(`NewLinksStore`, () => {
-    it(`adds and retrieves links`, () => {
+    it(`adds and deletes new links`, () => {
         const store = NewLinksStore();
 
         const first_link = NewLinkStub.withIdAndType(48, LinkTypeStub.buildUntyped());
@@ -35,5 +35,11 @@ describe(`NewLinksStore`, () => {
         expect(stored_links).toHaveLength(2);
         expect(stored_links).toContain(first_link);
         expect(stored_links).toContain(second_link);
+
+        store.deleteNewLink(first_link);
+
+        const links_after_deletion = store.getNewLinks();
+        expect(links_after_deletion).toHaveLength(1);
+        expect(links_after_deletion).not.toContain(first_link);
     });
 });

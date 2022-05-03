@@ -41,6 +41,7 @@ import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
+import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -72,12 +73,6 @@ describe(`AddLinkButtonTemplate`, () => {
             DeleteLinkMarkedForRemovalStub.withCount(),
             VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
             fault_notifier,
-            {
-                field_id: 696,
-                label: "Artifact link",
-                type: "art_link",
-                allowed_types: [],
-            },
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     LinkableArtifactStub.withDefaults()
@@ -87,9 +82,16 @@ describe(`AddLinkButtonTemplate`, () => {
                 current_artifact_identifier
             ),
             new_link_adder,
+            DeleteNewLinkStub.withCount(),
             RetrieveNewLinksStub.withNewLinks(
                 NewLinkStub.withIdAndType(NEW_ARTIFACT_ID, LinkTypeStub.buildUntyped())
             ),
+            {
+                field_id: 696,
+                label: "Artifact link",
+                type: "art_link",
+                allowed_types: [],
+            },
             current_artifact_identifier,
             ArtifactCrossReferenceStub.withRef("story #62")
         );

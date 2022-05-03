@@ -20,11 +20,12 @@
 import type { AddNewLink } from "../../domain/fields/link-field-v2/AddNewLink";
 import type { NewLink } from "../../domain/fields/link-field-v2/NewLink";
 import type { RetrieveNewLinks } from "../../domain/fields/link-field-v2/RetrieveNewLinks";
+import type { DeleteNewLink } from "../../domain/fields/link-field-v2/DeleteNewLink";
 
-type NewLinksStoreType = AddNewLink & RetrieveNewLinks;
+type NewLinksStoreType = AddNewLink & RetrieveNewLinks & DeleteNewLink;
 
 export const NewLinksStore = (): NewLinksStoreType => {
-    const links: NewLink[] = [];
+    let links: NewLink[] = [];
 
     return {
         addNewLink(link: NewLink): void {
@@ -33,6 +34,10 @@ export const NewLinksStore = (): NewLinksStoreType => {
 
         getNewLinks(): ReadonlyArray<NewLink> {
             return links;
+        },
+
+        deleteNewLink(link: NewLink): void {
+            links = links.filter((stored_link) => link !== stored_link);
         },
     };
 };
