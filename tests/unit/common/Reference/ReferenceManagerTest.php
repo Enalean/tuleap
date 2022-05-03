@@ -83,6 +83,8 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExtractReference(): void
     {
+        $GLOBALS['Language']->method('getOverridableText')->willReturn('some text');
+
         $dao = \Mockery::spy(\ReferenceDao::class);
         $dao->shouldReceive('searchActiveByGroupID')->with('100')
             ->andReturn(\TestHelper::arrayToDar(

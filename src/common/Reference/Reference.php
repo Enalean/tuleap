@@ -111,6 +111,23 @@ class Reference
     {
         return $this->description;
     }
+
+    public function getResolvedDescription(): string
+    {
+        if (! str_contains($this->description, "_desc_key")) {
+            return $this->description;
+        }
+
+        $matches = [];
+        if (! preg_match('/(.*):(.*)/', $this->description, $matches)) {
+            return $GLOBALS['Language']->getOverridableText('project_reference', $this->description);
+        }
+        if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+            return $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
+        }
+        return '';
+    }
+
     public function getLink()
     {
         return $this->link;

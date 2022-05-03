@@ -32,13 +32,31 @@ use Tuleap\Reference\ReferenceGetTooltipChainOpenGraph;
 
 $reference_manager = ReferenceManager::instance();
 $request           = HTTPRequest::instance();
+$project_manager   = ProjectManager::instance();
 
-$vGroupId = new Valid_GroupId();
-if (! $request->valid($vGroupId)) {
-    $group_id = 100;
-} else {
-    $group_id = $request->get('group_id');
+$project = null;
+if ($request->exist('project')) {
+    try {
+        if (is_numeric($request->get('project'))) {
+            $project = $project_manager->getValidProject((int) $request->get('project'));
+        } else {
+            $project = $project_manager->getProjectByCaseInsensitiveUnixName($request->get('project'));
+        }
+    } catch (Project_NotFoundException $e) {
+    }
+} elseif ($request->exist('group_id')) {
+    $vGroupId = new Valid_GroupId();
+    if ($request->valid($vGroupId)) {
+        try {
+            $project = $project_manager->getValidProject((int) $request->get('group_id'));
+        } catch (Project_NotFoundException $e) {
+        }
+    }
 }
+if (! $project) {
+    $project = $project_manager->getProject(Project::ADMIN_PROJECT_ID);
+}
+$group_id = $project->getID();
 
 $vKey = new Valid_String('key');
 $vKey->required();
@@ -68,9 +86,6 @@ if ($keyword === 'wiki') {
         $args = [$matches[1], $matches[2]];
     }
 }
-
-$project_manager = ProjectManager::instance();
-$project         = $project_manager->getProject($group_id);
 
 $event_manager = EventManager::instance();
 $event         = new GetReferenceEvent(

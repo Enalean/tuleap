@@ -256,6 +256,14 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
     /**
      * @return Reference[]
      */
+    public function getReferencesByProject(\Project $project): array
+    {
+        return $this->getReferencesByGroupId((int) $project->getID());
+    }
+
+    /**
+     * @return Reference[]
+     */
     public function getReferencesByGroupId(int $group_id): array
     {
         if (isset($this->referencesByProject[$group_id])) {
@@ -831,19 +839,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             $ref = $ref_instance->getReference();
 
             // Replace description key with real description if needed
-            $desc = '';
-            if (strpos($ref->getDescription(), "_desc_key") !== false) {
-                if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
-                    if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                        $desc = $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
-                    }
-                } else {
-                    $desc = $GLOBALS['Language']->getOverridableText('project_reference', $ref->getDescription());
-                }
-            } else {
-                $desc = $ref->getDescription();
-            }
-            $ref->setDescription($desc);
+            $ref->setDescription($ref->getResolvedDescription());
 
             $referencesInstances[] = $ref_instance;
         }
