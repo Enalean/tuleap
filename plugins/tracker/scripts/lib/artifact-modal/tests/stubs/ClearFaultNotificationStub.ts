@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NotifyFault } from "../../src/domain/NotifyFault";
+import type { ClearFaultNotification } from "../../src/domain/ClearFaultNotification";
 
-export interface NotifyFaultStub extends NotifyFault {
+export interface ClearFaultNotificationStub extends ClearFaultNotification {
     getCallCount(): number;
 }
 
-export const NotifyFaultStub = {
-    withCount: (): NotifyFaultStub => {
+export const ClearFaultNotificationStub = {
+    withCount: (): ClearFaultNotificationStub => {
         let call_count = 0;
         return {
-            onFault(): void {
+            clearFaultNotification(): void {
                 call_count++;
             },
             getCallCount: () => call_count,

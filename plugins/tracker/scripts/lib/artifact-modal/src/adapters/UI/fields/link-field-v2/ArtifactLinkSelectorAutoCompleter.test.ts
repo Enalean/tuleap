@@ -26,12 +26,26 @@ import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifa
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 
 const ARTIFACT_ID = 1621;
+
+const ForbiddenFault = (): Fault => ({
+    isForbidden: () => true,
+    ...Fault.fromMessage("You don't have permission"),
+});
+
+const NotFoundFault = (): Fault => ({
+    isNotFound: () => true,
+    ...Fault.fromMessage("Artifact not found"),
+});
 
 describe("ArtifactLinkSelectorAutoCompleter", () => {
     let artifact: LinkableArtifact,
         artifact_retriever: RetrieveMatchingArtifact,
+        fault_notifier: NotifyFaultStub,
+        notification_clearer: ClearFaultNotificationStub,
         link_selector: LinkSelectorStub,
         current_artifact_identifier: CurrentArtifactIdentifier | null;
 
@@ -45,6 +59,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             "army-green"
         );
         artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(artifact);
+        fault_notifier = NotifyFaultStub.withCount();
+        notification_clearer = ClearFaultNotificationStub.withCount();
         link_selector = LinkSelectorStub.withDropdownContentRecord();
         current_artifact_identifier = null;
     });
@@ -52,6 +68,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     const autocomplete = async (query: string): Promise<void> => {
         const autocompleter = ArtifactLinkSelectorAutoCompleter(
             artifact_retriever,
+            fault_notifier,
+            notification_clearer,
             current_artifact_identifier
         );
         await autocompleter.autoComplete(link_selector, query);
@@ -61,19 +79,24 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         ["an empty string", ""],
         ["not a number", "I know I'm supposed to enter a number by I don't care"],
     ])(
-        "when the query is %s, it will set an empty group collection in link-selector",
+        `when the query is %s, it will set an empty group collection in link-selector
+        and will clear the fault notification`,
         async (query_content_type: string, query: string) => {
             await autocomplete(query);
+
+            expect(notification_clearer.getCallCount()).toBe(1);
             const groups = link_selector.getGroupCollection();
             expect(groups).toHaveLength(0);
         }
     );
 
     it(`when an artifact is returned by the api,
-        then it will set a group with one item holding the matching artifact`, async () => {
+        then it will set a group with one item holding the matching artifact
+        and clear the fault notification`, async () => {
         await autocomplete(String(ARTIFACT_ID));
-        const groups = link_selector.getGroupCollection();
 
+        expect(notification_clearer.getCallCount()).toBe(1);
+        const groups = link_selector.getGroupCollection();
         if (groups === undefined) {
             throw new Error("Expected a group collection to be set");
         }
@@ -84,14 +107,17 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         expect(first_item.value).toBe(artifact);
     });
 
-    it(`when an error is returned by the api,
-        then it will set a group with zero items so that link-selector can show the empty state message`, async () => {
+    it(`when an unexpected error is returned by the api (not code 403 or 404),
+        then it will set a group with zero items so that link-selector can show the empty state message
+        and notify the fault`, async () => {
         const fault = Fault.fromMessage("Nope");
         artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
 
         await autocomplete(String(ARTIFACT_ID));
-        const groups = link_selector.getGroupCollection();
 
+        expect(notification_clearer.getCallCount()).toBe(1);
+        expect(fault_notifier.getCallCount()).toBe(1);
+        const groups = link_selector.getGroupCollection();
         if (groups === undefined) {
             throw new Error("Expected a group collection to be set");
         }
@@ -99,4 +125,29 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         expect(groups[0].items).toHaveLength(0);
         expect(groups[0].empty_message).not.toBe("");
     });
+
+    it.each([
+        ["403 Forbidden error code", ForbiddenFault()],
+        ["404 Not Found error code", NotFoundFault()],
+    ])(
+        `when the API responds %s,
+        it will set a group with zero items so that link-selector can show the empty state message
+        and will not notify the fault as it is expected that it can fail
+        (maybe the linkable number does not match any artifact)`,
+        async (_type_of_error, fault) => {
+            artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
+
+            await autocomplete("404");
+
+            expect(notification_clearer.getCallCount()).toBe(1);
+            expect(fault_notifier.getCallCount()).toBe(0);
+            const groups = link_selector.getGroupCollection();
+            if (groups === undefined) {
+                throw new Error("Expected a group collection to be set");
+            }
+            expect(groups).toHaveLength(1);
+            expect(groups[0].items).toHaveLength(0);
+            expect(groups[0].empty_message).not.toBe("");
+        }
+    );
 });

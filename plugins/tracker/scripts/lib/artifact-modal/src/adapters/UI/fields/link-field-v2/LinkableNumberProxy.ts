@@ -25,12 +25,16 @@ export const LinkableNumberProxy = {
         query_string: string,
         current_artifact_identifier: CurrentArtifactIdentifier | null
     ): LinkableNumber | null => {
-        if (query_string === "" || isNaN(Number(query_string))) {
+        if (query_string === "") {
             return null;
         }
-
         const query_number = Number.parseInt(query_string, 10);
-        if (Number.isNaN(query_number) || query_number === current_artifact_identifier?.id) {
+        if (
+            Number.isNaN(query_number) ||
+            Number(query_string) !== query_number ||
+            Math.abs(query_number) !== query_number ||
+            query_number === current_artifact_identifier?.id
+        ) {
             return null;
         }
 

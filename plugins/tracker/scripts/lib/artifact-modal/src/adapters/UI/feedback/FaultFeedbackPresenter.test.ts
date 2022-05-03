@@ -22,6 +22,7 @@ import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 import { setCatalog } from "../../../gettext-catalog";
 import { LinkRetrievalFault } from "../../../domain/fields/link-field-v2/LinkRetrievalFault";
 import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFault";
+import { MatchingArtifactRetrievalFault } from "../../../domain/fields/link-field-v2/MatchingArtifactRetrievalFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -50,6 +51,13 @@ describe(`FaultFeedbackPresenter`, () => {
 
     it(`translates a message for ParentRetrievalFault`, () => {
         const fault = ParentRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
+        const presenter = FaultFeedbackPresenter.fromFault(fault);
+        expect(presenter.message).toContain(FAULT_MESSAGE);
+        expect(presenter.message).not.toBe(FAULT_MESSAGE);
+    });
+
+    it(`translates a message for MatchingArtifactRetrievalFault`, () => {
+        const fault = MatchingArtifactRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
         const presenter = FaultFeedbackPresenter.fromFault(fault);
         expect(presenter.message).toContain(FAULT_MESSAGE);
         expect(presenter.message).not.toBe(FAULT_MESSAGE);

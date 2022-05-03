@@ -21,12 +21,22 @@ import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 
 describe("LinkableNumberProxy", () => {
-    it.each(["abcd", "10+", "105d", "10^5"])(
-        "should return null when there is no valid id in the query string",
-        (query: string) => {
-            expect(LinkableNumberProxy.fromQueryString(query, null)).toBeNull();
-        }
-    );
+    it.each([
+        "abcd",
+        "10+",
+        "105d",
+        "d105",
+        "10^5",
+        "1e5",
+        "-105",
+        "10.5",
+        "1,05",
+        "0b1101001",
+        "0o151",
+        "0x69",
+    ])("should return null when %s is entered", (query) => {
+        expect(LinkableNumberProxy.fromQueryString(query, null)).toBeNull();
+    });
 
     it("should return null when the user has entered the current artifact_id", () => {
         expect(
