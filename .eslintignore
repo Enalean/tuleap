@@ -27,3 +27,4 @@ src/www/scripts/vendor/
 src/www/scripts/fieldDependencies.js
 src/themes/tlp/src/types/
 plugins/mediawiki/www/
+**/additional-packages/**
