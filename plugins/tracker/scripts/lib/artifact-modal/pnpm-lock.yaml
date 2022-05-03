@@ -4,7 +4,6 @@ specifiers:
   '@tuleap/angular-tlp': file:../../../../../lib/frontend/angular-tlp
   '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
   '@tuleap/ckeditor-image-upload': file:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/core': file:../../../../../src
   '@tuleap/date-helper': file:../../../../../lib/frontend/date-helper
   '@tuleap/fault': file:../../../../../lib/frontend/fault
   '@tuleap/fetch-result': file:../../../../../lib/frontend/fetch-result
@@ -38,7 +37,6 @@ specifiers:
 dependencies:
   '@tuleap/angular-tlp': link:../../../../../lib/frontend/angular-tlp
   '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/core': link:../../../../../src
   '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
   '@tuleap/fault': link:../../../../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
