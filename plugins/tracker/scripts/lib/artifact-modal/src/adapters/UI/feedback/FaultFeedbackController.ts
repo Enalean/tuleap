@@ -19,12 +19,14 @@
 
 import type { NotifyFault } from "../../../domain/NotifyFault";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
+import type { ClearFaultNotification } from "../../../domain/ClearFaultNotification";
 
 export type OnFaultHandler = (presenter: FaultFeedbackPresenter) => void;
 
-export interface FaultFeedbackControllerType extends NotifyFault {
-    registerFaultListener(handler: OnFaultHandler): void;
-}
+export type FaultFeedbackControllerType = NotifyFault &
+    ClearFaultNotification & {
+        registerFaultListener(handler: OnFaultHandler): void;
+    };
 
 export const FaultFeedbackController = (): FaultFeedbackControllerType => {
     let _handler: OnFaultHandler | undefined;
@@ -34,6 +36,10 @@ export const FaultFeedbackController = (): FaultFeedbackControllerType => {
 
         onFault(fault): void {
             _handler?.(FaultFeedbackPresenter.fromFault(fault));
+        },
+
+        clearFaultNotification(): void {
+            _handler?.(FaultFeedbackPresenter.buildEmpty());
         },
     };
 };

@@ -18,6 +18,7 @@
  */
 
 import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
+import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
@@ -32,12 +33,8 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
-import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
-import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
-import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import type { LinkAdditionPresenter } from "./LinkAdditionPresenter";
@@ -48,43 +45,68 @@ import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLink
 import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants/src/constants";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
+import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
+import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
 
 describe(`LinkFieldController`, () => {
-    let current_artifact_identifier: CurrentArtifactIdentifier,
-        field: ArtifactLinkFieldStructure,
-        cross_reference: ArtifactCrossReference,
-        auto_completer: ArtifactLinkSelectorAutoCompleterType;
+    let links_retriever: RetrieveAllLinkedArtifacts,
+        links_retriever_sync: RetrieveLinkedArtifactsSync,
+        deleted_link_adder: AddLinkMarkedForRemovalStub,
+        deleted_link_remover: DeleteLinkMarkedForRemovalStub,
+        deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
+        fault_notifier: NotifyFaultStub,
+        new_link_adder: AddNewLinkStub,
+        new_links_retriever: RetrieveNewLinks;
+
     beforeEach(() => {
-        field = { field_id: FIELD_ID, type: "art_link", label: "Artifact link", allowed_types: [] };
-        current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
-        cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
-        auto_completer = ArtifactLinkSelectorAutoCompleter(
-            RetrieveMatchingArtifactStub.withMatchingArtifact(LinkableArtifactStub.withDefaults()),
-            current_artifact_identifier
-        );
+        links_retriever = RetrieveAllLinkedArtifactsStub.withoutLink();
+        links_retriever_sync = RetrieveLinkedArtifactsSyncStub.withoutLink();
+        deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
+        deleted_link_remover = DeleteLinkMarkedForRemovalStub.withCount();
+        deleted_link_verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
+        fault_notifier = NotifyFaultStub.withCount();
+        new_link_adder = AddNewLinkStub.withCount();
+        new_links_retriever = RetrieveNewLinksStub.withoutLink();
     });
 
+    const getController = (): LinkFieldControllerType => {
+        const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
+        const cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
+        return LinkFieldController(
+            links_retriever,
+            links_retriever_sync,
+            deleted_link_adder,
+            deleted_link_remover,
+            deleted_link_verifier,
+            fault_notifier,
+            {
+                field_id: FIELD_ID,
+                type: "art_link",
+                label: "Artifact link",
+                allowed_types: [],
+            },
+            ArtifactLinkSelectorAutoCompleter(
+                RetrieveMatchingArtifactStub.withMatchingArtifact(
+                    LinkableArtifactStub.withDefaults()
+                ),
+                fault_notifier,
+                ClearFaultNotificationStub.withCount(),
+                current_artifact_identifier
+            ),
+            new_link_adder,
+            new_links_retriever,
+            current_artifact_identifier,
+            cross_reference
+        );
+    };
+
     describe(`displayField()`, () => {
-        const displayField = (): LinkFieldPresenter => {
-            const controller = LinkFieldController(
-                RetrieveAllLinkedArtifactsStub.withoutLink(),
-                RetrieveLinkedArtifactsSyncStub.withoutLink(),
-                AddLinkMarkedForRemovalStub.withCount(),
-                DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-                NotifyFaultStub.withCount(),
-                field,
-                auto_completer,
-                AddNewLinkStub.withCount(),
-                RetrieveNewLinksStub.withoutLink(),
-                current_artifact_identifier,
-                cross_reference
-            );
-            return controller.displayField();
-        };
+        const displayField = (): LinkFieldPresenter => getController().displayField();
 
         it(`returns a presenter for the field and current artifact cross reference`, () => {
             const presenter = displayField();
@@ -93,31 +115,8 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`displayLinkedArtifacts()`, () => {
-        let links_retriever: RetrieveAllLinkedArtifacts, fault_notifier: NotifyFaultStub;
-
-        beforeEach(() => {
-            const linked_artifact = LinkedArtifactStub.withDefaults();
-            links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
-            fault_notifier = NotifyFaultStub.withCount();
-        });
-
-        const displayLinkedArtifacts = (): Promise<LinkedArtifactCollectionPresenter> => {
-            const controller = LinkFieldController(
-                links_retriever,
-                RetrieveLinkedArtifactsSyncStub.withoutLink(),
-                AddLinkMarkedForRemovalStub.withCount(),
-                DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
-                fault_notifier,
-                field,
-                auto_completer,
-                AddNewLinkStub.withCount(),
-                RetrieveNewLinksStub.withoutLink(),
-                current_artifact_identifier,
-                cross_reference
-            );
-            return controller.displayLinkedArtifacts();
-        };
+        const displayLinkedArtifacts = (): Promise<LinkedArtifactCollectionPresenter> =>
+            getController().displayLinkedArtifacts();
 
         it(`when the modal is in creation mode,
             it won't notify that there has been a fault
@@ -133,6 +132,8 @@ describe(`LinkFieldController`, () => {
 
         it(`when the modal is in edition mode and it succeeds loading,
             it will return a presenter with the linked artifacts`, async () => {
+            const linked_artifact = LinkedArtifactStub.withDefaults();
+            links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
             const presenter = await displayLinkedArtifacts();
 
             expect(presenter.has_loaded_content).toBe(true);
@@ -150,30 +151,13 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`markForRemoval`, () => {
-        let deleted_link_adder: AddLinkMarkedForRemovalStub;
-
-        beforeEach(() => {
-            deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
-        });
-
         const markForRemoval = (): LinkedArtifactCollectionPresenter => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
             const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
-            const controller = LinkFieldController(
-                RetrieveAllLinkedArtifactsStub.withoutLink(),
-                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
-                deleted_link_adder,
-                DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval(),
-                NotifyFaultStub.withCount(),
-                field,
-                auto_completer,
-                AddNewLinkStub.withCount(),
-                RetrieveNewLinksStub.withoutLink(),
-                current_artifact_identifier,
-                cross_reference
-            );
-            return controller.markForRemoval(identifier);
+            links_retriever_sync =
+                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact);
+            deleted_link_verifier = VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
+            return getController().markForRemoval(identifier);
         };
 
         it(`stores the given identifier as a link marked for removal and returns an updated presenter`, () => {
@@ -188,30 +172,12 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`unmarkForRemoval`, () => {
-        let deleted_link_remover: DeleteLinkMarkedForRemovalStub;
-
-        beforeEach(() => {
-            deleted_link_remover = DeleteLinkMarkedForRemovalStub.withCount();
-        });
-
         const unmarkForRemoval = (): LinkedArtifactCollectionPresenter => {
             const identifier = LinkedArtifactIdentifierStub.withId(ARTIFACT_ID);
             const linked_artifact = LinkedArtifactStub.withDefaults({ identifier });
-            const controller = LinkFieldController(
-                RetrieveAllLinkedArtifactsStub.withoutLink(),
-                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
-                AddLinkMarkedForRemovalStub.withCount(),
-                deleted_link_remover,
-                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-                NotifyFaultStub.withCount(),
-                field,
-                auto_completer,
-                AddNewLinkStub.withCount(),
-                RetrieveNewLinksStub.withoutLink(),
-                current_artifact_identifier,
-                cross_reference
-            );
-            return controller.unmarkForRemoval(identifier);
+            links_retriever_sync =
+                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact);
+            return getController().unmarkForRemoval(identifier);
         };
 
         it(`deletes the given identifier in the stored links marked for removal,
@@ -227,23 +193,8 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`onLinkableArtifactSelection`, () => {
-        const onSelection = (artifact: LinkableArtifact | null): LinkAdditionPresenter => {
-            const controller = LinkFieldController(
-                RetrieveAllLinkedArtifactsStub.withoutLink(),
-                RetrieveLinkedArtifactsSyncStub.withoutLink(),
-                AddLinkMarkedForRemovalStub.withCount(),
-                DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-                NotifyFaultStub.withCount(),
-                field,
-                auto_completer,
-                AddNewLinkStub.withCount(),
-                RetrieveNewLinksStub.withoutLink(),
-                current_artifact_identifier,
-                cross_reference
-            );
-            return controller.onLinkableArtifactSelection(artifact);
-        };
+        const onSelection = (artifact: LinkableArtifact | null): LinkAdditionPresenter =>
+            getController().onLinkableArtifactSelection(artifact);
 
         it(`when selection is null, it will return a presenter with disabled button`, () => {
             const presenter = onSelection(null);
@@ -257,34 +208,15 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`addNewLink`, () => {
-        let new_link_adder: AddNewLinkStub;
-
-        beforeEach(() => {
-            new_link_adder = AddNewLinkStub.withCount();
-        });
-
         const addNewLink = (): NewLinkCollectionPresenter => {
             const linkable_artifact = LinkableArtifactStub.withDefaults({
                 id: ARTIFACT_ID,
             });
             const link_type = LinkTypeStub.buildChildLinkType();
-            const controller = LinkFieldController(
-                RetrieveAllLinkedArtifactsStub.withoutLink(),
-                RetrieveLinkedArtifactsSyncStub.withoutLink(),
-                AddLinkMarkedForRemovalStub.withCount(),
-                DeleteLinkMarkedForRemovalStub.withCount(),
-                VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-                NotifyFaultStub.withCount(),
-                field,
-                auto_completer,
-                new_link_adder,
-                RetrieveNewLinksStub.withNewLinks(
-                    NewLink.fromLinkableArtifactAndType(linkable_artifact, link_type)
-                ),
-                current_artifact_identifier,
-                cross_reference
+            new_links_retriever = RetrieveNewLinksStub.withNewLinks(
+                NewLink.fromLinkableArtifactAndType(linkable_artifact, link_type)
             );
-            return controller.addNewLink(linkable_artifact, link_type);
+            return getController().addNewLink(linkable_artifact, link_type);
         };
 
         it(`adds a new link to the stored new links and returns an updated presenter`, () => {

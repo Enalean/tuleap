@@ -63,6 +63,9 @@ msgstr "Vazio"
 msgid "Enter artifact ids separated by a comma"
 msgstr ""
 
+msgid "Error while retrieving the artifact to link: %s"
+msgstr ""
+
 msgid "Error:"
 msgstr ""
 

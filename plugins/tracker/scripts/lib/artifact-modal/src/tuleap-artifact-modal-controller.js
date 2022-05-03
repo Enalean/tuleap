@@ -150,7 +150,12 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 fault_feedback_controller,
                 field,
-                ArtifactLinkSelectorAutoCompleter(api_client, current_artifact_identifier),
+                ArtifactLinkSelectorAutoCompleter(
+                    api_client,
+                    fault_feedback_controller,
+                    fault_feedback_controller,
+                    current_artifact_identifier
+                ),
                 new_links_store,
                 new_links_store,
                 current_artifact_identifier,

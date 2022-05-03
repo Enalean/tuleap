@@ -41,6 +41,7 @@ import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/Retriev
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -134,13 +135,14 @@ describe(`LinkedArtifactTemplate`, () => {
 
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
+            const fault_notifier = NotifyFaultStub.withCount();
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
                 AddLinkMarkedForRemovalStub.withCount(),
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
-                NotifyFaultStub.withCount(),
+                fault_notifier,
                 {
                     field_id: 457,
                     label: "Artifact link",
@@ -151,6 +153,8 @@ describe(`LinkedArtifactTemplate`, () => {
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
                         LinkableArtifactStub.withDefaults()
                     ),
+                    fault_notifier,
+                    ClearFaultNotificationStub.withCount(),
                     current_artifact_identifier
                 ),
                 AddNewLinkStub.withCount(),

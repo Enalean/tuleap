@@ -21,6 +21,7 @@ import type { Fault } from "@tuleap/fault";
 import { sprintf } from "sprintf-js";
 import {
     getLinkFieldFetchErrorMessage,
+    getMatchingArtifactErrorMessage,
     getParentFetchErrorMessage,
 } from "../../../gettext-catalog";
 
@@ -32,6 +33,8 @@ const isLinkRetrievalFault = (fault: Fault): boolean =>
     "isLinkRetrieval" in fault && fault.isLinkRetrieval() === true;
 const isParentRetrievalFault = (fault: Fault): boolean =>
     "isParentRetrieval" in fault && fault.isParentRetrieval() === true;
+const isMatchingArtifactRetrievalFault = (fault: Fault): boolean =>
+    "isMatchingArtifactRetrieval" in fault && fault.isMatchingArtifactRetrieval() === true;
 
 export const FaultFeedbackPresenter = {
     buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
@@ -41,6 +44,9 @@ export const FaultFeedbackPresenter = {
         }
         if (isParentRetrievalFault(fault)) {
             return { message: sprintf(getParentFetchErrorMessage(), fault) };
+        }
+        if (isMatchingArtifactRetrievalFault(fault)) {
+            return { message: sprintf(getMatchingArtifactErrorMessage(), fault) };
         }
         return { message: String(fault) };
     },

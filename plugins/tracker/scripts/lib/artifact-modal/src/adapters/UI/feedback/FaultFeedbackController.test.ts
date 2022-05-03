@@ -34,4 +34,17 @@ describe(`FaultFeedbackController`, () => {
             expect(presenter.message).toBe(String(fault));
         });
     });
+
+    describe(`clearFaultNotification`, () => {
+        it(`will notify its pre-registered handler with an empty presenter to clear the notification`, () => {
+            const controller = FaultFeedbackController();
+            const handler = jest.fn();
+            controller.registerFaultListener(handler);
+
+            controller.clearFaultNotification();
+
+            const presenter = handler.mock.calls[0][0];
+            expect(presenter.message).toBe("");
+        });
+    });
 });

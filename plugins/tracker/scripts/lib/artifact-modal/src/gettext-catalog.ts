@@ -85,3 +85,5 @@ export const getParentFetchErrorMessage = (): string =>
 export const getMatchingArtifactLabel = (): string => gettextCatalog.getString("Matching artifact");
 export const getNoResultFoundEmptyState = (): string => gettextCatalog.getString("No result found");
 export const getLinkSelectorPlaceholderText = (): string => gettextCatalog.getString("Artifact id");
+export const getMatchingArtifactErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving the artifact to link: %s");

@@ -40,6 +40,7 @@ import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -63,13 +64,14 @@ describe(`AddLinkButtonTemplate`, () => {
             .createElement("div") as unknown as ShadowRoot;
 
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(62);
+        const fault_notifier = NotifyFaultStub.withCount();
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
             RetrieveLinkedArtifactsSyncStub.withoutLink(),
             AddLinkMarkedForRemovalStub.withCount(),
             DeleteLinkMarkedForRemovalStub.withCount(),
             VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
-            NotifyFaultStub.withCount(),
+            fault_notifier,
             {
                 field_id: 696,
                 label: "Artifact link",
@@ -80,6 +82,8 @@ describe(`AddLinkButtonTemplate`, () => {
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     LinkableArtifactStub.withDefaults()
                 ),
+                fault_notifier,
+                ClearFaultNotificationStub.withCount(),
                 current_artifact_identifier
             ),
             new_link_adder,
