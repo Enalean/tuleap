@@ -26,7 +26,7 @@
     "@tuleap/tlp-swatch-colors": "file:../lib/frontend/tlp-swatch-colors",
     "@tuleap/tooltip": "file:../lib/frontend/tooltip",
     "@tuleap/vue2-gettext-init": "file:../lib/frontend/vue2-gettext-init",
-    "ckeditor4": "^4.17.1",
+    "ckeditor4": "^4.18.0",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",
     "d3-interpolate": "^3.0.1",
