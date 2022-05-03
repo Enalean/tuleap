@@ -26,16 +26,16 @@
     >
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
         <modal-feedback />
-        <div class="tlp-modal-body">
+        <div class="tlp-modal-body" v-if="embedded_item !== null">
             <item-update-properties
                 v-bind:version="version"
-                v-bind:item="item"
+                v-bind:item="embedded_item"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <embedded-properties
                     v-if="embedded_file_model"
                     v-model="embedded_file_model"
-                    v-bind:item="item"
+                    v-bind:item="embedded_item"
                     key="embedded-props"
                 />
             </item-update-properties>
@@ -50,7 +50,6 @@
     </form>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import { createModal } from "tlp";
@@ -80,6 +79,7 @@ export default {
             version: {},
             is_loading: false,
             modal: null,
+            embedded_item: null,
         };
     },
     computed: {
@@ -95,6 +95,7 @@ export default {
         },
     },
     mounted() {
+        this.embedded_item = this.item;
         this.modal = createModal(this.$el);
         this.registerEvents();
         emitter.on("update-version-title", this.updateTitleValue);
@@ -122,7 +123,7 @@ export default {
                 is_file_locked: this.item.lock_info !== null,
             };
 
-            this.embedded_file_model = this.item.embedded_file_properties;
+            this.embedded_file_model = this.embedded_item.embedded_file_properties;
 
             this.modal.show();
         },
@@ -138,7 +139,7 @@ export default {
             this.$store.commit("error/resetModalError");
 
             await this.$store.dispatch("createNewEmbeddedFileVersionFromModal", [
-                this.item,
+                this.embedded_item,
                 this.embedded_file_model.content,
                 this.version.title,
                 this.version.changelog,
@@ -148,8 +149,9 @@ export default {
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.$store.dispatch("refreshEmbeddedFile", this.item);
-                this.item.embedded_file_properties.content = this.embedded_file_model.content;
+                this.$store.dispatch("refreshEmbeddedFile", this.embedded_item);
+                this.embedded_item.embedded_file_properties.content =
+                    this.embedded_file_model.content;
                 this.embedded_file_model = null;
                 this.hide();
                 this.modal.hide();
