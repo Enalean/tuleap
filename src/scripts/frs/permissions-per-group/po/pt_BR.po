@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%{ user_group } has no permissions for any package or release"
+msgstr ""
+
+msgid "No packages found for project"
+msgstr ""
+
+msgid "Package"
+msgstr ""
+
+msgid "Packages are loading"
+msgstr "Carregando os Pacotes"
+
+msgid "Readers"
+msgstr ""
+
+msgid "Release"
+msgstr ""
+
+msgid "See all packages permissions"
+msgstr ""

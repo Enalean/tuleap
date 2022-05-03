@@ -1,0 +1,56 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Adds project owner role"
+msgstr ""
+
+msgid "Current project owner:"
+msgstr ""
+
+#, php-format
+msgid "Failed to send notification to user %s ."
+msgstr ""
+
+msgid "Owner"
+msgstr "Proprietário"
+
+msgid "Project owner"
+msgstr ""
+
+msgid ""
+"Project owner is accountable for project visibility, permissions & groups "
+"membership."
+msgstr ""
+
+msgid "Project ownership"
+msgstr ""
+
+msgid "Project status updated"
+msgstr ""
+
+#, php-format
+msgid "The project %1$s is now active."
+msgstr ""
+
+#, php-format
+msgid "The project %1$s is now deleted."
+msgstr ""
+
+#, php-format
+msgid "The project %1$s is now pending."
+msgstr ""
+
+#, php-format
+msgid "The project %1$s is now suspended."
+msgstr ""
+
+msgid "The project owner cannot be removed."
+msgstr ""
+
+msgid "This project has no owner."
+msgstr ""

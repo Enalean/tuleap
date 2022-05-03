@@ -1,0 +1,188 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$s internal login:"
+msgstr ""
+
+#, php-format
+msgid "%1$s login"
+msgstr ""
+
+msgid "%s group name"
+msgstr ""
+
+msgid "<em>Required for CVS, FTP and Subversion accesses</em>."
+msgstr ""
+
+msgid ""
+"<strong>%s</strong> is already linked with %s group <strong>%s</strong>."
+msgstr ""
+
+msgid "Account details"
+msgstr ""
+
+msgid "Account preferences"
+msgstr ""
+
+msgid "Add those who are not already member of this %s group."
+msgstr ""
+
+#, php-format
+msgid "An error occured during account update: %1$s."
+msgstr ""
+
+msgid "Bind with group from %s"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Email Address:"
+msgstr ""
+
+msgid "Every night the group will be synchronized with the %s one."
+msgstr ""
+
+#, php-format
+msgid "Fields marked with %1$s are mandatory."
+msgstr ""
+
+#, php-format
+msgid "First login to %1$s"
+msgstr ""
+
+#, php-format
+msgid "Group %1$s not found in directory"
+msgstr ""
+
+msgid "If you choose to synchronize with a group from %s, it will:"
+msgstr ""
+
+msgid "LDAP Plugin. Provides LDAP information as well as LDAP authentication."
+msgstr ""
+
+msgid "LDAP Sync Results"
+msgstr ""
+
+msgid "LDAP Sync Results for %projectName%"
+msgstr ""
+
+msgid "Link with %s group"
+msgstr ""
+
+#, php-format
+msgid "No %1$s login found"
+msgstr ""
+
+msgid "No users were added"
+msgstr ""
+
+msgid "No users were removed"
+msgstr ""
+
+msgid "Please select a %s group."
+msgstr ""
+
+#, php-format
+msgid "Please use your %1$s login (not the %2$s one)."
+msgstr ""
+
+msgid "Preserve members"
+msgstr ""
+
+msgid "Preserve users that are not part of the %s group."
+msgstr ""
+
+msgid ""
+"Receive Email about Site Updates <em>(Very low traffic and includes security "
+"notices. Highly Recommended.)</em>"
+msgstr ""
+
+msgid "Receive additional community mailings. <em>(Low traffic.)</em>"
+msgstr ""
+
+msgid ""
+"Remove all users who belong to this %s group but not to the %s group if you "
+"don't enable\n"
+"                      the 'Preserve members' option."
+msgstr ""
+
+#, php-format
+msgid "Set %1$s group binding"
+msgstr ""
+
+msgid "Set directory group binding"
+msgstr ""
+
+msgid "Synchronize"
+msgstr ""
+
+msgid "Synchronize daily"
+msgstr ""
+
+msgid "Thank you to fill the following before accessing your data:"
+msgstr ""
+
+msgid "Timezone"
+msgstr "Fuso horário"
+
+msgid ""
+"Unable to retrieve LDAP info for your user account, skipping Welcome page"
+msgstr ""
+
+msgid "Unlink group and %s"
+msgstr ""
+
+#, php-format
+msgid "Update %1$s group binding (%2$s)"
+msgstr ""
+
+#, php-format
+msgid "Update directory group binding (%s)"
+msgstr ""
+
+msgid "Update my account"
+msgstr ""
+
+msgid "User group no longer linked with the directory"
+msgstr ""
+
+msgid "User name:"
+msgstr ""
+
+#, php-format
+msgid "User not found: %1$s"
+msgstr ""
+
+msgid "User settings update error"
+msgstr ""
+
+msgid "Users added"
+msgstr ""
+
+msgid "Users removed"
+msgstr ""
+
+#, php-format
+msgid "Welcome %1$s"
+msgstr ""
+
+msgid ""
+"You must supply a timezone.<br /><br />Click on 'Back' to return to the "
+"previous screen and select a timezone."
+msgstr ""
+
+#, php-format
+msgid ""
+"[LDAP Daily Synchronization] %1$s is suspended, please clean up %2$s project."
+msgstr ""
+
+#, php-format
+msgid "[Reminder][LDAP Synch] The user %1$s will be deleted tomorrow"
+msgstr ""

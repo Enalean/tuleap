@@ -1,0 +1,66 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "Artifact to add %d must be a child of swimlane %d."
+msgstr ""
+
+msgid "Board type"
+msgstr ""
+
+msgid "Cardwall & Taskboard"
+msgstr ""
+
+msgid "Cardwall (legacy, for backward compatibility)"
+msgstr ""
+
+#, php-format
+msgid "Could not find artifact to add with id %d."
+msgstr ""
+
+msgid "Milestone not found."
+msgstr ""
+
+msgid "Please specify 'add' and/or 'order' in the payload."
+msgstr ""
+
+msgid "Taskboard"
+msgstr ""
+
+msgid "Taskboard (new, recommended)"
+msgstr ""
+
+#, php-format
+msgid "Taskboard is not activated in project %s."
+msgstr ""
+
+msgid "Taskboard not found."
+msgstr ""
+
+msgid "The artifact does not have a remaining effort numeric field"
+msgstr ""
+
+#, php-format
+msgid ""
+"Tracker %s has no list field mapped to column %s, please check its "
+"configuration."
+msgstr ""
+
+#, php-format
+msgid ""
+"Tracker %s has no value mapped to column %s, please check its configuration."
+msgstr ""
+
+msgid ""
+"Visually keep track of things that need to get done in a task board, used in "
+"Agile Dashboard."
+msgstr ""
+
+#, php-format
+msgid "You don't have permission to update the %s field."
+msgstr ""

@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Based on tracker fields"
+msgstr ""
+
+msgid "Choose a field..."
+msgstr ""
+
+msgid "Choose a method..."
+msgstr ""
+
+msgid "Choose a tracker..."
+msgstr ""
+
+msgid "Duration"
+msgstr ""
+
+msgid "End date"
+msgstr ""
+
+msgid "Inherited from another tracker"
+msgstr ""
+
+msgid ""
+"Please <a href=\"%{ tracker_fields_admin_url }\">add an artifact link field</"
+"a> to your tracker first."
+msgstr ""
+
+msgid "Reset this semantic"
+msgstr ""
+
+msgid "Save your modifications"
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "The timeframe of an artifact will be"
+msgstr ""
+
+msgid "Tracker"
+msgstr ""
+
+msgid ""
+"You can't find the tracker you are looking for? Make sure it has an "
+"artifact\n"
+"                    link field, and that its semantic is not inherited from "
+"another tracker."
+msgstr ""
+
+msgid ""
+"You cannot make this semantic inherit from another tracker because some "
+"other trackers\n"
+"        are inheriting their own semantics timeframe from this one."
+msgstr ""
+
+msgid ""
+"You cannot reset this semantic because some trackers inherit their own "
+"semantics timeframe from this one."
+msgstr ""
+"Você não pode reiniciar esta semântica porque alguns rastreadores herdam a "
+"sua própria semântica a partir desta."
+
+msgid ""
+"You cannot reset this semantic because this tracker has a burnup, burndown "
+"or another chart rendered by an external plugin"
+msgstr ""
+"Você não pode reiniciar esta semântica porque este rastreador tem um burnup, "
+"burndown ou outro gráfico feito por um plugin externo"
+
+msgid "or"
+msgstr "ou"

@@ -5,7 +5,7 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #
-# 
+#
 #
 #  License:
 #      This file is licensed under the GNU General Public License
@@ -14,7 +14,7 @@
 #  Simple utility to analyse Language data.
 #
 # Usage:
-#  Edit the directories below, and run the script. 
+#  Edit the directories below, and run the script.
 #  Use '-s' for silent mode (summary only)
 #  Use '-v' for verbose mode (print also unused keys)
 #
@@ -132,7 +132,7 @@ foreach my $my_tab_dir (@lang_tab_dir) {
   foreach my $filename (@tab_files) {
     next if ($filename =~ /\/Base\.tab$/); # GForge file
     chomp $filename;
-    
+
     # For readability
     my $fileonly;
     if ($filename=~m|.*/([^/]+)$|) {
@@ -225,8 +225,14 @@ foreach my $lang (keys %missing_keys_array) {
   print "  ".$unused_keys_array{$lang}." \tunused keys\n";
   print "  ".$incorrect_keys_array{$lang}." \tincorrect keys\n";
   print "  -> $percent% complete\n";
-  if ($duplicate_keys_array{$lang} ne 0 || $missing_keys_array{$lang} ne 0 || $incorrect_keys_array{$lang} ne 0) {
-    $exit_code = 1;
+  if ($lang eq 'en_US' || $lang eq 'fr_FR') {
+    if ($duplicate_keys_array{$lang} ne 0 || $missing_keys_array{$lang} ne 0 || $incorrect_keys_array{$lang} ne 0) {
+      $exit_code = 1;
+    }
+  } else { # Don't check missing keys for other lang than en_US and fr_FR
+    if ($duplicate_keys_array{$lang} ne 0 || $incorrect_keys_array{$lang} ne 0) {
+      $exit_code = 1;
+    }
   }
 }
 exit $exit_code;

@@ -1,0 +1,64 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$s will automatically pass following parameters to the job:"
+msgstr ""
+
+msgid "An error occurred while adding job."
+msgstr ""
+
+msgid "An error occurred while deleting job."
+msgstr ""
+
+msgid "Continuous Integration for Subversion plugin"
+msgstr ""
+
+msgid "Continuous Integration with Hudson/Jenkins for Subversion plugin"
+msgstr ""
+
+#, php-format
+msgid "Identifier (String) of %1$s user who made the commit."
+msgstr ""
+
+msgid "Identifier (String) of the current project."
+msgstr ""
+
+msgid "If empty, every commits will trigger a build."
+msgstr ""
+
+msgid "One path per line..."
+msgstr ""
+
+msgid "Only when commit occurs on following paths:"
+msgstr ""
+
+msgid "Repository not found."
+msgstr ""
+
+msgid "SVN multiple repositories"
+msgstr ""
+
+msgid "Subversion multi repositories trigger"
+msgstr ""
+
+msgid "This request is not valid."
+msgstr ""
+
+msgid "Trigger a build after a commit in repository:"
+msgstr ""
+
+msgid ""
+"URL (String) of the updated repository (https://svn.example.com/svnplugin/"
+"ExampleDepot/)."
+msgstr ""
+
+msgid ""
+"Value (string) of paths impacted by commit. Please note that paths are end "
+"of line separated."
+msgstr ""

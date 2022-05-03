@@ -1,0 +1,130 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "After %s"
+msgstr ""
+
+msgid "After %s and before %s"
+msgstr ""
+
+msgid "Artifact ID"
+msgstr ""
+
+msgid "Artifacts"
+msgstr ""
+
+msgid "Artifacts referenced by “%s”"
+msgstr ""
+
+msgid "Artifacts that reference “%s”"
+msgstr ""
+
+msgid "As of %s"
+msgstr ""
+
+msgid "Before %s"
+msgstr ""
+
+msgid "Blocked"
+msgstr ""
+
+msgid "Campaigns"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Executed By"
+msgstr ""
+
+msgid "Executed On"
+msgstr ""
+
+msgid "Expected results"
+msgstr ""
+
+msgid "Exported by"
+msgstr ""
+
+msgid "Exported on"
+msgstr ""
+
+msgid "Exported on %s by %s"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Link type"
+msgstr ""
+
+msgid ""
+"No filter has been applied to this report because no TQL query has been set"
+msgstr ""
+
+msgid ""
+"No filter has been applied to this report because no search criteria has a "
+"value set"
+msgstr ""
+
+msgid "Not run"
+msgstr ""
+
+msgid "Passed"
+msgstr ""
+
+msgid "Platform"
+msgstr ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Report URL"
+msgstr ""
+
+msgid "Requirements"
+msgstr ""
+
+msgid "Results"
+msgstr ""
+
+msgid "Search criteria"
+msgstr ""
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Step"
+msgstr ""
+
+msgid "Step %d"
+msgstr ""
+
+msgid "TQL query: "
+msgstr ""
+
+msgid "Table of contents"
+msgstr ""
+
+msgid "Tests"
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Traceability Matrix"
+msgstr ""
+
+msgid "Tracker"
+msgstr ""
+
+msgid "Tracker Report"
+msgstr ""
+
+msgid "Value"
+msgstr ""

@@ -1,0 +1,692 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"\"AddToTopBacklog\" post action cannot be used because the project does not "
+"use the explicit top backlog management."
+msgstr ""
+
+#, php-format
+msgid "%1$s Planning"
+msgstr ""
+
+#, php-format
+msgid "%1$s backlog"
+msgstr ""
+
+#, php-format
+msgid "%s Kanban"
+msgstr ""
+
+#, php-format
+msgid "%s top backlog"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>The initial effort of this tracker will be represented in the Agile "
+"Dashboard by the field <strong>%1$s</strong>.</p>"
+msgstr ""
+
+msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
+msgstr ""
+
+msgid ""
+"A first Kanban will be created during the activation. This operation can "
+"take a few seconds."
+msgstr ""
+
+msgid ""
+"A first scrum configuration will be used during the activation. This "
+"operation can take a few seconds."
+msgstr ""
+
+msgid "Activate Kanban"
+msgstr ""
+
+msgid "Activate Scrum"
+msgstr ""
+
+msgid "Activate count elements mode for burnup chart"
+msgstr ""
+
+msgid "Add Kanban to dashboard"
+msgstr ""
+
+msgid "Add a kanban"
+msgstr ""
+
+msgid "Add to dashboard"
+msgstr ""
+
+msgid "Add to my dashboard"
+msgstr ""
+
+msgid "Add to project dashboard"
+msgstr ""
+
+msgid "Add to top backlog"
+msgstr "Adicionar ao backlog principal"
+
+msgid "Agile Dashboard"
+msgstr ""
+
+msgid "Agile Dashboard Administration"
+msgstr ""
+
+msgid "Agile Dashboard administration"
+msgstr ""
+
+msgid "Agile dashboard"
+msgstr ""
+
+msgid "AgileDashboard service"
+msgstr ""
+
+msgid "Agiledashboard plannings"
+msgstr ""
+
+msgid ""
+"All milestones that have a status set to 'open' (as defined in their "
+"tracker's semantic) are either \"Current\" or \"Next\". Their timeframe (as "
+"defined in tracker semantic) decides in which tab(s) they appear."
+msgstr ""
+
+msgid ""
+"All tracker reports using \"Unplanned\" option for \"In milestone\" report "
+"criterion will now use \"Any\"."
+msgstr ""
+
+msgid ""
+"All tracker workflow post-actions \"AddToTopBacklog\" have been removed."
+msgstr ""
+
+msgid "An error occurred while trying to solve inconsistencies."
+msgstr ""
+
+msgid ""
+"Any \"AddToTopBacklog\" workflow post-actions defined in the project will be "
+"removed."
+msgstr ""
+
+#, php-format
+msgid ""
+"Artifact #%d not added in the top backlog because it's already planned in a "
+"submilestone."
+msgstr ""
+
+#, php-format
+msgid ""
+"Artifact #%d not removed from the top backlog because it's already planned "
+"in a submilestone."
+msgstr ""
+
+msgid "Backlog title"
+msgstr ""
+
+msgid "Burnup Chart"
+msgstr ""
+
+msgid "Burnup field"
+msgstr ""
+
+msgid "Burnup is under calculation. It will be available in few minutes."
+msgstr ""
+
+msgid "Can't create new planning"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cardwall"
+msgstr ""
+
+msgid "Charts"
+msgstr ""
+
+msgid "Charts configuration"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Configuration"
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+#, php-format
+msgid "Could not find planning with id %s."
+msgstr ""
+
+msgid "Create"
+msgstr "Criar"
+
+msgid "Create a kanban"
+msgstr ""
+
+msgid "Create a new planning"
+msgstr ""
+
+msgid "Define the initial effort of an artifact."
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid ""
+"Deletion of this planning is prohibited because this project is part of a "
+"program backlog."
+msgstr ""
+
+msgid ""
+"Displays a board to see the tasks to do, in progress, done etc. Please go on "
+"a kanban to add it."
+msgstr ""
+
+msgid ""
+"Do you really want to force burnup cache regeneration? The burnup will be "
+"unavailable for a few minutes if you do."
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+#, php-format
+msgid "Edit %1$s"
+msgstr ""
+
+msgid "Edit planning: %s"
+msgstr ""
+
+msgid "Enable Scrum V2"
+msgstr ""
+
+#, php-format
+msgid "Error while creating Kanban %1$s."
+msgstr ""
+
+msgid "Explicit backlog actions"
+msgstr ""
+
+msgid ""
+"Explicit backlog allows to select, item per item, what goes in Scrum top "
+"backlog."
+msgstr ""
+
+msgid "Explicit top backlog"
+msgstr ""
+
+msgid "Export the configuration"
+msgstr ""
+
+msgid "Filter:"
+msgstr ""
+
+msgid "Force cache regeneration"
+msgstr ""
+
+msgid "General settings"
+msgstr ""
+
+msgid ""
+"If you switch back to the old mode, some tracker reports could be updated to "
+"not use anymore the \"unplanned\" value for \"In milestone\" criterion."
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import a configuration from a template file"
+msgstr ""
+
+msgid "Import them in the backlog"
+msgstr ""
+
+msgid "Import/Export"
+msgstr ""
+
+msgid "In milestone"
+msgstr ""
+
+msgid "Inconsistencies successfully solved!"
+msgstr ""
+
+msgid "Initial Effort"
+msgstr ""
+
+msgid "Initial effort semantic has been unset"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Item is not linked to this milestone"
+msgstr ""
+
+msgid "Kanban"
+msgstr "Kanban"
+
+#, php-format
+msgid "Kanban %1$s successfully created."
+msgstr ""
+
+msgid "Kanban Administration of Agile Dashboard"
+msgstr ""
+
+msgid "Kanban board"
+msgstr ""
+
+msgid "Kanban cards"
+msgstr ""
+
+msgid "Kanban is currently active."
+msgstr ""
+
+msgid "Kanban is not currently active."
+msgstr ""
+
+msgid "Kanban name:"
+msgstr ""
+
+msgid "Kanban not found."
+msgstr ""
+
+msgid "Kanban successfully activated."
+msgstr ""
+
+msgid "Kanban title is empty."
+msgstr ""
+
+msgid "Kanban title successfully modified."
+msgstr ""
+
+msgid "Make sure to check their configuration."
+msgstr ""
+
+msgid "Milestone"
+msgstr ""
+
+msgid "Milestones"
+msgstr ""
+
+msgid ""
+"Milestones are \"Done\" when they have their status set to 'closed' as "
+"defined in their tracker's semantic."
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "New Planning"
+msgstr ""
+
+msgid "No Kanban has been yet configured by a project administrator."
+msgstr ""
+
+msgid "No Scrum has been yet configured by a project administrator."
+msgstr ""
+
+#, php-format
+msgid ""
+"No Scrum has been yet configured by a project administrator. <a href=\"%1$s"
+"\">Get Started!</a>"
+msgstr ""
+
+msgid "No tracker has been selected."
+msgstr ""
+
+msgid "No tracker is available."
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid ""
+"Note:<br>Importing a template will create new trackers. The import will not "
+"work if any existing tracker match those in the template"
+msgstr ""
+
+msgid "Once activated, you will start with a copy of the previous top backlog."
+msgstr ""
+
+#, php-format
+msgid "Other %s"
+msgid_plural "Other %s"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Parent item"
+msgstr ""
+
+msgid "Plan title"
+msgstr ""
+
+msgid "Planning"
+msgstr ""
+
+msgid "Planning deletion"
+msgstr ""
+
+msgid "Planning management"
+msgstr ""
+
+msgid "Planning name, backlog tracker and planning tracker are mandatory."
+msgstr ""
+
+msgid "Planning succesfully created."
+msgstr ""
+
+msgid "Planning succesfully updated."
+msgstr ""
+
+msgid ""
+"Please choose between Scrum or Kanban layout below.<br>Don't worry, you will "
+"be able to change your mind and customize your configuration afterwards."
+msgstr ""
+
+msgid "Please come back later."
+msgstr ""
+
+#, php-format
+msgid ""
+"PostAction of type %s cannot be defined without explicit backlog management."
+msgstr ""
+
+msgid "Remove from top backlog"
+msgstr "Remover do backlog principal"
+
+msgid "Save"
+msgstr "Gravar"
+
+msgid "Scrum"
+msgstr "Scrum"
+
+msgid "Scrum Administration of Agile Dashboard"
+msgstr ""
+
+msgid "Scrum configuration successfully updated."
+msgstr ""
+
+msgid "Scrum mono milestone"
+msgstr ""
+
+msgid "Scrum successfully activated."
+msgstr ""
+
+msgid "Scrum title is empty."
+msgstr ""
+
+msgid "Scrum title successfully modified."
+msgstr ""
+
+msgid "See documentation for more details."
+msgstr ""
+
+msgid "Select the source tracker:"
+msgstr ""
+
+#, php-format
+msgid "Semantic done is not defined for tracker <a href=\"%s\">%s</a>"
+msgstr ""
+
+#, php-format
+msgid ""
+"Semantic initial effort is not defined for tracker  <a href=\"%s\">%s</a>"
+msgstr ""
+
+msgid "Service Agiledashboard is disabled."
+msgstr ""
+
+msgid "Some items are not linked to this milestone."
+msgstr ""
+
+msgid "Start Kanban"
+msgstr ""
+
+msgid "Start Scrum"
+msgstr ""
+
+msgid "Start Scrum V2"
+msgstr ""
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Submit"
+msgstr "Enviar para"
+
+msgid "Switch backlog mode"
+msgstr ""
+
+msgid ""
+"The Agile Dashboard has not yet been configured by a project administrator."
+msgstr ""
+
+msgid "The Agile Dashboard has not yet been configured."
+msgstr ""
+
+#, php-format
+msgid ""
+"The backlog trackers cannot be updated because the following trackers have "
+"at least one \"Add to top backlog\" workflow post action: %s"
+msgstr ""
+
+msgid "The configuration has been successfully imported!"
+msgstr ""
+
+msgid "The field you submitted is not a numeric field"
+msgstr ""
+
+#, php-format
+msgid "The initial effort is now: %1$s"
+msgstr ""
+
+msgid ""
+"The post actions cannot be saved because this tracker is not a top backlog "
+"tracker and a \"AddToTopBacklog\" is defined."
+msgstr ""
+
+#, php-format
+msgid ""
+"The potential planning trackers are computed out of %1$s configuration and "
+"its hierarchy."
+msgstr ""
+
+msgid "The request is invalid."
+msgstr ""
+
+#, php-format
+msgid "The tracker %s is not found"
+msgstr ""
+
+msgid "There are no milestones for this period"
+msgstr ""
+
+msgid "There is no content you can see"
+msgstr ""
+
+msgid "There is no item yet"
+msgstr ""
+
+msgid ""
+"This artifact has been successfully added to the top backlog of the project."
+msgstr ""
+
+msgid ""
+"This artifact has not been added to the top backlog of the project because "
+"it's already planned in sub milestone of the project."
+msgstr ""
+
+msgid ""
+"This feature is under development. Once checked it wont be possible to start "
+"scrum with default template."
+msgstr ""
+
+msgid "This is used in the <b>Agile Dashboard</b> if enabled."
+msgstr ""
+
+msgid ""
+"This option will display all the burnup charts in the project with elements "
+"progression instead of effort progression."
+msgstr ""
+
+msgid "This planning allows assignment of"
+msgstr ""
+
+#, php-format
+msgid ""
+"This planning doesn't belong to root planning (%1$s) hierarchy. This "
+"configuration is not supported. You should remove this planning."
+msgstr ""
+
+msgid "This tracker is not a planning tracker"
+msgstr ""
+
+msgid ""
+"This will be used to identify the Kanban section from the Agile Dashboard "
+"homepage."
+msgstr ""
+
+msgid ""
+"This will be used to identify the Scrum section from the Agile Dashboard "
+"homepage."
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Top Backlog Planning"
+msgstr ""
+
+msgid "Top backlog"
+msgstr ""
+
+msgid "Tracker already used by another Kanban."
+msgstr ""
+
+msgid "Unable to export the configuration"
+msgstr ""
+
+msgid "Unable to find milestone"
+msgstr ""
+
+msgid "Unable to import the configuration!"
+msgstr ""
+
+msgid "Unable to save the <em>initial effort</em>"
+msgstr ""
+
+msgid "Unknown masschange action."
+msgstr ""
+
+msgid "Unplanned"
+msgstr ""
+
+msgid "Update of planning assignment may lead to errors in:"
+msgstr ""
+
+msgid "View Planning"
+msgstr ""
+
+#, php-format
+msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"
+msgstr ""
+
+msgid "We created an initial scrum configuration for you. Enjoy!"
+msgstr ""
+
+#, php-format
+msgid ""
+"We tried to create a first kanban for you but an existing tracker (%1$s) "
+"prevented it."
+msgstr ""
+
+msgid ""
+"We tried to create a first kanban for you but an internal error prevented it."
+msgstr ""
+
+#, php-format
+msgid ""
+"We tried to create an initial scrum configuration for you but an existing "
+"tracker (%1$s) prevented it."
+msgstr ""
+
+msgid ""
+"We tried to create an initial scrum configuration for you but an internal "
+"error prevented it."
+msgstr ""
+
+msgid "What's hot"
+msgstr ""
+
+msgid "What's next"
+msgstr ""
+
+msgid "Who can prioritize items?"
+msgstr ""
+
+#, php-format
+msgid "You are creating a new backlog item in: %s"
+msgstr ""
+
+msgid ""
+"You are going to remove the top backlog planning permanently (no possible "
+"rollback). Top backlog will be empty after the deletion of the top level "
+"planning. Please confirm your action."
+msgstr ""
+
+msgid "You cannot create more than one planning in scrum V2."
+msgstr ""
+
+msgid "You cannot create new planning because either:"
+msgstr ""
+
+msgid ""
+"You cannot define the <em>initial effort</em> semantic since there aren't "
+"any numeric fields in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot import more than one planning in scrum V2, please check your XML."
+msgstr ""
+
+msgid "You don't have permissions to see user groups."
+msgstr "Você não tem permissão para visualizar os grupos de usuários."
+
+#, php-format
+msgid ""
+"all potential planning trackers (%1$s) are already used by a planning "
+"configuration (see below)."
+msgstr ""
+
+msgid "burnup and velocity charts"
+msgstr ""
+
+msgid "closed"
+msgstr ""
+
+msgid "open"
+msgstr ""
+
+msgid "the Agile Dashboard"
+msgstr ""
+
+msgid "there is no trackers in tracker service"
+msgstr ""
+
+msgid "to"
+msgstr "para"

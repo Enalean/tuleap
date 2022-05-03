@@ -1,0 +1,282 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "<b>%s</b> field will determine background color."
+msgstr ""
+
+msgid ""
+"<p>Note: you can delete a column by removing its name (make text field "
+"blank).</p>"
+msgstr ""
+
+msgid ""
+"<p>You can define your own set of columns for the cardwall. Values will be "
+"associated is they match column title (be careful to lower case/upper case)."
+"</p>"
+msgstr ""
+
+msgid "A card will be displayed for each available background color."
+msgstr ""
+
+msgid "Add a field to the cards"
+msgstr ""
+
+msgid ""
+"At least one backlog element has no initial effort. Fallback on open/closed "
+"count."
+msgstr ""
+
+msgid "Auto stack the cards in this column"
+msgstr ""
+
+msgid "Background color"
+msgstr ""
+
+msgid "Backlog items"
+msgstr ""
+
+#, php-format
+msgid "Capacity: %1$s"
+msgstr ""
+
+msgid "Card Wall"
+msgstr ""
+
+msgid "Card design is the same as Kanban."
+msgstr ""
+
+msgid "Cards"
+msgstr ""
+
+msgid "Cardwall disabled"
+msgstr ""
+
+msgid "Choose a field to define card background color"
+msgstr ""
+
+msgid "Choose a field..."
+msgstr ""
+
+#, php-format
+msgid "Column %1$s changed"
+msgstr ""
+
+msgid "Column added"
+msgstr ""
+
+msgid "Column removed"
+msgstr ""
+
+msgid "Custom mapping"
+msgstr ""
+
+msgid "Display Avatar"
+msgstr ""
+
+#, php-format
+msgid "E.g.: %1$s"
+msgstr ""
+
+msgid "Electronic card wall for trackers for scrum, kanban, ..."
+msgstr ""
+
+msgid "Enable cardwall on top of this planning"
+msgstr ""
+
+msgid "Expand cards"
+msgstr ""
+
+msgid "Field not found"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Fullscreen"
+msgstr ""
+
+msgid "Go to field administration"
+msgstr ""
+
+msgid ""
+"If a color corresponds to multiple values, the preview will display only one "
+"card with this background color."
+msgstr ""
+
+#, php-format
+msgid "Initial effort: %1$s"
+msgstr ""
+
+msgid "Manage the Fields to be displayed on cards"
+msgstr ""
+
+#, php-format
+msgid "Mapping on %1$s added"
+msgstr ""
+
+#, php-format
+msgid "Mapping on %1$s changed to %2$s"
+msgstr ""
+
+#, php-format
+msgid "Mapping on %1$s removed"
+msgstr ""
+
+msgid "New column:"
+msgstr ""
+
+msgid ""
+"No field can be chosen for card color background. Only selectbox and "
+"radiobutton bind on static values with no value linked to the old color "
+"picker can be used."
+msgstr ""
+
+msgid "No field is chosen to determine the background color"
+msgstr ""
+
+msgid "No matching for this column"
+msgstr ""
+
+msgid "Now a cardwall exists on top of the tracker"
+msgstr ""
+
+msgid "On Going"
+msgstr ""
+
+msgid ""
+"Only selectbox and radiobutton bind on static values with no value linked "
+"to\n"
+"                    the old color picker can be used."
+msgstr ""
+
+msgid ""
+"Only static fields with values bound to new color picker can be chosen as "
+"background color"
+msgstr ""
+
+msgid "Please select a field to group artifacts in columns."
+msgstr ""
+
+msgid "Preview of the card"
+msgstr ""
+
+#, php-format
+msgid "Provided color value %1$s for column %2$s is not valid."
+msgstr ""
+
+#, php-format
+msgid "Provided column value %1$s is not valid. Skipping mapping value."
+msgstr ""
+
+#, php-format
+msgid "Provided field value %1$s is not valid. Skipping mapping."
+msgstr ""
+
+#, php-format
+msgid "Provided tracker value %1$s is not valid. Skipping mapping."
+msgstr ""
+
+#, php-format
+msgid "Provided value %1$s is not valid. Skipping mapping value."
+msgstr ""
+
+msgid "Remove background color"
+msgstr ""
+
+msgid "Search for: user, title, ..."
+msgstr ""
+
+msgid "Some cards might be hidden"
+msgstr ""
+
+msgid "Stack cards"
+msgstr ""
+
+msgid "Submit"
+msgstr "Enviar para"
+
+#, php-format
+msgid ""
+"The backlog item <a href=\"%3$s\"><u>%1$s</u></a> cannot be displayed since "
+"the column matchings have not be defined between <b>%2$s</b> and this "
+"planning"
+msgstr ""
+
+msgid ""
+"The field used to determine background color has been removed with success."
+msgstr ""
+
+#, php-format
+msgid "The field used to determine background color is now %s"
+msgstr ""
+
+msgid "The following fields are added to the cards"
+msgstr ""
+
+msgid "The following fields are added to the cards:"
+msgstr ""
+
+msgid "The preview respects the following rules:"
+msgstr ""
+
+msgid "The start date and the duration are not defined"
+msgstr ""
+
+msgid "There aren't any fields added to cards yet."
+msgstr ""
+
+msgid "There is no initial effort"
+msgstr ""
+
+msgid "There is no more field that can be added to the cards."
+msgstr ""
+
+#, php-format
+msgid "There is no values in the field %1$s. Please choose another one."
+msgstr ""
+
+msgid "There isn't any value"
+msgstr ""
+
+msgid "This is an example title"
+msgstr ""
+
+msgid "Todo|On Going|Done|Done-Done"
+msgstr ""
+
+msgid "Toggle the avatar or username display"
+msgstr ""
+
+#, php-format
+msgid "Values mapping changed for \"%1$s\" field"
+msgstr ""
+
+msgid "cards open"
+msgstr ""
+
+msgid "day to go"
+msgstr ""
+
+msgid "days to go"
+msgstr ""
+
+msgid "details"
+msgstr ""
+
+msgid "go back to semantic overview"
+msgstr ""
+
+msgid "or"
+msgstr "ou"
+
+msgid "point remaining"
+msgstr ""
+
+msgid "points remaining"
+msgstr ""

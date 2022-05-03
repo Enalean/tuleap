@@ -1,0 +1,1640 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid " At least a git repository is migrated to gerrit"
+msgstr ""
+
+#, php-format
+msgid "%1$s"
+msgstr ""
+
+#, php-format
+msgid "%1$s projects restriction"
+msgstr ""
+
+#, php-format
+msgid "%1$s repositories"
+msgstr ""
+
+#, php-format
+msgid "%s (Default)"
+msgstr ""
+
+#, php-format
+msgid "%s commit was pushed on %s"
+msgid_plural "%s commits were pushed on %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%s pushed %s commit on %s"
+msgid_plural "%s pushed %s commits on %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%s pushed on %s"
+msgstr ""
+
+msgid ""
+"<p>You can create personal forks of any reference repositories. By default "
+"forks will end up into your personal area of this project.</p></p>"
+msgstr ""
+
+msgid ""
+"<p>You might choose to fork into another project. In this case, fork creates "
+"new \"References\" in the target project.<br />You need to be administrator "
+"of the target project to do so and Git service must be activated.</p>"
+msgstr ""
+
+msgid "A Gerrit project with that name already exists on that server"
+msgstr ""
+
+msgid "A file already exists with this name under gitroot"
+msgstr ""
+
+#, php-format
+msgid "A push occured on %s"
+msgstr ""
+
+#, php-format
+msgid "A repository backup of '%1$s' will be available in the backup directory"
+msgstr ""
+
+#, php-format
+msgid ""
+"A system event has been queued. The gitolite configuration will be dumped at "
+"the time of its execution. <a href=\"%1$s\">Git queue can be found here</a>."
+msgstr ""
+
+msgid ""
+"A system event will be queued to dump the mirrored repositories "
+"configuration. This dump will rewrite the gitolite configuration according "
+"to the hostnames of each mirror and the hostname define for this server in "
+"the .gitolite.rc file. Do you want to continue?"
+msgstr ""
+
+msgid "Access"
+msgstr "Acesso"
+
+msgid "Access control"
+msgstr "Controle de acesso"
+
+msgid "Access control settings"
+msgstr ""
+
+msgid "Access control template successfully saved."
+msgstr ""
+
+msgid "Access to Git repositories"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid ""
+"Add a target which will be called everytime a git push will be done. The URL "
+"will be called using HTTP POST method."
+msgstr ""
+
+msgid "Add generic webhook"
+msgstr ""
+
+msgid "Add gerrit server"
+msgstr ""
+
+msgid "Add mirror"
+msgstr ""
+
+msgid "Add permission on a new branch"
+msgstr ""
+
+msgid "Add permission on a new tag"
+msgstr ""
+
+msgid "Add server"
+msgstr ""
+
+msgid "All fields are required"
+msgstr ""
+
+msgid "All projects can now use this Gerrit server."
+msgstr ""
+
+msgid "All projects can now use this mirror."
+msgstr ""
+
+msgid ""
+"All rules containing regular expressions will be deleted and you won't be "
+"able to activate the option again. If you don't save your modifications, the "
+"current state will still work."
+msgstr ""
+
+msgid ""
+"All rules containing regular expressions will be deleted. Please confirm the "
+"desactivation of regular expressions."
+msgstr ""
+
+msgid "Allow access"
+msgstr ""
+
+msgid "Allow all the projects to use this Gerrit server."
+msgstr ""
+
+msgid "Allow all the projects to use this mirror."
+msgstr ""
+
+msgid ""
+"Allow usage of regular expressions in branches and tags during repository "
+"permission definition"
+msgstr ""
+
+msgid "Already forked repository"
+msgstr ""
+
+msgid "Also Delete project on Gerrit"
+msgstr ""
+
+msgid "An error occured while deleting permission."
+msgstr ""
+
+#, php-format
+msgid ""
+"An error occured while migrating repository %1$s on gerrit. Please check <a "
+"href=\"%2$s\">gerrit settings</a> and contact site administration."
+msgstr ""
+
+msgid ""
+"An error occured while migrating this repository on gerrit %s. <strong>Do "
+"not use gerrit repository</strong>, check <a href=\"%s\">gerrit settings</a> "
+"and contact site administration."
+msgstr ""
+
+#, php-format
+msgid ""
+"An error occured while trying to access Gerrit server, maybe the server is "
+"down, please check with administrators: %1$s"
+msgstr ""
+
+msgid "An error occured while trying to delete the template."
+msgstr ""
+
+msgid "An error occured while updating default mirrors."
+msgstr ""
+
+msgid ""
+"An error occured whiled deleting the mirror in the default mirrors for "
+"projects."
+msgstr ""
+
+msgid ""
+"An error occurred while activating regular expressions option for Git fine "
+"grained permission."
+msgstr ""
+
+#, php-format
+msgid ""
+"As a reminder, the management of the repository (permissions, ...) has been "
+"delegated to Gerrit: <ul><li>A project <em>%1$s</em> has been created on the "
+"server <a href=\"%2$s\">%2$s</a>.</li><li>The current repository is now a "
+"mirror of the Gerrit reference.</li></ul>"
+msgstr ""
+
+msgid "As personal fork"
+msgstr ""
+
+msgid "Authorize"
+msgstr ""
+
+msgid "Authorized projects list"
+msgstr ""
+
+msgid "Back to Gerrit servers list"
+msgstr ""
+
+msgid "Back to mirror list"
+msgstr ""
+
+msgid "Bad repository id"
+msgstr ""
+
+msgid "Bad request."
+msgstr ""
+
+msgid "Branches"
+msgstr ""
+
+msgid "CI Builds"
+msgstr ""
+
+msgid "CI Token"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+#, php-format
+msgid "Cannot add user \"%s\""
+msgstr ""
+
+#, php-format
+msgid "Cannot add user group \"%s\""
+msgstr ""
+
+msgid "Cannot connect to remote Gerrit server"
+msgstr ""
+
+#, php-format
+msgid "Cannot delete project %1$s on Gerrit: %2$s."
+msgstr ""
+
+#, php-format
+msgid "Cannot remove user %s from notifications"
+msgstr ""
+
+#, php-format
+msgid "Cannot remove user group \"%s\" from notifications"
+msgstr ""
+
+msgid "Change HTTP password"
+msgstr ""
+
+msgid "Change replication password"
+msgstr ""
+
+msgid "Choose a destination project"
+msgstr ""
+
+msgid "Choose the path for the forks"
+msgstr ""
+
+msgid "Clone"
+msgstr ""
+
+msgid "Clone from SSH mirrors"
+msgstr ""
+
+msgid "Clone or download"
+msgstr ""
+
+msgid "Command sent to remote gerrit servers"
+msgstr ""
+
+msgid "Commits"
+msgstr "Commits"
+
+msgid "Configurations"
+msgstr ""
+
+msgid "Confirm deletion"
+msgstr ""
+
+msgid "Confirm restore of this Git repository"
+msgstr ""
+
+msgid "Copy to another project"
+msgstr ""
+
+msgid "Copy to clipboard"
+msgstr ""
+
+#, php-format
+msgid "Could not add mail %1$s"
+msgstr ""
+
+#, php-format
+msgid "Could not remove mail %1$s"
+msgstr ""
+
+msgid "Create new"
+msgstr ""
+
+msgid "Create personal repositories in this project"
+msgstr ""
+
+msgid "Creation date"
+msgstr ""
+
+msgid "Creator"
+msgstr "Criador"
+
+msgid "Currently, there's no project allowed to use this Gerrit server."
+msgstr ""
+
+msgid "Currently, there's no project allowed to use this mirror."
+msgstr ""
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Default branch successfully updated"
+msgstr ""
+
+msgid "Default branch:"
+msgstr ""
+
+msgid "Default mirrors updated."
+msgstr ""
+
+msgid "Default permissions"
+msgstr ""
+
+msgid ""
+"Define which user groups are allowed to change commits statuses after CI "
+"builds."
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+#, php-format
+msgid "Delete %1$s"
+msgstr ""
+
+#, php-format
+msgid "Delete %1$s mirror"
+msgstr ""
+
+msgid "Delete gerrit project"
+msgstr ""
+
+msgid "Delete this repository"
+msgstr ""
+
+msgid "Deleted git repositories"
+msgstr ""
+
+msgid "Deletion date"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Disconnect"
+msgstr ""
+
+msgid "Disconnect from Gerrit"
+msgstr ""
+
+msgid "Display last Git pushes of the project."
+msgstr ""
+
+msgid "Display last Git pushes performed by the user"
+msgstr ""
+
+msgid "Do you confirm change of repository access to private ?"
+msgstr ""
+
+#, php-format
+msgid "Edit %1$s"
+msgstr ""
+
+#, php-format
+msgid "Edit %1$s mirror"
+msgstr ""
+
+msgid "Edit generic webhook"
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "Empty required parameter(s)"
+msgstr ""
+
+msgid "Enable fine-grained permissions"
+msgstr ""
+
+msgid "Enable regular expressions in branches and tags pattern"
+msgstr ""
+
+msgid ""
+"Enabling this option can have security implications, with this feature a git "
+"administrator can do a denial of service attack. Please also note that this "
+"option might end up in non working state. Invalid regular expressions will "
+"be ignored silently."
+msgstr ""
+
+msgid ""
+"Enabling this option might end up in non working state. Invalid regular "
+"expressions will be ignored without errors."
+msgstr ""
+
+msgid "Enter a path or leave it blank"
+msgstr ""
+
+msgid "Error pushing SSH Keys. Please add them manually."
+msgstr ""
+
+msgid "Error when defining on which mirrors the repository is replicated."
+msgstr ""
+
+#, php-format
+msgid ""
+"Error when suspending (%1$s) %2$s from gerrit server %3$s, more details : "
+"%4$s"
+msgstr ""
+
+msgid "Error while adding the webhook :("
+msgstr ""
+
+msgid "Error while removing the webhook :("
+msgstr ""
+
+msgid "Error while saving the webhook :("
+msgstr ""
+
+msgid "Failed to add new mirror"
+msgstr ""
+
+msgid "Failed to delete mirror"
+msgstr ""
+
+msgid "Failed to update mirror"
+msgstr ""
+
+msgid "Files"
+msgstr "Arquivos"
+
+msgid "Filter on project id or name"
+msgstr ""
+
+msgid "Filter using project's id or name"
+msgstr ""
+
+msgid "Fine-grained permissions"
+msgstr ""
+
+msgid "Fork"
+msgstr ""
+
+msgid "Fork repositories"
+msgstr ""
+
+msgid "Forked from %s"
+msgstr ""
+
+msgid ""
+"Further to an administration permissions update, you no-longer have access "
+"to the Git service administration."
+msgstr ""
+
+msgid "General settings"
+msgstr ""
+
+msgid "Generic webhooks"
+msgstr ""
+
+msgid "Gerrit"
+msgstr ""
+
+msgid "Gerrit Templates"
+msgstr ""
+
+msgid "Gerrit permission configuration templates"
+msgstr ""
+
+#, php-format
+msgid ""
+"Gerrit: (%1$s) %2$s has been successfully suspended from gerrit server %3$s"
+msgstr ""
+
+msgid "Git"
+msgstr ""
+
+msgid "Git Administration"
+msgstr ""
+
+msgid "Git Administrators"
+msgstr ""
+
+msgid "Git access"
+msgstr ""
+
+msgid "Git access control template"
+msgstr ""
+
+msgid "Git administrators"
+msgstr ""
+
+msgid "Git commit"
+msgstr ""
+
+msgid "Git mirror administration"
+msgstr ""
+
+msgid "Git push"
+msgstr ""
+
+msgid "Git repositories"
+msgstr ""
+
+msgid "Git repository"
+msgstr ""
+
+msgid "Git repository does not belong to the project"
+msgstr ""
+
+msgid "Git service is disabled."
+msgstr ""
+
+msgid "Git settings template"
+msgstr ""
+
+msgid "Git tag"
+msgstr ""
+
+msgid "Git trigger"
+msgstr ""
+
+msgid "Git trigger not deleted"
+msgstr ""
+
+msgid "Git trigger not saved"
+msgstr ""
+
+msgid "Gitolite"
+msgstr ""
+
+msgid "Gitolite configuration"
+msgstr ""
+
+msgid "Global permissions"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
+msgid "Grok Mirror"
+msgstr ""
+
+msgid "HTTP password"
+msgstr ""
+
+msgid "HTTP port"
+msgstr ""
+
+msgid "Host"
+msgstr ""
+
+msgid "Hostname"
+msgstr ""
+
+#, php-format
+msgid "Hostname (%1$s) is reserved!"
+msgstr ""
+
+msgid "Hostname must be unique!"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Identifier"
+msgstr ""
+
+msgid "Identity file"
+msgstr ""
+
+msgid ""
+"In order to make sure I have the correct access on Gerrit, it can be "
+"necessary to update my group and project membership."
+msgstr ""
+
+#, php-format
+msgid "Into project <b>%1$s</b>"
+msgstr ""
+
+msgid "Invalid Project ID"
+msgstr ""
+
+msgid "Invalid Template ID"
+msgstr ""
+
+msgid "Invalid namespace, please only use alphanumeric characters."
+msgstr ""
+
+#, php-format
+msgid ""
+"It does not appear to be any <em><a href=\"%1$s\">gerrit server</a></em> set-"
+"up for this platform! Please contact your site administrator."
+msgstr ""
+
+msgid "It is either SSH or password replication for replication"
+msgstr ""
+
+msgid "It seems that you already forked this repository:"
+msgstr ""
+
+msgid "Last Git pushes"
+msgstr ""
+
+msgid "Last push"
+msgstr ""
+
+msgid "Leave project on Gerrit"
+msgstr ""
+
+msgid "List of allowed projects"
+msgstr ""
+
+msgid "List of mails to remove from notification"
+msgstr ""
+
+msgid "List of notified mails"
+msgstr ""
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Logs"
+msgstr ""
+
+#, php-format
+msgid "Logs for %1$s"
+msgstr ""
+
+#, php-format
+msgid "Mail %1$s removed"
+msgstr ""
+
+msgid "Mail added"
+msgstr ""
+
+msgid "Mail not removed"
+msgstr ""
+
+msgid "Mail prefix updated"
+msgstr ""
+
+msgid "Mail to notify not added"
+msgstr ""
+
+msgid "Make project on Gerrit Read-Only"
+msgstr ""
+
+msgid ""
+"Making the repository access private will remove notification for all mail "
+"addresses that doesn't correspond to a user member of this project."
+msgstr ""
+
+msgid "Manage allowed projects"
+msgstr ""
+
+msgid "Manually push SSH keys"
+msgstr ""
+
+msgid "Mass update of repositories"
+msgstr ""
+
+msgid "Maximum number of days ago"
+msgstr ""
+
+msgid "Maximum number of push by repository"
+msgstr ""
+
+msgid "Migrate repo to Gerrit"
+msgstr ""
+
+#, php-format
+msgid "Migration of %1$s to gerrit error"
+msgstr ""
+
+msgid "Migration to Gerrit"
+msgstr ""
+
+msgid "Mirror not found, please try again"
+msgstr ""
+
+msgid "Mirror updated!"
+msgstr ""
+
+msgid "Mirroring"
+msgstr ""
+
+msgid "Mirrors"
+msgstr ""
+
+msgid "Missing repository id or project id"
+msgstr ""
+
+msgid "Month"
+msgstr "Mês"
+
+msgid ""
+"Must be unique. The name \"projects\" and the hostname defined in .gitolite."
+"rc file cannot be used."
+msgstr ""
+
+msgid "My last Git pushes"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "No"
+msgstr "Não"
+
+msgid "No CI Token"
+msgstr ""
+
+msgid "No access selected for the fork"
+msgstr ""
+
+msgid "No changes for mirror"
+msgstr ""
+
+msgid "No data retrieved from the request"
+msgstr ""
+
+msgid "No defined webhooks yet"
+msgstr ""
+
+msgid "No gerrit server"
+msgstr ""
+
+msgid "No logs yet"
+msgstr ""
+
+msgid "No mirror"
+msgstr ""
+
+msgid "No notifications set"
+msgstr ""
+
+msgid "No permission defined yet."
+msgstr ""
+
+msgid "No pre-set permissions"
+msgstr ""
+
+msgid "No project selected"
+msgstr ""
+
+msgid "No project selected for the fork"
+msgstr ""
+
+msgid "No pushes to display"
+msgstr ""
+
+msgid "No repository has been forked."
+msgstr ""
+
+msgid "No repository selected for the fork"
+msgstr ""
+
+msgid "No restorable git repositories found"
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Not specified host"
+msgstr ""
+
+msgid "Not specified mirror name"
+msgstr ""
+
+msgid "Notification Prefix"
+msgstr ""
+
+msgid "Notifications"
+msgstr "Notificações"
+
+msgid "Notified people"
+msgstr ""
+
+msgid ""
+"Now, only the allowed projects are able to use this Gerrit server. Projects "
+"with at least one repository using this Gerrit server have been "
+"automatically added to the list of allowed projects. This restriction is not "
+"yet taken into account."
+msgstr ""
+
+msgid ""
+"Now, only the allowed projects are able to use this mirror. Projects with at "
+"least one repository using this mirror have been automatically added to the "
+"list of allowed projects."
+msgstr ""
+
+msgid "Only one replication SSH key is allowed by server"
+msgstr ""
+
+msgid "Only project administrator can create repositories"
+msgstr ""
+
+msgid "Owner"
+msgstr "Proprietário"
+
+msgid "Owner's Password"
+msgstr ""
+
+msgid "Owner's SSH Key"
+msgstr ""
+
+msgid ""
+"Parent project is not active, you are not allowed to migrate your repository "
+"on gerrit."
+msgstr ""
+
+msgid "Path cannot contain double dots (..)"
+msgstr ""
+
+msgid "Pattern"
+msgstr ""
+
+#, php-format
+msgid "Pattern %1$s is already existing."
+msgstr ""
+
+msgid "Permission"
+msgstr "Permissão"
+
+msgid "Permission successfully deleted."
+msgstr ""
+
+msgid "Permission to set build status"
+msgstr ""
+
+msgid "Permissions defined in Git"
+msgstr ""
+
+msgid "Please choose"
+msgstr ""
+
+msgid ""
+"Please choose a permission's configuration template for the migration,<br /"
+">they will be applied to the migrated repository on Gerrit:"
+msgstr ""
+
+msgid "Please choose the Gerrit server:"
+msgstr ""
+
+msgid "Please confirm your action."
+msgstr "Por favor, confirme a sua ação."
+
+msgid "Please define Write permissions."
+msgstr ""
+
+msgid "Please define both Write and Rewind permissions."
+msgstr ""
+
+msgid ""
+"Please note that when forking a single repository to another project, user-"
+"defined static user groups will not be copied."
+msgstr ""
+
+msgid "Plugin which provides Git support for Tuleap"
+msgstr ""
+
+msgid "Private"
+msgstr "Particular"
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Project does not exist"
+msgstr "O projeto não existe"
+
+msgid "Project does not exist."
+msgstr ""
+
+msgid "Project is not active"
+msgstr ""
+
+msgid "Project name"
+msgstr "Nome do projeto"
+
+msgid "Project not found."
+msgstr ""
+
+msgid "Project successfully added"
+msgstr ""
+
+msgid "Project(s) successfully removed"
+msgstr ""
+
+#, php-format
+msgid "Projects allowed to use %1$s"
+msgstr ""
+
+msgid "Projects and groups membership"
+msgstr ""
+
+msgid "Projects authorized to go over object's size limit"
+msgstr ""
+
+msgid "Push SSH keys to remote servers"
+msgstr ""
+
+msgid "Pushes"
+msgstr ""
+
+msgid "Read"
+msgstr ""
+
+msgid "Read-only"
+msgstr ""
+
+msgid "Regenerate configuration"
+msgstr ""
+
+#, php-format
+msgid "Regenerating Gitolite config for project %1$s. Please wait few minutes."
+msgstr ""
+
+#, php-format
+msgid "Regular expression %1$s for project %2$s."
+msgstr ""
+
+#, php-format
+msgid "Regular expression %1$s for repository %2$s."
+msgstr ""
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "Replication SSH Key"
+msgstr ""
+
+msgid "Replication SSH Key (SSH key of the user who runs gerrit server)"
+msgstr ""
+
+msgid "Replication password"
+msgstr ""
+
+#, php-format
+msgid "Repositories on %1$s mirror"
+msgstr ""
+
+msgid "Repositories on this mirror"
+msgstr ""
+
+msgid "Repository"
+msgstr ""
+
+#, php-format
+msgid "Repository %1$s already exists on target, skipped."
+msgstr ""
+
+#, php-format
+msgid "Repository %1$s already exists or would override an existing path"
+msgstr ""
+
+#, php-format
+msgid "Repository '%1$s' will be removed in a few seconds"
+msgstr ""
+
+msgid "Repository access permissions are going to be modified in a few seconds"
+msgstr ""
+
+msgid "Repository child search failed : missing repository id"
+msgstr ""
+
+msgid "Repository does not exist"
+msgstr ""
+
+msgid "Repository informations have been saved"
+msgstr ""
+
+msgid "Repository name"
+msgstr "Nome do Repositório"
+
+#, php-format
+msgid ""
+"Repository name is not well formatted. Allowed characters: %1$s and max "
+"length is %2$s, no slashes at the beginning or the end, it also must not "
+"finish with \".git\"."
+msgstr ""
+
+msgid "Repository not found"
+msgstr ""
+
+msgid "Repository not found : missing repository name or project id"
+msgstr ""
+
+msgid "Reset token"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Return type"
+msgstr ""
+
+msgid "Revoke access to selected"
+msgstr ""
+
+msgid "Revoke authorization"
+msgstr ""
+
+msgid "Rewind"
+msgstr ""
+
+msgid "Rewrite mirrored repositories configuration"
+msgstr ""
+
+msgid ""
+"Right now, there are no projects authorized to go over object's size limit"
+msgstr ""
+
+msgid "SSH Host"
+msgstr ""
+
+msgid "SSH port"
+msgstr ""
+
+msgid "Save"
+msgstr "Gravar"
+
+msgid "Save generic webhook"
+msgstr ""
+
+msgid "Save permissions"
+msgstr ""
+
+msgid "Select a branch or tag"
+msgstr ""
+
+msgid "Select repositories to fork"
+msgstr ""
+
+msgid ""
+"Select the mirrors where the new repositories will be replicated by default:"
+msgstr ""
+
+#, php-format
+msgid ""
+"Select the mirrors where you want to replicate the repository <b>%1$s</b>:"
+msgstr ""
+
+msgid ""
+"Select the repositories you want to update. You will be able to apply mass "
+"changes on the next page."
+msgstr ""
+
+msgid "Set build status"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Some rules may be deleted"
+msgstr ""
+
+msgid "Something went wrong during the update of the allowed project list."
+msgstr ""
+
+msgid ""
+"Something went wrong during the update of the mirror restriction status."
+msgstr ""
+
+msgid ""
+"Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a "
+"href=\"/doc/en/user-guide/code-versioning/git.html?#jenkins-webhooks"
+"\">Hudson Git Plugin</a>."
+msgstr ""
+
+msgid "Submit"
+msgstr "Enviar para"
+
+msgid "Submitted project can now use this Gerrit server."
+msgstr ""
+
+msgid "Submitted project can now use this mirror."
+msgstr ""
+
+msgid "Submitted projects will not be able to use this Gerrit server."
+msgstr ""
+
+msgid "Submitted projects will not be able to use this mirror."
+msgstr ""
+
+msgid "Successfully forked"
+msgstr ""
+
+msgid "System event created to restore repository"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Target URL"
+msgstr ""
+
+msgid "Template created"
+msgstr ""
+
+msgid "Template file name"
+msgstr ""
+
+msgid "Template name"
+msgstr ""
+
+msgid "Template successfully deleted."
+msgstr ""
+
+msgid "Template updated"
+msgstr ""
+
+msgid "Templates"
+msgstr ""
+
+msgid ""
+"The deletion of the project under Gerrit is on going, please wait for a few "
+"minutes."
+msgstr ""
+
+#, php-format
+msgid ""
+"The following projects were not revoked because these projects use this "
+"Gerrit server: %1$s"
+msgstr ""
+
+#, php-format
+msgid ""
+"The management of the repository (permissions, ...) will be delegated to "
+"Gerrit: <ul><li>A project <em>%1$s</em> will be created on the chosen server."
+"</li><li>The current repository will become a mirror of the Gerrit reference."
+"</li></ul>"
+msgstr ""
+
+msgid ""
+"The management of this Git repository has been delegated to the Gerrit "
+"platform: %s"
+msgstr ""
+
+#, php-format
+msgid ""
+"The migration failed %1$s, the gerrit repository is probably "
+"<strong>corrupted or partially migrated</strong>, do not use it and contact "
+"your site administration"
+msgstr ""
+
+msgid ""
+"The migration of this repository to Gerrit server is on going, please wait "
+"for a few minutes."
+msgstr ""
+
+#, php-format
+msgid "The notification is already enabled for this email %1$s"
+msgstr ""
+
+#, php-format
+msgid "The pattern %1$s is not well formed. Skipping."
+msgstr ""
+
+#, php-format
+msgid ""
+"The project reference based on the keyword '%s' is overriding the system "
+"reference used by the Git plugin."
+msgstr ""
+
+msgid "The regular expressions option has been disabled at plateform level."
+msgstr ""
+
+msgid ""
+"The repositories will be completely removed from mirrors in a few minutes."
+msgstr ""
+
+msgid ""
+"The repositories will be replicated on the selected mirrors  in a few "
+"minutes."
+msgstr ""
+
+#, php-format
+msgid ""
+"The repository <em>%1$s</em> has already been migrated to the Gerrit "
+"project: <a href=\"%3$s\">%2$s</a>."
+msgstr ""
+
+msgid "The repository cannot be deleted until it is disconnected from Gerrit"
+msgstr ""
+
+msgid "The repository does not exist"
+msgstr ""
+
+msgid ""
+"The repository is in queue for creation. Please check back here in a few "
+"minutes"
+msgstr ""
+
+#, php-format
+msgid "The repository will be automatically mirrored on: %1$s."
+msgstr ""
+
+msgid ""
+"The repository will be completely revoked from mirrors  in a few minutes."
+msgstr ""
+
+msgid ""
+"The repository will be replicated on the selected mirrors in a few minutes."
+msgstr ""
+
+msgid "The request is not valid."
+msgstr ""
+
+msgid "The requested Gerrit server does not exist."
+msgstr ""
+
+msgid ""
+"The setting of the project under Gerrit to read-only is on going, please "
+"wait for a few minutes."
+msgstr ""
+
+msgid "The update of the default branch did not succeed"
+msgstr ""
+
+msgid "There are no projects matching the filter"
+msgstr ""
+
+msgid "There are open changes for this project."
+msgstr ""
+
+#, php-format
+msgid ""
+"There is an event in queue for a repository creation (%1$s), it will be "
+"processed in one minute or two. Please be patient!"
+msgstr ""
+
+msgid ""
+"There is an event in queue for a repository permissions change, it will be "
+"processed in one minute or two. Please be patient!"
+msgstr ""
+
+#, php-format
+msgid ""
+"There is an event in queue for repository '%1$s' deletion, it will be "
+"processed in one minute or two. Please be patient!"
+msgstr ""
+
+#, php-format
+msgid "There is no logged pushes in the last %1$s week(s)"
+msgstr ""
+
+msgid ""
+"This file contains bidirectional Unicode text. It may be interpreted "
+"differently than what is shown. This might be used to inject malicious code "
+"that looks safe. You should review the file in an editor that reveals hidden "
+"Unicode characters."
+msgstr ""
+
+msgid "This mirror is used by repositories, you shall not delete it."
+msgstr ""
+
+msgid ""
+"This operation <strong>cannot</strong> be undone. This repository will never "
+"again be managed by a gerrit server. Do you confirm the disconnection?"
+msgstr ""
+
+msgid ""
+"This repository is in queue for migration to gerrit. Please check back here "
+"in a few minutes."
+msgstr ""
+
+msgid ""
+"This repository is managed by a Gerrit server running an unsupported "
+"version. Please, reach out to your site administrators to fix the issue."
+msgstr ""
+
+msgid ""
+"This repository was migrated to the server in the past. You cannot migrate "
+"again without deleting the project on the Gerrit server"
+msgstr ""
+
+msgid "This request is not valid (invalid mirror ids)."
+msgstr ""
+
+#, php-format
+msgid "This section allows to define which projects will be able to use %1$s."
+msgstr ""
+
+msgid ""
+"This section allows you to choose a Gerrit project configuration and create "
+"a reusable template from it"
+msgstr ""
+
+msgid ""
+"This section allows you to regenerate the Gitolite configuration file of a "
+"selected project."
+msgstr ""
+
+msgid ""
+"This section allows you to select Git service administrators, in addition to "
+"project administrators."
+msgstr ""
+
+msgid ""
+"This section gather credentials of the gerrit user who can perform admin "
+"tasks on Gerrit."
+msgstr ""
+
+msgid "This server is already used by some repositories."
+msgstr ""
+
+msgid ""
+"This server is configured to use Gerrit 2.5 which is not supported anymore, "
+"please review the configuration and save it to migrate"
+msgstr ""
+
+msgid ""
+"This token is used to authenticate CIs like Jenkins when calling the build "
+"status update APIs"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Token for Continuous Integration"
+msgstr ""
+
+msgid "Too long description"
+msgstr ""
+
+msgid "Total number of git commits"
+msgstr ""
+
+msgid "Total number of git pushes"
+msgstr ""
+
+msgid "Total number of git read access"
+msgstr ""
+
+msgid "Total number of repositories"
+msgstr ""
+
+msgid "Total number of users"
+msgstr ""
+
+msgid "Trigger a build after Git pushes in repository"
+msgstr ""
+
+msgid ""
+"Tuleap will use Basic Auth to interact with Gerrit REST API, check you "
+"gerrit.config."
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "URL have been copied"
+msgstr ""
+
+msgid "Unable to create template"
+msgstr ""
+
+msgid "Unable to delete repository: it has child(ren)"
+msgstr ""
+
+msgid "Unable to delete repository: path outside project repository root"
+msgstr ""
+
+msgid "Unable to restore Git repository : Invalid repository id"
+msgstr ""
+
+msgid ""
+"Unable to restore Git repository : repository with the same name already "
+"exist"
+msgstr ""
+
+msgid "Unable to update Repository data"
+msgstr ""
+
+msgid "Unable to update template"
+msgstr ""
+
+msgid "Undefined"
+msgstr ""
+
+msgid "Update"
+msgstr "Atualizar"
+
+msgid "Update default mirroring"
+msgstr ""
+
+msgid "Update mirroring of this repository"
+msgstr ""
+
+msgid "Update repositories"
+msgstr ""
+
+msgid "Update selected repositories"
+msgstr ""
+
+msgid "Use SSL?"
+msgstr ""
+
+msgid "Used by default?"
+msgstr ""
+
+msgid "Used by this repository?"
+msgstr ""
+
+#, php-format
+msgid "User \"%s\" successfully added to notifications"
+msgstr ""
+
+#, php-format
+msgid "User %s has been removed from notifications"
+msgstr ""
+
+msgid "User cannot access repository"
+msgstr ""
+
+#, php-format
+msgid "User group \"%s\" has been removed from notifications"
+msgstr ""
+
+#, php-format
+msgid "User group \"%s\" successfully added to notifications"
+msgstr ""
+
+msgid "User, group, email"
+msgstr ""
+
+msgid ""
+"Users from selected user groups will be able to authenticate using their "
+"access keys when calling the build status update APIs."
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "Was unused"
+msgstr ""
+
+msgid "Was used"
+msgstr ""
+
+#, php-format
+msgid ""
+"We cannot handle the mass update of all selected repositoies therefore we "
+"kept only %1$s repositories in your selection."
+msgstr ""
+
+msgid "Webhook added"
+msgstr ""
+
+msgid "Webhook removed"
+msgstr ""
+
+msgid "Webhook saved"
+msgstr ""
+
+msgid "Webhooks"
+msgstr ""
+
+#, php-format
+msgid ""
+"Wow, wait a minute. You are about to delete the <b>%1$s</b> mirror. Please "
+"confirm your action."
+msgstr ""
+
+#, php-format
+msgid ""
+"Wow, wait a minute. You are about to delete the <b>%1$s</b> server. Please "
+"confirm your action."
+msgstr ""
+
+msgid "Write"
+msgstr ""
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "Yes, I want to disconnect from Gerrit"
+msgstr ""
+
+msgid "Yes, revoke access"
+msgstr ""
+
+#, php-format
+msgid "You are about to migrate your repository <em>%1$s</em> to Gerrit."
+msgstr ""
+
+#, php-format
+msgid ""
+"You are about to permanently delete the repository <strong>%1$s</strong>. "
+"This operation <strong>cannot</strong> be undone. Do you confirm the "
+"deletion?"
+msgstr ""
+
+msgid "You are about to remove the webhook. Please confirm your action."
+msgstr ""
+
+msgid "You are about to remove this permission. Please confirm your action."
+msgstr ""
+
+msgid ""
+"You are about to revoke the access to this Gerrit server to one or several "
+"projects. Are you sure you want to do this?"
+msgstr ""
+
+msgid ""
+"You are about to revoke the access to this mirror to one or several "
+"projects. This implies the unmirroring of all repositories of the selected "
+"projects. Are you sure you want to do this?"
+msgstr ""
+
+#, php-format
+msgid ""
+"You are about to update <span>%1$s repositories</span>. For now, only "
+"mirroring settings can be updated."
+msgstr ""
+
+#, php-format
+msgid ""
+"You are about to update the repository <b>%1$s</b>. For now, only mirroring "
+"settings can be updated."
+msgstr ""
+
+#, php-format
+msgid "You are going to fork repository: %1$s"
+msgstr ""
+
+msgid "You are not allowed to access this page"
+msgstr ""
+
+msgid ""
+"You are using a version of Gerrit that is not supported, please contact your "
+"site administrators."
+msgstr ""
+
+msgid "You can define several generic webhooks."
+msgstr ""
+
+msgid ""
+"You can edit the template. The <b>%projectname%</b> variable is available; "
+"it will be replaced by the project's name during the migration process:"
+msgstr ""
+
+#, php-format
+msgid ""
+"You can only change <strong>READ</strong> permissions since this repository "
+"is managed by a remote Gerrit server. Please note that those modifications "
+"are local to %1$s <strong>ARE NOT propagated to Gerrit</strong>."
+msgstr ""
+
+msgid ""
+"You can use the following button to force push your <a href=\"%s\">ssh keys</"
+"a> to following gerrit servers:"
+msgstr ""
+
+msgid "You don't have permissions to see user groups."
+msgstr "Você não tem permissão para visualizar os grupos de usuários."
+
+msgid "You may need to log into Gerrit first."
+msgstr ""
+
+#, php-format
+msgid ""
+"Your platform does not allow regular expression usage, permissions %1$s not "
+"duplicated."
+msgstr ""
+
+msgid "click here to change"
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "edit"
+msgstr ""
+
+msgid "enabled"
+msgstr ""
+
+msgid "from gerrit config"
+msgstr ""
+
+msgid "from scratch"
+msgstr ""
+
+msgid "from template"
+msgstr ""
+
+msgid "or"
+msgstr "ou"
+
+msgid "repository"
+msgstr ""
+
+msgid "submodule"
+msgstr ""
+
+msgid "view"
+msgstr ""
+
+msgid "{{ user_group_name }} has no global permission for Git"
+msgstr ""

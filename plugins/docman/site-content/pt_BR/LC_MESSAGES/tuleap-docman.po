@@ -1,0 +1,2777 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "\"%1$s\" Property details"
+msgstr ""
+
+#, php-format
+msgid "\"%1$s\" is required, please fill the field."
+msgstr ""
+
+#, php-format
+msgid "\"%1$s\" successfully deleted"
+msgstr ""
+
+#, php-format
+msgid "%1$s <strong>locked</strong> this document on %2$s."
+msgstr ""
+
+#, php-format
+msgid ""
+"%1$s can notify approval members in two ways:<ul><li><strong>All at once:</"
+"strong> notify all reviewers who did not commit themselves yet.</"
+"li><li><strong>Sequential:</strong> notify reviewers (who did not commit "
+"themselves) one after another. If someone reject the document, the sequence "
+"stops.</li></ul>After an approver is notified by the approval table, it is "
+"informed of any later modification done on the document."
+msgstr ""
+
+#, php-format
+msgid ""
+"%1$s locked this page. You cannot modify it until the lock owner or a "
+"document manager release the lock."
+msgstr ""
+
+#, php-format
+msgid "%2$s requests access to a document in \"%1$s\""
+msgstr ""
+
+#, php-format
+msgid ""
+"%s does not have an approval table. The parameter \"approval_table_action\" "
+"must not be present."
+msgstr ""
+
+#, php-format
+msgid ""
+"%s has an approval table, you must provide \"approval_table_action\" "
+"parameter to choose the option creation of table (possible values: copy,"
+"reset,empty)."
+msgstr ""
+
+#, php-format
+msgid "%s has been modified by %s."
+msgstr ""
+
+#, php-format
+msgid "%s has been removed by %s."
+msgstr ""
+
+#, php-format
+msgid "(The maximum upload file size is %1$s MByte)"
+msgstr ""
+
+#, php-format
+msgid "(or use <a href=\"%1$s\">Advanced Search</a>)"
+msgstr ""
+
+#, php-format
+msgid "(or use <a href=\"%1$s\">Simple Search</a>)"
+msgstr ""
+
+msgid "* Mandatory field"
+msgstr ""
+
+msgid "-- My saved search:"
+msgstr ""
+
+msgid "-- Personal reports:"
+msgstr ""
+
+msgid "-- Project reports:"
+msgstr ""
+
+msgid "-- Project saved search:"
+msgstr ""
+
+msgid "...and for the whole sub-hierarchy."
+msgstr ""
+
+msgid "12 Months from today"
+msgstr ""
+
+msgid "3 Months from today"
+msgstr ""
+
+msgid "6 Months from today"
+msgstr ""
+
+#, php-format
+msgid ""
+"<big><strong>Warning:</strong></big> this table is linked to an old version "
+"of the document (version %1$s). The last document version is %2$s, you can "
+"either:"
+msgstr ""
+
+msgid "<br />You need Manage permission to define permissions."
+msgstr ""
+
+msgid ""
+"<br><a href=\"/my/\">Back to your personal page</a><em> or you can request "
+"it to him.</em></br> Write your message below and click on the button to "
+"send your request to the project administrators."
+msgstr ""
+
+msgid ""
+"<h3>Confirm deletion of approval table</h3><p>You are going to delete an "
+"approval table. Please note that all the data (reviewer list, current "
+"reviews, settings) will be deleted.</p><p>Are you sure that you want to "
+"continue?</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a "
+"document. </p><p>Are you sure that you want to delete this document?</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>Confirm deletion of document %1$s</h3><p>You are going to delete a file. "
+"Please note that all versions will be deleted.</p><p>Are you sure that you "
+"want to delete this file?</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>Confirm deletion of folder %1$s</h3><p>You are going to delete a folder. "
+"Please note that all sub-items and their versions will be deleted.</p><p>Are "
+"you sure that you want to delete this folder?</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>Confirm deletion of version %2$s of document %1$s</h3><p>You are going "
+"to delete a version of file. </p><p>Are you sure that you want to delete "
+"this version?</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<h3>Confirm recursive application of default values.</h3><p>You are about to "
+"apply the values selected in <strong>Default Values</strong> field set below "
+"on <strong>%1$s documents and %2$s folders</strong>.</p>"
+msgstr ""
+
+msgid ""
+"<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
+"the referenced wiki page will no longer exist in wiki service too.</em></p>"
+msgstr ""
+
+msgid ""
+"<p><em>You should also be aware that the following documents will no longer "
+"be valid if you choose to cascade deletion to wiki service:</em></p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p><img src=\"%3$s\" /> There are differences in properties definitions "
+"between %1$s and %2$s. You <strong>may loose</strong> some "
+"<strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste "
+"anyway, so only properties that exists in both %1$s and %2$s will be copied."
+"</li><li>Ask to a document manager admin to import %2$s properties "
+"definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn't "
+"impact documents</strong> themselves. This only refers to properties.</p>"
+msgstr ""
+
+msgid ""
+"<p>If you choose to:<ul><li><strong>Copy the previous approval table:</"
+"strong> A new approval table will be created from the previous one. Keeps "
+"reviewers, comments and commitments.</li><li><strong>Reset the approval "
+"cycle:</strong> Only the table structure will be kept (description, "
+"notification type, reviewer list.). Actually, the new table will be "
+"identical to the previous one, but without reviewer comments and "
+"commitements.</li><li><strong>Create an new empty table:</strong> Start over "
+"with a completly new approval table.</li></ul>In all cases, There is "
+"<strong>no automatic notification</strong> of the reviewers.</p>"
+msgstr ""
+
+msgid "<p>Paste operation successfully completed.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>The table below highlight the differences between %1$s and %2$s "
+"properties.</p><p>If there are differences, you can click on \"Import\" "
+"button at the bottom of the page. The properties of %1$s will be modified "
+"match what is defined in %2$s.</p><p><strong>Note:</strong> this operation "
+"delete neither properties nor values in %1$s and %2$s won't be modified.</p>"
+msgstr ""
+
+#, php-format
+msgid ""
+"<p>You will be redirected to <a href=\"%1$s\"> %2$s </a> in %3$s seconds</p>"
+msgstr ""
+
+msgid "<strong>Actions</strong> with selected reviewers:"
+msgstr ""
+
+msgid ""
+"<ul><li>The whole folder sub-tree is taken in account for these statistics.</"
+"li><li>To compute the size, only the last versions of \"file\" and "
+"\"embedded file\" documents are taken in account.</li></ul>"
+msgstr ""
+
+msgid "A directory already exists with this name under docman"
+msgstr ""
+
+msgid ""
+"A document with the same title is already being uploaded, you cannot copy "
+"your document here for now"
+msgstr ""
+
+msgid ""
+"A property with the same name but a different type exists in destination "
+"project. Will be skiped."
+msgstr ""
+
+msgid "Access"
+msgstr "Acesso"
+
+msgid "Access Permissions"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Active"
+msgstr "Ativo"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "Add a comment:"
+msgstr ""
+
+msgid "Add reviewers"
+msgstr ""
+
+msgid "Added:"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid "After"
+msgstr ""
+
+#, php-format
+msgid "After %s"
+msgstr ""
+
+msgid "All at once"
+msgstr ""
+
+msgid "All selected users were successfully removed from the approval table."
+msgstr ""
+
+msgid "Allow empty value"
+msgstr ""
+
+#, php-format
+msgid "Allow empty value: <strong>%1$s</strong>"
+msgstr ""
+
+msgid "Allow multiple selection"
+msgstr ""
+
+#, php-format
+msgid "Allow multiple selection: <strong>%1$s</strong>"
+msgstr ""
+
+msgid "Allowed patterns:"
+msgstr ""
+
+#, php-format
+msgid "Already in this approval table: %1$s."
+msgstr ""
+
+msgid ""
+"An empty document has no type. You will be able to choose document's type "
+"later. It's useful to create an entry in a hierarchy without the actual "
+"document."
+msgstr ""
+
+msgid "An error occured on element suppression."
+msgstr ""
+
+msgid "An error occured on property creation"
+msgstr ""
+
+msgid "An error occurred during the update of the max file size"
+msgstr ""
+
+msgid ""
+"An error occurred during the update of the number of files uploadable in "
+"parallel"
+msgstr ""
+
+#, php-format
+msgid "An error occurred on \"%1$s\" deletion"
+msgstr ""
+
+msgid "An error occurred on approval table creation for this item."
+msgstr ""
+
+msgid "An error occurred on report deletion"
+msgstr ""
+
+msgid "An error occurred on review recording."
+msgstr ""
+
+msgid "An error occurred: the approval table was not deleted."
+msgstr ""
+
+msgid ""
+"An image is associated to this report but you don't have the permission to "
+"see it."
+msgstr ""
+
+msgid "Anonymous"
+msgstr ""
+
+msgid "Append the members to the table:"
+msgstr ""
+
+msgid "Apply a naming pattern on files."
+msgstr ""
+
+msgid "Apply on documents & folders"
+msgstr ""
+
+msgid "Apply on folders only"
+msgstr ""
+
+msgid "Apply<br>recursively"
+msgstr ""
+
+msgid "Approval"
+msgstr ""
+
+msgid "Approval Table"
+msgstr ""
+
+msgid "Approval cycle details"
+msgstr ""
+
+msgid "Approval cycle start date:"
+msgstr ""
+
+msgid "Approval requester:"
+msgstr ""
+
+msgid "Approval table"
+msgstr ""
+
+#, php-format
+msgid "Approval table administration for %1$s"
+msgstr ""
+
+msgid "Approval table global settings"
+msgstr ""
+
+msgid "Approval table history"
+msgstr ""
+
+msgid "Approval table:"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "Are you sure you want to delete the property '%1$s'?"
+msgstr ""
+
+msgid "Are you sure you want to remove this filter from the list?"
+msgstr ""
+
+#, php-format
+msgid "Are your sure you want to delete report '%1$s'?"
+msgstr ""
+
+#, php-format
+msgid ""
+"As document owner, you are notified of the obsolescence in one month of the\n"
+"document:\n"
+"Title: %1$s\n"
+"Project: %2$s\n"
+"Obsolescence date: %3$s\n"
+"Direct Link: <%4$s>\n"
+"\n"
+"This document will disappear from your document manager in one month if you\n"
+"do nothing. The document will remain accessible through the administration\n"
+"interface though.\n"
+"You can change the obsolescence date of your document or make it permanent "
+"with\n"
+"the following link:\n"
+"<%5$s>\n"
+"\n"
+"--\n"
+"This is an automatic message sent by a robot. Please do not reply to this "
+"email."
+msgstr ""
+
+msgid "At the beginning"
+msgstr ""
+
+msgid "At the end"
+msgstr ""
+
+msgid "Attached to document version:"
+msgstr ""
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Available"
+msgstr ""
+
+msgid "Available properties"
+msgstr ""
+
+msgid "Back to properties"
+msgstr ""
+
+msgid "Back to property details"
+msgstr ""
+
+msgid "Back to the approval settings."
+msgstr ""
+
+msgid "Bad metadata label."
+msgstr ""
+
+msgid "Bad property type"
+msgstr ""
+
+msgid "Begin"
+msgstr ""
+
+msgid ""
+"By default the update only affect folders, if you want to update the "
+"documents too with the select box below."
+msgstr ""
+
+#, php-format
+msgid "Can't delete folder %s because it is not empty."
+msgstr ""
+
+msgid "Can't move item."
+msgstr ""
+
+#, php-format
+msgid "Cannot add  following user(s). Internal error: %1$s."
+msgstr ""
+
+#, php-format
+msgid "Cannot add following user(s). No access to document: %1$s."
+msgstr ""
+
+#, php-format
+msgid "Cannot add following user(s). Not registered users. %1$s."
+msgstr ""
+
+msgid "Cannot delete a version on something that is not a file."
+msgstr ""
+
+msgid "Cannot delete a version that doesn't exist."
+msgstr ""
+
+msgid ""
+"Cannot delete last version of a file. If you want to continue, please delete "
+"the document itself."
+msgstr ""
+
+msgid ""
+"Cannot delete this item because it contains items you are not allowed to "
+"modify (no 'Write' access, you may even not be able to read them). Please "
+"contact your document manager administrator."
+msgstr ""
+
+msgid "Cannot remove from the approval table."
+msgstr ""
+
+msgid "Cascade deletion to wiki service"
+msgstr ""
+
+#, php-format
+msgid "Change <em>%1$s</em>"
+msgstr ""
+
+msgid "Change Log"
+msgstr ""
+
+msgid "Change Log:"
+msgstr ""
+
+msgid "Check before import"
+msgstr ""
+
+msgid "Clear all"
+msgstr ""
+
+msgid "Click on the following link to approve or reject the document"
+msgstr ""
+
+msgid "Click on title to toggle table sort"
+msgstr ""
+
+msgid "Click to open the document"
+msgstr ""
+
+msgid "Click to see the approval table"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "Comment"
+msgstr "Comente"
+
+msgid "Comment only"
+msgstr ""
+
+msgid "Comment:"
+msgstr ""
+
+msgid "Commented"
+msgstr ""
+
+msgid "Content:"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy from template"
+msgstr ""
+
+#, php-format
+msgid "Copy of %s"
+msgstr ""
+
+#, php-format
+msgid "Copy of %s in %s at version %d."
+msgstr ""
+
+msgid "Copy the previous approval table (e.g. for small / typo updates)."
+msgstr ""
+
+msgid "Corresponding date:"
+msgstr ""
+
+msgid "Create"
+msgstr "Criar"
+
+msgid "Create Date"
+msgstr ""
+
+msgid "Create a document"
+msgstr ""
+
+msgid "Create a folder"
+msgstr ""
+
+msgid "Create a new approval table"
+msgstr ""
+
+msgid "Create a new one."
+msgstr ""
+
+msgid "Create a new property"
+msgstr ""
+
+msgid "Create a new value"
+msgstr ""
+
+msgid "Create an new empty table."
+msgstr ""
+
+msgid "Create document"
+msgstr ""
+
+msgid "Create folder"
+msgstr ""
+
+msgid "Create new version"
+msgstr ""
+
+msgid "Create property"
+msgstr ""
+
+msgid "Create value"
+msgstr ""
+
+msgid "Creation date:"
+msgstr ""
+
+msgid "Current image:"
+msgstr ""
+
+msgid "Customize filters"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Days"
+msgstr ""
+
+#, php-format
+msgid ""
+"Dear document manager,\n"
+"\n"
+"%1$s (login: %2$s) requests access to the following document in project "
+"\"%4$s\":\n"
+"<%3$s>\n"
+"\n"
+"%1$s wrote a message for you:\n"
+"%6$s\n"
+"\n"
+"Someone set permissions on this item, preventing users of having access to "
+"this resource.\n"
+"If you decide to accept the request, please take the appropriate actions to "
+"grant him permission and communicate that information to the requester.\n"
+"Otherwise, please inform the requester (%7$s) that he will not get access to "
+"the requested data.\n"
+"--\n"
+"%1$s."
+msgstr ""
+
+msgid "Declined"
+msgstr ""
+
+msgid "Default Values"
+msgstr ""
+
+msgid "Default value: submitter. Correspond to official owner of the document."
+msgstr ""
+
+msgid "Default view"
+msgstr ""
+
+msgid ""
+"Define a period of validity for your document. It will automatically be "
+"archived at the end of the period."
+msgstr ""
+
+msgid ""
+"Define the default properties values for the item that will be created "
+"within this folder."
+msgstr ""
+
+msgid "Define the default view for the document manager."
+msgstr ""
+
+msgid "Define the properties of your documents."
+msgstr ""
+
+msgid ""
+"Define what properties are available in your document manager. Each property "
+"can be edited during document submission and updated in the document "
+"properties panel."
+msgstr ""
+
+msgid "Define who can administrate the document manager."
+msgstr ""
+
+msgid "Delete"
+msgstr "Excluir"
+
+#, php-format
+msgid "Delete %1$s"
+msgstr ""
+
+msgid "Delete date"
+msgstr ""
+
+#, php-format
+msgid "Delete report '%1$s'"
+msgstr ""
+
+msgid "Delete the property"
+msgstr ""
+
+msgid "Delete the value"
+msgstr ""
+
+msgid "Delete version"
+msgstr ""
+
+msgid "Deleted"
+msgstr "Excluído"
+
+msgid "Deleted items"
+msgstr ""
+
+msgid "Deleted versions"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Description of the document."
+msgstr ""
+
+msgid "Description:"
+msgstr ""
+
+msgid "Description: <strong><em>new text</em></strong>"
+msgstr ""
+
+msgid "Details"
+msgstr "Detalhes"
+
+#, php-format
+msgid "Details of %1$s"
+msgstr ""
+
+#, php-format
+msgid "Differences<br />in %1$s vs. %2$s"
+msgstr ""
+
+msgid "Direct link to the document"
+msgstr ""
+
+msgid "Direct link:"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Display (legacy)"
+msgstr ""
+
+msgid ""
+"Display a docman item directly in the dashboard. <br /><em>For now, only "
+"embedded files are supported</em>."
+msgstr ""
+
+msgid "Display news form"
+msgstr ""
+
+msgid "Docman Viewer"
+msgstr ""
+
+msgid "Docman item"
+msgstr ""
+
+msgid "Docman permission export format"
+msgstr ""
+
+msgid "Document"
+msgstr ""
+
+msgid "Document Access"
+msgstr ""
+
+msgid "Document Administrator"
+msgstr ""
+
+msgid "Document History"
+msgstr ""
+
+msgid "Document Id Search"
+msgstr ""
+
+msgid "Document Manager"
+msgstr ""
+
+msgid "Document Manager Permissions"
+msgstr ""
+
+msgid "Document Manager already installed."
+msgstr ""
+
+msgid "Document Reader"
+msgstr ""
+
+msgid "Document Writer"
+msgstr ""
+
+msgid "Document id"
+msgstr ""
+
+msgid "Document id:"
+msgstr ""
+
+msgid "Document is locked by another user."
+msgstr ""
+
+msgid "Document manager"
+msgstr ""
+
+msgid "Document manager administrators"
+msgstr ""
+
+msgid "Document name:"
+msgstr ""
+
+msgid "Document properties"
+msgstr ""
+
+msgid "Document settings"
+msgstr ""
+
+msgid "Document status."
+msgstr ""
+
+msgid "Document successfully created."
+msgstr ""
+
+msgid "Document title"
+msgstr ""
+
+msgid "Document type"
+msgstr ""
+
+msgid "Document under review"
+msgstr ""
+
+msgid "Document version"
+msgstr ""
+
+msgid "Document version:"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Documents administration"
+msgstr ""
+
+msgid "Documents found"
+msgstr ""
+
+msgid ""
+"Documents labeled with the deleted element were reset to the \"None\" value."
+msgstr ""
+
+msgid "Documents under review"
+msgstr ""
+
+msgid "Doesn't exist"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Edit properties"
+msgstr ""
+
+#, php-format
+msgid "Edit properties of %1$s"
+msgstr ""
+
+msgid "Element successfully deleted."
+msgstr ""
+
+msgid "Element successfully updated."
+msgstr ""
+
+msgid "Email sent to reviewer."
+msgstr ""
+
+msgid "Embedded File"
+msgstr ""
+
+msgid "Embedded file"
+msgstr ""
+
+msgid "Embedded files:"
+msgstr ""
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "Empty document"
+msgstr ""
+
+msgid "Empty documents:"
+msgstr ""
+
+msgid "Enable monitoring for the whole sub-hierarchy"
+msgstr ""
+
+msgid "Enabled"
+msgstr "Habilitado"
+
+msgid "End"
+msgstr ""
+
+msgid "End:"
+msgstr ""
+
+msgid "Enforce filename pattern"
+msgstr ""
+
+msgid "Enter a project shortname or identifier here."
+msgstr ""
+
+msgid "Enter list by hand (separate by ','):"
+msgstr ""
+
+msgid "Enter project short name or identifier here."
+msgstr ""
+
+msgid "Error"
+msgstr "Erro"
+
+msgid "Error while appending file chunk."
+msgstr ""
+
+msgid "Error while creating initial version."
+msgstr ""
+
+msgid "Error while creating new version."
+msgstr ""
+
+msgid "Error while creating news. Check that details field is not empty."
+msgstr ""
+
+msgid "Error while creating news. Check that subject field is not empty."
+msgstr ""
+
+msgid "Error while creating news. Check that you have right permissions."
+msgstr ""
+
+msgid "Error while getting file checksum."
+msgstr ""
+
+msgid "Error while searching document history!"
+msgstr ""
+
+msgid "Error while searching for old versions"
+msgstr ""
+
+msgid "Error while trying to delete the wiki page from wiki service."
+msgstr ""
+
+msgid "Error: The given version of the item does not exist."
+msgstr ""
+
+msgid "Error: item ID is missing."
+msgstr ""
+
+msgid "Every"
+msgstr "Cada"
+
+msgid "Export date"
+msgstr ""
+
+msgid "File"
+msgstr "Arquivo"
+
+#, php-format
+msgid "File upload error(%1$s). Failed to write file to disk."
+msgstr ""
+
+#, php-format
+msgid "File upload error(%1$s). File upload stopped by extension."
+msgstr ""
+
+#, php-format
+msgid "File upload error(%1$s). Missing a temporary folder."
+msgstr ""
+
+#, php-format
+msgid "File upload error(%1$s). No file was uploaded."
+msgstr ""
+
+#, php-format
+msgid ""
+"File upload error(%1$s). The uploaded file exceeds the maximum allowed file "
+"size."
+msgstr ""
+
+#, php-format
+msgid "File upload error(%1$s). The uploaded file was only partially uploaded."
+msgstr ""
+
+#, php-format
+msgid "File upload error(%1$s). Unknown error code."
+msgstr ""
+
+msgid "File upload error. Please try again."
+msgstr ""
+
+msgid "File upload limits"
+msgstr ""
+
+msgid "Filename pattern"
+msgstr ""
+
+msgid "Files:"
+msgstr ""
+
+msgid "Fixed date"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "Folder Properties"
+msgstr ""
+
+msgid "Folders:"
+msgstr ""
+
+msgid ""
+"Following table aims to organize the approval cycle:<ul><li>With "
+"<strong>Select</strong> you choose the reviewers on which you want to apply "
+"<strong>Actions</strong> (see below for available actions)</li><li>With "
+"<strong>Rank</strong> you select the order the emails will be sent to notify "
+"people (only in <em>Sequential</em> notification)</li><li>With "
+"<strong>Actions</strong> you can (with selected reviewers) either:"
+"<ul><li><strong>Remove from table</strong>. No history kept.</li><li>or "
+"<strong>Force notification</strong> to send the notification email "
+"regardless of their review state of the notififcation type.</li></ul></li></"
+"ul>"
+msgstr ""
+
+msgid ""
+"For example, if enforced pattern is <code>${ID}-${TITLE}</code> and user "
+"creates a new document (or version) with title <code>MyFooBar</code>\n"
+"                        and id <code>123</code> from uploaded file "
+"<code>output.32.pdf</code>, then generated filename will be <code>123-"
+"MyFooBar.pdf</code>."
+msgstr ""
+
+msgid "Forbid deletion of document & versions by Writers"
+msgstr ""
+
+msgid "Forbid modifications of document properties by Writers"
+msgstr ""
+
+msgid "Forcast purge date"
+msgstr ""
+
+msgid "Force notification"
+msgstr ""
+
+msgid "Given project id and metadata project id mismatch."
+msgstr ""
+
+msgid "Global permissions"
+msgstr ""
+
+msgid "Global text search"
+msgstr ""
+
+msgid "Granted groups"
+msgstr ""
+
+msgid "Hide related documents"
+msgstr ""
+
+msgid "History"
+msgstr "Histórico"
+
+msgid ""
+"How to use folder selector:<ul><li><em>[other folders: ]</em> link displays "
+"the whole folder tree.</li><li><em>Position</em> select box allows to select "
+"the position within the selected folder.</li></ul>"
+msgstr ""
+
+msgid "Icons"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Image Id:"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+#, php-format
+msgid "Import \"%1$s\" properties"
+msgstr ""
+
+#, php-format
+msgid "Import actions<br />in %1$s"
+msgstr ""
+
+msgid "Import an old approval table"
+msgstr ""
+
+#, php-format
+msgid "Import properties from %1$s:"
+msgstr ""
+
+msgid "Import properties from another project"
+msgstr ""
+
+msgid "Import reports from another project."
+msgstr ""
+
+#, php-format
+msgid ""
+"Important note: this approval table is configured in 'Sequential' mode.\n"
+"The notification sequence is on hold until %1$s approves or rejects the "
+"document."
+msgstr ""
+
+msgid "Impossible to apply recursively properties values: No item found."
+msgstr ""
+
+msgid "Impossible to identify the requested project"
+msgstr ""
+
+msgid "In:&nbsp;"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid ""
+"Info: Global text search will search pattern in all \"Text\" properties (but "
+"not within documents yet)."
+msgstr ""
+
+msgid "Initial version"
+msgstr ""
+
+msgid "Initial version successfully created."
+msgstr ""
+
+#, php-format
+msgid "Insufficient permissions for user(s) \"%s\""
+msgstr ""
+
+msgid ""
+"Invalid pattern, filename pattern must contains at least '${TITLE}' or "
+"'${ID} variable"
+msgstr ""
+
+msgid "Invalid property"
+msgstr ""
+
+msgid "It is not possible to update a wiki page with approval table."
+msgstr ""
+
+msgid "Item Id"
+msgstr ""
+
+msgid "Item nature"
+msgstr ""
+
+msgid "Item successfully deleted."
+msgstr ""
+
+#, php-format
+msgid ""
+"Item successfully moved form <a href=\"?group_id=%1$s&amp;action=show&amp;id="
+"%2$s\">%3$s</a> to <a href=\"?group_id=%1$s&amp;action=show&amp;id=%4$s\">"
+"%5$s</a>."
+msgstr ""
+
+msgid "Item successfully updated"
+msgstr ""
+
+msgid "Item type"
+msgstr ""
+
+msgid "Items permissions are not listed."
+msgstr ""
+
+msgid "Keep history"
+msgstr ""
+
+msgid "Keep the current table."
+msgstr ""
+
+msgid "Keep the lock:"
+msgstr ""
+
+msgid "Kind of item (file, link, wiki,...)"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Last update date:"
+msgstr ""
+
+msgid "Last update of the document content or properties."
+msgstr ""
+
+msgid "Let fields blank if you do not want news."
+msgstr ""
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Links:"
+msgstr ""
+
+msgid "List of locked documents."
+msgstr ""
+
+msgid "List of values"
+msgstr ""
+
+msgid "List the documents under review."
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Location:"
+msgstr ""
+
+msgid "Locations:"
+msgstr ""
+
+msgid "Lock for edition"
+msgstr ""
+
+msgid "Locked Documents"
+msgstr ""
+
+msgid "Locked document"
+msgstr ""
+
+msgid "Mail reminder occurence"
+msgstr ""
+
+msgid "Maximum files size (in Bytes)"
+msgstr ""
+
+msgid "Maximum number of files"
+msgstr ""
+
+msgid "Message:"
+msgstr ""
+
+#, php-format
+msgid ""
+"Message:\n"
+"------------\n"
+"%1$s\n"
+"------------"
+msgstr ""
+
+msgid "Metadata not updated."
+msgstr ""
+
+msgid "Metadata successfully updated."
+msgstr ""
+
+msgid "Monitored document"
+msgstr ""
+
+#, php-format
+msgid "Monitoring for group(s) '%1$s' already exists"
+msgstr ""
+
+#, php-format
+msgid "Monitoring for group(s) '%1$s' has been added"
+msgstr ""
+
+#, php-format
+msgid "Monitoring for group(s) '%1$s' has not been added"
+msgstr ""
+
+#, php-format
+msgid ""
+"Monitoring for the whole sub-hierarchy for group(s) '%1$s' has not been added"
+msgstr ""
+
+#, php-format
+msgid ""
+"Monitoring for the whole sub-hierarchy for user(s) '%1$s' has not been added"
+msgstr ""
+
+#, php-format
+msgid "Monitoring for user(s) \"%s\" already exists"
+msgstr ""
+
+#, php-format
+msgid "Monitoring for user(s) \"%s\" has been added"
+msgstr ""
+
+#, php-format
+msgid "Monitoring for user(s) \"%s\" has not been added"
+msgstr ""
+
+#, php-format
+msgid "Monitoring was not active for group '%1$s'"
+msgstr ""
+
+#, php-format
+msgid "Monitoring was not active for user \"%s\""
+msgstr ""
+
+msgid "Move"
+msgstr ""
+
+#, php-format
+msgid "Move %1$s"
+msgstr ""
+
+msgid "Moved"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Name conflict"
+msgstr ""
+
+msgid "New Value"
+msgstr ""
+
+msgid "New Version"
+msgstr ""
+
+msgid "New document"
+msgstr ""
+
+msgid "New document - Parent Folder Selection"
+msgstr ""
+
+msgid "New filter name:"
+msgstr ""
+
+msgid "New folder"
+msgstr ""
+
+msgid "New personal report..."
+msgstr ""
+
+msgid "New project report..."
+msgstr ""
+
+msgid "New version"
+msgstr ""
+
+#, php-format
+msgid "New version for %1$s"
+msgstr ""
+
+#, php-format
+msgid "New version of %s wiki page was created by %s."
+msgstr ""
+
+msgid "New version successfully created."
+msgstr ""
+
+msgid "News successfully created."
+msgstr ""
+
+#, php-format
+msgid "Next %1$s"
+msgstr ""
+
+msgid "No"
+msgstr "Não"
+
+msgid "No approval table for this document."
+msgstr ""
+
+msgid "No document under review."
+msgstr ""
+
+msgid "No element selected"
+msgstr ""
+
+msgid "No email sent to reviewers."
+msgstr ""
+
+msgid "No notifications set"
+msgstr ""
+
+msgid "No review requested."
+msgstr ""
+
+msgid ""
+"No valid item to paste. Either no item was copied or item no longer exist."
+msgstr ""
+
+msgid "No, I do not want to delete it"
+msgstr ""
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "Not Yet"
+msgstr ""
+
+msgid "Not applicable"
+msgstr ""
+
+msgid "Not yet"
+msgstr ""
+
+msgid "Notification"
+msgstr ""
+
+msgid "Notification Type:"
+msgstr ""
+
+msgid "Notification email"
+msgstr ""
+
+msgid "Notification type:"
+msgstr ""
+
+msgid "Notification:"
+msgstr ""
+
+msgid "Notifications"
+msgstr "Notificações"
+
+msgid "Notified people"
+msgstr ""
+
+msgid "Number of items in this folder:"
+msgstr ""
+
+msgid "Obsolescence Date"
+msgstr ""
+
+msgid "Obsolete Documents"
+msgstr ""
+
+msgid "Obsolete date"
+msgstr ""
+
+msgid "Obsolete today"
+msgstr ""
+
+msgid "Old Value"
+msgstr ""
+
+msgid ""
+"One user group per column. Each one can have either READ, WRITE or MANAGE "
+"permission. An empty row means no access."
+msgstr ""
+
+msgid "Only admin can delete Project wide reports."
+msgstr ""
+
+msgid "Open to see related documents"
+msgstr ""
+
+msgid "Operation Canceled"
+msgstr ""
+
+msgid "Other location:"
+msgstr ""
+
+msgid "Other locations:"
+msgstr ""
+
+msgid "Owner"
+msgstr "Proprietário"
+
+msgid "Owner:"
+msgstr ""
+
+msgid "Page Name:"
+msgstr ""
+
+msgid "Parameter is missing"
+msgstr ""
+
+msgid "Parameter parent_id is missing"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+#, php-format
+msgid "Paste '%1$s' in '%2$s'"
+msgstr ""
+
+msgid "Paste Anyway"
+msgstr ""
+
+#, php-format
+msgid "Paste in progress '%1$s' in '%2$s'"
+msgstr ""
+
+msgid "Paste in progress..."
+msgstr ""
+
+msgid "Path"
+msgstr ""
+
+msgid "Pattern"
+msgstr ""
+
+msgid "Pattern must contain at least ${TITLE} or ${ID}"
+msgstr ""
+
+msgid "Permanent"
+msgstr ""
+
+msgid "Permission"
+msgstr "Permissão"
+
+msgid ""
+"Permission denied set on documents. You can not view this documents unless "
+"administrator grant you access."
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Permissions controlled by documents manager"
+msgstr ""
+
+#, php-format
+msgid "Permissions for %1$s has been ignored because %2$s is %3$s."
+msgstr ""
+
+msgid "Permissions for sub-items successfully updated."
+msgstr ""
+
+msgid "Permissions successfully updated."
+msgstr ""
+
+msgid "Permissions:"
+msgstr ""
+
+msgid "Personal"
+msgstr ""
+
+msgid "Please choose option for creating approval table"
+msgstr ""
+
+msgid "Please enter a new search name:"
+msgstr ""
+
+msgid ""
+"Please select the default view for browsing documents. Please note that this "
+"setting can be overridden by user preferences."
+msgstr ""
+
+msgid "Please select the folder where you want this new document appears."
+msgstr ""
+
+#, php-format
+msgid ""
+"Please wait for the paste to complete. This may take a while depending on "
+"size of data to be copied <img src=\"%1$s\" />"
+msgstr ""
+
+msgid "Position:"
+msgstr ""
+
+msgid ""
+"Possible commitment are:<ul><li><strong>Not yet:</strong> Status quo. You "
+"can add comment but nobody will be notifed.</li><li><strong>Approve:</"
+"strong> Sends an email to the approval requester and notify next reviewer in "
+"sequence if any.</li><li><strong>Reject:</strong> Sends an email to the "
+"approval requester and stops the approval sequence if any.</"
+"li><li><strong>Comment only:</strong> Sends an email to the approval "
+"requester to inform there are comments. In <em>Sequential</em> notification "
+"type, the notification workflow is frozen.</li><li><strong>Will not review:</"
+"strong> Sends an email to the approval requester and notify next reviewer in "
+"sequence if any.</li></ul>"
+msgstr ""
+
+#, php-format
+msgid "Previous %1$s"
+msgstr ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Project Documentation"
+msgstr ""
+
+msgid "Project data export"
+msgstr ""
+
+msgid "Project has no locked documents"
+msgstr ""
+
+msgid "Project has no obsolete documents"
+msgstr ""
+
+msgid "Project ids mismatch. Cancel update."
+msgstr ""
+
+msgid "Project:"
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+#, php-format
+msgid "Properties successfully imported from '%1$s'"
+msgstr ""
+
+msgid "Property"
+msgstr ""
+
+msgid "Property change"
+msgstr ""
+
+msgid "Property name is required, please fill this field."
+msgstr ""
+
+msgid "Property successfully created."
+msgstr ""
+
+msgid "Property values"
+msgstr ""
+
+msgid "Rank"
+msgstr ""
+
+msgid "Rank:"
+msgstr ""
+
+msgid "Recursion options"
+msgstr ""
+
+msgid "Redirect to document with given id."
+msgstr ""
+
+msgid ""
+"Refer to a document id available in the document manager (Warning: "
+"<strong>permissions apply</strong>)."
+msgstr ""
+
+msgid "References"
+msgstr "Referências"
+
+msgid "Rejected"
+msgstr ""
+
+msgid "Relaunch notification:"
+msgstr ""
+
+msgid "Release lock"
+msgstr ""
+
+msgid "Released lock"
+msgstr ""
+
+msgid "Remove from table"
+msgstr ""
+
+msgid "Remove the filter"
+msgstr ""
+
+#, php-format
+msgid "Removed monitoring for group(s) '%1$s'"
+msgstr ""
+
+#, php-format
+msgid "Removed monitoring for user(s) \"%s\""
+msgstr ""
+
+msgid "Removed:"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Report list"
+msgstr ""
+
+msgid "Report not found. Cancel deletion."
+msgstr ""
+
+msgid "Report not found. Cancel update."
+msgstr ""
+
+msgid "Report successfully cloned."
+msgstr ""
+
+msgid "Report successfully deleted"
+msgstr ""
+
+msgid "Report:"
+msgstr ""
+
+msgid "Requester"
+msgstr ""
+
+msgid "Requester comment:"
+msgstr ""
+
+msgid "Requester:"
+msgstr ""
+
+msgid "Reset the approval cycle (e.g. for major rewrite)."
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Restore version"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Review date:"
+msgstr ""
+
+msgid "Review:"
+msgstr ""
+
+msgid "Reviewer"
+msgstr ""
+
+msgid "Reviewers were notified."
+msgstr ""
+
+msgid "Sample value"
+msgstr ""
+
+msgid "Save as"
+msgstr ""
+
+msgid "Save options"
+msgstr ""
+
+msgid "Save options:"
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Scope:"
+msgstr ""
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Search criteria:"
+msgstr ""
+
+msgid "Search document id"
+msgstr ""
+
+msgid "Search report administration"
+msgstr ""
+
+msgid "See the notification email"
+msgstr ""
+
+msgid "Select"
+msgstr "Selecione"
+
+msgid "Send a mail reminder to approver(s)"
+msgstr ""
+
+msgid "Send me an email whenever this item is updated."
+msgstr ""
+
+msgid "Send my review"
+msgstr ""
+
+#, php-format
+msgid ""
+"Sequence.\n"
+"%1$s notifies reviewers one after another.\n"
+"People *will not be notified* to review the document *until you approved it*."
+msgstr ""
+
+msgid "Sequential"
+msgstr ""
+
+msgid "Settings cannot be updated."
+msgstr ""
+
+msgid "Settings differ"
+msgstr ""
+
+msgid "Settings have been saved successfully"
+msgstr ""
+
+msgid "Settings have been updated."
+msgstr ""
+
+msgid "Show"
+msgstr ""
+
+msgid "Show actions"
+msgstr ""
+
+msgid "Show my saved search"
+msgstr ""
+
+msgid "Size:"
+msgstr ""
+
+msgid "Something happen!"
+msgstr ""
+
+msgid ""
+"Specified owner does not exist. You are now the item owner. You can change "
+"owner in Item properties."
+msgstr ""
+
+msgid "Start date"
+msgstr ""
+
+msgid "Start:"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Status:"
+msgstr ""
+
+msgid "String"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Submit permissions"
+msgstr ""
+
+msgid "Subscribers"
+msgstr ""
+
+msgid "Summary"
+msgstr "Resumo"
+
+msgid "Switch to the new user interface"
+msgstr ""
+
+msgid "Table"
+msgstr ""
+
+msgid "Table settings updated."
+msgstr ""
+
+msgid "Table status:"
+msgstr ""
+
+msgid "Table successfully deleted."
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "The \"Status\" property is not activated for this item."
+msgstr ""
+
+#, php-format
+msgid "The <a href=\"%1$s\">selected item</a> has been successfully restored."
+msgstr ""
+
+#, php-format
+msgid ""
+"The <a href=\"%1$s\">selected version</a> has been successfully restored."
+msgstr ""
+
+msgid "The Item path in docman tree"
+msgstr ""
+
+msgid "The URL is required."
+msgstr ""
+
+msgid "The approval table is not yet available."
+msgstr ""
+
+#, php-format
+msgid ""
+"The date entered in field \"%1$s\" is not valid. Valid date format is YYYY-M-"
+"D (e.g. '%2$s' for today) or let the field blank."
+msgstr ""
+
+msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
+msgstr ""
+
+msgid "The document internal id"
+msgstr ""
+
+msgid "The document status (\"Draft\", \"Approved\" or \"Rejected\")"
+msgstr ""
+
+msgid "The document title"
+msgstr ""
+
+msgid "The file cannot be found."
+msgstr ""
+
+msgid ""
+"The file is obsolete and no longer available in standard views (Tree, "
+"Table, ...)"
+msgstr ""
+
+msgid "The folder associated to this report no longer exists."
+msgstr ""
+
+#, php-format
+msgid "The item %1$s doesn't exist or doesn't belong to project %2$s."
+msgstr ""
+
+#, php-format
+msgid "The item %d is not a folder."
+msgstr ""
+
+msgid ""
+"The latest version name of the document. If a document is created or\n"
+"                                    if there is no version name given at "
+"document update, an empty space is returned."
+msgstr ""
+
+#, php-format
+msgid "The list type property %s can accept only one value."
+msgstr ""
+
+#, php-format
+msgid "The metadata '%s' short_name must be provided for document creation"
+msgid_plural ""
+"The metadata '%s' short_names must be provided for document creation"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The obsolescence date is before the current date"
+msgstr ""
+
+msgid "The page name is required."
+msgstr ""
+
+msgid ""
+"The pattern contains variables whose values are specific to each document."
+msgstr ""
+
+msgid "The pattern has been successfully updated."
+msgstr ""
+
+msgid ""
+"The project does not support obsolescence date, you should not provide it to "
+"create or update a new document."
+msgstr ""
+
+msgid "The properties of the two projects are aligned. Nothing to do."
+msgstr ""
+
+#, php-format
+msgid "The property with short name %s does not exist in project."
+msgstr ""
+
+#, php-format
+msgid ""
+"The property with short name %s is a value, list_value should be empty and "
+"value should be provided."
+msgstr ""
+
+msgid "The report you want to clone doesn't exist."
+msgstr ""
+
+msgid "The requested version of this file cannot be found."
+msgstr ""
+
+#, php-format
+msgid "The resource %d does not exist."
+msgstr ""
+
+msgid "The same permissions are applied on a document and its properties."
+msgstr ""
+
+msgid ""
+"The selected group will not affect people notified for permission requests "
+"on documents service.<br> Only the <b>document managers</b> will be notified "
+"in that case."
+msgstr ""
+
+msgid "The selected item has not been restored."
+msgstr ""
+
+msgid "The selected version has not been restored."
+msgstr ""
+
+msgid "The specified item is not a file."
+msgstr ""
+
+#, php-format
+msgid "The specified owner ID #%d does not match a valid user."
+msgstr ""
+
+#, php-format
+msgid "The status \"%s\" is invalid."
+msgstr ""
+
+#, php-format
+msgid "The value '%s' of '%s' is unknown"
+msgid_plural "The values of '%s' for field '%s' are unknown"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "The value of '%s' is required"
+msgid_plural "The values of '%s' are required"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "There are no pending items."
+msgstr ""
+
+msgid "There are no pending versions."
+msgstr ""
+
+msgid "There is already a document being uploaded for this item"
+msgstr ""
+
+#, php-format
+msgid "There is already a property with the name '%1$s'."
+msgstr ""
+
+msgid "There is already a version being uploaded for this document."
+msgstr ""
+
+msgid ""
+"There is an approval table on the previous version of the document. You can "
+"either:"
+msgstr ""
+
+msgid "There is an error in parameters. Back to previous screen."
+msgstr ""
+
+msgid "There is no data attached to this item."
+msgstr ""
+
+msgid "There is no history yet"
+msgstr ""
+
+msgid "There is no version yet"
+msgstr ""
+
+msgid "This is an automatic message. Please do not reply to this email"
+msgstr ""
+
+msgid "This is not possible to create approval table for Empty documents."
+msgstr ""
+
+msgid ""
+"This is the list of all documents obsolete today. If you click on document "
+"title you will be redirected to the document properties and you will be able "
+"to make it available again."
+msgstr ""
+
+msgid "This is the list of all locked documents in project."
+msgstr ""
+
+msgid "This limit prevents a user to upload a file which size exceed x Bytes."
+msgstr ""
+
+msgid "This limit prevents a user to upload more than x files at a time."
+msgstr ""
+
+msgid "This table is linked to an old version of the document."
+msgstr ""
+
+msgid "This table shows the number of elements of each type."
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Title of the document."
+msgstr ""
+
+msgid "Title:"
+msgstr ""
+
+msgid "To restore monitoring, please visit:"
+msgstr ""
+
+msgid "To stop monitoring, please visit:"
+msgstr ""
+
+msgid "Toggle search criteria selection"
+msgstr ""
+
+msgid "Tree"
+msgstr "Árvore"
+
+msgid "Try to create an unknown property"
+msgstr ""
+
+#, php-format
+msgid "Try to update an unknown property '%1$s'"
+msgstr ""
+
+msgid "Type"
+msgstr "Tipo"
+
+#, php-format
+msgid "Unable to remove monitoring for group '%1$s'"
+msgstr ""
+
+#, php-format
+msgid "Unable to remove monitoring for user \"%s\""
+msgstr ""
+
+msgid "Unable to retrieve item. Perhaps it was removed."
+msgstr ""
+
+msgid "Unable to update element."
+msgstr ""
+
+#, php-format
+msgid "Unknown property label '%1$s'."
+msgstr ""
+
+msgid "Unused"
+msgstr ""
+
+msgid "Update"
+msgstr "Atualizar"
+
+#, php-format
+msgid "Update %1$s"
+msgstr ""
+
+msgid "Update Date"
+msgstr ""
+
+msgid "Update search:"
+msgstr ""
+
+msgid "Update this document"
+msgstr ""
+
+#, php-format
+msgid "Update value \"%2$s\" in \"%1$s\" property"
+msgstr ""
+
+msgid "Url:"
+msgstr ""
+
+#, php-format
+msgid "Usage: <strong>%1$s</strong>"
+msgstr ""
+
+msgid "Use this property"
+msgstr ""
+
+msgid "Used"
+msgstr ""
+
+msgid "User Groups..."
+msgstr ""
+
+msgid "User groups"
+msgstr ""
+
+msgid ""
+"User groups who can administrate the document manager, in addition of "
+"project administrators"
+msgstr ""
+
+msgid "User successfully added to the approval table."
+msgstr ""
+
+msgid "User, group"
+msgstr ""
+
+msgid "Validate"
+msgstr ""
+
+msgid "Validity:"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Value \"%2$s\" in \"%1$s\" property"
+msgstr ""
+
+msgid "Variable"
+msgstr ""
+
+msgid "Version"
+msgstr "Versão"
+
+#, php-format
+msgid "Version %s (%s) successfully deleted"
+msgstr ""
+
+msgid "Version Label:"
+msgstr ""
+
+msgid "Version author"
+msgstr ""
+
+msgid "Version date"
+msgstr ""
+
+msgid "Version label"
+msgstr ""
+
+msgid "Version number"
+msgstr ""
+
+msgid "Version reviewed:"
+msgstr ""
+
+msgid "Versions"
+msgstr ""
+
+msgid "View and update obsolete documents."
+msgstr ""
+
+msgid "View as:"
+msgstr ""
+
+msgid "Wait a minute..."
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "What"
+msgstr ""
+
+msgid "When"
+msgstr ""
+
+msgid "When the document was added into the document manager."
+msgstr ""
+
+msgid "When the pattern doesn't start with * (pattern #1 or #2):"
+msgstr ""
+
+msgid ""
+"When turned on, Writers will be allowed to set properties when they create a "
+"new document but will no longer be able to modify them afterward"
+msgstr ""
+
+msgid ""
+"When turned on, Writers will not be able to delete a document or a version "
+"of documents"
+msgstr ""
+
+msgid "Who"
+msgstr ""
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Wiki Page"
+msgstr ""
+
+msgid "Wiki page"
+msgstr ""
+
+msgid "Wiki page content change"
+msgstr ""
+
+msgid "Wiki page successfully deleted from wiki service."
+msgstr ""
+
+msgid "Wiki pages:"
+msgstr ""
+
+msgid "Will be created with the same permissions than its parent."
+msgstr ""
+
+#, php-format
+msgid ""
+"Will create property <strong>%1$s</strong> with the same settings and values"
+msgstr ""
+
+#, php-format
+msgid "Will create value <strong>%1$s</strong>"
+msgstr ""
+
+msgid "Will not review"
+msgstr ""
+
+#, php-format
+msgid "Will override <strong>%1$s</strong> settings in %2$s: %3$s"
+msgstr ""
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "Yes, I am sure!"
+msgstr ""
+
+msgid "You <strong>did not read this version</strong> of the document."
+msgstr ""
+
+msgid "You already <strong>reviewed an old version</strong> of the document."
+msgstr ""
+
+msgid ""
+"You are about to <strong>paste</strong> an item you <strong>copied</strong>. "
+"It will clone the whole hierarchy but <strong>only keeps the latest version "
+"of files, doesn't keep approval tables nor notifications and inherit "
+"permissions from new parent</strong>."
+msgstr ""
+
+msgid ""
+"You are about to <strong>paste</strong> an item you <strong>cut</strong>. It "
+"will preserve the whole hierarchy, notifications, approval table, "
+"permissions, etc. Actually, only the parent of the item will change."
+msgstr ""
+
+msgid ""
+"You are about to delete the value '%1$s'. All documents already labeled with "
+"this value will be bound to 'None'."
+msgstr ""
+
+msgid "You are not allowed to delete system properties."
+msgstr ""
+
+#, php-format
+msgid "You are not allowed to write on folder with id '%d'"
+msgstr ""
+
+msgid "You are not allowed to write this item."
+msgstr ""
+
+msgid "You are receiving this message because you are monitoring this item."
+msgstr ""
+
+msgid ""
+"You are receiving this message because you were added to the monitoring list "
+"of this item:"
+msgstr ""
+
+msgid ""
+"You are receiving this message because you were removed from the monitoring "
+"list of this item:"
+msgstr ""
+
+msgid "You are requested to review the following document:"
+msgstr ""
+
+#, php-format
+msgid ""
+"You are requested to review the following document:\n"
+"\n"
+"Project: %2$s\n"
+"Title: %1$s\n"
+"Document: <%4$s>\n"
+"\n"
+"Requester: %3$s <%8$s>\n"
+"Your review: <%7$s>\n"
+"\n"
+"%5$sNotification type: %6$s\n"
+"\n"
+"Click on the following link to approve or reject the document:\n"
+"<%7$s>\n"
+"\n"
+"--\n"
+"This is an automatic message. Please do not reply to this email."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this document</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this folder</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">copy this document</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">copy this folder</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">create a new document</a> in this folder."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">create a new folder</a> in this folder."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">create a new version</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">cut this document</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">cut this folder</a>."
+msgstr ""
+
+#, php-format
+msgid ""
+"You can <a href=\"%1$s\">move this document</a> to another folder or inside "
+"the current folder."
+msgstr ""
+
+#, php-format
+msgid ""
+"You can <a href=\"%1$s\">move this folder</a> to another folder or inside "
+"the current folder."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">paste '%2$s' into this folder</a>."
+msgstr ""
+
+#, php-format
+msgid "You can <a href=\"%1$s\">update</a> this document."
+msgstr ""
+
+msgid ""
+"You can customize your report by adding text and an image. Note: an image is "
+"just a reference on any valid image available in documentation manager "
+"(across projects)."
+msgstr ""
+
+msgid ""
+"You can either create a new document (file, link, wiki, etc) or a new folder."
+msgstr ""
+
+msgid ""
+"You can enforce the filename to follow a pattern. This filename will be "
+"automatically updated during the upload (filename of already existing "
+"documents are not affected by the configuration, only new ones will be)."
+msgstr ""
+
+msgid ""
+"You can import in this project a report defined in another project (either "
+"your 'Personal' reports or any 'Project' wide). The import only works if "
+"properties and values are the same in the two projects (same name, case "
+"sensitive). The import will work as best by trying to import as much as "
+"possible."
+msgstr ""
+
+msgid ""
+"You can import properties from any public projects or private projects you "
+"are member of."
+msgstr ""
+
+msgid ""
+"You can modify the settings of the report you already saved for this project."
+msgstr ""
+
+msgid "You can not delete report you do not own. Cancel deletion."
+msgstr ""
+
+msgid "You can not paste an item into itself."
+msgstr ""
+
+msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
+msgstr ""
+
+msgid "You can post news about your new item if you are admin of this project."
+msgstr ""
+
+msgid "You cannot add emails"
+msgstr ""
+
+msgid "You cannot add people to an old approval table."
+msgstr ""
+
+msgid "You cannot create a new version."
+msgstr ""
+
+msgid "You cannot cut something and then paste it into its child."
+msgstr ""
+
+msgid "You cannot cut this folder."
+msgstr ""
+
+msgid ""
+"You cannot delete because a parent folder is monitored with its sub-"
+"hierarchy. You can delete that monitoring only from the parent itself."
+msgstr ""
+
+msgid "You cannot delete the root folder."
+msgstr ""
+
+msgid "You cannot delete this document."
+msgstr ""
+
+msgid "You cannot delete this folder."
+msgstr ""
+
+msgid "You cannot enforce an empty filename pattern"
+msgstr ""
+
+msgid ""
+"You cannot modify it until the lock owner or a document manager release the "
+"lock."
+msgstr ""
+
+msgid "You cannot move this document."
+msgstr ""
+
+msgid "You cannot move this folder."
+msgstr ""
+
+msgid "You cannot paste something into a document."
+msgstr ""
+
+msgid "You cannot update this document."
+msgstr ""
+
+msgid ""
+"You do not have sufficient access rights to administrate the document "
+"manager."
+msgstr ""
+
+msgid ""
+"You do not have sufficient access rights to create something in this folder."
+msgstr ""
+
+#, php-format
+msgid "You do not have sufficient access rights to delete %s."
+msgstr ""
+
+msgid "You do not have sufficient access rights to delete this item."
+msgstr ""
+
+msgid "You do not have sufficient access rights to edit this item."
+msgstr ""
+
+msgid "You do not have sufficient access rights to move this item."
+msgstr ""
+
+msgid ""
+"You do not have sufficient access rights to set permissions for this item."
+msgstr ""
+
+msgid "You do not have sufficient access rights to view this item."
+msgstr ""
+
+msgid "You do not have the permission to access the document"
+msgstr ""
+
+msgid "You don't have enough permissions to perform this action"
+msgstr ""
+
+msgid "You should be site administrator to access this page"
+msgstr ""
+
+#, php-format
+msgid "You were added to '%s' monitoring list"
+msgstr ""
+
+#, php-format
+msgid "You were removed from '%s' monitoring list"
+msgstr ""
+
+#, php-format
+msgid "You're monitoring '%1$s' and its sub-hierarchy."
+msgstr ""
+
+#, php-format
+msgid "You're monitoring '%1$s'."
+msgstr ""
+
+msgid "Your are not allowed to access this data."
+msgstr ""
+
+#, php-format
+msgid ""
+"Your document '%1$s' was  rejected by %3$s <%4$s>.\n"
+"Direct access to the approval table:\n"
+"<%2$s>\n"
+"\n"
+"--\n"
+"This is an automatic email sent by a robot. Please do not reply to this "
+"email."
+msgstr ""
+
+#, php-format
+msgid ""
+"Your document '%1$s' was approved by %3$s <%4$s>.\n"
+"You can access to the table with the following link:\n"
+"<%2$s>\n"
+"\n"
+"--\n"
+"This is an automatic email sent by a robot. Please do not reply to this "
+"email."
+msgstr ""
+
+#, php-format
+msgid ""
+"Your document '%1$s' was approved by last reviewer: %3$s <%4$s>.\n"
+"You can access to the table with the following link:\n"
+"<%2$s>\n"
+"\n"
+"Please note that the document status was not automaticaly changed. You can\n"
+"change the document properties:\n"
+"<%5$s>\n"
+"\n"
+"--\n"
+"This is an automatic email sent by a robot. Please do not reply to this "
+"email."
+msgstr ""
+
+#, php-format
+msgid ""
+"Your document '%1$s' was commented (but neither approved nor rejected) by "
+"'%2$s' <%3$s>.\n"
+"%5$s\n"
+"You can access to the table with the following link:\n"
+"<%4$s>\n"
+"\n"
+"--\n"
+"This is an automatic email sent by a robot. Please do not reply to this "
+"email."
+msgstr ""
+
+#, php-format
+msgid ""
+"Your document '%1$s' will not be reviewed by %3$s <%4$s>.\n"
+"\n"
+"You can access to the table with the following link:\n"
+"<%2$s>\n"
+"\n"
+"--\n"
+"This is an automatic email sent by a robot. Please do not reply to this "
+"email."
+msgstr ""
+
+msgid ""
+"Your message is not valid, you can not send the default message or an empty "
+"one."
+msgstr ""
+
+#, php-format
+msgid "Your monitoring on '%1$s' has been removed."
+msgstr ""
+
+msgid "Your review was successfully recorded."
+msgstr ""
+
+#, php-format
+msgid "[%1$s] '%2$s' was approved by a reviewer %3$s"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] '%2$s' was approved by last reviewer %3$s"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] '%2$s' was rejected by a reviewer"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] Document '%2$s' will be obsolete in one month"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] Please review '%2$s'"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] [Reminder] Please review '%2$s'"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] a reviewer commented '%2$s'"
+msgstr ""
+
+#, php-format
+msgid "[%1$s] a reviewer will not review '%2$s'"
+msgstr ""
+
+msgid ""
+"copied. you can now paste it wherever you want (even across projects) with "
+"'Paste' action in popup menu.<br />Note that copy keeps <strong>neither "
+"approval tables nor notifications</strong> while cut does. <br />Note that "
+"only the link of the <strong>wiki pages</strong> is copied, not the "
+"<strong>content</strong>."
+msgstr ""
+
+msgid ""
+"cut. You can now paste it wherever you want with 'Paste' action in popup "
+"menu."
+msgstr ""
+
+#, php-format
+msgid ""
+"from:\n"
+" %s"
+msgstr ""
+
+#, php-format
+msgid "length must be greater than %1$s"
+msgstr ""
+
+msgid "locked"
+msgstr "bloqueado"
+
+msgid "look for exact sentence"
+msgstr ""
+
+msgid "lorem must be in result"
+msgstr ""
+
+msgid "lorem must not be in result"
+msgstr ""
+
+msgid "null is not a valid status."
+msgstr ""
+
+msgid "other folders:"
+msgstr ""
+
+msgid "recursive (apply same permissions to all sub-items of this folder)"
+msgstr ""
+
+msgid "report_id"
+msgstr ""
+
+#, php-format
+msgid ""
+"to:\n"
+" %s"
+msgstr ""
+
+msgid "truncated email"
+msgstr ""
+
+msgid "version"
+msgstr ""
+
+msgid "view/change"
+msgstr ""
+
+msgid "with comments"
+msgstr ""
+
+msgid "with_size = true only works with folders."
+msgstr ""
+
+#, php-format
+msgid ""
+"you cannot change permissions for sub-item %1$s since you do not have "
+"sufficient permissions."
+msgstr ""
+
+msgid "{{ user_group_name }} has no global permission"
+msgstr ""

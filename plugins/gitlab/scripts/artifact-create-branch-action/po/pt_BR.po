@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "An error occurred while creating %{ branch_name }, please try again"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Create branch"
+msgstr ""
+
+msgid "Create branch on a GitLab repository"
+msgstr ""
+
+msgid "Git reference from where the branch should be created"
+msgstr ""
+
+msgid "GitLab repositories integrations"
+msgstr ""
+
+msgid "Must be an existing git commit SHA-1 or a branch name"
+msgstr ""
+
+msgid "The branch %{ branch_name } already exists on %{ repo_name }"
+msgstr ""
+
+msgid ""
+"The branch <a href=\"%{ branch_url }\">%{ branch_name }</a> has been "
+"successfully created on <a href=\"%{ repo_url }\">%{ repo_name }</a>"
+msgstr ""
+
+msgid "The following branch will be created"
+msgstr ""
+
+msgid "The reference %{ ref_name } does not seem to exist on %{ repo_name }"
+msgstr ""

@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Administration"
+msgstr "Administração"
+
+msgid "An error has occurred loading content"
+msgstr ""
+
+msgid "An error occurred loading unplanned elements"
+msgstr ""
+
+msgid "Create the first %s"
+msgstr ""
+
+msgid "Create the first iteration"
+msgstr ""
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "New %{ iteration_sub_label }"
+msgstr ""
+
+msgid "Program"
+msgstr ""
+
+msgid "The retrieval of %s has failed"
+msgstr ""
+
+msgid "The retrieval of iterations has failed"
+msgstr ""
+
+msgid "There is no %s yet."
+msgstr ""
+
+msgid "There is no iteration yet."
+msgstr ""
+
+msgid "There is no unplanned element"
+msgstr ""
+
+msgid "To be planned by the Teams"
+msgstr ""

@@ -1,0 +1,38 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Displays project roadmap as a widget"
+msgstr ""
+
+msgid "No iteration tracker configured, or you are not allowed to see it."
+msgstr ""
+
+msgid "Roadmap"
+msgstr ""
+
+msgid "The roadmap cannot be found."
+msgstr ""
+
+msgid "The task cannot be found."
+msgstr ""
+
+msgid ""
+"The tracker does not have a \"title\" field, or you are not allowed to see "
+"it."
+msgstr ""
+
+msgid ""
+"The tracker does not have a timeframe defined, or you are not allowed to see "
+"it."
+msgstr ""
+
+msgid "Unknown level"
+msgstr ""
+
+msgid "the Roadmap widget"
+msgstr ""

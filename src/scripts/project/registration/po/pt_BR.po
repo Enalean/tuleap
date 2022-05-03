@@ -1,0 +1,167 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"<b>You will receive an email</b> when the administrator has validated it."
+msgstr "<b>Você receberá um email</b> quando o administrador o tiver validado."
+
+msgid "Back"
+msgstr ""
+
+msgid "Between %{ min } and %{ max } characters length"
+msgstr ""
+
+msgid "Chosen template"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Custom templates"
+msgstr "Modelos personalizados"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "For advanced users"
+msgstr "Para usuários avançados"
+
+msgid "From another project I'm admin of"
+msgstr ""
+
+msgid "Go to my home page"
+msgstr ""
+
+msgid "I agree to the <a href=\"/tos/tos.php\">policy agreement</a>"
+msgstr "Eu concordo com o <a href=\"/tos/tos.php\">acordo de política</a>"
+
+msgid "Information"
+msgstr ""
+
+msgid "Must start with a letter, without spaces nor punctuation."
+msgstr ""
+
+msgid "My new project"
+msgstr "Meu novo projeto"
+
+msgid "My useful project description"
+msgstr "Minha descrição útil do meu projeto"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "Oh snap! Failed to load project you are admin of."
+msgstr ""
+
+msgid "Only project members can access project content."
+msgstr "Apenas os membros do projeto podem acessar o conteúdo do projeto."
+
+msgid ""
+"Only project members can access project content. Restricted users can NOT be "
+"added in this project."
+msgstr ""
+"Apenas os membros do projeto podem acessar o conteúdo do projeto. Os "
+"usuários restritos NÃO podem ser adicionados a este projeto."
+
+msgid ""
+"Only project members can access project content. Restricted users can be "
+"added to the project."
+msgstr ""
+"Apenas os membros do projeto podem acessar o conteúdo do projeto. Usuários "
+"restritos podem ser adicionados ao projeto."
+
+msgid "Please choose a project..."
+msgstr ""
+
+msgid "Policy agreement"
+msgstr ""
+
+msgid "Private"
+msgstr "Particular"
+
+msgid "Private without restricted"
+msgstr ""
+
+msgid "Project configuration will be duplicated into your new project."
+msgstr ""
+
+msgid ""
+"Project content is available to all authenticated users, including "
+"restricted users. Please note that more restrictive permissions might exist "
+"on some items."
+msgstr ""
+"O conteúdo do projeto está disponível para todos os usuários autenticados, "
+"incluindo usuários restritos. Por favor, note que podem existir permissões "
+"mais restritivas em alguns itens."
+
+msgid ""
+"Project content is available to all authenticated users. Please note that "
+"more restrictive permissions might exist on some items."
+msgstr ""
+"O conteúdo do projeto está disponível para todos os usuários autenticados. "
+"Por favor, note que podem existir permissões mais restritivas em alguns "
+"itens."
+
+msgid "Project information"
+msgstr ""
+
+msgid "Project name must be between %{ min } and %{ max } characters length."
+msgstr ""
+
+msgid ""
+"Project short name must have between %{ min } and %{ max } characters "
+"length. It\n"
+"                can only contain alphanumerical characters and dashes. Must "
+"start with a letter."
+msgstr ""
+
+msgid "Project shortname"
+msgstr ""
+
+msgid "Project shortname:"
+msgstr ""
+
+msgid "Public"
+msgstr "Público"
+
+msgid "Public incl. restricted"
+msgstr "Público incl. restrito"
+
+msgid "Start a new project"
+msgstr "Inicie um novo projeto"
+
+msgid "Start my project"
+msgstr ""
+
+msgid "Template"
+msgstr "Modelo"
+
+msgid ""
+"The project template you will select provides pre-configured tools. Don’t "
+"worry,\n"
+"                you can always modify your project workspace after it has "
+"been created."
+msgstr ""
+
+msgid "Visibility"
+msgstr ""
+
+msgid "What kind of project is it?"
+msgstr ""
+
+msgid "You are not administrator of any project."
+msgstr ""
+
+msgid "Your project has been submitted to the administrators for validation"
+msgstr ""
+
+msgid "project-shortname"
+msgstr "nome do projeto"

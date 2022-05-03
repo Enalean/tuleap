@@ -1,0 +1,179 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add child"
+msgstr ""
+
+msgid "Add new card"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Card label…"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Collapse \"%{ label }\" column"
+msgstr ""
+
+msgid "Collapse \"%{ label }\" swimlane"
+msgstr ""
+
+msgid "Define columns"
+msgstr ""
+
+msgid "Edit assignee"
+msgid_plural "Edit assignees"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Edit card"
+msgstr ""
+
+msgid "Edit remaining efforts"
+msgstr ""
+
+msgid "Expand"
+msgstr ""
+
+msgid "Expand \"%{ label }\" column"
+msgstr ""
+
+msgid "Hide closed items"
+msgstr ""
+
+msgid "Incompatible usage of color"
+msgstr ""
+
+msgid "Initial effort"
+msgstr ""
+
+msgid "It seems an action you tried to perform can't be done"
+msgstr ""
+
+msgid "It seems an action you tried to perform can't be done."
+msgstr ""
+
+msgid "John"
+msgstr ""
+
+msgid "Move card down"
+msgstr ""
+
+msgid "Move card to the left cell"
+msgstr ""
+
+msgid "Move card to the right cell"
+msgstr ""
+
+msgid "Move card up"
+msgstr ""
+
+msgid "Move to left cell"
+msgstr ""
+
+msgid "Move to next swimlane or card"
+msgstr ""
+
+msgid "Move to previous swimlane or card"
+msgstr ""
+
+msgid "Move to right cell"
+msgstr ""
+
+msgid "Navigation in Taskboard"
+msgstr ""
+
+msgid "New remaining effort"
+msgstr ""
+
+msgid "Only colors from the new palette can be used."
+msgstr ""
+
+msgid "Oops, there's an issue"
+msgstr ""
+
+msgid "Place focus on first swimlane"
+msgstr ""
+
+msgid "Place focus on the first swimlane card"
+msgstr ""
+
+msgid ""
+"Please <a href=\"%{ admin_url }\">adjust configuration</a> to use a suitable "
+"color."
+msgstr ""
+
+msgid "Please choose…"
+msgstr ""
+
+msgid "Please edit the card to change the status, or add children if possible."
+msgstr ""
+
+msgid "Quick access"
+msgstr ""
+
+msgid "Reload the page"
+msgstr ""
+
+msgid "Remaining effort"
+msgstr ""
+
+msgid "Return to parent card or swimlane"
+msgstr ""
+
+msgid "Save"
+msgstr "Gravar"
+
+msgid "Set card label"
+msgstr ""
+
+msgid "Show error details"
+msgstr ""
+
+msgid ""
+"The column is configured to use a color (%{ color }) from the legacy palette."
+msgstr ""
+
+msgid "This card does not have any status."
+msgstr ""
+
+msgid ""
+"This card has status <strong>%{ label }</strong> that does not map to "
+"current taskboard columns."
+msgstr ""
+
+msgid "This column does not allow to drop this card here."
+msgstr ""
+
+msgid "This taskboard is empty"
+msgstr ""
+
+msgid "This taskboard is not properly configured"
+msgstr ""
+
+msgid "This taskboard is not ready to be used"
+msgstr ""
+
+msgid "Toggle closed items"
+msgstr ""
+
+msgid "Toggle fullscreen mode"
+msgstr ""
+
+msgid "View closed items"
+msgstr ""
+
+msgid "You have to configure the columns mapping."
+msgstr ""
+
+msgid "Your project administrator needs to finish the planning configuration."
+msgstr ""

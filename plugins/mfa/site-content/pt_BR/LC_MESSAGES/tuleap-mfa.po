@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add multi-factor authentication support"
+msgstr ""
+
+msgid "Enable two-factor authentication"
+msgstr ""
+
+msgid "Multi-factor authentication"
+msgstr ""
+
+msgid ""
+"You already have registered a multi-factor authentication device. "
+"Registering a new device will invalidate the one currently used."
+msgstr ""

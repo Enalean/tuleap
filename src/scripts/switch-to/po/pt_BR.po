@@ -1,0 +1,52 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "An error occurred while loading your recent items."
+msgstr ""
+
+msgid "Browse all projects"
+msgstr "Ver todos os projetos"
+
+msgid "Browse all…"
+msgstr "Ver todos..."
+
+msgid "Go to project administration of %s"
+msgstr "Ir para a administração do projeto de %s"
+
+msgid "Legacy search"
+msgstr ""
+
+msgid "My projects"
+msgstr ""
+
+msgid "Project, recent item, …"
+msgstr "projeto, item recente, ..."
+
+msgid "Recent items"
+msgstr ""
+
+msgid "Start exploring Tuleap"
+msgstr "Comece a explorar o Tuleap"
+
+msgid "Switch to…"
+msgstr "Mudar para..."
+
+msgid "You didn't visit recently any items matching your query."
+msgstr ""
+
+msgid "You don't belong to any projects"
+msgstr ""
+
+msgid "You don't belong to any projects matching your query."
+msgstr ""
+
+msgid "You don’t belong to any project or haven’t viewed anything yet"
+msgstr ""
+
+msgid "Your Tuleap history will appear here"
+msgstr ""

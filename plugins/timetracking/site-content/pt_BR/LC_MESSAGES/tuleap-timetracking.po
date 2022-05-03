@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Access denied. You don't have permissions to perform this action."
+msgstr ""
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "Add a new time"
+msgstr ""
+
+msgid "Add time"
+msgstr ""
+
+msgid "Add times"
+msgstr ""
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Delete the time"
+msgstr ""
+
+msgid "Displays time spent on multiple trackers"
+msgstr ""
+
+msgid "Displays your time tracking of the whole platform."
+msgstr ""
+
+msgid "Edit time"
+msgstr ""
+
+msgid "Enable time tracking for this tracker"
+msgstr ""
+
+msgid "No times saved"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Permissions successfully saved."
+msgstr ""
+
+msgid "Personal time tracking"
+msgstr ""
+
+msgid "Read"
+msgstr ""
+
+msgid "Read all tracker times"
+msgstr ""
+
+msgid "Save modifications"
+msgstr ""
+
+msgid ""
+"Select user groups that will be able to add time and read all times in this "
+"tracker, in addition of site administrators, project administrators and "
+"tracker administrators."
+msgstr ""
+
+msgid "Step"
+msgstr ""
+
+msgid "Steps"
+msgstr ""
+
+msgid "The date format is not the one expected (YYYY-MM-DD)."
+msgstr ""
+
+msgid "The request is not valid."
+msgstr ""
+
+msgid "The time format is not the one expected (hh:mm)."
+msgstr ""
+
+msgid "The time is missing"
+msgstr ""
+
+msgid "This artifact does not exist"
+msgstr ""
+
+msgid "This time does not belong to you."
+msgstr ""
+
+msgid "This time does not exist"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Time not found."
+msgstr ""
+
+msgid "Time successfully added."
+msgstr ""
+
+msgid "Time successfully deleted."
+msgstr ""
+
+msgid "Time successfully updated."
+msgstr ""
+
+msgid "Time tracking"
+msgstr ""
+
+msgid "Time tracking for Tuleap artifacts"
+msgstr ""
+
+msgid "Time tracking is disabled for tracker."
+msgstr ""
+
+msgid "Time tracking is enabled for tracker."
+msgstr ""
+
+msgid "Timetracking overview"
+msgstr ""
+
+msgid "Update"
+msgstr "Atualizar"
+
+msgid "User"
+msgstr ""
+
+msgid "Write"
+msgstr ""
+
+msgid "You are about to delete this time. Please confirm your action."
+msgstr ""
+
+msgid "You are not allowed to add a time."
+msgstr ""
+
+msgid "You are not allowed to delete a time."
+msgstr ""
+
+msgid "You are not allowed to edit this time."
+msgstr ""
+
+msgid "hh:mm"
+msgstr ""

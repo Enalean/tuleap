@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "MediaWiki Standalone"
+msgstr ""
+
+msgid "Standalone MediaWiki instances integration with Tuleap"
+msgstr ""
+
+msgid ""
+"The MediaWiki standalone service cannot activated when the Mediawiki service "
+"is active"
+msgstr ""
+
+msgid ""
+"The Mediawiki service cannot activated when the MediaWiki standalone service "
+"is active"
+msgstr ""

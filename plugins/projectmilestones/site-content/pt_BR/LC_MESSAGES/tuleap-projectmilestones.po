@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%s Milestones"
+msgstr ""
+
+msgid "A widget for milestones monitoring."
+msgstr ""
+
+msgid "Agile dashboard"
+msgstr ""
+
+msgid "Invalid Timeframe Semantic configuration."
+msgstr ""
+
+msgid "No root planning is defined."
+msgstr ""
+
+msgid "Project Milestones"
+msgstr ""
+
+msgid "Project does not exist."
+msgstr ""
+
+msgid "Project name"
+msgstr "Nome do projeto"
+
+msgid "Service AgileDashboard is disabled."
+msgstr ""
+
+msgid ""
+"This is a private project. You may only have access to private projects you "
+"are member of."
+msgstr ""
+
+msgid "You can not access to this project."
+msgstr ""

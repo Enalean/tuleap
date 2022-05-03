@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Choose a project to aggregate"
+msgstr ""
+
+msgid "Choose a source tracker for Iterations"
+msgstr ""
+
+msgid "Choose a source tracker for Program Increments"
+msgstr ""
+
+msgid "Choose which trackers can be planned"
+msgstr ""
+
+msgid "Choose who can prioritize and plan items"
+msgstr ""
+
+msgid "Iterations"
+msgstr ""
+
+msgid "New %s"
+msgstr ""
+
+msgid "Program Increments"
+msgstr ""
+
+msgid ""
+"This field is mandatory, please choose a tracker as Program Increment in the "
+"list."
+msgstr ""
+
+msgid ""
+"This field is mandatory, please choose one or several groups in the list."
+msgstr ""
+
+msgid ""
+"This field is mandatory, please choose one or several trackers in the list."
+msgstr ""
+
+msgid "iteration"
+msgstr ""
+
+msgid "program increment"
+msgstr ""

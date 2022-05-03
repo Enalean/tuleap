@@ -1,0 +1,249 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%1$s is now available."
+msgstr ""
+
+#, php-format
+msgid "%1$s is now unavailable. Web space and CGI remain accessible!"
+msgstr ""
+
+#, php-format
+msgid "%1$s projects restriction"
+msgstr ""
+
+msgid "All locally available plugins have been installed."
+msgstr ""
+
+msgid "All projects can now use this plugin."
+msgstr ""
+
+msgid "Allow access"
+msgstr ""
+
+msgid "Allow all the projects to use this plugin"
+msgstr ""
+
+msgid "Avail this plugin"
+msgstr ""
+
+msgid "Available plugins"
+msgstr "Plugins disponíveis"
+
+msgid "Be aware it's likely to impact end user's day to day activity."
+msgstr ""
+
+msgid "Can't restrict this plugin because of its system scope"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Confirm disable of plugin"
+msgstr ""
+
+msgid "Currently, there are no projects allowed to use this plugin."
+msgstr ""
+
+msgid "Dependencies"
+msgstr ""
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Disabling a plugin"
+msgstr ""
+
+msgid "Do not avail this plugin"
+msgstr ""
+
+msgid ""
+"Editing plugin properties through the web UI present a security risk, it is "
+"strongly advised to disable it. Check the deployment guide for more "
+"information."
+msgstr ""
+
+msgid "Enabled?"
+msgstr ""
+
+msgid "Filter on name or description"
+msgstr ""
+
+msgid "Filter on project id or name"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Install plugin"
+msgstr ""
+
+msgid "Installed plugins"
+msgstr ""
+
+msgid "List of allowed projects"
+msgstr ""
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "No"
+msgstr "Não"
+
+msgid "No dependencies"
+msgstr ""
+
+msgid "Now, only the allowed projects are able to use this plugin."
+msgstr ""
+
+msgid "Offers a web interface for managing plugins."
+msgstr ""
+
+msgid "Please confirm that you want to disable %s."
+msgstr ""
+
+#, php-format
+msgid "Plugin \"%1$s\" have been uninstalled."
+msgstr ""
+
+#, php-format
+msgid "Plugin \"%1$s\" have not been uninstalled."
+msgstr ""
+
+#, php-format
+msgid "Plugin installation failed: %1s"
+msgstr ""
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Plugins Administration"
+msgstr ""
+
+msgid "Project name"
+msgstr "Nome do projeto"
+
+msgid "Projects"
+msgstr "Projetos"
+
+#, php-format
+msgid "Projects allowed to use %1$s"
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "Readme"
+msgstr ""
+
+msgid "Restrict"
+msgstr ""
+
+msgid "Revoke access"
+msgstr ""
+
+msgid "Scope"
+msgstr "Escopo"
+
+msgid "Something went wrong during the update of the allowed project list."
+msgstr ""
+
+msgid ""
+"Something went wrong during the update of the plugin restriction status."
+msgstr ""
+
+msgid "Submitted project can now use this plugin."
+msgstr ""
+
+msgid "Submitted projects will not be able to use this plugin."
+msgstr ""
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "The feature will be desactivated for all users."
+msgstr ""
+
+msgid "The plugin has been successfully installed"
+msgstr ""
+
+msgid ""
+"There are unmet dependencies that prevent you from installing these plugins:"
+msgstr ""
+
+msgid "There isn't any matching plugins."
+msgstr ""
+
+#, php-format
+msgid "This section allows to define which projects will be able to use %1$s."
+msgstr ""
+
+#, php-format
+msgid "Unable to avail %1$s. Please avail the following plugins before: %2$s"
+msgstr ""
+
+#, php-format
+msgid ""
+"Unable to unavail %1$s. Please unavail the following plugins before:  %2$s"
+msgstr ""
+
+msgid "Uninstall"
+msgstr ""
+
+msgid "Uninstall plugin"
+msgstr ""
+
+msgid "Update properties"
+msgstr ""
+
+msgid "Version"
+msgstr "Versão"
+
+msgid "Warning"
+msgstr ""
+
+msgid "Yes, revoke access"
+msgstr ""
+
+msgid "You are about to disable a plugin."
+msgstr ""
+
+msgid ""
+"You are about to revoke the access to this plugin to one or several "
+"projects. Are you sure you want to do this?"
+msgstr ""
+
+msgid ""
+"You can't uninstall this plugin since at least another plugin depends on it:"
+msgstr ""
+
+msgid "Your about to install a plugin. Please confirm your action."
+msgstr ""
+
+msgid ""
+"Your about to uninstall a plugin. Please note the following points and "
+"confirm your action."
+msgstr ""
+
+msgid "directory of this plugin will not be deleted"
+msgstr ""
+
+msgid "script <code>db/uninstall.sql</code> of this plugin will be launched"
+msgstr ""
+
+msgid ""
+"web space and cgi scripts of this plugin will remain accessible unless you "
+"move or remove corresponding directory"
+msgstr ""

@@ -1,0 +1,102 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add"
+msgstr "Adicionar"
+
+msgid "Allowed fields"
+msgstr ""
+
+msgid "An error occurred"
+msgstr ""
+
+msgid "Artifact"
+msgstr ""
+
+msgid "Assigned to"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Error while fetching the list of projects you are member of"
+msgstr ""
+
+msgid "Error while fetching the list of trackers of this project"
+msgstr ""
+
+msgid "Example: @title = 'value'"
+msgstr ""
+
+msgid "Export CSV"
+msgstr ""
+
+msgid "If you update the query these trackers will be removed from it."
+msgstr ""
+
+msgid "Last update by"
+msgstr ""
+
+msgid "Last update date"
+msgstr ""
+
+msgid "Load more"
+msgstr ""
+
+msgid "No matching artifacts found"
+msgstr ""
+
+msgid "No trackers selected"
+msgstr ""
+
+msgid "Please choose..."
+msgstr ""
+
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Query"
+msgstr ""
+
+msgid "Report has been successfully saved"
+msgstr ""
+
+msgid "Save report"
+msgstr ""
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Submitted by"
+msgstr "Enviado por"
+
+msgid "Submitted on"
+msgstr ""
+
+msgid "The initial query contains trackers from inactive projects:"
+msgstr ""
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Tracker"
+msgstr ""
+
+msgid "Tracker selection is limited to 10 trackers"
+msgstr ""
+
+msgid ""
+"You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + "
+"Space."
+msgstr ""

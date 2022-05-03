@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "...to get"
+msgstr "...para obter"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "For your information..."
+msgstr "Para sua informação..."
+
+msgid "Format:"
+msgstr "Formato:"
+
+msgid "HTML"
+msgstr ""
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Markdown"
+msgstr ""
+
+msgid "Preview"
+msgstr "Pré-visualização"
+
+msgid "Text"
+msgstr ""
+
+msgid "There was an error in the Markdown preview:"
+msgstr "Houve um erro na pré-visualização do Markdown:"
+
+msgid "Type..."
+msgstr "Digite..."

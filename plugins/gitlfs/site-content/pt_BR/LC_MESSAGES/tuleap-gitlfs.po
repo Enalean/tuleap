@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Git LFS"
+msgstr ""
+
+msgid "Max file size"
+msgstr ""
+
+msgid "Max file size (in MiB)"
+msgstr ""
+
+msgid "Max file size configuration"
+msgstr ""
+
+msgid "Max file size updated."
+msgstr ""
+
+msgid "Save"
+msgstr "Gravar"
+
+msgid "Support of large file upload and download in Git"
+msgstr ""
+
+msgid "The configuration could not be updated through the Web UI."
+msgstr ""
+
+msgid "The configuration page is not available."
+msgstr ""
+
+msgid "The provided LFS object does not exist."
+msgstr ""
+
+msgid "You should be site administrator to access this page"
+msgstr ""
