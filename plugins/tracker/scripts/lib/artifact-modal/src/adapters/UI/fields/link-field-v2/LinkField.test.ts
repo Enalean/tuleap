@@ -23,10 +23,13 @@ import { getEmptyStateIfNeeded, getSkeletonIfNeeded } from "./LinkField";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
+import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
+import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
+import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 
-const getDocument = (): Document => document.implementation.createHTMLDocument();
-
-function getHost(data?: Partial<LinkField>): HostElement {
+function getHost(): HostElement {
     return {
         field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
             {
@@ -37,7 +40,6 @@ function getHost(data?: Partial<LinkField>): HostElement {
             },
             ArtifactCrossReferenceStub.withRef("story #103")
         ),
-        ...data,
     } as unknown as HostElement;
 }
 
@@ -49,7 +51,9 @@ describe("LinkField", () => {
     describe("Display", () => {
         let target: ShadowRoot;
         beforeEach(() => {
-            target = getDocument().createElement("div") as unknown as ShadowRoot;
+            target = document.implementation
+                .createHTMLDocument()
+                .createElement("div") as unknown as ShadowRoot;
         });
 
         it("should render a skeleton row when the links are being loaded", () => {
@@ -61,11 +65,46 @@ describe("LinkField", () => {
             expect(target.querySelector("[data-test=link-field-table-skeleton]")).not.toBeNull();
         });
 
-        it("should render an empty state row when content has been loaded and there is no link to display", () => {
-            const render = getEmptyStateIfNeeded(LinkedArtifactCollectionPresenter.forFault());
+        describe(`emptyState`, () => {
+            let linked_artifacts: readonly LinkedArtifactPresenter[], new_links: readonly NewLink[];
 
-            render(getHost(), target);
-            expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBeNull();
+            beforeEach(() => {
+                linked_artifacts = [];
+                new_links = [];
+            });
+
+            const renderField = (): void => {
+                const host = {
+                    linked_artifacts_presenter:
+                        LinkedArtifactCollectionPresenter.fromArtifacts(linked_artifacts),
+                    new_links_presenter: NewLinkCollectionPresenter.fromLinks(new_links),
+                } as LinkField;
+                const render = getEmptyStateIfNeeded(host);
+
+                render(getHost(), target);
+            };
+
+            it("should render an empty state row when content has been loaded and there is no link to display", () => {
+                renderField();
+                expect(target.querySelector("[data-test=link-table-empty-state]")).not.toBeNull();
+            });
+
+            it(`does not show an empty state when there is at least one linked artifact`, () => {
+                linked_artifacts = [
+                    LinkedArtifactPresenter.fromLinkedArtifact(
+                        LinkedArtifactStub.withDefaults(),
+                        false
+                    ),
+                ];
+                renderField();
+                expect(target.querySelector("[data-test=link-table-empty-state]")).toBeNull();
+            });
+
+            it(`does not show an empty state when there is at least one new link`, () => {
+                new_links = [NewLinkStub.withDefaults()];
+                renderField();
+                expect(target.querySelector("[data-test=link-table-empty-state]")).toBeNull();
+            });
         });
     });
 });

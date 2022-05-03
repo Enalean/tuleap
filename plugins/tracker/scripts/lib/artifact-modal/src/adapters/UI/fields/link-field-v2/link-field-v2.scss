@@ -110,6 +110,10 @@ $link-table-cell-background: transparent;
     }
 }
 
+.link-field-table-row-new {
+    background: var(--tlp-success-color-lighter-90);
+}
+
 .link-field-link-to-remove {
     text-decoration: line-through;
 }

@@ -20,23 +20,23 @@
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import {
-    getUndoRemovalLabel,
-    getMarkForRemovalLabel,
-    getDefaultLinkTypeLabel,
-} from "../../../../gettext-catalog";
+import { getUndoRemovalLabel, getMarkForRemovalLabel } from "../../../../gettext-catalog";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { LinkField } from "./LinkField";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import {
+    getArtifactLinkTypeLabel,
+    getArtifactStatusBadgeClasses,
+    getCrossRefClasses,
+} from "./NewLinkTemplate";
 
 type MapOfClasses = Record<string, boolean>;
 
-const getArtifactsStatusBadgeClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => ({
-    "tlp-badge-outline": true,
-    "tlp-badge-success": artifact.is_open,
-    "tlp-badge-secondary": !artifact.is_open,
-    "link-field-link-to-remove": artifact.is_marked_for_removal,
-});
+const getStatusBadgeClassesWithRemoval = (artifact: LinkedArtifactPresenter): MapOfClasses => {
+    const classes = getArtifactStatusBadgeClasses(artifact);
+    classes["link-field-link-to-remove"] = artifact.is_marked_for_removal;
+    return classes;
+};
 
 const getArtifactTableRowClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => ({
     "link-field-table-row": true,
@@ -46,14 +46,9 @@ const getArtifactTableRowClasses = (artifact: LinkedArtifactPresenter): MapOfCla
 const getRemoveClass = (artifact: LinkedArtifactPresenter): string =>
     artifact.is_marked_for_removal ? "link-field-link-to-remove" : "";
 
-const getCrossRefClasses = (artifact: LinkedArtifactPresenter): MapOfClasses => {
-    const badge_color = `tlp-swatch-${artifact.xref.color}`;
-    const classes: MapOfClasses = {
-        "cross-ref-badge": true,
-        "link-field-xref-badge": true,
-        "link-field-link-to-remove": artifact.is_marked_for_removal,
-    };
-    classes[badge_color] = true;
+const getCrossRefClassesWithRemoval = (artifact: LinkedArtifactPresenter): MapOfClasses => {
+    const classes = getCrossRefClasses(artifact);
+    classes["link-field-link-to-remove"] = artifact.is_marked_for_removal;
     return classes;
 };
 
@@ -98,14 +93,6 @@ export const getActionButton = (artifact: LinkedArtifactPresenter): UpdateFuncti
     `;
 };
 
-const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter): string => {
-    if (artifact.link_type.shortname !== "") {
-        return artifact.link_type.label;
-    }
-
-    return getDefaultLinkTypeLabel();
-};
-
 export const getLinkedArtifactTemplate = (
     artifact: LinkedArtifactPresenter
 ): UpdateFunction<LinkField> => html`
@@ -118,7 +105,7 @@ export const getLinkedArtifactTemplate = (
         </td>
         <td class="link-field-table-cell-xref ${getRemoveClass(artifact)}">
             <a href="${artifact.uri}" class="link-field-artifact-link" data-test="artifact-link">
-                <span class="${getCrossRefClasses(artifact)}" data-test="artifact-xref">
+                <span class="${getCrossRefClassesWithRemoval(artifact)}" data-test="artifact-xref">
                     ${artifact.xref.ref}
                 </span>
                 <span
@@ -133,7 +120,7 @@ export const getLinkedArtifactTemplate = (
             ${artifact.status &&
             html`
                 <span
-                    class="${getArtifactsStatusBadgeClasses(artifact)}"
+                    class="${getStatusBadgeClassesWithRemoval(artifact)}"
                     data-test="artifact-status"
                 >
                     ${artifact.status}

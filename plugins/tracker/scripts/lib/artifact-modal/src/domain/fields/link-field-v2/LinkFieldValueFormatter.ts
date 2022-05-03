@@ -21,7 +21,8 @@ import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync"
 import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { LinkFieldValueFormat } from "./LinkFieldValueFormat";
 import { FORWARD_DIRECTION } from "./LinkType";
-import { FormattedLinkArtifactFactory } from "./FormattedLinkArtifactFactory";
+import type { RetrieveNewLinks } from "./RetrieveNewLinks";
+import { Link } from "./LinkFieldValueFormat";
 
 interface FormatLinkFieldValue {
     getFormattedValuesByFieldId: (field_id: number) => LinkFieldValueFormat;
@@ -29,22 +30,25 @@ interface FormatLinkFieldValue {
 
 export const LinkFieldValueFormatter = (
     retrieve_linked_artifacts: RetrieveLinkedArtifactsSync,
-    verify_link_is_marked_for_removal: VerifyLinkIsMarkedForRemoval
+    verify_link_is_marked_for_removal: VerifyLinkIsMarkedForRemoval,
+    retrieve_new_links: RetrieveNewLinks
 ): FormatLinkFieldValue => {
     return {
         getFormattedValuesByFieldId: (field_id: number): LinkFieldValueFormat => {
-            const links = retrieve_linked_artifacts
+            const links_not_removed = retrieve_linked_artifacts
                 .getLinkedArtifacts()
                 .filter(({ link_type }) => link_type.direction === FORWARD_DIRECTION)
                 .filter(
                     (linked_artifact) =>
                         !verify_link_is_marked_for_removal.isMarkedForRemoval(linked_artifact)
                 )
-                .map(FormattedLinkArtifactFactory.fromLinkedArtifact);
+                .map(Link.fromLinkedArtifact);
+
+            const new_links = retrieve_new_links.getNewLinks().map(Link.fromNewLink);
 
             return {
                 field_id,
-                links,
+                links: links_not_removed.concat(new_links),
             };
         },
     };

@@ -127,7 +127,8 @@ function ArtifactModalController(
         },
         link_field_value_formatter: LinkFieldValueFormatter(
             links_store,
-            links_marked_for_removal_store
+            links_marked_for_removal_store,
+            new_links_store
         ),
         date_picker_initializer: DatePickerInitializer(),
         readonly_date_field_formatter: ReadonlyDateFieldFormatter(

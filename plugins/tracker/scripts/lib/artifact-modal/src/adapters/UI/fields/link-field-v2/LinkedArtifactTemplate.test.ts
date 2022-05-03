@@ -60,6 +60,7 @@ describe(`LinkedArtifactTemplate`, () => {
 
     it.each([
         [
+            "open artifact, not marked for removal",
             LinkedArtifactPresenter.fromLinkedArtifact(
                 LinkedArtifactStub.withDefaults({
                     identifier: LinkedArtifactIdentifierStub.withId(123),
@@ -68,16 +69,13 @@ describe(`LinkedArtifactTemplate`, () => {
                     uri: "/url/to/artifact/123",
                     status: "Open",
                     is_open: true,
-                    link_type: {
-                        shortname: "_is_child",
-                        direction: "reverse",
-                        label: "Parent",
-                    },
+                    link_type: LinkTypeStub.buildParentLinkType(),
                 }),
                 false
             ),
         ],
         [
+            "closed artifact, marked for removal",
             LinkedArtifactPresenter.fromLinkedArtifact(
                 LinkedArtifactStub.withDefaults({
                     identifier: LinkedArtifactIdentifierStub.withId(234),
@@ -86,16 +84,12 @@ describe(`LinkedArtifactTemplate`, () => {
                     uri: "/url/to/artifact/234",
                     status: "Closed",
                     is_open: false,
-                    link_type: {
-                        shortname: "",
-                        direction: "forward",
-                        label: "",
-                    },
+                    link_type: LinkTypeStub.buildUntyped(),
                 }),
                 true
             ),
         ],
-    ])(`will render a linked artifact`, (presenter) => {
+    ])(`will render a linked artifact`, (_type_of_presenter, presenter) => {
         render(presenter);
 
         const row = target.querySelector("[data-test=artifact-row]");
@@ -223,7 +217,8 @@ describe(`LinkedArtifactTemplate`, () => {
         });
 
         it(`will not render a button if the link's direction is "reverse"`, () => {
-            const linked_artifact = LinkedArtifactStub.withLinkType(
+            const linked_artifact = LinkedArtifactStub.withIdAndType(
+                123,
                 LinkTypeStub.buildParentLinkType()
             );
             const host = getHost(linked_artifact);

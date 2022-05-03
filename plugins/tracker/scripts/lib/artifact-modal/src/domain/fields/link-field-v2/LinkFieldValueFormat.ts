@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { LinkedArtifact } from "./LinkedArtifact";
+import type { NewLink } from "./NewLink";
+
 export interface Link {
     readonly id: number;
     readonly type: string;
@@ -24,5 +27,17 @@ export interface Link {
 
 export interface LinkFieldValueFormat {
     readonly field_id: number;
-    readonly links: Link[];
+    readonly links: ReadonlyArray<Link>;
 }
+
+export const Link = {
+    fromLinkedArtifact: (artifact: LinkedArtifact): Link => ({
+        id: artifact.identifier.id,
+        type: artifact.link_type.shortname,
+    }),
+
+    fromNewLink: (new_link: NewLink): Link => ({
+        id: new_link.identifier.id,
+        type: new_link.link_type.shortname,
+    }),
+};
