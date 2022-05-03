@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON } from "@tuleap/fetch-result";
-import type { FetchWrapperError } from "@tuleap/tlp-fetch";
-import { get, recursiveGet } from "@tuleap/tlp-fetch";
+import { getJSON, getAllJSON } from "@tuleap/fetch-result";
 import { Fault } from "@tuleap/fault";
 import { ResultAsync } from "neverthrow";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
@@ -48,6 +46,10 @@ type TuleapAPIClientType = RetrieveParent &
     RetrieveLinkTypes &
     RetrieveLinkedArtifactsByType;
 
+type AllLinkTypesResponse = {
+    readonly natures: ReadonlyArray<LinkType>;
+};
+
 export const TuleapAPIClient = (): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
         ResultAsync.fromPromise(getArtifact(artifact_id.id), (error) => {
@@ -62,28 +64,19 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
             LinkableArtifactProxy.fromAPIArtifact
         ),
 
-    getAllLinkTypes(artifact_id: CurrentArtifactIdentifier): Promise<LinkType[]> {
-        const id = artifact_id.id;
-        return get(`/api/v1/artifacts/${id}/links`).then(
-            async (response) => {
-                const { natures } = await response.json();
-
-                return natures;
-            },
-            async (error: FetchWrapperError) => {
-                const message = await getExtractedErrorMessage(error);
-
-                throw new Error(message);
-            }
-        );
-    },
+    getAllLinkTypes: (
+        artifact_id: CurrentArtifactIdentifier
+    ): ResultAsync<readonly LinkType[], Fault> =>
+        getJSON<AllLinkTypesResponse>(`/api/v1/artifacts/${artifact_id.id}/links`).map(
+            ({ natures }) => natures
+        ),
 
     getLinkedArtifactsByLinkType(
         artifact_id: CurrentArtifactIdentifier,
         link_type: LinkType
-    ): Promise<LinkedArtifact[]> {
+    ): ResultAsync<readonly LinkedArtifact[], Fault> {
         const id = artifact_id.id;
-        return recursiveGet<LinkedArtifactCollection, LinkedArtifact>(
+        return getAllJSON<LinkedArtifactCollection, LinkedArtifact>(
             `/api/v1/artifacts/${id}/linked_artifacts`,
             {
                 params: {
@@ -92,20 +85,13 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                     nature: link_type.shortname,
                     direction: link_type.direction,
                 },
-                getCollectionCallback: (payload: LinkedArtifactCollection): LinkedArtifact[] =>
+                getCollectionCallback: (
+                    payload: LinkedArtifactCollection
+                ): readonly LinkedArtifact[] =>
                     payload.collection.map((artifact) =>
                         LinkedArtifactProxy.fromAPIArtifactAndType(artifact, link_type)
                     ),
             }
-        ).catch(async (error) => {
-            const message = await getExtractedErrorMessage(error);
-            throw new Error(message);
-        });
+        );
     },
 });
-
-async function getExtractedErrorMessage(exception: FetchWrapperError): Promise<string> {
-    const { error } = await exception.response.json();
-
-    return `${error.code} ${error.message}`;
-}

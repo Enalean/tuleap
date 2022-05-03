@@ -21,7 +21,6 @@ import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPre
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
-import { isFault } from "@tuleap/fault";
 import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-field-v2/AddLinkMarkedForRemoval";
@@ -88,20 +87,21 @@ export const LinkFieldController = (
     displayField: (): LinkFieldPresenter =>
         LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
 
-    displayLinkedArtifacts: (): Promise<LinkedArtifactCollectionPresenter> => {
-        return links_retriever.getLinkedArtifacts(current_artifact_identifier).then((result) => {
-            if (!isFault(result)) {
-                const presenters = result.map((linked_artifact) =>
+    displayLinkedArtifacts: () =>
+        links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
+            (artifacts) => {
+                const presenters = artifacts.map((linked_artifact) =>
                     LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
                 );
                 return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
+            },
+            (fault) => {
+                if (!isCreationModeFault(fault)) {
+                    fault_notifier.onFault(LinkRetrievalFault(fault));
+                }
+                return LinkedArtifactCollectionPresenter.forFault();
             }
-            if (!isCreationModeFault(result)) {
-                fault_notifier.onFault(LinkRetrievalFault(result));
-            }
-            return LinkedArtifactCollectionPresenter.forFault();
-        });
-    },
+        ),
 
     markForRemoval(
         artifact_identifier: LinkedArtifactIdentifier

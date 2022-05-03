@@ -46,6 +46,9 @@ const webpack_config = {
     },
     resolve: {
         extensions: [".js", ".ts"],
+        alias: {
+            neverthrow: path.resolve(__dirname, "node_modules/neverthrow"),
+        },
     },
     module: {
         rules: [

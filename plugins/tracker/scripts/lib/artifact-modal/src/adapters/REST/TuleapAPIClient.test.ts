@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RecursiveGetInit } from "@tuleap/tlp-fetch";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { Fault } from "@tuleap/fault";
 import { isFault } from "@tuleap/fault";
@@ -35,6 +34,8 @@ import type { LinkableArtifact } from "../../domain/fields/link-field-v2/Linkabl
 import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
+import { okAsync } from "neverthrow";
+import type { GetAllOptions } from "@tuleap/fetch-result";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -111,7 +112,7 @@ describe(`TuleapAPIClient`, () => {
     });
 
     describe(`getAllLinkTypes()`, () => {
-        const getAllLinkTypes = (): Promise<LinkType[]> => {
+        const getAllLinkTypes = (): ResultAsync<readonly LinkType[], Fault> => {
             const client = TuleapAPIClient();
             return client.getAllLinkTypes(CurrentArtifactIdentifierStub.withId(ARTIFACT_ID));
         };
@@ -128,25 +129,21 @@ describe(`TuleapAPIClient`, () => {
                 label: "Child",
             };
 
-            const getSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(getSpy, {
-                return_json: { natures: [child_type, parent_type] },
-            });
+            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            getSpy.mockReturnValue(
+                ResponseStub.withSuccessfulPayload({ natures: [child_type, parent_type] })
+            );
 
-            const types = await getAllLinkTypes();
+            const result = await getAllLinkTypes();
 
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            const types = result.value;
             expect(types).toHaveLength(2);
             expect(types).toContain(parent_type);
             expect(types).toContain(child_type);
-        });
-
-        it(`when there is an error, it will unwrap the error message from the response`, () => {
-            const getSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchError(getSpy, {
-                error_json: { error: { code: 403, message: "You cannot" } },
-            });
-
-            return expect(getAllLinkTypes()).rejects.toThrowError("403 You cannot");
+            expect(getSpy.mock.calls[0][0]).toBe(`/api/v1/artifacts/${ARTIFACT_ID}/links`);
         });
     });
 
@@ -161,7 +158,7 @@ describe(`TuleapAPIClient`, () => {
             };
         });
 
-        const getLinkedArtifactsByLinkType = (): Promise<LinkedArtifact[]> => {
+        const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {
             const client = TuleapAPIClient();
             return client.getLinkedArtifactsByLinkType(
                 CurrentArtifactIdentifierStub.withId(ARTIFACT_ID),
@@ -179,21 +176,23 @@ describe(`TuleapAPIClient`, () => {
                 tracker: { color_name: "chrome-silver" },
             } as ArtifactWithStatus;
 
-            const recursiveGetSpy = jest.spyOn(tlp_fetch, "recursiveGet");
-
-            getMockLinkedArtifactsRetrieval(recursiveGetSpy, {
+            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON");
+            getMockLinkedArtifactsRetrieval(getAllSpy, {
                 collection: [first_artifact, second_artifact],
             });
 
-            const artifacts = await getLinkedArtifactsByLinkType();
+            const result = await getLinkedArtifactsByLinkType();
 
-            expect(artifacts).toHaveLength(2);
-            const [first_returned_artifact, second_returned_artifact] = artifacts;
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_artifact, second_returned_artifact] = result.value;
             expect(first_returned_artifact.identifier.id).toBe(FIRST_LINKED_ARTIFACT_ID);
             expect(first_returned_artifact.link_type).toBe(link_type);
             expect(second_returned_artifact.identifier.id).toBe(SECOND_LINKED_ARTIFACT_ID);
             expect(second_returned_artifact.link_type).toBe(link_type);
-            expect(recursiveGetSpy.mock.calls[0]).toEqual([
+            expect(getAllSpy.mock.calls[0]).toEqual([
                 `/api/v1/artifacts/${ARTIFACT_ID}/linked_artifacts`,
                 {
                     params: {
@@ -206,15 +205,6 @@ describe(`TuleapAPIClient`, () => {
                 },
             ]);
         });
-
-        it(`when there is an error, it will unwrap the error message from the response`, () => {
-            const getSpy = jest.spyOn(tlp_fetch, "recursiveGet");
-            mockFetchError(getSpy, {
-                error_json: { error: { code: 403, message: "You cannot" } },
-            });
-
-            return expect(getLinkedArtifactsByLinkType()).rejects.toThrowError("403 You cannot");
-        });
     });
 });
 
@@ -225,13 +215,12 @@ function getMockLinkedArtifactsRetrieval(
     recursiveGetSpy.mockImplementation(
         <TypeOfLinkedArtifact>(
             url: string,
-            init?: RecursiveGetInit<LinkedArtifactCollection, TypeOfLinkedArtifact>
-        ): Promise<Array<TypeOfLinkedArtifact>> => {
-            if (!init || !init.getCollectionCallback) {
-                throw new Error();
+            options?: GetAllOptions<LinkedArtifactCollection, TypeOfLinkedArtifact>
+        ): ResultAsync<readonly TypeOfLinkedArtifact[], Fault> => {
+            if (!options || !options.getCollectionCallback) {
+                throw new Error("Unexpected options for getAllJSON");
             }
-
-            return Promise.resolve(init.getCollectionCallback(linked_artifacts));
+            return okAsync(options.getCollectionCallback(linked_artifacts));
         }
     );
 }
