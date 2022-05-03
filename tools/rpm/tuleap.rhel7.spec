@@ -361,6 +361,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
 %description plugin-gitlab
 %{summary}.
 
+%package plugin-securitytxt
+Summary: Add support of security.txt file (RFC 9116)
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-securitytxt
+%{summary}.
+
 %if %{with enterprise}
 
 %package plugin-baseline
@@ -1355,6 +1362,10 @@ fi
 %{APP_DIR}/plugins/gitlab
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_gitlab
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_gitlab
+
+%files plugin-securitytxt
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/securitytxt
 
 %if %{with enterprise}
 

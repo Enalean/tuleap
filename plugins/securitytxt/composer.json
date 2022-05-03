@@ -1,0 +1,11 @@
+{
+    "name": "tuleap/plugin-security-txt",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\SecurityTxt\\": "include/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
