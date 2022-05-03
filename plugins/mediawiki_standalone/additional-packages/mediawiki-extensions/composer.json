@@ -1,0 +1,85 @@
+{
+  "repositories": [
+    {
+      "type": "package",
+      "package": [
+        {
+          "name": "mediawiki/labeled-section-transclusion",
+          "type": "mediawiki-extension",
+          "version": "1.35.6",
+          "require": {
+            "composer/installers": "^1.0"
+          },
+          "source": {
+            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/LabeledSectionTransclusion.git",
+            "type": "git",
+            "reference": "6438b1ee59ee1ad3678454bae36824b95e0701f5"
+          }
+        }
+      ]
+    },
+    {
+      "type": "package",
+      "package": [
+        {
+          "name": "mediawiki/math",
+          "type": "mediawiki-extension",
+          "version": "1.35.6",
+          "require": {
+            "composer/installers": "^1.0"
+          },
+          "source": {
+            "url": "https://gerrit.wikimedia.org/r/mediawiki/extensions/Math.git",
+            "type": "git",
+            "reference": "f40ee5660a30adab6211eb8aaa00549a31042dc3"
+          }
+        }
+      ]
+    },
+    {
+      "type": "package",
+      "package": [
+        {
+          "name": "mediawiki/pdf-book",
+          "type": "mediawiki-extension",
+          "version": "2.0.5",
+          "require": {
+            "composer/installers": "^1.0"
+          },
+          "source": {
+            "url": "https://gitlab.com/organicdesign/PdfBook",
+            "type": "git",
+            "reference": "a394656d977726ffdaa367eab0ee2bfce9a60fd9"
+          }
+        }
+      ]
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin"
+    }
+  ],
+  "require": {
+    "mediawiki/math": "^1.35.6",
+    "mediawiki/labeled-section-transclusion": "^1.35.6",
+    "mediawiki/pdf-book": "^2.0.5",
+    "mediawiki/tuleap-integration": "^1.0.0-beta",
+    "mediawiki/tuleap-wiki-farm": "^1.0.0-beta",
+    "mediawiki/tuleap-skin": "^1.0.0-beta"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform-check": false,
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}
