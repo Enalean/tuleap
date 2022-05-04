@@ -44,7 +44,10 @@ export const LinkFieldValueFormatter = (
                 )
                 .map(Link.fromLinkedArtifact);
 
-            const new_links = retrieve_new_links.getNewLinks().map(Link.fromNewLink);
+            const new_links = retrieve_new_links
+                .getNewLinks()
+                .filter(({ link_type }) => link_type.direction === FORWARD_DIRECTION)
+                .map(Link.fromNewLink);
 
             return {
                 field_id,

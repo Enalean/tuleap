@@ -22,8 +22,12 @@ import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
 } from "../../../../domain/fields/link-field-v2/LinkType";
+import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
 
-export type CollectionOfAllowedLinksTypesPresenters = readonly AllowedLinkTypesPresenterContainer[];
+export type CollectionOfAllowedLinksTypesPresenters = {
+    readonly is_parent_type_disabled: boolean;
+    readonly types: ReadonlyArray<AllowedLinkTypesPresenterContainer>;
+};
 
 export interface AllowedLinkTypesPresenterContainer {
     readonly forward_type_presenter: AllowedLinkTypePresenter;
@@ -38,21 +42,21 @@ export interface AllowedLinkTypePresenter {
 
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
+        parent_verifier: VerifyHasParentLink,
         types: readonly AllowedLinkTypeRepresentation[]
-    ): CollectionOfAllowedLinksTypesPresenters => {
-        return types.map((allowed_type) => {
-            return {
-                forward_type_presenter: {
-                    label: allowed_type.forward_label,
-                    shortname: allowed_type.shortname,
-                    direction: FORWARD_DIRECTION,
-                },
-                reverse_type_presenter: {
-                    label: allowed_type.reverse_label,
-                    shortname: allowed_type.shortname,
-                    direction: REVERSE_DIRECTION,
-                },
-            };
-        });
-    },
+    ): CollectionOfAllowedLinksTypesPresenters => ({
+        is_parent_type_disabled: parent_verifier.hasParentLink(),
+        types: types.map((allowed_type) => ({
+            forward_type_presenter: {
+                label: allowed_type.forward_label,
+                shortname: allowed_type.shortname,
+                direction: FORWARD_DIRECTION,
+            },
+            reverse_type_presenter: {
+                label: allowed_type.reverse_label,
+                shortname: allowed_type.shortname,
+                direction: REVERSE_DIRECTION,
+            },
+        })),
+    }),
 };

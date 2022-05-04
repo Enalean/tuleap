@@ -21,11 +21,16 @@ import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType"
 import { LinkTypeProxy } from "./LinkTypeProxy";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { setCatalog } from "../../../../gettext-catalog";
 
 const LABEL = "Linked to";
 
 describe(`LinkTypeProxy`, () => {
     let type: LinkType;
+
+    beforeEach(() => {
+        setCatalog({ getString: (msgid) => msgid });
+    });
 
     const triggerEvent = (): void => {
         const doc = document.implementation.createHTMLDocument();
@@ -51,5 +56,12 @@ describe(`LinkTypeProxy`, () => {
         expect(type.shortname).toBe(UNTYPED_LINK);
         expect(type.direction).toBe(FORWARD_DIRECTION);
         expect(type.label).toBe(LABEL);
+    });
+
+    it(`builds the "Untyped" link type`, () => {
+        const type = LinkTypeProxy.buildUntyped();
+        expect(type.shortname).toBe(UNTYPED_LINK);
+        expect(type.direction).toBe(FORWARD_DIRECTION);
+        expect(type.label).not.toBe("");
     });
 });

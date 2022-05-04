@@ -77,10 +77,8 @@ describe("LinkFieldValueFormatter", () => {
         verifier = VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
 
-        expect(format()).toStrictEqual({
-            field_id: FIELD_ID,
-            links: [],
-        });
+        const value = format();
+        expect(value.links).toHaveLength(0);
     });
 
     it("formats the existing links and the new links into a single array", () => {
@@ -94,6 +92,25 @@ describe("LinkFieldValueFormatter", () => {
                 { id: SECOND_NEW_LINK_ID, type: IS_CHILD_LINK_TYPE },
             ],
         });
+    });
+
+    it(`filters out the reverse link types in existing and new links because the API does not support them yet`, () => {
+        links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
+            LinkedArtifactStub.withIdAndType(
+                FIRST_LINKED_ARTIFACT_ID,
+                LinkTypeStub.buildReverseCustom()
+            ),
+            LinkedArtifactStub.withIdAndType(
+                SECOND_LINKED_ARTIFACT_ID,
+                LinkTypeStub.buildParentLinkType()
+            )
+        );
+        new_links_retriever = RetrieveNewLinksStub.withNewLinks(
+            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildReverseCustom()),
+            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildReverseCustom())
+        );
+        const value = format();
+        expect(value.links).toHaveLength(0);
     });
 
     it(`adds only new links when there are no existing links`, () => {

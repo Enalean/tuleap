@@ -43,6 +43,7 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
+import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -155,6 +156,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
+                VerifyHasParentLinkStub.withNoParentLink(),
                 {
                     field_id: 457,
                     label: "Artifact link",

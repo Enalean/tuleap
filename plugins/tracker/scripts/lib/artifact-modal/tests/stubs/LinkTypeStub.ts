@@ -40,4 +40,9 @@ export const LinkTypeStub = {
         direction: REVERSE_DIRECTION,
         label: "Parent",
     }),
+    buildReverseCustom: (): LinkType => ({
+        shortname: "custom",
+        direction: REVERSE_DIRECTION,
+        label: "Custom Reverse",
+    }),
 };

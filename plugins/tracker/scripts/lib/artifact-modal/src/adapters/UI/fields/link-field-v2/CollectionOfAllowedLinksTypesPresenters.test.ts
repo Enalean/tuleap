@@ -18,12 +18,14 @@
  */
 
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 
-describe("AllowedLinksTypesPresenter", () => {
+describe("CollectionOfAllowedLinksTypesPresenters", () => {
     it("Given a collection of allowed links types, then it should build a collection of presenters for each type and each direction", () => {
         const allowed_types = [
             {
-                shortname: "_is_child",
+                shortname: IS_CHILD_LINK_TYPE,
                 forward_label: "Child",
                 reverse_label: "Parent",
             },
@@ -34,10 +36,13 @@ describe("AllowedLinksTypesPresenter", () => {
             },
         ];
 
-        const presenters =
-            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(allowed_types);
+        const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            VerifyHasParentLinkStub.withNoParentLink(),
+            allowed_types
+        );
 
-        expect(presenters).toStrictEqual([
+        expect(presenter.is_parent_type_disabled).toBe(false);
+        expect(presenter.types).toStrictEqual([
             {
                 forward_type_presenter: {
                     label: "Child",
@@ -63,5 +68,21 @@ describe("AllowedLinksTypesPresenter", () => {
                 },
             },
         ]);
+    });
+
+    it(`should mark reverse _is_child type (Parent) as disabled when there is already a reverse _is_child link
+        as an Artifact should only have one Parent`, () => {
+        const presenter = CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            VerifyHasParentLinkStub.withParentLink(),
+            [
+                {
+                    shortname: IS_CHILD_LINK_TYPE,
+                    forward_label: "Child",
+                    reverse_label: "Parent",
+                },
+            ]
+        );
+        expect(presenter.is_parent_type_disabled).toBe(true);
+        expect(presenter.types).toHaveLength(1);
     });
 });

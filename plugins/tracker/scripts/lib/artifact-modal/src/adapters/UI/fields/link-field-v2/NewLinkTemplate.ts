@@ -55,7 +55,9 @@ export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter | New
 
 export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => {
     const removeNewLink = (host: LinkField): void => {
-        host.new_links_presenter = host.controller.removeNewLink(link);
+        const { links, types } = host.controller.removeNewLink(link);
+        host.new_links_presenter = links;
+        host.allowed_link_types = types;
     };
 
     return html`

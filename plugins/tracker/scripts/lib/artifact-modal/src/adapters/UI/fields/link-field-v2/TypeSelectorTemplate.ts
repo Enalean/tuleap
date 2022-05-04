@@ -22,8 +22,10 @@ import { html } from "hybrids";
 import type { LinkField } from "./LinkField";
 import { getDefaultLinkTypeLabel, getNewArtifactLabel } from "../../../../gettext-catalog";
 import type { AllowedLinkTypesPresenterContainer } from "./CollectionOfAllowedLinksTypesPresenters";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeProxy } from "./LinkTypeProxy";
+import type { AllowedLinkTypePresenter } from "./CollectionOfAllowedLinksTypesPresenters";
+import { REVERSE_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 
 const onChange = (host: LinkField, event: Event): void => {
     const new_link_type = LinkTypeProxy.fromChangeEvent(event);
@@ -33,23 +35,33 @@ const onChange = (host: LinkField, event: Event): void => {
     host.current_link_type = new_link_type;
 };
 
+const getOption = (
+    host: LinkField,
+    presenter: AllowedLinkTypePresenter
+): UpdateFunction<LinkField> => {
+    const value = presenter.shortname + " " + presenter.direction;
+    const is_selected =
+        host.current_link_type.shortname === presenter.shortname &&
+        host.current_link_type.direction === presenter.direction;
+    const is_disabled =
+        presenter.shortname === IS_CHILD_LINK_TYPE &&
+        presenter.direction === REVERSE_DIRECTION &&
+        host.allowed_link_types.is_parent_type_disabled;
+    return html`
+        <option value="${value}" selected="${is_selected}" disabled="${is_disabled}">
+            ${presenter.label}
+        </option>
+    `;
+};
+
 const getOptions = (
     host: LinkField,
     types_container: AllowedLinkTypesPresenterContainer
 ): UpdateFunction<LinkField> => {
-    const { forward_type_presenter } = types_container;
-
-    const forward_link_value =
-        forward_type_presenter.shortname + " " + forward_type_presenter.direction;
-
+    const { forward_type_presenter, reverse_type_presenter } = types_container;
     return html`
         <option disabled>–</option>
-        <option
-            value="${forward_link_value}"
-            selected="${host.current_link_type.shortname === forward_type_presenter.shortname}"
-        >
-            ${forward_type_presenter.label}
-        </option>
+        ${getOption(host, forward_type_presenter)} ${getOption(host, reverse_type_presenter)}
     `;
 };
 
@@ -73,7 +85,7 @@ export const getTypeSelectorTemplate = (host: LinkField): UpdateFunction<LinkFie
                 >
                     ${getDefaultLinkTypeLabel()}
                 </option>
-                ${host.allowed_link_types.map((presenter) => getOptions(host, presenter))}
+                ${host.allowed_link_types.types.map((presenter) => getOptions(host, presenter))}
             </optgroup>
         </select>
     `;

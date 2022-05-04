@@ -37,11 +37,16 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
+import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import type { LinkSelector } from "@tuleap/link-selector";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -49,7 +54,9 @@ describe(`AddLinkButtonTemplate`, () => {
     let host: HostElement,
         new_link_adder: AddNewLinkStub,
         link_addition_presenter: LinkAdditionPresenter,
-        link_selector: LinkSelectorStub;
+        link_selector: LinkSelectorStub,
+        current_link_type: LinkType,
+        parent_verifier: VerifyHasParentLink;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
@@ -57,6 +64,8 @@ describe(`AddLinkButtonTemplate`, () => {
         const linkable_artifact = LinkableArtifactStub.withDefaults({ id: NEW_ARTIFACT_ID });
         link_addition_presenter = LinkAdditionPresenter.withArtifactSelected(linkable_artifact);
         link_selector = LinkSelectorStub.withResetSelectionCallCount();
+        current_link_type = LinkTypeStub.buildUntyped();
+        parent_verifier = VerifyHasParentLinkStub.withNoParentLink();
     });
 
     const render = (): HTMLButtonElement => {
@@ -86,23 +95,36 @@ describe(`AddLinkButtonTemplate`, () => {
             RetrieveNewLinksStub.withNewLinks(
                 NewLinkStub.withIdAndType(NEW_ARTIFACT_ID, LinkTypeStub.buildUntyped())
             ),
+            parent_verifier,
             {
                 field_id: 696,
                 label: "Artifact link",
                 type: "art_link",
-                allowed_types: [],
+                allowed_types: [
+                    {
+                        shortname: IS_CHILD_LINK_TYPE,
+                        forward_label: "Parent",
+                        reverse_label: "Child",
+                    },
+                ],
             },
             current_artifact_identifier,
             ArtifactCrossReferenceStub.withRef("story #62")
         );
+        const allowed_link_types =
+            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                VerifyHasParentLinkStub.withNoParentLink(),
+                []
+            );
 
         host = {
             link_addition_presenter,
-            current_link_type: LinkTypeStub.buildUntyped(),
+            current_link_type,
             new_links_presenter: NewLinkCollectionPresenter.buildEmpty(),
-            link_selector,
+            allowed_link_types,
+            link_selector: link_selector as LinkSelector,
             controller,
-        } as unknown as HostElement;
+        } as HostElement;
 
         const updateFunction = getAddLinkButtonTemplate(host);
         updateFunction(host, target);
@@ -121,11 +143,39 @@ describe(`AddLinkButtonTemplate`, () => {
 
         expect(new_link_adder.getCallCount()).toBe(1);
         expect(link_selector.getCallCount()).toBe(1);
-        expect(host.new_links_presenter.links).toHaveLength(1);
+        expect(host.new_links_presenter).toHaveLength(1);
+        expect(host.allowed_link_types.types).toHaveLength(1);
+        expect(host.current_link_type).toBe(current_link_type);
 
-        const new_link = host.new_links_presenter.links[0];
+        const new_link = host.new_links_presenter[0];
         expect(new_link.identifier.id).toBe(NEW_ARTIFACT_ID);
         expect(new_link.link_type.shortname).toBe(UNTYPED_LINK);
+    });
+
+    describe(`given the current link type was reverse _is_child (Parent)`, () => {
+        beforeEach(() => {
+            current_link_type = LinkTypeStub.buildParentLinkType();
+        });
+
+        it(`when I click the button and that type is now disabled,
+            it will set the Untyped link as current link type`, () => {
+            parent_verifier = VerifyHasParentLinkStub.withParentLink();
+
+            const button = render();
+            button.click();
+
+            expect(host.current_link_type.shortname).toBe(UNTYPED_LINK);
+        });
+
+        it(`when I click the button and that type is still enabled,
+            it will not change the current link type`, () => {
+            parent_verifier = VerifyHasParentLinkStub.withNoParentLink();
+
+            const button = render();
+            button.click();
+
+            expect(host.current_link_type).toBe(current_link_type);
+        });
     });
 
     it(`when there is no selected artifact, the button will be disabled`, () => {

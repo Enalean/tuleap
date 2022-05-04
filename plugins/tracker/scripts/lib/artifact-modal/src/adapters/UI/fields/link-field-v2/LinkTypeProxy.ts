@@ -22,6 +22,8 @@ import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
 } from "../../../../domain/fields/link-field-v2/LinkType";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { getDefaultLinkTypeLabel } from "../../../../gettext-catalog";
 
 export const LinkTypeProxy = {
     fromChangeEvent: (event: Event): LinkType | null => {
@@ -38,4 +40,10 @@ export const LinkTypeProxy = {
             label: event.target.selectedOptions[0].label,
         };
     },
+
+    buildUntyped: (): LinkType => ({
+        shortname: UNTYPED_LINK,
+        direction: FORWARD_DIRECTION,
+        label: getDefaultLinkTypeLabel(),
+    }),
 };

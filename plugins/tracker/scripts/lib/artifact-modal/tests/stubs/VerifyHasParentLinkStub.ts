@@ -17,11 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import type { VerifyHasParentLink } from "../../src/domain/fields/link-field-v2/VerifyHasParentLink";
 
-export type NewLinkCollectionPresenter = readonly NewLink[];
+export const VerifyHasParentLinkStub = {
+    withParentLink: (): VerifyHasParentLink => ({
+        hasParentLink: () => true,
+    }),
 
-export const NewLinkCollectionPresenter = {
-    buildEmpty: (): NewLinkCollectionPresenter => [],
-    fromLinks: (links: readonly NewLink[]): NewLinkCollectionPresenter => links,
+    withNoParentLink: (): VerifyHasParentLink => ({
+        hasParentLink: () => false,
+    }),
 };
