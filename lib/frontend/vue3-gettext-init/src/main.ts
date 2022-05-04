@@ -70,7 +70,9 @@ export async function initVueGettext(
 function transformTranslationToVue3GettextFormat(po_file: POFile): Vue3GettextTranslationData {
     const vue3_gettext_data: Vue3GettextTranslationData = {};
     for (const [, value] of Object.entries(po_file.translations[""])) {
-        vue3_gettext_data[value.msgid] = value.msgstr;
+        if (value.msgstr.every((msgstr) => msgstr.length !== 0)) {
+            vue3_gettext_data[value.msgid] = value.msgstr;
+        }
     }
     return vue3_gettext_data;
 }

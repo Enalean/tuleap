@@ -35,6 +35,14 @@ describe("vue3-gettext-init", () => {
                             msgid: "Hello world",
                             msgstr: ["Bonjour monde"],
                         },
+                        "Untranslated string": {
+                            msgid: "Untranslated string",
+                            msgstr: [""],
+                        },
+                        "Untranslated plural": {
+                            msgid: "Untranslated plural",
+                            msgstr: ["Pluriel non traduit", ""],
+                        },
                     },
                 },
             });
@@ -42,7 +50,7 @@ describe("vue3-gettext-init", () => {
             document.body.dataset.userLocale = "fr_FR";
         });
 
-        it("loads the translations and gives them to vue3-gettext", async () => {
+        it("loads the translations and gives them to vue3-gettext, skipping untranslated strings", async () => {
             const create_gettext_spy = jest.fn(createGettext);
 
             const gettext = await initVueGettext(create_gettext_spy, callback);
