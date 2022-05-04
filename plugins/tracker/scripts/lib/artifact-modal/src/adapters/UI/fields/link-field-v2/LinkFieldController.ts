@@ -42,9 +42,16 @@ import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/R
 import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { DeleteNewLink } from "../../../../domain/fields/link-field-v2/DeleteNewLink";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+
+export type LinkFieldPresenterAndAllowedLinkTypes = {
+    readonly field: LinkFieldPresenter;
+    readonly types: CollectionOfAllowedLinksTypesPresenters;
+};
 
 export type LinkFieldControllerType = {
-    displayField(): LinkFieldPresenter;
+    displayField(): LinkFieldPresenterAndAllowedLinkTypes;
     displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
@@ -87,8 +94,12 @@ export const LinkFieldController = (
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_artifact_reference: ArtifactCrossReference | null
 ): LinkFieldControllerType => ({
-    displayField: (): LinkFieldPresenter =>
-        LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
+    displayField: () => ({
+        field: LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
+        types: CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+            field.allowed_types.filter((type) => type.shortname === IS_CHILD_LINK_TYPE)
+        ),
+    }),
 
     displayLinkedArtifacts: () =>
         links_retriever.getLinkedArtifacts(current_artifact_identifier).match(

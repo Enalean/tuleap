@@ -39,6 +39,7 @@ import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
+import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -47,6 +48,7 @@ export interface LinkField {
     link_selector: LinkSelector;
     field_presenter: LinkFieldPresenter;
     linked_artifacts_presenter: LinkedArtifactCollectionPresenter;
+    allowed_link_types: CollectionOfAllowedLinksTypesPresenters;
     link_addition_presenter: LinkAdditionPresenter;
     new_links_presenter: NewLinkCollectionPresenter;
     current_link_type: LinkType;
@@ -116,7 +118,9 @@ export const LinkField = define<LinkField>({
     link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
-            host.field_presenter = controller.displayField();
+            const { field, types } = controller.displayField();
+            host.field_presenter = field;
+            host.allowed_link_types = types;
             controller
                 .displayLinkedArtifacts()
                 .then((presenter) => (host.linked_artifacts_presenter = presenter));
@@ -134,6 +138,7 @@ export const LinkField = define<LinkField>({
         },
     },
     field_presenter: undefined,
+    allowed_link_types: undefined,
     linked_artifacts_presenter: {
         get: (host, last_value) =>
             last_value ?? LinkedArtifactCollectionPresenter.buildLoadingState(),

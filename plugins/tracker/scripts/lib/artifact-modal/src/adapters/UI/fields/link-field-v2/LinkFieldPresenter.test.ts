@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
@@ -38,32 +37,17 @@ describe(`LinkFieldPresenter`, () => {
                 field_id: FIELD_ID,
                 label: FIELD_LABEL,
                 type: "art_link",
-                allowed_types: [
-                    {
-                        shortname: IS_CHILD_LINK_TYPE,
-                        forward_label: "Parent",
-                        reverse_label: "Child",
-                    },
-                    {
-                        shortname: "custom",
-                        forward_label: "Custom Forward",
-                        reverse_label: "Custom Reverse",
-                    },
-                ],
+                allowed_types: [],
             },
             cross_reference
         );
 
-    it(`keeps only "is_child" link type and builds from a field representation and the current artifact's cross-reference`, () => {
+    it(`builds from a field representation and the current artifact's cross-reference`, () => {
         const presenter = build();
 
         expect(presenter.field_id).toBe(FIELD_ID);
         expect(presenter.label).toBe(FIELD_LABEL);
         expect(presenter.current_artifact_reference?.ref).toBe("story #62");
-        expect(presenter.allowed_types).toHaveLength(1);
-        expect(presenter.allowed_types[0].forward_type_presenter.shortname).toBe(
-            IS_CHILD_LINK_TYPE
-        );
     });
 
     it(`builds with a null cross reference (creation mode)`, () => {

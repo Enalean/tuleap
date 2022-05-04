@@ -26,6 +26,7 @@ import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossRef
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupElement {
     const optgroup = select.querySelector("[data-test=link-type-select-optgroup]");
@@ -36,10 +37,25 @@ function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupEleme
 }
 
 describe("TypeSelectorTemplate", () => {
-    let host: HostElement, cross_reference: ArtifactCrossReference | null;
+    let host: HostElement,
+        allowed_link_types: CollectionOfAllowedLinksTypesPresenters,
+        cross_reference: ArtifactCrossReference | null;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
+        allowed_link_types =
+            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType([
+                {
+                    shortname: IS_CHILD_LINK_TYPE,
+                    forward_label: "Child",
+                    reverse_label: "Parent",
+                },
+                {
+                    shortname: "_covered_by",
+                    forward_label: "Covered by",
+                    reverse_label: "Covers",
+                },
+            ]);
         cross_reference = ArtifactCrossReferenceStub.withRef("story #150");
     });
 
@@ -47,28 +63,17 @@ describe("TypeSelectorTemplate", () => {
         const target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
-        const allowed_types = [
-            {
-                shortname: "_is_child",
-                forward_label: "Child",
-                reverse_label: "Parent",
-            },
-            {
-                shortname: "_covered_by",
-                forward_label: "Covered by",
-                reverse_label: "Covers",
-            },
-        ];
         host = {
             field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
                 {
                     field_id: 276,
                     type: "art_link",
                     label: "Artifact link",
-                    allowed_types,
+                    allowed_types: [],
                 },
                 cross_reference
             ),
+            allowed_link_types,
             current_link_type: LinkTypeStub.buildUntyped(),
         } as HostElement;
 
@@ -87,13 +92,19 @@ describe("TypeSelectorTemplate", () => {
         const optgroup = getSelectMainOptionsGroup(select);
 
         expect(optgroup.label).toBe("story #150");
-        expect(select.options).toHaveLength(3);
 
-        const [untyped_option, , child_option] = select.options;
+        const options_with_label = Array.from(select.options).filter(
+            (option) => option.label !== "–"
+        );
+        const separators = Array.from(select.options).filter((option) => option.label === "–");
+        expect(separators).toHaveLength(2);
+        expect(options_with_label).toHaveLength(3);
+
+        const [untyped_option, child_option, covered_by_option] = options_with_label;
         expect(untyped_option.selected).toBe(true);
         expect(untyped_option.label).toBe("Linked to");
-
         expect(child_option.label).toBe("Child");
+        expect(covered_by_option.label).toBe("Covered by");
     });
 
     it("Should display 'New artifact' when there is no artifact cross reference (creation mode)", () => {

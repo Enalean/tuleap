@@ -73,9 +73,7 @@ export const getTypeSelectorTemplate = (host: LinkField): UpdateFunction<LinkFie
                 >
                     ${getDefaultLinkTypeLabel()}
                 </option>
-                ${host.field_presenter.allowed_types.map((presenter) =>
-                    getOptions(host, presenter)
-                )}
+                ${host.allowed_link_types.map((presenter) => getOptions(host, presenter))}
             </optgroup>
         </select>
     `;

@@ -18,7 +18,10 @@
  */
 
 import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
-import type { LinkFieldControllerType } from "./LinkFieldController";
+import type {
+    LinkFieldControllerType,
+    LinkFieldPresenterAndAllowedLinkTypes,
+} from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
 import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
@@ -33,7 +36,6 @@ import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStu
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
-import type { LinkFieldPresenter } from "./LinkFieldPresenter";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
@@ -102,7 +104,18 @@ describe(`LinkFieldController`, () => {
                 field_id: FIELD_ID,
                 type: "art_link",
                 label: "Artifact link",
-                allowed_types: [],
+                allowed_types: [
+                    {
+                        shortname: IS_CHILD_LINK_TYPE,
+                        forward_label: "Child",
+                        reverse_label: "Parent",
+                    },
+                    {
+                        shortname: "custom",
+                        forward_label: "Custom Forward",
+                        reverse_label: "Custom Reverse",
+                    },
+                ],
             },
             current_artifact_identifier,
             cross_reference
@@ -110,11 +123,18 @@ describe(`LinkFieldController`, () => {
     };
 
     describe(`displayField()`, () => {
-        const displayField = (): LinkFieldPresenter => getController().displayField();
+        const displayField = (): LinkFieldPresenterAndAllowedLinkTypes =>
+            getController().displayField();
 
         it(`returns a presenter for the field and current artifact cross reference`, () => {
-            const presenter = displayField();
-            expect(presenter.field_id).toBe(FIELD_ID);
+            const { field } = displayField();
+            expect(field.field_id).toBe(FIELD_ID);
+        });
+
+        it(`returns a presenter for the allowed link types and keeps only _is_child type`, () => {
+            const { types } = displayField();
+            expect(types).toHaveLength(1);
+            expect(types[0].forward_type_presenter.shortname).toBe(IS_CHILD_LINK_TYPE);
         });
     });
 
