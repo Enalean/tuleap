@@ -9,6 +9,12 @@ msgstr ""
 msgid "MediaWiki Standalone"
 msgstr ""
 
+msgid "Mediawiki Standalone (read only)"
+msgstr ""
+
+msgid "Read only access to information about Mediawiki Standalone"
+msgstr ""
+
 msgid "Standalone MediaWiki instances integration with Tuleap"
 msgstr ""
 

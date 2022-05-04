@@ -34,6 +34,8 @@ use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
+use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
+use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceActivationProjectServiceBeforeActivationEvent;
@@ -101,6 +103,7 @@ final class mediawiki_standalonePlugin extends Plugin
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(Event::REST_RESOURCES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -130,6 +133,17 @@ final class mediawiki_standalonePlugin extends Plugin
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         (new ServiceActivationHandler())->handle(new ServiceActivationServiceDisabledCollectorEvent($event));
+    }
+
+    /**
+     * @see         Event::REST_RESOURCES
+     *
+     * @psalm-param array{restler: \Luracast\Restler\Restler} $params
+     */
+    public function restResources(array $params): void
+    {
+        $injector = new MediawikiStandaloneResourcesInjector();
+        $injector->populate($params['restler']);
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event): void
@@ -201,10 +215,11 @@ final class mediawiki_standalonePlugin extends Plugin
     private static function allowedOAuth2Scopes(): array
     {
         return [
-          OAuth2SignInScope::fromItself(),
-          OpenIDConnectEmailScope::fromItself(),
-          OpenIDConnectProfileScope::fromItself(),
-          OAuth2ProjectReadScope::fromItself(),
+            OAuth2SignInScope::fromItself(),
+            OpenIDConnectEmailScope::fromItself(),
+            OpenIDConnectProfileScope::fromItself(),
+            OAuth2ProjectReadScope::fromItself(),
+            OAuth2MediawikiStandaloneReadScope::fromItself(),
         ];
     }
 }
