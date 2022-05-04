@@ -52,7 +52,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             false
         );
 
-        if ($chart) {
+        if ($chart && $chart->getRenderer()->getReport()->getTracker()->userCanView()) {
             $content = $chart->getWidgetContent();
         } else {
             $content = '<em>Chart does not exist</em>';
