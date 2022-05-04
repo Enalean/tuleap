@@ -252,7 +252,7 @@ class GraphOnTrackersV5_ChartFactory
                 $report   = null; //We don't know the report
                 $renderer = Tracker_Report_RendererFactory::instance()->getReportRendererById($chart_data['report_graphic_id'], $report, $store_in_session);
             }
-            if ($renderer && $renderer->getReport()->getTracker()->userCanView()) {
+            if ($renderer) {
                 $c = $this->instanciateChart($chart_data, $renderer, $store_in_session);
             }
         }
