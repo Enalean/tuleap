@@ -10,7 +10,7 @@
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/tlp": "file:../../../src/themes/tlp",
-    "lit": "^2.0.2"
+    "lit": "^2.2.3"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../build-system-configurator",

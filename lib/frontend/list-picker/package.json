@@ -13,7 +13,7 @@
     "@tuleap/gettext": "file:../gettext",
     "@tuleap/tlp": "file:../../../src/themes/tlp",
     "@tuleap/tlp-swatch-colors": "file:../tlp-swatch-colors",
-    "lit": "^2.0.2"
+    "lit": "^2.2.3"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "file:../build-system-configurator",
