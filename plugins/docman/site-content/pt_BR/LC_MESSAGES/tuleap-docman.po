@@ -1899,6 +1899,10 @@ msgid "The approval table is not yet available."
 msgstr ""
 
 #, php-format
+msgid "The column: '%s' cannot be sorted."
+msgstr "A coluna: '%s' não pode ser classificada."
+
+#, php-format
 msgid ""
 "The date entered in field \"%1$s\" is not valid. Valid date format is YYYY-M-"
 "D (e.g. '%2$s' for today) or let the field blank."

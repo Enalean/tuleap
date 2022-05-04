@@ -30,14 +30,16 @@ use Luracast\Restler\RestException;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
-use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
+use Tuleap\Docman\REST\v1\Search\ColumnCannotBeSortedException;
 use Tuleap\Docman\REST\v1\Search\PostSearchRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchDateRepresentation;
+use Tuleap\Docman\REST\v1\Search\SearchPropertyRepresentation;
 use Tuleap\Docman\Search\AlwaysThereColumnRetriever;
 use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Docman\Search\FilterFilename;
 use Tuleap\Docman\Search\FilterItemId;
+use Tuleap\Docman\Search\InvalidSortTypeException;
 use Tuleap\REST\I18NRestException;
 
 class SearchReportBuilder
@@ -52,6 +54,9 @@ class SearchReportBuilder
     ) {
     }
 
+    /**
+     * @throws I18NRestException
+     */
     public function buildReport(
         \Docman_Folder $item,
         PostSearchRepresentation $search,
@@ -75,9 +80,14 @@ class SearchReportBuilder
 
         $deduplicated_column_names = array_flip(array_flip([...$always_there_columns_names, ...$additional_columns_names]));
 
-        $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report, $search->sort);
-
-        return $report;
+        try {
+            $this->column_report_builder->addColumnsFromArray($deduplicated_column_names, $report, $search->sort);
+            return $report;
+        } catch (ColumnCannotBeSortedException  $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        } catch (InvalidSortTypeException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
     }
 
     private function addGlobalTextFilter(PostSearchRepresentation $search, Docman_Report $report): void
