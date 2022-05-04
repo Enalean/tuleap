@@ -18,7 +18,7 @@
     "@tuleap/project-privacy-helper": "link:../project-privacy-helper",
     "@tuleap/tlp": "link:../../../src/themes/tlp",
     "@tuleap/tlp-popovers": "link:../tlp-popovers",
-    "@vueuse/core": "^7.5.3",
+    "@vueuse/core": "^8.4.2",
     "vue": "^3.2.26",
     "vue-dompurify-html": "^3.0.0-beta.3"
   },
