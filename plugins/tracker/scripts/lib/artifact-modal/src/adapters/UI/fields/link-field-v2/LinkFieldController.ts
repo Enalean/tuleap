@@ -41,8 +41,9 @@ import type { AddNewLink } from "../../../../domain/fields/link-field-v2/AddNewL
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
 import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import type { DeleteNewLink } from "../../../../domain/fields/link-field-v2/DeleteNewLink";
 
-export interface LinkFieldControllerType {
+export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenter;
     displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
@@ -50,7 +51,8 @@ export interface LinkFieldControllerType {
     autoComplete: LinkSelectorSearchFieldCallback;
     onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
     addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkCollectionPresenter;
-}
+    removeNewLink(link: NewLink): NewLinkCollectionPresenter;
+};
 
 const isCreationModeFault = (fault: Fault): boolean =>
     "isCreationMode" in fault && fault.isCreationMode() === true;
@@ -77,10 +79,11 @@ export const LinkFieldController = (
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
     fault_notifier: NotifyFault,
-    field: ArtifactLinkFieldStructure,
     links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
     new_link_adder: AddNewLink,
+    new_link_remover: DeleteNewLink,
     new_links_retriever: RetrieveNewLinks,
+    field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_artifact_reference: ArtifactCrossReference | null
 ): LinkFieldControllerType => ({
@@ -103,16 +106,12 @@ export const LinkFieldController = (
             }
         ),
 
-    markForRemoval(
-        artifact_identifier: LinkedArtifactIdentifier
-    ): LinkedArtifactCollectionPresenter {
+    markForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
         deleted_link_adder.addLinkMarkedForRemoval(artifact_identifier);
         return buildPresenter(links_store, deleted_link_verifier);
     },
 
-    unmarkForRemoval(
-        artifact_identifier: LinkedArtifactIdentifier
-    ): LinkedArtifactCollectionPresenter {
+    unmarkForRemoval(artifact_identifier): LinkedArtifactCollectionPresenter {
         deleted_link_remover.deleteLinkMarkedForRemoval(artifact_identifier);
         return buildPresenter(links_store, deleted_link_verifier);
     },
@@ -128,6 +127,11 @@ export const LinkFieldController = (
 
     addNewLink(artifact, type): NewLinkCollectionPresenter {
         new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
+        return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
+    },
+
+    removeNewLink(link): NewLinkCollectionPresenter {
+        new_link_remover.deleteNewLink(link);
         return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
     },
 });

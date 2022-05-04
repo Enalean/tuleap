@@ -22,7 +22,7 @@ import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import type { LinkField } from "./LinkField";
-import { getDefaultLinkTypeLabel } from "../../../../gettext-catalog";
+import { getDefaultLinkTypeLabel, getRemoveLabel } from "../../../../gettext-catalog";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 
 type MapOfClasses = Record<string, boolean>;
@@ -53,8 +53,12 @@ export const getArtifactLinkTypeLabel = (artifact: LinkedArtifactPresenter | New
     return getDefaultLinkTypeLabel();
 };
 
-export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> =>
-    html`
+export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => {
+    const removeNewLink = (host: LinkField): void => {
+        host.new_links_presenter = host.controller.removeNewLink(link);
+    };
+
+    return html`
         <tr class="link-field-table-row link-field-table-row-new" data-test="link-row">
             <td class="link-field-table-cell-type" data-test="link-type">
                 ${getArtifactLinkTypeLabel(link)}
@@ -77,6 +81,17 @@ export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> =>
                     </span>
                 `}
             </td>
-            <td class="link-field-table-cell-action"></td>
+            <td class="link-field-table-cell-action">
+                <button
+                    class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                    type="button"
+                    onclick="${removeNewLink}"
+                    data-test="action-button"
+                >
+                    <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                    ${getRemoveLabel()}
+                </button>
+            </td>
         </tr>
     `;
+};

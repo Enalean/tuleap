@@ -42,6 +42,7 @@ import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifac
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
+import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -143,12 +144,6 @@ describe(`LinkedArtifactTemplate`, () => {
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
                 fault_notifier,
-                {
-                    field_id: 457,
-                    label: "Artifact link",
-                    type: "art_link",
-                    allowed_types: [],
-                },
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
                         LinkableArtifactStub.withDefaults()
@@ -158,7 +153,14 @@ describe(`LinkedArtifactTemplate`, () => {
                     current_artifact_identifier
                 ),
                 AddNewLinkStub.withCount(),
+                DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
+                {
+                    field_id: 457,
+                    label: "Artifact link",
+                    type: "art_link",
+                    allowed_types: [],
+                },
                 current_artifact_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72")
             );
