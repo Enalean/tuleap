@@ -8,3 +8,7 @@ msgstr ""
 
 msgid "Add support of security.txt file (RFC 9116)"
 msgstr "Ajout du support du fichier security.txt (RFC 9116)"
+
+#, php-format
+msgid "This file was automatically generated at %s"
+msgstr "Ce fichier a été généré automatiquement le %s"

@@ -54,14 +54,20 @@ final class SecurityTxtController extends DispatchablePSR15Compatible implements
                 ->withBody($this->stream_factory->createStream('No security.txt file defined'));
         }
 
-        $canonical = ServerHostname::HTTPSUrl() . self::WELL_KNOWN_SECURITY_TXT_HREF;
-        $expires   = (new \DateTimeImmutable())->add(new \DateInterval('P1W'))->format(\DateTimeInterface::ATOM);
+        $canonical              = ServerHostname::HTTPSUrl() . self::WELL_KNOWN_SECURITY_TXT_HREF;
+        $current_date           = new \DateTimeImmutable();
+        $expires                = $current_date->add(new \DateInterval('P1W'))->format(\DateTimeInterface::ATOM);
+        $comment_auto_generated = sprintf(
+            dgettext('tuleap-securitytxt', 'This file was automatically generated at %s'),
+            $current_date->format(\DateTimeInterface::ATOM)
+        );
 
         return $this->response_factory->createResponse(200)
             ->withHeader('Content-Type', 'text/plain;charset=utf-8')
             ->withBody(
                 $this->stream_factory->createStream(
                     <<<EOF
+                    # $comment_auto_generated
                     Canonical: $canonical
                     Expires: $expires
                     Contact: $primary_contact
