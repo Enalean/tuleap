@@ -28,7 +28,7 @@ import angular_artifact_modal from "@tuleap/plugin-tracker-artifact-modal";
 import "angular-moment";
 import "moment/locale/fr.js";
 import "angular-gettext";
-import translations from "../../po/fr.po";
+import translations from "../../po/fr_FR.po";
 
 import card_fields from "@tuleap/plugin-agiledashboard-card-fields";
 

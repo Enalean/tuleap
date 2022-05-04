@@ -29,7 +29,7 @@ import angular_async from "@tuleap/angular-async";
 import "angular-locker";
 import "angular-gettext";
 import "ng-scrollbar";
-import translations from "../../po/fr.po";
+import translations from "../../po/fr_FR.po";
 
 import jwt from "./jwt/jwt.js";
 import kanban_item from "./kanban-item/kanban-item.js";

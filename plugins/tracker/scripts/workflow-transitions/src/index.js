@@ -25,7 +25,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import store_options from "./store";
 import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import french_translations from "../po/fr_FR.po";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
 

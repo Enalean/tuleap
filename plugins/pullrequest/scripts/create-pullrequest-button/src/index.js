@@ -20,7 +20,7 @@
 import Vue from "vue";
 import App from "./components/App.vue";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import french_translations from "../po/fr_FR.po";
 
 document.addEventListener("DOMContentLoaded", () => {
     const is_anonymous = document.body.dataset.userId === "0";
