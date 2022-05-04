@@ -341,6 +341,33 @@ final class JiraToTuleapFieldTypeMapperTest extends \Tuleap\Test\PHPUnit\TestCas
             },
         ];
 
+        yield 'do not have the same ID twice in generated lists' => [
+            'jira_field' => new JiraFieldAPIRepresentation(
+                'selectid',
+                'Select Single',
+                false,
+                'com.atlassian.jira.plugin.system.customfieldtypes:select',
+                [
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 1, 'name' => 'CIRRUS'], new FieldAndValueIDGenerator()),
+                    JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses(['id' => 2, 'name' => '*CIRRUS'], new FieldAndValueIDGenerator()),
+                ],
+                true,
+            ),
+            'tests' => function (SimpleXMLElement $exported_tracker, FieldMappingCollection $collection) {
+                $node = $exported_tracker->xpath('//formElement[name="' . AlwaysThereFieldsExporter::CUSTOM_FIELDSET_NAME . '"]//formElement[name="selectid"]')[0];
+
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $node['type']);
+                self::assertEquals('Select Single', $node->label);
+                self::assertEquals('static', $node->bind['type']);
+                self::assertCount(2, $node->bind->items->item);
+                self::assertNotEquals($node->bind->items->item[0]['ID'], $node->bind->items->item[1]['ID']);
+
+                $mapping = $collection->getMappingFromJiraField('selectid');
+                self::assertEquals(Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE, $mapping->getType());
+                self::assertEquals(Tracker_FormElement_Field_List_Bind_Static::TYPE, $mapping->getBindType());
+            },
+        ];
+
         yield 'testJiraMultiUserPickerFieldIsMappedToMultiSelectBoxField' => [
             'jira_field' => new JiraFieldAPIRepresentation(
                 'multiselectid',

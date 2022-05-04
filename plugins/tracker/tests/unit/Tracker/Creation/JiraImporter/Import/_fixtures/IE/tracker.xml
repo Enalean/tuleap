@@ -112,8 +112,8 @@
           <bind type="static" is_rank_alpha="0">
             <items>
               <item ID="Vbug_fixversions_release_01" label="Release 01"/>
-              <item ID="Vbug_fixversions_release_20" label="Release 2.0"/>
-              <item ID="Vbug_fixversions_release_30" label="Release 3.0"/>
+              <item ID="Vbug_fixversions_release_2_0" label="Release 2.0"/>
+              <item ID="Vbug_fixversions_release_3_0" label="Release 3.0"/>
             </items>
           </bind>
         </formElement>
@@ -145,8 +145,8 @@
           <bind type="static" is_rank_alpha="0">
             <items>
               <item ID="Vbug_versions_release_01" label="Release 01"/>
-              <item ID="Vbug_versions_release_20" label="Release 2.0"/>
-              <item ID="Vbug_versions_release_30" label="Release 3.0"/>
+              <item ID="Vbug_versions_release_2_0" label="Release 2.0"/>
+              <item ID="Vbug_versions_release_3_0" label="Release 3.0"/>
             </items>
           </bind>
         </formElement>
@@ -512,15 +512,15 @@
           <value ref="fileinfo_10000"/>
         </field_change>
         <field_change field_name="fixVersions" type="list" bind="static">
-          <value format="id"><![CDATA[bug_fixversions_release_20]]></value>
-          <value format="id"><![CDATA[bug_fixversions_release_30]]></value>
+          <value format="id"><![CDATA[bug_fixversions_release_2_0]]></value>
+          <value format="id"><![CDATA[bug_fixversions_release_3_0]]></value>
         </field_change>
         <field_change field_name="priority" type="list" bind="static">
           <value format="id"><![CDATA[bug_priority_highest]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
-          <value format="id"><![CDATA[bug_versions_release_20]]></value>
-          <value format="id"><![CDATA[bug_versions_release_30]]></value>
+          <value format="id"><![CDATA[bug_versions_release_2_0]]></value>
+          <value format="id"><![CDATA[bug_versions_release_3_0]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change field_name="assignee" type="list" bind="users">
