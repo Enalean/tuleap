@@ -58,6 +58,9 @@ Requires: rh-mysql57-mysql
 Requires: perl-DBI, perl-DBD-MySQL, perl-LDAP, perl-JSON, sudo, openssh
 Requires: highlight, nginx, logrotate
 
+# xmllint
+Requires: libxml2
+
 # Unit file
 Requires: systemd
 

@@ -113,7 +113,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_xml_exporter->shouldReceive('exportPlannings')->once();
         $this->kanban_XML_exporter->shouldReceive('export')->withArgs([Mockery::any(), $this->project])->once();
 
-        $this->xml_validator->shouldReceive('validate')->once()->andThrows(new XML_ParseException('', [], []));
+        $this->xml_validator->shouldReceive('validate')->once()->andThrows(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
 
         $this->expectException(XML_ParseException::class);
 

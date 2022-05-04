@@ -131,7 +131,7 @@ final class CardwallConfigXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cardwall_config2->shouldReceive('getDashboardColumns')->andReturn([]);
 
         $xml_validator = Mockery::mock(XML_RNGValidator::class);
-        $xml_validator->shouldReceive('validate')->andThrow(new XML_ParseException('', [], []));
+        $xml_validator->shouldReceive('validate')->andThrow(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
 
         $xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
         $this->expectException(XML_ParseException::class);

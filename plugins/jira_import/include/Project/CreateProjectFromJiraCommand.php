@@ -26,6 +26,7 @@ namespace Tuleap\JiraImport\Project;
 use Monolog\Handler\PsrHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -98,7 +99,7 @@ final class CreateProjectFromJiraCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $logger          = new ConsoleLogger($output);
+        $logger          = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
         $debug_directory = $input->getOption(self::OPT_DEBUG);
         if ($debug_directory !== null && is_string($debug_directory)) {
             $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);

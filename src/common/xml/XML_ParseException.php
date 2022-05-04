@@ -18,37 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XML_ParseException extends Exception
+abstract class XML_ParseException extends Exception // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /** @var XML_ParseError[] */
-    private $errors;
-    private $indented_xml;
-    private $rng_path;
-
-    public function __construct($rng_path, array $errors, array $indented_xml)
+    public function __construct(string $message, private string $rng_path, private array $indented_xml)
     {
-        $this->rng_path     = $rng_path;
-        $this->errors       = $errors;
-        $this->indented_xml = $indented_xml;
-        parent::__construct(sprintf('XML parse errors. %d errors found by jing', count($errors)));
+        parent::__construct($message);
     }
 
-    public function getRngPath()
+    public function getRngPath(): string
     {
         return $this->rng_path;
     }
 
-    public function getErrors()
-    {
-        return $this->errors;
-    }
+    abstract public function getErrors(): array;
 
-    public function getSourceXMLForError(XML_ParseError $error)
+    public function getSourceXMLForError(XML_ParseError $error): string
     {
         return $this->indented_xml[$error->getLine() - 1];
     }
 
-    public function getIndentedXml()
+    public function getIndentedXml(): string
     {
         $output  = [];
         $line_no = 1;
@@ -59,7 +48,12 @@ class XML_ParseException extends Exception
         return implode(PHP_EOL, $output);
     }
 
-    public function getFileLines()
+    public function getXMLWithoutLineNumbers(): string
+    {
+        return implode(PHP_EOL, $this->indented_xml);
+    }
+
+    public function getFileLines(): array
     {
         return $this->indented_xml;
     }

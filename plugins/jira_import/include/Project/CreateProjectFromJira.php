@@ -48,7 +48,6 @@ use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\ProjectMilestones\Widget\DashboardProjectMilestones;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LinkedIssuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
@@ -56,6 +55,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerat
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
+use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
@@ -130,40 +130,39 @@ final class CreateProjectFromJira
         $this->roadmap_dashboard_creator                 = $roadmap_dashboard_creator;
     }
 
+    /**
+     * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
+     * @throws \Tuleap\Project\XML\Import\ImportNotValidException
+     */
     public function create(
         LoggerInterface $logger,
-        ClientWrapper $jira_client,
+        JiraClient $jira_client,
         JiraCredentials $jira_credentials,
         string $jira_project,
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
     ): \Project {
-        try {
-            if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
-                throw new \RuntimeException('Project shortname already exists');
-            }
-            $xml_element = $this->generateFromJira(
-                $logger,
-                $jira_client,
-                $jira_credentials,
-                $jira_project,
-                $shortname,
-                $fullname,
-                $jira_epic_issue_type
-            );
-
-            $archive = new JiraProjectArchive($xml_element);
-            return $this->createProject($logger, $xml_element, $archive);
-        } catch (\XML_ParseException $exception) {
-            $this->logParseErrors($logger, $exception);
-            throw $exception;
+        if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
+            throw new \RuntimeException('Project shortname already exists');
         }
+        $xml_element = $this->generateFromJira(
+            $logger,
+            $jira_client,
+            $jira_credentials,
+            $jira_project,
+            $shortname,
+            $fullname,
+            $jira_epic_issue_type
+        );
+
+        $archive = new JiraProjectArchive($xml_element);
+        return $this->createProject($logger, $xml_element, $archive);
     }
 
     public function generateArchive(
         LoggerInterface $logger,
-        ClientWrapper $jira_client,
+        JiraClient $jira_client,
         JiraCredentials $jira_credentials,
         string $jira_project,
         string $shortname,
@@ -171,36 +170,22 @@ final class CreateProjectFromJira
         string $jira_epic_issue_type,
         string $archive_path,
     ): void {
-        try {
-            $xml_element = $this->generateFromJira(
-                $logger,
-                $jira_client,
-                $jira_credentials,
-                $jira_project,
-                $shortname,
-                $fullname,
-                $jira_epic_issue_type
-            );
+        $xml_element = $this->generateFromJira(
+            $logger,
+            $jira_client,
+            $jira_credentials,
+            $jira_project,
+            $shortname,
+            $fullname,
+            $jira_epic_issue_type
+        );
 
-            $xml_element->saveXML($archive_path);
-        } catch (\XML_ParseException $exception) {
-            $this->logParseErrors($logger, $exception);
-            throw $exception;
-        }
-    }
-
-    private function logParseErrors(LoggerInterface $logger, \XML_ParseException $exception): void
-    {
-        $logger->debug($exception->getIndentedXml());
-        foreach ($exception->getErrors() as $error) {
-            $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
-            $logger->error('Error @ line' . $exception->getSourceXMLForError($error));
-        }
+        $xml_element->saveXML($archive_path);
     }
 
     private function generateFromJira(
         LoggerInterface $logger,
-        ClientWrapper $jira_client,
+        JiraClient $jira_client,
         JiraCredentials $jira_credentials,
         string $jira_project,
         string $shortname,

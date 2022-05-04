@@ -45,7 +45,6 @@ class XML_RNGValidator
     }
 
     /**
-     * @param             $rng_path
      * @throws XML_ParseException
      */
     private function extractErrors(DOMDocument $dom, string $rng_path): void
@@ -56,21 +55,25 @@ class XML_RNGValidator
 
         try {
             file_put_contents($xml_file, $dom->saveXML());
-            $indent = __DIR__ . '/../../utils/xml/indent.xsl';
             $system_command->exec(
-                'xsltproc -o ' . escapeshellarg($temp) . ' ' . escapeshellarg($indent) . ' ' . escapeshellarg($xml_file)
+                'xmllint --format --output ' . escapeshellarg($temp) . ' ' . escapeshellarg($xml_file)
             );
         } catch (System_Command_CommandException $ex) {
             unlink($temp);
-            throw new \RuntimeException("Unable to generate pretty print version of XML file for error handling");
+            throw new \RuntimeException("Unable to generate pretty print version of XML file for error handling: " . $ex->getMessage());
         }
 
         try {
             $jing = __DIR__ . '/../../utils/xml/jing.jar';
             $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
-        } catch (System_Command_CommandException $ex) {
+        } catch (System_Command_CommandException $exception) {
+            if ($exception->getReturnValue() === 127) {
+                throw new \Tuleap\XML\ParseExceptionWithoutJava($rng_path, file($temp, FILE_IGNORE_NEW_LINES));
+            }
+            assert(isset($exception)); // Maybe a bug in psalm 4.20.0
+
             $errors = [];
-            foreach ($ex->getOutput() as $o) {
+            foreach ($exception->getOutput() as $o) {
                 $matches = [];
                 if (preg_match('/:(\d+):(\d+):([^:]+):(.*)/', $o, $matches)) {
                     //1 line
@@ -80,7 +83,7 @@ class XML_RNGValidator
                     $errors[] = new XML_ParseError($matches[1], $matches[2], $matches[3], $matches[4]);
                 }
             }
-            throw new XML_ParseException($rng_path, $errors, file($temp, FILE_IGNORE_NEW_LINES));
+            throw new \Tuleap\XML\ParseExceptionWithErrors($rng_path, $errors, file($temp, FILE_IGNORE_NEW_LINES));
         } finally {
             unlink($temp);
             unlink($xml_file);

@@ -25,6 +25,7 @@ use Tuleap\JiraImport\Project\ArtifactLinkType\ArtifactLinkTypeImporter;
 use Tuleap\JiraImport\Project\CreateProjectFromJira;
 use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\JiraImport\Project\Dashboard\RoadmapDashboardCreator;
+use Tuleap\JiraImport\Project\ReplayCreateProjectFromJiraCommand;
 use Tuleap\JiraImport\Project\ReplayImportCommand;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -87,6 +88,46 @@ final class jira_importPlugin extends Plugin
                 return new CreateProjectFromJiraCommand(
                     $user_manager,
                     new JiraProjectBuilder(),
+                    new CreateProjectFromJira(
+                        $user_manager,
+                        TemplateFactory::build(),
+                        new XMLFileContentRetriever(),
+                        new XMLImportHelper($user_manager),
+                        new JiraTrackerBuilder(),
+                        new ArtifactLinkTypeImporter(
+                            new ArtifactLinkTypeConverter(
+                                new TypePresenterFactory(
+                                    $nature_dao,
+                                    $artifact_link_usage_dao,
+                                ),
+                            ),
+                            new TypeCreator(
+                                $nature_dao,
+                                $nature_validator,
+                            ),
+                        ),
+                        new PlatformConfigurationRetriever(
+                            EventManager::instance()
+                        ),
+                        ProjectManager::instance(),
+                        new UserRolesChecker(),
+                        new RoadmapDashboardCreator()
+                    )
+                );
+            }
+        );
+
+        $commands_collector->addCommand(
+            ReplayCreateProjectFromJiraCommand::NAME,
+            static function (): ReplayCreateProjectFromJiraCommand {
+                $user_manager = UserManager::instance();
+
+                $nature_dao              = new TypeDao();
+                $nature_validator        = new TypeValidator($nature_dao);
+                $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+
+                return new ReplayCreateProjectFromJiraCommand(
+                    $user_manager,
                     new CreateProjectFromJira(
                         $user_manager,
                         TemplateFactory::build(),

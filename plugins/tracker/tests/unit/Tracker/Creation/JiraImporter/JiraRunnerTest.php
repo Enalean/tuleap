@@ -42,8 +42,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNo
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub;
+use Tuleap\XML\ParseExceptionWithErrors;
 use UserManager;
-use XML_ParseException;
 
 final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -525,7 +525,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->creator
             ->shouldReceive('createFromJira')
             ->once()
-            ->andThrow(new XML_ParseException('', [], []));
+            ->andThrow(new ParseExceptionWithErrors('', [], []));
 
         $this->logger
             ->shouldReceive('error')
