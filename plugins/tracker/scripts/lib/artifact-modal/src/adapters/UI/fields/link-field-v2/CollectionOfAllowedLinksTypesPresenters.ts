@@ -23,8 +23,7 @@ import {
     REVERSE_DIRECTION,
 } from "../../../../domain/fields/link-field-v2/LinkType";
 
-export type CollectionOfAllowedLinksTypesPresenters =
-    ReadonlyArray<AllowedLinkTypesPresenterContainer>;
+export type CollectionOfAllowedLinksTypesPresenters = readonly AllowedLinkTypesPresenterContainer[];
 
 export interface AllowedLinkTypesPresenterContainer {
     readonly forward_type_presenter: AllowedLinkTypePresenter;
@@ -34,12 +33,12 @@ export interface AllowedLinkTypesPresenterContainer {
 export interface AllowedLinkTypePresenter {
     readonly label: string;
     readonly shortname: string;
-    readonly direction: string;
+    readonly direction: "forward" | "reverse";
 }
 
 export const CollectionOfAllowedLinksTypesPresenters = {
     fromCollectionOfAllowedLinkType: (
-        types: ReadonlyArray<AllowedLinkTypeRepresentation>
+        types: readonly AllowedLinkTypeRepresentation[]
     ): CollectionOfAllowedLinksTypesPresenters => {
         return types.map((allowed_type) => {
             return {

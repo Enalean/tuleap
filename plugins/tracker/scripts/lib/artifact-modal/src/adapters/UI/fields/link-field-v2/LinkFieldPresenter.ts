@@ -17,32 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
-import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 export type LinkFieldPresenter = {
     readonly field_id: number;
     readonly label: string;
     readonly current_artifact_reference: ArtifactCrossReference | null;
-    readonly allowed_types: CollectionOfAllowedLinksTypesPresenters;
 };
 
 export const LinkFieldPresenter = {
     fromFieldAndCrossReference: (
         field: ArtifactLinkFieldStructure,
         current_artifact_reference: ArtifactCrossReference | null
-    ): LinkFieldPresenter => {
-        const type_presenters =
-            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                field.allowed_types.filter((type) => type.shortname === IS_CHILD_LINK_TYPE)
-            );
-        return {
-            field_id: field.field_id,
-            label: field.label,
-            current_artifact_reference,
-            allowed_types: type_presenters,
-        };
-    },
+    ): LinkFieldPresenter => ({
+        field_id: field.field_id,
+        label: field.label,
+        current_artifact_reference,
+    }),
 };
