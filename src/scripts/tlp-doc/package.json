@@ -6,11 +6,11 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@tuleap/filter-inline-table": "file:../../../lib/frontend/filter-table",
-    "@tuleap/link-selector": "file:../../../lib/frontend/link-selector",
-    "@tuleap/list-picker": "file:../../../lib/frontend/list-picker",
+    "@tuleap/filter-inline-table": "link:../../../lib/frontend/filter-table",
+    "@tuleap/link-selector": "link:../../../lib/frontend/link-selector",
+    "@tuleap/list-picker": "link:../../../lib/frontend/list-picker",
     "@tuleap/tlp-relative-date": "link:../../../lib/frontend/tlp-relative-date",
-    "@tuleap/tlp-swatch-colors": "file:../../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/tlp-swatch-colors": "link:../../../lib/frontend/tlp-swatch-colors",
     "codemirror": "^5.62.0",
     "dompurify": "^2.3.6"
   }

@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
-  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   '@types/bootstrap': ^4.5.1
   '@types/jquery': ^3.5.5
   jquery: ^3.6.0

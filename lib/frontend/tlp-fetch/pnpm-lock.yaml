@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../build-system-configurator
-  '@tuleap/concurrency-limit-pool': file:../concurrency-limit-pool
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/concurrency-limit-pool': link:../concurrency-limit-pool
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../concurrency-limit-pool

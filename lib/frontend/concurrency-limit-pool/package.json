@@ -14,7 +14,7 @@
     }
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

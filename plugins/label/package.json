@@ -5,17 +5,17 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "file:../../src",
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
-    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/core": "link:../../src",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "mustache": "^4.2.0",
     "vue": "^2.6.14",
     "vue-dompurify-html": "^2.5.1",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/po-gettext-plugin": "file:../../lib/frontend/po-gettext-plugin"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../../lib/frontend/po-gettext-plugin"
   },
   "scripts": {
     "build": "vite build",

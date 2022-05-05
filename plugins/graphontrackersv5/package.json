@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
-    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "d3-array": "^3.0.1",
     "d3-axis": "^3.0.0",
     "d3-collection": "^1.0.7",
@@ -21,7 +21,7 @@
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",

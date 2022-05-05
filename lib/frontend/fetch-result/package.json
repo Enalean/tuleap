@@ -14,12 +14,12 @@
     }
   },
   "dependencies": {
-    "@tuleap/concurrency-limit-pool": "file:../concurrency-limit-pool",
-    "@tuleap/fault": "file:../fault",
+    "@tuleap/concurrency-limit-pool": "link:../concurrency-limit-pool",
+    "@tuleap/fault": "link:../fault",
     "neverthrow": "^4.3.1"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

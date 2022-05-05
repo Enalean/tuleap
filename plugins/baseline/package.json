@@ -5,10 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
-    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
-    "@tuleap/vue-breadcrumb-privacy": "file:../../lib/frontend/vue-breadcrumb-privacy",
+    "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/vue-breadcrumb-privacy": "link:../../lib/frontend/vue-breadcrumb-privacy",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "node-htmldiff": "^0.9.3",
@@ -20,7 +20,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
     "@vue/test-utils": "^1.3.0",
     "vuex-mock-store": "0.0.8"
   },

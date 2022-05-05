@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../build-system-configurator
-  '@tuleap/tlp-fetch': file:../tlp-fetch
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/tlp-fetch': link:../tlp-fetch
   '@types/ckeditor': ^4.9.10
   tus-js-client: ^2.3.0
 

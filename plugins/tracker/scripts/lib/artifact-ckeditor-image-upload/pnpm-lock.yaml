@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/ckeditor-image-upload': file:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/gettext': file:../../../../../lib/frontend/gettext
-  '@tuleap/po-gettext-plugin': file:../../../../../lib/frontend/po-gettext-plugin
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/gettext': link:../../../../../lib/frontend/gettext
+  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
   css.escape: ^1.5.1
   pretty-kibibytes: ^4.0.4
   sprintf-js: ^1.1.2

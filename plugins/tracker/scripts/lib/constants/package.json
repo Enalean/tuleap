@@ -19,6 +19,6 @@
     "watch": "vite build --watch --mode development --minify false"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
   }
 }

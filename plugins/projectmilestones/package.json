@@ -5,10 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/date-helper": "file:../../lib/frontend/date-helper",
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
-    "@tuleap/tlp-swatch-colors": "file:../../lib/frontend/tlp-swatch-colors",
-    "@tuleap/vue2-gettext-init": "file:../../lib/frontend/vue2-gettext-init",
+    "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
+    "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
     "d3-array": "^3.0.1",
     "d3-scale": "^4.0.0",
     "d3-selection": "^3.0.0",
@@ -20,9 +20,9 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
-    "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support",
+    "@tuleap/vuex-store-wrapper-jest": "link:../../lib/frontend/vuex-store-wrapper-jest",
     "@types/d3-array": "^2.12.1",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.1.0",

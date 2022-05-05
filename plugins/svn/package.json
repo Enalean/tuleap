@@ -5,15 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper",
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
-    "@tuleap/tlp": "file:../../src/themes/tlp"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support",
+    "@tuleap/tlp": "link:../../src/themes/tlp"
   },
   "scripts": {
     "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",

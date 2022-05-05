@@ -5,15 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/gettext": "file:../../lib/frontend/gettext",
-    "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper",
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/gettext": "link:../../lib/frontend/gettext",
+    "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "mustache": "^4.2.0",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/tlp": "file:../../src/themes/tlp"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/tlp": "link:../../src/themes/tlp"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

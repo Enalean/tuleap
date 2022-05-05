@@ -10,14 +10,14 @@
   "main": "dist/list-picker.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@tuleap/gettext": "file:../gettext",
-    "@tuleap/tlp": "file:../../../src/themes/tlp",
-    "@tuleap/tlp-swatch-colors": "file:../tlp-swatch-colors",
+    "@tuleap/gettext": "link:../gettext",
+    "@tuleap/tlp": "link:../../../src/themes/tlp",
+    "@tuleap/tlp-swatch-colors": "link:../tlp-swatch-colors",
     "lit": "^2.2.3"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../build-system-configurator",
-    "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
+    "@tuleap/build-system-configurator": "link:../build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

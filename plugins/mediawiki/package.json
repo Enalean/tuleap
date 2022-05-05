@@ -5,8 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",

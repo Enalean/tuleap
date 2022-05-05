@@ -9,12 +9,12 @@
   "main": "dist/link-selector.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@tuleap/tlp": "file:../../../src/themes/tlp",
+    "@tuleap/tlp": "link:../../../src/themes/tlp",
     "lit": "^2.2.3"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../build-system-configurator",
-    "@tuleap/po-gettext-plugin": "file:../po-gettext-plugin"
+    "@tuleap/build-system-configurator": "link:../build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
