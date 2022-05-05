@@ -2,7 +2,7 @@
 
 // See https://issues.jenkins.io/browse/JENKINS-44085 and
 // and https://github.com/jenkinsci/bom/blob/542369a68d4c8b604626b4dbc00a109cc8833836/Jenkinsfile#L47-L71
-semaphore_max_test_stages = 5;
+semaphore_max_test_stages = 4;
 def execTestWithLimitedConcurrency(Closure testToExecute) {
     waitUntil { if (semaphore_max_test_stages > 0) { semaphore_max_test_stages--; true } else { false } }
     assert semaphore_max_test_stages >= 0
