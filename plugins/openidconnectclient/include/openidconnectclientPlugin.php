@@ -106,7 +106,6 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook('before_register');
         $this->addHook(Event::AFTER_USER_REGISTRATION);
         $this->addHook('anonymous_access_to_script_allowed');
-        $this->addHook('javascript_file');
         $this->addHook('cssfile');
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -132,15 +131,6 @@ class openidconnectclientPlugin extends Plugin implements PluginWithConfigKeys
     {
         if (strpos($params['script_name'], $this->getPluginPath()) === 0) {
             $params['anonymous_allowed'] = true;
-        }
-    }
-
-    public function javascript_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $layout = $params['layout'];
-            assert($layout instanceof \Tuleap\Layout\BaseLayout);
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'open-id-connect-client.js'));
         }
     }
 
