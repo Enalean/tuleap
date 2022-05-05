@@ -1,9 +1,9 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/tlp': file:../../src/themes/tlp
-  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@types/bootstrap': ^4.5.0
   '@types/dompurify': ^2.3.2
   dompurify: ^2.3.6

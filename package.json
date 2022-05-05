@@ -2,12 +2,12 @@
   "name": "@tuleap/plugin-mytuleap_contact_support",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp": "file:../../src/themes/tlp",
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp": "link:../../src/themes/tlp",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "dompurify": "^2.3.6"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
     "@types/bootstrap": "^4.5.0",
     "@types/dompurify": "^2.3.2"
   },
