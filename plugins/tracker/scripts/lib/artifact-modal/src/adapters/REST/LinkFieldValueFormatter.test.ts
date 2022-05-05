@@ -18,17 +18,17 @@
  */
 
 import { LinkFieldValueFormatter } from "./LinkFieldValueFormatter";
-import { RetrieveLinkedArtifactsSyncStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
-import { VerifyLinkIsMarkedForRemovalStub } from "../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
-import { LinkedArtifactStub } from "../../../../tests/stubs/LinkedArtifactStub";
-import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
-import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
-import type { LinkFieldValueFormat } from "./LinkFieldValueFormat";
-import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
-import { RetrieveNewLinksStub } from "../../../../tests/stubs/RetrieveNewLinksStub";
-import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
-import type { RetrieveNewLinks } from "./RetrieveNewLinks";
+import { RetrieveLinkedArtifactsSyncStub } from "../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
+import { VerifyLinkIsMarkedForRemovalStub } from "../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
+import { LinkedArtifactStub } from "../../../tests/stubs/LinkedArtifactStub";
+import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
+import { NewLinkStub } from "../../../tests/stubs/NewLinkStub";
+import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+import { RetrieveNewLinksStub } from "../../../tests/stubs/RetrieveNewLinksStub";
+import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
+import type { RetrieveNewLinks } from "../../domain/fields/link-field-v2/RetrieveNewLinks";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 
 const FIELD_ID = 1060;
 const FIRST_LINKED_ARTIFACT_ID = 666;
@@ -62,7 +62,7 @@ describe("LinkFieldValueFormatter", () => {
         verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
     });
 
-    const format = (): LinkFieldValueFormat => {
+    const format = (): ArtifactLinkNewChangesetValue => {
         const formatter = LinkFieldValueFormatter(links_retriever, verifier, new_links_retriever);
         return formatter.getFormattedValuesByFieldId(FIELD_ID);
     };
@@ -78,6 +78,9 @@ describe("LinkFieldValueFormatter", () => {
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
 
         const value = format();
+        if (!("links" in value)) {
+            throw new Error("Expected a links key");
+        }
         expect(value.links).toHaveLength(0);
     });
 
@@ -110,6 +113,9 @@ describe("LinkFieldValueFormatter", () => {
             NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildReverseCustom())
         );
         const value = format();
+        if (!("links" in value)) {
+            throw new Error("Expected a links key");
+        }
         expect(value.links).toHaveLength(0);
     });
 
@@ -138,11 +144,28 @@ describe("LinkFieldValueFormatter", () => {
         });
     });
 
+    it(`sets the "parent" key of the payload when there is a new parent link`, () => {
+        links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
+        new_links_retriever = RetrieveNewLinksStub.withNewLinks(
+            NewLinkStub.withIdAndType(FIRST_NEW_LINK_ID, LinkTypeStub.buildParentLinkType()),
+            NewLinkStub.withIdAndType(SECOND_NEW_LINK_ID, LinkTypeStub.buildUntyped())
+        );
+
+        expect(format()).toStrictEqual({
+            field_id: FIELD_ID,
+            parent: { id: FIRST_NEW_LINK_ID },
+            links: [{ id: SECOND_NEW_LINK_ID, type: UNTYPED_LINK }],
+        });
+    });
+
     it(`returns an empty array when there are neither existing links nor new links`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
 
         const value = format();
+        if (!("links" in value)) {
+            throw new Error("Expected a links key");
+        }
         expect(value.links).toHaveLength(0);
     });
 });

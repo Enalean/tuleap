@@ -56,7 +56,7 @@ import { LinksStore } from "./adapters/Memory/LinksStore";
 import { ReadonlyDateFieldFormatter } from "./adapters/UI/fields/date-readonly-field/readonly-date-field-formatter";
 import { FileUploadQuotaController } from "./adapters/UI/footer/FileUploadQuotaController";
 import { UserTemporaryFileQuotaStore } from "./adapters/Memory/UserTemporaryFileQuotaStore";
-import { LinkFieldValueFormatter } from "./domain/fields/link-field-v2/LinkFieldValueFormatter";
+import { LinkFieldValueFormatter } from "./adapters/REST/LinkFieldValueFormatter";
 import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldController";
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
