@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "../../../../tracker/themes/FlamingParrot/css/colorpicker";
+@use "@tuleap/plugin-tracker-color-picker";
 @import "../../../../tracker/themes/default/css/includes/field-bound-colors";
 @import "../../../../tracker/themes/default/css/includes/columns-colors";
 

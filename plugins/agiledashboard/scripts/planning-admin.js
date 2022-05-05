@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createColorPicker } from "../../tracker/scripts/colorpicker/index.js";
+import { createColorPicker } from "@tuleap/plugin-tracker-color-picker";
 
 document.addEventListener("DOMContentLoaded", () => {
     const mount_points = document.querySelectorAll(".vue-colorpicker-mount-point");

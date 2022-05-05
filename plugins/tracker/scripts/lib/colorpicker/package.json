@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-color-picker",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/plugin-tracker-color-picker.es.js",
+  "main": "dist/plugin-tracker-color-picker.umd.js",
+  "style": "dist/style.css",
+  "dependencies": {
+    "@tuleap/tlp-swatch-colors": "link:../../../../../lib/frontend/tlp-swatch-colors",
+    "vue": "^2.6.14",
+    "vue-gettext": "^2.1.12"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../../../../../lib/frontend/po-gettext-plugin"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}
