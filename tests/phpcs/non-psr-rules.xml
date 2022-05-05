@@ -14,6 +14,7 @@
     <exclude-pattern>*/plugins/**/frontend-assets/*</exclude-pattern>
     <exclude-pattern>*/plugins/**/backend-assets/*</exclude-pattern>
     <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
+    <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions/*</exclude-pattern>
 
     <!-- Forbid useless semicolon `;` -->
     <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
