@@ -27,7 +27,7 @@ import angular_filter from "angular-filter";
 
 import "angular-breadcrumb";
 import "angular-gettext";
-import translations from "../po/fr.po";
+import translations from "../po/fr_FR.po";
 import "d3-selection-multi";
 
 import shared_properties from "./shared-properties/shared-properties.js";

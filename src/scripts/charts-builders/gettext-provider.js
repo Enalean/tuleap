@@ -18,7 +18,7 @@
  */
 
 import Gettext from "node-gettext";
-import french_translations from "./po/fr.po";
+import french_translations from "./po/fr_FR.po";
 
 const gettext_provider = new Gettext();
 gettext_provider.addTranslations("fr_FR", "charts-builders", french_translations);

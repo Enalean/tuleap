@@ -21,7 +21,7 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./store";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "./po/fr.po";
+import french_translations from "./po/fr_FR.po";
 import StepDefinitionField from "./StepDefinitionField.vue";
 import { setProjectId } from "./helpers/shared-properties.js";
 

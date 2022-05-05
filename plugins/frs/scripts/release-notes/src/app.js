@@ -24,7 +24,7 @@ import angular_tlp_module from "@tuleap/angular-tlp";
 
 import "angular-gettext";
 import "angular-filter";
-import translations from "../po/fr.po";
+import translations from "../po/fr_FR.po";
 
 import AppController from "./app-controller.js";
 import RestErrorService from "./rest-error-service.js";

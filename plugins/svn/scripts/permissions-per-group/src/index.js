@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import french_translations from "../po/fr_FR.po";
 import SvnPermissions from "./SVNPermissions.vue";
 
 document.addEventListener("DOMContentLoaded", () => {

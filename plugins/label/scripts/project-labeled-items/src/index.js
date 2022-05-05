@@ -20,7 +20,7 @@
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import french_translations from "../po/fr_FR.po";
 import LabeledItemsList from "./LabeledItemsList.vue";
 
 document.addEventListener("DOMContentLoaded", () => {

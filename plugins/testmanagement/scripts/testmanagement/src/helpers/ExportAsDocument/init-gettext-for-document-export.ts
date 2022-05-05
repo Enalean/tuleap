@@ -18,7 +18,7 @@
  */
 
 import type { GettextProvider } from "@tuleap/gettext";
-import french_translations from "../../../po/fr.po";
+import french_translations from "../../../po/fr_FR.po";
 import { initGettextSync } from "@tuleap/gettext";
 
 export function initGettextForDocumentExport(locale: string): GettextProvider {
