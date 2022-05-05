@@ -63,6 +63,7 @@ import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackCon
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field-v2/ArtifactLinkSelectorAutoCompleter";
 import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
+import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 
 export default ArtifactModalController;
 
@@ -169,6 +170,13 @@ function ArtifactModalController(
         },
         getFileFieldController: (field) => {
             return FileFieldController(field, self.values[field.field_id]);
+        },
+        getPermissionFieldController: (field) => {
+            return PermissionFieldController(
+                field,
+                self.values[field.field_id],
+                self.isDisabled(field)
+            );
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,

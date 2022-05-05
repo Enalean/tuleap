@@ -275,13 +275,11 @@
 </script>
 
 <script type="text/ng-template" id="field-perm.tpl.html">
-<div
-    class="tlp-form-element"
-    tuleap-artifact-modal-permission-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
+<tuleap-artifact-modal-permission-field
+    controller="modal.getPermissionFieldController(field)"
     data-test="permission-field"
-></div>
+    ce-one-way
+></tuleap-artifact-modal-permission-field>
 </script>
 
 <script type="text/ng-template" id="field-date.tpl.html">

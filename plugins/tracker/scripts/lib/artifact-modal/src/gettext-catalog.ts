@@ -89,3 +89,5 @@ export const getLinkSelectorPlaceholderText = (): string => gettextCatalog.getSt
 export const getMatchingArtifactErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the artifact to link: %s");
 export const getRemoveLabel = (): string => gettextCatalog.getString("Remove");
+export const getPermissionFieldLabel = (): string =>
+    gettextCatalog.getString("Restrict access to this artifact for the following user groups:");
