@@ -82,28 +82,11 @@
 </script>
 
 <script type="text/ng-template" id="field-cb.tpl.html">
-<div class="tlp-form-element" data-test="checkbox-field">
-    <label class="tlp-label">
-        {{ field.label }}
-        <i ng-if="field.required" class="fa fa-asterisk"></i>
-    </label>
-
-    <label ng-repeat="field_value in field.values"
-        for="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
-        class="tlp-label tlp-checkbox"
-        data-test="checkbox-field-value"
-    >
-        <input type="checkbox"
-            ng-model="modal.values[field.field_id].bind_value_ids[$index]"
-            ng-true-value="{{ field_value.id | json }}"
-            ng-false-value="null"
-            ng-disabled="modal.isDisabled(field)"
-            id="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
-            data-test="checkbox-field-input"
-        >
-        {{ field_value.label }}
-    </label>
-</div>
+<tuleap-artifact-modal-checkbox-field
+    controller="modal.getCheckboxFieldController(field)"
+    data-test="checkbox-field"
+    ce-one-way
+></tuleap-artifact-modal-checkbox-field>
 </script>
 
 <script type="text/ng-template" id="field-int.tpl.html">

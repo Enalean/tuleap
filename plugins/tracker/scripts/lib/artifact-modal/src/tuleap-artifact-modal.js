@@ -55,6 +55,7 @@ import "./adapters/UI/fields/user-avatar-field/UserAvatarField";
 import "./adapters/UI/fields/date-readonly-field/DateReadonlyField";
 import "./adapters/UI/fields/file-field/FileField";
 import "./adapters/UI/fields/permission-field/PermissionField";
+import "./adapters/UI/fields/checkbox-field/CheckboxField";
 import "./followups/FollowupEditor";
 import "./adapters/UI/feedback/ModalFeedback";
 import "./adapters/UI/footer/FileUploadQuota";
