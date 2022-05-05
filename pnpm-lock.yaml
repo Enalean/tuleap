@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/html-escaper': file:../../lib/frontend/html-escaper
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
 
 dependencies:
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
