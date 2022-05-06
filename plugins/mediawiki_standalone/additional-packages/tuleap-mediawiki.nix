@@ -110,7 +110,6 @@ in pkgs.stdenvNoCC.mkDerivation {
 
   buildPhase = ''
     runHook preBuild
-    ls -la
     rpmbuild \
       --define "tuleap_version ${tuleapVersion}" \
       --define "mw_version ${mediawiki.version}" \
