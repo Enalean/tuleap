@@ -10,7 +10,7 @@ main() {
     if [[ -n ${files_list} ]]
     then
         local eslint_output
-        eslint_output=$(pnpm run eslint --silent -- ${files_list})
+        eslint_output=$(pnpm --silent run eslint ${files_list})
         local status=$?
         if [ ${status} -ne 0 ]
         then
@@ -19,7 +19,7 @@ main() {
             local error_message="
 You can run the following command to let ESLint fix a part of the errors for you:
 
-pnpm run eslint --silent -- --fix $formatted_files
+pnpm --silent run eslint --fix $formatted_files
 
 "
             printf "$error_message"
