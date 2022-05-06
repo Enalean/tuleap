@@ -27,7 +27,7 @@
     "buffer": "^6.0.3",
     "dompurify": "^2.3.6",
     "events": "^3.3.0",
-    "hybrids": "^7.0.5",
+    "hybrids": "^8.0.2",
     "lodash": "2.4.0",
     "moment": "^2.29.1",
     "neverthrow": "^4.2.1",
