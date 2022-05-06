@@ -2,7 +2,7 @@
 
 let
   pinnedNixpkgs = import (fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/77fda7f672726e1a95c8cd200f27bccfc86c870b.tar.gz";
-    sha256 = "07qj1d45pkqsmkahbhh7hilwwbvg8vlz1wg497hzjrlx1a57v4y5";
+    url = "https://github.com/NixOS/nixpkgs/archive/b283b64580d1872333a99af2b4cef91bb84580cf.tar.gz";
+    sha256 = "0gmrpfzc622xl1lv3ffaj104j2q3nmia7jywafqmgmrcdm9axkkp";
   } ) {};
 in pinnedNixpkgs

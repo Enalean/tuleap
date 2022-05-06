@@ -1,9 +1,9 @@
 { pkgs ? (import ./pinned-nixpkgs.nix) {} }:
 
 let
-    node = pkgs.nodejs-16_x;
+    node = pkgs.nodejs-18_x;
     nodePackages = (import ./pnpm { inherit pkgs; nodejs = node; });
-    pnpm = nodePackages."pnpm-^6".override { dontNpmInstall = true; };
+    pnpm = nodePackages."pnpm-^7".override { dontNpmInstall = true; };
     nodeBaseBin = pkgs.stdenvNoCC.mkDerivation {
         name = "node-base-bin";
         unpackPhase = "true";

@@ -6,13 +6,13 @@ let
   sources = {};
 in
 {
-  "pnpm-^6" = nodeEnv.buildNodePackage {
+  "pnpm-^7" = nodeEnv.buildNodePackage {
     name = "pnpm";
     packageName = "pnpm";
-    version = "6.25.0";
+    version = "7.0.0";
     src = fetchurl {
-      url = "https://registry.npmjs.org/pnpm/-/pnpm-6.25.0.tgz";
-      sha512 = "Hlck6S8j7obFkkfQCnDJXIEBRNK4wIanMzDfpRE5TNbLsJnxbWXGbMV5ZhDf8Q8xy6RkBWdoKAmliL0nLmzxHQ==";
+      url = "https://registry.npmjs.org/pnpm/-/pnpm-7.0.0.tgz";
+      sha512 = "5njVSmE/Sz6coyikS6gjwoKWaxxsJ6BY6jL1aqwvnEpNUfFednbHqid3aZ42JszOFaSOz3Qipcfp4ei22G/JEg==";
     };
     buildInputs = globalBuildInputs;
     meta = {
