@@ -2,10 +2,10 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/core': link:../../src
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
+  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
@@ -26,9 +26,9 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@tuleap/core': link:../../src
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
+  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch

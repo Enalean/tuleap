@@ -20,6 +20,7 @@
 @use "@tuleap/cross-ref-badges";
 @use "@tuleap/list-picker";
 @use "help-dropdown";
+@use "@tuleap/fp-feedback";
 @import "logo";
 @import "navbar";
 @import "sidebar";
@@ -29,7 +30,6 @@
 @import "browser-unsupported";
 @import "skip-to-main-link";
 @import "content";
-@import "feedback";
 @import "register";
 @import "login";
 @import "widget";

@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
+  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
   '@tuleap/plugin-tracker-color-picker': link:../tracker/scripts/lib/colorpicker
@@ -23,6 +24,7 @@ specifiers:
   vue-gettext: ^2.1.12
 
 dependencies:
+  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/plugin-tracker-artifact-modal': link:../tracker/scripts/lib/artifact-modal
   '@tuleap/plugin-tracker-color-picker': link:../tracker/scripts/lib/colorpicker

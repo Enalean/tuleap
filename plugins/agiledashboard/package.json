@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/fp-feedback": "link:../../lib/frontend/fp-feedback",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",
     "@tuleap/plugin-tracker-artifact-modal": "link:../tracker/scripts/lib/artifact-modal",
     "@tuleap/plugin-tracker-color-picker": "link:../tracker/scripts/lib/colorpicker",
