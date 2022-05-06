@@ -18,13 +18,15 @@
  */
 
 import type { DidCheckFileFieldIsPresent } from "./DidCheckFileFieldIsPresent";
-import type { DidChangeListFieldValue } from "./DidChangeListFieldValue";
+import type { DidChangeListFieldValue } from "./fields/select-box-field/DidChangeListFieldValue";
 import type { WillDisableSubmit } from "./submit/WillDisableSubmit";
 import type { WillEnableSubmit } from "./submit/WillEnableSubmit";
 import type { WillNotifyFault } from "./WillNotifyFault";
 import type { WillClearFaultNotification } from "./WillClearFaultNotification";
+import type { DidChangeAllowedValues } from "./fields/select-box-field/DidChangeAllowedValues";
 
 export type AllEvents = {
+    DidChangeAllowedValues: DidChangeAllowedValues;
     DidChangeListFieldValue: DidChangeListFieldValue;
     DidCheckFileFieldIsPresent: DidCheckFileFieldIsPresent;
     WillClearFaultNotification: WillClearFaultNotification;

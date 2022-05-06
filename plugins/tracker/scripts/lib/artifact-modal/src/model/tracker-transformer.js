@@ -67,7 +67,6 @@ function transformField(field) {
             field.values = filterHiddenValues(field.values);
             field.values = displayI18NLabelIfAvailable(field.values);
             field.values = addNoneValueInSelectboxField(field);
-            field.filtered_values = { ...field.values };
             break;
         case "msb":
             field.values = filterHiddenValues(field.values);

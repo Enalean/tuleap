@@ -32,10 +32,6 @@ import {
     setIsNotUploadingInCKEditor,
 } from "./fields/file-field/is-uploading-in-ckeditor-state";
 import { sprintf } from "sprintf-js";
-import {
-    getTargetFieldPossibleValues,
-    setUpFieldDependenciesActions,
-} from "./field-dependencies-helper.js";
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ParentFeedbackController } from "./adapters/UI/feedback/ParentFeedbackController";
@@ -74,6 +70,8 @@ import { CommentsController } from "./domain/comments/CommentsController";
 import { ProjectIdentifierProxy } from "./adapters/REST/ProjectIdentifierProxy";
 import { EventDispatcher } from "./domain/EventDispatcher";
 import { DidCheckFileFieldIsPresent } from "./domain/DidCheckFileFieldIsPresent";
+import { SelectBoxFieldController } from "./adapters/UI/fields/select-box-field/SelectBoxFieldController";
+import { FieldDependenciesValuesHelper } from "./domain/fields/select-box-field/FieldDependenciesValuesHelper";
 
 const isFileUploadFault = (fault) => "isFileUpload" in fault && fault.isFileUpload() === true;
 
@@ -125,6 +123,8 @@ function ArtifactModalController(
     const file_uploader = FileFieldsUploader(api_client, FileUploader());
     const user_history_cache = UserHistoryCache(api_client);
 
+    const user_locale = document.body.dataset.userLocale ?? "en_US";
+
     Object.assign(self, {
         $onInit: init,
         artifact_id: modal_model.artifact_id,
@@ -148,9 +148,7 @@ function ArtifactModalController(
             new_links_store
         ),
         date_picker_initializer: DatePickerInitializer(),
-        readonly_date_field_formatter: ReadonlyDateFieldFormatter(
-            document.body.dataset.userLocale ?? "en_US"
-        ),
+        readonly_date_field_formatter: ReadonlyDateFieldFormatter(user_locale),
         parent_feedback_controller: ParentFeedbackController(
             api_client,
             event_dispatcher,
@@ -227,6 +225,16 @@ function ArtifactModalController(
                 self.isDisabled(field)
             );
         },
+        getSelectBoxFieldController: (field) => {
+            return SelectBoxFieldController(
+                event_dispatcher,
+                field,
+                self.values[field.field_id],
+                self.isDisabled(field),
+                user_locale
+            );
+        },
+        getEventDispatcher: () => event_dispatcher,
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,
@@ -422,47 +430,7 @@ function ArtifactModalController(
     }
 
     function setFieldDependenciesWatchers() {
-        setUpFieldDependenciesActions(self.tracker, setFieldDependenciesWatcher);
-    }
-
-    function setFieldDependenciesWatcher(source_field_id, target_field, field_dependencies_rules) {
-        if (self.values[source_field_id] === undefined) {
-            return;
-        }
-
-        $scope.$watch(
-            function () {
-                return self.values[source_field_id].bind_value_ids;
-            },
-            function (new_value, old_value) {
-                if (new_value === old_value) {
-                    return;
-                }
-
-                var source_value_ids = [].concat(new_value);
-
-                changeTargetFieldPossibleValuesAndResetSelectedValue(
-                    source_field_id,
-                    source_value_ids,
-                    target_field,
-                    field_dependencies_rules
-                );
-            },
-            true
-        );
-    }
-
-    function changeTargetFieldPossibleValuesAndResetSelectedValue(
-        source_field_id,
-        source_value_ids,
-        target_field,
-        field_dependencies_rules
-    ) {
-        target_field.filtered_values = getTargetFieldPossibleValues(
-            source_value_ids,
-            target_field,
-            field_dependencies_rules
-        );
+        FieldDependenciesValuesHelper(self.getEventDispatcher(), self.tracker.workflow.rules.lists);
     }
 
     function setFieldValueForCustomElement(event) {
