@@ -24,7 +24,7 @@ specifiers:
   buffer: ^6.0.3
   dompurify: ^2.3.6
   events: ^3.3.0
-  hybrids: ^7.0.5
+  hybrids: ^8.0.2
   lodash: 2.4.0
   moment: ^2.29.1
   neverthrow: ^4.2.1
@@ -54,7 +54,7 @@ dependencies:
   buffer: 6.0.3
   dompurify: 2.3.6
   events: 3.3.0
-  hybrids: 7.0.5
+  hybrids: 8.0.2
   lodash: 2.4.0
   moment: 2.29.1
   neverthrow: 4.3.1
@@ -122,8 +122,9 @@ packages:
     engines: {node: '>=0.8.x'}
     dev: false
 
-  /hybrids/7.0.5:
-    resolution: {integrity: sha512-uQmRBImwJw8HI55x9R6T3vDKL3FdIm/KKGBfArjd7/rPYLFHpn33XrgBc1bzTZ32yh0jCOZQdzyED5g+2lhf+w==}
+  /hybrids/8.0.2:
+    resolution: {integrity: sha512-zWoTtXfyWhcccPdOcMeKgNSZ0UPKw6+00pCZYdaRNPPvkCIag0MMNco1vhCot32i8Ma3Uvy9rzVQhOrSPXIWDQ==}
+    hasBin: true
     dev: false
 
   /ieee754/1.2.1:
