@@ -17,26 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifact } from "./LinkedArtifact";
-import type { NewLink } from "./NewLink";
+import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { NewLink } from "../../domain/fields/link-field-v2/NewLink";
+import type { ArtifactLinkNewChangesetLink } from "@tuleap/plugin-tracker-rest-api-types";
 
-export interface Link {
-    readonly id: number;
-    readonly type: string;
-}
-
-export interface LinkFieldValueFormat {
-    readonly field_id: number;
-    readonly links: ReadonlyArray<Link>;
-}
-
-export const Link = {
-    fromLinkedArtifact: (artifact: LinkedArtifact): Link => ({
+export const NewChangesetLinkProxy = {
+    fromLinkedArtifact: (artifact: LinkedArtifact): ArtifactLinkNewChangesetLink => ({
         id: artifact.identifier.id,
         type: artifact.link_type.shortname,
     }),
 
-    fromNewLink: (new_link: NewLink): Link => ({
+    fromNewLink: (new_link: NewLink): ArtifactLinkNewChangesetLink => ({
         id: new_link.identifier.id,
         type: new_link.link_type.shortname,
     }),
