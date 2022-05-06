@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/tlp': file:../../src/themes/tlp
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/tlp': link:../../src/themes/tlp
 
 dependencies:
   '@tuleap/tlp': link:../../src/themes/tlp

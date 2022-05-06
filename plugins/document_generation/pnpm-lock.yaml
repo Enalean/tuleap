@@ -1,17 +1,17 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/gettext': file:../../lib/frontend/gettext
-  '@tuleap/plugin-docgen-docx': file:./scripts/lib/docx
-  '@tuleap/plugin-docgen-xlsx': file:./scripts/lib/xlsx
-  '@tuleap/plugin-tracker-rest-api-types': file:../tracker/scripts/lib/rest-api-types
-  '@tuleap/po-gettext-plugin': file:../../lib/frontend/po-gettext-plugin
-  '@tuleap/tlp': file:../../src/themes/tlp
-  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-modal': file:../../lib/frontend/tlp-modal
-  '@tuleap/vue3-gettext-init': file:../../lib/frontend/vue3-gettext-init
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/plugin-docgen-docx': link:./scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx': link:./scripts/lib/xlsx
+  '@tuleap/plugin-tracker-rest-api-types': link:../tracker/scripts/lib/rest-api-types
+  '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
+  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^2.0.0-rc.17
   '@vueform/multiselect': ^2.3.3

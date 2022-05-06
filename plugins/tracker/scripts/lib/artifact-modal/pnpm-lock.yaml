@@ -1,21 +1,21 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-tlp': file:../../../../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/ckeditor-image-upload': file:../../../../../lib/frontend/ckeditor-image-upload
-  '@tuleap/date-helper': file:../../../../../lib/frontend/date-helper
-  '@tuleap/fault': file:../../../../../lib/frontend/fault
-  '@tuleap/fetch-result': file:../../../../../lib/frontend/fetch-result
-  '@tuleap/link-selector': file:../../../../../lib/frontend/link-selector
-  '@tuleap/list-picker': file:../../../../../lib/frontend/list-picker
-  '@tuleap/plugin-tracker-constants': file:../constants
-  '@tuleap/plugin-tracker-rest-api-types': file:../rest-api-types
-  '@tuleap/plugin-tracker-rich-text-editor': file:../rich-text-editor
-  '@tuleap/tlp': file:../../../../../src/themes/tlp
-  '@tuleap/tlp-fetch': file:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/angular-tlp': link:../../../../../lib/frontend/angular-tlp
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/ckeditor-image-upload': link:../../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/date-helper': link:../../../../../lib/frontend/date-helper
+  '@tuleap/fault': link:../../../../../lib/frontend/fault
+  '@tuleap/fetch-result': link:../../../../../lib/frontend/fetch-result
+  '@tuleap/link-selector': link:../../../../../lib/frontend/link-selector
+  '@tuleap/list-picker': link:../../../../../lib/frontend/list-picker
+  '@tuleap/plugin-tracker-constants': link:../constants
+  '@tuleap/plugin-tracker-rest-api-types': link:../rest-api-types
+  '@tuleap/plugin-tracker-rich-text-editor': link:../rich-text-editor
+  '@tuleap/tlp': link:../../../../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../../../../lib/frontend/tlp-relative-date
-  '@tuleap/tooltip': file:../../../../../lib/frontend/tooltip
+  '@tuleap/tooltip': link:../../../../../lib/frontend/tooltip
   '@types/ckeditor': ^4.9.10
   angular: ^1.8.2
   angular-custom-elements: ^2.1.0

@@ -5,9 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/html-escaper": "file:../../lib/frontend/html-escaper",
-    "@tuleap/tlp-modal": "file:../../lib/frontend/tlp-modal",
-    "@tuleap/tlp-popovers": "file:../../lib/frontend/tlp-popovers"
+    "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
+    "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
+    "@tuleap/tlp-popovers": "link:../../lib/frontend/tlp-popovers"
   },
   "config": {
     "bin": "../../node_modules/.bin"
@@ -18,7 +18,7 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support"
   }
 }

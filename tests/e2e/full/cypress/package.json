@@ -5,6 +5,6 @@
   "private": true,
   "version": "0.0.0",
   "devDependencies": {
-    "@tuleap/cypress-utilities-support": "file:../../../../lib/test-utils/cypress-utilities-support"
+    "@tuleap/cypress-utilities-support": "link:../../../../lib/test-utils/cypress-utilities-support"
   }
 }

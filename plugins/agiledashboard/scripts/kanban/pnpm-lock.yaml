@@ -1,13 +1,13 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-async': file:../../../../lib/frontend/angular-async
-  '@tuleap/angular-tlp': file:../../../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': file:../../../../lib/frontend/build-system-configurator
-  '@tuleap/html-escaper': file:../../../../lib/frontend/html-escaper
-  '@tuleap/plugin-agiledashboard-card-fields': file:../lib/card-fields
-  '@tuleap/plugin-tracker-artifact-modal': file:../../../tracker/scripts/lib/artifact-modal
-  '@tuleap/tlp-fetch': file:../../../../lib/frontend/tlp-fetch
+  '@tuleap/angular-async': link:../../../../lib/frontend/angular-async
+  '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
+  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
+  '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
+  '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
+  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   angular: ^1.8.2
   angular-gettext: ^2.4.2
   angular-jwt: ^0.1.11

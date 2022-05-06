@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/angular-tlp': file:../../lib/frontend/angular-tlp
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
-  '@tuleap/tooltip': file:../../lib/frontend/tooltip
+  '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tooltip': link:../../lib/frontend/tooltip
   '@types/codemirror': ^5.60.1
   '@uirouter/angularjs': ^1.0.29
   angular: ^1.8.2

@@ -1,11 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
-  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/gettext': file:../../lib/frontend/gettext
-  '@tuleap/tlp': file:../../src/themes/tlp
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
+  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@types/sprintf-js': ^1.1.2
   sprintf-js: ^1.1.2
 

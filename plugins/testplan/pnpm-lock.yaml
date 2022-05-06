@@ -1,18 +1,18 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/concurrency-limit-pool': file:../../lib/frontend/concurrency-limit-pool
-  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/gettext': file:../../lib/frontend/gettext
-  '@tuleap/plugin-docgen-docx': file:../document_generation/scripts/lib/docx
-  '@tuleap/plugin-docgen-xlsx': file:../document_generation/scripts/lib/xlsx
-  '@tuleap/plugin-testmanagement': file:../testmanagement
-  '@tuleap/plugin-tracker-rest-api-types': file:../tracker/scripts/lib/rest-api-types
-  '@tuleap/po-gettext-plugin': file:../../lib/frontend/po-gettext-plugin
-  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
-  '@tuleap/vue3-gettext-init': file:../../lib/frontend/vue3-gettext-init
-  '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
+  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/plugin-docgen-docx': link:../document_generation/scripts/lib/docx
+  '@tuleap/plugin-docgen-xlsx': link:../document_generation/scripts/lib/xlsx
+  '@tuleap/plugin-testmanagement': link:../testmanagement
+  '@tuleap/plugin-tracker-rest-api-types': link:../tracker/scripts/lib/rest-api-types
+  '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
+  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@vue/test-utils': ^2.0.0-rc.17
   docx: ^7.3.0
   vue: ^3.2.31

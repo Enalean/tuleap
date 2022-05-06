@@ -5,13 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/filter-inline-table": "file:../../lib/frontend/filter-table"
+    "@tuleap/filter-inline-table": "link:../../lib/frontend/filter-table"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
   }
 }

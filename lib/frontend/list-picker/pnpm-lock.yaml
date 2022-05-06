@@ -1,11 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../build-system-configurator
-  '@tuleap/gettext': file:../gettext
-  '@tuleap/po-gettext-plugin': file:../po-gettext-plugin
-  '@tuleap/tlp': file:../../../src/themes/tlp
-  '@tuleap/tlp-swatch-colors': file:../tlp-swatch-colors
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/gettext': link:../gettext
+  '@tuleap/po-gettext-plugin': link:../po-gettext-plugin
+  '@tuleap/tlp': link:../../../src/themes/tlp
+  '@tuleap/tlp-swatch-colors': link:../tlp-swatch-colors
   lit: ^2.2.3
 
 dependencies:

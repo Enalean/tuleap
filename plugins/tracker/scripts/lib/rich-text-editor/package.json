@@ -10,17 +10,17 @@
   "main": "dist/plugin-tracker-rich-text-editor.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@tuleap/gettext": "file:../../../../../lib/frontend/gettext",
-    "@tuleap/plugin-tracker-constants": "file:../constants",
-    "@tuleap/tlp-fetch": "file:../../../../../lib/frontend/tlp-fetch",
+    "@tuleap/gettext": "link:../../../../../lib/frontend/gettext",
+    "@tuleap/plugin-tracker-constants": "link:../constants",
+    "@tuleap/tlp-fetch": "link:../../../../../lib/frontend/tlp-fetch",
     "dompurify": "^2.3.6",
     "lit": "^2.2.3",
     "marked": "^4.0.10",
     "turndown": "^7.0.0"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator",
-    "@tuleap/po-gettext-plugin": "file:../../../../../lib/frontend/po-gettext-plugin",
+    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../../../../../lib/frontend/po-gettext-plugin",
     "@types/bootstrap": "^3.4.0",
     "@types/ckeditor": "^4.9.10",
     "@types/dompurify": "^2.3.2",

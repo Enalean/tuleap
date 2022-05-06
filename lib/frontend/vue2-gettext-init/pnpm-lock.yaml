@@ -1,8 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../build-system-configurator
-  '@tuleap/gettext': file:../gettext
+  '@tuleap/build-system-configurator': link:../build-system-configurator
+  '@tuleap/gettext': link:../gettext
   vue: ^2.6.14
   vue-gettext: ^2.1.12
 

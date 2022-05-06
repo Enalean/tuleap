@@ -5,16 +5,16 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp-fetch": "file:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "luxon": "^1.26.0",
     "vue": "^2.6.14",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "file:../../lib/test-utils/cypress-utilities-support",
-    "@tuleap/vuex-store-wrapper-jest": "file:../../lib/frontend/vuex-store-wrapper-jest",
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support",
+    "@tuleap/vuex-store-wrapper-jest": "link:../../lib/frontend/vuex-store-wrapper-jest",
     "@vue/test-utils": "^1.3.0"
   },
   "scripts": {

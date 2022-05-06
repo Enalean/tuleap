@@ -1,11 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../../../../lib/frontend/build-system-configurator
-  '@tuleap/gettext': file:../../../../../lib/frontend/gettext
-  '@tuleap/plugin-tracker-constants': file:../constants
-  '@tuleap/po-gettext-plugin': file:../../../../../lib/frontend/po-gettext-plugin
-  '@tuleap/tlp-fetch': file:../../../../../lib/frontend/tlp-fetch
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/gettext': link:../../../../../lib/frontend/gettext
+  '@tuleap/plugin-tracker-constants': link:../constants
+  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
+  '@tuleap/tlp-fetch': link:../../../../../lib/frontend/tlp-fetch
   '@types/bootstrap': ^3.4.0
   '@types/ckeditor': ^4.9.10
   '@types/dompurify': ^2.3.2

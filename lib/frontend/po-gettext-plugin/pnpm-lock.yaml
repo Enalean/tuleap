@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@rollup/pluginutils': ^4.1.0
-  '@tuleap/build-system-configurator': file:../build-system-configurator
+  '@tuleap/build-system-configurator': link:../build-system-configurator
   '@types/gettext-parser': ^4.0.0
   gettext-parser: ^4.0.4
   unplugin: ^0.5.2

@@ -14,16 +14,16 @@
     "test": "jest"
   },
   "dependencies": {
-    "@tuleap/concurrency-limit-pool": "file:../../../../../lib/frontend/concurrency-limit-pool",
-    "@tuleap/plugin-tracker-constants": "file:../../../../tracker/scripts/lib/constants",
-    "@tuleap/plugin-tracker-rest-api-types": "file:../../../../tracker/scripts/lib/rest-api-types",
-    "@tuleap/tlp-fetch": "file:../../../../../lib/frontend/tlp-fetch",
+    "@tuleap/concurrency-limit-pool": "link:../../../../../lib/frontend/concurrency-limit-pool",
+    "@tuleap/plugin-tracker-constants": "link:../../../../tracker/scripts/lib/constants",
+    "@tuleap/plugin-tracker-rest-api-types": "link:../../../../tracker/scripts/lib/rest-api-types",
+    "@tuleap/tlp-fetch": "link:../../../../../lib/frontend/tlp-fetch",
     "docx": "^7.3.0",
     "dompurify": "^2.3.6",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator",
     "@types/dompurify": "^2.3.2",
     "@types/sprintf-js": "^1.1.2"
   }

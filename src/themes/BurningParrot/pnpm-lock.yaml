@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/cross-ref-badges': file:../../../lib/frontend/cross-ref-badges
+  '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges
 
 dependencies:
   '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges

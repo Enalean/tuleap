@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "@tuleap/plugin-tracker-constants": "file:../constants"
+    "@tuleap/plugin-tracker-constants": "link:../constants"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -22,6 +22,6 @@
     "watch": "vite build --watch --mode development --minify false"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../../../../lib/frontend/build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
   }
 }

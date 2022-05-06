@@ -1,20 +1,20 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@tuleap/build-system-configurator': file:../../lib/frontend/build-system-configurator
-  '@tuleap/core': file:../../src
-  '@tuleap/cypress-utilities-support': file:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/date-helper': file:../../lib/frontend/date-helper
-  '@tuleap/drag-and-drop': file:../../lib/frontend/drag-and-drop
-  '@tuleap/gettext': file:../../lib/frontend/gettext
-  '@tuleap/list-picker': file:../../lib/frontend/list-picker
-  '@tuleap/project-privacy-helper': file:../../lib/frontend/project-privacy-helper
-  '@tuleap/tlp': file:../../src/themes/tlp
-  '@tuleap/tlp-fetch': file:../../lib/frontend/tlp-fetch
-  '@tuleap/tlp-swatch-colors': file:../../lib/frontend/tlp-swatch-colors
-  '@tuleap/vue-breadcrumb-privacy': file:../../lib/frontend/vue-breadcrumb-privacy
-  '@tuleap/vue2-gettext-init': file:../../lib/frontend/vue2-gettext-init
-  '@tuleap/vuex-store-wrapper-jest': file:../../lib/frontend/vuex-store-wrapper-jest
+  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/core': link:../../src
+  '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
+  '@tuleap/date-helper': link:../../lib/frontend/date-helper
+  '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
+  '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/list-picker': link:../../lib/frontend/list-picker
+  '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
+  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
+  '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
+  '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.3.0
   sprintf-js: ^1.1.2

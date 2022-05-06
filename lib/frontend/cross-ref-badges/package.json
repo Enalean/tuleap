@@ -8,6 +8,6 @@
   "main": "themes/main.scss",
   "style": "themes/main.scss",
   "dependencies": {
-    "@tuleap/tlp-swatch-colors": "file:../tlp-swatch-colors"
+    "@tuleap/tlp-swatch-colors": "link:../tlp-swatch-colors"
   }
 }

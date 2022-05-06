@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@floating-ui/dom': ^0.4.2
-  '@tuleap/build-system-configurator': file:../build-system-configurator
+  '@tuleap/build-system-configurator': link:../build-system-configurator
 
 dependencies:
   '@floating-ui/dom': 0.4.4

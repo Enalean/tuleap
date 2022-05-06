@@ -6,12 +6,12 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@tuleap/angular-async": "file:../../../../lib/frontend/angular-async",
-    "@tuleap/angular-tlp": "file:../../../../lib/frontend/angular-tlp",
-    "@tuleap/html-escaper": "file:../../../../lib/frontend/html-escaper",
-    "@tuleap/plugin-agiledashboard-card-fields": "file:../lib/card-fields",
-    "@tuleap/plugin-tracker-artifact-modal": "file:../../../tracker/scripts/lib/artifact-modal",
-    "@tuleap/tlp-fetch": "file:../../../../lib/frontend/tlp-fetch",
+    "@tuleap/angular-async": "link:../../../../lib/frontend/angular-async",
+    "@tuleap/angular-tlp": "link:../../../../lib/frontend/angular-tlp",
+    "@tuleap/html-escaper": "link:../../../../lib/frontend/html-escaper",
+    "@tuleap/plugin-agiledashboard-card-fields": "link:../lib/card-fields",
+    "@tuleap/plugin-tracker-artifact-modal": "link:../../../tracker/scripts/lib/artifact-modal",
+    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",
     "angular-jwt": "^0.1.11",
@@ -26,7 +26,7 @@
     "socket.io-client": "^4.4.1"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "file:../../../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0"
   }
