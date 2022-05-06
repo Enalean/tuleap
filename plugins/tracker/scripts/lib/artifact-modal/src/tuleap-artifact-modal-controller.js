@@ -65,6 +65,7 @@ import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-fie
 import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { ParentLinkVerifier } from "./domain/fields/link-field-v2/ParentLinkVerifier";
+import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
 
 export default ArtifactModalController;
 
@@ -177,6 +178,13 @@ function ArtifactModalController(
             return PermissionFieldController(
                 field,
                 self.values[field.field_id],
+                self.isDisabled(field)
+            );
+        },
+        getCheckboxFieldController: (field) => {
+            return CheckboxFieldController(
+                field,
+                self.values[field.field_id].bind_value_ids,
                 self.isDisabled(field)
             );
         },
