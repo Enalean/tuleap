@@ -64,7 +64,7 @@ def runBuildAndRun(String os) {
 
 def runESLint() {
     dir ('sources') {
-        sh 'pnpm run eslint -- --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
+        sh 'pnpm run eslint --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
     }
 }
 

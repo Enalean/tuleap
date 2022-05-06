@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
@@ -535,7 +535,7 @@ packages:
       invariant: 2.2.4
     dev: false
 
-  /react-immutable-pure-component/2.2.2_bd1a0e68a5e0e4857c26400f3b5f7e9d:
+  /react-immutable-pure-component/2.2.2_xuna42ff4dsik7bgiahtwx36tu:
     resolution: {integrity: sha512-vkgoMJUDqHZfXXnjVlG3keCxSO/U6WeDQ5/Sl0GK2cH8TOxEzQ5jXqDXHEL/jqk6fsNxV05oH5kD7VNMUE2k+A==}
     peerDependencies:
       immutable: '>= 2 || >= 4.0.0-rc'
@@ -566,7 +566,7 @@ packages:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
     dev: false
 
-  /react-redux/7.2.6_react-dom@17.0.2+react@17.0.2:
+  /react-redux/7.2.6_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-10RPdsz0UUrRL1NZE0ejTkucnclYSgXp5q+tB5SWx2qeG2ZJQJyymgAhwKy73yiL/13btfB6fPr+rgbMAaZIAQ==}
     peerDependencies:
       react: ^16.8.3 || ^17
@@ -740,9 +740,9 @@ packages:
       react-debounce-input: 3.2.4_react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-immutable-proptypes: 2.2.0_immutable@3.8.2
-      react-immutable-pure-component: 2.2.2_bd1a0e68a5e0e4857c26400f3b5f7e9d
+      react-immutable-pure-component: 2.2.2_xuna42ff4dsik7bgiahtwx36tu
       react-inspector: 5.1.1_react@17.0.2
-      react-redux: 7.2.6_react-dom@17.0.2+react@17.0.2
+      react-redux: 7.2.6_sfoxds7t5ydpegc3knd667wn6m
       react-syntax-highlighter: 15.4.5_react@17.0.2
       redux: 4.1.2
       redux-immutable: 4.0.0_immutable@3.8.2

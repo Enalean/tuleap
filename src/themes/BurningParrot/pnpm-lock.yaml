@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/cross-ref-badges': link:../../../lib/frontend/cross-ref-badges

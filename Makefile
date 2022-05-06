@@ -279,11 +279,11 @@ deptrac: ## Execute deptrac. Use SEARCH_PATH to look for deptrac config files un
 
 eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@pnpm run eslint -- --quiet $(FILES)
+	@pnpm run eslint --quiet -- $(FILES)
 
 eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
-	@pnpm run eslint -- --fix --quiet $(FILES)
+	@pnpm run eslint --fix --quiet -- $(FILES)
 
 stylelint: ## Execute stylelint. Use FILES parameter to execute on specific files.
 	$(eval FILES ?= **/*.{vue,scss})
