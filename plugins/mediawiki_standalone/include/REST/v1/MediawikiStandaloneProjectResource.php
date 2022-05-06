@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\REST\v1;
 
+use Luracast\Restler\RestException;
+use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
 use Tuleap\REST\Header;
 
 final class MediawikiStandaloneProjectResource
@@ -48,6 +50,16 @@ final class MediawikiStandaloneProjectResource
      */
     protected function getPermissions(int $id): GetPermissionsRepresentation
     {
-        return new GetPermissionsRepresentation(new PermissionsRepresentation(false, false, false, false));
+        $user = \UserManager::instance()->getCurrentUser();
+
+        try {
+            $project = \ProjectManager::instance()->getValidProject($id);
+
+            $permissions_builder = new UserPermissionsBuilder(new \User_ForgeUserGroupPermissionsManager(new \User_ForgeUserGroupPermissionsDao()));
+
+            return new GetPermissionsRepresentation($permissions_builder->getPermissions($user, $project));
+        } catch (\Project_NotFoundException) {
+            throw new RestException(404, 'Project not found');
+        }
     }
 }

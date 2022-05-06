@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,16 +16,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin;
+declare(strict_types=1);
 
-use PFUser;
+namespace Tuleap\MediawikiStandalone\Permissions;
 
-class RestReadOnlyAdminUser extends PFUser
+/**
+ * @psalm-immutable
+ */
+final class UserPermissions
 {
-    public function isSuperUser(): bool
+    public function __construct(public bool $is_reader, public bool $is_writer, public bool $is_admin, public bool $is_bot)
     {
-        return true;
+    }
+
+    public static function noAccess(): self
+    {
+        return new self(false, false, false, false);
+    }
+
+    public static function fullAccess(): self
+    {
+        return new self(true, true, true, true);
     }
 }

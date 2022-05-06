@@ -25,15 +25,11 @@ namespace Tuleap\Test\Builders;
 
 class UserTestBuilder
 {
-    private $params = ['language_id' => 'en_US'];
-    /**
-     * @var \BaseLanguage
-     */
-    private $language;
-    /**
-     * @var string
-     */
-    private $avatar_url = '';
+    private array $params                = ['language_id' => 'en_US'];
+    private ?\BaseLanguage $language     = null;
+    private ?bool $is_site_administrator = null;
+    private ?array $user_group_data      = null;
+    private string $avatar_url           = '';
 
     public static function aUser(): self
     {
@@ -42,7 +38,11 @@ class UserTestBuilder
 
     public static function anActiveUser(): self
     {
-        return (new self())->withId(10001)->withStatus(\PFUser::STATUS_ACTIVE);
+        return (new self())
+            ->withId(10001)
+            ->withStatus(\PFUser::STATUS_ACTIVE)
+            ->isNotSiteAdministrator()
+            ->isMemberOfNoProjects();
     }
 
     public static function anAnonymousUser(): self
@@ -125,25 +125,71 @@ class UserTestBuilder
         return $this;
     }
 
+    public function isNotSiteAdministrator(): self
+    {
+        $this->is_site_administrator = false;
+        return $this;
+    }
+
+    public function isSiteAdministrator(): self
+    {
+        $this->is_site_administrator = true;
+        return $this;
+    }
+
+    public function isProjectAdministrator(\Project $project): self
+    {
+        if ($this->user_group_data === null) {
+            $this->user_group_data = [];
+        }
+        $this->user_group_data[] = [
+            'group_id' => (string) $project->getID(),
+            'admin_flags' => 'A',
+        ];
+        return $this;
+    }
+
+    public function isMemberOfNoProjects(): self
+    {
+        $this->user_group_data = [];
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);
-        if ($this->language) {
+        if ($this->language !== null) {
             $user->setLanguage($this->language);
         }
-        if ($this->avatar_url) {
+        if ($this->avatar_url !== '') {
             $user->setAvatarUrl($this->avatar_url);
+        }
+        if ($this->user_group_data !== null) {
+            $user->setUserGroupData($this->user_group_data);
+        }
+        if ($this->is_site_administrator !== null) {
+            $user->setIsSuperUser($this->is_site_administrator);
         }
         return $user;
     }
 
     public static function buildWithDefaults(): \PFUser
     {
-        return self::aUser()->withId(110)->withUserName('John')->build();
+        return self::aPreBuiltUser(110)->build();
     }
 
     public static function buildWithId(int $id): \PFUser
     {
-        return self::aUser()->withId($id)->withUserName('John')->build();
+        return self::aPreBuiltUser($id)->build();
+    }
+
+    public static function buildSiteAdministrator(): \PFUser
+    {
+        return self::aPreBuiltUser(110)->isSiteAdministrator()->build();
+    }
+
+    private static function aPreBuiltUser(int $id): self
+    {
+        return self::aUser()->withId($id)->withUserName('John');
     }
 }

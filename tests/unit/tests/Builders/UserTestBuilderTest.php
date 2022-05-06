@@ -21,16 +21,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\REST\v1;
+namespace Tuleap\Test\Builders;
 
-use Tuleap\MediawikiStandalone\Permissions\UserPermissions;
+use Tuleap\Test\PHPUnit\TestCase;
 
-/**
- * @psalm-immutable
- */
-final class GetPermissionsRepresentation
+final class UserTestBuilderTest extends TestCase
 {
-    public function __construct(public UserPermissions $permissions)
+    public function testIsAdminOfTwoProjects(): void
     {
+        $project_101 = ProjectTestBuilder::aProject()->withId(101)->build();
+        $project_102 = ProjectTestBuilder::aProject()->withId(102)->build();
+
+        $user = UserTestBuilder::anActiveUser()
+            ->isProjectAdministrator($project_101)
+            ->isProjectAdministrator($project_102)
+            ->build();
+
+        self::assertTrue($user->isAdmin(102));
+        self::assertTrue($user->isAdmin(101));
+        self::assertFalse($user->isAdmin(103));
     }
 }

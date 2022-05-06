@@ -21,16 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\REST\v1;
+namespace Tuleap\MediawikiStandalone\Permissions;
 
-use Tuleap\MediawikiStandalone\Permissions\UserPermissions;
+use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\User\ForgePermissionsRetriever;
 
-/**
- * @psalm-immutable
- */
-final class GetPermissionsRepresentation
+final class UserPermissionsBuilder
 {
-    public function __construct(public UserPermissions $permissions)
+    public function __construct(private ForgePermissionsRetriever $forge_permissions_retriever)
     {
+    }
+
+    public function getPermissions(\PFUser $user, \Project $project): UserPermissions
+    {
+        if (
+            $user->isSuperUser() ||
+            $this->forge_permissions_retriever->doesUserHavePermission($user, new MediawikiAdminAllProjects()) ||
+            $user->isAdmin((int) $project->getID())
+        ) {
+            return UserPermissions::fullAccess();
+        }
+        return UserPermissions::noAccess();
     }
 }

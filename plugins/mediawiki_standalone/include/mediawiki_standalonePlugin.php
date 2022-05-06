@@ -65,6 +65,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../mediawiki/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class mediawiki_standalonePlugin extends Plugin
@@ -93,6 +94,11 @@ final class mediawiki_standalonePlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getDependencies(): array
+    {
+        return ['mediawiki'];
     }
 
     public function getHooksAndCallbacks(): Collection
