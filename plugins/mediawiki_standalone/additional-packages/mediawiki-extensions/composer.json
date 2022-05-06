@@ -75,6 +75,9 @@
     "mediawiki/tuleap-wiki-farm": "^1.0.0-beta",
     "mediawiki/tuleap-skin": "^1.0.0-beta"
   },
+  "replace": {
+    "guzzlehttp/guzzle": "^6.0 || ^7.0"
+  },
   "config": {
     "sort-packages": true,
     "platform-check": false,

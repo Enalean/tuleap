@@ -246,6 +246,14 @@ Requires: php-mediawiki-tuleap-123 >= 1.23.9-17
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
+%package plugin-mediawiki-standalone
+Summary: MediaWiki Standalone plugin
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: mediawiki-%{name}-flavor = @@VERSION@@
+%description plugin-mediawiki-standalone
+%{summary}.
+
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
@@ -561,7 +569,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki_standalone
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %if %{with enterprise}
@@ -1290,6 +1297,10 @@ fi
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/master
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/projects
+
+%files plugin-mediawiki-standalone
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/mediawiki_standalone
 
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
