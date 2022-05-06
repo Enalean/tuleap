@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function formatPermissionFieldValue(field_value) {
-    if (field_value === undefined) {
-        return null;
-    }
+import type { UserGroupRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 
-    const { field_id, value } = field_value;
-    return { field_id, value };
+export interface PermissionFieldType {
+    readonly field_id: number;
+    readonly label: string;
+    readonly required: boolean;
+    readonly values: PermissionFieldValuesType;
+}
+
+interface PermissionFieldValuesType {
+    readonly ugroup_representations: ReadonlyArray<UserGroupRepresentation>;
 }

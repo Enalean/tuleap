@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { formatPermissionFieldValue } from "./permission-field-value-formatter.js";
+import { formatPermissionFieldValue } from "./permission-field-value-formatter";
 
 describe("permission-field-value-formatter -", () => {
     describe("formatPermissionFieldValue() -", () => {
@@ -40,7 +40,7 @@ describe("permission-field-value-formatter -", () => {
 
             const result = formatPermissionFieldValue(field_value);
 
-            expect(result).toEqual({
+            expect(result).toStrictEqual({
                 field_id: 166,
                 value: {
                     is_used_by_default: true,
