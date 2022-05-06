@@ -20,7 +20,6 @@
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import {
-    getDefaultLinkTypeLabel,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
@@ -34,12 +33,11 @@ import { createLinkSelector } from "@tuleap/link-selector";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
-import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import { LinkTypeProxy } from "./LinkTypeProxy";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -58,7 +56,7 @@ export type HostElement = LinkField & HTMLElement;
 export const getEmptyStateIfNeeded = (host: LinkField): UpdateFunction<LinkField> => {
     if (
         host.linked_artifacts_presenter.linked_artifacts.length > 0 ||
-        host.new_links_presenter.links.length > 0 ||
+        host.new_links_presenter.length > 0 ||
         !host.linked_artifacts_presenter.has_loaded_content
     ) {
         return html``;
@@ -121,9 +119,10 @@ export const LinkField = define<LinkField>({
             const { field, types } = controller.displayField();
             host.field_presenter = field;
             host.allowed_link_types = types;
-            controller
-                .displayLinkedArtifacts()
-                .then((presenter) => (host.linked_artifacts_presenter = presenter));
+            controller.displayLinkedArtifacts().then(({ artifacts, types }) => {
+                host.linked_artifacts_presenter = artifacts;
+                host.allowed_link_types = types;
+            });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
                 search_field_callback: controller.autoComplete,
@@ -153,12 +152,7 @@ export const LinkField = define<LinkField>({
         set: (host, presenter) => presenter,
     },
     current_link_type: {
-        get: (host, last_value) =>
-            last_value ?? {
-                shortname: UNTYPED_LINK,
-                label: getDefaultLinkTypeLabel(),
-                direction: FORWARD_DIRECTION,
-            },
+        get: (host, last_value) => last_value ?? LinkTypeProxy.buildUntyped(),
         set: (host, value) => value,
     },
     content: (host) => html`
@@ -168,7 +162,7 @@ export const LinkField = define<LinkField>({
         <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
                 ${host.linked_artifacts_presenter.linked_artifacts.map(getLinkedArtifactTemplate)}
-                ${host.new_links_presenter.links.map(getNewLinkTemplate)}
+                ${host.new_links_presenter.map(getNewLinkTemplate)}
                 ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
                 ${getEmptyStateIfNeeded(host)}
             </tbody>

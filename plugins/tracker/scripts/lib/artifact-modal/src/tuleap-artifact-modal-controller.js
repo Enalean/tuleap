@@ -64,6 +64,7 @@ import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field-v2/ArtifactLinkSelectorAutoCompleter";
 import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
+import { ParentLinkVerifier } from "./domain/fields/link-field-v2/ParentLinkVerifier";
 
 export default ArtifactModalController;
 
@@ -159,6 +160,7 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 new_links_store,
+                ParentLinkVerifier(links_store, links_marked_for_removal_store, new_links_store),
                 field,
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(

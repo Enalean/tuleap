@@ -23,7 +23,7 @@ import { getNewLinkTemplate } from "./NewLinkTemplate";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
-import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants/src/constants";
+import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import { LinkFieldController } from "./LinkFieldController";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -41,6 +41,8 @@ import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaul
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
+import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -137,18 +139,31 @@ describe(`NewLinkTemplate`, () => {
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
+                VerifyHasParentLinkStub.withNoParentLink(),
                 {
                     field_id: 525,
                     label: "Artifact link",
                     type: "art_link",
-                    allowed_types: [],
+                    allowed_types: [
+                        {
+                            shortname: IS_CHILD_LINK_TYPE,
+                            forward_label: "Child",
+                            reverse_label: "Parent",
+                        },
+                    ],
                 },
                 current_artifact_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22")
             );
+            const allowed_link_types =
+                CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                    VerifyHasParentLinkStub.withNoParentLink(),
+                    []
+                );
 
             return {
                 new_links_presenter: NewLinkCollectionPresenter.fromLinks([new_link]),
+                allowed_link_types,
                 controller,
             } as HostElement;
         };
@@ -169,7 +184,8 @@ describe(`NewLinkTemplate`, () => {
             }
             button.click();
 
-            expect(host.new_links_presenter.links).toHaveLength(0);
+            expect(host.new_links_presenter).toHaveLength(0);
+            expect(host.allowed_link_types.types).toHaveLength(1);
         });
     });
 });
