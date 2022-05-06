@@ -17,8 +17,72 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PostFileResponse {
+import type { RegisteredUserWithAvatar } from "./users";
+import type { BaseFieldStructure } from "./trackers";
+import type { UserGroupRepresentation } from "./artifacts";
+import type {
+    ColorName,
+    SelectBoxFieldIdentifier,
+    StaticBindIdentifier,
+    UserGroupsBindIdentifier,
+    UsersBindIdentifier,
+} from "@tuleap/plugin-tracker-constants";
+
+export type StaticListItem = {
     readonly id: number;
-    readonly download_href: string;
-    readonly upload_href: string | null;
-}
+    readonly label: string;
+    readonly value_color: ColorName | "";
+};
+
+export type UserBoundListItem = {
+    readonly id: number;
+    readonly label: string;
+    readonly user_reference: RegisteredUserWithAvatar;
+};
+
+export type UserGroupBoundListItem = {
+    /**
+     * Dynamic user groups have ids like "101_3", where 101 is the
+     * project ID and 3 is a constant.
+     */
+    readonly id: string;
+    readonly label: string;
+    readonly ugroup_reference: UserGroupRepresentation;
+};
+
+type CommonListFieldStructure = BaseFieldStructure & {
+    readonly type: SelectBoxFieldIdentifier;
+    readonly label: string;
+    readonly required: boolean;
+};
+
+export type StaticBoundListField = CommonListFieldStructure & {
+    readonly bindings: {
+        readonly type: StaticBindIdentifier;
+    };
+    readonly default_value: ReadonlyArray<StaticListItem>;
+    readonly values: ReadonlyArray<StaticListItem>;
+};
+
+export type UserBoundListField = CommonListFieldStructure & {
+    readonly bindings: {
+        readonly type: UsersBindIdentifier;
+    };
+    readonly default_value: ReadonlyArray<UserBoundListItem>;
+    readonly values: ReadonlyArray<UserBoundListItem>;
+};
+
+export type UserGroupBoundListField = CommonListFieldStructure & {
+    readonly bindings: {
+        readonly type: UserGroupsBindIdentifier;
+    };
+    readonly default_value: ReadonlyArray<UserGroupBoundListItem>;
+    readonly values: ReadonlyArray<UserGroupBoundListItem>;
+};
+
+export type ListFieldItem = StaticListItem | UserBoundListItem | UserGroupBoundListItem;
+
+export type ListFieldStructure =
+    | StaticBoundListField
+    | UserBoundListField
+    | UserGroupBoundListField;

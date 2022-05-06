@@ -19,25 +19,32 @@
 
 import type {
     ArtifactLink,
+    ArtifactLinkFieldStructure,
     ArtifactResponseNoInstance as ArtifactResponseWithoutStepDefinition,
     BaseFieldStructure,
+    ChangesetValue,
     ComputedChangesetValue,
+    ContainerFieldStructure,
     CrossReferenceChangesetValue,
     DateChangesetValue,
-    ChangesetValue,
+    DateFieldStructure,
     FileChangesetValue,
     LastUpdateByChangesetValue,
+    ListFieldStructure,
+    ListLikeFieldStructure,
     NumericChangesetValue,
     OpenListChangesetValue,
+    OpenListFieldStructure,
     PermissionChangesetValue,
+    PermissionsOnArtifactFieldStructure,
     SimpleListChangesetValue,
     StringChangesetValue,
-    StructureFields as StructureFieldsWithoutStepExecution,
     StructureFormat,
     SubmittedByChangesetValue,
     TextChangesetValue,
     TrackerResponseNoInstance,
     UnknownChangesetValue,
+    UnknownFieldStructure,
     UserWithEmailAndStatus,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactLinkFieldIdentifier } from "@tuleap/plugin-tracker-constants";
@@ -261,7 +268,17 @@ export interface TrackerStructure {
     disposition: ReadonlyArray<StructureFormat>;
 }
 
-export type FieldsStructure = StructureFieldsWithoutStepExecution | StepExecutionFieldStructure;
+type StructureFieldsWithoutUnusedProperties =
+    | UnknownFieldStructure
+    | Pick<DateFieldStructure, "field_id" | "type" | "is_time_displayed">
+    | Pick<ContainerFieldStructure, "field_id" | "type" | "label">
+    | Pick<ListLikeFieldStructure, "field_id" | "type">
+    | Pick<ListFieldStructure, "field_id" | "type">
+    | Pick<OpenListFieldStructure, "field_id" | "type">
+    | Pick<PermissionsOnArtifactFieldStructure, "field_id" | "type" | "values">
+    | Pick<ArtifactLinkFieldStructure, "field_id" | "type">;
+
+export type FieldsStructure = StructureFieldsWithoutUnusedProperties | StepExecutionFieldStructure;
 
 export interface StepExecutionFieldStructure extends BaseFieldStructure {
     type: "ttmstepexec";
