@@ -114,6 +114,14 @@ class Workflow_Dao extends \Tuleap\DB\DataAccessObject
      */
     public function searchWorkflowsByFieldIDsAndTrackerIDs(array $tracker_ids, array $field_ids): array
     {
+        if (empty($tracker_ids)) {
+            return [];
+        }
+
+        if (empty($field_ids)) {
+            return [];
+        }
+
         $where_statement = EasyStatement::open()->in('tracker_id IN (?*)', $tracker_ids)->andIn('field_id IN (?*)', $field_ids);
 
         return $this->getDB()->run(
