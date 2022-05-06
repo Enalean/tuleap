@@ -25,18 +25,12 @@
 
 <script>
 import FolderContainer from "./FolderContainer.vue";
-import { mapState } from "vuex";
 
 export default {
     name: "RootFolder",
     components: { FolderContainer },
-    computed: {
-        ...mapState(["current_folder"]),
-    },
     mounted() {
-        if (!this.current_folder || this.current_folder.parent_id !== 0) {
-            this.$store.dispatch("loadRootFolder");
-        }
+        this.$store.dispatch("loadRootFolder");
         this.$store.commit("resetAscendantHierarchy");
         this.$store.dispatch("removeQuickLook");
     },

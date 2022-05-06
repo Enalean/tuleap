@@ -46,40 +46,12 @@ describe("RootFolder", () => {
         };
     });
 
-    it(`Should load folder content at first load`, () => {
+    it(`Should load folder content`, () => {
         store.state.current_folder = null;
 
         factory();
 
         expect(store.dispatch).toHaveBeenCalledWith("loadRootFolder");
-        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
-        expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
-    });
-
-    it(`Should load root folder, if we are moving from a folder to root folder`, () => {
-        store.state.current_folder = {
-            id: 3,
-            title: "root folder",
-            parent_id: 42,
-        };
-
-        factory();
-
-        expect(store.dispatch).toHaveBeenCalledWith("loadRootFolder");
-        expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
-        expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
-    });
-
-    it(`Should not load root folder, if app have already been launched`, () => {
-        store.state.current_folder = {
-            id: 3,
-            title: "root folder",
-            parent_id: 0,
-        };
-
-        factory();
-
-        expect(store.dispatch).not.toHaveBeenCalledWith("loadRootFolder");
         expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
         expect(store.commit).toHaveBeenCalledWith("resetAscendantHierarchy");
     });
