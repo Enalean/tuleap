@@ -6,7 +6,6 @@
   "private": true,
   "dependencies": {
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
-    "@tuleap/plugin-tracker": "link:../tracker",
     "@tuleap/plugin-tracker-tql-codemirror": "link:../tracker/scripts/lib/TQL-CodeMirror",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
