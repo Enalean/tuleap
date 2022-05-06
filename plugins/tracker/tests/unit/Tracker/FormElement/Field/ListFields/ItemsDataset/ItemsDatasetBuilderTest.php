@@ -30,6 +30,7 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsDataAttributesForFieldListValue(): void
     {
+        $field            = $this->createMock(\Tracker_FormElement_Field_List::class);
         $field_list_value = \Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
         $field_list_value->shouldReceive('getDataset')->andReturn([
             'data-user-id' => 102,
@@ -37,7 +38,7 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'data-color-name' => 'peggy-pink',
         ]);
 
-        $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field_list_value);
+        $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field, $field_list_value);
         $this->assertSame(
             ' data-user-id="102" data-avatar-url="some_url" data-color-name="peggy-pink"',
             $data_attributes
@@ -46,10 +47,11 @@ class ItemsDatasetBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEmptyStringWhenThereIsNoDataToBind(): void
     {
+        $field            = $this->createMock(\Tracker_FormElement_Field_List::class);
         $field_list_value = \Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
         $field_list_value->shouldReceive('getDataset')->andReturn([]);
 
-        $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field_list_value);
+        $data_attributes = ItemsDatasetBuilder::buildDataAttributesForValue($field, $field_list_value);
         $this->assertSame(
             '',
             $data_attributes

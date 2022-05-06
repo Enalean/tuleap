@@ -83,9 +83,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return array of Tracker_FormElement_Field_List_BindDecorator
+     * @return Tracker_FormElement_Field_List_BindDecorator[]
      */
-    public function getDecorators()
+    public function getDecorators(): array
     {
         return $this->getBind()->getDecorators();
     }
@@ -1067,7 +1067,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
-        $purifier  = Codendi_HTMLPurifier::instance();
         $value_id  = $value->getId();
         $list_bind = $this->getBind();
         if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
@@ -1090,10 +1089,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                         . $styles['classes']
                         . '"';
 
-        $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
-        if (isset($this->getDecorators()[$value_id])) {
-            $dataset .= '" data-color-value="' . $purifier->purify($this->getDecorators()[$value_id]->getCurrentColor())   . '"';
-        }
+        $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($this, $value);
+
         return $option_start . $dataset . '>' . $label . '</option>';
     }
 
@@ -1135,13 +1132,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         foreach ($this->getBind()->getAllValues() as $id => $value) {
             if (! $value->isHidden()) {
                 $styles  = $this->getBind()->getSelectOptionStyles($id);
-                $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
-                if (isset($this->getDecorators()[$id])) {
-                    $dataset .= '" data-color-value="' . $purifier->purify($this->getDecorators()[$id]->getCurrentColor())   . '"';
-                }
-                $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" class="' . $styles['classes'] . '"' . $dataset . '">';
-                $html .= $this->getBind()->formatArtifactValue($id);
-                $html .= '</option>';
+                $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($this, $value);
+                $html   .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" class="' . $styles['classes'] . '"' . $dataset . '">';
+                $html   .= $this->getBind()->formatArtifactValue($id);
+                $html   .= '</option>';
             }
         }
 

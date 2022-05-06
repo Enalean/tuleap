@@ -100,15 +100,17 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
     protected function displayArtifactJavascript($changeset_values): string
     {
-        $hp        = Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $csp_nonce = $GLOBALS['Response']->getCSPNonce();
-        $html      = sprintf('<script type="text/javascript" nonce="%s">', $hp->purify($csp_nonce));
-        $html     .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
+        $html      = sprintf('<script type="text/javascript" nonce="%s">', $purifier->purify($csp_nonce));
+        $html     .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $purifier->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $values    = $this->getBind()->getAllValues();
         $html     .= "\n\t.addOption('" . dgettext('tuleap-tracker', 'None') . "'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ", '')";
 
         foreach ($values as $id => $value) {
-            $html .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . (in_array($id, array_values($changeset_values)) ? 'true' : 'false') . ", " . json_encode($value->getDataset()) . ")";
+            $dataset = $value->getDataset($this);
+            $html   .= "\n\t.addOption('" . $purifier->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . (in_array($id, array_values($changeset_values)) ? 'true' : 'false') . ", " . json_encode($dataset) . ")";
         }
         $html .= ";\n";
         $html .= '</script>';
@@ -127,7 +129,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         $html         .= "\n\t.addOption('" . $hp->purify($GLOBALS['Language']->getText('global', 'unchanged'), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE) . "', false, '')";
 
         foreach ($values as $id => $value) {
-            $dataset = $value->getDataset();
+            $dataset = $value->getDataset($this);
             $html   .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . ($id == $default_value ? 'true' : 'false') . ', ' . json_encode($dataset) . ")";
         }
         $html .= ";\n";

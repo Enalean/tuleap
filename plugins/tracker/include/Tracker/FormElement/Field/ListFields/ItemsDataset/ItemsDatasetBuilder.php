@@ -22,14 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset;
 
+use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Value;
 
 final class ItemsDatasetBuilder
 {
-    public static function buildDataAttributesForValue(Tracker_FormElement_Field_List_Value $value): string
-    {
+    public static function buildDataAttributesForValue(
+        Tracker_FormElement_Field_List $field,
+        Tracker_FormElement_Field_List_Value $value,
+    ): string {
         $data_attributes = '';
-        foreach ($value->getDataset() as $data_attribute_name => $data_value) {
+        foreach ($value->getDataset($field) as $data_attribute_name => $data_value) {
             $data_attributes .= ' ' . $data_attribute_name . '="' . $data_value . '"';
         }
 
