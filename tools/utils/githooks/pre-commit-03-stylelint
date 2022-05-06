@@ -10,7 +10,7 @@ main() {
     if [[ -n ${files_list} ]]
     then
         local stylelint_output
-        stylelint_output=$(pnpm run stylelint --silent -- ${files_list})
+        stylelint_output=$(pnpm --silent run stylelint ${files_list})
         local status=$?
         if [ ${status} -ne 0 ]
         then
@@ -19,7 +19,7 @@ main() {
             local error_message="
 You can run the following command to let stylelint fix a part of the errors for you:
 
-pnpm run stylelint --silent -- --fix $formatted_files
+pnpm --silent run stylelint --fix $formatted_files
 
 "
             printf "$error_message"
