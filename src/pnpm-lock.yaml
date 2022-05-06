@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@fortawesome/fontawesome-free': ^5.15.2
@@ -130,13 +130,13 @@ devDependencies:
   '@types/node': 14.14.31
   '@types/prismjs': 1.16.6
   '@types/sprintf-js': 1.1.2
-  '@vue/test-utils': 1.3.0_9065e7474e033a8e4b95615fc8e6c36c
+  '@vue/test-utils': 1.3.0_sbs6or2oam5i4s4vmfp4rzwdnq
   jquery: 3.6.0
   node-fetch: 3.0.0
   vue-class-component: 7.2.6_vue@2.6.14
-  vue-property-decorator: 9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5
+  vue-property-decorator: 9.1.2_zrnidtknow37s43kh2nsmp2h4u
   vue-template-compiler: 2.6.14
-  vuex-class: 0.3.2_74f9cfd67148c622b48e1672fc254539
+  vuex-class: 0.3.2_ot447vtrjddcfneoczzpyjkfhe
 
 packages:
 
@@ -541,7 +541,7 @@ packages:
     resolution: {integrity: sha512-3eMyKenMi0R1CeKzBYtk/Z2JIHsTMQrIrTah0q54o45pHTpWVNofU2oHx0jS8tqsDRhis2TbB6238WP9oh2l2w==}
     dev: false
 
-  /@vue/test-utils/1.3.0_9065e7474e033a8e4b95615fc8e6c36c:
+  /@vue/test-utils/1.3.0_sbs6or2oam5i4s4vmfp4rzwdnq:
     resolution: {integrity: sha512-Xk2Xiyj2k5dFb8eYUKkcN9PzqZSppTlx7LaQWBbdA8tqh3jHr/KHX2/YLhNFc/xwDrgeLybqd+4ZCPJSGPIqeA==}
     peerDependencies:
       vue: 2.x
@@ -1628,7 +1628,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.10
     dev: false
 
   /jsonfile/5.0.0:
@@ -2117,7 +2117,7 @@ packages:
       vue: 2.6.14
     dev: false
 
-  /vue-property-decorator/9.1.2_cc5a81cd4d75b7f9736a3e9b263f47e5:
+  /vue-property-decorator/9.1.2_zrnidtknow37s43kh2nsmp2h4u:
     resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
     peerDependencies:
       vue: '*'
@@ -2142,7 +2142,7 @@ packages:
     resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
     dev: false
 
-  /vuex-class/0.3.2_74f9cfd67148c622b48e1672fc254539:
+  /vuex-class/0.3.2_ot447vtrjddcfneoczzpyjkfhe:
     resolution: {integrity: sha512-m0w7/FMsNcwJgunJeM+wcNaHzK2KX1K1rw2WUQf7Q16ndXHo7pflRyOV/E8795JO/7fstyjH3EgqBI4h4n4qXQ==}
     peerDependencies:
       vue: ^2.5.0
