@@ -53,6 +53,7 @@ use Tuleap\Docman\Search\ColumnReportAugmenter;
 use Tuleap\Docman\Search\SearchSortPropertyMapper;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use UGroupManager;
 use UserHelper;
 
@@ -190,6 +191,7 @@ final class SearchResource extends AuthenticatedResource
      * <p>`sort` is an array of:</p>
      * <ul>
      * <li>`{ "name": "field_2", "order": "asc" }` accepted value for `order` are `asc` and `desc`</li>
+     * <li>`Note:` the following columns cannot be sorted: `id`, `location`, `multi list custom properties` </li>
      * </ul>
      *
      * <hr>
@@ -221,6 +223,7 @@ final class SearchResource extends AuthenticatedResource
      * @return SearchRepresentation[]
      *
      * @throws RestException 400
+     * @throws I18NRestException 400
      */
     public function search(int $id, PostSearchRepresentation $search_representation): array
     {

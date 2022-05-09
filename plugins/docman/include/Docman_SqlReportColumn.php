@@ -42,4 +42,42 @@ class Docman_SqlReportColumn extends \Docman_MetadataSqlQueryChunk
         }
         return $sql;
     }
+
+    /**
+     * @param string[] $previous_from_statement
+     * @return string[]
+     */
+    public function getCustomMetadataFromIfNeeded(array $previous_from_statement): array
+    {
+        $tables = [];
+        if ($this->isCustomMetadata() && ! $this->isCustomMetadataTableAlreadyInFromStatement($previous_from_statement) && $this->isReportColumnCanBeSorted()) {
+            $tables[] = $this->_getMdvJoin();
+        }
+        return $tables;
+    }
+
+    /**
+     * @param string[] $from_statements
+     */
+    private function isCustomMetadataTableAlreadyInFromStatement(array $from_statements): bool
+    {
+        if ($this->isCustomMetadata()) {
+            foreach ($from_statements as $statement) {
+                if (str_contains($statement, $this->mdv)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private function isCustomMetadata(): bool
+    {
+        return $this->isRealMetadata;
+    }
+
+    private function isReportColumnCanBeSorted(): bool
+    {
+        return $this->column->getSort() !== null;
+    }
 }

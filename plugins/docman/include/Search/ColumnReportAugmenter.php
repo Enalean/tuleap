@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Search;
 
 use Docman_ReportColumnFactory;
+use Tuleap\Docman\REST\v1\Search\ColumnCannotBeSortedException;
+use Tuleap\Docman\REST\v1\Search\SearchColumnSortChecker;
 use Tuleap\Docman\REST\v1\Search\SearchSortRepresentation;
 
 final class ColumnReportAugmenter
@@ -57,6 +59,8 @@ final class ColumnReportAugmenter
 
     /**
      * @param string[] $report_columns
+     * @throws ColumnCannotBeSortedException
+     * @throws InvalidSortTypeException
      */
     public function addColumnsFromArray(array $report_columns, \Docman_Report $report, array $sort_list): void
     {
@@ -68,6 +72,7 @@ final class ColumnReportAugmenter
             $column_search_property = $this->getSearchSortByColumnLabel($column_label, $sort_list);
 
             if ($column_search_property !== null) {
+                SearchColumnSortChecker::checkColumnCanBeSorted($column_search_property, $column);
                 $column->setSort($this->property_mapper->convertToLegacySort($column_search_property->order));
             }
 

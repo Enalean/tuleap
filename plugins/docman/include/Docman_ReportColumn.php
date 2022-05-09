@@ -111,4 +111,9 @@ class Docman_ReportColumn
     {
         return '';
     }
+
+    public function getColumnProperty(): Docman_Metadata|Docman_ListMetadata|null
+    {
+        return $this->md;
+    }
 }

@@ -201,9 +201,10 @@ class Docman_ItemDao extends DataAccessObject
             while ($ci->valid()) {
                 $c = $ci->current();
 
-                $sqlCol = Docman_SqlReportColumnFactory::getFromColumn($c);
-                if ($sqlCol !== null) {
-                    $order = $sqlCol->getOrderBy();
+                $sql_col = Docman_SqlReportColumnFactory::getFromColumn($c);
+                if ($sql_col !== null) {
+                    $order     = $sql_col->getOrderBy();
+                    $fromStmts = array_merge($fromStmts, $sql_col->getCustomMetadataFromIfNeeded($fromStmts));
                     if ($order != '') {
                         if ($sql_order != '') {
                             $sql_order .= ', ';
