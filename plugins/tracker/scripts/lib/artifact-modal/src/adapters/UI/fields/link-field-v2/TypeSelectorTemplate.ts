@@ -32,7 +32,7 @@ const onChange = (host: LinkField, event: Event): void => {
     if (!new_link_type) {
         return;
     }
-    host.current_link_type = host.controller.setSelectedLinkType(new_link_type);
+    host.current_link_type = host.controller.setSelectedLinkType(host.link_selector, new_link_type);
 };
 
 const getOption = (

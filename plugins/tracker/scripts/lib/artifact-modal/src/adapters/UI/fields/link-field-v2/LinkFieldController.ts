@@ -33,20 +33,24 @@ import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
-import type { LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
+import type { LinkSelectorSearchFieldCallback, LinkSelector } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import type { AddNewLink } from "../../../../domain/fields/link-field-v2/AddNewLink";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
 import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
-import { LinkType, REVERSE_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { DeleteNewLink } from "../../../../domain/fields/link-field-v2/DeleteNewLink";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
 import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
 import type { SetSelectedLinkType } from "../../../../domain/fields/link-field-v2/SetSelectedLinkType";
+import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
+import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
+import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
@@ -79,7 +83,7 @@ export type LinkFieldControllerType = {
     onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
     addNewLink(artifact: LinkableArtifact): NewLinkPresentersAndSelectedType;
     removeNewLink(link: NewLink): NewLinkPresentersAndAllowedLinkTypes;
-    setSelectedLinkType(type: LinkType): LinkType;
+    setSelectedLinkType(link_selector: LinkSelector, type: LinkType): LinkType;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -107,6 +111,7 @@ export const LinkFieldController = (
     deleted_link_remover: DeleteLinkMarkedForRemoval,
     deleted_link_verifier: VerifyLinkIsMarkedForRemoval,
     fault_notifier: NotifyFault,
+    notification_clearer: ClearFaultNotification,
     links_autocompleter: ArtifactLinkSelectorAutoCompleterType,
     new_link_adder: AddNewLink,
     new_link_remover: DeleteNewLink,
@@ -114,8 +119,10 @@ export const LinkFieldController = (
     parent_verifier: VerifyHasParentLink,
     type_retriever: RetrieveSelectedLinkType,
     type_setter: SetSelectedLinkType,
+    parents_retriever: RetrievePossibleParents,
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
+    current_tracker_identifier: CurrentTrackerIdentifier,
     current_artifact_reference: ArtifactCrossReference | null
 ): LinkFieldControllerType => {
     const only_is_child_type = field.allowed_types.filter(
@@ -132,8 +139,7 @@ export const LinkFieldController = (
         allowed_link_types: CollectionOfAllowedLinksTypesPresenters
     ): LinkType => {
         if (
-            previous_link_type.shortname === IS_CHILD_LINK_TYPE &&
-            previous_link_type.direction === REVERSE_DIRECTION &&
+            LinkType.isReverseChild(previous_link_type) &&
             allowed_link_types.is_parent_type_disabled
         ) {
             return type_setter.setSelectedLinkType(LinkType.buildUntyped());
@@ -210,6 +216,28 @@ export const LinkFieldController = (
             };
         },
 
-        setSelectedLinkType: type_setter.setSelectedLinkType,
+        setSelectedLinkType: (link_selector, type): LinkType => {
+            link_selector.resetSelection();
+
+            if (!LinkType.isReverseChild(type)) {
+                link_selector.setDropdownContent([]);
+                return type_setter.setSelectedLinkType(type);
+            }
+
+            notification_clearer.clearFaultNotification();
+            link_selector.setDropdownContent([PossibleParentsGroup.buildLoadingState()]);
+            parents_retriever.getPossibleParents(current_tracker_identifier).match(
+                (possible_parents) => {
+                    link_selector.setDropdownContent([
+                        PossibleParentsGroup.fromPossibleParents(possible_parents),
+                    ]);
+                },
+                (fault) => {
+                    fault_notifier.onFault(fault);
+                    link_selector.setDropdownContent([PossibleParentsGroup.buildEmpty()]);
+                }
+            );
+            return type_setter.setSelectedLinkType(type);
+        },
     };
 };

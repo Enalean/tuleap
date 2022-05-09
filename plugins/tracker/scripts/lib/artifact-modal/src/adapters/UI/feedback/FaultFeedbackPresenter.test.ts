@@ -23,6 +23,7 @@ import { setCatalog } from "../../../gettext-catalog";
 import { LinkRetrievalFault } from "../../../domain/fields/link-field-v2/LinkRetrievalFault";
 import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFault";
 import { MatchingArtifactRetrievalFault } from "../../../domain/fields/link-field-v2/MatchingArtifactRetrievalFault";
+import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field-v2/PossibleParentsRetrievalFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
@@ -42,22 +43,18 @@ describe(`FaultFeedbackPresenter`, () => {
         expect(presenter.message).toBe(String(fault));
     });
 
-    it(`translates a message for LinkRetrievalFault`, () => {
-        const fault = LinkRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
-        const presenter = FaultFeedbackPresenter.fromFault(fault);
-        expect(presenter.message).toContain(FAULT_MESSAGE);
-        expect(presenter.message).not.toBe(FAULT_MESSAGE);
-    });
-
-    it(`translates a message for ParentRetrievalFault`, () => {
-        const fault = ParentRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
-        const presenter = FaultFeedbackPresenter.fromFault(fault);
-        expect(presenter.message).toContain(FAULT_MESSAGE);
-        expect(presenter.message).not.toBe(FAULT_MESSAGE);
-    });
-
-    it(`translates a message for MatchingArtifactRetrievalFault`, () => {
-        const fault = MatchingArtifactRetrievalFault(Fault.fromMessage(FAULT_MESSAGE));
+    it.each([
+        ["LinkRetrievalFault", LinkRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
+        ["ParentRetrievalFault", ParentRetrievalFault(Fault.fromMessage(FAULT_MESSAGE))],
+        [
+            "MatchingArtifactRetrievalFault",
+            MatchingArtifactRetrievalFault(Fault.fromMessage(FAULT_MESSAGE)),
+        ],
+        [
+            "PossibleParentsRetrievalFault",
+            PossibleParentsRetrievalFault(Fault.fromMessage(FAULT_MESSAGE)),
+        ],
+    ])(`translates a message for %s`, (fault_name, fault) => {
         const presenter = FaultFeedbackPresenter.fromFault(fault);
         expect(presenter.message).toContain(FAULT_MESSAGE);
         expect(presenter.message).not.toBe(FAULT_MESSAGE);

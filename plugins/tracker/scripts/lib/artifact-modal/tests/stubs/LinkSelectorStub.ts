@@ -19,10 +19,10 @@
 
 import type { LinkSelector, GroupCollection } from "@tuleap/link-selector";
 
-export interface LinkSelectorStub extends LinkSelector {
+export type LinkSelectorStub = LinkSelector & {
     getGroupCollection(): GroupCollection | undefined;
-    getCallCount(): number;
-}
+    getResetCallCount(): number;
+};
 
 const noop = (): void => {
     // Do nothing
@@ -31,6 +31,7 @@ const noop = (): void => {
 export const LinkSelectorStub = {
     withDropdownContentRecord: (): LinkSelectorStub => {
         let recorded_argument: GroupCollection | undefined;
+        let call_count = 0;
         return {
             setDropdownContent(groups): void {
                 recorded_argument = groups;
@@ -40,8 +41,10 @@ export const LinkSelectorStub = {
                 return recorded_argument;
             },
 
-            getCallCount: () => 0,
-            resetSelection: noop,
+            resetSelection(): void {
+                call_count++;
+            },
+            getResetCallCount: () => call_count,
             destroy: noop,
         };
     },
@@ -53,7 +56,7 @@ export const LinkSelectorStub = {
                 call_count++;
             },
 
-            getCallCount: () => call_count,
+            getResetCallCount: () => call_count,
 
             setDropdownContent: noop,
             getGroupCollection: () => undefined,

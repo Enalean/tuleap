@@ -17,24 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import type { Identifier } from "./Identifier";
 
-export const FORWARD_DIRECTION = "forward";
-export const REVERSE_DIRECTION = "reverse";
-
-export interface LinkType {
-    readonly shortname: string;
-    readonly direction: "forward" | "reverse";
-    readonly label: string;
-}
-
-export const LinkType = {
-    buildUntyped: (): LinkType => ({
-        shortname: UNTYPED_LINK,
-        direction: FORWARD_DIRECTION,
-        label: "",
-    }),
-
-    isReverseChild: (type: LinkType): boolean =>
-        type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
-};
+// I identify the tracker of the artifact currently under creation or edition
+export type CurrentTrackerIdentifier = Identifier<"CurrentTrackerIdentifier">;

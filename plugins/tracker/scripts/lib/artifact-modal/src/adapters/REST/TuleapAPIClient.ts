@@ -36,15 +36,18 @@ import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
 import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
 import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
+import type { RetrievePossibleParents } from "../../domain/fields/link-field-v2/RetrievePossibleParents";
+import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field-v2/PossibleParentsRetrievalFault";
 
-export interface LinkedArtifactCollection {
-    readonly collection: ArtifactWithStatus[];
-}
+export type LinkedArtifactCollection = {
+    readonly collection: ReadonlyArray<ArtifactWithStatus>;
+};
 
 type TuleapAPIClientType = RetrieveParent &
     RetrieveMatchingArtifact &
     RetrieveLinkTypes &
-    RetrieveLinkedArtifactsByType;
+    RetrieveLinkedArtifactsByType &
+    RetrievePossibleParents;
 
 type AllLinkTypesResponse = {
     readonly natures: ReadonlyArray<LinkType>;
@@ -93,5 +96,15 @@ export const TuleapAPIClient = (): TuleapAPIClientType => ({
                     ),
             }
         );
+    },
+
+    getPossibleParents(tracker_id): ResultAsync<readonly LinkableArtifact[], Fault> {
+        const id = tracker_id.id;
+        return getAllJSON<readonly ArtifactWithStatus[], ArtifactWithStatus>(
+            `/api/v1/trackers/${id}/parent_artifacts`,
+            { params: { limit: 1000 } }
+        )
+            .map((artifacts) => artifacts.map(LinkableArtifactProxy.fromAPIArtifact))
+            .mapErr(PossibleParentsRetrievalFault);
     },
 });

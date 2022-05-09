@@ -23,6 +23,7 @@ import {
     getLinkFieldFetchErrorMessage,
     getMatchingArtifactErrorMessage,
     getParentFetchErrorMessage,
+    getPossibleParentErrorMessage,
 } from "../../../gettext-catalog";
 
 export type FaultFeedbackPresenter = {
@@ -35,6 +36,8 @@ const isParentRetrievalFault = (fault: Fault): boolean =>
     "isParentRetrieval" in fault && fault.isParentRetrieval() === true;
 const isMatchingArtifactRetrievalFault = (fault: Fault): boolean =>
     "isMatchingArtifactRetrieval" in fault && fault.isMatchingArtifactRetrieval() === true;
+const isPossibleParentsRetrievalFault = (fault: Fault): boolean =>
+    "isPossibleParentsRetrieval" in fault && fault.isPossibleParentsRetrieval() === true;
 
 export const FaultFeedbackPresenter = {
     buildEmpty: (): FaultFeedbackPresenter => ({ message: "" }),
@@ -47,6 +50,9 @@ export const FaultFeedbackPresenter = {
         }
         if (isMatchingArtifactRetrievalFault(fault)) {
             return { message: sprintf(getMatchingArtifactErrorMessage(), fault) };
+        }
+        if (isPossibleParentsRetrievalFault(fault)) {
+            return { message: sprintf(getPossibleParentErrorMessage(), fault) };
         }
         return { message: String(fault) };
     },

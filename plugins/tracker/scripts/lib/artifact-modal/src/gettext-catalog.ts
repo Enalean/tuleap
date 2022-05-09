@@ -91,3 +91,8 @@ export const getMatchingArtifactErrorMessage = (): string =>
 export const getRemoveLabel = (): string => gettextCatalog.getString("Remove");
 export const getPermissionFieldLabel = (): string =>
     gettextCatalog.getString("Restrict access to this artifact for the following user groups:");
+export const getPossibleParentsLabel = (): string => gettextCatalog.getString("Possible parents");
+export const getPossibleParentsEmptyState = (): string =>
+    gettextCatalog.getString("No possible parent found");
+export const getPossibleParentErrorMessage = (): string =>
+    gettextCatalog.getString("Error while retrieving the possible parents: %s");

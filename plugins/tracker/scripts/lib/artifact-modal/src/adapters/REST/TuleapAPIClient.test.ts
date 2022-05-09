@@ -25,7 +25,6 @@ import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as fetch_result from "@tuleap/fetch-result";
-import { ResponseStub } from "@tuleap/fetch-result/tests/helper/ResponseStub";
 import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
@@ -37,6 +36,7 @@ import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 import { okAsync } from "neverthrow";
 import type { GetAllOptions } from "@tuleap/fetch-result";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
+import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -46,6 +46,7 @@ const SECOND_LINKED_ARTIFACT_ID = 60;
 const ARTIFACT_TITLE = "thio";
 const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
 const COLOR = "deep-blue";
+const TRACKER_ID = 36;
 
 describe(`TuleapAPIClient`, () => {
     describe(`getParent()`, () => {
@@ -96,7 +97,7 @@ describe(`TuleapAPIClient`, () => {
                 tracker: { color_name: COLOR },
             } as ArtifactWithStatus;
             const getSpy = jest.spyOn(fetch_result, "getJSON");
-            getSpy.mockReturnValue(ResponseStub.withSuccessfulPayload(artifact));
+            getSpy.mockReturnValue(okAsync(artifact));
 
             const result = await getMatching();
 
@@ -131,9 +132,7 @@ describe(`TuleapAPIClient`, () => {
             };
 
             const getSpy = jest.spyOn(fetch_result, "getJSON");
-            getSpy.mockReturnValue(
-                ResponseStub.withSuccessfulPayload({ natures: [child_type, parent_type] })
-            );
+            getSpy.mockReturnValue(okAsync({ natures: [child_type, parent_type] }));
 
             const result = await getAllLinkTypes();
 
@@ -201,6 +200,40 @@ describe(`TuleapAPIClient`, () => {
                     getCollectionCallback: expect.any(Function),
                 },
             ]);
+        });
+    });
+
+    describe(`getPossibleParents()`, () => {
+        const getPossibleParents = (): ResultAsync<readonly LinkableArtifact[], Fault> => {
+            const client = TuleapAPIClient();
+            return client.getPossibleParents(CurrentTrackerIdentifierStub.withId(TRACKER_ID));
+        };
+
+        it(`will return an array of linkable artifacts`, async () => {
+            const first_artifact = {
+                id: FIRST_LINKED_ARTIFACT_ID,
+                tracker: { color_name: "chrome-silver" },
+            } as ArtifactWithStatus;
+            const second_artifact = {
+                id: SECOND_LINKED_ARTIFACT_ID,
+                tracker: { color_name: "coral-pink" },
+            } as ArtifactWithStatus;
+            const getAllSpy = jest.spyOn(fetch_result, "getAllJSON");
+            getAllSpy.mockReturnValue(okAsync([first_artifact, second_artifact]));
+
+            const result = await getPossibleParents();
+
+            if (!result.isOk()) {
+                throw new Error("Expected an Ok");
+            }
+            expect(result.value).toHaveLength(2);
+            const [first_returned_artifact, second_returned_artifact] = result.value;
+            expect(first_returned_artifact.id).toBe(FIRST_LINKED_ARTIFACT_ID);
+            expect(second_returned_artifact.id).toBe(SECOND_LINKED_ARTIFACT_ID);
+            expect(getAllSpy).toHaveBeenCalledWith(
+                `/api/v1/trackers/${TRACKER_ID}/parent_artifacts`,
+                { params: { limit: 1000 } }
+            );
         });
     });
 });
