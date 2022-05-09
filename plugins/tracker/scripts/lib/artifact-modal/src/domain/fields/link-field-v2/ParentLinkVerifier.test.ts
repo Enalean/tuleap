@@ -27,22 +27,36 @@ import { RetrieveNewLinksStub } from "../../../../tests/stubs/RetrieveNewLinksSt
 import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
 import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
 import { LinkedArtifactStub } from "../../../../tests/stubs/LinkedArtifactStub";
+import { ParentArtifactIdentifierStub } from "../../../../tests/stubs/ParentArtifactIdentifierStub";
+import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
 
 describe(`ParentLinkVerifier`, () => {
     let links_retriever: RetrieveLinkedArtifactsSync,
         removal_verifier: VerifyLinkIsMarkedForRemoval,
-        new_links_retriever: RetrieveNewLinks;
+        new_links_retriever: RetrieveNewLinks,
+        parent_identifier: ParentArtifactIdentifier | null;
 
     beforeEach(() => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
         removal_verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
+        parent_identifier = null;
     });
 
     const hasParentLink = (): boolean => {
-        const verifier = ParentLinkVerifier(links_retriever, removal_verifier, new_links_retriever);
+        const verifier = ParentLinkVerifier(
+            links_retriever,
+            removal_verifier,
+            new_links_retriever,
+            parent_identifier
+        );
         return verifier.hasParentLink();
     };
+
+    it(`returns true when the artifact under creation was given a parent by the caller of the modal`, () => {
+        parent_identifier = ParentArtifactIdentifierStub.withId(318);
+        expect(hasParentLink()).toBe(true);
+    });
 
     it(`returns false when there is no link at all`, () => {
         expect(hasParentLink()).toBe(false);

@@ -103,7 +103,12 @@ describe(`LinkFieldController`, () => {
             new_link_adder,
             new_link_remover,
             new_links_retriever,
-            ParentLinkVerifier(links_retriever_sync, deleted_link_verifier, new_links_retriever),
+            ParentLinkVerifier(
+                links_retriever_sync,
+                deleted_link_verifier,
+                new_links_retriever,
+                null
+            ),
             {
                 field_id: FIELD_ID,
                 type: "art_link",
