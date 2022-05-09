@@ -103,6 +103,9 @@ function ArtifactModalController(
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
+    const parent_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
+        modal_model.parent_artifact_id
+    );
 
     Object.assign(self, {
         $onInit: init,
@@ -140,7 +143,7 @@ function ArtifactModalController(
         parent_feedback_controller: ParentFeedbackController(
             api_client,
             fault_feedback_controller,
-            ParentArtifactIdentifierProxy.fromCallerArgument(modal_model.parent_artifact_id)
+            parent_identifier
         ),
         fault_feedback_controller,
         file_upload_quota_controller: FileUploadQuotaController(UserTemporaryFileQuotaStore()),
@@ -161,7 +164,12 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 new_links_store,
-                ParentLinkVerifier(links_store, links_marked_for_removal_store, new_links_store),
+                ParentLinkVerifier(
+                    links_store,
+                    links_marked_for_removal_store,
+                    new_links_store,
+                    parent_identifier
+                ),
                 field,
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(

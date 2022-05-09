@@ -23,13 +23,18 @@ import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 import type { VerifyHasParentLink } from "./VerifyHasParentLink";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { REVERSE_DIRECTION } from "./LinkType";
+import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
 
 export const ParentLinkVerifier = (
     links_retriever: RetrieveLinkedArtifactsSync,
     marked_for_removal_verifier: VerifyLinkIsMarkedForRemoval,
-    new_links_retriever: RetrieveNewLinks
+    new_links_retriever: RetrieveNewLinks,
+    parent_identifier: ParentArtifactIdentifier | null
 ): VerifyHasParentLink => ({
     hasParentLink(): boolean {
+        if (parent_identifier) {
+            return true;
+        }
         const has_non_removed_parent = links_retriever
             .getLinkedArtifacts()
             .some(
