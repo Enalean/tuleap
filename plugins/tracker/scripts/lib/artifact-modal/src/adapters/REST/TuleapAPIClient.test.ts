@@ -36,6 +36,7 @@ import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 import { okAsync } from "neverthrow";
 import type { GetAllOptions } from "@tuleap/fetch-result";
+import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 
 const FORWARD_DIRECTION = "forward";
 const IS_CHILD_SHORTNAME = "_is_child";
@@ -151,11 +152,7 @@ describe(`TuleapAPIClient`, () => {
         let link_type: LinkType;
 
         beforeEach(() => {
-            link_type = {
-                shortname: IS_CHILD_SHORTNAME,
-                direction: FORWARD_DIRECTION,
-                label: "Parent",
-            };
+            link_type = LinkTypeStub.buildChildLinkType();
         });
 
         const getLinkedArtifactsByLinkType = (): ResultAsync<readonly LinkedArtifact[], Fault> => {

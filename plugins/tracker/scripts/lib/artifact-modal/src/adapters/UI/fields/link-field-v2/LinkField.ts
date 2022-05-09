@@ -37,7 +37,6 @@ import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import { LinkTypeProxy } from "./LinkTypeProxy";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -116,9 +115,10 @@ export const LinkField = define<LinkField>({
     link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
-            const { field, types } = controller.displayField();
+            const { field, types, selected_link_type } = controller.displayField();
             host.field_presenter = field;
             host.allowed_link_types = types;
+            host.current_link_type = selected_link_type;
             controller.displayLinkedArtifacts().then(({ artifacts, types }) => {
                 host.linked_artifacts_presenter = artifacts;
                 host.allowed_link_types = types;
@@ -151,10 +151,7 @@ export const LinkField = define<LinkField>({
         get: (host, last_value) => last_value ?? LinkAdditionPresenter.withoutSelection(),
         set: (host, presenter) => presenter,
     },
-    current_link_type: {
-        get: (host, last_value) => last_value ?? LinkTypeProxy.buildUntyped(),
-        set: (host, value) => value,
-    },
+    current_link_type: undefined,
     content: (host) => html`
         <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
             ${host.field_presenter.label}

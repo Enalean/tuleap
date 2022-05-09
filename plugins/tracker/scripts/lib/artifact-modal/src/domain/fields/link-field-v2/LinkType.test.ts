@@ -17,25 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
-import {
-    FORWARD_DIRECTION,
-    REVERSE_DIRECTION,
-} from "../../../../domain/fields/link-field-v2/LinkType";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { FORWARD_DIRECTION, LinkType } from "./LinkType";
 
-export const LinkTypeProxy = {
-    fromChangeEvent: (event: Event): LinkType | null => {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return null;
-        }
-        const [shortname, direction] = event.target.value.split(" ");
-        if (direction !== FORWARD_DIRECTION && direction !== REVERSE_DIRECTION) {
-            return null;
-        }
-        return {
-            direction,
-            shortname,
-            label: event.target.selectedOptions[0].label,
-        };
-    },
-};
+describe(`LinkType`, () => {
+    it(`builds the "Untyped" link type`, () => {
+        const type = LinkType.buildUntyped();
+        expect(type.shortname).toBe(UNTYPED_LINK);
+        expect(type.direction).toBe(FORWARD_DIRECTION);
+        expect(type.label).toBe("");
+    });
+});

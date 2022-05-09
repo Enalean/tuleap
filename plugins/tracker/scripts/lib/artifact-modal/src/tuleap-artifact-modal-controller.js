@@ -66,6 +66,7 @@ import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
 import { ParentLinkVerifier } from "./domain/fields/link-field-v2/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
+import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
 
 export default ArtifactModalController;
 
@@ -100,6 +101,7 @@ function ArtifactModalController(
     const links_store = LinksStore();
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
+    const type_store = SelectedLinkTypeStore();
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
@@ -170,6 +172,8 @@ function ArtifactModalController(
                     new_links_store,
                     parent_identifier
                 ),
+                type_store,
+                type_store,
                 field,
                 current_artifact_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(

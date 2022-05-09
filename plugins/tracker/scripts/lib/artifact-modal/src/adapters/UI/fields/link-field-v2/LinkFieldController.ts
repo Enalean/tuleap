@@ -40,20 +40,29 @@ import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import type { AddNewLink } from "../../../../domain/fields/link-field-v2/AddNewLink";
 import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
 import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { LinkType, REVERSE_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { DeleteNewLink } from "../../../../domain/fields/link-field-v2/DeleteNewLink";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
+import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
+import type { SetSelectedLinkType } from "../../../../domain/fields/link-field-v2/SetSelectedLinkType";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
     readonly types: CollectionOfAllowedLinksTypesPresenters;
+    readonly selected_link_type: LinkType;
 };
 
 export type LinkedArtifactPresentersAndAllowedLinkTypes = {
     readonly artifacts: LinkedArtifactCollectionPresenter;
     readonly types: CollectionOfAllowedLinksTypesPresenters;
+};
+
+export type NewLinkPresentersAndSelectedType = {
+    readonly links: NewLinkCollectionPresenter;
+    readonly types: CollectionOfAllowedLinksTypesPresenters;
+    readonly selected_link_type: LinkType;
 };
 
 export type NewLinkPresentersAndAllowedLinkTypes = {
@@ -68,8 +77,9 @@ export type LinkFieldControllerType = {
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete: LinkSelectorSearchFieldCallback;
     onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
-    addNewLink(artifact: LinkableArtifact, type: LinkType): NewLinkPresentersAndAllowedLinkTypes;
+    addNewLink(artifact: LinkableArtifact): NewLinkPresentersAndSelectedType;
     removeNewLink(link: NewLink): NewLinkPresentersAndAllowedLinkTypes;
+    setSelectedLinkType(type: LinkType): LinkType;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -102,6 +112,8 @@ export const LinkFieldController = (
     new_link_remover: DeleteNewLink,
     new_links_retriever: RetrieveNewLinks,
     parent_verifier: VerifyHasParentLink,
+    type_retriever: RetrieveSelectedLinkType,
+    type_setter: SetSelectedLinkType,
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_artifact_reference: ArtifactCrossReference | null
@@ -115,10 +127,25 @@ export const LinkFieldController = (
             only_is_child_type
         );
 
+    const getNewSelectedLinkType = (
+        previous_link_type: LinkType,
+        allowed_link_types: CollectionOfAllowedLinksTypesPresenters
+    ): LinkType => {
+        if (
+            previous_link_type.shortname === IS_CHILD_LINK_TYPE &&
+            previous_link_type.direction === REVERSE_DIRECTION &&
+            allowed_link_types.is_parent_type_disabled
+        ) {
+            return type_setter.setSelectedLinkType(LinkType.buildUntyped());
+        }
+        return previous_link_type;
+    };
+
     return {
         displayField: () => ({
             field: LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
             types: buildAllowedTypes(),
+            selected_link_type: type_retriever.getSelectedLinkType(),
         }),
 
         displayLinkedArtifacts: () =>
@@ -162,11 +189,16 @@ export const LinkFieldController = (
             return LinkAdditionPresenter.withArtifactSelected(artifact);
         },
 
-        addNewLink(artifact, type): NewLinkPresentersAndAllowedLinkTypes {
-            new_link_adder.addNewLink(NewLink.fromLinkableArtifactAndType(artifact, type));
+        addNewLink(artifact): NewLinkPresentersAndSelectedType {
+            const previous_link_type = type_retriever.getSelectedLinkType();
+            new_link_adder.addNewLink(
+                NewLink.fromLinkableArtifactAndType(artifact, previous_link_type)
+            );
+            const types = buildAllowedTypes();
             return {
                 links: NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks()),
-                types: buildAllowedTypes(),
+                types,
+                selected_link_type: getNewSelectedLinkType(previous_link_type, types),
             };
         },
 
@@ -177,5 +209,7 @@ export const LinkFieldController = (
                 types: buildAllowedTypes(),
             };
         },
+
+        setSelectedLinkType: type_setter.setSelectedLinkType,
     };
 };
