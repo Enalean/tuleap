@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
 namespace Tuleap\REST;
 
 use Psr\Http\Message\ResponseInterface;
@@ -123,20 +124,28 @@ final class TrackersTest extends TrackerBase
 
     public function testOptionsGetParentArtifacts(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest(
+                'OPTIONS',
+                'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'
+            )
+        );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testOptionsGetParentArtifactsWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'),
+            $this->request_factory->createRequest(
+                'OPTIONS',
+                'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'
+            ),
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -520,7 +529,12 @@ final class TrackersTest extends TrackerBase
 
     public function testGetParentArtifacts(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
+        $response = $this->getResponse(
+            $this->request_factory->createRequest(
+                'GET',
+                'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'
+            )
+        );
 
         $this->assertGETParentArtifacts($response);
     }
@@ -528,7 +542,10 @@ final class TrackersTest extends TrackerBase
     public function testGetParentArtifactsWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'),
+            $this->request_factory->createRequest(
+                'GET',
+                'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'
+            ),
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -556,13 +573,13 @@ final class TrackersTest extends TrackerBase
     {
         $parent_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertCount(5, $parent_artifacts);
-        $this->assertEquals($parent_artifacts[0]['title'], "Epic epoc");
-        $this->assertEquals($parent_artifacts[1]['title'], "Epic c'est tout");
-        $this->assertEquals($parent_artifacts[2]['title'], "Epic pic");
-        $this->assertEquals($parent_artifacts[3]['title'], "Fourth epic");
-        $this->assertEquals($parent_artifacts[4]['title'], "First epic");
+        self::assertSame(200, $response->getStatusCode());
+        self::assertCount(5, $parent_artifacts);
+        self::assertSame('Epic epoc', $parent_artifacts[0]['title']);
+        self::assertSame("Epic c'est tout", $parent_artifacts[1]['title']);
+        self::assertSame('Epic pic', $parent_artifacts[2]['title']);
+        self::assertSame('Fourth epic', $parent_artifacts[3]['title']);
+        self::assertSame('First epic', $parent_artifacts[4]['title']);
     }
 
     private function getReleaseTrackerUri()
