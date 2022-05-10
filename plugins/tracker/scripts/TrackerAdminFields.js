@@ -20,7 +20,7 @@
 
 /* global codendi:readonly ProtoMultiSelect:readonly $:readonly $$:readonly Ajax:readonly Effect:readonly */
 
-import { createColorPicker } from "./colorpicker/index.js";
+import { createColorPicker } from "@tuleap/plugin-tracker-color-picker";
 
 document.observe("dom:loaded", function () {
     initColorPicker();

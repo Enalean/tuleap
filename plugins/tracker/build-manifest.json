@@ -22,23 +22,23 @@
     },
     "gettext-vue": {
         "colorpicker": {
-            "src": "scripts/colorpicker",
-            "po": "scripts/colorpicker/po"
+            "src": "scripts/lib/colorpicker/src",
+            "po": "scripts/lib/colorpicker/po"
         },
         "artifact-action-buttons": {
-            "src": "scripts/artifact-action-buttons",
+            "src": "scripts/artifact-action-buttons/src",
             "po": "scripts/artifact-action-buttons/po"
         },
         "permissions-per-group": {
-            "src": "scripts/permissions-per-group",
+            "src": "scripts/permissions-per-group/src",
             "po": "scripts/permissions-per-group/po"
         },
         "workflow-transitions": {
-            "src": "scripts/workflow-transitions",
+            "src": "scripts/workflow-transitions/src",
             "po": "scripts/workflow-transitions/po"
         },
         "tracker-creation": {
-            "src": "scripts/tracker-creation",
+            "src": "scripts/tracker-creation/src",
             "po": "scripts/tracker-creation/po"
         },
         "timeframe-admin": {

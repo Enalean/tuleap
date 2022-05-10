@@ -1,0 +1,28 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
+  '@tuleap/tlp-swatch-colors': link:../../../../../lib/frontend/tlp-swatch-colors
+  vue: ^2.6.14
+  vue-gettext: ^2.1.12
+
+dependencies:
+  '@tuleap/tlp-swatch-colors': link:../../../../../lib/frontend/tlp-swatch-colors
+  vue: 2.6.14
+  vue-gettext: 2.1.12
+
+devDependencies:
+  '@tuleap/build-system-configurator': link:../../../../../lib/frontend/build-system-configurator
+  '@tuleap/po-gettext-plugin': link:../../../../../lib/frontend/po-gettext-plugin
+
+packages:
+
+  /vue-gettext/2.1.12:
+    resolution: {integrity: sha512-7Kw36xtKvARp8ZafQGPK9WR6EM+dhFUikR5f0+etSkiHuvUM3yf1HsRDLYoLLdJ0AMaXxKwgekumzvCk6KX8rA==}
+    engines: {npm: '>= 3.0.0'}
+    dev: false
+
+  /vue/2.6.14:
+    resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
+    dev: false
