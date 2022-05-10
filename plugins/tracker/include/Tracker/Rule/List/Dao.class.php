@@ -139,6 +139,14 @@ class Tracker_Rule_List_Dao extends \Tuleap\DB\DataAccessObject
      */
     public function searchTrackersWithRulesByFieldIDsAndTrackerIDs(array $tracker_ids, array $field_ids): array
     {
+        if (empty($tracker_ids)) {
+            return [];
+        }
+
+        if (empty($field_ids)) {
+            return [];
+        }
+
         $where_statement_field_tracker = EasyStatement::open()
             ->in('tracker_id IN (?*)', $tracker_ids)
             ->andGroup()
