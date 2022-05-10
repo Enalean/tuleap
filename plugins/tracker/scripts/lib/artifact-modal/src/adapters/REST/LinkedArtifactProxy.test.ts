@@ -18,8 +18,8 @@
  */
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
+import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 
 const ARTIFACT_ID = 7;
 const TITLE = "maeandroid";
@@ -40,11 +40,7 @@ describe(`LinkedArtifactProxy`, () => {
             xref: CROSS_REFERENCE,
             tracker: { color_name: COLOR },
         };
-        const link_type: LinkType = {
-            shortname: "_is_child",
-            direction: "forward",
-            label: "Parent",
-        };
+        const link_type = LinkTypeStub.buildChildLinkType();
 
         const linked_artifact = LinkedArtifactProxy.fromAPIArtifactAndType(api_artifact, link_type);
 

@@ -23,6 +23,7 @@ import type {
     LinkFieldPresenterAndAllowedLinkTypes,
     LinkedArtifactPresentersAndAllowedLinkTypes,
     NewLinkPresentersAndAllowedLinkTypes,
+    NewLinkPresentersAndSelectedType,
 } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
@@ -46,7 +47,7 @@ import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/L
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants/src/constants";
+import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
 import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
@@ -54,7 +55,12 @@ import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/R
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ParentLinkVerifier } from "../../../../domain/fields/link-field-v2/ParentLinkVerifier";
+import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
+import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
+import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
+import type { SetSelectedLinkType } from "../../../../domain/fields/link-field-v2/SetSelectedLinkType";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -68,7 +74,9 @@ describe(`LinkFieldController`, () => {
         fault_notifier: NotifyFaultStub,
         new_link_adder: AddNewLinkStub,
         new_links_retriever: RetrieveNewLinks,
-        new_link_remover: DeleteNewLinkStub;
+        new_link_remover: DeleteNewLinkStub,
+        type_retriever: RetrieveSelectedLinkType,
+        type_setter: SetSelectedLinkType;
 
     beforeEach(() => {
         links_retriever = RetrieveAllLinkedArtifactsStub.withoutLink();
@@ -80,6 +88,8 @@ describe(`LinkFieldController`, () => {
         new_link_adder = AddNewLinkStub.withCount();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
         new_link_remover = DeleteNewLinkStub.withCount();
+        type_retriever = RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped());
+        type_setter = SetSelectedLinkTypeStub.buildPassThrough();
     });
 
     const getController = (): LinkFieldControllerType => {
@@ -109,6 +119,8 @@ describe(`LinkFieldController`, () => {
                 new_links_retriever,
                 null
             ),
+            type_retriever,
+            type_setter,
             {
                 field_id: FIELD_ID,
                 type: "art_link",
@@ -144,6 +156,12 @@ describe(`LinkFieldController`, () => {
             const { types } = displayField();
             expect(types.types).toHaveLength(1);
             expect(types.types[0].forward_type_presenter.shortname).toBe(IS_CHILD_LINK_TYPE);
+        });
+
+        it(`returns a presenter containing the selected link type`, () => {
+            const { selected_link_type } = displayField();
+            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });
     });
 
@@ -255,20 +273,24 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`addNewLink`, () => {
-        let link_type: LinkType;
-
+        let first_type: LinkType, second_type: LinkType;
         beforeEach(() => {
-            link_type = LinkTypeStub.buildChildLinkType();
+            first_type = LinkTypeStub.buildParentLinkType();
+            second_type = LinkTypeStub.buildUntyped();
         });
 
-        const addNewLink = (): NewLinkPresentersAndAllowedLinkTypes => {
+        const addNewLink = (): NewLinkPresentersAndSelectedType => {
+            type_retriever = RetrieveSelectedLinkTypeStub.withSuccessiveTypes(
+                first_type,
+                second_type
+            );
             const linkable_artifact = LinkableArtifactStub.withDefaults({
                 id: ARTIFACT_ID,
             });
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(
-                NewLinkStub.withIdAndType(ARTIFACT_ID, link_type)
+                NewLinkStub.withIdAndType(ARTIFACT_ID, first_type)
             );
-            return getController().addNewLink(linkable_artifact, link_type);
+            return getController().addNewLink(linkable_artifact);
         };
 
         it(`adds a new link to the stored new links and returns an updated presenter`, () => {
@@ -280,11 +302,22 @@ describe(`LinkFieldController`, () => {
             expect(links[0].link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
         });
 
-        it(`when a new reverse _is_child link is added, it will disable this type`, () => {
-            link_type = LinkTypeStub.buildParentLinkType();
-            const { types } = addNewLink();
+        it(`when a new reverse _is_child link is added, it will disable this type
+            and will set the Untyped link as selected type (as there should be only one Parent)`, () => {
+            const { types, selected_link_type } = addNewLink();
 
             expect(types.is_parent_type_disabled).toBe(true);
+            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
+            expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
+        });
+
+        it(`when another type of link is added, it will not change the selected type`, () => {
+            first_type = LinkTypeStub.buildReverseCustom();
+            second_type = first_type;
+
+            const { selected_link_type } = addNewLink();
+
+            expect(selected_link_type).toBe(first_type);
         });
     });
 
@@ -306,6 +339,18 @@ describe(`LinkFieldController`, () => {
             const { types } = removeNewLink();
 
             expect(types.is_parent_type_disabled).toBe(false);
+        });
+    });
+
+    describe(`setSelectedLinkType`, () => {
+        const setSelectedLinkType = (type: LinkType): LinkType => {
+            return getController().setSelectedLinkType(type);
+        };
+
+        it(`stores the new selected link type and returns it`, () => {
+            const new_type = LinkTypeStub.buildReverseCustom();
+            const result = setSelectedLinkType(new_type);
+            expect(result).toBe(new_type);
         });
     });
 });

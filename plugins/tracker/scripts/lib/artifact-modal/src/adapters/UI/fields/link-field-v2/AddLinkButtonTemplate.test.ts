@@ -47,6 +47,8 @@ import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLi
 import type { LinkSelector } from "@tuleap/link-selector";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
+import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
+import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -64,7 +66,7 @@ describe(`AddLinkButtonTemplate`, () => {
         const linkable_artifact = LinkableArtifactStub.withDefaults({ id: NEW_ARTIFACT_ID });
         link_addition_presenter = LinkAdditionPresenter.withArtifactSelected(linkable_artifact);
         link_selector = LinkSelectorStub.withResetSelectionCallCount();
-        current_link_type = LinkTypeStub.buildUntyped();
+        current_link_type = LinkTypeStub.buildChildLinkType();
         parent_verifier = VerifyHasParentLinkStub.withNoParentLink();
     });
 
@@ -96,6 +98,8 @@ describe(`AddLinkButtonTemplate`, () => {
                 NewLinkStub.withIdAndType(NEW_ARTIFACT_ID, LinkTypeStub.buildUntyped())
             ),
             parent_verifier,
+            RetrieveSelectedLinkTypeStub.withType(current_link_type),
+            SetSelectedLinkTypeStub.buildPassThrough(),
             {
                 field_id: 696,
                 label: "Artifact link",
@@ -150,32 +154,6 @@ describe(`AddLinkButtonTemplate`, () => {
         const new_link = host.new_links_presenter[0];
         expect(new_link.identifier.id).toBe(NEW_ARTIFACT_ID);
         expect(new_link.link_type.shortname).toBe(UNTYPED_LINK);
-    });
-
-    describe(`given the current link type was reverse _is_child (Parent)`, () => {
-        beforeEach(() => {
-            current_link_type = LinkTypeStub.buildParentLinkType();
-        });
-
-        it(`when I click the button and that type is now disabled,
-            it will set the Untyped link as current link type`, () => {
-            parent_verifier = VerifyHasParentLinkStub.withParentLink();
-
-            const button = render();
-            button.click();
-
-            expect(host.current_link_type.shortname).toBe(UNTYPED_LINK);
-        });
-
-        it(`when I click the button and that type is still enabled,
-            it will not change the current link type`, () => {
-            parent_verifier = VerifyHasParentLinkStub.withNoParentLink();
-
-            const button = render();
-            button.click();
-
-            expect(host.current_link_type).toBe(current_link_type);
-        });
     });
 
     it(`when there is no selected artifact, the button will be disabled`, () => {

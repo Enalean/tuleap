@@ -44,6 +44,8 @@ import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLink
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
+import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
+import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -157,6 +159,8 @@ describe(`LinkedArtifactTemplate`, () => {
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 VerifyHasParentLinkStub.withNoParentLink(),
+                RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped()),
+                SetSelectedLinkTypeStub.buildPassThrough(),
                 {
                     field_id: 457,
                     label: "Artifact link",

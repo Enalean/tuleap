@@ -21,33 +21,17 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { LinkField } from "./LinkField";
 import { getAddLinkButtonLabel } from "../../../../gettext-catalog";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
-import { LinkTypeProxy } from "./LinkTypeProxy";
-import { REVERSE_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
-
-const getNewCurrentLinkType = (host: LinkField): LinkType => {
-    if (
-        host.current_link_type.shortname === IS_CHILD_LINK_TYPE &&
-        host.current_link_type.direction === REVERSE_DIRECTION &&
-        host.allowed_link_types.is_parent_type_disabled
-    ) {
-        return LinkTypeProxy.buildUntyped();
-    }
-    return host.current_link_type;
-};
 
 const onClickAddNewLink = (host: LinkField): void => {
     if (!host.link_addition_presenter.artifact) {
         return;
     }
-    const { links, types } = host.controller.addNewLink(
-        host.link_addition_presenter.artifact,
-        host.current_link_type
+    const { links, types, selected_link_type } = host.controller.addNewLink(
+        host.link_addition_presenter.artifact
     );
     host.new_links_presenter = links;
     host.allowed_link_types = types;
-    host.current_link_type = getNewCurrentLinkType(host);
+    host.current_link_type = selected_link_type;
     host.link_selector.resetSelection();
 };
 

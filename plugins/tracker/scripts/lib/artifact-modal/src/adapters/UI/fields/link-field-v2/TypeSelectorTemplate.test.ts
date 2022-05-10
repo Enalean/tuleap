@@ -28,6 +28,24 @@ import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
+import { LinkFieldController } from "./LinkFieldController";
+import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
+import { RetrieveLinkedArtifactsSyncStub } from "../../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
+import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
+import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkMarkedForRemovalStub";
+import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
+import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
+import { RetrieveMatchingArtifactStub } from "../../../../../tests/stubs/RetrieveMatchingArtifactStub";
+import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
+import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
+import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
+import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
+import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
+import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
+import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
+import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
+import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 
 function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupElement {
     const optgroup = select.querySelector("[data-test=link-type-select-optgroup]");
@@ -67,16 +85,42 @@ describe("TypeSelectorTemplate", () => {
         const target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
-        host = {
-            field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
-                {
-                    field_id: 276,
-                    type: "art_link",
-                    label: "Artifact link",
-                    allowed_types: [],
-                },
-                cross_reference
+        const field: ArtifactLinkFieldStructure = {
+            field_id: 276,
+            type: "art_link",
+            label: "Artifact link",
+            allowed_types: [],
+        };
+        const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
+        const fault_notifier = NotifyFaultStub.withCount();
+        const controller = LinkFieldController(
+            RetrieveAllLinkedArtifactsStub.withoutLink(),
+            RetrieveLinkedArtifactsSyncStub.withoutLink(),
+            AddLinkMarkedForRemovalStub.withCount(),
+            DeleteLinkMarkedForRemovalStub.withCount(),
+            VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
+            fault_notifier,
+            ArtifactLinkSelectorAutoCompleter(
+                RetrieveMatchingArtifactStub.withMatchingArtifact(
+                    LinkableArtifactStub.withDefaults()
+                ),
+                fault_notifier,
+                ClearFaultNotificationStub.withCount(),
+                current_artifact_identifier
             ),
+            AddNewLinkStub.withCount(),
+            DeleteNewLinkStub.withCount(),
+            RetrieveNewLinksStub.withoutLink(),
+            VerifyHasParentLinkStub.withNoParentLink(),
+            RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped()),
+            SetSelectedLinkTypeStub.buildPassThrough(),
+            field,
+            current_artifact_identifier,
+            ArtifactCrossReferenceStub.withRef("bug #22")
+        );
+        host = {
+            controller,
+            field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(field, cross_reference),
             allowed_link_types,
             current_link_type: LinkTypeStub.buildUntyped(),
         } as HostElement;

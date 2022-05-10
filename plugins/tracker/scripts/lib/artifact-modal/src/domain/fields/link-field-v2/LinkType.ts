@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+
 export const FORWARD_DIRECTION = "forward";
 export const REVERSE_DIRECTION = "reverse";
 
@@ -25,3 +27,11 @@ export interface LinkType {
     readonly direction: "forward" | "reverse";
     readonly label: string;
 }
+
+export const LinkType = {
+    buildUntyped: (): LinkType => ({
+        shortname: UNTYPED_LINK,
+        direction: FORWARD_DIRECTION,
+        label: "",
+    }),
+};
