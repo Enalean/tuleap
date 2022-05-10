@@ -21,29 +21,31 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
  * @psalm-immutable
  */
-class ParentArtifactReference extends ArtifactReference
+final class ParentArtifactRepresentation
 {
-    /**
-     * @var string
-     */
-    public $title;
-
-    private function __construct(Artifact $artifact, \Tracker $tracker, string $format = '')
-    {
-        parent::__construct($artifact, $tracker, $format);
-
-        $this->title = $artifact->getCachedTitle();
+    private function __construct(
+        public int $id,
+        public string $title,
+        public string $xref,
+        public string $uri,
+        public MinimalTrackerRepresentation $tracker,
+    ) {
     }
 
-    /**
-     * @return ParentArtifactReference
-     */
-    public static function build(Artifact $artifact, string $format = ''): ArtifactReference
+    public static function build(Artifact $artifact): ParentArtifactRepresentation
     {
-        return new self($artifact, $artifact->getTracker(), $format);
+        $artifact_id = $artifact->getId();
+        return new self(
+            $artifact_id,
+            $artifact->getCachedTitle(),
+            $artifact->getXRef(),
+            ArtifactRepresentation::ROUTE . '/' . $artifact_id,
+            MinimalTrackerRepresentation::build($artifact->getTracker())
+        );
     }
 }

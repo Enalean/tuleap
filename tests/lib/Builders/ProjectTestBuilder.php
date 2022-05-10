@@ -25,6 +25,7 @@ namespace Tuleap\Test\Builders;
 
 use Project;
 use TemplateSingleton;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 
 final class ProjectTestBuilder
 {
@@ -79,6 +80,12 @@ final class ProjectTestBuilder
     public function withAccess(string $access): self
     {
         $this->data['access'] = $access;
+        return $this;
+    }
+
+    public function withIcon(string $icon_codepoint): self
+    {
+        $this->data['icon_codepoint'] = EmojiCodepointConverter::convertEmojiToStoreFormat($icon_codepoint);
         return $this;
     }
 }

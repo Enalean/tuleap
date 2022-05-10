@@ -65,7 +65,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
+use Tuleap\Tracker\REST\Artifact\ParentArtifactRepresentation;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -489,7 +489,7 @@ class TrackersResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 1000}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return array {@type Tuleap\Tracker\REST\Artifact\ParentArtifactReference}
+     * @return array {@type ParentArtifactRepresentation}
      * @throws RestException 403
      * @throws RestException 404
      */
@@ -515,7 +515,7 @@ class TrackersResource extends AuthenticatedResource
         $nb_matching = $pagination->getTotalSize();
         Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
         return array_map(
-            static fn($artifact) => ParentArtifactReference::build($artifact),
+            static fn($artifact) => ParentArtifactRepresentation::build($artifact),
             array_values($pagination->getArtifacts())
         );
     }
