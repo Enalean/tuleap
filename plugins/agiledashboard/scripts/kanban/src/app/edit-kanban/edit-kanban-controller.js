@@ -61,7 +61,7 @@ function EditKanbanCtrl(
 
     const sanitized_kanban_label = escaper.html(self.kanban.tracker.label);
 
-    const tracker_link = `<a class="edit-kanban-title-tracker-link" href="/plugins/tracker/?tracker=${self.kanban.tracker.id}">${sanitized_kanban_label}</a>`;
+    const tracker_link = `<a href="/plugins/tracker/?tracker=${self.kanban.tracker.id}">${sanitized_kanban_label}</a>`;
 
     self.title_tracker_link = gettextCatalog.getString("Based on the {{ trackerLink }} tracker.", {
         trackerLink: tracker_link,
