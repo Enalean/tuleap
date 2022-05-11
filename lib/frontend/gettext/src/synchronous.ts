@@ -23,16 +23,27 @@ import { DEFAULT_LANGUAGE } from "./constants";
 
 export function initGettextSync(
     domain: string,
-    translations: GettextParserPoFile,
+    translations: GettextParserPoFile | Record<string, GettextParserPoFile>,
     locale = DEFAULT_LANGUAGE
 ): GettextProvider {
     const gettext_provider = new Gettext();
+
     if (locale !== DEFAULT_LANGUAGE) {
-        gettext_provider.addTranslations(locale, domain, translations);
+        if (isGettextParserPoFile(translations)) {
+            gettext_provider.addTranslations(locale, domain, translations);
+        } else if (locale in translations) {
+            gettext_provider.addTranslations(locale, domain, translations[locale]);
+        }
     }
 
     gettext_provider.setLocale(locale);
     gettext_provider.setTextDomain(domain);
 
     return gettext_provider;
+}
+
+function isGettextParserPoFile(
+    translations: GettextParserPoFile | Record<string, GettextParserPoFile>
+): translations is GettextParserPoFile {
+    return "translations" in translations;
 }
