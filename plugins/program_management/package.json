@@ -5,9 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "link:../../src",
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
     "@tuleap/drag-and-drop": "link:../../lib/frontend/drag-and-drop",
+    "@tuleap/fp-feedback": "link:../../lib/frontend/fp-feedback",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",
     "@tuleap/project-privacy-helper": "link:../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",

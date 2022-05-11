@@ -19,7 +19,7 @@
 
 import { patch } from "@tuleap/tlp-fetch";
 import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
-import { addFeedback, clearAllFeedbacks } from "../../../../../src/scripts/tuleap/feedback";
+import { addFeedback, clearAllFeedbacks } from "@tuleap/fp-feedback";
 
 export function initArtifactAdditionalAction(mount_point: Document): void {
     const action_button = mount_point.getElementById("artifact-explicit-backlog-action");

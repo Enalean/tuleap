@@ -19,7 +19,7 @@
 
 import { initArtifactAdditionalAction } from "./artifact-additional-action";
 import * as fetch_wrapper from "@tuleap/tlp-fetch";
-import * as feedbacks from "@tuleap/core/scripts/tuleap/feedback";
+import * as feedbacks from "@tuleap/fp-feedback";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {

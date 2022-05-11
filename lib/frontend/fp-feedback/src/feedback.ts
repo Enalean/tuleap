@@ -17,45 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function selfClosingInfo(message) {
-    const duration_in_ms = 5000;
-    const feedback_element = document.getElementById("feedback");
+export type FeedbackLevel = "error" | "info" | "warning";
+
+export function addFeedback(doc: Document, level: FeedbackLevel, message: string): void {
+    const feedback_element = doc.getElementById("feedback");
     if (!feedback_element) {
         return;
     }
 
-    const section = document.createElement("section");
-    const content = document.createElement("p");
-    content.insertAdjacentText("beforeend", message);
-    content.classList.add("tlp-alert-info");
-    section.appendChild(content);
-
-    feedback_element.appendChild(section);
-    window.setTimeout(() => section.remove(), duration_in_ms);
-}
-
-export function addFeedback(level, message) {
-    const feedback_element = document.getElementById("feedback");
-    if (!feedback_element) {
-        return;
-    }
-
-    const ul_element = document.createElement("ul");
+    const ul_element = doc.createElement("ul");
     ul_element.classList.add(`feedback_${level}`);
-    const feedback_content_element = document.createElement("li");
+    const feedback_content_element = doc.createElement("li");
     feedback_content_element.insertAdjacentText("beforeend", message);
     ul_element.appendChild(feedback_content_element);
 
     feedback_element.appendChild(ul_element);
 }
 
-export function clearAllFeedbacks() {
-    const feedback_element = document.getElementById("feedback");
+export function clearAllFeedbacks(doc: Document): void {
+    const feedback_element = doc.getElementById("feedback");
     if (!feedback_element) {
         return;
     }
 
-    while (feedback_element.firstChild) {
-        feedback_element.removeChild(feedback_element.firstChild);
-    }
+    feedback_element.replaceChildren();
 }

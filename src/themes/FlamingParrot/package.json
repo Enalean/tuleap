@@ -6,6 +6,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/cross-ref-badges": "link:../../../lib/frontend/cross-ref-badges"
+    "@tuleap/cross-ref-badges": "link:../../../lib/frontend/cross-ref-badges",
+    "@tuleap/fp-feedback": "link:../../../lib/frontend/fp-feedback"
   }
 }
