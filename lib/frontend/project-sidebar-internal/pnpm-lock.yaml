@@ -8,7 +8,7 @@ specifiers:
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-popovers': link:../tlp-popovers
   '@vue/test-utils': ^2.0.0-rc.17
-  '@vueuse/core': ^7.5.3
+  '@vueuse/core': ^8.4.2
   vue: ^3.2.26
   vue-dompurify-html: ^3.0.0-beta.3
 
@@ -18,7 +18,7 @@ dependencies:
   '@tuleap/project-privacy-helper': link:../project-privacy-helper
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-popovers': link:../tlp-popovers
-  '@vueuse/core': 7.5.3_vue@3.2.26
+  '@vueuse/core': 8.4.2_vue@3.2.26
   vue: 3.2.26
   vue-dompurify-html: 3.0.0-beta.3_vue@3.2.26
 
@@ -131,8 +131,8 @@ packages:
       vue: 3.2.26
     dev: true
 
-  /@vueuse/core/7.5.3_vue@3.2.26:
-    resolution: {integrity: sha512-D9j5ymHFMFRXQqCp0yZJkf/bvBGiz0MrKUa364p+L8dMyd5zyq2K1JmHyvoBd4xbTFRfmQ1h878u6YE5LCkDVQ==}
+  /@vueuse/core/8.4.2_vue@3.2.26:
+    resolution: {integrity: sha512-dUVU96lii1ZdWoNJXauQNt+4QrHz1DKbuW+y6pDR2N10q7rGZJMDU7pQeMcC2XeosX7kMODfaBuqsF03NozzLg==}
     peerDependencies:
       '@vue/composition-api': ^1.1.0
       vue: ^2.6.0 || ^3.2.0
@@ -142,13 +142,18 @@ packages:
       vue:
         optional: true
     dependencies:
-      '@vueuse/shared': 7.5.3_vue@3.2.26
+      '@vueuse/metadata': 8.4.2
+      '@vueuse/shared': 8.4.2_vue@3.2.26
       vue: 3.2.26
-      vue-demi: 0.12.1_vue@3.2.26
+      vue-demi: 0.12.5_vue@3.2.26
     dev: false
 
-  /@vueuse/shared/7.5.3_vue@3.2.26:
-    resolution: {integrity: sha512-BJ71cxHN5VByW1S58Gl85NFJaQu93F7Vs7K/MuAKsIIuHm9PBbkR5Vxkg9ko9cBdiKVt+FNoo13BhdbA+Vwycg==}
+  /@vueuse/metadata/8.4.2:
+    resolution: {integrity: sha512-2BIj++7P0/I5dfMsEe8q7Kw0HqVAjVcyNOd9+G22/ILUC9TVLTeYOuJ1kwa1Gpr+0LWKHc6GqHiLWNL33+exoQ==}
+    dev: false
+
+  /@vueuse/shared/8.4.2_vue@3.2.26:
+    resolution: {integrity: sha512-hILXMEjL8YQhj1LHN/HZ49UThyfk8irTjhele2nW+L3N55ElFUBGB/f4w0rg8EW+/suhqv7kJJPTZzvHCqxlIw==}
     peerDependencies:
       '@vue/composition-api': ^1.1.0
       vue: ^2.6.0 || ^3.2.0
@@ -159,7 +164,7 @@ packages:
         optional: true
     dependencies:
       vue: 3.2.26
-      vue-demi: 0.12.1_vue@3.2.26
+      vue-demi: 0.12.5_vue@3.2.26
     dev: false
 
   /csstype/2.6.19:
@@ -213,8 +218,8 @@ packages:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
     dev: false
 
-  /vue-demi/0.12.1_vue@3.2.26:
-    resolution: {integrity: sha512-QL3ny+wX8c6Xm1/EZylbgzdoDolye+VpCXRhI2hug9dJTP3OUJ3lmiKN3CsVV3mOJKwFi0nsstbgob0vG7aoIw==}
+  /vue-demi/0.12.5_vue@3.2.26:
+    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
