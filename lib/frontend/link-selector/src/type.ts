@@ -23,6 +23,7 @@ import type { HTMLTemplateStringProcessor } from "./index";
 
 export interface LinkSelector {
     setDropdownContent: (groups: GroupCollection) => void;
+    setPlaceholder: (placeholder: string) => void;
     resetSelection: () => void;
     destroy: () => void;
 }
@@ -37,7 +38,6 @@ export type LinkSelectorTemplatingCallback = (
 ) => HTMLTemplateResult;
 
 export interface LinkSelectorOptions {
-    readonly placeholder?: string;
     templating_callback: LinkSelectorTemplatingCallback;
     selection_callback: LinkSelectorSelectionCallback;
     search_field_callback: LinkSelectorSearchFieldCallback;

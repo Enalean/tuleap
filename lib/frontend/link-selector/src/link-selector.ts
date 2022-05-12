@@ -42,11 +42,7 @@ export function createLinkSelector(
     const items_map_manager = new ItemsMapManager(ListItemMapBuilder(options.templating_callback));
 
     items_map_manager.refreshItemsMap([]);
-    const base_renderer = new BaseComponentRenderer(
-        document,
-        source_select_box,
-        options.placeholder ?? ""
-    );
+    const base_renderer = new BaseComponentRenderer(document, source_select_box, "");
     const {
         wrapper_element,
         link_selector_element,
@@ -124,6 +120,9 @@ export function createLinkSelector(
     const link_selector_instance: LinkSelector = {
         setDropdownContent: (groups): void => {
             dropdown_content_refresher.refresh(groups);
+        },
+        setPlaceholder: (placeholder: string): void => {
+            placeholder_element.replaceChildren(document.createTextNode(placeholder));
         },
         resetSelection: (): void => {
             selection_manager.clearSelection();
