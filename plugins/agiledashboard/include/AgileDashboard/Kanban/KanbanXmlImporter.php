@@ -100,7 +100,7 @@ class KanbanXmlImporter
                 $tracker_mapping[(string) $attrs["tracker_id"]]
             );
 
-            $kanban = $this->dashboard_kanban_factory->getKanbanForXmlImport(
+            $kanban = $this->dashboard_kanban_factory->getKanbanWithoutPermissionChecking(
                 $kanban_id
             );
             $mappings_registry->addReference((string) $attrs['ID'], $kanban);

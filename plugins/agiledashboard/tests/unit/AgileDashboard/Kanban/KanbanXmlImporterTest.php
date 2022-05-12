@@ -336,7 +336,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             </project>'
         );
 
-        $this->kanban_factory->shouldReceive('getKanbanForXmlImport')->andReturns(new \AgileDashboard_Kanban(11221, -1, ''));
+        $this->kanban_factory->shouldReceive('getKanbanWithoutPermissionChecking')->andReturns(new \AgileDashboard_Kanban(11221, -1, ''));
         $this->dashboard_kanban_column_factory->shouldReceive('getColumnForAKanban')
             ->times(3)
             ->andReturn(\Mockery::spy(\AgileDashboard_KanbanColumn::class));
