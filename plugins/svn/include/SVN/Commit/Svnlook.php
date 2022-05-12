@@ -44,19 +44,19 @@ class Svnlook
     public function getChangedFiles(Repository $repository, $revision)
     {
         $command = $this->svnlook . ' changed -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($repository->getSystemPath());
-        return $this->system_commnd->exec($command);
+        return $this->system_commnd->exec('LANG=en_US.UTF-8 ' . $command);
     }
 
     public function getChangedDirectories(Repository $repository, $revision)
     {
         $command = $this->svnlook . ' dirs-changed -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($repository->getSystemPath());
-        return $this->system_commnd->exec($command);
+        return $this->system_commnd->exec('LANG=en_US.UTF-8 ' . $command);
     }
 
     public function getInfo(Repository $repository, $revision)
     {
         $command = $this->svnlook . ' info -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($repository->getSystemPath());
-        return $this->system_commnd->exec($command);
+        return $this->system_commnd->exec('LANG=en_US.UTF-8 ' . $command);
     }
 
     public function getTree(Repository $repository)
@@ -65,13 +65,13 @@ class Svnlook
             escapeshellarg($repository->getSystemPath()) . ' | head -n' .
             escapeshellarg((string) (ImmutableTagPresenter::MAX_NUMBER_OF_FOLDERS + 1));
 
-        return $this->system_commnd->exec($command);
+        return $this->system_commnd->exec('LANG=en_US.UTF-8 ' . $command);
     }
 
     public function getTransactionPath(Repository $repository, $transaction)
     {
         $command = $this->svnlook . ' changed -t ' . escapeshellarg($transaction) . ' ' . escapeshellarg($repository->getSystemPath());
-        return $this->system_commnd->exec($command);
+        return $this->system_commnd->exec('LANG=en_US.UTF-8 ' . $command);
     }
 
     /**
@@ -81,7 +81,7 @@ class Svnlook
     {
         $arg_txn  = escapeshellarg($transaction);
         $arg_repo = escapeshellarg($repository->getSystemPath());
-        return $this->system_commnd->exec("{$this->svnlook} log -t $arg_txn $arg_repo");
+        return $this->system_commnd->exec("LANG=en_US.UTF-8 {$this->svnlook} log -t $arg_txn $arg_repo");
     }
 
     /**
@@ -93,7 +93,7 @@ class Svnlook
         $transaction     = escapeshellarg($transaction);
         $filename        = escapeshellarg($filename);
 
-        return popen("$this->svnlook cat -t $transaction $repository_path $filename", 'rb');
+        return popen("LANG=en_US.UTF-8 $this->svnlook cat -t $transaction $repository_path $filename", 'rb');
     }
 
     /**
@@ -109,7 +109,7 @@ class Svnlook
      */
     public function getFileSize(Repository $repository, string $transaction, string $path_into_repository): int
     {
-        $process = new Process([$this->svnlook, 'filesize', '-t', $transaction, $repository->getSystemPath(), $path_into_repository]);
+        $process = new Process([$this->svnlook, 'filesize', '-t', $transaction, $repository->getSystemPath(), $path_into_repository], null, ['LANG' => 'en_US.UTF-8']);
         return (int) $process->mustRun()->getOutput();
     }
 }
