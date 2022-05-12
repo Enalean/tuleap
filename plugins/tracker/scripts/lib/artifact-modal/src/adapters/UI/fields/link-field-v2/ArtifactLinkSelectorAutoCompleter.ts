@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkSelectorSearchFieldCallback, LinkSelector } from "@tuleap/link-selector";
+import type {
+    GroupOfItems,
+    LinkSelector,
+    LinkSelectorSearchFieldCallback,
+} from "@tuleap/link-selector";
 import type { Fault } from "@tuleap/fault";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
@@ -30,9 +34,9 @@ import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-fi
 import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { LinkableNumber } from "../../../../domain/fields/link-field-v2/LinkableNumber";
-import type { GroupOfItems } from "@tuleap/link-selector";
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
+import { LinkableArtifactFilter } from "../../../../domain/fields/link-field-v2/LinkableArtifactFilter";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete: LinkSelectorSearchFieldCallback;
@@ -56,24 +60,25 @@ export const ArtifactLinkSelectorAutoCompleter = (
         return LinkType.isReverseChild(selected_type);
     };
 
-    const getMatchingArtifactsGroup = async (
-        linkable_number: LinkableNumber
-    ): Promise<GroupOfItems> => {
-        const result = await retrieve_matching_artifact.getMatchingArtifact(linkable_number);
-        return result.match(MatchingArtifactsGroup.fromMatchingArtifact, (fault) => {
-            if (!isExpectedFault(fault)) {
-                fault_notifier.onFault(MatchingArtifactRetrievalFault(fault));
-            }
-            return MatchingArtifactsGroup.buildEmpty();
-        });
-    };
+    const getMatchingArtifactsGroup = (linkable_number: LinkableNumber): Promise<GroupOfItems> =>
+        retrieve_matching_artifact
+            .getMatchingArtifact(linkable_number)
+            .match(MatchingArtifactsGroup.fromMatchingArtifact, (fault) => {
+                if (!isExpectedFault(fault)) {
+                    fault_notifier.onFault(MatchingArtifactRetrievalFault(fault));
+                }
+                return MatchingArtifactsGroup.buildEmpty();
+            });
 
-    const getPossibleParentsGroup = async (): Promise<GroupOfItems> => {
-        const result = await parents_retriever.getPossibleParents(current_tracker_identifier);
-        return result.match(PossibleParentsGroup.fromPossibleParents, (fault) => {
-            fault_notifier.onFault(fault);
-            return PossibleParentsGroup.buildEmpty();
-        });
+    const getPossibleParentsGroup = (query: string): Promise<GroupOfItems> => {
+        const filter = LinkableArtifactFilter(query);
+        return parents_retriever
+            .getPossibleParents(current_tracker_identifier)
+            .map((artifacts) => artifacts.filter(filter.matchesQuery))
+            .match(PossibleParentsGroup.fromPossibleParents, (fault) => {
+                fault_notifier.onFault(fault);
+                return PossibleParentsGroup.buildEmpty();
+            });
     };
 
     return {
@@ -103,7 +108,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 groups.push(await getMatchingArtifactsGroup(linkable_number));
             }
             if (is_parent_selected) {
-                groups.push(await getPossibleParentsGroup());
+                groups.push(await getPossibleParentsGroup(query));
             }
             link_selector.setDropdownContent(groups);
         },
