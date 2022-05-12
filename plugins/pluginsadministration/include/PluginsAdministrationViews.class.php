@@ -168,6 +168,9 @@ class PluginsAdministrationViews extends Views
         $dependencies           = implode(', ', $plugin->getDependencies());
         $are_there_dependencies = ! empty($dependencies);
 
+        $disabled_dependencies           = $this->getDisabledDependencies($plugin->getDependencies());
+        $are_there_disabled_dependencies = ! empty($disabled_dependencies);
+
         $additional_options           = $plugin->getAdministrationOptions();
         $are_there_additional_options = ! empty($additional_options);
 
@@ -185,12 +188,29 @@ class PluginsAdministrationViews extends Views
             $this->getEnableUrl((int) $plugin->getId(), $is_enabled, 'properties'),
             $are_there_dependencies,
             $dependencies,
+            $are_there_disabled_dependencies,
+            $disabled_dependencies,
             $is_there_readme,
             $readme,
             $are_there_additional_options,
             $additional_options,
             $csrf_token,
             $is_enabled
+        );
+    }
+
+    /**
+     * @param string[] $dependencies
+     *
+     * @return string[]
+     */
+    private function getDisabledDependencies(array $dependencies): array
+    {
+        return array_values(
+            array_filter(
+                $dependencies,
+                fn (string $plugin_name) => $this->plugin_manager->getAvailablePluginByName($plugin_name) === null
+            )
         );
     }
 
@@ -267,27 +287,35 @@ class PluginsAdministrationViews extends Views
         );
 
         $plugins = [];
-        foreach ($this->_plugins as $plugin) {
+        foreach ($this->_plugins as $plugin_row) {
+            $plugin = $this->plugin_manager->getPluginById($plugin_row['id']);
+
             $is_there_unmet_dependencies = false;
-            $unmet_dependencies          = $this->dependency_solver->getInstalledDependencies(
-                $this->plugin_manager->getPluginById($plugin['id'])
-            );
+            $unmet_dependencies          = $this->dependency_solver->getInstalledDependencies($plugin);
 
             if ($unmet_dependencies) {
                 $is_there_unmet_dependencies = true;
             }
+
+            $disabled_dependencies           = $this->getDisabledDependencies($plugin->getDependencies());
+            $are_there_disabled_dependencies = ! empty($disabled_dependencies);
+
+            $enable_url = $this->getEnableUrl($plugin_row['id'], $plugin_row['available'], 'installed');
+
             $plugins[] = [
-                'id'                          => $plugin['id'],
-                'name'                        => $plugin['name'],
-                'description'                 => $plugin['description'],
-                'enable_url'                  => $this->getEnableUrl($plugin['id'], $plugin['available'], 'installed'),
-                'scope'                       => $this->getScopeLabel((int) $plugin['scope']),
-                'dont_touch'                  => $plugin['dont_touch'],
-                'dont_restrict'               => $plugin['dont_restrict'],
-                'is_there_unmet_dependencies' => $is_there_unmet_dependencies,
-                'unmet_dependencies'          => $unmet_dependencies,
-                'csrf_token'                  => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
-                'is_enabled'                  => $plugin['available'],
+                'id'                              => $plugin_row['id'],
+                'name'                            => $plugin_row['name'],
+                'description'                     => $plugin_row['description'],
+                'enable_url'                      => $enable_url,
+                'scope'                           => $this->getScopeLabel((int) $plugin_row['scope']),
+                'dont_touch'                      => $plugin_row['dont_touch'],
+                'dont_restrict'                   => $plugin_row['dont_restrict'],
+                'is_there_unmet_dependencies'     => $is_there_unmet_dependencies,
+                'are_there_disabled_dependencies' => $are_there_disabled_dependencies,
+                'disabled_dependencies'           => $disabled_dependencies,
+                'unmet_dependencies'              => $unmet_dependencies,
+                'csrf_token'                      => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
+                'is_enabled'                      => $plugin_row['available'],
             ];
         }
 

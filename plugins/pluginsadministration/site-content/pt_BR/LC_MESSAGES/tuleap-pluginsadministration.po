@@ -72,7 +72,13 @@ msgid ""
 "information."
 msgstr ""
 
+msgid "Enable plugin and its dependencies"
+msgstr ""
+
 msgid "Enabled?"
+msgstr ""
+
+msgid "Enabling a plugin"
 msgstr ""
 
 msgid "Filter on name or description"
@@ -88,6 +94,9 @@ msgid "Install"
 msgstr ""
 
 msgid "Install plugin"
+msgstr ""
+
+msgid "Install plugin and its dependencies"
 msgstr ""
 
 msgid "Installed plugins"
@@ -177,6 +186,10 @@ msgid "The feature will be desactivated for all users."
 msgstr ""
 
 msgid "The plugin has been successfully installed"
+msgstr ""
+
+msgid ""
+"There are unmet dependencies that prevent you from enabling these plugins:"
 msgstr ""
 
 msgid ""

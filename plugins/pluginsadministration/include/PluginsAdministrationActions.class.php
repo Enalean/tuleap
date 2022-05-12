@@ -53,13 +53,17 @@ class PluginsAdministrationActions extends Actions
         if ($plugin_data) {
             $plugin_manager = $this->plugin_manager;
             $dependencies   = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
-            if ($dependencies) {
+            if ($dependencies && ! $request->get('with-dependencies')) {
                 $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to avail %1$s. Please avail the following plugins before: %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
             if (! $plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
-                $plugin_manager->availablePlugin($plugin_data['plugin']);
+                if ($dependencies) {
+                    $plugin_manager->enablePluginAndItsDependencies($plugin_data['plugin']);
+                } else {
+                    $plugin_manager->availablePlugin($plugin_data['plugin']);
+                }
                 $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now available.'), $plugin_data['name']));
             }
         }

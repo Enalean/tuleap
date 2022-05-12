@@ -51,7 +51,6 @@ class AvailablePluginsPresenter
         $this->install_label            = dgettext('tuleap-pluginsadministration', 'Install');
         $this->install_modal_title      = dgettext('tuleap-pluginsadministration', 'Install plugin');
         $this->install_modal_content    = dgettext('tuleap-pluginsadministration', 'Your about to install a plugin. Please confirm your action.');
-        $this->error_install_dependency = dgettext('tuleap-pluginsadministration', 'There are unmet dependencies that prevent you from installing these plugins:');
         $this->install_modal_submit     = dgettext('tuleap-pluginsadministration', 'Install');
         $this->install_modal_cancel     = dgettext('tuleap-pluginsadministration', 'Cancel');
         $this->filter_label             = dgettext('tuleap-pluginsadministration', 'Filter on name or description');
