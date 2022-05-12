@@ -142,7 +142,7 @@ describe("ListItemBuilder", () => {
             id: "link-selector-item-group2-5",
             template: expect.anything(),
             value: { id: 5 },
-            is_disabled: false,
+            is_disabled: true,
             group_id: "group2",
             is_selected: false,
             element: expect.any(Element),

@@ -2,14 +2,13 @@
     <label class="tlp-label" for="link-selector-sb">Link selector</label>
     <select id="link-selector-sb" name="list-value" value=""></select>
     <p class="tlp-text-info"><i class="fas fa-question-circle" aria-hidden="true"></i>
-        In this live example, type <code class="code-inline">105</code> in the search field to simulate some content fetched from a distant endpoint.
+        In this live example, type <code class="code-inline">105</code> in the search field to simulate some content fetched from a remote endpoint.
     </p>
     <script type="text/javascript">
         import { createLinkSelector } from "@tuleap/link-selector";
 
-        createLinkSelector(document.querySelector('#link-selector-sb'), {
-            placeholder: "Please select an item to link",
-            templating_callback: (html, item) => html`item.id`,
+        const link_selector = createLinkSelector(document.querySelector('#link-selector-sb'), {
+            templating_callback: (html, item) => html`${item.id}`,
             selection_callback: (selected_value) => {
                 console.log("Selected value : " + selected_value);
             },
@@ -25,5 +24,6 @@
                 }])
             }
         });
+        link_selector.setPlaceholder("Please select an item to link");
     </script>
 </div>

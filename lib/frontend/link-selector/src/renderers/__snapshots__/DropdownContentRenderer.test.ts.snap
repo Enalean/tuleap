@@ -41,7 +41,7 @@ exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
         Value 4
 
       </li>
-      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-5" class="link-selector-dropdown-option-value">
+      <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-5" class="link-selector-dropdown-option-value-disabled">
 
         Value 5
 

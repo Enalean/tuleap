@@ -32,7 +32,7 @@ export const PossibleParentsGroup = {
     fromPossibleParents: (possible_parents: readonly LinkableArtifact[]): GroupOfItems => ({
         label: getPossibleParentsLabel(),
         empty_message: getPossibleParentsEmptyState(),
-        items: possible_parents.map((artifact) => ({ value: artifact })),
+        items: possible_parents.map((artifact) => ({ value: artifact, is_disabled: false })),
         is_loading: false,
     }),
 
