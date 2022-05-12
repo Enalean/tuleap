@@ -294,10 +294,12 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`addNewLink`, () => {
+        let link_selector: LinkSelectorStub;
         let first_type: LinkType, second_type: LinkType;
         beforeEach(() => {
             first_type = LinkTypeStub.buildParentLinkType();
             second_type = LinkTypeStub.buildUntyped();
+            link_selector = LinkSelectorStub.withDropdownContentRecord();
         });
 
         const addNewLink = (): NewLinkPresentersAndSelectedType => {
@@ -311,13 +313,14 @@ describe(`LinkFieldController`, () => {
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(
                 NewLinkStub.withIdAndType(ARTIFACT_ID, first_type)
             );
-            return getController().addNewLink(linkable_artifact);
+            return getController().addNewLink(linkable_artifact, link_selector);
         };
 
         it(`adds a new link to the stored new links and returns an updated presenter`, () => {
             const { links } = addNewLink();
 
             expect(new_link_adder.getCallCount()).toBe(1);
+            expect(link_selector.getResetCallCount()).toBe(1);
             expect(links).toHaveLength(1);
             expect(links[0].identifier.id).toBe(ARTIFACT_ID);
             expect(links[0].link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
@@ -328,6 +331,7 @@ describe(`LinkFieldController`, () => {
             const { types, selected_link_type } = addNewLink();
 
             expect(types.is_parent_type_disabled).toBe(true);
+            expect(link_selector.getResetCallCount()).toBe(1);
             expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
             expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
         });
@@ -337,6 +341,8 @@ describe(`LinkFieldController`, () => {
             second_type = first_type;
 
             const { selected_link_type } = addNewLink();
+
+            expect(link_selector.getResetCallCount()).toBe(1);
 
             expect(selected_link_type).toBe(first_type);
         });

@@ -30,6 +30,9 @@ msgstr ""
 msgid "Artifact id"
 msgstr ""
 
+msgid "Artifact id or title"
+msgstr ""
+
 msgid "Auto-compute"
 msgstr ""
 

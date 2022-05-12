@@ -51,6 +51,10 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
+import {
+    getLinkSelectorPlaceholderText,
+    getParentLinkSelectorPlaceholderText,
+} from "../../../../gettext-catalog";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
@@ -81,7 +85,10 @@ export type LinkFieldControllerType = {
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete: LinkSelectorSearchFieldCallback;
     onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
-    addNewLink(artifact: LinkableArtifact): NewLinkPresentersAndSelectedType;
+    addNewLink(
+        artifact: LinkableArtifact,
+        link_selector: LinkSelector
+    ): NewLinkPresentersAndSelectedType;
     removeNewLink(link: NewLink): NewLinkPresentersAndAllowedLinkTypes;
     setSelectedLinkType(link_selector: LinkSelector, type: LinkType): LinkType;
 };
@@ -195,11 +202,15 @@ export const LinkFieldController = (
             return LinkAdditionPresenter.withArtifactSelected(artifact);
         },
 
-        addNewLink(artifact): NewLinkPresentersAndSelectedType {
+        addNewLink(artifact, link_selector): NewLinkPresentersAndSelectedType {
             const previous_link_type = type_retriever.getSelectedLinkType();
             new_link_adder.addNewLink(
                 NewLink.fromLinkableArtifactAndType(artifact, previous_link_type)
             );
+
+            link_selector.resetSelection();
+            link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+
             const types = buildAllowedTypes();
             return {
                 links: NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks()),
@@ -220,9 +231,11 @@ export const LinkFieldController = (
             link_selector.resetSelection();
 
             if (!LinkType.isReverseChild(type)) {
+                link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
                 link_selector.setDropdownContent([]);
                 return type_setter.setSelectedLinkType(type);
             }
+            link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
 
             notification_clearer.clearFaultNotification();
             link_selector.setDropdownContent([PossibleParentsGroup.buildLoadingState()]);

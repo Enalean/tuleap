@@ -42,6 +42,9 @@ msgstr ""
 msgid "Artifact id"
 msgstr "Id d'artéfact"
 
+msgid "Artifact id or title"
+msgstr "Id ou titre de l'artéfact"
+
 msgid "Auto-compute"
 msgstr "Calcul automatique"
 
