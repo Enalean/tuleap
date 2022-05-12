@@ -452,18 +452,18 @@ final class EmailNotificationTask implements PostCreationTask
                         </td>
                     </tr>';
             }
+        }
 
-            $artifact_link = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?aid=' . (int) $art->getId();
+        $artifact_link = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?aid=' . (int) $art->getId();
 
-            $output .=
-                '<tr>
+        $output .=
+            '<tr>
                     <td> </td>
                     <td align="right">' .
-                $this->fetchHtmlAnswerButton($artifact_link) .
-                '</span>
+            $this->fetchHtmlAnswerButton($language, $artifact_link) .
+            '
                     </td>
                 </tr>';
-        }
         $output .= '</table>';
 
         //Display of snapshot
@@ -477,11 +477,11 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return string html call to action button to include in an html mail
      */
-    private function fetchHtmlAnswerButton($artifact_link)
+    private function fetchHtmlAnswerButton(\BaseLanguage $language, $artifact_link)
     {
         return '<span class="cta">
             <a href="' . $artifact_link . '" target="_blank" rel="noreferrer">' .
-            $GLOBALS['Language']->getText('tracker_include_artifact', 'mail_answer_now') .
+            $language->getText('tracker_include_artifact', 'mail_answer_now') .
             '</a>
         </span>';
     }
