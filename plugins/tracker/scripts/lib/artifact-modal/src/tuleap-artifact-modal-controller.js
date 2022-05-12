@@ -67,6 +67,8 @@ import { PermissionFieldController } from "./adapters/UI/fields/permission-field
 import { ParentLinkVerifier } from "./domain/fields/link-field-v2/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
 import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
+import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
+import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
 
 export default ArtifactModalController;
 
@@ -102,11 +104,15 @@ function ArtifactModalController(
     const links_marked_for_removal_store = LinksMarkedForRemovalStore();
     const new_links_store = NewLinksStore();
     const type_store = SelectedLinkTypeStore();
+    const possible_parents_cache = PossibleParentsCache(api_client);
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
     const parent_identifier = ParentArtifactIdentifierProxy.fromCallerArgument(
         modal_model.parent_artifact_id
+    );
+    const current_tracker_identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(
+        modal_model.tracker_id
     );
 
     Object.assign(self, {
@@ -157,11 +163,15 @@ function ArtifactModalController(
                 links_marked_for_removal_store,
                 links_marked_for_removal_store,
                 fault_feedback_controller,
+                fault_feedback_controller,
                 ArtifactLinkSelectorAutoCompleter(
                     api_client,
                     fault_feedback_controller,
                     fault_feedback_controller,
-                    current_artifact_identifier
+                    type_store,
+                    possible_parents_cache,
+                    current_artifact_identifier,
+                    current_tracker_identifier
                 ),
                 new_links_store,
                 new_links_store,
@@ -174,8 +184,10 @@ function ArtifactModalController(
                 ),
                 type_store,
                 type_store,
+                possible_parents_cache,
                 field,
                 current_artifact_identifier,
+                current_tracker_identifier,
                 ArtifactCrossReference.fromCurrentArtifact(
                     current_artifact_identifier,
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),

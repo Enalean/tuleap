@@ -17,24 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import { CurrentTrackerIdentifierProxy } from "./CurrentTrackerIdentifierProxy";
 
-export const FORWARD_DIRECTION = "forward";
-export const REVERSE_DIRECTION = "reverse";
+const TRACKER_ID = 82;
 
-export interface LinkType {
-    readonly shortname: string;
-    readonly direction: "forward" | "reverse";
-    readonly label: string;
-}
-
-export const LinkType = {
-    buildUntyped: (): LinkType => ({
-        shortname: UNTYPED_LINK,
-        direction: FORWARD_DIRECTION,
-        label: "",
-    }),
-
-    isReverseChild: (type: LinkType): boolean =>
-        type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
-};
+describe(`CurrentTrackerIdentifierProxy`, () => {
+    it(`builds an identifier from the Modal's tracker id`, () => {
+        const identifier = CurrentTrackerIdentifierProxy.fromModalTrackerId(TRACKER_ID);
+        expect(identifier.id).toBe(TRACKER_ID);
+    });
+});

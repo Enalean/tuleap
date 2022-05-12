@@ -46,6 +46,8 @@ import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub"
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
+import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
+import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -140,6 +142,12 @@ describe(`LinkedArtifactTemplate`, () => {
         const getHost = (linked_artifact: LinkedArtifact): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(72);
             const fault_notifier = NotifyFaultStub.withCount();
+            const type_retriever = RetrieveSelectedLinkTypeStub.withType(
+                LinkTypeStub.buildUntyped()
+            );
+            const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
+            const notification_clearer = ClearFaultNotificationStub.withCount();
+            const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
@@ -147,20 +155,25 @@ describe(`LinkedArtifactTemplate`, () => {
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 marked_for_removal_verifier,
                 fault_notifier,
+                notification_clearer,
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
                         LinkableArtifactStub.withDefaults()
                     ),
                     fault_notifier,
-                    ClearFaultNotificationStub.withCount(),
-                    current_artifact_identifier
+                    notification_clearer,
+                    type_retriever,
+                    parents_retriever,
+                    current_artifact_identifier,
+                    current_tracker_identifier
                 ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 VerifyHasParentLinkStub.withNoParentLink(),
-                RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped()),
+                type_retriever,
                 SetSelectedLinkTypeStub.buildPassThrough(),
+                parents_retriever,
                 {
                     field_id: 457,
                     label: "Artifact link",
@@ -168,6 +181,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     allowed_types: [],
                 },
                 current_artifact_identifier,
+                current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("story #72")
             );
 

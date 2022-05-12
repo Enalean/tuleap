@@ -19,6 +19,7 @@
 
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import { FORWARD_DIRECTION, LinkType } from "./LinkType";
+import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
 
 describe(`LinkType`, () => {
     it(`builds the "Untyped" link type`, () => {
@@ -27,4 +28,15 @@ describe(`LinkType`, () => {
         expect(type.direction).toBe(FORWARD_DIRECTION);
         expect(type.label).toBe("");
     });
+
+    it.each([
+        [true, "reverse _is_child", LinkTypeStub.buildParentLinkType()],
+        [false, "forward _is_child", LinkTypeStub.buildChildLinkType()],
+        [false, "untyped", LinkTypeStub.buildUntyped()],
+    ])(
+        `isReverseChild() returns %s when given a %s link type`,
+        (expected_return, link_type_string, link_type) => {
+            expect(LinkType.isReverseChild(link_type)).toBe(expected_return);
+        }
+    );
 });

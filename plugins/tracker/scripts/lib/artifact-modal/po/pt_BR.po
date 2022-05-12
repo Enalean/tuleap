@@ -66,6 +66,9 @@ msgstr ""
 msgid "Error while retrieving the artifact to link: %s"
 msgstr ""
 
+msgid "Error while retrieving the possible parents: %s"
+msgstr ""
+
 msgid "Error:"
 msgstr ""
 
@@ -114,6 +117,9 @@ msgstr ""
 msgid "No follow-ups"
 msgstr ""
 
+msgid "No possible parent found"
+msgstr ""
+
 msgid "No result found"
 msgstr ""
 
@@ -133,6 +139,9 @@ msgid "Please select a date"
 msgstr ""
 
 msgid "Please select an item in the list"
+msgstr ""
+
+msgid "Possible parents"
 msgstr ""
 
 msgid "Preview"

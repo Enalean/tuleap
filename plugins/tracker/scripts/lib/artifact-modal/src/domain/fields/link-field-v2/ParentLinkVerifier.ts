@@ -21,8 +21,7 @@ import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync"
 import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 import type { VerifyHasParentLink } from "./VerifyHasParentLink";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
-import { REVERSE_DIRECTION } from "./LinkType";
+import { LinkType } from "./LinkType";
 import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdentifier";
 
 export const ParentLinkVerifier = (
@@ -39,17 +38,12 @@ export const ParentLinkVerifier = (
             .getLinkedArtifacts()
             .some(
                 (link) =>
-                    link.link_type.shortname === IS_CHILD_LINK_TYPE &&
-                    link.link_type.direction === REVERSE_DIRECTION &&
+                    LinkType.isReverseChild(link.link_type) &&
                     !marked_for_removal_verifier.isMarkedForRemoval(link)
             );
         const has_new_parent = new_links_retriever
             .getNewLinks()
-            .some(
-                (link) =>
-                    link.link_type.shortname === IS_CHILD_LINK_TYPE &&
-                    link.link_type.direction === REVERSE_DIRECTION
-            );
+            .some((link) => LinkType.isReverseChild(link.link_type));
 
         return has_new_parent || has_non_removed_parent;
     },

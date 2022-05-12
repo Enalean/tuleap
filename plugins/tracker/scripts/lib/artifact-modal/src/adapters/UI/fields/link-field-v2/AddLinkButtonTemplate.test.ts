@@ -49,6 +49,8 @@ import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType"
 import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
 import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
+import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
+import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -77,6 +79,10 @@ describe(`AddLinkButtonTemplate`, () => {
 
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(62);
         const fault_notifier = NotifyFaultStub.withCount();
+        const type_retriever = RetrieveSelectedLinkTypeStub.withType(current_link_type);
+        const notification_clearer = ClearFaultNotificationStub.withCount();
+        const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(55);
+        const parents_retriever = RetrievePossibleParentsStub.withoutParents();
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
             RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -84,13 +90,17 @@ describe(`AddLinkButtonTemplate`, () => {
             DeleteLinkMarkedForRemovalStub.withCount(),
             VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
             fault_notifier,
+            notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     LinkableArtifactStub.withDefaults()
                 ),
                 fault_notifier,
-                ClearFaultNotificationStub.withCount(),
-                current_artifact_identifier
+                notification_clearer,
+                type_retriever,
+                parents_retriever,
+                current_artifact_identifier,
+                current_tracker_identifier
             ),
             new_link_adder,
             DeleteNewLinkStub.withCount(),
@@ -98,8 +108,9 @@ describe(`AddLinkButtonTemplate`, () => {
                 NewLinkStub.withIdAndType(NEW_ARTIFACT_ID, LinkTypeStub.buildUntyped())
             ),
             parent_verifier,
-            RetrieveSelectedLinkTypeStub.withType(current_link_type),
+            type_retriever,
             SetSelectedLinkTypeStub.buildPassThrough(),
+            parents_retriever,
             {
                 field_id: 696,
                 label: "Artifact link",
@@ -113,6 +124,7 @@ describe(`AddLinkButtonTemplate`, () => {
                 ],
             },
             current_artifact_identifier,
+            current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("story #62")
         );
         const allowed_link_types =
@@ -146,7 +158,7 @@ describe(`AddLinkButtonTemplate`, () => {
         button.click();
 
         expect(new_link_adder.getCallCount()).toBe(1);
-        expect(link_selector.getCallCount()).toBe(1);
+        expect(link_selector.getResetCallCount()).toBe(1);
         expect(host.new_links_presenter).toHaveLength(1);
         expect(host.allowed_link_types.types).toHaveLength(1);
         expect(host.current_link_type).toBe(current_link_type);
@@ -163,6 +175,6 @@ describe(`AddLinkButtonTemplate`, () => {
         button.click();
 
         expect(new_link_adder.getCallCount()).toBe(0);
-        expect(link_selector.getCallCount()).toBe(0);
+        expect(link_selector.getResetCallCount()).toBe(0);
     });
 });

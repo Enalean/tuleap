@@ -45,6 +45,8 @@ import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasPar
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
+import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
+import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -123,6 +125,12 @@ describe(`NewLinkTemplate`, () => {
         const getHost = (new_link: NewLink): HostElement => {
             const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
             const fault_notifier = NotifyFaultStub.withCount();
+            const type_retriever = RetrieveSelectedLinkTypeStub.withType(
+                LinkTypeStub.buildUntyped()
+            );
+            const notification_clearer = ClearFaultNotificationStub.withCount();
+            const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(28);
+            const parents_retriever = RetrievePossibleParentsStub.withoutParents();
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -130,20 +138,25 @@ describe(`NewLinkTemplate`, () => {
                 DeleteLinkMarkedForRemovalStub.withCount(),
                 VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
                 fault_notifier,
+                notification_clearer,
                 ArtifactLinkSelectorAutoCompleter(
                     RetrieveMatchingArtifactStub.withMatchingArtifact(
                         LinkableArtifactStub.withDefaults()
                     ),
                     fault_notifier,
-                    ClearFaultNotificationStub.withCount(),
-                    current_artifact_identifier
+                    notification_clearer,
+                    type_retriever,
+                    parents_retriever,
+                    current_artifact_identifier,
+                    current_tracker_identifier
                 ),
                 AddNewLinkStub.withCount(),
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 VerifyHasParentLinkStub.withNoParentLink(),
-                RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped()),
+                type_retriever,
                 SetSelectedLinkTypeStub.buildPassThrough(),
+                parents_retriever,
                 {
                     field_id: 525,
                     label: "Artifact link",
@@ -157,6 +170,7 @@ describe(`NewLinkTemplate`, () => {
                     ],
                 },
                 current_artifact_identifier,
+                current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22")
             );
             const allowed_link_types =

@@ -19,11 +19,10 @@
 
 import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
 import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
-import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION, LinkType } from "../../domain/fields/link-field-v2/LinkType";
 import type { RetrieveNewLinks } from "../../domain/fields/link-field-v2/RetrieveNewLinks";
 import { NewChangesetLinkProxy } from "./NewChangesetLinkProxy";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
-import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 
 interface FormatLinkFieldValue {
     getFormattedValuesByFieldId: (field_id: number) => ArtifactLinkNewChangesetValue;
@@ -51,11 +50,7 @@ export const LinkFieldValueFormatter = (
             .map(NewChangesetLinkProxy.fromNewLink);
 
         const links = links_not_removed.concat(new_forward_links);
-        const new_parent = new_links.find(
-            ({ link_type }) =>
-                link_type.shortname === IS_CHILD_LINK_TYPE &&
-                link_type.direction === REVERSE_DIRECTION
-        );
+        const new_parent = new_links.find(({ link_type }) => LinkType.isReverseChild(link_type));
         if (!new_parent) {
             return { field_id, links };
         }

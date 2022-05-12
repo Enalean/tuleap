@@ -17,24 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { LinkableArtifact } from "./LinkableArtifact";
+import type { CurrentTrackerIdentifier } from "../../CurrentTrackerIdentifier";
 
-export const FORWARD_DIRECTION = "forward";
-export const REVERSE_DIRECTION = "reverse";
-
-export interface LinkType {
-    readonly shortname: string;
-    readonly direction: "forward" | "reverse";
-    readonly label: string;
+export interface RetrievePossibleParents {
+    getPossibleParents(
+        tracker_identifier: CurrentTrackerIdentifier
+    ): ResultAsync<readonly LinkableArtifact[], Fault>;
 }
-
-export const LinkType = {
-    buildUntyped: (): LinkType => ({
-        shortname: UNTYPED_LINK,
-        direction: FORWARD_DIRECTION,
-        label: "",
-    }),
-
-    isReverseChild: (type: LinkType): boolean =>
-        type.shortname === IS_CHILD_LINK_TYPE && type.direction === REVERSE_DIRECTION,
-};

@@ -61,9 +61,16 @@ import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/Retriev
 import type { SetSelectedLinkType } from "../../../../domain/fields/link-field-v2/SetSelectedLinkType";
 import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
+import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
+import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
+import { setCatalog } from "../../../../gettext-catalog";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
+const FIRST_PARENT_ID = 527;
+const SECOND_PARENT_ID = 548;
 
 describe(`LinkFieldController`, () => {
     let links_retriever: RetrieveAllLinkedArtifacts,
@@ -76,9 +83,14 @@ describe(`LinkFieldController`, () => {
         new_links_retriever: RetrieveNewLinks,
         new_link_remover: DeleteNewLinkStub,
         type_retriever: RetrieveSelectedLinkType,
-        type_setter: SetSelectedLinkType;
+        type_setter: SetSelectedLinkType,
+        notification_clearer: ClearFaultNotificationStub,
+        parents_retriever: RetrievePossibleParents;
 
     beforeEach(() => {
+        setCatalog({
+            getString: (msgid) => msgid,
+        });
         links_retriever = RetrieveAllLinkedArtifactsStub.withoutLink();
         links_retriever_sync = RetrieveLinkedArtifactsSyncStub.withoutLink();
         deleted_link_adder = AddLinkMarkedForRemovalStub.withCount();
@@ -90,11 +102,14 @@ describe(`LinkFieldController`, () => {
         new_link_remover = DeleteNewLinkStub.withCount();
         type_retriever = RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped());
         type_setter = SetSelectedLinkTypeStub.buildPassThrough();
+        notification_clearer = ClearFaultNotificationStub.withCount();
+        parents_retriever = RetrievePossibleParentsStub.withoutParents();
     });
 
     const getController = (): LinkFieldControllerType => {
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         const cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
+        const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(70);
         return LinkFieldController(
             links_retriever,
             links_retriever_sync,
@@ -102,13 +117,17 @@ describe(`LinkFieldController`, () => {
             deleted_link_remover,
             deleted_link_verifier,
             fault_notifier,
+            notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     LinkableArtifactStub.withDefaults()
                 ),
                 fault_notifier,
-                ClearFaultNotificationStub.withCount(),
-                current_artifact_identifier
+                notification_clearer,
+                type_retriever,
+                parents_retriever,
+                current_artifact_identifier,
+                current_tracker_identifier
             ),
             new_link_adder,
             new_link_remover,
@@ -121,6 +140,7 @@ describe(`LinkFieldController`, () => {
             ),
             type_retriever,
             type_setter,
+            parents_retriever,
             {
                 field_id: FIELD_ID,
                 type: "art_link",
@@ -139,6 +159,7 @@ describe(`LinkFieldController`, () => {
                 ],
             },
             current_artifact_identifier,
+            current_tracker_identifier,
             cross_reference
         );
     };
@@ -343,14 +364,92 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`setSelectedLinkType`, () => {
+        let link_selector: LinkSelectorStub;
+
+        beforeEach(() => {
+            link_selector = LinkSelectorStub.withDropdownContentRecord();
+        });
+
         const setSelectedLinkType = (type: LinkType): LinkType => {
-            return getController().setSelectedLinkType(type);
+            return getController().setSelectedLinkType(link_selector, type);
         };
 
-        it(`stores the new selected link type and returns it`, () => {
+        it(`when the new type is NOT reverse _is_child
+            it stores the new selected link type,
+            clears the selection, clears the dropdown content
+            and returns the new selected link type`, () => {
             const new_type = LinkTypeStub.buildReverseCustom();
             const result = setSelectedLinkType(new_type);
+
             expect(result).toBe(new_type);
+            expect(link_selector.getResetCallCount()).toBe(1);
+            const groups = link_selector.getGroupCollection();
+            expect(groups).toHaveLength(0);
+        });
+
+        describe(`when the new type is reverse _is_child (Parent)`, () => {
+            let parent_type: LinkType;
+            beforeEach(() => {
+                parent_type = LinkTypeStub.buildParentLinkType();
+                const first_parent = LinkableArtifactStub.withDefaults({ id: FIRST_PARENT_ID });
+                const second_parent = LinkableArtifactStub.withDefaults({ id: SECOND_PARENT_ID });
+                parents_retriever = RetrievePossibleParentsStub.withParents(
+                    first_parent,
+                    second_parent
+                );
+            });
+
+            it(`will load the possible parents for this tracker
+                and will set the dropdown content with a group of possible parents
+                and returns the new selected link type`, async () => {
+                const result = setSelectedLinkType(parent_type);
+
+                expect(link_selector.getResetCallCount()).toBe(1);
+                expect(notification_clearer.getCallCount()).toBe(1);
+                const loading_groups = link_selector.getGroupCollection();
+                if (loading_groups === undefined) {
+                    throw new Error("Expected a group collection to be set");
+                }
+                expect(loading_groups).toHaveLength(1);
+                expect(loading_groups[0].is_loading).toBe(true);
+
+                await result; // wait for the ResultAsync of parents_retriever
+
+                expect(result).toBe(parent_type);
+                const groups = link_selector.getGroupCollection();
+                if (groups === undefined) {
+                    throw new Error("Expected a group collection to be set");
+                }
+                expect(groups).toHaveLength(1);
+                expect(groups[0].is_loading).toBe(false);
+                const parent_ids = groups[0].items.map((item) => {
+                    const linkable_artifact = item.value as LinkableArtifact;
+                    return linkable_artifact.id;
+                });
+                expect(parent_ids).toHaveLength(2);
+                expect(parent_ids).toContain(FIRST_PARENT_ID);
+                expect(parent_ids).toContain(SECOND_PARENT_ID);
+            });
+
+            it(`and there is an error during retrieval of the possible parents,
+                it will notify that there has been a fault
+                and will set the dropdown content with an empty group of possible parents`, async () => {
+                parents_retriever = RetrievePossibleParentsStub.withFault(
+                    Fault.fromMessage("Ooops")
+                );
+
+                const result = await setSelectedLinkType(parent_type);
+
+                expect(result).toBe(parent_type);
+                expect(fault_notifier.getCallCount()).toBe(1);
+                const groups = link_selector.getGroupCollection();
+                if (groups === undefined) {
+                    throw new Error("Expected a group collection to be set");
+                }
+                expect(groups).toHaveLength(1);
+                expect(groups[0].is_loading).toBe(false);
+                expect(groups[0].items).toHaveLength(0);
+            });
         });
     });
 });

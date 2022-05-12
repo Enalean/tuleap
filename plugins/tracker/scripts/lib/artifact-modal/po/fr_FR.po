@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-05-04 10:21+0200\n"
+"PO-Revision-Date: 2022-05-10 15:11+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -78,6 +78,9 @@ msgstr "Entrer des ids d'artefacts séparés par une virgule"
 msgid "Error while retrieving the artifact to link: %s"
 msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
 
+msgid "Error while retrieving the possible parents: %s"
+msgstr "Erreur pendant la récupération des parents possibles : %s"
+
 msgid "Error:"
 msgstr "Erreur :"
 
@@ -126,6 +129,9 @@ msgstr "Nouvel artéfact"
 msgid "No follow-ups"
 msgstr "Aucun commentaire"
 
+msgid "No possible parent found"
+msgstr "Aucun parent possible trouvé"
+
 msgid "No result found"
 msgstr "Aucun résultat trouvé"
 
@@ -146,6 +152,9 @@ msgstr "Veuillez choisir une date"
 
 msgid "Please select an item in the list"
 msgstr "Veuillez choisir un élément dans la liste"
+
+msgid "Possible parents"
+msgstr "Parents possibles"
 
 msgid "Preview"
 msgstr "Aperçu"

@@ -26,6 +26,13 @@ import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
 import { MatchingArtifactRetrievalFault } from "../../../../domain/fields/link-field-v2/MatchingArtifactRetrievalFault";
+import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
+import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { PossibleParentsGroup } from "./PossibleParentsGroup";
+import type { LinkableNumber } from "../../../../domain/fields/link-field-v2/LinkableNumber";
+import type { GroupOfItems } from "@tuleap/link-selector";
+import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
+import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete: LinkSelectorSearchFieldCallback;
@@ -39,30 +46,66 @@ export const ArtifactLinkSelectorAutoCompleter = (
     retrieve_matching_artifact: RetrieveMatchingArtifact,
     fault_notifier: NotifyFault,
     notification_clearer: ClearFaultNotification,
-    current_artifact_identifier: CurrentArtifactIdentifier | null
-): ArtifactLinkSelectorAutoCompleterType => ({
-    autoComplete: async (link_selector: LinkSelector, query: string): Promise<void> => {
-        notification_clearer.clearFaultNotification();
+    type_retriever: RetrieveSelectedLinkType,
+    parents_retriever: RetrievePossibleParents,
+    current_artifact_identifier: CurrentArtifactIdentifier | null,
+    current_tracker_identifier: CurrentTrackerIdentifier
+): ArtifactLinkSelectorAutoCompleterType => {
+    const isParentSelected = (): boolean => {
+        const selected_type = type_retriever.getSelectedLinkType();
+        return LinkType.isReverseChild(selected_type);
+    };
 
-        const linkable_number = LinkableNumberProxy.fromQueryString(
-            query,
-            current_artifact_identifier
-        );
-        if (linkable_number === null) {
-            link_selector.setDropdownContent([]);
-            return;
-        }
-
-        link_selector.setDropdownContent([MatchingArtifactsGroup.buildLoadingState()]);
-
+    const getMatchingArtifactsGroup = async (
+        linkable_number: LinkableNumber
+    ): Promise<GroupOfItems> => {
         const result = await retrieve_matching_artifact.getMatchingArtifact(linkable_number);
-        link_selector.setDropdownContent([
-            result.match(MatchingArtifactsGroup.fromMatchingArtifact, (fault) => {
-                if (!isExpectedFault(fault)) {
-                    fault_notifier.onFault(MatchingArtifactRetrievalFault(fault));
-                }
-                return MatchingArtifactsGroup.buildEmpty();
-            }),
-        ]);
-    },
-});
+        return result.match(MatchingArtifactsGroup.fromMatchingArtifact, (fault) => {
+            if (!isExpectedFault(fault)) {
+                fault_notifier.onFault(MatchingArtifactRetrievalFault(fault));
+            }
+            return MatchingArtifactsGroup.buildEmpty();
+        });
+    };
+
+    const getPossibleParentsGroup = async (): Promise<GroupOfItems> => {
+        const result = await parents_retriever.getPossibleParents(current_tracker_identifier);
+        return result.match(PossibleParentsGroup.fromPossibleParents, (fault) => {
+            fault_notifier.onFault(fault);
+            return PossibleParentsGroup.buildEmpty();
+        });
+    };
+
+    return {
+        autoComplete: async (link_selector: LinkSelector, query: string): Promise<void> => {
+            notification_clearer.clearFaultNotification();
+
+            const linkable_number = LinkableNumberProxy.fromQueryString(
+                query,
+                current_artifact_identifier
+            );
+            const is_parent_selected = isParentSelected();
+            if (!linkable_number && !is_parent_selected) {
+                link_selector.setDropdownContent([]);
+                return;
+            }
+            const loading_groups = [];
+            if (linkable_number) {
+                loading_groups.push(MatchingArtifactsGroup.buildLoadingState());
+            }
+            if (is_parent_selected) {
+                loading_groups.push(PossibleParentsGroup.buildLoadingState());
+            }
+            link_selector.setDropdownContent(loading_groups);
+
+            const groups = [];
+            if (linkable_number) {
+                groups.push(await getMatchingArtifactsGroup(linkable_number));
+            }
+            if (is_parent_selected) {
+                groups.push(await getPossibleParentsGroup());
+            }
+            link_selector.setDropdownContent(groups);
+        },
+    };
+};

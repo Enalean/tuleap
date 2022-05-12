@@ -46,6 +46,10 @@ import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedL
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
+import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
+import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
+import type { LinkSelector } from "@tuleap/link-selector";
 
 function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupElement {
     const optgroup = select.querySelector("[data-test=link-type-select-optgroup]");
@@ -93,6 +97,10 @@ describe("TypeSelectorTemplate", () => {
         };
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(22);
         const fault_notifier = NotifyFaultStub.withCount();
+        const type_retriever = RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped());
+        const notification_clearer = ClearFaultNotificationStub.withCount();
+        const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(30);
+        const parents_retriever = RetrievePossibleParentsStub.withoutParents();
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
             RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -100,22 +108,28 @@ describe("TypeSelectorTemplate", () => {
             DeleteLinkMarkedForRemovalStub.withCount(),
             VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval(),
             fault_notifier,
+            notification_clearer,
             ArtifactLinkSelectorAutoCompleter(
                 RetrieveMatchingArtifactStub.withMatchingArtifact(
                     LinkableArtifactStub.withDefaults()
                 ),
                 fault_notifier,
-                ClearFaultNotificationStub.withCount(),
-                current_artifact_identifier
+                notification_clearer,
+                type_retriever,
+                parents_retriever,
+                current_artifact_identifier,
+                current_tracker_identifier
             ),
             AddNewLinkStub.withCount(),
             DeleteNewLinkStub.withCount(),
             RetrieveNewLinksStub.withoutLink(),
             VerifyHasParentLinkStub.withNoParentLink(),
-            RetrieveSelectedLinkTypeStub.withType(LinkTypeStub.buildUntyped()),
+            type_retriever,
             SetSelectedLinkTypeStub.buildPassThrough(),
+            parents_retriever,
             field,
             current_artifact_identifier,
+            current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("bug #22")
         );
         host = {
@@ -123,6 +137,7 @@ describe("TypeSelectorTemplate", () => {
             field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(field, cross_reference),
             allowed_link_types,
             current_link_type: LinkTypeStub.buildUntyped(),
+            link_selector: LinkSelectorStub.withResetSelectionCallCount() as LinkSelector,
         } as HostElement;
 
         const updateFunction = getTypeSelectorTemplate(host);
