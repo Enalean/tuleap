@@ -125,17 +125,19 @@ class JiraUserRetriever
         return $this->retrieveUser($update_author);
     }
 
-    /**
-     * @throws JiraConnectionException
-     */
     public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
     {
         if ($this->user_cache->hasUserWithUniqueIdentifier($unique_account_identifier)) {
             return $this->user_cache->getUserFromCacheByJiraUniqueIdentifier($unique_account_identifier);
         }
 
-        $jira_user = $this->jira_user_querier->retrieveUserFromJiraAPI($unique_account_identifier);
+        try {
+            $jira_user = $this->jira_user_querier->retrieveUserFromJiraAPI($unique_account_identifier);
 
-        return $this->retrieveUser($jira_user);
+            return $this->retrieveUser($jira_user);
+        } catch (JiraConnectionException $exception) {
+            $this->logger->warning(sprintf('Impossible to get user %s: %s. Fallback to default user', $unique_account_identifier, $exception->getMessage()), ['exception' => $exception]);
+        }
+        return $this->default_user;
     }
 }
