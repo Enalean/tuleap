@@ -36,6 +36,7 @@ export const LinkSelectorStub = {
             setDropdownContent(groups): void {
                 recorded_argument = groups;
             },
+            setPlaceholder: noop,
 
             getGroupCollection(): GroupCollection | undefined {
                 return recorded_argument;
@@ -59,6 +60,7 @@ export const LinkSelectorStub = {
             getResetCallCount: () => call_count,
 
             setDropdownContent: noop,
+            setPlaceholder: noop,
             getGroupCollection: () => undefined,
             destroy: noop,
         };

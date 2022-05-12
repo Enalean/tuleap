@@ -131,8 +131,9 @@ export const LinkField = define<LinkField>({
                     const artifact = getLinkableArtifact(value);
                     host.link_addition_presenter = controller.onLinkableArtifactSelection(artifact);
                 },
-                placeholder: getLinkSelectorPlaceholderText(),
             });
+            host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+
             return controller;
         },
     },
