@@ -710,7 +710,7 @@ final class Tracker_FormElement_Field_DateTest extends \Tuleap\Test\PHPUnit\Test
 
         $sql = $method->invokeArgs($field, [$is_advanced, ">", $from, $to, $column]);
         $this->makeStringCheckable($sql);
-        $this->assertEquals("my_date_column > $to + 86400", $sql);
+        $this->assertEquals("my_date_column > $to + 86400 - 1", $sql);
     }
 
     private function makeStringCheckable(&$string)
