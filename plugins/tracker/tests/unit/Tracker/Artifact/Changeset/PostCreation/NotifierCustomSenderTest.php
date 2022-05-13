@@ -28,8 +28,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker;
-use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
@@ -38,6 +38,7 @@ use UserHelper;
 class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var String
@@ -48,7 +49,6 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     private $recipient_factory;
     private $mail_sender;
     private $custom_email_sender;
-    private $changeset;
     private $mail_notification_task;
     private $user_realname;
     private $default_format_var;
@@ -72,17 +72,6 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper               = \Mockery::spy(UserHelper::class);
         $this->mail_sender         = \Mockery::mock(MailSender::class);
         $this->custom_email_sender = \Mockery::mock(\Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender::class);
-
-        $tracker = \Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(101);
-
-        $artifact = \Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(111);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-
-        $this->changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->changeset->shouldReceive('getArtifact')->andReturn($artifact);
-        $this->changeset->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->mail_notification_task = new EmailNotificationTask(
             $logger,
@@ -144,6 +133,7 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact = \Mockery::spy(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(666);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact->shouldReceive('fetchMailTitle')->andReturn('The title in the mail');
 
         $changeset->shouldReceive('getArtifact')->andReturn($artifact);
 
@@ -153,7 +143,8 @@ class NotifierCustomSenderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'enabled' => $custom_sender_enabled,
             ]
         );
-         return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);
+
+        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);
     }
 
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()

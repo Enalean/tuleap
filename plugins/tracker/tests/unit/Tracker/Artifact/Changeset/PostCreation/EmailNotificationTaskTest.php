@@ -62,6 +62,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker  = \Mockery::spy(\Tracker::class);
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
+        $this->artifact->shouldReceive('fetchMailTitle')->andReturn('The title in the mail');
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $this->changeset->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
@@ -110,7 +111,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             [],              // headers
             \Mockery::any(), // from
-            '[story #666] ', // subject
+            '[story #666] The title in the mail', // subject
             \Mockery::any(), // html body
             \Mockery::any(), // text body
             \Mockery::any(),  // msg id
