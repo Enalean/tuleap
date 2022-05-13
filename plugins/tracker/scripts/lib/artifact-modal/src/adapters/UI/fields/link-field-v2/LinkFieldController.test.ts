@@ -66,6 +66,7 @@ import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/Current
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { setCatalog } from "../../../../gettext-catalog";
+import type { GroupCollection } from "@tuleap/link-selector";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -370,6 +371,14 @@ describe(`LinkFieldController`, () => {
             link_selector = LinkSelectorStub.withDropdownContentRecord();
         });
 
+        const getGroupCollection = (): GroupCollection => {
+            const groups = link_selector.getGroupCollection();
+            if (groups === undefined) {
+                throw new Error("Expected a group collection to be set");
+            }
+            return groups;
+        };
+
         const setSelectedLinkType = (type: LinkType): LinkType => {
             return getController().setSelectedLinkType(link_selector, type);
         };
@@ -383,7 +392,7 @@ describe(`LinkFieldController`, () => {
 
             expect(result).toBe(new_type);
             expect(link_selector.getResetCallCount()).toBe(1);
-            const groups = link_selector.getGroupCollection();
+            const groups = getGroupCollection();
             expect(groups).toHaveLength(0);
         });
 
@@ -406,20 +415,14 @@ describe(`LinkFieldController`, () => {
 
                 expect(link_selector.getResetCallCount()).toBe(1);
                 expect(notification_clearer.getCallCount()).toBe(1);
-                const loading_groups = link_selector.getGroupCollection();
-                if (loading_groups === undefined) {
-                    throw new Error("Expected a group collection to be set");
-                }
+                const loading_groups = getGroupCollection();
                 expect(loading_groups).toHaveLength(1);
                 expect(loading_groups[0].is_loading).toBe(true);
 
                 await result; // wait for the ResultAsync of parents_retriever
 
                 expect(result).toBe(parent_type);
-                const groups = link_selector.getGroupCollection();
-                if (groups === undefined) {
-                    throw new Error("Expected a group collection to be set");
-                }
+                const groups = getGroupCollection();
                 expect(groups).toHaveLength(1);
                 expect(groups[0].is_loading).toBe(false);
                 const parent_ids = groups[0].items.map((item) => {
@@ -442,10 +445,7 @@ describe(`LinkFieldController`, () => {
 
                 expect(result).toBe(parent_type);
                 expect(fault_notifier.getCallCount()).toBe(1);
-                const groups = link_selector.getGroupCollection();
-                if (groups === undefined) {
-                    throw new Error("Expected a group collection to be set");
-                }
+                const groups = getGroupCollection();
                 expect(groups).toHaveLength(1);
                 expect(groups[0].is_loading).toBe(false);
                 expect(groups[0].items).toHaveLength(0);
