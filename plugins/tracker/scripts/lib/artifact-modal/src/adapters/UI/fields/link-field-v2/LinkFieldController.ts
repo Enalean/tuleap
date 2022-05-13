@@ -55,6 +55,7 @@ import {
     getLinkSelectorPlaceholderText,
     getParentLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
@@ -127,6 +128,7 @@ export const LinkFieldController = (
     type_retriever: RetrieveSelectedLinkType,
     type_setter: SetSelectedLinkType,
     parents_retriever: RetrievePossibleParents,
+    link_verifier: VerifyIsAlreadyLinked,
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
@@ -242,7 +244,7 @@ export const LinkFieldController = (
             parents_retriever.getPossibleParents(current_tracker_identifier).match(
                 (possible_parents) => {
                     link_selector.setDropdownContent([
-                        PossibleParentsGroup.fromPossibleParents(possible_parents),
+                        PossibleParentsGroup.fromPossibleParents(link_verifier, possible_parents),
                     ]);
                 },
                 (fault) => {

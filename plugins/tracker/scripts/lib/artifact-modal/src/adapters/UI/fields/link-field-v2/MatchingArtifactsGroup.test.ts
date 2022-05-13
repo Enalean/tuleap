@@ -20,6 +20,7 @@
 import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
 import { setCatalog } from "../../../../gettext-catalog";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 describe(`MatchingArtifactsGroup`, () => {
     beforeEach(() => {
@@ -30,7 +31,10 @@ describe(`MatchingArtifactsGroup`, () => {
 
     it(`builds from a Linkable Artifact`, () => {
         const artifact = LinkableArtifactStub.withDefaults({ id: 123 });
-        const group = MatchingArtifactsGroup.fromMatchingArtifact(artifact);
+        const group = MatchingArtifactsGroup.fromMatchingArtifact(
+            VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
+            artifact
+        );
 
         expect(group.items).toHaveLength(1);
         expect(group.items[0].value).toBe(artifact);

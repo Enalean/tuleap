@@ -37,6 +37,7 @@ import type { LinkableNumber } from "../../../../domain/fields/link-field-v2/Lin
 import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { LinkableArtifactFilter } from "../../../../domain/fields/link-field-v2/LinkableArtifactFilter";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete: LinkSelectorSearchFieldCallback;
@@ -52,6 +53,7 @@ export const ArtifactLinkSelectorAutoCompleter = (
     notification_clearer: ClearFaultNotification,
     type_retriever: RetrieveSelectedLinkType,
     parents_retriever: RetrievePossibleParents,
+    link_verifier: VerifyIsAlreadyLinked,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier
 ): ArtifactLinkSelectorAutoCompleterType => {
@@ -61,24 +63,28 @@ export const ArtifactLinkSelectorAutoCompleter = (
     };
 
     const getMatchingArtifactsGroup = (linkable_number: LinkableNumber): Promise<GroupOfItems> =>
-        retrieve_matching_artifact
-            .getMatchingArtifact(linkable_number)
-            .match(MatchingArtifactsGroup.fromMatchingArtifact, (fault) => {
+        retrieve_matching_artifact.getMatchingArtifact(linkable_number).match(
+            (artifact) => MatchingArtifactsGroup.fromMatchingArtifact(link_verifier, artifact),
+            (fault) => {
                 if (!isExpectedFault(fault)) {
                     fault_notifier.onFault(MatchingArtifactRetrievalFault(fault));
                 }
                 return MatchingArtifactsGroup.buildEmpty();
-            });
+            }
+        );
 
     const getPossibleParentsGroup = (query: string): Promise<GroupOfItems> => {
         const filter = LinkableArtifactFilter(query);
         return parents_retriever
             .getPossibleParents(current_tracker_identifier)
             .map((artifacts) => artifacts.filter(filter.matchesQuery))
-            .match(PossibleParentsGroup.fromPossibleParents, (fault) => {
-                fault_notifier.onFault(fault);
-                return PossibleParentsGroup.buildEmpty();
-            });
+            .match(
+                (artifacts) => PossibleParentsGroup.fromPossibleParents(link_verifier, artifacts),
+                (fault) => {
+                    fault_notifier.onFault(fault);
+                    return PossibleParentsGroup.buildEmpty();
+                }
+            );
     };
 
     return {

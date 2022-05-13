@@ -20,6 +20,8 @@
 import type { GroupOfItems } from "@tuleap/link-selector";
 import { getPossibleParentsEmptyState, getPossibleParentsLabel } from "../../../../gettext-catalog";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 
 export const PossibleParentsGroup = {
     buildLoadingState: (): GroupOfItems => ({
@@ -29,10 +31,15 @@ export const PossibleParentsGroup = {
         is_loading: true,
     }),
 
-    fromPossibleParents: (possible_parents: readonly LinkableArtifact[]): GroupOfItems => ({
+    fromPossibleParents: (
+        link_verifier: VerifyIsAlreadyLinked,
+        possible_parents: readonly LinkableArtifact[]
+    ): GroupOfItems => ({
         label: getPossibleParentsLabel(),
         empty_message: getPossibleParentsEmptyState(),
-        items: possible_parents.map((artifact) => ({ value: artifact, is_disabled: false })),
+        items: possible_parents.map((artifact) =>
+            LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
+        ),
         is_loading: false,
     }),
 

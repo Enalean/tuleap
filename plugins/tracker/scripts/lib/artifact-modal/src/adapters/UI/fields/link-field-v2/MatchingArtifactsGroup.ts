@@ -20,20 +20,27 @@
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
 import { getMatchingArtifactLabel, getNoResultFoundEmptyState } from "../../../../gettext-catalog";
 import type { GroupOfItems } from "@tuleap/link-selector";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 
 export const MatchingArtifactsGroup = {
-    fromMatchingArtifact: (artifact: LinkableArtifact): GroupOfItems => ({
+    fromMatchingArtifact: (
+        link_verifier: VerifyIsAlreadyLinked,
+        artifact: LinkableArtifact
+    ): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
         empty_message: getNoResultFoundEmptyState(),
-        items: [{ value: artifact, is_disabled: false }],
+        items: [LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)],
         is_loading: false,
     }),
+
     buildEmpty: (): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
         empty_message: getNoResultFoundEmptyState(),
         items: [],
         is_loading: false,
     }),
+
     buildLoadingState: (): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
         empty_message: "",

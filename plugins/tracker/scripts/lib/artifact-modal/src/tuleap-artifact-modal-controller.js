@@ -69,6 +69,7 @@ import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/Che
 import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
+import { AlreadyLinkedVerifier } from "./domain/fields/link-field-v2/AlreadyLinkedVerifier";
 
 export default ArtifactModalController;
 
@@ -105,6 +106,11 @@ function ArtifactModalController(
     const new_links_store = NewLinksStore();
     const type_store = SelectedLinkTypeStore();
     const possible_parents_cache = PossibleParentsCache(api_client);
+    const already_linked_verifier = AlreadyLinkedVerifier(
+        links_store,
+        links_marked_for_removal_store,
+        new_links_store
+    );
     const current_artifact_identifier = CurrentArtifactIdentifierProxy.fromModalArtifactId(
         modal_model.artifact_id
     );
@@ -170,6 +176,7 @@ function ArtifactModalController(
                     fault_feedback_controller,
                     type_store,
                     possible_parents_cache,
+                    already_linked_verifier,
                     current_artifact_identifier,
                     current_tracker_identifier
                 ),
@@ -185,6 +192,7 @@ function ArtifactModalController(
                 type_store,
                 type_store,
                 possible_parents_cache,
+                already_linked_verifier,
                 field,
                 current_artifact_identifier,
                 current_tracker_identifier,
