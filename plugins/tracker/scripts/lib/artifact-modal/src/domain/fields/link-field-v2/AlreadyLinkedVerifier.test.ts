@@ -18,11 +18,9 @@
  */
 
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
-import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
 import { RetrieveNewLinksStub } from "../../../../tests/stubs/RetrieveNewLinksStub";
-import { VerifyLinkIsMarkedForRemovalStub } from "../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { AlreadyLinkedVerifier } from "./AlreadyLinkedVerifier";
 import { LinkableArtifactStub } from "../../../../tests/stubs/LinkableArtifactStub";
 import { LinkedArtifactStub } from "../../../../tests/stubs/LinkedArtifactStub";
@@ -32,22 +30,15 @@ import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
 const ARTIFACT_ID = 877;
 
 describe(`AlreadyLinkedVerifier`, () => {
-    let links_retriever: RetrieveLinkedArtifactsSync,
-        removal_verifier: VerifyLinkIsMarkedForRemoval,
-        new_links_retriever: RetrieveNewLinks;
+    let links_retriever: RetrieveLinkedArtifactsSync, new_links_retriever: RetrieveNewLinks;
 
     beforeEach(() => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
-        removal_verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
     });
 
     const isAlreadyLinked = (): boolean => {
-        const verifier = AlreadyLinkedVerifier(
-            links_retriever,
-            removal_verifier,
-            new_links_retriever
-        );
+        const verifier = AlreadyLinkedVerifier(links_retriever, new_links_retriever);
         return verifier.isAlreadyLinked(LinkableArtifactStub.withDefaults({ id: ARTIFACT_ID }));
     };
 
@@ -72,20 +63,10 @@ describe(`AlreadyLinkedVerifier`, () => {
         expect(isAlreadyLinked()).toBe(true);
     });
 
-    it(`returns true when there is an existing link for the same artifact id
-        and it's not marked for removal`, () => {
+    it(`returns true when there is an existing link for the same artifact id`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
             LinkedArtifactStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped())
         );
         expect(isAlreadyLinked()).toBe(true);
-    });
-
-    it(`returns false when an existing link for the same artifact id exists
-        but is marked for removal`, () => {
-        links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(ARTIFACT_ID, LinkTypeStub.buildUntyped())
-        );
-        removal_verifier = VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
-        expect(isAlreadyLinked()).toBe(false);
     });
 });
