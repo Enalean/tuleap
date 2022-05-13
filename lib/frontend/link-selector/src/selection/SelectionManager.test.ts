@@ -65,7 +65,6 @@ describe("SelectionManager", () => {
             items_map_manager,
             selection_callback
         );
-        jest.spyOn(source_select_box, "dispatchEvent");
         items_map_manager.refreshItemsMap(GroupCollectionBuilder.withSingleGroup());
         item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-1");
         item_2 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-2");
@@ -93,7 +92,8 @@ describe("SelectionManager", () => {
             expect(selection_callback).toHaveBeenCalledWith(null);
         });
 
-        it("replaces the placeholder with the currently selected value and toggles the selected attributes on the <select> options", () => {
+        it(`replaces the placeholder with the currently selected value
+            and toggles the selected attribute on the corresponding dropdown element`, () => {
             manager.processSelection(item_1.element);
 
             const selected_value = selection_container.querySelector(
@@ -108,7 +108,8 @@ describe("SelectionManager", () => {
             expect(selection_callback).toHaveBeenCalledWith(item_1.value);
         });
 
-        it("replaces the previously selected value with the current one and toggles the selected attributes on the <select> options", () => {
+        it(`replaces the previously selected value with the current one
+          and toggles the selected attributes on the corresponding dropdown elements`, () => {
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
@@ -129,7 +130,8 @@ describe("SelectionManager", () => {
     });
 
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
-        it("should replace the currently selected value with the placeholder and remove the selected attribute on the source <option>", () => {
+        it(`should replace the currently selected value with the placeholder
+            and remove the selected attribute on the source corresponding dropdown element`, () => {
             selection_container.appendChild(placeholder);
 
             // First select the item
@@ -175,7 +177,8 @@ describe("SelectionManager", () => {
     });
 
     describe("resetAfterDependenciesUpdate", () => {
-        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", () => {
+        it(`when an item is selected but there is no item in the items map anymore,
+            then it should display the placeholder`, () => {
             manager.processSelection(item_1.element);
             items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
             manager.resetAfterDependenciesUpdate();
@@ -186,20 +189,24 @@ describe("SelectionManager", () => {
             expect(selection_callback).toHaveBeenCalledWith(null);
         });
 
-        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", () => {
+        it(`when no item has been selected and there is no item in the items map anymore,
+            then it should do nothing`, () => {
             items_map_manager.refreshItemsMap(GroupCollectionBuilder.withEmptyGroup());
             manager.resetAfterDependenciesUpdate();
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
-        it("when an item has been selected, and is still available in the new options, then it should keep it selected", () => {
+        it(`when an item has been selected, and is still available in the new items, then it should keep it selected`, () => {
             manager.processSelection(item_1.element);
 
             const groups: GroupCollection = [
                 {
                     label: "",
                     empty_message: "irrelevant",
-                    items: [{ value: { id: 0 } }, { value: item_1.value }],
+                    items: [
+                        { value: { id: 0 }, is_disabled: false },
+                        { value: item_1.value, is_disabled: false },
+                    ],
                     is_loading: false,
                 },
             ];

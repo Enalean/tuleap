@@ -29,10 +29,10 @@ export const GroupCollectionBuilder = {
             label: "",
             empty_message: "irrelevant",
             items: [
-                { value: { id: 0 } },
-                { value: { id: 1 } },
-                { value: { id: 2 } },
-                { value: { id: 3 } },
+                { value: { id: 0 }, is_disabled: false },
+                { value: { id: 1 }, is_disabled: false },
+                { value: { id: 2 }, is_disabled: false },
+                { value: { id: 3 }, is_disabled: false },
             ],
             is_loading: false,
         },
@@ -42,13 +42,21 @@ export const GroupCollectionBuilder = {
         {
             label: "Group 1",
             empty_message: "irrelevant",
-            items: [{ value: { id: 0 } }, { value: { id: 1 } }, { value: { id: 2 } }],
+            items: [
+                { value: { id: 0 }, is_disabled: false },
+                { value: { id: 1 }, is_disabled: false },
+                { value: { id: 2 }, is_disabled: false },
+            ],
             is_loading: false,
         },
         {
             label: "Group 2",
             empty_message: "irrelevant",
-            items: [{ value: { id: 3 } }, { value: { id: 4 } }, { value: { id: 5 } }],
+            items: [
+                { value: { id: 3 }, is_disabled: false },
+                { value: { id: 4 }, is_disabled: false },
+                { value: { id: 5 }, is_disabled: true },
+            ],
             is_loading: false,
         },
     ],

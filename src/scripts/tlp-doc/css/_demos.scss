@@ -383,6 +383,10 @@
     padding: 8px;
 }
 
-.doc-link-selector-icon {
+.doc-link-selector-badge {
     margin: 0 5px 0 0;
+}
+
+.link-selector-dropdown-option-value-disabled > .doc-link-selector-badge {
+    opacity: 0.5;
 }

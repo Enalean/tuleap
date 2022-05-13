@@ -25,7 +25,7 @@ export const MatchingArtifactsGroup = {
     fromMatchingArtifact: (artifact: LinkableArtifact): GroupOfItems => ({
         label: getMatchingArtifactLabel(),
         empty_message: getNoResultFoundEmptyState(),
-        items: [{ value: artifact }],
+        items: [{ value: artifact, is_disabled: false }],
         is_loading: false,
     }),
     buildEmpty: (): GroupOfItems => ({

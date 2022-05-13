@@ -237,15 +237,16 @@ import { createLinkSelector } from "@tuleap/link-selector";
             }
             if (example.id === "example-link-selector-") {
                 const source_select = document.querySelector("#link-selector-sb");
+                const ADDITIONAL_ITEM_ID = 105;
 
                 const item_105 = {
                     value: {
-                        id: 105,
+                        id: ADDITIONAL_ITEM_ID,
                         color: "graffiti-yellow",
                         xref: "story #105",
                         title: "Do more stuff",
                     },
-                    option_value: "105",
+                    is_disabled: false,
                 };
                 const items = [
                     {
@@ -255,7 +256,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
                             xref: "story #101",
                             title: "Do this",
                         },
-                        option_value: "101",
+                        is_disabled: false,
                     },
                     {
                         value: {
@@ -264,7 +265,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
                             xref: "story #102",
                             title: "Do that",
                         },
-                        option_value: "102",
+                        is_disabled: false,
                     },
                     {
                         value: {
@@ -273,20 +274,20 @@ import { createLinkSelector } from "@tuleap/link-selector";
                             xref: "story #103",
                             title: "And that too",
                         },
-                        option_value: "103",
+                        is_disabled: true,
                     },
                 ];
                 const group = {
                     label: "Matching items",
                     empty_message: "No matching item",
+                    is_loading: false,
                     items: [],
                 };
 
                 const link_selector = createLinkSelector(source_select, {
-                    placeholder: "Please select an item to link",
                     templating_callback: (html, item) =>
                         html`
-                            <span class="tlp-badge-${item.value.color} doc-link-selector-icon">
+                            <span class="tlp-badge-${item.value.color} doc-link-selector-badge">
                                 ${item.value.xref}
                             </span>
                             ${item.value.title}
@@ -301,14 +302,14 @@ import { createLinkSelector } from "@tuleap/link-selector";
                         }
                         const lowercase_query = query.toLowerCase();
 
-                        if (lowercase_query === "105") {
+                        if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
                             link_selector.setDropdownContent([{ ...group, items: [item_105] }]);
                             return;
                         }
                         const filtered_items = items.filter(
                             (item) =>
                                 String(item.value.id).includes(lowercase_query) ||
-                                item.value.title.includes(lowercase_query)
+                                item.value.title.toLowerCase().includes(lowercase_query)
                         );
                         if (filtered_items.length > 0) {
                             link_selector.setDropdownContent([{ ...group, items: filtered_items }]);
@@ -317,6 +318,7 @@ import { createLinkSelector } from "@tuleap/link-selector";
                         link_selector.setDropdownContent([group]);
                     },
                 });
+                link_selector.setPlaceholder("Please select an item to link");
                 link_selector.setDropdownContent([{ ...group, items }]);
             }
 

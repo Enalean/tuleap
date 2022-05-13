@@ -51,11 +51,11 @@ export const ListItemMapBuilder = (
         const link_selector_item: RenderedItem = {
             id,
             group_id,
-            is_disabled: false,
+            is_disabled: item.is_disabled,
             is_selected: false,
             value: item.value,
             template: template,
-            element: getRenderedListItem(id, template, false),
+            element: getRenderedListItem(id, template, item.is_disabled),
         };
         accumulator.set(id, link_selector_item);
         return accumulator;

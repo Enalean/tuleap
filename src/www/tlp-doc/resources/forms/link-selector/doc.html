@@ -7,7 +7,6 @@
     <br>
     Options:
     <ul>
-        <li><code class="code-inline">placeholder (default: "")</code>: A string message inviting the user to fill up the "search" field</li>
         <li>
             <code class="code-inline">templating_callback: (html: HTMLTemplateStringProcessor, item: LinkSelectorItem) => HTMLTemplateResult</code>: A callback function returning a lit/html template result to customize item templates
             <br>
@@ -43,14 +42,19 @@
         <ul>
             <li><code class="code-inline">label: string</code>: The label of the group. Think of it as the text content of an &lt;optgroup&gt;.</li>
             <li><code class="code-inline">empty_message: string</code>: The translated message that will be shown when there are no items. It is the "empty state" of the group.</li>
+            <li><code class="code-inline">is_loading: boolean</code>: Show a spinner next to the group's label if true.</li>
             <li><code class="code-inline">items: LinkSelectorItem[]</code>: the items of the group.</li>
         </ul>
         Each <code class="code-inline">LinkSelectorItem</code> has these properties:
         <ul>
             <li><code class="code-inline">value: unknown</code>: The value that will be passed to <code class="code-inline">selection_callback</code>. It can be any type, usually it's an object.</li>
+            <li><code class="code-inline">is_disabled: boolean</code>: the item cannot be selected if it's false.</li>
         </ul>
     </li>
     <li><code class="code-inline">resetSelection() => void</code>: reset the current selection.</li>
+    <li>
+        <code class="code-inline">setPlaceholder(placeholder: string) => void</code>: set a string message inviting the user to fill up the "search" field.
+    </li>
     <li><code class="code-inline">destroy() => void</code>: destroy link-selector and remove all event handlers.</li>
 </ul>
 </p>

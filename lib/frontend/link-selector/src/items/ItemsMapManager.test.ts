@@ -52,7 +52,7 @@ describe("ItemsMapManager", () => {
                 element: expect.any(Element),
                 group_id: "group2",
                 id: "link-selector-item-group2-5",
-                is_disabled: false,
+                is_disabled: true,
                 is_selected: false,
                 template: expect.anything(),
                 value: value_5,
