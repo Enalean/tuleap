@@ -400,7 +400,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                     break;
                 default:
                     $to               = $this->getDao()->getDa()->escapeInt($to);
-                    $and_compare_date = "$column > $to + $seconds_in_a_day";
+                    $and_compare_date = "$column > $to + $seconds_in_a_day - 1";
                     break;
             }
         }
