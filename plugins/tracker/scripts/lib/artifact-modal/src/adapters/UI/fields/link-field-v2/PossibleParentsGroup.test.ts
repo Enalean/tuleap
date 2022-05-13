@@ -20,6 +20,7 @@
 import { setCatalog } from "../../../../gettext-catalog";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 describe(`PossibleParentsGroup`, () => {
     beforeEach(() => {
@@ -31,7 +32,10 @@ describe(`PossibleParentsGroup`, () => {
     it(`builds from an array of Linkable Artifacts`, () => {
         const first_artifact = LinkableArtifactStub.withDefaults({ id: 994 });
         const second_artifact = LinkableArtifactStub.withDefaults({ id: 788 });
-        const group = PossibleParentsGroup.fromPossibleParents([first_artifact, second_artifact]);
+        const group = PossibleParentsGroup.fromPossibleParents(
+            VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
+            [first_artifact, second_artifact]
+        );
 
         expect(group.is_loading).toBe(false);
         expect(group.items).toHaveLength(2);

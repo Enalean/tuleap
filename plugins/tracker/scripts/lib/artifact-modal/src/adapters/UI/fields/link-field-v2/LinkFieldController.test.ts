@@ -67,6 +67,7 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { GroupCollection } from "@tuleap/link-selector";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -108,6 +109,7 @@ describe(`LinkFieldController`, () => {
     });
 
     const getController = (): LinkFieldControllerType => {
+        const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(18);
         const cross_reference = ArtifactCrossReferenceStub.withRef("story #18");
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(70);
@@ -127,6 +129,7 @@ describe(`LinkFieldController`, () => {
                 notification_clearer,
                 type_retriever,
                 parents_retriever,
+                link_verifier,
                 current_artifact_identifier,
                 current_tracker_identifier
             ),
@@ -142,6 +145,7 @@ describe(`LinkFieldController`, () => {
             type_retriever,
             type_setter,
             parents_retriever,
+            link_verifier,
             {
                 field_id: FIELD_ID,
                 type: "art_link",

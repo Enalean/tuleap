@@ -51,6 +51,7 @@ import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/Retriev
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -83,6 +84,7 @@ describe(`AddLinkButtonTemplate`, () => {
         const notification_clearer = ClearFaultNotificationStub.withCount();
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(55);
         const parents_retriever = RetrievePossibleParentsStub.withoutParents();
+        const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
         const controller = LinkFieldController(
             RetrieveAllLinkedArtifactsStub.withoutLink(),
             RetrieveLinkedArtifactsSyncStub.withoutLink(),
@@ -99,6 +101,7 @@ describe(`AddLinkButtonTemplate`, () => {
                 notification_clearer,
                 type_retriever,
                 parents_retriever,
+                link_verifier,
                 current_artifact_identifier,
                 current_tracker_identifier
             ),
@@ -111,6 +114,7 @@ describe(`AddLinkButtonTemplate`, () => {
             type_retriever,
             SetSelectedLinkTypeStub.buildPassThrough(),
             parents_retriever,
+            link_verifier,
             {
                 field_id: 696,
                 label: "Artifact link",

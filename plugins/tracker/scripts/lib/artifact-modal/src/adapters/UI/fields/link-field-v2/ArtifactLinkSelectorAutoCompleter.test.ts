@@ -36,6 +36,7 @@ import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/Retrieve
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import type { GroupCollection } from "@tuleap/link-selector";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 const ARTIFACT_ID = 1621;
 const TRACKER_ID = 978;
@@ -99,6 +100,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             notification_clearer,
             type_retriever,
             parents_retriever,
+            VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
             current_artifact_identifier,
             current_tracker_identifier
         );

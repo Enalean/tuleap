@@ -48,6 +48,7 @@ import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/Retriev
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
+import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -148,6 +149,7 @@ describe(`LinkedArtifactTemplate`, () => {
             const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(75);
             const notification_clearer = ClearFaultNotificationStub.withCount();
             const parents_retriever = RetrievePossibleParentsStub.withoutParents();
+            const link_verifier = VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked();
             const controller = LinkFieldController(
                 RetrieveAllLinkedArtifactsStub.withoutLink(),
                 RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact),
@@ -164,6 +166,7 @@ describe(`LinkedArtifactTemplate`, () => {
                     notification_clearer,
                     type_retriever,
                     parents_retriever,
+                    link_verifier,
                     current_artifact_identifier,
                     current_tracker_identifier
                 ),
@@ -174,6 +177,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 type_retriever,
                 SetSelectedLinkTypeStub.buildPassThrough(),
                 parents_retriever,
+                link_verifier,
                 {
                     field_id: 457,
                     label: "Artifact link",
