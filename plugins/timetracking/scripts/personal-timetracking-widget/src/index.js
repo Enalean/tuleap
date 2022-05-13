@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             store,
             propsData: {
                 userId: user_id,
+                userLocale: locale,
             },
         }).$mount(vue_mount_point);
     }

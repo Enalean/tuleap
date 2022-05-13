@@ -25,7 +25,7 @@
         v-on:validate-time="editTime"
     />
     <tr v-else>
-        <td>{{ timeData.date }}</td>
+        <td>{{ time_date }}</td>
         <td class="timetracking-detail-modal-step" v-bind:title="timeData.step">
             {{ timeData.step }}
         </td>
@@ -58,7 +58,8 @@
     </tr>
 </template>
 <script>
-import { formatMinutes } from "../../../../time-formatters.js";
+import { formatDateUsingPreferredUserFormat, formatMinutes } from "../../../../time-formatters.js";
+import { mapState } from "vuex";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { createPopover } from "tlp";
 import WidgetModalDeletePopover from "./WidgetModalDeletePopover.vue";
@@ -75,8 +76,12 @@ export default {
         };
     },
     computed: {
+        ...mapState(["user_locale"]),
         minutes() {
             return formatMinutes(this.timeData.minutes);
+        },
+        time_date() {
+            return formatDateUsingPreferredUserFormat(this.timeData.date, this.user_locale);
         },
     },
     methods: {
