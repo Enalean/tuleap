@@ -48,7 +48,7 @@ describe("PullRequestCollectionService -", function () {
             SharedPropertiesService.getRepositoryId.mockReturnValue(1);
         });
 
-        it("When I load all pull requests, then the REST service will be called, the open pull requests will be stored before the closed pull requests and all pull requests will be stored by reverse order of creation date", async function () {
+        it("When I load all pull requests, then the REST service will be called, the open pull requests will be stored before the closed pull requests", async function () {
             const pull_requests = [
                 { id: 1, status: "merge" },
                 { id: 2, status: "review" },
@@ -61,16 +61,16 @@ describe("PullRequestCollectionService -", function () {
 
             const promise = wrapPromise(PullRequestCollectionService.loadAllPullRequests());
 
-            const reversed_and_ordered_pull_requests = [
-                { id: 4, status: "review" },
+            const expected_pull_requests = [
                 { id: 2, status: "review" },
-                { id: 3, status: "abandon" },
+                { id: 4, status: "review" },
                 { id: 1, status: "merge" },
+                { id: 3, status: "abandon" },
             ];
 
             await promise;
-            expect(PullRequestCollectionService.all_pull_requests).toEqual(
-                reversed_and_ordered_pull_requests
+            expect(PullRequestCollectionService.all_pull_requests).toStrictEqual(
+                expected_pull_requests
             );
             expect(PullRequestCollectionService.areAllPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneClosedPullRequest()).toBe(true);
@@ -97,11 +97,11 @@ describe("PullRequestCollectionService -", function () {
 
             await promise;
             expect(PullRequestCollectionService.all_pull_requests).toBe(all_pr_reference);
-            expect(PullRequestCollectionService.all_pull_requests).toEqual([
+            expect(PullRequestCollectionService.all_pull_requests).toStrictEqual([
                 { id: 4, status: "review" },
-                { id: 3, status: "abandon" },
-                { id: 2, status: "merge" },
                 { id: 1, status: "merge" },
+                { id: 2, status: "merge" },
+                { id: 3, status: "abandon" },
             ]);
         });
     });
@@ -126,13 +126,10 @@ describe("PullRequestCollectionService -", function () {
 
             const promise = wrapPromise(PullRequestCollectionService.loadOpenPullRequests());
 
-            const reversed_pull_requests = [
-                { id: 2, status: "review" },
-                { id: 1, status: "review" },
-            ];
-
             await promise;
-            expect(PullRequestCollectionService.all_pull_requests).toEqual(reversed_pull_requests);
+            expect(PullRequestCollectionService.all_pull_requests).toStrictEqual(
+                open_pull_requests
+            );
             expect(PullRequestCollectionService.areOpenPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneOpenpullRequest()).toBe(true);
         });
@@ -164,9 +161,9 @@ describe("PullRequestCollectionService -", function () {
 
             await promise;
             expect(PullRequestCollectionService.all_pull_requests).toBe(all_pr_reference);
-            expect(PullRequestCollectionService.all_pull_requests).toEqual([
-                { id: 4, status: "review" },
+            expect(PullRequestCollectionService.all_pull_requests).toStrictEqual([
                 { id: 3, status: "review" },
+                { id: 4, status: "review" },
             ]);
         });
     });
@@ -196,16 +193,18 @@ describe("PullRequestCollectionService -", function () {
 
             const promise = wrapPromise(PullRequestCollectionService.loadClosedPullRequests());
 
-            const reversed_pull_requests = [
+            const expected_pull_requests = [
                 { id: 2, status: "review" },
                 { id: 1, status: "review" },
-                { id: 4, status: "abandon" },
                 { id: 3, status: "merge" },
+                { id: 4, status: "abandon" },
             ];
 
             await promise;
             expect(PullRequestCollectionService.all_pull_requests).toBe(all_pr_reference);
-            expect(PullRequestCollectionService.all_pull_requests).toEqual(reversed_pull_requests);
+            expect(PullRequestCollectionService.all_pull_requests).toStrictEqual(
+                expected_pull_requests
+            );
             expect(PullRequestCollectionService.areClosedPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneClosedPullRequest()).toBe(true);
         });

@@ -151,6 +151,7 @@ class Dao extends DataAccessObject
                 FROM plugin_pullrequest_review
                 WHERE (repository_id = ? OR repo_dest_id = ?)
                 AND $where_status_statement
+                ORDER BY creation_date DESC
                 LIMIT ?
                 OFFSET ?";
 

@@ -54,7 +54,7 @@ function PullRequestCollectionService(
                 there_is_at_least_one_open_pull_request = open_pull_requests.length > 0;
                 there_is_at_least_one_closed_pull_request = closed_pull_requests.length > 0;
 
-                resetAllPullRequests(closed_pull_requests.concat(open_pull_requests));
+                resetAllPullRequests([...open_pull_requests, ...closed_pull_requests]);
 
                 open_pull_requests_loaded = true;
                 closed_pull_requests_loaded = true;
@@ -96,13 +96,12 @@ function PullRequestCollectionService(
     }
 
     function progressivelyLoadCallback(pull_requests) {
-        const pull_request_copy = [...pull_requests];
-        self.all_pull_requests.push(...pull_request_copy.reverse());
+        self.all_pull_requests.push(...pull_requests);
     }
 
     function resetAllPullRequests(pull_requests) {
         self.all_pull_requests.length = 0;
-        self.all_pull_requests.push(...pull_requests.reverse());
+        self.all_pull_requests.push(...pull_requests);
     }
 
     function search(pull_request_id) {
