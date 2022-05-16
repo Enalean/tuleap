@@ -20,22 +20,16 @@
 import type { VerifyIsAlreadyLinked } from "./VerifyIsAlreadyLinked";
 import type { LinkableArtifact } from "./LinkableArtifact";
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
-import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 
 export const AlreadyLinkedVerifier = (
     links_retriever: RetrieveLinkedArtifactsSync,
-    marked_for_removal_verifier: VerifyLinkIsMarkedForRemoval,
     new_links_retriever: RetrieveNewLinks
 ): VerifyIsAlreadyLinked => ({
     isAlreadyLinked(linkable_artifact: LinkableArtifact): boolean {
         const has_non_removed_existing_link = links_retriever
             .getLinkedArtifacts()
-            .some(
-                (link) =>
-                    link.identifier.id === linkable_artifact.id &&
-                    !marked_for_removal_verifier.isMarkedForRemoval(link)
-            );
+            .some((link) => link.identifier.id === linkable_artifact.id);
         const has_new_link = new_links_retriever
             .getNewLinks()
             .some((link) => link.identifier.id === linkable_artifact.id);

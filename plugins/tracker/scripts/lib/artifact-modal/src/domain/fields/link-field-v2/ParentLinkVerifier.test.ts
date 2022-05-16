@@ -19,10 +19,8 @@
 
 import { ParentLinkVerifier } from "./ParentLinkVerifier";
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
-import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 import { RetrieveLinkedArtifactsSyncStub } from "../../../../tests/stubs/RetrieveLinkedArtifactsSyncStub";
-import { VerifyLinkIsMarkedForRemovalStub } from "../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { RetrieveNewLinksStub } from "../../../../tests/stubs/RetrieveNewLinksStub";
 import { NewLinkStub } from "../../../../tests/stubs/NewLinkStub";
 import { LinkTypeStub } from "../../../../tests/stubs/LinkTypeStub";
@@ -32,21 +30,18 @@ import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdenti
 
 describe(`ParentLinkVerifier`, () => {
     let links_retriever: RetrieveLinkedArtifactsSync,
-        removal_verifier: VerifyLinkIsMarkedForRemoval,
         new_links_retriever: RetrieveNewLinks,
         parent_identifier: ParentArtifactIdentifier | null;
 
     beforeEach(() => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withoutLink();
         new_links_retriever = RetrieveNewLinksStub.withoutLink();
-        removal_verifier = VerifyLinkIsMarkedForRemovalStub.withNoLinkMarkedForRemoval();
         parent_identifier = null;
     });
 
     const hasParentLink = (): boolean => {
         const verifier = ParentLinkVerifier(
             links_retriever,
-            removal_verifier,
             new_links_retriever,
             parent_identifier
         );
@@ -84,18 +79,10 @@ describe(`ParentLinkVerifier`, () => {
         expect(hasParentLink()).toBe(true);
     });
 
-    it(`returns true when an existing reverse _is_child link exists and is not marked for removal`, () => {
+    it(`returns true when an existing reverse _is_child link exists`, () => {
         links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
             LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildParentLinkType())
         );
         expect(hasParentLink()).toBe(true);
-    });
-
-    it(`returns false when an existing reverse _is_child link exists but is marked for removal`, () => {
-        links_retriever = RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(
-            LinkedArtifactStub.withIdAndType(357, LinkTypeStub.buildParentLinkType())
-        );
-        removal_verifier = VerifyLinkIsMarkedForRemovalStub.withAllLinksMarkedForRemoval();
-        expect(hasParentLink()).toBe(false);
     });
 });

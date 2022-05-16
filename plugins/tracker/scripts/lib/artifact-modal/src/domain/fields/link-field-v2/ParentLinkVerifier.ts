@@ -18,7 +18,6 @@
  */
 
 import type { RetrieveLinkedArtifactsSync } from "./RetrieveLinkedArtifactsSync";
-import type { VerifyLinkIsMarkedForRemoval } from "./VerifyLinkIsMarkedForRemoval";
 import type { RetrieveNewLinks } from "./RetrieveNewLinks";
 import type { VerifyHasParentLink } from "./VerifyHasParentLink";
 import { LinkType } from "./LinkType";
@@ -26,7 +25,6 @@ import type { ParentArtifactIdentifier } from "../../parent/ParentArtifactIdenti
 
 export const ParentLinkVerifier = (
     links_retriever: RetrieveLinkedArtifactsSync,
-    marked_for_removal_verifier: VerifyLinkIsMarkedForRemoval,
     new_links_retriever: RetrieveNewLinks,
     parent_identifier: ParentArtifactIdentifier | null
 ): VerifyHasParentLink => ({
@@ -36,11 +34,7 @@ export const ParentLinkVerifier = (
         }
         const has_non_removed_parent = links_retriever
             .getLinkedArtifacts()
-            .some(
-                (link) =>
-                    LinkType.isReverseChild(link.link_type) &&
-                    !marked_for_removal_verifier.isMarkedForRemoval(link)
-            );
+            .some((link) => LinkType.isReverseChild(link.link_type));
         const has_new_parent = new_links_retriever
             .getNewLinks()
             .some((link) => LinkType.isReverseChild(link.link_type));
