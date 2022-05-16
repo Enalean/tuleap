@@ -20,7 +20,8 @@
 import angular from "angular";
 import "angular-gettext";
 import angular_tlp from "@tuleap/angular-tlp";
-import french_translations from "../po/fr_FR.po";
+import fr_FR from "../po/fr_FR.po";
+import pt_BR from "../po/pt_BR.po";
 
 import angular_custom_elements_module from "angular-custom-elements";
 
@@ -65,11 +66,13 @@ export default angular
     .run([
         "gettextCatalog",
         function (gettextCatalog) {
-            for (const [language, strings] of Object.entries(french_translations)) {
-                const short_language = language.split("_")[0];
-                gettextCatalog.setStrings(short_language, strings);
-                setCatalog(gettextCatalog);
-            }
+            [fr_FR, pt_BR].forEach((translations_catalog) => {
+                for (const [language, strings] of Object.entries(translations_catalog)) {
+                    const short_language = language.split("_")[0];
+                    gettextCatalog.setStrings(short_language, strings);
+                    setCatalog(gettextCatalog);
+                }
+            });
         },
     ])
     .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
