@@ -59,6 +59,8 @@ export const getLinkedParentFeedback = (): string =>
 export const getAddLinkButtonLabel = (): string => gettextCatalog.getString("Add link");
 export const getLinkFieldTableEmptyStateText = (): string =>
     gettextCatalog.getString("There is no link yet");
+export const getLinkFieldNoteText = (): string =>
+    gettextCatalog.getString("Note: an artifact can only have one parent.");
 export const getMarkForRemovalLabel = (): string => gettextCatalog.getString("Mark for removal");
 export const getUnlinkLabel = (): string => gettextCatalog.getString("Unlink");
 export const getRestoreLabel = (): string => gettextCatalog.getString("Restore");

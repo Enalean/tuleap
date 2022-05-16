@@ -129,6 +129,9 @@ msgstr ""
 msgid "None"
 msgstr "Nenhum"
 
+msgid "Note: an artifact can only have one parent."
+msgstr ""
+
 msgid "Only comments are displayed"
 msgstr ""
 

@@ -141,6 +141,9 @@ msgstr "Aucun résultat trouvé"
 msgid "None"
 msgstr "Aucun"
 
+msgid "Note: an artifact can only have one parent."
+msgstr "Note : un artéfact ne peut avoir qu'un seul parent."
+
 msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
