@@ -42,7 +42,6 @@ import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
-import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
@@ -177,15 +176,9 @@ describe(`NewLinkTemplate`, () => {
                 current_tracker_identifier,
                 ArtifactCrossReferenceStub.withRef("bug #22")
             );
-            const allowed_link_types =
-                CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                    VerifyHasParentLinkStub.withNoParentLink(),
-                    []
-                );
 
             return {
                 new_links_presenter: NewLinkCollectionPresenter.fromLinks([new_link]),
-                allowed_link_types,
                 controller,
             } as HostElement;
         };
@@ -207,7 +200,6 @@ describe(`NewLinkTemplate`, () => {
             button.click();
 
             expect(host.new_links_presenter).toHaveLength(0);
-            expect(host.allowed_link_types.types).toHaveLength(1);
         });
     });
 });

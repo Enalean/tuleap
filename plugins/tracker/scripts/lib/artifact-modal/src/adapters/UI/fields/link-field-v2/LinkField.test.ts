@@ -19,7 +19,14 @@
 
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement, LinkField } from "./LinkField";
-import { getEmptyStateIfNeeded, getSkeletonIfNeeded } from "./LinkField";
+import {
+    getEmptyStateIfNeeded,
+    getSkeletonIfNeeded,
+    setAllowedTypes,
+    setCurrentLinkType,
+    setLinkedArtifacts,
+    setNewLinks,
+} from "./LinkField";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
@@ -28,6 +35,15 @@ import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
 import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
+import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
+import type { LinkSelector } from "@tuleap/link-selector";
+import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
+import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants/src/constants";
+import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
+import type { LinkFieldControllerType } from "./LinkFieldController";
 
 function getHost(): HostElement {
     return {
@@ -104,6 +120,137 @@ describe("LinkField", () => {
                 new_links = [NewLinkStub.withDefaults()];
                 renderField();
                 expect(target.querySelector("[data-test=link-table-empty-state]")).toBeNull();
+            });
+        });
+    });
+
+    describe(`setters`, () => {
+        describe(`current_link_type`, () => {
+            let link_selector: LinkSelectorStub;
+
+            beforeEach(() => {
+                link_selector = LinkSelectorStub.withResetSelectionCallCount();
+            });
+
+            const setType = (link_type: LinkType | undefined): LinkType => {
+                const host = {
+                    link_selector: link_selector as LinkSelector,
+                } as LinkField;
+                return setCurrentLinkType(host, link_type);
+            };
+
+            it(`defaults to Untyped link`, () => {
+                const link_type = setType(undefined);
+
+                expect(link_type.shortname).toBe(UNTYPED_LINK);
+            });
+
+            it(`resets link-selector selection and returns the given type`, () => {
+                const link_type = LinkTypeStub.buildReverseCustom();
+                const result = setType(link_type);
+                expect(result).toBe(link_type);
+                expect(link_selector.getResetCallCount()).toBe(1);
+            });
+        });
+
+        describe(`allowed_link_types`, () => {
+            let host: LinkField;
+
+            beforeEach(() => {
+                host = {
+                    controller: {
+                        setSelectedLinkType: (
+                            link_selector: LinkSelector,
+                            type: LinkType
+                        ): LinkType => {
+                            return type;
+                        },
+                    } as LinkFieldControllerType,
+                } as LinkField;
+            });
+
+            const setTypes = (
+                presenter: CollectionOfAllowedLinksTypesPresenters | undefined
+            ): CollectionOfAllowedLinksTypesPresenters => {
+                return setAllowedTypes(host, presenter);
+            };
+
+            it("defaults to a en empty CollectionOfAllowedLinksTypesPresenters", () => {
+                const allowed_types = setTypes(undefined);
+                expect(allowed_types.types).toHaveLength(0);
+                expect(allowed_types.is_parent_type_disabled).toBe(false);
+            });
+
+            it("When the current link is a reverse child and the parent link type is disabled, then it should default to Untyped link", () => {
+                host.current_link_type = LinkTypeStub.buildParentLinkType();
+                setTypes(
+                    CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                        VerifyHasParentLinkStub.withParentLink(),
+                        [
+                            {
+                                shortname: IS_CHILD_LINK_TYPE,
+                                forward_label: "Child",
+                                reverse_label: "Parent",
+                            },
+                        ]
+                    )
+                );
+
+                expect(host.current_link_type.shortname).toBe(UNTYPED_LINK);
+            });
+        });
+
+        describe("-", () => {
+            let host: LinkField;
+
+            beforeEach(() => {
+                host = {
+                    controller: {
+                        displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
+                            return CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                                VerifyHasParentLinkStub.withNoParentLink(),
+                                [
+                                    {
+                                        shortname: IS_CHILD_LINK_TYPE,
+                                        forward_label: "Child",
+                                        reverse_label: "Parent",
+                                    },
+                                ]
+                            );
+                        },
+                    } as LinkFieldControllerType,
+                } as LinkField;
+            });
+
+            describe("setLinkedArtifacts", () => {
+                it("should default to a loading state when there are no linked artifacts yet", () => {
+                    const linked_artifacts = setLinkedArtifacts(host, undefined);
+
+                    expect(linked_artifacts.is_loading).toBe(true);
+                    expect(linked_artifacts.has_loaded_content).toBe(false);
+                    expect(linked_artifacts.linked_artifacts).toHaveLength(0);
+                });
+
+                it("should display allowed types when linked artifacts have been retrieved", () => {
+                    setLinkedArtifacts(host, LinkedArtifactCollectionPresenter.fromArtifacts([]));
+
+                    expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
+                    expect(host.allowed_link_types.types).not.toHaveLength(0);
+                });
+            });
+
+            describe("setNewLinks", () => {
+                it("defaults to an empty NewLinkCollectionPresenter", () => {
+                    const new_links = setNewLinks(host, undefined);
+                    expect(new_links).toHaveLength(0);
+                });
+
+                it("should display allowed types when new links have been added or removed", () => {
+                    setNewLinks(host, NewLinkCollectionPresenter.fromLinks([]));
+
+                    expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
+                    expect(host.allowed_link_types.types).not.toHaveLength(0);
+                });
             });
         });
     });

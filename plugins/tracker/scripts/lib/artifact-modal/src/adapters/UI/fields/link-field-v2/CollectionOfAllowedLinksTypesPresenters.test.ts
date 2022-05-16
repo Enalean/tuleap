@@ -22,7 +22,8 @@ import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 
 describe("CollectionOfAllowedLinksTypesPresenters", () => {
-    it("Given a collection of allowed links types, then it should build a collection of presenters for each type and each direction", () => {
+    it(`Given a collection of allowed links types,
+        then it should build a collection of presenters for each type and each direction`, () => {
         const allowed_types = [
             {
                 shortname: IS_CHILD_LINK_TYPE,
@@ -84,5 +85,11 @@ describe("CollectionOfAllowedLinksTypesPresenters", () => {
         );
         expect(presenter.is_parent_type_disabled).toBe(true);
         expect(presenter.types).toHaveLength(1);
+    });
+
+    it(`Should build an empty presenter`, () => {
+        const presenter = CollectionOfAllowedLinksTypesPresenters.buildEmpty();
+        expect(presenter.is_parent_type_disabled).toBe(false);
+        expect(presenter.types).toHaveLength(0);
     });
 });
