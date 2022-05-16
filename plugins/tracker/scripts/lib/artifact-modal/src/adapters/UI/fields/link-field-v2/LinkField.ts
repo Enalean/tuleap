@@ -23,6 +23,7 @@ import {
     getLinkFieldNoteText,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
+    getParentLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
 import type { LinkFieldControllerType } from "./LinkFieldController";
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
@@ -33,11 +34,11 @@ import type { LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
-import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 
 export interface LinkField {
     readonly content: () => HTMLElement;
@@ -103,6 +104,58 @@ export const getSkeletonIfNeeded = (
     `;
 };
 
+export const setNewLinks = (
+    host: LinkField,
+    presenter: NewLinkCollectionPresenter | undefined
+): NewLinkCollectionPresenter => {
+    if (!presenter) {
+        return NewLinkCollectionPresenter.buildEmpty();
+    }
+    host.allowed_link_types = host.controller.displayAllowedTypes();
+    return presenter;
+};
+
+export const setLinkedArtifacts = (
+    host: LinkField,
+    presenter: LinkedArtifactCollectionPresenter | undefined
+): LinkedArtifactCollectionPresenter => {
+    if (!presenter) {
+        return LinkedArtifactCollectionPresenter.buildLoadingState();
+    }
+
+    host.allowed_link_types = host.controller.displayAllowedTypes();
+    return presenter;
+};
+
+export const setAllowedTypes = (
+    host: LinkField,
+    presenter: CollectionOfAllowedLinksTypesPresenters | undefined
+): CollectionOfAllowedLinksTypesPresenters => {
+    if (!presenter) {
+        return CollectionOfAllowedLinksTypesPresenters.buildEmpty();
+    }
+    if (LinkType.isReverseChild(host.current_link_type) && presenter.is_parent_type_disabled) {
+        host.current_link_type = host.controller.setSelectedLinkType(
+            host.link_selector,
+            LinkType.buildUntyped()
+        );
+    }
+    return presenter;
+};
+
+export const setCurrentLinkType = (host: LinkField, link_type: LinkType | undefined): LinkType => {
+    if (!link_type) {
+        return LinkType.buildUntyped();
+    }
+    host.link_selector.resetSelection();
+    if (!LinkType.isReverseChild(link_type)) {
+        host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+        return link_type;
+    }
+    host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
+    return link_type;
+};
+
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
     artifact_link_select: ({ content }) => {
@@ -116,13 +169,11 @@ export const LinkField = define<LinkField>({
     link_selector: undefined,
     controller: {
         set(host, controller: LinkFieldControllerType) {
-            const { field, types, selected_link_type } = controller.displayField();
+            const { field, selected_link_type } = controller.displayField();
             host.field_presenter = field;
-            host.allowed_link_types = types;
-            host.current_link_type = selected_link_type;
-            controller.displayLinkedArtifacts().then(({ artifacts, types }) => {
+            host.allowed_link_types = controller.displayAllowedTypes();
+            controller.displayLinkedArtifacts().then((artifacts) => {
                 host.linked_artifacts_presenter = artifacts;
-                host.allowed_link_types = types;
             });
 
             host.link_selector = createLinkSelector(host.artifact_link_select, {
@@ -133,27 +184,28 @@ export const LinkField = define<LinkField>({
                     host.link_addition_presenter = controller.onLinkableArtifactSelection(artifact);
                 },
             });
-            host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+            host.current_link_type = selected_link_type;
 
             return controller;
         },
     },
     field_presenter: undefined,
-    allowed_link_types: undefined,
+    allowed_link_types: {
+        set: setAllowedTypes,
+    },
     linked_artifacts_presenter: {
-        get: (host, last_value) =>
-            last_value ?? LinkedArtifactCollectionPresenter.buildLoadingState(),
-        set: (host, presenter) => presenter,
+        set: setLinkedArtifacts,
     },
     new_links_presenter: {
-        get: (host, last_value) => last_value ?? NewLinkCollectionPresenter.buildEmpty(),
-        set: (host, presenter) => presenter,
+        set: setNewLinks,
     },
     link_addition_presenter: {
         get: (host, last_value) => last_value ?? LinkAdditionPresenter.withoutSelection(),
         set: (host, presenter) => presenter,
     },
-    current_link_type: undefined,
+    current_link_type: {
+        set: setCurrentLinkType,
+    },
     content: (host) => html`
         <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
             ${host.field_presenter.label}

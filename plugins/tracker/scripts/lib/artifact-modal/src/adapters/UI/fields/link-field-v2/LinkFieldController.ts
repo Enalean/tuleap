@@ -33,7 +33,7 @@ import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
-import type { LinkSelectorSearchFieldCallback, LinkSelector } from "@tuleap/link-selector";
+import type { LinkSelector, LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
@@ -51,46 +51,23 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
-import {
-    getLinkSelectorPlaceholderText,
-    getParentLinkSelectorPlaceholderText,
-} from "../../../../gettext-catalog";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
-    readonly types: CollectionOfAllowedLinksTypesPresenters;
     readonly selected_link_type: LinkType;
-};
-
-export type LinkedArtifactPresentersAndAllowedLinkTypes = {
-    readonly artifacts: LinkedArtifactCollectionPresenter;
-    readonly types: CollectionOfAllowedLinksTypesPresenters;
-};
-
-export type NewLinkPresentersAndSelectedType = {
-    readonly links: NewLinkCollectionPresenter;
-    readonly types: CollectionOfAllowedLinksTypesPresenters;
-    readonly selected_link_type: LinkType;
-};
-
-export type NewLinkPresentersAndAllowedLinkTypes = {
-    readonly links: NewLinkCollectionPresenter;
-    readonly types: CollectionOfAllowedLinksTypesPresenters;
 };
 
 export type LinkFieldControllerType = {
     displayField(): LinkFieldPresenterAndAllowedLinkTypes;
-    displayLinkedArtifacts(): Promise<LinkedArtifactPresentersAndAllowedLinkTypes>;
+    displayLinkedArtifacts(): Promise<LinkedArtifactCollectionPresenter>;
+    displayAllowedTypes(): CollectionOfAllowedLinksTypesPresenters;
     markForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     unmarkForRemoval(artifact_id: LinkedArtifactIdentifier): LinkedArtifactCollectionPresenter;
     autoComplete: LinkSelectorSearchFieldCallback;
     onLinkableArtifactSelection(artifact: LinkableArtifact | null): LinkAdditionPresenter;
-    addNewLink(
-        artifact: LinkableArtifact,
-        link_selector: LinkSelector
-    ): NewLinkPresentersAndSelectedType;
-    removeNewLink(link: NewLink): NewLinkPresentersAndAllowedLinkTypes;
+    addNewLink(artifact: LinkableArtifact): NewLinkCollectionPresenter;
+    removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     setSelectedLinkType(link_selector: LinkSelector, type: LinkType): LinkType;
 };
 
@@ -137,31 +114,17 @@ export const LinkFieldController = (
     const only_is_child_type = field.allowed_types.filter(
         (type) => type.shortname === IS_CHILD_LINK_TYPE
     );
-    const buildAllowedTypes = (): CollectionOfAllowedLinksTypesPresenters =>
-        CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-            parent_verifier,
-            only_is_child_type
-        );
-
-    const getNewSelectedLinkType = (
-        previous_link_type: LinkType,
-        allowed_link_types: CollectionOfAllowedLinksTypesPresenters
-    ): LinkType => {
-        if (
-            LinkType.isReverseChild(previous_link_type) &&
-            allowed_link_types.is_parent_type_disabled
-        ) {
-            return type_setter.setSelectedLinkType(LinkType.buildUntyped());
-        }
-        return previous_link_type;
-    };
-
     return {
         displayField: () => ({
             field: LinkFieldPresenter.fromFieldAndCrossReference(field, current_artifact_reference),
-            types: buildAllowedTypes(),
             selected_link_type: type_retriever.getSelectedLinkType(),
         }),
+
+        displayAllowedTypes: () =>
+            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                parent_verifier,
+                only_is_child_type
+            ),
 
         displayLinkedArtifacts: () =>
             links_retriever.getLinkedArtifacts(current_artifact_identifier).match(
@@ -169,19 +132,13 @@ export const LinkFieldController = (
                     const presenters = artifacts.map((linked_artifact) =>
                         LinkedArtifactPresenter.fromLinkedArtifact(linked_artifact, false)
                     );
-                    return {
-                        artifacts: LinkedArtifactCollectionPresenter.fromArtifacts(presenters),
-                        types: buildAllowedTypes(),
-                    };
+                    return LinkedArtifactCollectionPresenter.fromArtifacts(presenters);
                 },
                 (fault) => {
                     if (!isCreationModeFault(fault)) {
                         fault_notifier.onFault(LinkRetrievalFault(fault));
                     }
-                    return {
-                        artifacts: LinkedArtifactCollectionPresenter.forFault(),
-                        types: buildAllowedTypes(),
-                    };
+                    return LinkedArtifactCollectionPresenter.forFault();
                 }
             ),
 
@@ -204,40 +161,24 @@ export const LinkFieldController = (
             return LinkAdditionPresenter.withArtifactSelected(artifact);
         },
 
-        addNewLink(artifact, link_selector): NewLinkPresentersAndSelectedType {
+        addNewLink(artifact): NewLinkCollectionPresenter {
             const previous_link_type = type_retriever.getSelectedLinkType();
             new_link_adder.addNewLink(
                 NewLink.fromLinkableArtifactAndType(artifact, previous_link_type)
             );
-
-            link_selector.resetSelection();
-            link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
-
-            const types = buildAllowedTypes();
-            return {
-                links: NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks()),
-                types,
-                selected_link_type: getNewSelectedLinkType(previous_link_type, types),
-            };
+            return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
         },
 
-        removeNewLink(link): NewLinkPresentersAndAllowedLinkTypes {
+        removeNewLink(link): NewLinkCollectionPresenter {
             new_link_remover.deleteNewLink(link);
-            return {
-                links: NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks()),
-                types: buildAllowedTypes(),
-            };
+            return NewLinkCollectionPresenter.fromLinks(new_links_retriever.getNewLinks());
         },
 
         setSelectedLinkType: (link_selector, type): LinkType => {
-            link_selector.resetSelection();
-
             if (!LinkType.isReverseChild(type)) {
-                link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
                 link_selector.setDropdownContent([]);
                 return type_setter.setSelectedLinkType(type);
             }
-            link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
 
             notification_clearer.clearFaultNotification();
             link_selector.setDropdownContent([PossibleParentsGroup.buildLoadingState()]);

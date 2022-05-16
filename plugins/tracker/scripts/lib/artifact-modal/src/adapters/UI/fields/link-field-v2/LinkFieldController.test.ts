@@ -21,9 +21,6 @@ import type { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollecti
 import type {
     LinkFieldControllerType,
     LinkFieldPresenterAndAllowedLinkTypes,
-    LinkedArtifactPresentersAndAllowedLinkTypes,
-    NewLinkPresentersAndAllowedLinkTypes,
-    NewLinkPresentersAndSelectedType,
 } from "./LinkFieldController";
 import { LinkFieldController } from "./LinkFieldController";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";
@@ -68,6 +65,8 @@ import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { GroupCollection } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
+import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -173,12 +172,6 @@ describe(`LinkFieldController`, () => {
             expect(field.field_id).toBe(FIELD_ID);
         });
 
-        it(`returns a presenter for the allowed link types and keeps only _is_child type`, () => {
-            const { types } = displayField();
-            expect(types.types).toHaveLength(1);
-            expect(types.types[0].forward_type_presenter.shortname).toBe(IS_CHILD_LINK_TYPE);
-        });
-
         it(`returns a presenter containing the selected link type`, () => {
             const { selected_link_type } = displayField();
             expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
@@ -186,8 +179,20 @@ describe(`LinkFieldController`, () => {
         });
     });
 
+    describe(`displayAllowedTypes()`, () => {
+        const display = (): CollectionOfAllowedLinksTypesPresenters =>
+            getController().displayAllowedTypes();
+
+        it(`returns a presenter for the allowed link types and keeps only _is_child type`, () => {
+            const types = display();
+            expect(types.types).toHaveLength(1);
+            expect(types.types[0].forward_type_presenter.shortname).toBe(IS_CHILD_LINK_TYPE);
+            expect(types.is_parent_type_disabled).toBe(false);
+        });
+    });
+
     describe(`displayLinkedArtifacts()`, () => {
-        const displayLinkedArtifacts = (): Promise<LinkedArtifactPresentersAndAllowedLinkTypes> =>
+        const displayLinkedArtifacts = (): Promise<LinkedArtifactCollectionPresenter> =>
             getController().displayLinkedArtifacts();
 
         it(`when the modal is in creation mode,
@@ -196,7 +201,7 @@ describe(`LinkFieldController`, () => {
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(
                 NoLinksInCreationModeFault()
             );
-            const { artifacts } = await displayLinkedArtifacts();
+            const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
             expect(fault_notifier.getCallCount()).toBe(0);
@@ -206,30 +211,16 @@ describe(`LinkFieldController`, () => {
             it will return a presenter with the linked artifacts`, async () => {
             const linked_artifact = LinkedArtifactStub.withDefaults();
             links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
-            const { artifacts } = await displayLinkedArtifacts();
+            const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
-        });
-
-        it(`when the modal is in edition mode and it succeeds loading,
-            it will disable the reverse _is_child type if there was one already linked`, async () => {
-            const linked_artifact = LinkedArtifactStub.withIdAndType(
-                43,
-                LinkTypeStub.buildParentLinkType()
-            );
-            links_retriever = RetrieveAllLinkedArtifactsStub.withLinkedArtifacts(linked_artifact);
-            links_retriever_sync =
-                RetrieveLinkedArtifactsSyncStub.withLinkedArtifacts(linked_artifact);
-            const { types } = await displayLinkedArtifacts();
-
-            expect(types.is_parent_type_disabled).toBe(true);
         });
 
         it(`when the modal is in edition mode and it fails loading,
             it will notify that there has been a fault
             and it will return an empty presenter`, async () => {
             links_retriever = RetrieveAllLinkedArtifactsStub.withFault(Fault.fromMessage("Ooops"));
-            const { artifacts } = await displayLinkedArtifacts();
+            const artifacts = await displayLinkedArtifacts();
 
             expect(artifacts.has_loaded_content).toBe(true);
             expect(fault_notifier.getCallCount()).toBe(1);
@@ -294,15 +285,13 @@ describe(`LinkFieldController`, () => {
     });
 
     describe(`addNewLink`, () => {
-        let link_selector: LinkSelectorStub;
         let first_type: LinkType, second_type: LinkType;
         beforeEach(() => {
             first_type = LinkTypeStub.buildParentLinkType();
             second_type = LinkTypeStub.buildUntyped();
-            link_selector = LinkSelectorStub.withDropdownContentRecord();
         });
 
-        const addNewLink = (): NewLinkPresentersAndSelectedType => {
+        const addNewLink = (): NewLinkCollectionPresenter => {
             type_retriever = RetrieveSelectedLinkTypeStub.withSuccessiveTypes(
                 first_type,
                 second_type
@@ -313,59 +302,31 @@ describe(`LinkFieldController`, () => {
             new_links_retriever = RetrieveNewLinksStub.withNewLinks(
                 NewLinkStub.withIdAndType(ARTIFACT_ID, first_type)
             );
-            return getController().addNewLink(linkable_artifact, link_selector);
+            return getController().addNewLink(linkable_artifact);
         };
 
         it(`adds a new link to the stored new links and returns an updated presenter`, () => {
-            const { links } = addNewLink();
+            const links = addNewLink();
 
             expect(new_link_adder.getCallCount()).toBe(1);
-            expect(link_selector.getResetCallCount()).toBe(1);
             expect(links).toHaveLength(1);
             expect(links[0].identifier.id).toBe(ARTIFACT_ID);
             expect(links[0].link_type.shortname).toBe(IS_CHILD_LINK_TYPE);
         });
-
-        it(`when a new reverse _is_child link is added, it will disable this type
-            and will set the Untyped link as selected type (as there should be only one Parent)`, () => {
-            const { types, selected_link_type } = addNewLink();
-
-            expect(types.is_parent_type_disabled).toBe(true);
-            expect(link_selector.getResetCallCount()).toBe(1);
-            expect(selected_link_type.shortname).toBe(UNTYPED_LINK);
-            expect(selected_link_type.direction).toBe(FORWARD_DIRECTION);
-        });
-
-        it(`when another type of link is added, it will not change the selected type`, () => {
-            first_type = LinkTypeStub.buildReverseCustom();
-            second_type = first_type;
-
-            const { selected_link_type } = addNewLink();
-
-            expect(link_selector.getResetCallCount()).toBe(1);
-
-            expect(selected_link_type).toBe(first_type);
-        });
     });
 
     describe(`removeNewLink`, () => {
-        const removeNewLink = (): NewLinkPresentersAndAllowedLinkTypes => {
+        const removeNewLink = (): NewLinkCollectionPresenter => {
             const new_link = NewLinkStub.withDefaults();
             new_links_retriever = RetrieveNewLinksStub.withoutLink();
             return getController().removeNewLink(new_link);
         };
 
         it(`deletes a new link and returns an updated presenter`, () => {
-            const { links } = removeNewLink();
+            const links = removeNewLink();
 
             expect(new_link_remover.getCallCount()).toBe(1);
             expect(links).toHaveLength(0);
-        });
-
-        it(`when there are no new reverse _is_child links, it will enable this type`, () => {
-            const { types } = removeNewLink();
-
-            expect(types.is_parent_type_disabled).toBe(false);
         });
     });
 
@@ -390,13 +351,12 @@ describe(`LinkFieldController`, () => {
 
         it(`when the new type is NOT reverse _is_child
             it stores the new selected link type,
-            clears the selection, clears the dropdown content
+            clears the dropdown content,
             and returns the new selected link type`, () => {
             const new_type = LinkTypeStub.buildReverseCustom();
             const result = setSelectedLinkType(new_type);
 
             expect(result).toBe(new_type);
-            expect(link_selector.getResetCallCount()).toBe(1);
             const groups = getGroupCollection();
             expect(groups).toHaveLength(0);
         });
@@ -418,7 +378,6 @@ describe(`LinkFieldController`, () => {
                 and returns the new selected link type`, async () => {
                 const result = setSelectedLinkType(parent_type);
 
-                expect(link_selector.getResetCallCount()).toBe(1);
                 expect(notification_clearer.getCallCount()).toBe(1);
                 const loading_groups = getGroupCollection();
                 expect(loading_groups).toHaveLength(1);

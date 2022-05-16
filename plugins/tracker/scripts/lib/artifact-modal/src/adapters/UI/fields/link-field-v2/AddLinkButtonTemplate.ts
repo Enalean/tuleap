@@ -26,13 +26,7 @@ const onClickAddNewLink = (host: LinkField): void => {
     if (!host.link_addition_presenter.artifact) {
         return;
     }
-    const { links, types, selected_link_type } = host.controller.addNewLink(
-        host.link_addition_presenter.artifact,
-        host.link_selector
-    );
-    host.new_links_presenter = links;
-    host.allowed_link_types = types;
-    host.current_link_type = selected_link_type;
+    host.new_links_presenter = host.controller.addNewLink(host.link_addition_presenter.artifact);
 };
 
 export const getAddLinkButtonTemplate = (host: LinkField): UpdateFunction<LinkField> => {

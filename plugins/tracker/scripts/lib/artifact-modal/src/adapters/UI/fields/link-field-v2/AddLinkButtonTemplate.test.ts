@@ -38,15 +38,10 @@ import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLink
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
-import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ClearFaultNotificationStub } from "../../../../../tests/stubs/ClearFaultNotificationStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
-import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
-import type { LinkSelector } from "@tuleap/link-selector";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
-import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
 import { RetrieveSelectedLinkTypeStub } from "../../../../../tests/stubs/RetrieveSelectedLinkTypeStub";
 import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedLinkTypeStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
@@ -58,19 +53,13 @@ const NEW_ARTIFACT_ID = 81;
 describe(`AddLinkButtonTemplate`, () => {
     let host: HostElement,
         new_link_adder: AddNewLinkStub,
-        link_addition_presenter: LinkAdditionPresenter,
-        link_selector: LinkSelectorStub,
-        current_link_type: LinkType,
-        parent_verifier: VerifyHasParentLink;
+        link_addition_presenter: LinkAdditionPresenter;
 
     beforeEach(() => {
         setCatalog({ getString: (msgid) => msgid });
         new_link_adder = AddNewLinkStub.withCount();
         const linkable_artifact = LinkableArtifactStub.withDefaults({ id: NEW_ARTIFACT_ID });
         link_addition_presenter = LinkAdditionPresenter.withArtifactSelected(linkable_artifact);
-        link_selector = LinkSelectorStub.withResetSelectionCallCount();
-        current_link_type = LinkTypeStub.buildChildLinkType();
-        parent_verifier = VerifyHasParentLinkStub.withNoParentLink();
     });
 
     const render = (): HTMLButtonElement => {
@@ -80,7 +69,9 @@ describe(`AddLinkButtonTemplate`, () => {
 
         const current_artifact_identifier = CurrentArtifactIdentifierStub.withId(62);
         const fault_notifier = NotifyFaultStub.withCount();
-        const type_retriever = RetrieveSelectedLinkTypeStub.withType(current_link_type);
+        const type_retriever = RetrieveSelectedLinkTypeStub.withType(
+            LinkTypeStub.buildChildLinkType()
+        );
         const notification_clearer = ClearFaultNotificationStub.withCount();
         const current_tracker_identifier = CurrentTrackerIdentifierStub.withId(55);
         const parents_retriever = RetrievePossibleParentsStub.withoutParents();
@@ -110,7 +101,7 @@ describe(`AddLinkButtonTemplate`, () => {
             RetrieveNewLinksStub.withNewLinks(
                 NewLinkStub.withIdAndType(NEW_ARTIFACT_ID, LinkTypeStub.buildUntyped())
             ),
-            parent_verifier,
+            VerifyHasParentLinkStub.withNoParentLink(),
             type_retriever,
             SetSelectedLinkTypeStub.buildPassThrough(),
             parents_retriever,
@@ -131,18 +122,10 @@ describe(`AddLinkButtonTemplate`, () => {
             current_tracker_identifier,
             ArtifactCrossReferenceStub.withRef("story #62")
         );
-        const allowed_link_types =
-            CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                VerifyHasParentLinkStub.withNoParentLink(),
-                []
-            );
 
         host = {
             link_addition_presenter,
-            current_link_type,
             new_links_presenter: NewLinkCollectionPresenter.buildEmpty(),
-            allowed_link_types,
-            link_selector: link_selector as LinkSelector,
             controller,
         } as HostElement;
 
@@ -156,16 +139,13 @@ describe(`AddLinkButtonTemplate`, () => {
         return button;
     };
 
-    it(`when an artifact has been selected, clicking the button will add a new link and reset the link selector`, () => {
+    it(`when an artifact has been selected, clicking the button will add a new link`, () => {
         const button = render();
         expect(button.disabled).toBe(false);
         button.click();
 
         expect(new_link_adder.getCallCount()).toBe(1);
-        expect(link_selector.getResetCallCount()).toBe(1);
         expect(host.new_links_presenter).toHaveLength(1);
-        expect(host.allowed_link_types.types).toHaveLength(1);
-        expect(host.current_link_type).toBe(current_link_type);
 
         const new_link = host.new_links_presenter[0];
         expect(new_link.identifier.id).toBe(NEW_ARTIFACT_ID);
@@ -179,6 +159,5 @@ describe(`AddLinkButtonTemplate`, () => {
         button.click();
 
         expect(new_link_adder.getCallCount()).toBe(0);
-        expect(link_selector.getResetCallCount()).toBe(0);
     });
 });

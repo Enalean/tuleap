@@ -59,4 +59,9 @@ export const CollectionOfAllowedLinksTypesPresenters = {
             },
         })),
     }),
+
+    buildEmpty: (): CollectionOfAllowedLinksTypesPresenters => ({
+        is_parent_type_disabled: false,
+        types: [],
+    }),
 };
