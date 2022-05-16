@@ -20,6 +20,7 @@
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import {
+    getLinkFieldNoteText,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
 } from "../../../../gettext-catalog";
@@ -157,6 +158,7 @@ export const LinkField = define<LinkField>({
         <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
             ${host.field_presenter.label}
         </label>
+        <p>${getLinkFieldNoteText()}</p>
         <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
                 ${host.linked_artifacts_presenter.linked_artifacts.map(getLinkedArtifactTemplate)}
