@@ -4,4 +4,4 @@
 // http://sourceforge.net
 
 require_once __DIR__ . '/../include/pre.php';
-include($Language->getContent('project/tos'));
+include(HTTPRequest::instance()->getCurrentUser()->getLanguage()->getContent('project/tos'));
