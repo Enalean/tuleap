@@ -47,22 +47,6 @@ final class SearchColumnSortCheckerTest extends TestCase
     /**
      * @throws ColumnCannotBeSortedException
      */
-    public function testItThrowsAnExceptionWhenTheSortedColumnIsId(): void
-    {
-        $sort_representation        = new SearchSortRepresentation();
-        $sort_representation->name  = "id";
-        $sort_representation->order = "asc";
-
-        $column_report = new Docman_ReportColumn(new Docman_Metadata());
-
-        self::expectException(ColumnCannotBeSortedException::class);
-
-        SearchColumnSortChecker::checkColumnCanBeSorted($sort_representation, $column_report);
-    }
-
-    /**
-     * @throws ColumnCannotBeSortedException
-     */
     public function testItThrowsAnExceptionWhenTheSortedColumnIsAMetadataWhichAllowMultiValueList(): void
     {
         $sort_representation        = new SearchSortRepresentation();
