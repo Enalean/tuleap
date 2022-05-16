@@ -191,7 +191,7 @@ final class SearchResource extends AuthenticatedResource
      * <p>`sort` is an array of:</p>
      * <ul>
      * <li>`{ "name": "field_2", "order": "asc" }` accepted value for `order` are `asc` and `desc`</li>
-     * <li>`Note:` the following columns cannot be sorted: `id`, `location`, `multi list custom properties` </li>
+     * <li>`Note:` the following columns cannot be sorted: `location`, `multi list custom properties` </li>
      * </ul>
      *
      * <hr>

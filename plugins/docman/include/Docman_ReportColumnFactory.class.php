@@ -1,6 +1,7 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
  *
@@ -19,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\Search\IdColumnReport;
 
 class Docman_ReportColumnFactory
 {
@@ -40,6 +43,10 @@ class Docman_ReportColumnFactory
             case 'title':
                 $md  = $mdFactory->getFromLabel($colLabel);
                 $col = new Docman_ReportColumnTitle($md);
+                break;
+
+            case 'id':
+                $col = new IdColumnReport();
                 break;
 
             default:

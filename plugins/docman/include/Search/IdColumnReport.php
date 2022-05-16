@@ -20,24 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1\Search;
+namespace Tuleap\Docman\Search;
 
 use Docman_ReportColumn;
 
-final class SearchColumnSortChecker
+class IdColumnReport extends Docman_ReportColumn
 {
-    /**
-     * @throws ColumnCannotBeSortedException
-     */
-    public static function checkColumnCanBeSorted(SearchSortRepresentation $sort_representation, Docman_ReportColumn $column): void
+    public function __construct()
     {
-        $property = $column->getColumnProperty();
-        if (
-            $sort_representation->name === "location"
-            || $property === null
-            || $property->isMultipleValuesAllowed()
-        ) {
-            throw new ColumnCannotBeSortedException($sort_representation->name);
-        }
+        $metadata = new \Docman_Metadata();
+        $metadata->setLabel('item_id');
+        $metadata->setName('item_id');
+
+        parent::__construct($metadata);
     }
 }
