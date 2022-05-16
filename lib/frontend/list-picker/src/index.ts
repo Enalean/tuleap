@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import french_translations from "../po/fr_FR.po";
+import fr_FR from "../po/fr_FR.po";
+import pt_BR from "../po/pt_BR.po";
 import type { ListPicker, ListPickerOptions } from "./type";
 import * as creator from "./list-picker";
 import { initGettextSync } from "@tuleap/gettext";
@@ -30,7 +31,7 @@ export function createListPicker(
 ): Promise<ListPicker> {
     const gettext_provider = initGettextSync(
         "tuleap-list-picker",
-        french_translations,
+        { fr_FR, pt_BR },
         options.locale
     );
     return creator.createListPicker(source_select_box, gettext_provider, options);

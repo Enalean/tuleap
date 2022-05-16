@@ -14,13 +14,14 @@ declare module "*.po" {
 
 ```typescript
 //src/index.ts
-import french_translations from "../po/fr_FR.po";
+import fr_FR from "../po/fr_FR.po";
+import pt_BR from "../po/pt_BR.po";
 import { initGettextSync } from "@tuleap/gettext";
 
 const gettext_provider = initGettextSync(
     "tuleap-my-lib", // domain for your translations
-    french_translations,
-    locale // fr_FR or en_US
+    { fr_FR, pt_BR },
+    locale // fr_FR, pt_BR, or en_US
 );
 
 // Use the gexttext_provider !
