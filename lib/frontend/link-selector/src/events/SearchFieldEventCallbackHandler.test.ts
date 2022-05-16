@@ -22,13 +22,9 @@ import { LinkSelectorStub } from "../../tests/stubs/LinkSelectorStub";
 import type { LinkSelector, LinkSelectorSearchFieldCallback } from "../type";
 
 describe("SearchFieldEventCallbackHandler", () => {
-    let search_field_element: HTMLInputElement, link_selector: LinkSelector;
-
-    beforeEach(() => {
-        const doc = document.implementation.createHTMLDocument();
-        search_field_element = doc.createElement("input");
-        link_selector = LinkSelectorStub.build();
-    });
+    let search_field_element: HTMLInputElement,
+        link_selector: LinkSelector,
+        callback: LinkSelectorSearchFieldCallback;
 
     const init = (callback: LinkSelectorSearchFieldCallback): void => {
         const handler = SearchFieldEventCallbackHandler(
@@ -39,12 +35,18 @@ describe("SearchFieldEventCallbackHandler", () => {
         return handler.init();
     };
 
-    it("should execute the callback after 250ms after the users has stopped typing in the search_field_element", () => {
-        const callback = jest.fn();
+    beforeEach(() => {
+        const doc = document.implementation.createHTMLDocument();
+        search_field_element = doc.createElement("input");
+        link_selector = LinkSelectorStub.build();
+
+        callback = jest.fn();
         jest.useFakeTimers();
 
         init(callback);
+    });
 
+    it("should execute the callback after 250ms after the users has stopped typing in the search_field_element", () => {
         search_field_element.value = "a query";
         search_field_element.dispatchEvent(new Event("input"));
 
@@ -58,11 +60,6 @@ describe("SearchFieldEventCallbackHandler", () => {
     });
 
     it("should not execute the callback when the user it still typing", () => {
-        const callback = jest.fn();
-        jest.useFakeTimers();
-
-        init(callback);
-
         ["nana ", "nana ", "nana ", "BATMAN"].forEach((query) => {
             search_field_element.value += query;
             search_field_element.dispatchEvent(new Event("input"));
@@ -72,5 +69,14 @@ describe("SearchFieldEventCallbackHandler", () => {
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(link_selector, "nana nana nana BATMAN");
+    });
+
+    it("When the query has been cleared, then it should trigger the callback immediately", () => {
+        search_field_element.value = "";
+        search_field_element.dispatchEvent(new Event("input"));
+
+        jest.advanceTimersByTime(0); // 0 ms elapsed
+
+        expect(callback).toHaveBeenCalledWith(link_selector, "");
     });
 });

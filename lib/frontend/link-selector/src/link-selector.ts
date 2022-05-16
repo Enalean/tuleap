@@ -32,6 +32,7 @@ import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 import { SearchFieldEventCallbackHandler } from "./events/SearchFieldEventCallbackHandler";
 import { DropdownContentRefresher } from "./dropdown/DropdownContentRefresher";
+import { SearchFieldClearer } from "./events/SearchFieldClearer";
 
 export function createLinkSelector(
     source_select_box: HTMLSelectElement,
@@ -73,6 +74,7 @@ export function createLinkSelector(
         field_focus_manager
     );
 
+    const search_field_clearer = SearchFieldClearer(search_field_element);
     const selection_manager = new SelectionManager(
         source_select_box,
         dropdown_element,
@@ -80,7 +82,8 @@ export function createLinkSelector(
         placeholder_element,
         dropdown_manager,
         items_map_manager,
-        options.selection_callback
+        options.selection_callback,
+        search_field_clearer
     );
 
     const dropdown_content_renderer = new DropdownContentRenderer(
@@ -125,6 +128,7 @@ export function createLinkSelector(
             placeholder_element.replaceChildren(document.createTextNode(placeholder));
         },
         resetSelection: (): void => {
+            search_field_clearer.clearSearchField();
             selection_manager.clearSelection();
         },
         destroy: (): void => {

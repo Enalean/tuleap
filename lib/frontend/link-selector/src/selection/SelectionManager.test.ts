@@ -26,6 +26,7 @@ import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import type { GroupCollection } from "../items/GroupCollection";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";
+import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
 
 describe("SelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -37,7 +38,8 @@ describe("SelectionManager", () => {
         dropdown_manager: DropdownManager,
         item_1: RenderedItem,
         item_2: RenderedItem,
-        selection_callback: jest.MockedFunction<LinkSelectorSelectionCallback>;
+        selection_callback: jest.MockedFunction<LinkSelectorSelectionCallback>,
+        clear_search_field: ClearSearchFieldStub;
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
@@ -56,6 +58,7 @@ describe("SelectionManager", () => {
         selection_callback = jest.fn();
         items_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
         dropdown_manager = { openLinkSelector: jest.fn() } as unknown as DropdownManager;
+        clear_search_field = ClearSearchFieldStub();
         manager = new SelectionManager(
             source_select_box,
             dropdown,
@@ -63,7 +66,8 @@ describe("SelectionManager", () => {
             placeholder,
             dropdown_manager,
             items_map_manager,
-            selection_callback
+            selection_callback,
+            clear_search_field
         );
         items_map_manager.refreshItemsMap(GroupCollectionBuilder.withSingleGroup());
         item_1 = items_map_manager.findLinkSelectorItemInItemMap("link-selector-item-1");
@@ -156,6 +160,7 @@ describe("SelectionManager", () => {
             expect(dropdown_manager.openLinkSelector).toHaveBeenCalled();
 
             expect(selection_callback).toHaveBeenCalledWith(null);
+            expect(clear_search_field.getCallsCount()).toBe(1);
         });
 
         it("should not remove the current selection when the source <select> is disabled", () => {

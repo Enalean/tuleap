@@ -37,8 +37,14 @@ export const SearchFieldEventCallbackHandler = (
             // we call the callback only once after the delay and _not_ for each input
             clearTimeout(timeout_id);
 
+            const query = search_field_element.value;
+            if (query === "") {
+                // The query has been cleared, no need to wait
+                callback(link_selector, query);
+            }
+
             timeout_id = setTimeout(() => {
-                callback(link_selector, search_field_element.value);
+                callback(link_selector, query);
             }, TRIGGER_CALLBACK_DELAY_IN_MS);
         });
     },
