@@ -76,11 +76,11 @@
               <label><![CDATA[Priorité]]></label>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="Vbug_priority_trs_haute" label="Tr&#xE8;s haute"/>
+                  <item ID="Vbug_priority_tr__s_haute" label="Tr&#xE8;s haute"/>
                   <item ID="Vbug_priority_haute" label="Haute"/>
                   <item ID="Vbug_priority_moyenne" label="Moyenne"/>
                   <item ID="Vbug_priority_basse" label="Basse"/>
-                  <item ID="Vbug_priority_trs_basse" label="Tr&#xE8;s basse"/>
+                  <item ID="Vbug_priority_tr__s_basse" label="Tr&#xE8;s basse"/>
                   <item ID="Vbug_priority_bloquante" label="Bloquante"/>
                   <item ID="Vbug_priority_mineure" label="Mineure"/>
                 </items>

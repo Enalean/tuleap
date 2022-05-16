@@ -37,7 +37,7 @@ class FieldNameFormatter
             'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
         ];
         $label          = strtolower(trim($base_name));
-        $label          = preg_replace('/[^\w\d_ -]/si', '', $label);
+        $label          = preg_replace('/[^\w_ -]/si', '_', $label);
         //replace any space char with _
         $label = preg_replace('/\s+/', '_', $label);
         $label = strtr($label, $normalizeChars);

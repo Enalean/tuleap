@@ -23,15 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-
 class FieldNameFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItFormatsFieldName(): void
     {
-        $formatter = new FieldNameFormatter();
-        $label     = 'titi est dans la brouSSe avec ro,min"ééééet';
-        $label     = FieldNameFormatter::getFormattedName($label);
+        $label = 'titi est dans la brouSSe avec ro,min"ééééet';
+        $label = FieldNameFormatter::getFormattedName($label);
 
-        $this->assertEquals('titi_est_dans_la_brousse_avec_rominet', $label);
+        self::assertEquals('titi_est_dans_la_brousse_avec_ro_min_________et', $label);
     }
 }

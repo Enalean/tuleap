@@ -107,7 +107,7 @@
             <items>
               <item ID="Vbug_customfield_10202_logiciel" label="Logiciel"/>
               <item ID="Vbug_customfield_10202_electrique" label="Electrique"/>
-              <item ID="Vbug_customfield_10202_mcanique" label="M&#xE9;canique"/>
+              <item ID="Vbug_customfield_10202_m__canique" label="M&#xE9;canique"/>
             </items>
           </bind>
         </formElement>
@@ -121,7 +121,7 @@
           <label><![CDATA[Affecte la/les version(s)]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vbug_versions_10" label="1.0"/>
+              <item ID="Vbug_versions_1_0" label="1.0"/>
             </items>
           </bind>
         </formElement>
@@ -171,7 +171,7 @@
           <label><![CDATA[Version(s) corrigée(s)]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vbug_fixversions_10" label="1.0"/>
+              <item ID="Vbug_fixversions_1_0" label="1.0"/>
             </items>
           </bind>
         </formElement>
@@ -231,9 +231,9 @@
             <items>
               <item ID="Vbug_customfield_10249_backbone_itg" label="BACKBONE_ITG"/>
               <item ID="Vbug_customfield_10249_ethercat_itg" label="ETHERCAT_ITG"/>
-              <item ID="Vbug_customfield_10249_std_itg_0101" label="STD_ITG_01.01"/>
-              <item ID="Vbug_customfield_10249_std_itg_0201" label="STD_ITG_02.01"/>
-              <item ID="Vbug_customfield_10249_std_itg_1603" label="STD_ITG_16.03"/>
+              <item ID="Vbug_customfield_10249_std_itg_01_01" label="STD_ITG_01.01"/>
+              <item ID="Vbug_customfield_10249_std_itg_02_01" label="STD_ITG_02.01"/>
+              <item ID="Vbug_customfield_10249_std_itg_16_03" label="STD_ITG_16.03"/>
               <item ID="Vbug_customfield_10249_std_itg" label="STD_ITG"/>
               <item ID="Vbug_customfield_10249_laser_itg" label="LASER_ITG"/>
               <item ID="Vbug_customfield_10249_-" label="-"/>
@@ -245,7 +245,7 @@
           <label><![CDATA[Motif]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="Vbug_customfield_10287_impossible_reproduire" label="Impossible &#xE0; reproduire"/>
+              <item ID="Vbug_customfield_10287_impossible____reproduire" label="Impossible &#xE0; reproduire"/>
               <item ID="Vbug_customfield_10287_doublon" label="doublon"/>
               <item ID="Vbug_customfield_10287_no_fix" label="No fix"/>
             </items>
@@ -624,7 +624,7 @@
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
-          <value format="id"><![CDATA[bug_versions_10]]></value>
+          <value format="id"><![CDATA[bug_versions_1_0]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change type="text" field_name="description">
@@ -766,7 +766,7 @@
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
-          <value format="id"><![CDATA[bug_versions_10]]></value>
+          <value format="id"><![CDATA[bug_versions_1_0]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks"/>
         <field_change type="text" field_name="description">
@@ -881,7 +881,7 @@
           <value format="id"><![CDATA[1]]></value>
         </field_change>
         <field_change field_name="fixVersions" type="list" bind="static">
-          <value format="id"><![CDATA[bug_fixversions_10]]></value>
+          <value format="id"><![CDATA[bug_fixversions_1_0]]></value>
         </field_change>
         <field_change type="text" field_name="customfield_10231">
           <value format="html"><![CDATA[<p>-</p>]]></value>
@@ -908,7 +908,7 @@
           <value format="id"><![CDATA[bug_customfield_10215_composant_1]]></value>
         </field_change>
         <field_change field_name="versions" type="list" bind="static">
-          <value format="id"><![CDATA[bug_versions_10]]></value>
+          <value format="id"><![CDATA[bug_versions_1_0]]></value>
         </field_change>
         <field_change type="art_link" field_name="issuelinks">
           <value nature="_is_child"><![CDATA[10750]]></value>
