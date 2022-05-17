@@ -112,6 +112,9 @@ export const setNewLinks = (
         return NewLinkCollectionPresenter.buildEmpty();
     }
     host.allowed_link_types = host.controller.displayAllowedTypes();
+    host.link_selector.resetSelection();
+    host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+
     return presenter;
 };
 
