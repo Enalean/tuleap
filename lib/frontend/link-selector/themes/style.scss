@@ -64,6 +64,8 @@
 .link-selector-selection {
     display: flex;
     align-items: center;
+    cursor: default;
+    user-select: none;
 
     &.link-selector-single {
         height: var(--tlp-form-element-height);
@@ -267,8 +269,6 @@
     font-family: var(--tlp-font-family);
     font-size: var(--tlp-form-element-font-size);
     line-height: normal;
-    cursor: default;
-    user-select: none;
 
     &:focus {
         transition: border-color var(--tlp-form-element-border-transition-duration) linear,
