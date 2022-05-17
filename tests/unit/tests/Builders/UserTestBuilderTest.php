@@ -33,12 +33,23 @@ final class UserTestBuilderTest extends TestCase
         $project_102 = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $user = UserTestBuilder::anActiveUser()
-            ->isProjectAdministrator($project_101)
-            ->isProjectAdministrator($project_102)
+            ->withAdministratorOf($project_101)
+            ->withAdministratorOf($project_102)
             ->build();
 
         self::assertTrue($user->isAdmin(102));
         self::assertTrue($user->isAdmin(101));
         self::assertFalse($user->isAdmin(103));
+    }
+
+    public function testIsMemberOfOneProject(): void
+    {
+        $project_101 = ProjectTestBuilder::aProject()->withId(101)->build();
+
+        $user = UserTestBuilder::anActiveUser()
+            ->withMemberOf($project_101)
+            ->build();
+
+        self::assertTrue($user->isMember($project_101->getID()));
     }
 }
