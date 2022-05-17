@@ -473,7 +473,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return isset($tracker_data[$group_artifact_id]) ? $tracker_data[$group_artifact_id]['perm_level'] : 0;
     }
 
-    public function isSuperUser()
+    public function isSuperUser(): bool
     {
         if ($this->is_super_user === null) {
             $this->is_super_user = false;
@@ -483,6 +483,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             }
         }
         return $this->is_super_user;
+    }
+
+    public function setIsSuperUser(bool $is_super_user): void
+    {
+        $this->is_super_user = $is_super_user;
     }
 
     public function getAllUgroups()

@@ -46,7 +46,7 @@ class DynamicUser extends \PFUser
         return parent::getStatus();
     }
 
-    public function isSuperUser()
+    public function isSuperUser(): bool
     {
         return true;
     }

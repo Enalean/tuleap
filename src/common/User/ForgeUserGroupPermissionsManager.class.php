@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupPermissionsManager
+use Tuleap\User\ForgePermissionsRetriever;
+
+class User_ForgeUserGroupPermissionsManager implements ForgePermissionsRetriever // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var User_ForgeUserGroupPermissionsDao
@@ -56,10 +58,7 @@ class User_ForgeUserGroupPermissionsManager
         return $this->permissions_dao->deletePersmissionForUGroup($user_group_id, $permission_id);
     }
 
-    /**
-     * @return bool
-     */
-    public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission)
+    public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
     {
         return $this->permissions_dao->doesUserHavePermission($user->getId(), $permission->getId());
     }

@@ -19,16 +19,12 @@
  *
  */
 
-declare(strict_types=1);
+namespace Tuleap\User;
 
-namespace Tuleap\MediawikiStandalone\REST\v1;
+use PFUser;
+use User_ForgeUserGroupPermission;
 
-/**
- * @psalm-immutable
- */
-final class PermissionsRepresentation
+interface ForgePermissionsRetriever
 {
-    public function __construct(public bool $is_reader, public bool $is_writer, public bool $is_admin, public bool $is_bot)
-    {
-    }
+    public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool;
 }
