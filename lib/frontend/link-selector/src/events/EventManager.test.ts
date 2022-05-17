@@ -18,13 +18,14 @@
  */
 
 import { EventManager } from "./EventManager";
-import type { SelectionManager } from "../selection/SelectionManager";
-import type { DropdownManager } from "../dropdown/DropdownManager";
+import { ManageDropdownStub } from "../../tests/stubs/ManageDropdownStub";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import type { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
+import { ClearSearchFieldStub } from "../../tests/stubs/ClearSearchFieldStub";
+import { ManageSelectionStub } from "../../tests/stubs/ManageSelectionStub";
 
 describe("event manager", () => {
     let doc: HTMLDocument,
@@ -32,13 +33,10 @@ describe("event manager", () => {
         component_wrapper: HTMLElement,
         link_selector_input: Element,
         dropdown: Element,
-        manager: EventManager,
-        dropdown_manager: DropdownManager,
         clickable_item: Element,
         search_field: HTMLInputElement,
         item_highlighter: ListItemHighlighter,
         dropdown_content_renderer: DropdownContentRenderer,
-        selection_manager: SelectionManager,
         navigation_manager: KeyboardNavigationManager,
         field_focus_manager: FieldFocusManager;
 
@@ -49,10 +47,33 @@ describe("event manager", () => {
         return search_field_element;
     }
 
+    function getEventManager(
+        dropdown_element: Element,
+        search_field_element: HTMLInputElement,
+        dropdown_manager: ManageDropdownStub,
+        clear_search_field: ClearSearchFieldStub,
+        manage_selection: ManageSelectionStub
+    ): EventManager {
+        return new EventManager(
+            doc,
+            component_wrapper,
+            link_selector_input,
+            dropdown_element,
+            search_field_element,
+            source_select_box,
+            manage_selection,
+            dropdown_manager,
+            dropdown_content_renderer,
+            navigation_manager,
+            item_highlighter,
+            field_focus_manager,
+            clear_search_field
+        );
+    }
+
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         source_select_box = document.createElement("select");
-        source_select_box.setAttribute("multiple", "multiple");
 
         const {
             wrapper_element,
@@ -70,11 +91,6 @@ describe("event manager", () => {
 
         search_field = getSearchField(search_field_element);
         dropdown = dropdown_element;
-        dropdown_manager = {
-            openLinkSelector: jest.fn(),
-            closeLinkSelector: jest.fn(),
-            isDropdownOpen: jest.fn(),
-        } as unknown as DropdownManager;
 
         item_highlighter = {
             resetHighlight: jest.fn(),
@@ -87,34 +103,22 @@ describe("event manager", () => {
             renderAfterDependenciesUpdate: jest.fn(),
         } as unknown as DropdownContentRenderer;
 
-        selection_manager = {
-            processSelection: jest.fn(),
-            resetAfterDependenciesUpdate: jest.fn(),
-        } as unknown as SelectionManager;
-
         field_focus_manager = {
             doesSelectionElementHaveTheFocus: jest.fn(),
         } as unknown as FieldFocusManager;
 
         navigation_manager = { navigate: jest.fn() } as unknown as KeyboardNavigationManager;
-
-        manager = new EventManager(
-            doc,
-            component_wrapper,
-            link_selector_input,
-            dropdown_element,
-            search_field_element,
-            source_select_box,
-            selection_manager,
-            dropdown_manager,
-            dropdown_content_renderer,
-            navigation_manager,
-            item_highlighter,
-            field_focus_manager
-        );
     });
 
     it("When the source <select> is disabled, then it should not attach any event", () => {
+        const manager = getEventManager(
+            dropdown,
+            search_field,
+            ManageDropdownStub.withClosedDropdown(),
+            ClearSearchFieldStub(),
+            ManageSelectionStub.withNoSelection()
+        );
+
         jest.spyOn(doc, "addEventListener");
         jest.spyOn(component_wrapper, "addEventListener");
         jest.spyOn(search_field, "addEventListener");
@@ -131,20 +135,28 @@ describe("event manager", () => {
     });
 
     describe("Dropdown opening", () => {
-        it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
-            const isDropdownOpen = jest.spyOn(dropdown_manager, "isDropdownOpen");
-            isDropdownOpen.mockReturnValueOnce(false);
+        let manager: EventManager, manage_dropdown: ManageDropdownStub;
 
+        beforeEach(() => {
+            manage_dropdown = ManageDropdownStub.withClosedDropdown();
+            manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                ClearSearchFieldStub(),
+                ManageSelectionStub.withNoSelection()
+            );
+        });
+
+        it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
             manager.attachEvents();
 
             link_selector_input.dispatchEvent(new MouseEvent("pointerdown"));
-            expect(dropdown_manager.openLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(1);
             expect(item_highlighter.resetHighlight).toHaveBeenCalledTimes(1);
 
-            isDropdownOpen.mockReturnValueOnce(true);
-
             link_selector_input.dispatchEvent(new MouseEvent("pointerdown"));
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
         });
 
         it("Does not open the dropdown when I click on the component root while the source <select> is disabled", () => {
@@ -153,27 +165,10 @@ describe("event manager", () => {
             manager.attachEvents();
             component_wrapper.dispatchEvent(new MouseEvent("click"));
 
-            expect(dropdown_manager.openLinkSelector).not.toHaveBeenCalled();
+            expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(0);
         });
 
         it("When a keyboard selection has occurred, and user hits Enter, then it should reopen the dropdown", () => {
-            const select_element = document.createElement("select");
-            const manager = new EventManager(
-                doc,
-                component_wrapper,
-                link_selector_input,
-                dropdown,
-                search_field,
-                select_element,
-                selection_manager,
-                dropdown_manager,
-                dropdown_content_renderer,
-                navigation_manager,
-                item_highlighter,
-                field_focus_manager
-            );
-
-            const isDropdownOpen = jest.spyOn(dropdown_manager, "isDropdownOpen");
             const doesSelectionElementHaveTheFocus = jest.spyOn(
                 field_focus_manager,
                 "doesSelectionElementHaveTheFocus"
@@ -182,113 +177,178 @@ describe("event manager", () => {
             manager.attachEvents();
 
             // Keyboard selection has occurred
-            isDropdownOpen.mockReturnValueOnce(true);
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.isDropdownOpen()).toBe(false);
 
             // Now user hits the Enter key again
-            isDropdownOpen.mockReturnValueOnce(false);
             doesSelectionElementHaveTheFocus.mockReturnValue(true);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-            expect(dropdown_manager.openLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.isDropdownOpen()).toBe(true);
 
             // Now user closes the dropdown without selecting any item
-            isDropdownOpen.mockReturnValueOnce(true);
             doesSelectionElementHaveTheFocus.mockReturnValue(false);
-            doc.dispatchEvent(new Event("click"));
-
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalledTimes(1);
+            doc.dispatchEvent(new MouseEvent("pointerdown"));
+            expect(manage_dropdown.isDropdownOpen()).toBe(false);
 
             // And finally, he hits enter once again
-            isDropdownOpen.mockReturnValueOnce(false);
             doesSelectionElementHaveTheFocus.mockReturnValue(true);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-            expect(dropdown_manager.openLinkSelector).toHaveBeenCalledTimes(1);
+            expect(manage_dropdown.isDropdownOpen()).toBe(true);
         });
     });
 
     describe("Dropdown closure", () => {
-        it("should close the dropdown when the escape key has been pressed", () => {
-            manager.attachEvents();
+        let manager: EventManager,
+            manage_dropdown: ManageDropdownStub,
+            clear_search_field: ClearSearchFieldStub;
 
-            [{ key: "Escape" }, { key: "Esc" }].forEach((event_init: KeyboardEventInit) => {
-                doc.dispatchEvent(new KeyboardEvent("keyup", event_init));
-
-                expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
-            });
+        beforeEach(() => {
+            manage_dropdown = ManageDropdownStub.withOpenDropdown();
+            clear_search_field = ClearSearchFieldStub();
+            manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                clear_search_field,
+                ManageSelectionStub.withNoSelection()
+            );
         });
 
-        it("should close the dropdown when the user mouse downs outside the link-selector", () => {
+        it.each([
+            ["Escape", { key: "Escape" }],
+            ["Esc", { key: "Esc" }],
+        ])(
+            "should close the dropdown when the pressent key is %s",
+            (key_name: string, event_init: KeyboardEventInit) => {
+                manager.attachEvents();
+                doc.dispatchEvent(new KeyboardEvent("keyup", event_init));
+
+                expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
+            }
+        );
+
+        it("should close the dropdown when the user clicks outside the link-selector while it is open", () => {
             manager.attachEvents();
             doc.dispatchEvent(new MouseEvent("pointerdown"));
 
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
+        });
+
+        it(`Given that the dropdown is open and user has not selected any value,
+            When the user clicks outside the list picker,
+            Then the dropdown is closed and the search field is cleared`, () => {
+            manager.attachEvents();
+            doc.dispatchEvent(new MouseEvent("pointerdown"));
+
+            expect(clear_search_field.getCallsCount()).toBe(1);
+        });
+
+        it(`Given that the dropdown is open and user has selected a value,
+            When the user clicks outside the list picker,
+            Then the dropdown is closed BUT the search field is left untouched`, () => {
+            const manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                clear_search_field,
+                ManageSelectionStub.withSelectedElement(doc.createElement("li"))
+            );
+
+            manager.attachEvents();
+            doc.dispatchEvent(new MouseEvent("pointerdown"));
+
+            expect(clear_search_field.getCallsCount()).toBe(0);
         });
     });
 
     describe("Item selection", () => {
         it("processes the selection when an item is clicked in the dropdown list", () => {
+            const manage_dropdown = ManageDropdownStub.withOpenDropdown();
+            const manage_selection = ManageSelectionStub.withNoSelection();
+            const manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                ClearSearchFieldStub(),
+                manage_selection
+            );
             manager.attachEvents();
+
             clickable_item.dispatchEvent(new MouseEvent("pointerup"));
-            expect(selection_manager.processSelection).toHaveBeenCalled();
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
+            expect(manage_selection.getProcessSelectionCallCount()).toBe(1);
+            expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
         });
     });
 
     describe("Search input events", () => {
-        it("should keep the search input content and reset the highlight when the tab key has been pressed", () => {
-            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
+        let manager: EventManager, manage_dropdown: ManageDropdownStub;
 
+        beforeEach(() => {
+            manage_dropdown = ManageDropdownStub.withOpenDropdown();
+            manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                ClearSearchFieldStub(),
+                ManageSelectionStub.withNoSelection()
+            );
             manager.attachEvents();
+        });
 
+        it("should keep the search input content and reset the highlight when the tab key has been pressed", () => {
             search_field.value = "an old query";
-
             search_field.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
 
             expect(search_field.value).toBe("an old query");
-
             expect(item_highlighter.resetHighlight).toHaveBeenCalled();
         });
 
         it("should open the dropdown when the Enter key is pressed", () => {
-            manager.attachEvents();
             search_field.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
-            expect(dropdown_manager.openLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(1);
         });
 
         it("should not reopen the dropdown when a keyboard selection has just occurred", () => {
             const highlighted_item = document.createElement("li");
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
-            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValueOnce(true);
-
-            manager.attachEvents();
 
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
             search_field.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
-            expect(dropdown_manager.openLinkSelector).not.toHaveBeenCalled();
+            expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(0);
         });
     });
 
     describe("removeEventsListenersOnDocument", () => {
-        it("should remove the keyup event on document", () => {
+        let manager: EventManager, manage_dropdown: ManageDropdownStub;
+
+        beforeEach(() => {
+            manage_dropdown = ManageDropdownStub.withClosedDropdown();
+            manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                ClearSearchFieldStub(),
+                ManageSelectionStub.withNoSelection()
+            );
             manager.attachEvents();
+        });
+
+        it("should remove the keyup event on document", () => {
             manager.removeEventsListenersOnDocument();
             doc.dispatchEvent(new Event("keyup"));
-            expect(dropdown_manager.closeLinkSelector).not.toHaveBeenCalled();
+            expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(0);
         });
 
         it("should remove the click event on document", () => {
-            manager.attachEvents();
             manager.removeEventsListenersOnDocument();
             doc.dispatchEvent(new Event("click"));
-            expect(dropdown_manager.closeLinkSelector).not.toHaveBeenCalled();
+            expect(manage_dropdown.getOpenLinkSelectorCallCount()).toBe(0);
         });
 
         it("should remove the keydown event on document", () => {
-            manager.attachEvents();
             manager.removeEventsListenersOnDocument();
             doc.dispatchEvent(new Event("keydown"));
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
@@ -296,10 +356,22 @@ describe("event manager", () => {
     });
 
     describe("attachSourceSelectBoxChangeEvent", () => {
+        let manager: EventManager;
+
+        beforeEach(() => {
+            manager = getEventManager(
+                dropdown,
+                search_field,
+                ManageDropdownStub.withClosedDropdown(),
+                ClearSearchFieldStub(),
+                ManageSelectionStub.withNoSelection()
+            );
+            manager.attachEvents();
+        });
+
         describe("Forms error handling", () => {
             it("should add an 'error' class on the component wrapper when the source <select> value has changed and is invalid", () => {
                 jest.spyOn(source_select_box, "checkValidity").mockImplementation(() => false);
-                manager.attachEvents();
 
                 source_select_box.dispatchEvent(new Event("change"));
                 expect(component_wrapper.classList).toContain("link-selector-error");
@@ -307,7 +379,6 @@ describe("event manager", () => {
 
             it("should remove the 'error' class on the component wrapper when the source <select> value has changed and is valid", () => {
                 jest.spyOn(source_select_box, "checkValidity").mockImplementation(() => true);
-                manager.attachEvents();
 
                 source_select_box.dispatchEvent(new Event("change"));
                 expect(component_wrapper.classList).not.toContain("link-selector-error");
@@ -316,9 +387,32 @@ describe("event manager", () => {
     });
 
     describe("Keyboard navigation", () => {
-        it("should not call the navigation manager when the dropdown is closed", () => {
-            manager.attachEvents();
+        let manager: EventManager,
+            manage_dropdown: ManageDropdownStub,
+            manage_selection: ManageSelectionStub;
 
+        beforeEach(() => {
+            manage_dropdown = ManageDropdownStub.withOpenDropdown();
+            manage_selection = ManageSelectionStub.withNoSelection();
+            manager = getEventManager(
+                dropdown,
+                search_field,
+                manage_dropdown,
+                ClearSearchFieldStub(),
+                manage_selection
+            );
+        });
+
+        it("should not call the navigation manager when the dropdown is closed", () => {
+            const manager = getEventManager(
+                dropdown,
+                search_field,
+                ManageDropdownStub.withClosedDropdown(),
+                ClearSearchFieldStub(),
+                manage_selection
+            );
+
+            manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
@@ -326,7 +420,6 @@ describe("event manager", () => {
 
         it("should call the navigation manager when the dropdown is open", () => {
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(null);
-            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValueOnce(true);
 
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
@@ -337,24 +430,21 @@ describe("event manager", () => {
         it("should select the currently highlighted item when the Enter key is pressed", () => {
             const highlighted_item = document.createElement("li");
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
-            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
 
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
 
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
-            expect(selection_manager.processSelection).toHaveBeenCalledWith(highlighted_item);
+            expect(manage_selection.getCurrentSelection()).toStrictEqual(highlighted_item);
             expect(item_highlighter.resetHighlight).toHaveBeenCalled();
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
         });
 
         it("should close the dropdown when the tab key has been pressed", () => {
-            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
-
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
 
-            expect(dropdown_manager.closeLinkSelector).toHaveBeenCalled();
+            expect(manage_dropdown.getCloseLinkSelectorCallCount()).toBe(1);
         });
     });
 });

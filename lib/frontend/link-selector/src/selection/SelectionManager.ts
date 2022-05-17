@@ -24,7 +24,12 @@ import { html, render } from "lit/html.js";
 import type { LinkSelectorSelectionCallback } from "../type";
 import type { ClearSearchField } from "../events/SearchFieldClearer";
 
-export class SelectionManager {
+export interface ManageSelection {
+    processSelection: (item: Element) => void;
+    hasSelection: () => boolean;
+}
+
+export class SelectionManager implements ManageSelection {
     private selection_state: LinkSelectorSelectionStateSingle | null;
 
     constructor(
@@ -183,5 +188,9 @@ export class SelectionManager {
 
         this.callback(null);
         this.selection_state = null;
+    }
+
+    public hasSelection(): boolean {
+        return this.selection_state !== null;
     }
 }
