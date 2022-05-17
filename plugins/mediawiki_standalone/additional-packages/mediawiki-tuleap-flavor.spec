@@ -15,6 +15,7 @@ BuildArch:      noarch
 
 AutoReqProv: no
 
+Requires: tuleap-mathoid = %{tuleap_version}
 Requires: php74-php-xml php74-php-intl php74-php-json php74-php-ldap php74-php-mbstring php74-php-mysqlnd php74-php-process php74-php-pdo php74-php-opcache php74-php-fpm php74-php-cli php74-php-sodium
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)

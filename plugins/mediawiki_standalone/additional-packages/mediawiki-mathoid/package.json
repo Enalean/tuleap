@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-mediawiki_standalone-mathoid",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "bin": "node_modules/mathoid/cli.js",
+  "dependencies": {
+    "mathoid": "https://github.com/wikimedia/mathoid/tarball/a87501ee0ee943e7aef63fefaa966aa1b40a907d"
+  },
+  "devDependencies": {
+    "pkg": "^5.6.0"
+  },
+  "pkg": {
+    "assets": "node_modules/**/*.js",
+    "targets": [
+      "node16-linuxstatic-x64"
+    ]
+  },
+  "scripts": {
+    "build": "pkg --no-bytecode --public-packages '*' --public --output dist/mathoid-cli package.json",
+    "test": "./src/test.sh"
+  }
+}
