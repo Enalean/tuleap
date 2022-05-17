@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (c) Enalean, 2011-Present. All Rights Reserved.
 # Copyright (c) STMicroelectronics, 2005. All Rights Reserved.

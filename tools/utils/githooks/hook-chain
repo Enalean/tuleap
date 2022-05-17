@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Adapted from: https://stackoverflow.com/questions/8730514/chaining-git-hooks
 #

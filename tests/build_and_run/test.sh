@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Note: images are pulled each and every time to ensure we are running the last version of the image.
 #       This is required because we don't version the images

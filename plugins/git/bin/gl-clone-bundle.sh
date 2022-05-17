@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Execute a git clone --mirror as gitolite user and set up the description.
 # Used during project import into include/GitRepositoryManager.class.php

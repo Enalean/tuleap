@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 cat /data/etc/email_whitelist | sed 's/$/ :/' > /etc/postfix/transport
