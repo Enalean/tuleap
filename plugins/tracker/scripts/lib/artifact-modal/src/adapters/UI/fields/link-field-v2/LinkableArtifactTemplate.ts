@@ -23,6 +23,7 @@ import type {
     HTMLTemplateResult,
 } from "@tuleap/link-selector";
 import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import { getAlreadyLinkedTextTooltip, getAlreadyLinkedInfo } from "../../../../gettext-catalog";
 
 const isLinkableArtifact = (item: unknown): item is LinkableArtifact =>
     typeof item === "object" && item !== null && "id" in item;
@@ -42,5 +43,20 @@ export const getLinkableArtifactTemplate = (
     if (!artifact) {
         return lit_html``;
     }
-    return lit_html`<span class="tlp-swatch-${artifact.xref.color} cross-ref-badge link-field-xref-badge">${artifact.xref.ref}</span> ${artifact.title}`;
+
+    const item_classes = `tlp-swatch-${artifact.xref.color} cross-ref-badge link-field-xref-badge`;
+
+    if (item.is_disabled) {
+        return lit_html`<span class="link-field-item" title="${getAlreadyLinkedTextTooltip()}">
+<span class="${item_classes}">${artifact.xref.ref}</span>
+    <span class="link-field-item-title">${artifact.title}</span>
+    <span class="link-field-disabled-item-already-linked-info">
+        ${getAlreadyLinkedInfo()}
+    </span>
+</span>`;
+    }
+
+    return lit_html`<span class="link-field-item"><span class="${item_classes}">${artifact.xref.ref}</span>
+    <span class="link-field-item-title">${artifact.title}</span>
+</span>`;
 };
