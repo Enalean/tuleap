@@ -63,9 +63,9 @@ $GLOBALS['wgDefaultUserOptions']['math'] = 'mathml';
 $GLOBALS['wgMaxShellMemory']             = 1228800;
 $GLOBALS['wgHiddenPrefs'][]              = 'math';
 $GLOBALS['wgMathoidCli']                 = [
-    '/opt/mediawiki/mathoid/cli.js',
-    '-c',
-    '/opt/mediawiki/mathoid/config.yaml',
+    '/usr/lib/tuleap/mathoid/bin/mathoid-cli',
+    '--config',
+    '/usr/share/tuleap-mathoid/config.yaml',
 ];
 
 // MediaWiki Core default settings - START ###
