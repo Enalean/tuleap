@@ -201,10 +201,12 @@ describe("LinkField", () => {
         });
 
         describe("-", () => {
-            let host: LinkField;
+            let host: LinkField, link_selector: LinkSelectorStub;
 
             beforeEach(() => {
+                link_selector = LinkSelectorStub.withResetSelectionCallCount();
                 host = {
+                    link_selector: link_selector as LinkSelector,
                     controller: {
                         displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
                             return CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
@@ -245,11 +247,12 @@ describe("LinkField", () => {
                     expect(new_links).toHaveLength(0);
                 });
 
-                it("should display allowed types when new links have been added or removed", () => {
+                it("should display allowed types when new links have been edited, and clear the link-selector selection", () => {
                     setNewLinks(host, NewLinkCollectionPresenter.fromLinks([]));
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);
+                    expect(link_selector.getResetCallCount()).toBe(1);
                 });
             });
         });
