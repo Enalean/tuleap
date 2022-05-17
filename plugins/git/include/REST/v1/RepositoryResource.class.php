@@ -387,19 +387,23 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
-     * Get git repository's pull requests
+     * Get pull requests
      *
-     * User is not able to see a pull request in a git repository where he is not able to READ
+     * <p>Retrieve all git repository's pull requests.</p>
+     *
+     * <p>Pull requests are sorted by descending order of creation date.</p>
+     *
+     * <p>User is not able to see a pull request in a git repository where he is not able to READ.</p>
+     *
+     * <p>
+     * <code>$query</code> parameter is optional, by default we return all pull requests. If
+     * <code>query={"status":"open"}</code> then only open pull requests are returned and if
+     * <code>query={"status":"closed"}</code> then only closed pull requests are returned.
+     * </p>
      *
      * <pre>
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
      * </pre>
-     *
-     * <p>
-     * $query parameter is optional, by default we return all pull requests. If
-     * query={"status":"open"} then only open pull requests are returned and if
-     * query={"status":"closed"} then only closed pull requests are returned.
-     * </p>
      *
      * @url GET {id}/pull_requests
      *
