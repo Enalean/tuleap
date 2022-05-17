@@ -717,7 +717,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
                     $status = $GLOBALS['Language']->getText('include_exit', 'project_status_P');
                     break;
                 case Project::STATUS_SUSPENDED:
-                    $status = $GLOBALS['Language']->getText('include_exit', 'project_status_H');
+                    $status = _('This project is suspended');
                     break;
                 case Project::STATUS_SYSTEM:
                     $status = $GLOBALS['Language']->getText('include_exit', 'project_status_s');

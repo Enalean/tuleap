@@ -83,6 +83,26 @@ final class ProjectTestBuilder
         return $this;
     }
 
+    public function withAccessPublicIncludingRestricted(): self
+    {
+        return $this->withAccess(\Project::ACCESS_PUBLIC_UNRESTRICTED);
+    }
+
+    public function withAccessPublic(): self
+    {
+        return $this->withAccess(\Project::ACCESS_PUBLIC);
+    }
+
+    public function withAccessPrivate(): self
+    {
+        return $this->withAccess(\Project::ACCESS_PRIVATE);
+    }
+
+    public function withAccessPrivateWithoutRestricted(): self
+    {
+        return $this->withAccess(\Project::ACCESS_PRIVATE_WO_RESTRICTED);
+    }
+
     public function withIcon(string $icon_codepoint): self
     {
         $this->data['icon_codepoint'] = EmojiCodepointConverter::convertEmojiToStoreFormat($icon_codepoint);

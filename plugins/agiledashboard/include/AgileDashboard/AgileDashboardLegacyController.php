@@ -60,7 +60,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
         $project = $request->getProject();
 
         if ($project->isError() || $project->isDeleted()) {
-            $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_exit', 'project_status_D'));
+            $layout->addFeedback(Feedback::ERROR, _('This project is deleted'));
             $layout->redirect('/');
         }
 

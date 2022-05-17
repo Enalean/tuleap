@@ -56,7 +56,7 @@ if (! $project->isActive()) {
         case Project::STATUS_DELETED:
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('include_exit', 'project_status_D')
+                _('This project is deleted')
             );
             break;
         case Project::STATUS_PENDING:
@@ -68,7 +68,7 @@ if (! $project->isActive()) {
         case Project::STATUS_SUSPENDED:
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('include_exit', 'project_status_H')
+                _('This project is suspended')
             );
             break;
         case Project::STATUS_SYSTEM:

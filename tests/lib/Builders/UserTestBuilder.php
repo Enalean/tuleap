@@ -45,9 +45,21 @@ class UserTestBuilder
             ->withoutMemberOfProjects();
     }
 
+    public static function aRestrictedUser(): self
+    {
+        return (new self())
+            ->withId(10001)
+            ->withStatus(\PFUser::STATUS_RESTRICTED)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects();
+    }
+
     public static function anAnonymousUser(): self
     {
-        return (new self())->withId(0);
+        return (new self())
+            ->withId(0)
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects();
     }
 
     public function withUserName(string $name): self

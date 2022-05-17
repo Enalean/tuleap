@@ -305,7 +305,7 @@ class SvnRouter implements DispatchableWithRequest
         } elseif ($project->isDeleted()) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('include_exit', 'project_status_D')
+                _('This project is deleted')
             );
 
             $layout->redirect('/');

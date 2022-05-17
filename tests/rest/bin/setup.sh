@@ -105,7 +105,8 @@ seed_data() {
         testplan \
         taskboard \
         roadmap \
-        program_management
+        program_management \
+        mediawiki_standalone
 
     load_project /usr/share/tuleap/tests/rest/_fixtures/01-private-member
     load_project /usr/share/tuleap/tests/rest/_fixtures/02-private

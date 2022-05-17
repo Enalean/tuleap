@@ -26,7 +26,7 @@ class ProjectAccessSuspendedErrorPresenter
 
     public function __construct()
     {
-        $this->error_message  = $GLOBALS['Language']->getText('include_exit', 'project_status_H');
+        $this->error_message  = _('This project is suspended');
         $this->custom_message = $GLOBALS['Language']->getText('include_exit', 'project_suspended_cutom_message');
     }
 }

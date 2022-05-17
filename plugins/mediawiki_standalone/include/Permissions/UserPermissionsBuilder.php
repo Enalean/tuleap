@@ -24,11 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Permissions;
 
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\Project\CheckProjectAccess;
 use Tuleap\User\ForgePermissionsRetriever;
 
 final class UserPermissionsBuilder
 {
-    public function __construct(private ForgePermissionsRetriever $forge_permissions_retriever)
+    public function __construct(private ForgePermissionsRetriever $forge_permissions_retriever, private CheckProjectAccess $check_project_access)
     {
     }
 
@@ -46,6 +47,11 @@ final class UserPermissionsBuilder
             return UserPermissions::writer();
         }
 
+        try {
+            $this->check_project_access->checkUserCanAccessProject($user, $project);
+            return UserPermissions::reader();
+        } catch (\Project_AccessException) {
+        }
         return UserPermissions::noAccess();
     }
 }

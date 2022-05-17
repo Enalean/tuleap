@@ -46,4 +46,9 @@ final class UserPermissions
     {
         return new self(true, true, false, false);
     }
+
+    public static function reader(): self
+    {
+        return new self(true, false, false, false);
+    }
 }
