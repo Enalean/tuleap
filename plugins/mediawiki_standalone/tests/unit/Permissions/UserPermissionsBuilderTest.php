@@ -78,16 +78,59 @@ final class UserPermissionsBuilderTest extends TestCase
                 'is_admin' => true,
             ],
             'project administrator has all permissions' => [
-                'user' => UserTestBuilder::anActiveUser()->isProjectAdministrator($project)->build(),
+                'user' => UserTestBuilder::anActiveUser()->withAdministratorOf($project)->build(),
                 'project' => $project,
                 'is_site_mediawiki_admin' => false,
                 'is_admin' => true,
             ],
             'regular user is not admin' => [
-                'user' => UserTestBuilder::anActiveUser()->isMemberOfNoProjects()->build(),
+                'user' => UserTestBuilder::anActiveUser()->withoutMemberOfProjects()->build(),
                 'project' => $project,
                 'is_site_mediawiki_admin' => false,
                 'is_admin' => false,
+            ],
+            'project members are not admin' => [
+                'user' => UserTestBuilder::anActiveUser()->withMemberOf($project)->build(),
+                'project' => $project,
+                'is_site_mediawiki_admin' => false,
+                'is_admin' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getWriterTestData
+     */
+    public function testGetPermissionsForWriters(PFUser $user, Project $project, bool $is_writer): void
+    {
+        $forge_permissions_retriever = new class implements ForgePermissionsRetriever
+        {
+            public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
+            {
+                return false;
+            }
+        };
+
+        $permission_builder = new UserPermissionsBuilder($forge_permissions_retriever);
+
+        $user_permissions = $permission_builder->getPermissions($user, $project);
+
+        self::assertEquals($is_writer, $user_permissions->is_writer);
+    }
+
+    public function getWriterTestData(): iterable
+    {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+        return [
+            'regular user is not writer' => [
+                'user' => UserTestBuilder::anActiveUser()->withoutMemberOfProjects()->build(),
+                'project' => $project,
+                'is_writer' => false,
+            ],
+            'project members are writers' => [
+                'user' => UserTestBuilder::anActiveUser()->withMemberOf($project)->build(),
+                'project' => $project,
+                'is_writer' => true,
             ],
         ];
     }

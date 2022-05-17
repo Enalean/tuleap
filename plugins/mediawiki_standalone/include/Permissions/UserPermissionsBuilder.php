@@ -41,6 +41,11 @@ final class UserPermissionsBuilder
         ) {
             return UserPermissions::fullAccess();
         }
+
+        if ($user->isMember($project->getID())) {
+            return UserPermissions::writer();
+        }
+
         return UserPermissions::noAccess();
     }
 }

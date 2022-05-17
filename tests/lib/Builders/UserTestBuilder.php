@@ -41,8 +41,8 @@ class UserTestBuilder
         return (new self())
             ->withId(10001)
             ->withStatus(\PFUser::STATUS_ACTIVE)
-            ->isNotSiteAdministrator()
-            ->isMemberOfNoProjects();
+            ->withoutSiteAdministrator()
+            ->withoutMemberOfProjects();
     }
 
     public static function anAnonymousUser(): self
@@ -125,19 +125,19 @@ class UserTestBuilder
         return $this;
     }
 
-    public function isNotSiteAdministrator(): self
+    public function withoutSiteAdministrator(): self
     {
         $this->is_site_administrator = false;
         return $this;
     }
 
-    public function isSiteAdministrator(): self
+    public function withSiteAdministrator(): self
     {
         $this->is_site_administrator = true;
         return $this;
     }
 
-    public function isProjectAdministrator(\Project $project): self
+    public function withAdministratorOf(\Project $project): self
     {
         if ($this->user_group_data === null) {
             $this->user_group_data = [];
@@ -149,9 +149,21 @@ class UserTestBuilder
         return $this;
     }
 
-    public function isMemberOfNoProjects(): self
+    public function withoutMemberOfProjects(): self
     {
         $this->user_group_data = [];
+        return $this;
+    }
+
+    public function withMemberOf(\Project $project): self
+    {
+        if ($this->user_group_data === null) {
+            $this->user_group_data = [];
+        }
+        $this->user_group_data[] = [
+            'group_id' => (string) $project->getID(),
+            'admin_flags' => '',
+        ];
         return $this;
     }
 
@@ -185,7 +197,7 @@ class UserTestBuilder
 
     public static function buildSiteAdministrator(): \PFUser
     {
-        return self::aPreBuiltUser(110)->isSiteAdministrator()->build();
+        return self::aPreBuiltUser(110)->withSiteAdministrator()->build();
     }
 
     private static function aPreBuiltUser(int $id): self

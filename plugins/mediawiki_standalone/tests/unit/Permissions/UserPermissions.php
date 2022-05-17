@@ -28,7 +28,7 @@ namespace Tuleap\MediawikiStandalone\Permissions;
  */
 final class UserPermissions
 {
-    public function __construct(public bool $is_reader, public bool $is_writer, public bool $is_admin, public bool $is_bot)
+    private function __construct(public bool $is_reader, public bool $is_writer, public bool $is_admin, public bool $is_bot)
     {
     }
 
@@ -40,5 +40,10 @@ final class UserPermissions
     public static function fullAccess(): self
     {
         return new self(true, true, true, true);
+    }
+
+    public static function writer(): self
+    {
+        return new self(true, true, false, false);
     }
 }
