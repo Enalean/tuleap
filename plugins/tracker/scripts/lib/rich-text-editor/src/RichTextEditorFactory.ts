@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import french_translations from "../po/fr_FR.po";
+import fr_FR from "../po/fr_FR.po";
+import pt_BR from "../po/pt_BR.po";
 import { initGettextSync } from "@tuleap/gettext";
 import TurndownService from "turndown";
 import { parse } from "marked";
@@ -83,7 +84,7 @@ export class RichTextEditorFactory {
         doc: Document,
         locale: string
     ): RichTextEditorFactory {
-        const gettext_provider = initGettextSync("rich-text-editor", french_translations, locale);
+        const gettext_provider = initGettextSync("rich-text-editor", { fr_FR, pt_BR }, locale);
         const document_adapter = new FlamingParrotDocumentAdapter(doc);
         const builder = new FlamingParrotEditorAreaBuilder(
             document_adapter,
