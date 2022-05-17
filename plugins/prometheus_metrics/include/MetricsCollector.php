@@ -124,7 +124,7 @@ class MetricsCollector
     {
         if ($this->redis !== null) {
             $nb_events = $this->redis->lLen(Worker::EVENT_QUEUE_NAME);
-            $this->prometheus->gaugeSet('worker_events', 'Total number of worker events', $nb_events, ['queue' => Worker::EVENT_QUEUE_NAME]);
+            $this->prometheus->gaugeSet('worker_events', 'Total number of worker events', (float) $nb_events, ['queue' => Worker::EVENT_QUEUE_NAME]);
         }
     }
 
