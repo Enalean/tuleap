@@ -108,7 +108,8 @@ export function createLinkSelector(
         dropdown_content_renderer,
         keyboard_navigation_manager,
         highlighter,
-        field_focus_manager
+        field_focus_manager,
+        search_field_clearer
     );
     const dropdown_content_refresher = DropdownContentRefresher(
         items_map_manager,

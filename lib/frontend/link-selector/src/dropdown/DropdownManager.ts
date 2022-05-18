@@ -19,7 +19,13 @@
 import type { ScrollingManager } from "../events/ScrollingManager";
 import type { FieldFocusManager } from "../navigation/FieldFocusManager";
 
-export class DropdownManager {
+export interface ManageDropdown {
+    isDropdownOpen: () => boolean;
+    closeLinkSelector: () => void;
+    openLinkSelector: () => void;
+}
+
+export class DropdownManager implements ManageDropdown {
     private resize_observer: ResizeObserver;
     private is_dropdown_placed_above: boolean;
 
