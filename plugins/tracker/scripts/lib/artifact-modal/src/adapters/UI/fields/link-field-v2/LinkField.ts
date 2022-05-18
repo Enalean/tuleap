@@ -150,12 +150,24 @@ export const setCurrentLinkType = (host: LinkField, link_type: LinkType | undefi
     if (!link_type) {
         return LinkType.buildUntyped();
     }
+
+    const is_new_link_type_reverse_child = LinkType.isReverseChild(link_type);
+    const was_old_link_type_reverse_child = host.current_link_type
+        ? LinkType.isReverseChild(host.current_link_type)
+        : false;
+    if (!is_new_link_type_reverse_child && !was_old_link_type_reverse_child) {
+        host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
+        return link_type;
+    }
+
     host.link_selector.resetSelection();
+
     if (!LinkType.isReverseChild(link_type)) {
         host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
         return link_type;
     }
     host.link_selector.setPlaceholder(getParentLinkSelectorPlaceholderText());
+
     return link_type;
 };
 

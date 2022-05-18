@@ -132,24 +132,51 @@ describe("LinkField", () => {
                 link_selector = LinkSelectorStub.withResetSelectionCallCount();
             });
 
-            const setType = (link_type: LinkType | undefined): LinkType => {
+            const setType = (
+                current_link_type: LinkType | undefined,
+                new_link_type: LinkType | undefined
+            ): LinkType => {
                 const host = {
                     link_selector: link_selector as LinkSelector,
+                    current_link_type,
                 } as LinkField;
-                return setCurrentLinkType(host, link_type);
+                return setCurrentLinkType(host, new_link_type);
             };
 
             it(`defaults to Untyped link`, () => {
-                const link_type = setType(undefined);
+                const link_type = setType(undefined, undefined);
 
                 expect(link_type.shortname).toBe(UNTYPED_LINK);
             });
 
-            it(`resets link-selector selection and returns the given type`, () => {
-                const link_type = LinkTypeStub.buildReverseCustom();
-                const result = setType(link_type);
+            it(`Given that the current link type is a custom type,
+                When the type is changed to reverse _is_child (Parent),
+                Then the selection is reset`, () => {
+                const current_link_type = LinkTypeStub.buildReverseCustom();
+                const link_type = LinkTypeStub.buildParentLinkType();
+                const result = setType(current_link_type, link_type);
                 expect(result).toBe(link_type);
                 expect(link_selector.getResetCallCount()).toBe(1);
+            });
+
+            it(`Given that the current link type is reverse _is_child (Parent),
+                When the type is changed to another type,
+                Then the selection is reset`, () => {
+                const current_link_type = LinkTypeStub.buildParentLinkType();
+                const link_type = LinkTypeStub.buildReverseCustom();
+                const result = setType(current_link_type, link_type);
+                expect(result).toBe(link_type);
+                expect(link_selector.getResetCallCount()).toBe(1);
+            });
+
+            it(`Given that the current link type is NOT reverse _is_child (Parent),
+                When the new type is NOT reverse _is_child (Parent),
+                Then the selection will not be reset`, () => {
+                const current_link_type = LinkTypeStub.buildUntyped();
+                const link_type = LinkTypeStub.buildReverseCustom();
+                const result = setType(current_link_type, link_type);
+                expect(result).toBe(link_type);
+                expect(link_selector.getResetCallCount()).toBe(0);
             });
         });
 
