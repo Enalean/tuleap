@@ -18,7 +18,6 @@
  */
 
 import { adjustHeaderPositionAccordingToBanners } from "./adjust-header-position-according-to-banners";
-import { dimension } from "@shopify/jest-dom-mocks";
 
 describe("adjustHeaderPositionAccordingToBanners", () => {
     let doc: Document;
@@ -37,27 +36,25 @@ describe("adjustHeaderPositionAccordingToBanners", () => {
         platform_banner = doc.createElement("div");
         doc.body.appendChild(platform_banner);
 
-        dimension.mock({
-            offsetHeight: (element) => {
-                if (element === project_banner) {
-                    return 200;
-                }
+        Object.defineProperties(window.HTMLElement.prototype, {
+            offsetHeight: {
+                get(): number {
+                    if (this === project_banner) {
+                        return 200;
+                    }
 
-                if (element === platform_banner) {
-                    return 150;
-                }
+                    if (this === platform_banner) {
+                        return 150;
+                    }
 
-                if (element === header) {
-                    return 50;
-                }
+                    if (this === header) {
+                        return 50;
+                    }
 
-                return 0;
+                    return 0;
+                },
             },
         });
-    });
-
-    afterEach(() => {
-        dimension.restore();
     });
 
     it(`Given platform banner is not defined,
