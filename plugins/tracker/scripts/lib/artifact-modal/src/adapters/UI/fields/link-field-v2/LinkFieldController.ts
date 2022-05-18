@@ -176,7 +176,6 @@ export const LinkFieldController = (
 
         setSelectedLinkType: (link_selector, type): LinkType => {
             if (!LinkType.isReverseChild(type)) {
-                link_selector.setDropdownContent([]);
                 return type_setter.setSelectedLinkType(type);
             }
 

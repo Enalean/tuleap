@@ -351,14 +351,11 @@ describe(`LinkFieldController`, () => {
 
         it(`when the new type is NOT reverse _is_child
             it stores the new selected link type,
-            clears the dropdown content,
             and returns the new selected link type`, () => {
             const new_type = LinkTypeStub.buildReverseCustom();
             const result = setSelectedLinkType(new_type);
 
             expect(result).toBe(new_type);
-            const groups = getGroupCollection();
-            expect(groups).toHaveLength(0);
         });
 
         describe(`when the new type is reverse _is_child (Parent)`, () => {
