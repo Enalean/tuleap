@@ -22,6 +22,7 @@ import type { RenderedItem, LinkSelectorSelectionStateSingle } from "../type";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import { html, render } from "lit/html.js";
 import type { LinkSelectorSelectionCallback } from "../type";
+import type { ClearSearchField } from "../events/SearchFieldClearer";
 
 export class SelectionManager {
     private selection_state: LinkSelectorSelectionStateSingle | null;
@@ -33,7 +34,8 @@ export class SelectionManager {
         private readonly placeholder_element: Element,
         private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly callback: LinkSelectorSelectionCallback
+        private readonly callback: LinkSelectorSelectionCallback,
+        private readonly search_field_clearer: ClearSearchField
     ) {
         this.selection_state = null;
     }
@@ -109,7 +111,7 @@ export class SelectionManager {
         const selected_value = this.createCurrentSelectionElement(item);
 
         this.selection_element.appendChild(selected_value);
-        this.selection_element.appendChild(this.createRemoveCurrentSelectionButton(item));
+        this.selection_element.appendChild(this.createRemoveCurrentSelectionButton());
         this.selection_element.removeChild(placeholder);
 
         item.is_selected = true;
@@ -137,16 +139,14 @@ export class SelectionManager {
         this.callback(newly_selected_item.value);
         this.selection_element.innerHTML = "";
         this.selection_element.appendChild(new_selected_value_element);
-        this.selection_element.appendChild(
-            this.createRemoveCurrentSelectionButton(newly_selected_item)
-        );
+        this.selection_element.appendChild(this.createRemoveCurrentSelectionButton());
         this.selection_state = {
             selected_item: newly_selected_item,
             selected_value_element: new_selected_value_element,
         };
     }
 
-    private createRemoveCurrentSelectionButton(item: RenderedItem): Element {
+    private createRemoveCurrentSelectionButton(): Element {
         const remove_value_button = document.createElement("span");
         remove_value_button.classList.add("link-selector-selected-value-remove-button");
         remove_value_button.innerText = "×";
@@ -159,7 +159,8 @@ export class SelectionManager {
             event.preventDefault();
             event.cancelBubble = true;
 
-            this.replaceCurrentValueWithPlaceholder(item);
+            this.search_field_clearer.clearSearchField();
+            this.clearSelection();
             this.dropdown_manager.openLinkSelector();
         });
 
