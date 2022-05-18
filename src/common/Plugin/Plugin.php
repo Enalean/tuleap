@@ -332,7 +332,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     /**
      * Function executed after plugin installation
      */
-    public function postInstall()
+    public function postInstall(): void
     {
     }
 
