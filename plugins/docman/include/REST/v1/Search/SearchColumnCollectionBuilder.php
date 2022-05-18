@@ -41,8 +41,10 @@ final class SearchColumnCollectionBuilder
 
             if ($metadata->isSpecial()) {
                 $columns->add(SearchColumn::buildForHardcodedProperty($metadata->getLabel(), $metadata->getName()));
+            } elseif ($metadata->isMultipleValuesAllowed()) {
+                $custom_columns[] = SearchColumn::buildForMultipleValuesCustomProperty($metadata->getLabel(), $metadata->getName());
             } else {
-                $custom_columns[] = SearchColumn::buildForCustomProperty($metadata->getLabel(), $metadata->getName());
+                $custom_columns[] = SearchColumn::buildForSingleValueCustomProperty($metadata->getLabel(), $metadata->getName());
             }
         }
 

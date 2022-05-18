@@ -17,17 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Route } from "vue-router/types/router";
 import type { AdditionalFieldNumber } from "../type";
 
 const pattern = /^field_\d+$/;
 export function isAdditionalFieldNumber(key: string): key is AdditionalFieldNumber {
     return pattern.test(key);
-}
-
-export function isAdditionalPropertySeemsToBeADate(
-    route: Route,
-    key: AdditionalFieldNumber
-): boolean {
-    return typeof route.query[key + "_op"] !== "undefined";
 }

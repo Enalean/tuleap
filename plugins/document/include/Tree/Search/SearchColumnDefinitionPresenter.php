@@ -24,7 +24,7 @@ namespace Tuleap\Document\Tree\Search;
 
 final class SearchColumnDefinitionPresenter
 {
-    public function __construct(public string $name, public string $label)
+    public function __construct(public string $name, public string $label, public bool $is_multiple_value_allowed)
     {
     }
 }

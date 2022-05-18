@@ -464,6 +464,7 @@ describe("rest-querier", () => {
                         date: "2022-01-31",
                         operator: "=",
                     },
+                    sort: null,
                 },
                 170
             );

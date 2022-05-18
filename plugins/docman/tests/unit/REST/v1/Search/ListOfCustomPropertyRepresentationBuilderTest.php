@@ -68,10 +68,10 @@ final class ListOfCustomPropertyRepresentationBuilderTest extends TestCase
         $item->addMetadata($metadata_list);
 
         $columns = new SearchColumnCollection();
-        $columns->add(SearchColumn::buildForCustomProperty('field_1', 'Comments'));
-        $columns->add(SearchColumn::buildForCustomProperty('field_2', 'Comments2'));
-        $columns->add(SearchColumn::buildForCustomProperty('field_3', 'Audit date'));
-        $columns->add(SearchColumn::buildForCustomProperty('field_4', 'Choice'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_1', 'Comments'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_2', 'Comments2'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_3', 'Audit date'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_4', 'Choice'));
 
         $builder           = new ListOfCustomPropertyRepresentationBuilder();
         $custom_properties = $builder->getCustomProperties($item, $columns);
@@ -103,8 +103,8 @@ final class ListOfCustomPropertyRepresentationBuilderTest extends TestCase
         $item->addMetadata($metadata_text);
 
         $columns = new SearchColumnCollection();
-        $columns->add(SearchColumn::buildForCustomProperty('field_1', 'Comments'));
-        $columns->add(SearchColumn::buildForCustomProperty('field_2', 'Comments2'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_1', 'Comments'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_2', 'Comments2'));
 
         $builder           = new ListOfCustomPropertyRepresentationBuilder();
         $custom_properties = $builder->getCustomProperties($item, $columns);
@@ -130,7 +130,7 @@ final class ListOfCustomPropertyRepresentationBuilderTest extends TestCase
         $item->addMetadata($metadata_date);
 
         $columns = new SearchColumnCollection();
-        $columns->add(SearchColumn::buildForCustomProperty('field_3', 'Audit date'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_3', 'Audit date'));
 
         $builder           = new ListOfCustomPropertyRepresentationBuilder();
         $custom_properties = $builder->getCustomProperties($item, $columns);
@@ -150,7 +150,7 @@ final class ListOfCustomPropertyRepresentationBuilderTest extends TestCase
         $item->addMetadata($metadata_date);
 
         $columns = new SearchColumnCollection();
-        $columns->add(SearchColumn::buildForCustomProperty('field_4', 'Choice'));
+        $columns->add(SearchColumn::buildForSingleValueCustomProperty('field_4', 'Choice'));
 
         $builder           = new ListOfCustomPropertyRepresentationBuilder();
         $custom_properties = $builder->getCustomProperties($item, $columns);

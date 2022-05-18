@@ -103,6 +103,7 @@ describe("SearchCriteriaPanel", () => {
             update_date,
             obsolescence_date,
             status: "draft",
+            sort: null,
         };
         expect(wrapper.emitted()["advanced-search"]).toStrictEqual([[expected_params]]);
 

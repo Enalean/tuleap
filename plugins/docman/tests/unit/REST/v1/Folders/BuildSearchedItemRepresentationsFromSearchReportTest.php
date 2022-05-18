@@ -155,7 +155,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             );
 
         $wanted_custom_properties = new SearchColumnCollection();
-        $wanted_custom_properties->add(SearchColumn::buildForCustomProperty('field_23', 'Comments'));
+        $wanted_custom_properties->add(SearchColumn::buildForSingleValueCustomProperty('field_23', 'Comments'));
 
         $collection = $this->representation_builder->build(
             $report,

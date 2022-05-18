@@ -32,15 +32,27 @@ final class SearchColumnTest extends TestCase
 
         self::assertEquals("name", $column->getName());
         self::assertEquals("label", $column->getLabel());
+        self::assertFalse($column->isMultipleValueAllowed());
         self::assertFalse($column->isCustomProperty());
+    }
+
+    public function buildForSingleValueCustomProperty(): void
+    {
+        $column = SearchColumn::buildForSingleValueCustomProperty("name", "label");
+
+        self::assertEquals("name", $column->getName());
+        self::assertEquals("label", $column->getLabel());
+        self::assertFalse($column->isMultipleValueAllowed());
+        self::assertTrue($column->isCustomProperty());
     }
 
     public function testBuildForCustomProperty(): void
     {
-        $column = SearchColumn::buildForCustomProperty("name", "label");
+        $column = SearchColumn::buildForMultipleValuesCustomProperty("name", "label");
 
         self::assertEquals("name", $column->getName());
         self::assertEquals("label", $column->getLabel());
+        self::assertTrue($column->isMultipleValueAllowed());
         self::assertTrue($column->isCustomProperty());
     }
 }

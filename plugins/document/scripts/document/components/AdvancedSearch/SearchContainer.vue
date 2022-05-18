@@ -33,6 +33,7 @@
                 v-if="can_result_table_be_displayed"
                 v-bind:is_loading="is_loading"
                 v-bind:results="results"
+                v-bind:sort="query.sort"
             />
         </div>
     </div>

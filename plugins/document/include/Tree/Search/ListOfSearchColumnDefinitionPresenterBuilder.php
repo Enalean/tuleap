@@ -42,7 +42,8 @@ final class ListOfSearchColumnDefinitionPresenterBuilder
         return array_map(
             static fn(SearchColumn $column): SearchColumnDefinitionPresenter => new SearchColumnDefinitionPresenter(
                 $column->getName(),
-                $column->getLabel()
+                $column->getLabel(),
+                $column->isMultipleValueAllowed()
             ),
             $this->getFilteredColumns($project, $metadata_factory)
         );

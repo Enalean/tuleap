@@ -37,10 +37,10 @@ final class SearchColumnCollectionTest extends TestCase
         $collection = new SearchColumnCollection();
         $collection->add(SearchColumn::buildForHardcodedProperty("id", "Id"));
         $collection->add(SearchColumn::buildForHardcodedProperty("title", "Title"));
-        $collection->add(SearchColumn::buildForCustomProperty("field_1", "Priority"));
-        $collection->add(SearchColumn::buildForCustomProperty("field_2", "Comments"));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_1", "Priority"));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_2", "Comments"));
         $collection->add(SearchColumn::buildForHardcodedProperty("status", "Status"));
-        $collection->add(SearchColumn::buildForCustomProperty("field_3", "Audit date"));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_3", "Audit date"));
 
         self::assertEquals(
             ["id", "title", "field_1", "field_2", "status", "field_3"],
@@ -53,10 +53,10 @@ final class SearchColumnCollectionTest extends TestCase
         $collection = new SearchColumnCollection();
         $collection->add(SearchColumn::buildForHardcodedProperty("id", "Id"));
         $collection->add(SearchColumn::buildForHardcodedProperty("title", "Title"));
-        $collection->add(SearchColumn::buildForCustomProperty("field_1", "Priority"));
-        $collection->add(SearchColumn::buildForCustomProperty("field_2", "Comments"));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_1", "Priority"));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_2", "Comments"));
         $collection->add(SearchColumn::buildForHardcodedProperty("status", "Status"));
-        $collection->add(SearchColumn::buildForCustomProperty("field_3", "Audit date"));
+        $collection->add(SearchColumn::buildForSingleValueCustomProperty("field_3", "Audit date"));
 
         $only_custom_collection = $collection->extractColumnsOnCustomProperties();
         self::assertEquals(

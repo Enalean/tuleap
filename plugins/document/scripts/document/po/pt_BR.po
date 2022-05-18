@@ -108,6 +108,9 @@ msgstr ""
 msgid "Archive size warning threshold reached"
 msgstr ""
 
+msgid "Ascending sort on %{label}."
+msgstr ""
+
 msgid "Before"
 msgstr ""
 
@@ -188,6 +191,9 @@ msgstr ""
 msgid ""
 "Depending on the speed of your network, it can take some time to complete.\n"
 "                    Do you want to continue?"
+msgstr ""
+
+msgid "Descending sort on %{label}."
 msgstr ""
 
 msgid "Description"

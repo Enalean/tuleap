@@ -24,14 +24,17 @@ import type {
     SearchBodyPropertyDate,
     SearchBodyPropertySimple,
     AllowedSearchBodyPropertyName,
+    SortParams,
 } from "../type";
 import { HardcodedPropertyName } from "../type";
 import { isAdditionalFieldNumber } from "./additional-custom-properties";
 
 export function getRestBodyFromSearchParams(search: AdvancedSearchParams): SearchBodyRest {
+    const sort_params: SortParams | null = search.sort ? search.sort : null;
     return {
         ...(search.global_search && { global_search: search.global_search }),
         ...getProperties(search),
+        ...(sort_params && { sort: [sort_params] }),
     };
 }
 

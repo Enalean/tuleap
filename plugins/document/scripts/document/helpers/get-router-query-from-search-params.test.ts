@@ -41,6 +41,7 @@ describe("getRouterQueryFromSearchParams", () => {
             update_date: null,
             obsolescence_date: null,
             status: "",
+            sort: null,
         };
         expect(getRouterQueryFromSearchParams(query_params)).toStrictEqual({});
     });
