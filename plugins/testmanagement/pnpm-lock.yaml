@@ -44,7 +44,7 @@ specifiers:
   dragula: ^3.7.2
   jquery: ^3.6.0
   lodash: ^2.4.2
-  moment: ^2.29.1
+  moment: ^2.29.3
   path-browserify: ^1.0.1
   pretty-kibibytes: ^4.0.4
   socket.io-client: ^4.4.1
@@ -92,7 +92,7 @@ dependencies:
   dompurify: 2.3.6
   dragula: 3.7.3
   lodash: 2.4.2
-  moment: 2.29.1
+  moment: 2.29.3
   path-browserify: 1.0.1
   pretty-kibibytes: 4.0.4
   socket.io-client: 4.4.1
@@ -207,7 +207,7 @@ packages:
     resolution: {integrity: sha512-KG8rvO9MoaBLwtGnxTeUveSyNtrL+RNgGl1zqWN36+HDCCVGk2DGWOzqKWB6o+eTTbO3Opn4hupWKIElc8XETA==}
     engines: {node: '>=0.10.0'}
     dependencies:
-      moment: 2.29.1
+      moment: 2.29.3
     dev: false
 
   /angular-sanitize/1.8.2:
@@ -646,8 +646,8 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
-  /moment/2.29.1:
-    resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
+  /moment/2.29.3:
+    resolution: {integrity: sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==}
     dev: false
 
   /ms/2.1.2:

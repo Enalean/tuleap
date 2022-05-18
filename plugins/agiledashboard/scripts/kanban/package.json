@@ -21,7 +21,7 @@
     "angular-socket-io": "0.7.0",
     "dragular": "4.2.0",
     "lodash": "^2.4.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "ng-scrollbar": "0.0.7",
     "socket.io-client": "^4.4.1"
   },

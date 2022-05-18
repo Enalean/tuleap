@@ -38,7 +38,7 @@
     "dragula": "^3.7.2",
     "marked": "^4.0.10",
     "mermaid": "^9.0.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
