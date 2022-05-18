@@ -9,6 +9,9 @@ msgstr ""
 msgid "%(usage)s of %(quota)s"
 msgstr ""
 
+msgid "(already linked)"
+msgstr ""
+
 msgid "(auto-computed)"
 msgstr ""
 
@@ -194,6 +197,9 @@ msgstr ""
 
 msgid "There was an error in the Markdown preview:"
 msgstr "Houve um erro na pré-visualização do Markdown:"
+
+msgid "This artifact is already linked"
+msgstr ""
 
 msgid "Type..."
 msgstr "Digite..."

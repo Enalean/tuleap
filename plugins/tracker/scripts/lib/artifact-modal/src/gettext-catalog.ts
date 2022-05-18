@@ -100,3 +100,6 @@ export const getPossibleParentsEmptyState = (): string =>
     gettextCatalog.getString("No possible parent found");
 export const getPossibleParentErrorMessage = (): string =>
     gettextCatalog.getString("Error while retrieving the possible parents: %s");
+export const getAlreadyLinkedTextTooltip = (): string =>
+    gettextCatalog.getString("This artifact is already linked");
+export const getAlreadyLinkedInfo = (): string => gettextCatalog.getString("(already linked)");

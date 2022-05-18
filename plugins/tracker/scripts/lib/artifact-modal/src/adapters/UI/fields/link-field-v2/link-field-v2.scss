@@ -142,3 +142,22 @@ $link-table-cell-background: transparent;
 .link-field-artifact-title {
     vertical-align: middle;
 }
+
+.link-field-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    > .link-field-item-title {
+        flex: 1 1 auto;
+        margin: 0 var(--tlp-large-spacing) 0 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    > .link-field-disabled-item-already-linked-info {
+        flex: 0 1 auto;
+        white-space: nowrap;
+    }
+}

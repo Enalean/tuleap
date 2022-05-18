@@ -19,6 +19,9 @@ msgstr ""
 msgid "%(usage)s of %(quota)s"
 msgstr "%(usage)s sur %(quota)s"
 
+msgid "(already linked)"
+msgstr "(déjà lié)"
+
 msgid "(auto-computed)"
 msgstr "(calculé automatiquement)"
 
@@ -76,7 +79,7 @@ msgid "Empty"
 msgstr "Aucun(e)"
 
 msgid "Enter artifact ids separated by a comma"
-msgstr "Entrer des ids d'artefacts séparés par une virgule"
+msgstr "Entrer des ids d'artéfacts séparés par une virgule"
 
 msgid "Error while retrieving the artifact to link: %s"
 msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
@@ -166,7 +169,7 @@ msgid "Preview"
 msgstr "Aperçu"
 
 msgid "References list is empty."
-msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
+msgstr "Cet artéfact n'est pas référencé, et n'est pas source de références."
 
 msgid "Remove"
 msgstr "Supprimer"
@@ -179,7 +182,7 @@ msgstr "Rétablir"
 
 msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
-"Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :"
+"Restreindre l'accès à cet artéfact pour les groupes d'utilisateurs suivants :"
 
 msgid "Save changes"
 msgstr "Enregistrer les changements"
@@ -203,13 +206,16 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "The artifact will be linked to %s"
-msgstr "L'artefact sera lié à %s"
+msgstr "L'artéfact sera lié à %s"
 
 msgid "There is no link yet"
 msgstr "Il n'y a pas encore de liens"
 
 msgid "There was an error in the Markdown preview:"
 msgstr "Il y a eu une erreur dans l'aperçu Markdown :"
+
+msgid "This artifact is already linked"
+msgstr "Cet artéfact est déjà lié"
 
 msgid "Type..."
 msgstr "Ecrivez..."
