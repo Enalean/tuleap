@@ -63,9 +63,19 @@ $link-table-cell-background: transparent;
 }
 
 .link-field-table-footer-input {
+    position: relative;
     width: 100%;
 
-    > .link-selector-component-wrapper > .link-selector > .link-selector-selection {
+    > .link-field-selector-wrapper {
+        position: absolute;
+        right: 0;
+        left: $link-table-cell-padding;
+    }
+
+    > .link-field-selector-wrapper
+        > .link-selector-component-wrapper
+        > .link-selector
+        > .link-selector-selection {
         height: 32px;
     }
 }
