@@ -104,6 +104,7 @@ class RedisPersistentQueue implements PersistentQueue
             $this->redis->watch($processing_queue);
 
             $potential_events_to_requeue = $this->redis->lRange($processing_queue, 0, -1);
+            assert(is_array($potential_events_to_requeue));
             $this->redis->multi();
             foreach ($potential_events_to_requeue as $potential_event_to_requeue) {
                 $message = RedisEventMessageForPersistentQueue::fromSerializedEventMessageValue($potential_event_to_requeue);
@@ -132,7 +133,8 @@ class RedisPersistentQueue implements PersistentQueue
         $this->logger->debug('Wait for events');
         $message_counter = 0;
         while ($message_counter < self::MAX_MESSAGES) {
-            $value            = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
+            $value = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
+            assert(is_string($value));
             $message_metadata = RedisEventMessageForPersistentQueue::fromSerializedEventMessageValue($value);
             $topic            = $message_metadata->getTopic();
             $enqueue_time     = $message_metadata->getEnqueueTime();
@@ -206,7 +208,7 @@ class RedisPersistentQueue implements PersistentQueue
         }
 
         $values = $this->redis->lRange($this->event_queue_name, 0, -1);
-        if (! isset($values[0])) {
+        if (! is_array($values) || ! isset($values[0])) {
             return PersistentQueueStatistics::emptyQueue();
         }
         $event_message = RedisEventMessageForPersistentQueue::fromSerializedEventMessageValue($values[0]);
