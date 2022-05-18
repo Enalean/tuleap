@@ -91,7 +91,7 @@ class PluginsAdministrationActions extends Actions
                     $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id=' . $plugin->getId());
                 }
             } catch (Exception $exception) {
-                $GLOBALS['Response']->addFeeback(Feedback::ERROR, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin installation failed: %1s'), $exception->getMessage()));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin installation failed: %1s'), $exception->getMessage()));
             }
         }
 
