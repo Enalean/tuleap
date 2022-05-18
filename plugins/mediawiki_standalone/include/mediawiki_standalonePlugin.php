@@ -25,6 +25,7 @@ use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -32,6 +33,11 @@ use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\MediawikiStandalone\Configuration\GenerateLocalSettingsCommand;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
+use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
@@ -60,6 +66,7 @@ use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Templating\TemplateCache;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
 use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
@@ -110,6 +117,7 @@ final class mediawiki_standalonePlugin extends Plugin
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(CLICommandsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -117,6 +125,12 @@ final class mediawiki_standalonePlugin extends Plugin
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function postInstall(): void
+    {
+        parent::postInstall();
+        $this->buildLocalSettingsInstantiator()->instantiateLocalSettings();
     }
 
     public function serviceClassnames(array &$params): void
@@ -227,5 +241,26 @@ final class mediawiki_standalonePlugin extends Plugin
             OAuth2ProjectReadScope::fromItself(),
             OAuth2MediawikiStandaloneReadScope::fromItself(),
         ];
+    }
+
+    public function collectCLICommands(CLICommandsCollector $collector): void
+    {
+        $collector->addCommand(
+            GenerateLocalSettingsCommand::NAME,
+            function (): GenerateLocalSettingsCommand {
+                return new GenerateLocalSettingsCommand($this->buildLocalSettingsInstantiator());
+            }
+        );
+    }
+
+    private function buildLocalSettingsInstantiator(): LocalSettingsInstantiator
+    {
+        return new LocalSettingsInstantiator(
+            new LocalSettingsFactory(),
+            new LocalSettingsPersistToPHPFile(
+                ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName(),
+                new PHPStringMustacheRenderer(new TemplateCache(), __DIR__ . '/../templates/')
+            )
+        );
     }
 }

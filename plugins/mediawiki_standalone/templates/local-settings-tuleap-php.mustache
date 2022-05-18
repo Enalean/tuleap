@@ -1,0 +1,18 @@
+<?php
+// This file is deployed and managed by Tuleap.
+// DO NOT EDIT.
+
+// TODO: properly set instances, images and cache dir
+
+$GLOBALS['wgTuleapPreSharedKey'] = {{ pre_shared_key }};
+
+$GLOBALS['wgTuleapUrl'] = {{ https_url }};
+
+$GLOBALS['wgServer'] = $GLOBALS['wgTuleapUrl'];
+
+// TODO
+$GLOBALS['wgTuleapOAuth2Config'] = ['clientId' => 'tlp-client-id-1', 'clientSecret' => 'tlp-oauth2-...',];
+
+$GLOBALS['wgPhpCli'] = {{ php_cli_path }};
+
+// TODO: log management
