@@ -132,6 +132,9 @@ msgstr ""
 msgid "None"
 msgstr "Nenhum"
 
+msgid "Note:"
+msgstr ""
+
 msgid "Note: an artifact can only have one parent."
 msgstr ""
 
@@ -228,6 +231,9 @@ msgstr "Você pode arrastar e soltar, ou colar a imagem diretamente no editor."
 msgid ""
 "You exceeded your current file upload quota. Please remove existing "
 "temporary files or wait until they are cleaned up."
+msgstr ""
+
+msgid "can only have one parent."
 msgstr ""
 
 msgid "{{ project_label }} - open {{ tracker_label }}"

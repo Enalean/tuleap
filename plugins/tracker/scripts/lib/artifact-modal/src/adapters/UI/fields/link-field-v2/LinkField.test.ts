@@ -21,6 +21,7 @@ import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement, LinkField } from "./LinkField";
 import {
     getEmptyStateIfNeeded,
+    getLinkFieldCanOnlyHaveOneParentNote,
     getSkeletonIfNeeded,
     setAllowedTypes,
     setCurrentLinkType,
@@ -44,20 +45,7 @@ import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLi
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants/src/constants";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import type { LinkFieldControllerType } from "./LinkFieldController";
-
-function getHost(): HostElement {
-    return {
-        field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
-            {
-                field_id: 60,
-                type: "art_link",
-                label: "Links overview",
-                allowed_types: [],
-            },
-            ArtifactCrossReferenceStub.withRef("story #103")
-        ),
-    } as unknown as HostElement;
-}
+import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 
 describe("LinkField", () => {
     beforeEach(() => {
@@ -65,8 +53,24 @@ describe("LinkField", () => {
     });
 
     describe("Display", () => {
-        let target: ShadowRoot;
+        let target: ShadowRoot, artifact_cross_reference: ArtifactCrossReference | null;
+
+        function getHost(): HostElement {
+            return {
+                field_presenter: LinkFieldPresenter.fromFieldAndCrossReference(
+                    {
+                        field_id: 60,
+                        type: "art_link",
+                        label: "Links overview",
+                        allowed_types: [],
+                    },
+                    artifact_cross_reference
+                ),
+            } as unknown as HostElement;
+        }
+
         beforeEach(() => {
+            artifact_cross_reference = null;
             target = document.implementation
                 .createHTMLDocument()
                 .createElement("div") as unknown as ShadowRoot;
@@ -120,6 +124,39 @@ describe("LinkField", () => {
                 new_links = [NewLinkStub.withDefaults()];
                 renderField();
                 expect(target.querySelector("[data-test=link-table-empty-state]")).toBeNull();
+            });
+        });
+
+        describe("getLinkFieldCanOnlyHaveOneParentNote", () => {
+            it("When the modal is open in creation mode, Then it defaults to a generic note", () => {
+                const host = getHost();
+                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(host);
+
+                renderNote(host, target);
+
+                expect(target.textContent?.trim()).toBe(
+                    "Note: an artifact can only have one parent."
+                );
+            });
+
+            it("When the modal is open in edition mode, Then the note displays the artifact reference in a badge", () => {
+                artifact_cross_reference = ArtifactCrossReferenceStub.withRefAndColor(
+                    "story #123",
+                    "red-wine"
+                );
+
+                const host = getHost();
+                const renderNote = getLinkFieldCanOnlyHaveOneParentNote(host);
+
+                renderNote(host, target);
+
+                const badge = target.querySelector("[data-test=artifact-cross-ref-badge]");
+                if (!badge) {
+                    throw new Error("The note should have a cross reference badge, none found.");
+                }
+
+                expect(badge.textContent?.trim()).toBe("story #123");
+                expect(badge.classList).toContain("tlp-badge-red-wine");
             });
         });
     });

@@ -20,6 +20,8 @@
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import {
+    getLinkFieldCanHaveOnlyOneParent,
+    getLinkFieldNoteStartText,
     getLinkFieldNoteText,
     getLinkFieldTableEmptyStateText,
     getLinkSelectorPlaceholderText,
@@ -171,6 +173,26 @@ export const setCurrentLinkType = (host: LinkField, link_type: LinkType | undefi
     return link_type;
 };
 
+export const getLinkFieldCanOnlyHaveOneParentNote = (
+    host: LinkField
+): UpdateFunction<LinkField> => {
+    if (!host.field_presenter.current_artifact_reference) {
+        return html`
+            ${getLinkFieldNoteText()}
+        `;
+    }
+
+    const { ref: artifact_reference, color } = host.field_presenter.current_artifact_reference;
+    const badge_classes = [`tlp-badge-${color}`, "tlp-badge-outline", "tlp-badge-rounded"];
+    return html`
+        ${getLinkFieldNoteStartText()}
+        <span data-test="artifact-cross-ref-badge" class="${badge_classes}">
+            ${artifact_reference}
+        </span>
+        ${getLinkFieldCanHaveOnlyOneParent()}
+    `;
+};
+
 export const LinkField = define<LinkField>({
     tag: "tuleap-artifact-modal-link-field-v2",
     artifact_link_select: ({ content }) => {
@@ -225,7 +247,7 @@ export const LinkField = define<LinkField>({
         <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
             ${host.field_presenter.label}
         </label>
-        <p>${getLinkFieldNoteText()}</p>
+        <p>${getLinkFieldCanOnlyHaveOneParentNote(host)}</p>
         <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
                 ${host.linked_artifacts_presenter.linked_artifacts.map(getLinkedArtifactTemplate)}

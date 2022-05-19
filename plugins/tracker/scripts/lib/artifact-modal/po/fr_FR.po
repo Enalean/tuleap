@@ -144,6 +144,9 @@ msgstr "Aucun résultat trouvé"
 msgid "None"
 msgstr "Aucun"
 
+msgid "Note:"
+msgstr "Note :"
+
 msgid "Note: an artifact can only have one parent."
 msgstr "Note : un artéfact ne peut avoir qu'un seul parent."
 
@@ -251,6 +254,9 @@ msgstr ""
 "Vous avez dépassé votre quota actuel de téléversement de fichiers. Veuillez "
 "supprimer des fichiers temporaires existants ou attendre jusqu'à ce qu'ils "
 "soient nettoyés."
+
+msgid "can only have one parent."
+msgstr "ne peut avoir qu'un seul parent."
 
 msgid "{{ project_label }} - open {{ tracker_label }}"
 msgstr "{{ project_label }} - {{ tracker_label }} ouvert·e·s"
