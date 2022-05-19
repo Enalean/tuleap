@@ -9,7 +9,7 @@
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/vue-breadcrumb-privacy": "link:../../lib/frontend/vue-breadcrumb-privacy",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "moment-timezone": "^0.5.33",
     "node-htmldiff": "^0.9.3",
     "sprintf-js": "^1.1.2",

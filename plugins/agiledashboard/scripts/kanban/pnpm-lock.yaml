@@ -19,7 +19,7 @@ specifiers:
   dragular: 4.2.0
   jquery: ^3.6.0
   lodash: ^2.4.0
-  moment: ^2.29.1
+  moment: ^2.29.3
   ng-scrollbar: 0.0.7
   socket.io-client: ^4.4.1
 
@@ -39,7 +39,7 @@ dependencies:
   angular-socket-io: 0.7.0
   dragular: 4.2.0
   lodash: 2.4.0
-  moment: 2.29.1
+  moment: 2.29.3
   ng-scrollbar: 0.0.7
   socket.io-client: 4.4.1
 
@@ -82,7 +82,7 @@ packages:
     resolution: {integrity: sha512-KG8rvO9MoaBLwtGnxTeUveSyNtrL+RNgGl1zqWN36+HDCCVGk2DGWOzqKWB6o+eTTbO3Opn4hupWKIElc8XETA==}
     engines: {node: '>=0.10.0'}
     dependencies:
-      moment: 2.29.1
+      moment: 2.29.3
     dev: false
 
   /angular-sanitize/1.8.2:
@@ -157,8 +157,8 @@ packages:
     engines: {'0': node, '1': rhino}
     dev: false
 
-  /moment/2.29.1:
-    resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
+  /moment/2.29.3:
+    resolution: {integrity: sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==}
     dev: false
 
   /ms/2.1.2:

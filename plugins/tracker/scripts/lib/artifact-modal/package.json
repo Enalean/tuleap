@@ -29,7 +29,7 @@
     "events": "^3.3.0",
     "hybrids": "^8.0.2",
     "lodash": "2.4.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "neverthrow": "^4.2.1",
     "pretty-kibibytes": "^4.0.4",
     "process": "^0.11.10",

@@ -34,7 +34,7 @@ specifiers:
   d3-shape: ^3.0.1
   dompurify: ^2.3.6
   jquery: ^3.6.0
-  moment: ^2.29.1
+  moment: ^2.29.3
   mustache: ^4.2.0
   node-gettext: ^3.0.0
   slugify: ^1.6.1
@@ -70,7 +70,7 @@ dependencies:
   d3-selection: 3.0.0
   d3-shape: 3.0.1
   dompurify: 2.3.6
-  moment: 2.29.1
+  moment: 2.29.3
   mustache: 4.2.0
   node-gettext: 3.0.0
   slugify: 1.6.1
@@ -378,8 +378,8 @@ packages:
       brace-expansion: 1.1.11
     dev: true
 
-  /moment/2.29.1:
-    resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
+  /moment/2.29.3:
+    resolution: {integrity: sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==}
     dev: false
 
   /mustache/4.2.0:
