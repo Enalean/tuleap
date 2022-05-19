@@ -30,7 +30,9 @@ final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRe
     {
         return new LocalSettingsRepresentation(
             new ConcealedString('random_value'),
-            'https://example.com'
+            'https://example.com',
+            'tlp-client-id-test',
+            new ConcealedString('tlp-client-secret')
         );
     }
 }

@@ -23,15 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
 use Tuleap\ServerHostname;
 
 final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
 {
+    public function __construct(private MediaWikiOAuth2AppSecretGenerator $oauth2_app_generator)
+    {
+    }
+
     public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
     {
+        $oauth2_secret = $this->oauth2_app_generator->generateOAuth2AppSecret();
+
         return new LocalSettingsRepresentation(
             new ConcealedString(sodium_bin2hex(random_bytes(32))),
-            ServerHostname::HTTPSUrl()
+            ServerHostname::HTTPSUrl(),
+            ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),
+            $oauth2_secret->getSecret()
         );
     }
 }

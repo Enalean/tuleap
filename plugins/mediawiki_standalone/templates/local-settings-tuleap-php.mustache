@@ -10,8 +10,7 @@ $GLOBALS['wgTuleapUrl'] = {{ https_url }};
 
 $GLOBALS['wgServer'] = $GLOBALS['wgTuleapUrl'];
 
-// TODO
-$GLOBALS['wgTuleapOAuth2Config'] = ['clientId' => 'tlp-client-id-1', 'clientSecret' => 'tlp-oauth2-...',];
+$GLOBALS['wgTuleapOAuth2Config'] = ['clientId' =>  {{ oauth2_client_id }}, 'clientSecret' => {{ oauth2_client_secret }}];
 
 $GLOBALS['wgPhpCli'] = {{ php_cli_path }};
 

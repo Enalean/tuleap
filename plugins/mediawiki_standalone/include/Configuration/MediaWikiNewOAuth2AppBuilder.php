@@ -22,25 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
-use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
+use Tuleap\ServerHostname;
 
-final class LocalSettingsFactoryTest extends TestCase
+final class MediaWikiNewOAuth2AppBuilder
 {
-    public function testGeneratesRepresentation(): void
+    private const OAUTH2_REDIRECT_ENDPOINT = '/mediawiki/_oauth/Special:TuleapLogin/callback';
+
+    public function __construct(private SplitTokenVerificationStringHasher $hasher)
     {
-        $factory = new LocalSettingsFactory(
-            new class implements MediaWikiOAuth2AppSecretGenerator {
-                public function generateOAuth2AppSecret(): LastGeneratedClientSecret
-                {
-                    return new LastGeneratedClientSecret(789, new ConcealedString('random'));
-                }
-            }
+    }
+
+    public function buildMediawikiOAuth2App(): NewOAuth2App
+    {
+        return NewOAuth2App::fromSiteAdministrationAppData(
+            sprintf('%s MediaWiki', \ForgeConfig::get('sys_name')),
+            ServerHostname::HTTPSUrl() . self::OAUTH2_REDIRECT_ENDPOINT,
+            true,
+            $this->hasher,
+            \mediawiki_standalonePlugin::SERVICE_SHORTNAME,
         );
-
-        $representation = $factory->generateTuleapLocalSettingsRepresentation();
-
-        self::assertInstanceOf(LocalSettingsRepresentation::class, $representation);
     }
 }

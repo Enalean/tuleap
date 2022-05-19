@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class LocalSettingsInstantiatorTest extends TestCase
@@ -39,7 +40,8 @@ final class LocalSettingsInstantiatorTest extends TestCase
 
         $instantiator = new LocalSettingsInstantiator(
             new LocalSettingsRepresentationForTestBuilder(),
-            $local_settings_persistor
+            $local_settings_persistor,
+            new DBTransactionExecutorPassthrough()
         );
 
         $instantiator->instantiateLocalSettings();

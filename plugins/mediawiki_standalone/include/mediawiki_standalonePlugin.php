@@ -37,6 +37,8 @@ use Tuleap\MediawikiStandalone\Configuration\GenerateLocalSettingsCommand;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
@@ -49,6 +51,7 @@ use Tuleap\MediawikiStandalone\Service\ServiceActivationServiceDisabledCollector
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\AppMatchingClientIDFilterAppTypeRetriever;
+use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationCodeResponseFactory;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2ServerCore\AuthorizationServer\PKCE\PKCEInformationExtractor;
@@ -255,12 +258,23 @@ final class mediawiki_standalonePlugin extends Plugin
 
     private function buildLocalSettingsInstantiator(): LocalSettingsInstantiator
     {
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $hasher               = new SplitTokenVerificationStringHasher();
         return new LocalSettingsInstantiator(
-            new LocalSettingsFactory(),
+            new LocalSettingsFactory(
+                new MediaWikiOAuth2AppSecretGeneratorDBStore(
+                    $transaction_executor,
+                    new AppDao(),
+                    new MediaWikiNewOAuth2AppBuilder($hasher),
+                    $hasher,
+                    new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret())
+                )
+            ),
             new LocalSettingsPersistToPHPFile(
                 ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName(),
                 new PHPStringMustacheRenderer(new TemplateCache(), __DIR__ . '/../templates/')
-            )
+            ),
+            $transaction_executor
         );
     }
 }
