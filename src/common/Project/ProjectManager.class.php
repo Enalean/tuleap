@@ -26,6 +26,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipProjectVisibilityToggler;
@@ -36,7 +37,7 @@ use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
 use Tuleap\Webhook\Emitter;
 
-class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[ConfigKey("Is project creation allowed to regular users (1) or not (0)")]
     public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
@@ -173,6 +174,14 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         return $this->assertProjectIsValid(
             $this->getProject($group_id)
         );
+    }
+
+    /**
+     * @throws Project_NotFoundException
+     */
+    public function getValidProjectById(int $project_id): \Project
+    {
+        return $this->getValidProject($project_id);
     }
 
     /**

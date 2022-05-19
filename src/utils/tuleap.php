@@ -44,6 +44,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Plugin\PluginInstallCommand;
+use Tuleap\Queue\WorkerLogger;
 use Tuleap\User\Profile\ForceRegenerationDefaultAvatarCommand;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Password\PasswordSanityChecker;
@@ -218,7 +219,7 @@ $CLI_command_collector->addCommand(
         return new TaskWorkerProcessCommand(
             $event_manager,
             new TruncateLevelLogger(
-                BackendLogger::getDefaultLogger(basename(Tuleap\Queue\Worker::DEFAULT_LOG_FILE_PATH)),
+                BackendLogger::getDefaultLogger(basename(WorkerLogger::DEFAULT_LOG_FILE_PATH)),
                 ForgeConfig::get('sys_logger_level')
             )
         );
@@ -271,6 +272,11 @@ $CLI_command_collector->addCommand(
     static function (): PluginInstallCommand {
         return new PluginInstallCommand(PluginManager::instance());
     }
+);
+
+$CLI_command_collector->addCommand(
+    \Tuleap\Queue\WorkerEnqueueCommand::NAME,
+    static fn () => new \Tuleap\Queue\WorkerEnqueueCommand(),
 );
 
 $event_manager->dispatch($CLI_command_collector);
