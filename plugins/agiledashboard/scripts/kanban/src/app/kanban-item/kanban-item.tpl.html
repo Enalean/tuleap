@@ -37,7 +37,7 @@
         title="{{ 'Expand/collapse the card' | translate }}"
         aria-label="{{ 'Expand/collapse the card' | translate }}"
         role="button"
-        ng-click="kanban.setIsCollapsed(item, ! item.is_collapsed)"
+        ng-click="kanban.collapseOneItem(item, ! item.is_collapsed)"
          data-test="kanban-item-content-expand-collapse"
     >
         <i class="kanban-item-content-expand-collapse-icon fa" ng-class="{ 'fa-angle-down': item.is_collapsed, 'fa-angle-up': ! item.is_collapsed }" data-test="kanban-item-content-expand-collapse-icon"></i>
