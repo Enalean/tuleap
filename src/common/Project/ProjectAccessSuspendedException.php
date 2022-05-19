@@ -26,7 +26,6 @@ class ProjectAccessSuspendedException extends Project_AccessException
 {
     public function __construct()
     {
-        $message = $GLOBALS['Language']->getText('include_exit', 'project_status_H');
-        parent::__construct($message);
+        parent::__construct(_('This project is suspended'));
     }
 }

@@ -25,12 +25,16 @@ namespace Tuleap\MediawikiStandalone\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\MediawikiStandalone\Permissions\UserPermissionsBuilder;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\REST\Header;
 
 final class MediawikiStandaloneProjectResource
 {
     /**
-     * @url OPTIONS {id}/mediawiki_standalone
+     * @url OPTIONS {id}/mediawiki_standalone_permissions
+     *
+     * @oauth2-scope read:mediawiki_standalone
      *
      * @param int $id Id of the project
      */
@@ -43,19 +47,27 @@ final class MediawikiStandaloneProjectResource
      * Get Mediawiki permissions of the current user
      *
      * @url    GET {id}/mediawiki_standalone_permissions
-     *
+     * @access hybrid
      * @oauth2-scope read:mediawiki_standalone
      *
      * @param int $id Id of the project
      */
-    protected function getPermissions(int $id): GetPermissionsRepresentation
+    public function getPermissions(int $id): GetPermissionsRepresentation
     {
         $user = \UserManager::instance()->getCurrentUser();
 
         try {
             $project = \ProjectManager::instance()->getValidProject($id);
 
-            $permissions_builder = new UserPermissionsBuilder(new \User_ForgeUserGroupPermissionsManager(new \User_ForgeUserGroupPermissionsDao()));
+            $permissions_builder = new UserPermissionsBuilder(
+                new \User_ForgeUserGroupPermissionsManager(
+                    new \User_ForgeUserGroupPermissionsDao()
+                ),
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    \EventManager::instance(),
+                )
+            );
 
             return new GetPermissionsRepresentation($permissions_builder->getPermissions($user, $project));
         } catch (\Project_NotFoundException) {

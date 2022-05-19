@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    unix-name="mediawiki-standalone-test" full-name="Mediawiki Standalone" description="For test" access="public">
+    <long-description>A test project</long-description>
+    <services>
+        <service shortname="plugin_mediawiki_standalone" enabled="true" />
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_3</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>

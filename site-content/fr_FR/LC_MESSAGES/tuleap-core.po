@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid ""
 "       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-"
@@ -3884,8 +3884,14 @@ msgstr "Ce project n'utilise pas de service avec des permissions"
 msgid "This project has no CVS history."
 msgstr "Ce projet n'a pas d'historique CVS."
 
+msgid "This project is deleted"
+msgstr "Ce projet est supprimé"
+
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
+
+msgid "This project is suspended"
+msgstr "Ce projet est suspendu"
 
 msgid ""
 "This project is suspended. Only site administrators may access it.\n"

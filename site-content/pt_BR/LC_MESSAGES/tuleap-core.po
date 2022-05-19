@@ -3780,7 +3780,13 @@ msgstr ""
 msgid "This project has no CVS history."
 msgstr "Este projeto não tem histórico CVS."
 
+msgid "This project is deleted"
+msgstr ""
+
 msgid "This project is not categorized yet."
+msgstr ""
+
+msgid "This project is suspended"
 msgstr ""
 
 msgid ""
