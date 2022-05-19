@@ -22,18 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
+use Tuleap\DB\DBTransactionExecutor;
+
 final class LocalSettingsInstantiator
 {
     public function __construct(
         private LocalSettingsRepresentationBuilder $representation_builder,
         private LocalSettingsPersist $local_settings_persistor,
+        private DBTransactionExecutor $transaction_executor,
     ) {
     }
 
     public function instantiateLocalSettings(): void
     {
-        $this->local_settings_persistor->persist(
-            $this->representation_builder->generateTuleapLocalSettingsRepresentation()
+        $this->transaction_executor->execute(
+            function (): void {
+                $this->local_settings_persistor->persist(
+                    $this->representation_builder->generateTuleapLocalSettingsRepresentation()
+                );
+            }
         );
     }
 }

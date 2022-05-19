@@ -36,6 +36,8 @@ final class LocalSettingsRepresentation
     public function __construct(
         public ConcealedString $pre_shared_key,
         public string $https_url,
+        public string $oauth2_client_id,
+        public ConcealedString $oauth2_client_secret,
     ) {
     }
 }

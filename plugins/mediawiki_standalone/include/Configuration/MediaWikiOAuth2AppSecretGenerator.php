@@ -22,25 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
-use Tuleap\Test\PHPUnit\TestCase;
 
-final class LocalSettingsFactoryTest extends TestCase
+interface MediaWikiOAuth2AppSecretGenerator
 {
-    public function testGeneratesRepresentation(): void
-    {
-        $factory = new LocalSettingsFactory(
-            new class implements MediaWikiOAuth2AppSecretGenerator {
-                public function generateOAuth2AppSecret(): LastGeneratedClientSecret
-                {
-                    return new LastGeneratedClientSecret(789, new ConcealedString('random'));
-                }
-            }
-        );
-
-        $representation = $factory->generateTuleapLocalSettingsRepresentation();
-
-        self::assertInstanceOf(LocalSettingsRepresentation::class, $representation);
-    }
+    public function generateOAuth2AppSecret(): LastGeneratedClientSecret;
 }

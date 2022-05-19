@@ -22,25 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class LocalSettingsFactoryTest extends TestCase
+final class MediaWikiNewOAuth2AppBuilderTest extends TestCase
 {
-    public function testGeneratesRepresentation(): void
+    use ForgeConfigSandbox;
+
+    public function testBuildsNewMediawikiOAuth2App(): void
     {
-        $factory = new LocalSettingsFactory(
-            new class implements MediaWikiOAuth2AppSecretGenerator {
-                public function generateOAuth2AppSecret(): LastGeneratedClientSecret
-                {
-                    return new LastGeneratedClientSecret(789, new ConcealedString('random'));
-                }
-            }
-        );
+        \ForgeConfig::set('sys_default_domain', 'example.com');
+        \ForgeConfig::set('sys_name', 'MyTuleapInstance');
 
-        $representation = $factory->generateTuleapLocalSettingsRepresentation();
+        $builder = new MediaWikiNewOAuth2AppBuilder(new SplitTokenVerificationStringHasher());
 
-        self::assertInstanceOf(LocalSettingsRepresentation::class, $representation);
+        $app = $builder->buildMediawikiOAuth2App();
+
+        self::assertStringContainsString('MyTuleapInstance', $app->getName());
+        self::assertEquals('plugin_mediawiki_standalone', $app->getAppType());
+        self::assertEquals('https://example.com/mediawiki/_oauth/Special:TuleapLogin/callback', $app->getRedirectEndpoint());
     }
 }
