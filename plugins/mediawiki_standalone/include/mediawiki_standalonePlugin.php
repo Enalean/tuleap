@@ -173,7 +173,7 @@ final class mediawiki_standalonePlugin extends Plugin
     {
         $route_collector = $event->getRouteCollector();
 
-        $route_collector->addRoute(['GET', 'POST'], '/mediawiki/oauth2_authorize', $this->getRouteHandler('routeAuthorizationEndpoint'));
+        $route_collector->addRoute(['GET', 'POST'], '/mediawiki_standalone/oauth2_authorize', $this->getRouteHandler('routeAuthorizationEndpoint'));
     }
 
     public function routeAuthorizationEndpoint(): \Tuleap\Request\DispatchableWithRequest
