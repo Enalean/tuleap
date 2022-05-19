@@ -237,7 +237,9 @@ export const LinkField = define<LinkField>({
                 <tr class="link-field-table-row">
                     <td class="link-field-table-footer-type">${getTypeSelectorTemplate(host)}</td>
                     <td class="link-field-table-footer-input" colspan="2">
-                        <select data-select="artifact-link-select"></select>
+                        <div class="link-field-selector-wrapper">
+                            <select data-select="artifact-link-select"></select>
+                        </div>
                     </td>
                     <td class="link-field-table-footer-add-link">
                         ${getAddLinkButtonTemplate(host)}
