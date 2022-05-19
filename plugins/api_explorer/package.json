@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "react": "^17.0.2",
-    "swagger-ui": "^4.1.3"
+    "swagger-ui": "^4.11.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
