@@ -22,26 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\OAuth2ServerCore\App\ClientIdentifier;
-use Tuleap\ServerHostname;
+use Tuleap\Config\ConfigDao;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 
-final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
+final class MediaWikiSharedSecretGeneratorForgeConfigStore implements MediaWikiSharedSecretGenerator
 {
-    public function __construct(
-        private MediaWikiOAuth2AppSecretGenerator $oauth2_app_generator,
-        private MediaWikiSharedSecretGenerator $shared_secret_generator,
-    ) {
+    public function __construct(private ConfigDao $config_dao)
+    {
     }
 
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    public function generateSharedSecret(): ConcealedString
     {
-        $oauth2_secret = $this->oauth2_app_generator->generateOAuth2AppSecret();
+        $secret = new ConcealedString(sodium_bin2hex(random_bytes(32)));
 
-        return new LocalSettingsRepresentation(
-            $this->shared_secret_generator->generateSharedSecret(),
-            ServerHostname::HTTPSUrl(),
-            ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),
-            $oauth2_secret->getSecret()
+        $this->config_dao->save(
+            MediawikiHTTPClientFactory::SHARED_SECRET,
+            \ForgeConfig::encryptValue($secret)
         );
+
+        return $secret;
     }
 }
