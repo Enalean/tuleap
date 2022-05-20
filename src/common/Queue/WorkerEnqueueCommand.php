@@ -69,7 +69,28 @@ final class WorkerEnqueueCommand extends Command
 
         $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
-        (new EnqueueTask($logger))->enqueue(new GenericQueueTask($topic, $payload, 'Enqueue from CLI'));
+        $task = new class ($topic, $payload) implements QueueTask {
+            public function __construct(private string $topic, private array $payload)
+            {
+            }
+
+            public function getTopic(): string
+            {
+                return $this->topic;
+            }
+
+            public function getPayload(): array
+            {
+                return $this->payload;
+            }
+
+            public function getPreEnqueueMessage(): string
+            {
+                return 'Enqueue from CLI';
+            }
+        };
+
+        (new EnqueueTask($logger))->enqueue($task);
 
         return self::SUCCESS;
     }
