@@ -127,6 +127,10 @@
     margin: 0 0 0 var(--tlp-small-spacing);
 }
 
+.link-selector-group-icon {
+    margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+}
+
 .link-selector-empty-dropdown-state {
     padding: var(--tlp-form-element-padding-horizontal);
     color: var(--tlp-dimmed-color);

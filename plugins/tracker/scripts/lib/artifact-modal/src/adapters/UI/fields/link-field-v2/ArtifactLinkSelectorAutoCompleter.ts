@@ -21,6 +21,7 @@ import type {
     GroupOfItems,
     LinkSelector,
     LinkSelectorSearchFieldCallback,
+    GroupCollection,
 } from "@tuleap/link-selector";
 import type { Fault } from "@tuleap/fault";
 import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
@@ -38,6 +39,7 @@ import type { RetrievePossibleParents } from "../../../../domain/fields/link-fie
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { LinkableArtifactFilter } from "../../../../domain/fields/link-field-v2/LinkableArtifactFilter";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 
 export type ArtifactLinkSelectorAutoCompleterType = {
     autoComplete: LinkSelectorSearchFieldCallback;
@@ -57,6 +59,8 @@ export const ArtifactLinkSelectorAutoCompleter = (
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier
 ): ArtifactLinkSelectorAutoCompleterType => {
+    let loaded_possible_parents_cache: GroupCollection = [PossibleParentsGroup.buildLoadingState()];
+
     const isParentSelected = (): boolean => {
         const selected_type = type_retriever.getSelectedLinkType();
         return LinkType.isReverseChild(selected_type);
@@ -73,18 +77,35 @@ export const ArtifactLinkSelectorAutoCompleter = (
             }
         );
 
-    const getPossibleParentsGroup = (query: string): Promise<GroupOfItems> => {
+    const getPossibleParentsGroup = (query: string): Promise<GroupCollection> => {
         const filter = LinkableArtifactFilter(query);
         return parents_retriever
             .getPossibleParents(current_tracker_identifier)
             .map((artifacts) => artifacts.filter(filter.matchesQuery))
             .match(
-                (artifacts) => PossibleParentsGroup.fromPossibleParents(link_verifier, artifacts),
+                (artifacts) =>
+                    LinkFieldPossibleParentsGroupsByProjectBuilder.buildGroupsSortedByProject(
+                        link_verifier,
+                        artifacts
+                    ),
                 (fault) => {
                     fault_notifier.onFault(fault);
-                    return PossibleParentsGroup.buildEmpty();
+                    return [PossibleParentsGroup.buildEmpty()];
                 }
             );
+    };
+
+    const getFilteredPossibleParentsGroups = async (query: string): Promise<GroupCollection> => {
+        const matching_parents = await getPossibleParentsGroup(query);
+        if (matching_parents.length === 0) {
+            const empty_possible_parents_group = [PossibleParentsGroup.buildEmpty()];
+            loaded_possible_parents_cache = empty_possible_parents_group;
+            return empty_possible_parents_group;
+        }
+
+        loaded_possible_parents_cache = matching_parents;
+
+        return matching_parents;
     };
 
     return {
@@ -100,21 +121,21 @@ export const ArtifactLinkSelectorAutoCompleter = (
                 link_selector.setDropdownContent([]);
                 return;
             }
-            const loading_groups = [];
+            let loading_groups = [];
             if (linkable_number) {
                 loading_groups.push(MatchingArtifactsGroup.buildLoadingState());
             }
-            if (is_parent_selected) {
-                loading_groups.push(PossibleParentsGroup.buildLoadingState());
+            if (is_parent_selected && loaded_possible_parents_cache !== null) {
+                loading_groups = loading_groups.concat(loaded_possible_parents_cache);
             }
             link_selector.setDropdownContent(loading_groups);
 
-            const groups = [];
+            let groups = [];
             if (linkable_number) {
                 groups.push(await getMatchingArtifactsGroup(linkable_number));
             }
             if (is_parent_selected) {
-                groups.push(await getPossibleParentsGroup(query));
+                groups = groups.concat(await getFilteredPossibleParentsGroups(query));
             }
             link_selector.setDropdownContent(groups);
         },

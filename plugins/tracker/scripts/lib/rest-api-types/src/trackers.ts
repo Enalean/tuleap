@@ -103,6 +103,12 @@ export interface MinimalTrackerResponse {
     readonly label: string;
 }
 
+export interface TrackerProjectRepresentation {
+    readonly id: number;
+    readonly label: string;
+    readonly icon: string;
+}
+
 export interface TrackerResponseWithColor extends MinimalTrackerResponse {
     readonly color_name: TrackerColorName;
 }

@@ -29,7 +29,7 @@ describe(`PossibleParentsGroup`, () => {
         });
     });
 
-    it(`builds from an array of Linkable Artifacts`, () => {
+    it(`builds from an array of Linkable Artifacts a group labelled after the name of the project they come from`, () => {
         const first_artifact = LinkableArtifactStub.withDefaults({ id: 994 });
         const second_artifact = LinkableArtifactStub.withDefaults({ id: 788 });
         const group = PossibleParentsGroup.fromPossibleParents(
@@ -37,6 +37,8 @@ describe(`PossibleParentsGroup`, () => {
             [first_artifact, second_artifact]
         );
 
+        expect(group.label).toBe("Guinea Pig");
+        expect(group.icon).toBe("🐹");
         expect(group.is_loading).toBe(false);
         expect(group.items).toHaveLength(2);
         const values = group.items.map((item) => item.value);
@@ -46,12 +48,16 @@ describe(`PossibleParentsGroup`, () => {
 
     it(`builds an empty group so that Link-selector will show an empty state message`, () => {
         const group = PossibleParentsGroup.buildEmpty();
+        expect(group.label).toBe("Possible parents");
+        expect(group.icon).toBe("");
         expect(group.items).toHaveLength(0);
         expect(group.is_loading).toBe(false);
     });
 
     it(`builds an empty loading group so that Link-selector will show a spinner`, () => {
         const group = PossibleParentsGroup.buildLoadingState();
+        expect(group.label).toBe("Possible parents");
+        expect(group.icon).toBe("");
         expect(group.items).toHaveLength(0);
         expect(group.is_loading).toBe(true);
         expect(group.empty_message).toBe("");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type LinkSelectorItem = {
-    readonly is_disabled: boolean;
-    readonly value: unknown;
-};
-
-export type GroupOfItems = {
+export type ArtifactProject = {
+    readonly id: number;
     readonly label: string;
     readonly icon: string;
-    readonly empty_message: string;
-    readonly items: ReadonlyArray<LinkSelectorItem>;
-    readonly is_loading: boolean;
 };
-
-export type GroupCollection = ReadonlyArray<GroupOfItems>;

@@ -62,6 +62,7 @@ describe("DropDownContentRenderer", () => {
             const groups: GroupCollection = [
                 {
                     label: "Group 1",
+                    icon: "",
                     empty_message: empty_state_text,
                     items: [],
                     is_loading: false,
@@ -84,6 +85,7 @@ describe("DropDownContentRenderer", () => {
             const groups: GroupCollection = [
                 {
                     label: "A group still loading",
+                    icon: "",
                     empty_message: empty_state_text,
                     items: [],
                     is_loading: true,
@@ -96,6 +98,25 @@ describe("DropDownContentRenderer", () => {
                 "[data-test=link-selector-loading-group-spinner]"
             );
             expect(spinner).toBeDefined();
+        });
+
+        it("renders the group icon next to the group title when one is defined", () => {
+            const empty_state_text = "I am loading, wait a second!";
+            const groups: GroupCollection = [
+                {
+                    label: "Guinea pig",
+                    icon: "🐹",
+                    empty_message: empty_state_text,
+                    items: [],
+                    is_loading: true,
+                },
+            ];
+
+            render(groups);
+
+            const icon = dropdown_list.querySelector("[data-test=link-selector-group-icon]");
+            expect(icon).toBeDefined();
+            expect(icon?.textContent?.trim()).toBe("🐹");
         });
     });
 

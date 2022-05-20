@@ -52,6 +52,7 @@ import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTracker
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
@@ -183,9 +184,12 @@ export const LinkFieldController = (
             link_selector.setDropdownContent([PossibleParentsGroup.buildLoadingState()]);
             parents_retriever.getPossibleParents(current_tracker_identifier).match(
                 (possible_parents) => {
-                    link_selector.setDropdownContent([
-                        PossibleParentsGroup.fromPossibleParents(link_verifier, possible_parents),
-                    ]);
+                    link_selector.setDropdownContent(
+                        LinkFieldPossibleParentsGroupsByProjectBuilder.buildGroupsSortedByProject(
+                            link_verifier,
+                            possible_parents
+                        )
+                    );
                 },
                 (fault) => {
                     fault_notifier.onFault(fault);

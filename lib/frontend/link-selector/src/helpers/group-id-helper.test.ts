@@ -24,6 +24,7 @@ describe(`group-id-helper`, () => {
     it(`builds a group ID from a group label`, () => {
         const group: GroupOfItems = {
             label: "Matching Items",
+            icon: "",
             empty_message: "irrelevant",
             items: [],
             is_loading: false,

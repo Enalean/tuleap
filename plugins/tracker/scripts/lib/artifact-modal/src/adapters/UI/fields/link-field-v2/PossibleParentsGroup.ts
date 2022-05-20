@@ -26,6 +26,7 @@ import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 export const PossibleParentsGroup = {
     buildLoadingState: (): GroupOfItems => ({
         label: getPossibleParentsLabel(),
+        icon: "",
         empty_message: "",
         items: [],
         is_loading: true,
@@ -35,7 +36,8 @@ export const PossibleParentsGroup = {
         link_verifier: VerifyIsAlreadyLinked,
         possible_parents: readonly LinkableArtifact[]
     ): GroupOfItems => ({
-        label: getPossibleParentsLabel(),
+        label: getPossibleParentProjectLabel(possible_parents),
+        icon: getPossibleParentsIcon(possible_parents),
         empty_message: getPossibleParentsEmptyState(),
         items: possible_parents.map((artifact) =>
             LinkSelectorItemProxy.fromLinkableArtifact(link_verifier, artifact)
@@ -45,8 +47,25 @@ export const PossibleParentsGroup = {
 
     buildEmpty: (): GroupOfItems => ({
         label: getPossibleParentsLabel(),
+        icon: "",
         empty_message: getPossibleParentsEmptyState(),
         items: [],
         is_loading: false,
     }),
 };
+
+function getPossibleParentProjectLabel(possible_parents: readonly LinkableArtifact[]): string {
+    if (possible_parents.length === 0) {
+        return getPossibleParentsLabel();
+    }
+
+    return possible_parents[0].project.label;
+}
+
+function getPossibleParentsIcon(possible_parents: readonly LinkableArtifact[]): string {
+    if (possible_parents.length === 0) {
+        return "";
+    }
+
+    return possible_parents[0].project.icon;
+}

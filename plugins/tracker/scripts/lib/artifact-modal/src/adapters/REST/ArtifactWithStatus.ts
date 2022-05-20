@@ -20,9 +20,14 @@
 import type {
     ArtifactResponseNoInstance,
     TrackerResponseWithColor,
+    TrackerProjectRepresentation,
 } from "@tuleap/plugin-tracker-rest-api-types";
 
 export type ArtifactWithStatus = Pick<
     ArtifactResponseNoInstance,
     "id" | "xref" | "title" | "html_url" | "status" | "is_open"
-> & { readonly tracker: Pick<TrackerResponseWithColor, "color_name"> };
+> & {
+    readonly tracker: Pick<TrackerResponseWithColor, "color_name"> & {
+        readonly project: Pick<TrackerProjectRepresentation, "id" | "label" | "icon">;
+    };
+};
