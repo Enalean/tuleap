@@ -42,12 +42,16 @@ final class InstanceManagement
                 $this->logger->info(sprintf("Processing %s: ", $worker_event->getEventName()));
                 $this->sendRequest($suspension_event);
             }
+            if (($resume = ResumeInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
+                $this->logger->info(sprintf("Processing %s: ", $worker_event->getEventName()));
+                $this->sendRequest($resume);
+            }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
     }
 
-    private function sendRequest(InstanceSuspensionWorkerEvent $event): void
+    private function sendRequest(InstanceOperation $event): void
     {
         try {
             $request = $event->getRequest($this->http_factory);

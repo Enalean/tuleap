@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\MediawikiStandalone\Instance;
 
 use Psr\Http\Message\RequestFactoryInterface;
@@ -30,12 +29,10 @@ use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 
-/**
- * @psalm-immutable
- */
-final class InstanceSuspensionWorkerEvent implements InstanceOperation
+final class ResumeInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-suspension';
+    public const TOPIC = 'tuleap.mediawiki-standalone.instance-resume';
+
 
     private function __construct(private \Project $project)
     {
@@ -59,7 +56,7 @@ final class InstanceSuspensionWorkerEvent implements InstanceOperation
     {
         return $request_factory->createRequest(
             'POST',
-            ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/suspend/' . urlencode($this->project->getUnixNameLowerCase())
+            ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/resume/' . urlencode($this->project->getUnixNameLowerCase())
         );
     }
 }
