@@ -38,7 +38,7 @@ final class InstanceManagement
     public function process(WorkerEvent $worker_event): void
     {
         try {
-            if (($suspension_event = InstanceSuspensionWorkerEvent::fromEvent($worker_event, $this->project_factory)) !== null) {
+            if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->logger->info(sprintf("Processing %s: ", $worker_event->getEventName()));
                 $this->sendRequest($suspension_event);
             }

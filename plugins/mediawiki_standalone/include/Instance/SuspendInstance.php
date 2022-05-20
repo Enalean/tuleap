@@ -33,7 +33,7 @@ use Tuleap\ServerHostname;
 /**
  * @psalm-immutable
  */
-final class InstanceSuspensionWorkerEvent implements InstanceOperation
+final class SuspendInstance implements InstanceOperation
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-suspension';
 
