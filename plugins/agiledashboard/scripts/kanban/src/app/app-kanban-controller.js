@@ -109,7 +109,7 @@ function KanbanCtrl(
         toggleBacklog,
         expandArchive,
         toggleArchive,
-        setIsCollapsed,
+        collapseOneItem,
         filterCards,
         showEditModal,
         moveItemAtTheEndWithoutItemUpdate,
@@ -196,6 +196,11 @@ function KanbanCtrl(
 
     function setIsCollapsed(item, is_collapsed) {
         item.is_collapsed = is_collapsed;
+    }
+
+    function collapseOneItem(item, is_collapsed) {
+        setIsCollapsed(item, is_collapsed);
+        self.reflowKustomScrollBars();
     }
 
     function filterCards() {
