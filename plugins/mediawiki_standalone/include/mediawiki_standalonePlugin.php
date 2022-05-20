@@ -43,6 +43,8 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDB
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\Instance\InstanceCreationWorkerEvent;
 use Tuleap\MediawikiStandalone\Instance\InstanceCreationWorkerTask;
+use Tuleap\MediawikiStandalone\Instance\InstanceSuspensionWorkerEvent;
+use Tuleap\MediawikiStandalone\Instance\InstanceSuspensionWorkerTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
@@ -179,6 +181,15 @@ final class mediawiki_standalonePlugin extends Plugin
                 HTTPFactoryBuilder::requestFactory(),
                 ProjectManager::instance(),
             ))->process($creation_event);
+        }
+
+        if (($suspension_event = InstanceSuspensionWorkerEvent::fromEvent($event)) !== null) {
+            (new InstanceSuspensionWorkerTask(
+                $this->getBackendLogger(),
+                new MediawikiHTTPClientFactory(),
+                HTTPFactoryBuilder::requestFactory(),
+                ProjectManager::instance(),
+            ))->process($suspension_event);
         }
     }
 
