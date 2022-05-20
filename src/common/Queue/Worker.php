@@ -22,7 +22,6 @@
 namespace Tuleap\Queue;
 
 use Psr\Log\LoggerInterface;
-use BackendLogger;
 use TruncateLevelLogger;
 use BrokerLogger;
 use Log_ConsoleLogger;
@@ -37,8 +36,6 @@ class Worker
     public const EVENT_QUEUE_NAME = 'app_user_events';
 
     public const DEFAULT_PID_FILE_PATH = '/var/run/tuleap/worker.pid';
-
-    public const DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
 
     private $id = 0;
     private $pid_file;
@@ -117,14 +114,14 @@ class Worker
                 new BrokerLogger(
                     [
                         new Log_ConsoleLogger(),
-                        BackendLogger::getDefaultLogger(basename(self::DEFAULT_LOG_FILE_PATH)),
+                        WorkerLogger::get(),
                     ]
                 )
             );
         } else {
             $this->setLogger(
                 new TruncateLevelLogger(
-                    BackendLogger::getDefaultLogger(basename(self::DEFAULT_LOG_FILE_PATH)),
+                    WorkerLogger::get(),
                     ForgeConfig::get('sys_logger_level')
                 )
             );

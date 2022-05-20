@@ -26,6 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -40,6 +41,9 @@ use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
+use Tuleap\MediawikiStandalone\Instance\InstanceCreationWorkerEvent;
+use Tuleap\MediawikiStandalone\Instance\InstanceCreationWorkerTask;
+use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
@@ -68,6 +72,7 @@ use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
@@ -80,7 +85,8 @@ require_once __DIR__ . '/../../mediawiki/vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class mediawiki_standalonePlugin extends Plugin
 {
-    public const SERVICE_SHORTNAME = 'plugin_mediawiki_standalone';
+    public const SERVICE_SHORTNAME   = 'plugin_mediawiki_standalone';
+    private const SERVICE_URL_PREFIX = '/mediawiki/';
 
     public function __construct(?int $id)
     {
@@ -115,12 +121,16 @@ final class mediawiki_standalonePlugin extends Plugin
     {
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::SERVICE_IS_USED);
+
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CLICommandsCollector::NAME);
+        $this->addHook(WorkerEvent::NAME);
+        $this->addHook(GetConfigKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -141,11 +151,40 @@ final class mediawiki_standalonePlugin extends Plugin
         $params['classnames'][$this->getServiceShortname()] = MediawikiStandaloneService::class;
     }
 
+    /**
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        if ($params['shortname'] === self::SERVICE_SHORTNAME && $params['is_used']) {
+            /*(new EnqueueTask())->enqueue(
+                new InstanceCreationWorkerEvent((int) $params['group_id'])
+            );*/
+        }
+    }
+
     public function serviceUrlCollector(ServiceUrlCollector $collector): void
     {
         if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl('/to_be_defined');
+            $collector->setUrl(self::SERVICE_URL_PREFIX . $collector->getProject()->getUnixNameLowerCase());
         }
+    }
+
+    public function workerEvent(WorkerEvent $event): void
+    {
+        if (($creation_event = InstanceCreationWorkerEvent::fromEvent($event)) !== null) {
+            (new InstanceCreationWorkerTask(
+                $this->getBackendLogger(),
+                new MediawikiHTTPClientFactory(),
+                HTTPFactoryBuilder::requestFactory(),
+                ProjectManager::instance(),
+            ))->process($creation_event);
+        }
+    }
+
+    public function getConfigKeys(GetConfigKeys $event): void
+    {
+        $event->addConfigClass(MediawikiHTTPClientFactory::class);
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
