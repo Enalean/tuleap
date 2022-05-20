@@ -312,7 +312,7 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG(): void
     {
         $xml_validator = \Mockery::spy(\XML_RNGValidator::class);
-        $xml_validator->shouldReceive('validate')->andThrows(new XML_ParseException('', [], []));
+        $xml_validator->shouldReceive('validate')->andThrows(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
 
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
