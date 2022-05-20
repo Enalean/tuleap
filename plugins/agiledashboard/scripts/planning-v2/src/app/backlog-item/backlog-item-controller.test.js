@@ -48,14 +48,17 @@ describe("BacklogItemController -", function () {
             $q = _$q_;
             $rootScope = _$rootScope_;
             $scope = $rootScope.$new();
-            $scope.backlog_item = {
-                id: 49348548,
+
+            const backlog_item = {
+                id: 352,
                 children: {
                     data: [],
                     loaded: false,
                     collapsed: false,
                 },
             };
+
+            $scope.backlog_item = backlog_item;
             $compile = _$compile_;
             $document = _$document_;
 
@@ -78,6 +81,8 @@ describe("BacklogItemController -", function () {
             CardFieldsService = _CardFieldsService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
+            BacklogItemCollectionService.items[backlog_item.id] = backlog_item;
+
             jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
                 () => {}
             );

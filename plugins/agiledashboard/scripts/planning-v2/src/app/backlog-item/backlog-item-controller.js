@@ -31,7 +31,10 @@ function BacklogItemController(
     var self = this;
     _.extend(self, {
         BACKLOG_ITEM_CHILDREN_PAGINATION: { limit: 50, offset: 0 },
-        backlog_item: $scope.backlog_item, // inherited from parent scope
+        backlog_item:
+            BacklogItemCollectionService.items[
+                $scope.backlog_item.id // inherited from parent scope
+            ],
         escaping: false,
         dragular_instance_for_backlog_item_children: undefined,
         children_promise: $q.when(),
