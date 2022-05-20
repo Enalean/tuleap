@@ -88,6 +88,7 @@
                 whitelist_tags_elements = retrieveElementsMatchingTags(whitelist_tags);
 
             resetTreeState(immutable_tags_elements, whitelist_tags_elements);
+            setUpMaxLengthWarnings();
             immutable_tags_elements.forEach(function (immutable_tag_element) {
                 immutable_tag_element.children("span").addClass("label label-important");
                 immutable_tag_element.addClass("immutable");
@@ -101,6 +102,24 @@
                 whitelist_tag_element.addClass("whitelist");
                 whitelist_tag_element.parents(".tag").addClass("parent-of-whitelist");
             });
+        }
+
+        function setUpMaxLengthWarnings() {
+            const immutable_tags = document.getElementById("immutable-tags-path");
+            const immutable_tag_warning = document.getElementById("immutable-tag-to-big-warning");
+            toggleMaxLengthWarning(immutable_tag_warning, immutable_tags);
+
+            const whitelist_tags = document.getElementById("immutable-tags-whitelist");
+            const whitelist_warning = document.getElementById("whitelist-tag-to-big-warning");
+            toggleMaxLengthWarning(whitelist_warning, whitelist_tags);
+        }
+
+        function toggleMaxLengthWarning(warning, element) {
+            if (warning && element && element.value.length >= element.getAttribute("maxlength")) {
+                warning.removeAttribute("hidden");
+            } else {
+                warning.setAttribute("hidden", "");
+            }
         }
 
         function retrieveElementsMatchingTags(tags) {

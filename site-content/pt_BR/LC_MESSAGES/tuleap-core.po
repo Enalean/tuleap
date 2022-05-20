@@ -3498,6 +3498,12 @@ msgstr ""
 "O modelo padrão legado. Não estará mais disponível em breve. Será recriado "
 "como um \"template personalizado\"."
 
+msgid "The list of global whitelist is too big."
+msgstr ""
+
+msgid "The list of immutable tags paths is too big."
+msgstr ""
+
 msgid ""
 "The list of projects that were previously whitelisted will be permanently "
 "lost."

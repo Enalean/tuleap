@@ -365,6 +365,12 @@ msgstr ""
 msgid "The given path is not valid"
 msgstr ""
 
+msgid "The list of global whitelist is too big."
+msgstr ""
+
+msgid "The list of immutable tags paths is too big."
+msgstr ""
+
 #, php-format
 msgid "The path '%s' already exists."
 msgstr ""
