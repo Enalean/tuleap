@@ -57,6 +57,14 @@ class HTTPRequestBuilder
         return $this;
     }
 
+    public function withParams(array $params): self
+    {
+        foreach ($params as $key => $value) {
+            $this->request->set($key, $value);
+        }
+        return $this;
+    }
+
     public function build(): \HTTPRequest
     {
         return $this->request;

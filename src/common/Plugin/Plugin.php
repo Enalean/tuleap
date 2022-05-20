@@ -112,13 +112,23 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addServiceForProject($params['project'], $params['services']);
     }
 
-    protected function addServiceForProject(Project $project, array &$services)
+    protected function addServiceForProject(Project $project, array &$services): void
+    {
+        if (! $this->isServiceAllowedForProject($project)) {
+            return;
+        }
+        $services[] = $this->getServiceShortname();
+    }
+
+    protected function isServiceAllowedForProject(\Project $project): bool
     {
         if ($this->is_resricted !== null && $this->is_resricted === false) {
-            $services[] = $this->getServiceShortname();
-        } elseif ($this->isAllowed($project->getID())) {
-            $services[] = $this->getServiceShortname();
+            return true;
         }
+        if ($this->isAllowed($project->getID())) {
+            return true;
+        }
+        return false;
     }
 
     public function setIsRestricted($is_restricted)

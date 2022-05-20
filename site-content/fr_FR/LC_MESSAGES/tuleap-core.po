@@ -3227,6 +3227,9 @@ msgstr "Le service n'existe pas dans la base de données"
 msgid "Service permissions"
 msgstr "Permissions des services"
 
+msgid "Service updated successfully"
+msgstr "Service mis à jour avec succès"
+
 msgid "Services"
 msgstr "Services"
 

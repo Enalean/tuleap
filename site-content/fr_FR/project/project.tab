@@ -338,7 +338,6 @@ project_admin_servicebar	cant_create_s	Impossible de créer le service
 project_admin_servicebar	s_create_success	Service créé avec succès
 project_admin_servicebar	s_add_success	Service ajouté avec succès à $1 projet(s)
 project_admin_servicebar	s_id_missed	L'ID du service est manquant
-project_admin_servicebar	s_update_success	Service mis à jour avec succès
 project_admin_servicebar	edit_s_bar	Modifier la barre de service
 project_admin_servicebar	edit_system_s	Modifier les services systèmes
 project_admin_servicebar	edit_s_for	Modifier les services du projet <B>$1</B>

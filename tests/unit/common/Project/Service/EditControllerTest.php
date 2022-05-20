@@ -22,66 +22,149 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Service;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    /** @var EditController */
-    private $controller;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever */
-    private $project_retriever;
-    /** @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker */
-    private $admininistrator_checker;
-    /** @var M\LegacyMockInterface|M\MockInterface|ServicePOSTDataBuilder */
-    private $data_builder;
+    /**
+     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|ServicePOSTDataBuilder
+     */
+    private mixed $data_builder;
+    /**
+     * @var \CSRFSynchronizerToken|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private mixed $csrf_token;
 
     protected function setUp(): void
     {
-        $this->project_retriever       = M::mock(ProjectRetriever::class);
-        $this->admininistrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->data_builder            = M::mock(ServicePOSTDataBuilder::class);
-        $csrf_token                    = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller              = new AddController(
-            $this->project_retriever,
-            $this->admininistrator_checker,
-            M::mock(ServiceCreator::class),
-            $this->data_builder,
-            $csrf_token
-        );
+        $this->data_builder = $this->createMock(ServicePOSTDataBuilder::class);
+        $this->csrf_token   = $this->createMock(\CSRFSynchronizerToken::class);
+        $this->csrf_token->method('check');
+    }
 
-        $csrf_token->shouldReceive('check');
+    public function testItRedirectsWhenProjectIsNotFound(): void
+    {
+        $project = ProjectTestBuilder::aProject()->withId(120)->build();
+
+        $current_user = UserTestBuilder::anActiveUser()->withId(101)->withAdministratorOf($project)->build();
+        $request      = HTTPRequestBuilder::get()->withUser($current_user)->build();
+
+        $inspector = new LayoutInspector();
+        $response  = LayoutBuilder::buildWithInspector($inspector);
+
+        $this->expectException(NotFoundException::class);
+
+        $controller = new EditController(
+            ProjectByIDFactoryStub::buildWith($project),
+            new ProjectAdministratorChecker(),
+            $this->createMock(ServiceUpdator::class),
+            $this->data_builder,
+            $this->createMock(\ServiceManager::class),
+            $this->csrf_token,
+            new \EventManager(),
+        );
+        $controller->process($request, $response, ['id' => '102']);
     }
 
     public function testItRedirectsWhenServiceDataIsInvalid(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->andReturn('102')
-            ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->with('102')
-            ->once()
-            ->andReturn($project);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $request      = M::mock(\HTTPRequest::class);
-        $current_user = M::mock(\PFUser::class);
-        $request->shouldReceive('getCurrentUser')->andReturn($current_user);
-        $this->admininistrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->once()
-            ->with($current_user, $project);
-        $response = M::mock(BaseLayout::class);
-        $this->data_builder->shouldReceive('buildFromRequest')
-            ->once()
+        $current_user = UserTestBuilder::anActiveUser()->withId(101)->withAdministratorOf($project)->build();
+        $request      = HTTPRequestBuilder::get()->withUser($current_user)->build();
+
+        $inspector = new LayoutInspector();
+        $response  = LayoutBuilder::buildWithInspector($inspector);
+        $this->data_builder->method('buildFromRequest')
             ->with($request, $project, $response)
-            ->andThrow(new InvalidServicePOSTDataException());
+            ->willThrowException(new InvalidServicePOSTDataException());
 
-        $response->shouldReceive('addFeedback')->once();
-        $response->shouldReceive('redirect')->once();
-        $this->controller->process($request, $response, ['id' => '102']);
+        $controller = new EditController(
+            ProjectByIDFactoryStub::buildWith($project),
+            new ProjectAdministratorChecker(),
+            $this->createMock(ServiceUpdator::class),
+            $this->data_builder,
+            $this->createMock(\ServiceManager::class),
+            $this->csrf_token,
+            new \EventManager(),
+        );
+        $controller->process($request, $response, ['id' => '102']);
+
+        self::assertEquals('error', $inspector->getFeedback()[0]['level']);
+        self::assertNotNull($inspector->getRedirectUrl());
+    }
+
+    public function testItCreatesANewSystemService(): void
+    {
+        $project = $this->createMock(\Project::class);
+        $project->method('getID')->willReturn('120');
+        $project->method('getMinimalRank')->willReturn(1);
+        $current_user    = UserTestBuilder::anActiveUser()->withId(101)->withAdministratorOf($project)->build();
+        $request_builder = HTTPRequestBuilder::get()->withUser($current_user);
+
+        $inspector = new LayoutInspector();
+        $response  = LayoutBuilder::buildWithInspector($inspector);
+
+        $service_manager = $this->createMock(\ServiceManager::class);
+        $service_manager->method('getListOfAllowedServicesForProject')->willReturn([]);
+
+        $service_to_activate = new \Service(
+            $project,
+            [
+                'short_name' => 'plugin_stuff',
+            ]
+        );
+
+        $event_manager = new \EventManager();
+        $event_manager->addClosureOnEvent(ServiceUrlCollector::NAME, fn (ServiceUrlCollector $event) => $event->setUrl('/path/to'));
+        $event_manager->addClosureOnEvent(AddMissingService::NAME, fn (AddMissingService $event) => $event->addService($service_to_activate));
+
+        $service_updator = $this->createMock(ServiceUpdator::class);
+        $service_updator->expects($this->once())->method('addSystemService')->with($project, $service_to_activate, $current_user);
+
+        $controller = new EditController(
+            ProjectByIDFactoryStub::buildWith($project),
+            new ProjectAdministratorChecker(),
+            $service_updator,
+            new ServicePOSTDataBuilder(
+                $event_manager,
+                $service_manager,
+                new ServiceLinkDataBuilder(),
+            ),
+            $service_manager,
+            $this->csrf_token,
+            $event_manager,
+        );
+
+        $request_builder->withParams([
+            'service_id' => '-1',
+            'short_name' => 'plugin_stuff',
+            'is_used'  => '1',
+            'is_active' => '1',
+            'label' => 'Stuff',
+            'rank' => 500,
+        ]);
+
+        $controller->process(
+            $request_builder->build(),
+            $response,
+            [
+                'id' => '120',
+            ]
+        );
+
+        self::assertEquals('info', $inspector->getFeedback()[0]['level']);
+        self::assertNotNull($inspector->getRedirectUrl());
     }
 }

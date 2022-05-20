@@ -72,6 +72,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -123,10 +124,11 @@ final class mediawiki_standalonePlugin extends Plugin
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SERVICE_IS_USED);
-
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ServiceDisabledCollector::NAME);
+        $this->addHook(AddMissingService::NAME);
+
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CLICommandsCollector::NAME);
@@ -171,6 +173,29 @@ final class mediawiki_standalonePlugin extends Plugin
         }
     }
 
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        (new ServiceActivationHandler())->handle(new ServiceActivationProjectServiceBeforeActivationEvent($event));
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        (new ServiceActivationHandler())->handle(new ServiceActivationServiceDisabledCollectorEvent($event));
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        if (! $this->isServiceAllowedForProject($event->project)) {
+            return;
+        }
+
+        $event->addService(
+            MediawikiStandaloneService::forServiceCreation(
+                $event->project
+            )
+        );
+    }
+
     public function workerEvent(WorkerEvent $event): void
     {
         (new InstanceManagement(
@@ -184,16 +209,6 @@ final class mediawiki_standalonePlugin extends Plugin
     public function getConfigKeys(GetConfigKeys $event): void
     {
         $event->addConfigClass(MediawikiHTTPClientFactory::class);
-    }
-
-    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
-    {
-        (new ServiceActivationHandler())->handle(new ServiceActivationProjectServiceBeforeActivationEvent($event));
-    }
-
-    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
-    {
-        (new ServiceActivationHandler())->handle(new ServiceActivationServiceDisabledCollectorEvent($event));
     }
 
     /**
