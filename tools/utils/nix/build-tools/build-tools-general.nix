@@ -12,7 +12,6 @@
     pkgs.coreutils
     pkgs.gzip
     pkgs.cpio
-    pkgs.glibc
     pkgs.cosign
     pkgs.cachix
-]
+] ++ pkgs.lib.optionals (! pkgs.stdenv.isDarwin) [ pkgs.glibc ]
