@@ -26,27 +26,33 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
 use Psr\Http\Client\ClientInterface;
+use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
+use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class InstanceCreationWorkerTaskTest extends TestCase
+final class InstanceManagementTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    private TestLogger $logger;
     private Client $mediawiki_client;
-    private InstanceCreationWorkerTask $task;
+    private InstanceManagement $instance_management;
 
     protected function setUp(): void
     {
         \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'tuleap.example.com');
+        $this->logger = new TestLogger();
         $this->mediawiki_client = new Client();
-        $this->task             = new InstanceCreationWorkerTask(
-            new NullLogger(),
+        $this->mediawiki_client->setDefaultResponse(HTTPFactoryBuilder::responseFactory()->createResponse(400, 'Should be overriden in tests'));
+        $this->instance_management = new InstanceManagement(
+            $this->logger,
             new class ($this->mediawiki_client) implements MediawikiClientFactory {
                 public function __construct(private ClientInterface $client)
                 {
@@ -74,34 +80,36 @@ final class InstanceCreationWorkerTaskTest extends TestCase
 
     public function testInvalidProjectWillNotIssueRequests(): void
     {
-        $this->task->process(new InstanceCreationWorkerEvent(100));
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 100]]));
 
         self::assertFalse($this->mediawiki_client->getLastRequest());
     }
 
     public function testItSendsPUTRequestToCreateMediawikiInstance(): void
     {
-        $this->expectNotToPerformAssertions();
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'PUT'),
             function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
         );
-        $this->task->process(new InstanceCreationWorkerEvent(120));
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertArrayNotHasKey(LogLevel::ERROR, $this->logger->recordsByLevel);
     }
 
     public function testPUTRequestIsFailure(): void
     {
-        $this->expectNotToPerformAssertions();
-
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'PUT'),
             function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(422);
             }
         );
-        $this->task->process(new InstanceCreationWorkerEvent(120));
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertStringContainsString(CreateInstance::class.' error', $this->logger->recordsByLevel[LogLevel::ERROR][0]['message']);
     }
 }

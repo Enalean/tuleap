@@ -59,4 +59,9 @@ final class ResumeInstance implements InstanceOperation
             ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/resume/' . urlencode($this->project->getUnixNameLowerCase())
         );
     }
+
+    public function getTopic(): string
+    {
+        return self::TOPIC;
+    }
 }

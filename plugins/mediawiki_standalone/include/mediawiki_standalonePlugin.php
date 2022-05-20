@@ -41,8 +41,6 @@ use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
-use Tuleap\MediawikiStandalone\Instance\InstanceCreationWorkerEvent;
-use Tuleap\MediawikiStandalone\Instance\InstanceCreationWorkerTask;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
@@ -173,15 +171,6 @@ final class mediawiki_standalonePlugin extends Plugin
 
     public function workerEvent(WorkerEvent $event): void
     {
-        if (($creation_event = InstanceCreationWorkerEvent::fromEvent($event)) !== null) {
-            (new InstanceCreationWorkerTask(
-                $this->getBackendLogger(),
-                new MediawikiHTTPClientFactory(),
-                HTTPFactoryBuilder::requestFactory(),
-                ProjectManager::instance(),
-            ))->process($creation_event);
-        }
-
         (new InstanceManagement(
             $this->getBackendLogger(),
             new MediawikiHTTPClientFactory(),

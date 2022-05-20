@@ -23,21 +23,22 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-use Tuleap\Queue\QueueTask;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\ServerHostname;
 
-/**
- * @psalm-immutable
- */
-final class InstanceCreationWorkerEvent implements QueueTask
+final class CreateInstance implements InstanceOperation
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
 
-    public function __construct(public int $project_id)
+    private function __construct(private \Project $project)
     {
     }
 
-    public static function fromEvent(WorkerEvent $event): ?self
+    public static function fromEvent(WorkerEvent $event, ProjectByIDFactory $project_factory): ?self
     {
         if ($event->getEventName() !== self::TOPIC) {
             return null;
@@ -46,21 +47,29 @@ final class InstanceCreationWorkerEvent implements QueueTask
         if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
             throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
         }
-        return new self($payload['project_id']);
+
+        $project = $project_factory->getValidProjectById($payload['project_id']);
+        return new self($project);
+    }
+
+    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface
+    {
+        return $request_factory->createRequest('PUT', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/' . urlencode($this->project->getUnixNameLowerCase()))
+            ->withBody(
+                HTTPFactoryBuilder::streamFactory()->createStream(
+                    \json_encode(
+                        [
+                            'adminpass' => 'welcome400',
+                            'project_id' => (int) $this->project->getID(),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    )
+                )
+            );
     }
 
     public function getTopic(): string
     {
         return self::TOPIC;
-    }
-
-    public function getPayload(): array
-    {
-        return ['project_id' => $this->project_id];
-    }
-
-    public function getPreEnqueueMessage(): string
-    {
-        return sprintf('Enqueue creation of mediawiki instance for %d', $this->project_id);
     }
 }

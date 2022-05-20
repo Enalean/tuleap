@@ -28,5 +28,7 @@ use Psr\Http\Message\RequestInterface;
 
 interface InstanceOperation
 {
+    public function getTopic(): string;
+
     public function getRequest(RequestFactoryInterface $request_factory): RequestInterface;
 }

@@ -30,9 +30,6 @@ use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 
-/**
- * @psalm-immutable
- */
 final class SuspendInstance implements InstanceOperation
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-suspension';
@@ -61,5 +58,10 @@ final class SuspendInstance implements InstanceOperation
             'POST',
             ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/suspend/' . urlencode($this->project->getUnixNameLowerCase())
         );
+    }
+
+    public function getTopic(): string
+    {
+        return self::TOPIC;
     }
 }

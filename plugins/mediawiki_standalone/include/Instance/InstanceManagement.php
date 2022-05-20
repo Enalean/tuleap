@@ -38,13 +38,17 @@ final class InstanceManagement
     public function process(WorkerEvent $worker_event): void
     {
         try {
+            if (($create_event = CreateInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
+                $this->sendRequest($create_event);
+                return;
+            }
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
-                $this->logger->info(sprintf("Processing %s: ", $worker_event->getEventName()));
                 $this->sendRequest($suspension_event);
+                return;
             }
             if (($resume = ResumeInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
-                $this->logger->info(sprintf("Processing %s: ", $worker_event->getEventName()));
                 $this->sendRequest($resume);
+                return;
             }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
@@ -54,6 +58,7 @@ final class InstanceManagement
     private function sendRequest(InstanceOperation $event): void
     {
         try {
+            $this->logger->info(sprintf("Processing %s: ", $event->getTopic()));
             $request = $event->getRequest($this->http_factory);
             $this->logger->debug(sprintf('%s %s', $request->getMethod(), (string) $request->getUri()));
             $response = $this->client_factory->getHTTPClient()->sendRequest($request);
