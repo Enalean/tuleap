@@ -27,31 +27,38 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\ProjectByIDFactory;
-use Tuleap\ServerHostname;
+use Tuleap\Queue\WorkerEvent;
 
-final class InstanceSuspensionWorkerTask
+final class InstanceManagement
 {
     public function __construct(private LoggerInterface $logger, private MediawikiClientFactory $client_factory, private RequestFactoryInterface $http_factory, private ProjectByIDFactory $project_factory)
     {
     }
 
-    public function process(InstanceSuspensionWorkerEvent $event): void
+    public function process(WorkerEvent $worker_event): void
     {
-        $this->logger->info(sprintf("Processing %s: ", $event->getTopic()));
-
         try {
-            $project = $this->project_factory->getValidProjectById($event->project_id);
-            $request = $this->http_factory->createRequest('POST', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/suspend/' . urlencode($project->getUnixNameLowerCase()));
+            if (($suspension_event = InstanceSuspensionWorkerEvent::fromEvent($worker_event, $this->project_factory)) !== null) {
+                $this->logger->info(sprintf("Processing %s: ", $worker_event->getEventName()));
+                $this->sendRequest($suspension_event);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+        }
+    }
+
+    private function sendRequest(InstanceSuspensionWorkerEvent $event): void
+    {
+        try {
+            $request = $event->getRequest($this->http_factory);
             $this->logger->debug(sprintf('%s %s', $request->getMethod(), (string) $request->getUri()));
             $response = $this->client_factory->getHTTPClient()->sendRequest($request);
             $this->logger->debug((string) $response->getBody());
             if ($response->getStatusCode() === 200) {
-                $this->logger->info('Mediawiki instance successfully suspended');
+                $this->logger->info(sprintf('Mediawiki %s success', $event::class));
                 return;
             }
-            $this->logger->error(sprintf('Unable to create new mediawiki instance: %s (code: %d)', $response->getReasonPhrase(), $response->getStatusCode()));
-        } catch (\Project_NotFoundException) {
-            $this->logger->error(sprintf('Project %d does not exist or is no longer active. Skip init', $event->project_id));
+            $this->logger->error(sprintf('Mediawiki %s error: %s (code: %d)', $event::class, $response->getReasonPhrase(), $response->getStatusCode()));
         } catch (ClientExceptionInterface | ConfigurationErrorException $e) {
             $this->logger->error(sprintf('Cannot connect to mediawiki REST API: %s (%s)', $e->getMessage(), $e::class), ['exception' => $e]);
         }
