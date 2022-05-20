@@ -26,6 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Config\ConfigDao;
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -40,6 +41,7 @@ use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiSharedSecretGeneratorForgeConfigStore;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
@@ -304,7 +306,8 @@ final class mediawiki_standalonePlugin extends Plugin
                     new MediaWikiNewOAuth2AppBuilder($hasher),
                     $hasher,
                     new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret())
-                )
+                ),
+                new MediaWikiSharedSecretGeneratorForgeConfigStore(new ConfigDao())
             ),
             new LocalSettingsPersistToPHPFile(
                 ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName(),

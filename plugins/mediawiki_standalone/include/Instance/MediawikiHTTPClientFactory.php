@@ -27,6 +27,7 @@ use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Message\Authentication\Bearer;
 use Psr\Http\Client\ClientInterface;
+use Tuleap\Config\ConfigCannotBeModified;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeySecret;
@@ -40,6 +41,7 @@ final class MediawikiHTTPClientFactory implements MediawikiClientFactory
 {
     #[ConfigKey('Pre-shared secret between Tuleap and Mediawiki')]
     #[ConfigKeySecret]
+    #[ConfigCannotBeModified]
     public const SHARED_SECRET = 'mediawiki_standalone_shared_secret';
 
     /**

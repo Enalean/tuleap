@@ -34,13 +34,22 @@ final class LocalSettingsFactoryTest extends TestCase
             new class implements MediaWikiOAuth2AppSecretGenerator {
                 public function generateOAuth2AppSecret(): LastGeneratedClientSecret
                 {
-                    return new LastGeneratedClientSecret(789, new ConcealedString('random'));
+                    return new LastGeneratedClientSecret(789, new ConcealedString('random_oauth2_secret'));
+                }
+            },
+            new class implements MediaWikiSharedSecretGenerator
+            {
+                public function generateSharedSecret(): ConcealedString
+                {
+                    return new ConcealedString('random_shared_secret');
                 }
             }
         );
 
         $representation = $factory->generateTuleapLocalSettingsRepresentation();
 
-        self::assertInstanceOf(LocalSettingsRepresentation::class, $representation);
+        self::assertStringContainsString('789', $representation->oauth2_client_id);
+        self::assertEquals('random_oauth2_secret', $representation->oauth2_client_secret->getString());
+        self::assertEquals('random_shared_secret', $representation->pre_shared_key->getString());
     }
 }
