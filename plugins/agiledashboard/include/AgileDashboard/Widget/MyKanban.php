@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\Widget;
 
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_PermissionsManager;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TrackerFactory;
 use Tuleap\Dashboard\User\UserDashboardController;
 use UserManager;
@@ -41,7 +40,6 @@ class MyKanban extends Kanban
         WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
         WidgetKanbanConfigUpdater $widget_kanban_config_updater,
         \Tracker_ReportFactory $tracker_report_factory,
-        EventDispatcherInterface $event_dispatcher,
     ) {
         parent::__construct(
             self::NAME,
@@ -55,8 +53,7 @@ class MyKanban extends Kanban
             $permissions_manager,
             $widget_kanban_config_retriever,
             $widget_kanban_config_updater,
-            $tracker_report_factory,
-            $event_dispatcher
+            $tracker_report_factory
         );
     }
 }

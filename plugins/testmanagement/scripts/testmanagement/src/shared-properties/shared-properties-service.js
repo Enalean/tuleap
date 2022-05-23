@@ -11,9 +11,7 @@ function SharedPropertiesService() {
         milestone: undefined,
         trackers_using_list_picker: [],
         csrf_token_campaign_status: undefined,
-        has_current_project_parents: false,
         file_upload_max_size: 0,
-        is_links_field_v2_enabled: false,
         base_url: "",
         platform_name: "",
         platform_logo_url: "",
@@ -63,12 +61,8 @@ function SharedPropertiesService() {
         setTrackersUsingListPicker,
         getCSRFTokenCampaignStatus,
         setCSRFTokenCampaignStatus,
-        setHasCurrentProjectParents,
-        hasCurrentProjectParents,
         setFileUploadMaxSize,
         getFileUploadMaxSize,
-        setIsLinksFieldV2Enabled,
-        isLinksFieldV2Enabled,
     };
 
     function getPlatformLogoUrl() {
@@ -231,27 +225,11 @@ function SharedPropertiesService() {
         property.csrf_token_campaign_status = csrf_token;
     }
 
-    function setHasCurrentProjectParents(has_current_project_parents) {
-        property.has_current_project_parents = has_current_project_parents;
-    }
-
-    function hasCurrentProjectParents() {
-        return property.has_current_project_parents;
-    }
-
     function setFileUploadMaxSize(file_upload_max_size) {
         property.file_upload_max_size = file_upload_max_size;
     }
 
     function getFileUploadMaxSize() {
         return property.file_upload_max_size;
-    }
-
-    function setIsLinksFieldV2Enabled(is_links_field_v2_enabled) {
-        property.is_links_field_v2_enabled = is_links_field_v2_enabled;
-    }
-
-    function isLinksFieldV2Enabled() {
-        return property.is_links_field_v2_enabled;
     }
 }

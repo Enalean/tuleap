@@ -96,7 +96,6 @@ describe("TuleapArtifactModalController", () => {
                         },
                     ],
                     color: "inca_silver",
-                    is_links_field_v2_enabled: false,
                     tracker: {
                         item_name: "story",
                     },
@@ -240,7 +239,6 @@ describe("TuleapArtifactModalController", () => {
                 values,
                 true,
                 followup_comment,
-                false,
                 expect.any(Object)
             );
             expect(createArtifact).toHaveBeenCalledWith(39, values);
@@ -282,7 +280,6 @@ describe("TuleapArtifactModalController", () => {
                 values,
                 false,
                 followup_comment,
-                false,
                 expect.any(Object)
             );
             expect(editArtifactWithConcurrencyChecking).toHaveBeenCalledWith(
@@ -386,7 +383,6 @@ describe("TuleapArtifactModalController", () => {
                 values,
                 false,
                 followup_comment,
-                false,
                 expect.any(Object)
             );
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);

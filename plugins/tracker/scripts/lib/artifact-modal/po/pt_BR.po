@@ -66,9 +66,6 @@ msgstr ""
 msgid "Empty"
 msgstr "Vazio"
 
-msgid "Enter artifact ids separated by a comma"
-msgstr ""
-
 msgid "Error while retrieving the artifact to link: %s"
 msgstr ""
 
@@ -147,12 +144,6 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-msgid "Parent artifact"
-msgstr ""
-
-msgid "Please choose a parent…"
-msgstr ""
-
 msgid "Please select a date"
 msgstr ""
 
@@ -181,9 +172,6 @@ msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 
 msgid "Save changes"
-msgstr ""
-
-msgid "Select parent"
 msgstr ""
 
 msgid "Size: %s"
@@ -240,7 +228,4 @@ msgid "can only have one parent."
 msgstr ""
 
 msgid "to remove link"
-msgstr ""
-
-msgid "{{ project_label }} - open {{ tracker_label }}"
 msgstr ""

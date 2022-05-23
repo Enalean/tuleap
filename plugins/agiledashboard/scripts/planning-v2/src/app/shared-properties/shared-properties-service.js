@@ -27,8 +27,6 @@ export default function SharedPropertiesService() {
         allowed_additional_panes_to_display: [],
         is_list_picker_enabled: false,
         trackers_disabling_list_picker: [],
-        has_current_project_parents: false,
-        is_links_field_v2_enabled: false,
     };
 
     return {
@@ -47,10 +45,6 @@ export default function SharedPropertiesService() {
         setEnableListPicker,
         isListPickerEnabledForTracker,
         setTrackersDisablingListPicker,
-        setHasCurrentProjectParents,
-        hasCurrentProjectParents,
-        setIsLinksFieldV2Enabled,
-        isLinksFieldV2Enabled,
     };
 
     function getUserId() {
@@ -115,21 +109,5 @@ export default function SharedPropertiesService() {
 
     function setTrackersDisablingListPicker(trackers_disabling_list_picker) {
         property.trackers_disabling_list_picker = trackers_disabling_list_picker;
-    }
-
-    function setHasCurrentProjectParents(has_current_project_parents) {
-        property.has_current_project_parents = has_current_project_parents;
-    }
-
-    function hasCurrentProjectParents() {
-        return property.has_current_project_parents;
-    }
-
-    function setIsLinksFieldV2Enabled(is_links_field_v2_enabled) {
-        property.is_links_field_v2_enabled = is_links_field_v2_enabled;
-    }
-
-    function isLinksFieldV2Enabled() {
-        return property.is_links_field_v2_enabled;
     }
 }

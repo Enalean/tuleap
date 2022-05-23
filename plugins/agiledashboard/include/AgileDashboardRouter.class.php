@@ -370,8 +370,7 @@ class AgileDashboardRouter
                     new AgileDashboard_PermissionsManager(),
                     $this->service_crumb_builder,
                     new BreadCrumbBuilder($tracker_factory, $this->kanban_factory),
-                    new RecentlyVisitedKanbanDao(),
-                    $this->event_manager
+                    new RecentlyVisitedKanbanDao()
                 );
                 $this->renderAction($controller, 'showKanban', $request, [], $header_options);
                 break;

@@ -65,16 +65,12 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
      * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
-     * @param {boolean} has_current_project_parents  Does the current project have parents? (see SAFe).
-     * @param {boolean} is_links_field_v2_enabled  Enable the new artifact link field.
      */
     function showCreation(
         tracker_id,
         parent_artifact_id,
         displayItemCallback,
         is_list_picker_enabled = false,
-        has_current_project_parents = false,
-        is_links_field_v2_enabled = false,
         prefill_values
     ) {
         TuleapArtifactModalLoading.loading = true;
@@ -89,8 +85,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     tracker_id,
                     parent_artifact_id,
                     is_list_picker_enabled,
-                    has_current_project_parents,
-                    is_links_field_v2_enabled,
                     prefill_values
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
@@ -109,17 +103,13 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
      * @param {int} artifact_id              The id of the artifact we want to edit
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the edited artifact's id.
      * @param {boolean} is_list_picker_enabled  Enable the new list picker or not. Currently it is behind a feature flag. (To be removed when the feature flag will be removed)
-     * @param {boolean} has_current_project_parents  Does the current project have parents? (see SAFe).
-     * @param {boolean} is_links_field_v2_enabled Enable the new artifact link field.
      */
     function showEdition(
         user_id,
         tracker_id,
         artifact_id,
         displayItemCallback,
-        is_list_picker_enabled = false,
-        has_current_project_parents = false,
-        is_links_field_v2_enabled = false
+        is_list_picker_enabled = false
     ) {
         TuleapArtifactModalLoading.loading = true;
 
@@ -133,9 +123,7 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
                     user_id,
                     tracker_id,
                     artifact_id,
-                    is_list_picker_enabled,
-                    has_current_project_parents,
-                    is_links_field_v2_enabled
+                    is_list_picker_enabled
                 ),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
             },
@@ -146,8 +134,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         tracker_id,
         parent_artifact_id,
         is_list_picker_enabled,
-        has_current_project_parents,
-        is_links_field_v2_enabled,
         prefill_values
     ) {
         var modal_model = {};
@@ -157,8 +143,6 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         modal_model.tracker_id = tracker_id;
         modal_model.parent_artifact_id = parent_artifact_id;
         modal_model.is_list_picker_enabled = is_list_picker_enabled;
-        modal_model.has_current_project_parents = has_current_project_parents;
-        modal_model.is_links_field_v2_enabled = is_links_field_v2_enabled;
 
         var promise = $q
             .when(getTracker(tracker_id))
@@ -190,21 +174,12 @@ function ArtifactModalService($q, TlpModalService, TuleapArtifactModalLoading) {
         return promise;
     }
 
-    function initEditionModalModel(
-        user_id,
-        tracker_id,
-        artifact_id,
-        is_list_picker_enabled,
-        has_current_project_parents,
-        is_links_field_v2_enabled
-    ) {
+    function initEditionModalModel(user_id, tracker_id, artifact_id, is_list_picker_enabled) {
         var modal_model = {};
 
         const creation_mode = false;
 
         modal_model.is_list_picker_enabled = is_list_picker_enabled;
-        modal_model.has_current_project_parents = has_current_project_parents;
-        modal_model.is_links_field_v2_enabled = is_links_field_v2_enabled;
         setCreationMode(creation_mode);
         modal_model.user_id = user_id;
         modal_model.tracker_id = tracker_id;

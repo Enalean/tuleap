@@ -20,7 +20,6 @@
 import { validateOpenListFieldValue } from "./fields/open-list-field/open-list-field-validate-service.js";
 import { formatComputedFieldValue } from "./fields/computed-field/computed-field-value-formatter.js";
 import { formatPermissionFieldValue } from "./adapters/UI/fields/permission-field/permission-field-value-formatter";
-import { formatLinkFieldValue } from "./fields/link-field/link-field-value-formatter.js";
 import { validateFileField } from "./fields/file-field/file-field-validator.js";
 import { FILE_FIELD, TEXT_FIELD } from "@tuleap/plugin-tracker-constants";
 
@@ -28,7 +27,6 @@ export function validateArtifactFieldsValues(
     field_values,
     creation_mode,
     followup_value_model,
-    is_links_field_v2_enabled,
     link_field_value_formatter
 ) {
     const text_field_value_models = Object.values(field_values).filter(
@@ -48,9 +46,7 @@ export function validateArtifactFieldsValues(
                 case "tbl":
                     return validateOpenListFieldValue(field);
                 case "art_link":
-                    return is_links_field_v2_enabled
-                        ? link_field_value_formatter.getFormattedValuesByFieldId(field.field_id)
-                        : formatLinkFieldValue(field);
+                    return link_field_value_formatter.getFormattedValuesByFieldId(field.field_id);
                 case FILE_FIELD:
                     return validateFileField(field, text_field_value_models, followup_value_model);
                 default:

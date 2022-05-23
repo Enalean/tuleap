@@ -23,7 +23,6 @@
  */
 
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
-use Tuleap\Tracker\Modal\FeatureFlagArtifactModalLinksFieldV2;
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
 {
@@ -63,10 +62,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
      */
     public $trackers_ids_having_list_picker_disabled;
 
-    public string $has_current_project_parents;
-
-    public string $is_links_field_v2_enabled;
-
     /**
      * @param string[] $allowed_additional_panes_to_display
      */
@@ -76,7 +71,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $milestone_id,
         bool $is_in_explicit_top_backlog,
         array $allowed_additional_panes_to_display,
-        bool $has_current_project_parents,
     ) {
         $this->user_id                                  = $current_user->getId();
         $this->lang                                     = $this->getLanguageAbbreviation($current_user);
@@ -88,8 +82,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->allowed_additional_panes_to_display      = json_encode($allowed_additional_panes_to_display);
         $this->trackers_ids_having_list_picker_disabled = json_encode(ListPickerIncluder::getTrackersHavingListPickerDisabled());
         $this->is_list_picker_enabled                   = json_encode(ListPickerIncluder::isListPickerEnabledOnPlatform());
-        $this->is_links_field_v2_enabled                = json_encode(FeatureFlagArtifactModalLinksFieldV2::isArtifactModalLinksFieldV2Enabled(), JSON_THROW_ON_ERROR);
-        $this->has_current_project_parents              = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

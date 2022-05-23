@@ -28,7 +28,6 @@ use AgileDashboard_PermissionsManager;
 use Codendi_Request;
 use KanbanPresenter;
 use Project;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tracker_Report;
 use Tracker_ReportFactory;
@@ -36,7 +35,6 @@ use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
-use Tuleap\Event\Events\HasCurrentProjectParentProjects;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
@@ -92,8 +90,6 @@ abstract class Kanban extends Widget
      */
     private $tracker_report_factory;
 
-    private EventDispatcherInterface $event_dispatcher;
-
     public function __construct(
         $id,
         $owner_id,
@@ -107,7 +103,6 @@ abstract class Kanban extends Widget
         WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
         WidgetKanbanConfigUpdater $widget_kanban_config_updater,
         Tracker_ReportFactory $tracker_report_factory,
-        EventDispatcherInterface $event_dispatcher,
     ) {
         parent::__construct($id);
         $this->owner_id                       = $owner_id;
@@ -122,10 +117,9 @@ abstract class Kanban extends Widget
         $this->widget_kanban_config_updater   = $widget_kanban_config_updater;
         $this->tracker_report_factory         = $tracker_report_factory;
 
-        $this->renderer         = TemplateRendererFactory::build()->getRenderer(
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(
             AGILEDASHBOARD_TEMPLATE_DIR . '/widgets'
         );
-        $this->event_dispatcher = $event_dispatcher;
     }
 
     public function create(Codendi_Request $request)
@@ -200,9 +194,6 @@ abstract class Kanban extends Widget
                 $project_id
             );
 
-            $event = new HasCurrentProjectParentProjects($tracker->getProject());
-            $this->event_dispatcher->dispatch($event);
-
             $kanban_presenter        = new KanbanPresenter(
                 $kanban,
                 $this->getCurrentUser(),
@@ -211,7 +202,6 @@ abstract class Kanban extends Widget
                 $project_id,
                 $this->dashboard_widget_id,
                 $this->tracker_report_id,
-                $event->hasProjectAtLeastOneParentProject()
             );
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,

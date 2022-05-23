@@ -477,8 +477,6 @@ describe("PlannerView", () => {
                 30,
                 651,
                 expect.any(Function),
-                false,
-                false,
                 false
             );
             expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
@@ -545,8 +543,6 @@ describe("PlannerView", () => {
                 12,
                 9040,
                 expect.any(Function),
-                false,
-                false,
                 false
             );
             expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
@@ -570,8 +566,6 @@ describe("PlannerView", () => {
                 82,
                 PlanningController.milestone_id,
                 expect.any(Function),
-                false,
-                false,
                 false
             );
         });
@@ -683,8 +677,6 @@ describe("PlannerView", () => {
                 94,
                 null,
                 expect.any(Function),
-                false,
-                false,
                 false
             );
         });

@@ -27,7 +27,6 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Event\Events\HasCurrentProjectParentProjects;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -298,7 +297,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
         $this->addHook(ImportXMLProjectTrackerDone::NAME);
         $this->addHook(PossibleParentSelector::NAME);
-        $this->addHook(HasCurrentProjectParentProjects::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1411,15 +1409,5 @@ final class program_managementPlugin extends Plugin
                 Tracker_ArtifactFactory::instance(),
             )
         );
-    }
-
-    public function hasCurrentProjectParentProjects(HasCurrentProjectParentProjects $event): void
-    {
-        $dao     = new TeamDao();
-        $project = ProjectProxy::buildFromProject($event->getProject());
-
-        if ($dao->isATeam($project->getId())) {
-            $event->setHasParents();
-        }
     }
 }

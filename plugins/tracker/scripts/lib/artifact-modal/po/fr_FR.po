@@ -78,9 +78,6 @@ msgstr "Modifié par"
 msgid "Empty"
 msgstr "Aucun(e)"
 
-msgid "Enter artifact ids separated by a comma"
-msgstr "Entrer des ids d'artéfacts séparés par une virgule"
-
 msgid "Error while retrieving the artifact to link: %s"
 msgstr "Erreur pendant la récupération de l'artéfact à lier : %s"
 
@@ -159,12 +156,6 @@ msgstr "Seuls les commentaires sont affichés"
 msgid "Open"
 msgstr "Ouvrez"
 
-msgid "Parent artifact"
-msgstr "Artéfact parent"
-
-msgid "Please choose a parent…"
-msgstr "Veuillez choisir un parent…"
-
 msgid "Please select a date"
 msgstr "Veuillez choisir une date"
 
@@ -195,9 +186,6 @@ msgstr ""
 
 msgid "Save changes"
 msgstr "Enregistrer les changements"
-
-msgid "Select parent"
-msgstr "Sélectionner un parent"
 
 msgid "Size: %s"
 msgstr "Taille: %s"
@@ -263,6 +251,3 @@ msgstr "ne peut avoir qu'un seul parent."
 
 msgid "to remove link"
 msgstr "pour supprimer ce lien"
-
-msgid "{{ project_label }} - open {{ tracker_label }}"
-msgstr "{{ project_label }} - {{ tracker_label }} ouvert·e·s"
