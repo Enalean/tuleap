@@ -117,6 +117,8 @@ export const setNewLinks = (
     host.link_selector.resetSelection();
     host.link_selector.setPlaceholder(getLinkSelectorPlaceholderText());
 
+    host.artifact_link_select.focus();
+
     return presenter;
 };
 

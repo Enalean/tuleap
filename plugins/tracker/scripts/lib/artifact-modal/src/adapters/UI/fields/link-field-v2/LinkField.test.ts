@@ -270,6 +270,9 @@ describe("LinkField", () => {
             beforeEach(() => {
                 link_selector = LinkSelectorStub.withResetSelectionCallCount();
                 host = {
+                    artifact_link_select: document.implementation
+                        .createHTMLDocument()
+                        .createElement("select"),
                     link_selector: link_selector as LinkSelector,
                     controller: {
                         displayAllowedTypes: (): CollectionOfAllowedLinksTypesPresenters => {
@@ -311,12 +314,17 @@ describe("LinkField", () => {
                     expect(new_links).toHaveLength(0);
                 });
 
-                it("should display allowed types when new links have been edited, and clear the link-selector selection", () => {
+                it(`should display allowed types when new links have been edited,
+                    clear the link-selector selection,
+                    and focus the <select> element once done`, () => {
+                    jest.spyOn(host.artifact_link_select, "focus");
+
                     setNewLinks(host, NewLinkCollectionPresenter.fromLinks([]));
 
                     expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
                     expect(host.allowed_link_types.types).not.toHaveLength(0);
                     expect(link_selector.getResetCallCount()).toBe(1);
+                    expect(host.artifact_link_select.focus).toHaveBeenCalledTimes(1);
                 });
             });
         });
