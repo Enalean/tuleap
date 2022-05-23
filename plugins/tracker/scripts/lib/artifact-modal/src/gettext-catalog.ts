@@ -105,3 +105,6 @@ export const getPossibleParentErrorMessage = (): string =>
 export const getAlreadyLinkedTextTooltip = (): string =>
     gettextCatalog.getString("This artifact is already linked");
 export const getAlreadyLinkedInfo = (): string => gettextCatalog.getString("(already linked)");
+export const getOpenArtifactToUnlinkTextStart = (): string => gettextCatalog.getString("Open");
+export const getOpenArtifactToUnlinkTextEnd = (): string =>
+    gettextCatalog.getString("to remove link");

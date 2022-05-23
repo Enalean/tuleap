@@ -49,6 +49,7 @@ import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedL
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -186,7 +187,8 @@ describe(`LinkedArtifactTemplate`, () => {
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
-                ArtifactCrossReferenceStub.withRef("story #72")
+                ArtifactCrossReferenceStub.withRef("story #72"),
+                ControlLinkedArtifactsPopoversStub.build()
             );
 
             return {
@@ -246,7 +248,9 @@ describe(`LinkedArtifactTemplate`, () => {
             ).toBe(false);
         });
 
-        it(`will not render a button if the link's direction is "reverse"`, () => {
+        it(`When the link's direction is "reverse"
+            Then it will render a link to redirect the user to the artifact
+            and a popover`, () => {
             const linked_artifact = LinkedArtifactStub.withIdAndType(
                 123,
                 LinkTypeStub.buildParentLinkType()
@@ -254,9 +258,15 @@ describe(`LinkedArtifactTemplate`, () => {
             const host = getHost(linked_artifact);
             render(host, linked_artifact, false);
 
-            const button = target.querySelector("[data-test=action-button]");
+            const link = target.querySelector("[data-test=action-button]");
+            const popover = target.querySelector("[data-test=linked-artifact-popover]");
+            if (!(link instanceof HTMLAnchorElement) || !(popover instanceof HTMLElement)) {
+                throw new Error("The link has not been found");
+            }
 
-            expect(button).toBeNull();
+            expect(link.href).toBe("/plugins/tracker/?aid=123");
+            expect(link.id).toBe("link-field-linked-artifact-popover-123");
+            expect(popover.id).toBe("link-field-linked-artifact-popover-123-content");
         });
     });
 });

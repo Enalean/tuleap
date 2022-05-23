@@ -198,6 +198,17 @@ $link-table-cell-background: transparent;
     line-height: normal;
 }
 
+.link-field-popover {
+    z-index: 100000;
+    width: auto;
+}
+
+.link-field-linked-artifact-popover-body {
+    display: flex;
+    align-items: center;
+}
+
+.link-field-linked-artifact-popover-badge,
 .link-field-parent-note-xref-badge {
     margin: 0 6px;
 }

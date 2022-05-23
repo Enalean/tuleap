@@ -47,6 +47,7 @@ import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedL
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -174,7 +175,8 @@ describe(`NewLinkTemplate`, () => {
                 },
                 current_artifact_identifier,
                 current_tracker_identifier,
-                ArtifactCrossReferenceStub.withRef("bug #22")
+                ArtifactCrossReferenceStub.withRef("bug #22"),
+                ControlLinkedArtifactsPopoversStub.build()
             );
 
             return {

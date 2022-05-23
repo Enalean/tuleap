@@ -51,6 +51,7 @@ import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/Current
 import { LinkSelectorStub } from "../../../../../tests/stubs/LinkSelectorStub";
 import type { LinkSelector } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 
 function getSelectMainOptionsGroup(select: HTMLSelectElement): HTMLOptGroupElement {
     const optgroup = select.querySelector("[data-test=link-type-select-optgroup]");
@@ -134,7 +135,8 @@ describe("TypeSelectorTemplate", () => {
             field,
             current_artifact_identifier,
             current_tracker_identifier,
-            ArtifactCrossReferenceStub.withRef("bug #22")
+            ArtifactCrossReferenceStub.withRef("bug #22"),
+            ControlLinkedArtifactsPopoversStub.build()
         );
         host = {
             controller,

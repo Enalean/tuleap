@@ -70,6 +70,7 @@ import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
 import { AlreadyLinkedVerifier } from "./domain/fields/link-field-v2/AlreadyLinkedVerifier";
+import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-field-v2/LinkedArtifactsPopoversController";
 
 export default ArtifactModalController;
 
@@ -191,7 +192,8 @@ function ArtifactModalController(
                     current_artifact_identifier,
                     TrackerShortnameProxy.fromTrackerModel(modal_model.tracker),
                     modal_model.tracker.color_name
-                )
+                ),
+                LinkedArtifactsPopoversController()
             );
         },
         getFileFieldController: (field) => {

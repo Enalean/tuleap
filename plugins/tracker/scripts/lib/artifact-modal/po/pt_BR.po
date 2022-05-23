@@ -144,6 +144,9 @@ msgstr ""
 msgid "Only comments are displayed"
 msgstr ""
 
+msgid "Open"
+msgstr ""
+
 msgid "Parent artifact"
 msgstr ""
 
@@ -234,6 +237,9 @@ msgid ""
 msgstr ""
 
 msgid "can only have one parent."
+msgstr ""
+
+msgid "to remove link"
 msgstr ""
 
 msgid "{{ project_label }} - open {{ tracker_label }}"
