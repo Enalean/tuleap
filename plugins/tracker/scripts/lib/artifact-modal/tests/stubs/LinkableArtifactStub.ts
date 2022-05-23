@@ -29,6 +29,11 @@ export const LinkableArtifactStub = {
         uri: "/plugins/tracker/?aid=456",
         status: "Ongoing",
         is_open: true,
+        project: {
+            id: 10,
+            icon: "🐹",
+            label: "Guinea Pig",
+        },
         ...data,
     }),
 
@@ -44,5 +49,10 @@ export const LinkableArtifactStub = {
         uri: "/plugins/tracker/?aid=" + id,
         status: "Ongoing",
         is_open: true,
+        project: {
+            id: 10,
+            icon: "",
+            label: "Project X",
+        },
     }),
 };

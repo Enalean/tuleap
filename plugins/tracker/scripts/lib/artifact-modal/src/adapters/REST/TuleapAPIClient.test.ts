@@ -47,6 +47,11 @@ const ARTIFACT_TITLE = "thio";
 const ARTIFACT_XREF = `story #${ARTIFACT_ID}`;
 const COLOR = "deep-blue";
 const TRACKER_ID = 36;
+const PROJECT = {
+    id: 100,
+    label: "Guinea Pig",
+    icon: "🐹",
+};
 
 describe(`TuleapAPIClient`, () => {
     describe(`getParent()`, () => {
@@ -94,7 +99,7 @@ describe(`TuleapAPIClient`, () => {
                 id: ARTIFACT_ID,
                 title: ARTIFACT_TITLE,
                 xref: ARTIFACT_XREF,
-                tracker: { color_name: COLOR },
+                tracker: { color_name: COLOR, project: PROJECT },
             } as ArtifactWithStatus;
             const getSpy = jest.spyOn(fetch_result, "getJSON");
             getSpy.mockReturnValue(okAsync(artifact));
@@ -212,11 +217,11 @@ describe(`TuleapAPIClient`, () => {
         it(`will return an array of linkable artifacts`, async () => {
             const first_artifact = {
                 id: FIRST_LINKED_ARTIFACT_ID,
-                tracker: { color_name: "chrome-silver" },
+                tracker: { color_name: "chrome-silver", project: PROJECT },
             } as ArtifactWithStatus;
             const second_artifact = {
                 id: SECOND_LINKED_ARTIFACT_ID,
-                tracker: { color_name: "coral-pink" },
+                tracker: { color_name: "coral-pink", project: PROJECT },
             } as ArtifactWithStatus;
             const getAllSpy = jest.spyOn(fetch_result, "getAllJSON");
             getAllSpy.mockReturnValue(okAsync([first_artifact, second_artifact]));

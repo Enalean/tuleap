@@ -70,11 +70,23 @@ const createEmptyDropdownState = (dropdown_message: string): HTMLTemplateResult 
         </li>
     `;
 
+const getGroupIcon = (group: GroupOfItems): HTMLTemplateResult => {
+    if (group.icon.length === 0) {
+        return html``;
+    }
+
+    return html`
+        <span data-test="link-selector-group-icon" class="link-selector-group-icon">
+            ${group.icon}
+        </span>
+    `;
+};
+
 const getGroupLabel = (group: GroupOfItems): HTMLTemplateResult => {
     if (group.is_loading) {
         return html`
             <strong class="link-selector-group-label">
-                ${group.label}
+                ${getGroupIcon(group)} ${group.label}
                 <i
                     class="fas fa-spin fa-circle-notch link-selector-loading-group-spinner"
                     data-test="link-selector-loading-group-spinner"
@@ -84,7 +96,7 @@ const getGroupLabel = (group: GroupOfItems): HTMLTemplateResult => {
     }
 
     return html`
-        <strong class="link-selector-group-label">${group.label}</strong>
+        <strong class="link-selector-group-label">${getGroupIcon(group)} ${group.label}</strong>
     `;
 };
 

@@ -18,6 +18,7 @@
  */
 
 import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
+import { ArtifactProjectProxy } from "./ArtifactProjectProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
 
@@ -29,5 +30,6 @@ export const LinkableArtifactProxy = {
         uri: artifact.html_url,
         status: artifact.status,
         is_open: artifact.is_open,
+        project: ArtifactProjectProxy.fromAPIArtifact(artifact),
     }),
 };

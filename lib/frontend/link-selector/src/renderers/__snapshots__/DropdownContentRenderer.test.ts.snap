@@ -5,7 +5,11 @@ exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
 <ul class="link-selector-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li class="link-selector-item-group">
 
-    <strong class="link-selector-group-label">Group 1</strong>
+    <strong class="link-selector-group-label">
+        <span data-test="link-selector-group-icon" class="link-selector-group-icon">
+            🐹
+        </span>
+     Group 1</strong>
 
     <ul role="group" class="link-selector-dropdown-option-group" aria-label="Group 1">
       <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group1-0" class="link-selector-dropdown-option-value">
@@ -28,7 +32,11 @@ exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
 
   <li class="link-selector-item-group">
 
-    <strong class="link-selector-group-label">Group 2</strong>
+    <strong class="link-selector-group-label">
+        <span data-test="link-selector-group-icon" class="link-selector-group-icon">
+            🦏
+        </span>
+     Group 2</strong>
 
     <ul role="group" class="link-selector-dropdown-option-group" aria-label="Group 2">
       <li role="option" aria-selected="false" data-test="link-selector-item" data-item-id="link-selector-item-group2-3" class="link-selector-dropdown-option-value">

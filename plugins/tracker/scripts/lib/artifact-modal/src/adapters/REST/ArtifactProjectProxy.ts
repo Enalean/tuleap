@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type LinkSelectorItem = {
-    readonly is_disabled: boolean;
-    readonly value: unknown;
-};
+import type { ArtifactWithStatus } from "./ArtifactWithStatus";
+import type { ArtifactProject } from "../../domain/ArtifactProject";
 
-export type GroupOfItems = {
-    readonly label: string;
-    readonly icon: string;
-    readonly empty_message: string;
-    readonly items: ReadonlyArray<LinkSelectorItem>;
-    readonly is_loading: boolean;
+export const ArtifactProjectProxy = {
+    fromAPIArtifact: (artifact: ArtifactWithStatus): ArtifactProject => ({
+        id: artifact.tracker.project.id,
+        label: artifact.tracker.project.label,
+        icon: artifact.tracker.project.icon,
+    }),
 };
-
-export type GroupCollection = ReadonlyArray<GroupOfItems>;

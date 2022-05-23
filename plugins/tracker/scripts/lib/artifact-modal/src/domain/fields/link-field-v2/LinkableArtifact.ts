@@ -18,6 +18,7 @@
  */
 
 import type { ArtifactCrossReference } from "../../ArtifactCrossReference";
+import type { ArtifactProject } from "../../ArtifactProject";
 
 export type LinkableArtifact = {
     readonly id: number;
@@ -26,4 +27,5 @@ export type LinkableArtifact = {
     readonly uri: string;
     readonly status: string;
     readonly is_open: boolean;
+    readonly project: ArtifactProject;
 };

@@ -38,7 +38,14 @@ describe(`LinkedArtifactProxy`, () => {
             is_open: true,
             html_url: HTML_URI,
             xref: CROSS_REFERENCE,
-            tracker: { color_name: COLOR },
+            tracker: {
+                color_name: COLOR,
+                project: {
+                    id: 100,
+                    label: "Guinea Pig",
+                    icon: "🐹",
+                },
+            },
         };
         const link_type = LinkTypeStub.buildChildLinkType();
 
