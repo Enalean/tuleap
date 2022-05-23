@@ -343,7 +343,8 @@ abstract class Kanban extends Widget
     ) {
         $this->loadContent($id);
 
-        $old_kanban = $this->kanban_factory->getKanbanWithoutPermissionChecking(
+        $old_kanban = $this->kanban_factory->getKanban(
+            $this->getCurrentUser(),
             $this->kanban_id
         );
 
@@ -375,7 +376,7 @@ abstract class Kanban extends Widget
             $owner_id,
             $owner_type,
             $new_kanban_id,
-            $old_kanban->getName(),
+            $this->kanban_title,
             $new_report_id
         );
     }

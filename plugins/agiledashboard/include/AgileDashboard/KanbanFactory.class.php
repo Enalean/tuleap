@@ -71,7 +71,7 @@ class AgileDashboard_KanbanFactory
         return $this->instantiateFromRow($row);
     }
 
-    public function getKanbanWithoutPermissionChecking(int $kanban_id): AgileDashboard_Kanban
+    public function getKanbanForXmlImport(int $kanban_id)
     {
         $row = $this->dao->getKanbanById($kanban_id)->getRow();
 
