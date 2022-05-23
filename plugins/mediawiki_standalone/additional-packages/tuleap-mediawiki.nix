@@ -44,7 +44,7 @@ let
     '';
   };
   mediawikiTuleapConfig = pkgs.stdenvNoCC.mkDerivation {
-    name = "mediawiki-tuleap-skins-extensions";
+    name = "mediawiki-tuleap-config";
 
     src = ./mediawiki-tuleap-config;
 
@@ -55,12 +55,24 @@ let
       runHook postInstall
     '';
   };
+  mediawikiTuleapConfigSuspended = pkgs.stdenvNoCC.mkDerivation {
+      name = "mediawiki-tuleap-config-suspended";
+
+      src = ./mediawiki-extensions/extensions/TuleapWikiFarm/docs;
+
+      installPhase = ''
+        runHook preInstall
+        mkdir $out/
+        cp LocalSettings.SUSPENDED.php $out/
+        runHook postInstall
+      '';
+    };
   mediawikiTuleapFlavorTarball = pkgs.stdenvNoCC.mkDerivation {
     name = "mediawiki-tuleap-flavor.tar";
 
     src = pkgs.buildEnv {
       name = "tuleap-mediawiki-flavor-src";
-      paths = [ mediawiki mediawikiSkinsAndExtensions mediawikiTuleapConfig ];
+      paths = [ mediawiki mediawikiSkinsAndExtensions mediawikiTuleapConfig mediawikiTuleapConfigSuspended ];
     };
 
     unpackPhase = ''

@@ -21,46 +21,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
-
-use Tuleap\Queue\QueueTask;
-use Tuleap\Queue\WorkerEvent;
+namespace Tuleap\Queue;
 
 /**
  * @psalm-immutable
  */
-final class InstanceCreationWorkerEvent implements QueueTask
+final class GenericQueueTask implements QueueTask
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
-
-    public function __construct(public int $project_id)
+    public function __construct(private string $topic, private array $payload, private string $message)
     {
-    }
-
-    public static function fromEvent(WorkerEvent $event): ?self
-    {
-        if ($event->getEventName() !== self::TOPIC) {
-            return null;
-        }
-        $payload = $event->getPayload();
-        if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
-            throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
-        }
-        return new self($payload['project_id']);
     }
 
     public function getTopic(): string
     {
-        return self::TOPIC;
+        return $this->topic;
     }
 
     public function getPayload(): array
     {
-        return ['project_id' => $this->project_id];
+        return $this->payload;
     }
 
     public function getPreEnqueueMessage(): string
     {
-        return sprintf('Enqueue creation of mediawiki instance for %d', $this->project_id);
+        return $this->message;
     }
 }
