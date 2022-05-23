@@ -18,6 +18,7 @@
  */
 
 import { Upload } from "tus-js-client";
+import type { DetailedError } from "tus-js-client";
 import { getItem } from "../../api/rest-querier";
 import { flagItemAsCreated } from "./flag-item-as-created";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
@@ -87,9 +88,9 @@ export function uploadFile(
                 context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
             }
         },
-        onError: (error: Error): void => {
+        onError: (error: Error | DetailedError): void => {
             fake_item.is_uploading = false;
-            fake_item.upload_error = error.message;
+            fake_item.upload_error = getMessageFromError(error);
 
             context.commit("removeItemFromFolderContent", fake_item);
         },
@@ -136,8 +137,8 @@ export function uploadVersion(
             context.commit("replaceUploadingFileWithActualFile", [updated_file, new_item_version]);
             emitter.emit("item-has-just-been-updated");
         },
-        onError: (error: Error): void => {
-            updated_file.upload_error = error.message;
+        onError: (error: Error | DetailedError): void => {
+            updated_file.upload_error = getMessageFromError(error);
         },
     });
     uploader.start();
@@ -183,12 +184,20 @@ export function uploadVersionFromEmpty(
             context.commit("replaceUploadingFileWithActualFile", [updated_empty, new_item_version]);
             emitter.emit("item-has-just-been-updated");
         },
-        onError: (error: Error): void => {
-            updated_empty.upload_error = error.message;
+        onError: (error: Error | DetailedError): void => {
+            updated_empty.upload_error = getMessageFromError(error);
         },
     });
 
     uploader.start();
 
     return uploader;
+}
+
+function getMessageFromError(error: Error | DetailedError): string {
+    if ("causingError" in error) {
+        return error.causingError.message;
+    } else {
+        return error.message;
+    }
 }
