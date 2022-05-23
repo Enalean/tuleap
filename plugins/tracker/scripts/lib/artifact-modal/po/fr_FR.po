@@ -135,6 +135,9 @@ msgstr "Nouvel artéfact"
 msgid "No follow-ups"
 msgstr "Aucun commentaire"
 
+msgid "No links"
+msgstr "Aucun lien"
+
 msgid "No possible parent found"
 msgstr "Aucun parent possible trouvé"
 
@@ -210,9 +213,6 @@ msgstr "Texte"
 
 msgid "The artifact will be linked to %s"
 msgstr "L'artéfact sera lié à %s"
-
-msgid "There is no link yet"
-msgstr "Il n'y a pas encore de liens"
 
 msgid "There was an error in the Markdown preview:"
 msgstr "Il y a eu une erreur dans l'aperçu Markdown :"

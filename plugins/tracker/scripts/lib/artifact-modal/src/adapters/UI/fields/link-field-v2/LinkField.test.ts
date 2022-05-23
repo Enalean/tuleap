@@ -156,7 +156,7 @@ describe("LinkField", () => {
                 }
 
                 expect(badge.textContent?.trim()).toBe("story #123");
-                expect(badge.classList).toContain("tlp-badge-red-wine");
+                expect(badge.classList).toContain("tlp-swatch-red-wine");
             });
         });
     });

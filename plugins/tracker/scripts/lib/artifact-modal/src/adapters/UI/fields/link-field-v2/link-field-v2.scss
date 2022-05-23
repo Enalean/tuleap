@@ -24,12 +24,13 @@ $link-table-cell-border-bottom: 1px solid var(--tlp-background-color-darker-05);
 $link-table-cell-background: transparent;
 
 .link-field-xref-badge {
-    margin: 0 5px 0 0;
+    margin: 0 6px 0 0;
 }
 
 #tuleap-artifact-modal-link-table {
     width: unset;
     margin: 0 0 var(--tlp-medium-spacing);
+    overflow: hidden;
     border: 1px solid var(--tlp-background-color-darker-05);
     border-bottom: 0;
     border-radius: 5px;
@@ -39,6 +40,8 @@ $link-table-cell-background: transparent;
             > :is(.link-field-table-cell-type, .link-field-table-cell-xref, .link-field-table-cell-status, .link-field-table-cell-action, .link-field-table-cell-no-links) {
                 padding: $link-table-cell-padding;
                 border-bottom: $link-table-cell-border-bottom;
+                border-bottom-right-radius: 0;
+                border-bottom-left-radius: 0;
                 background: $link-table-cell-background;
             }
 
@@ -141,7 +144,22 @@ $link-table-cell-background: transparent;
 }
 
 .link-field-table-cell-xref {
+    position: relative;
     width: 100%;
+}
+
+.link-field-artifact-link {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    padding: $link-table-cell-padding;
+    color: var(--tlp-dark-color);
+}
+
+.link-field-artifact-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .link-field-table-cell-status {
@@ -159,8 +177,7 @@ $link-table-cell-background: transparent;
     width: 100%;
 
     > .link-field-item-title {
-        flex: 1 1 auto;
-        margin: 0 var(--tlp-large-spacing) 0 0;
+        flex: 0 1 auto;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -168,6 +185,19 @@ $link-table-cell-background: transparent;
 
     > .link-field-disabled-item-already-linked-info {
         flex: 0 1 auto;
+        margin: 0 0 0 calc(var(--tlp-small-spacing) / 2);
         white-space: nowrap;
     }
+}
+
+.link-field-artifact-can-have-only-one-parent-note {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--tlp-small-spacing);
+    font-size: 0.875rem;
+    line-height: normal;
+}
+
+.link-field-parent-note-xref-badge {
+    margin: 0 6px;
 }
