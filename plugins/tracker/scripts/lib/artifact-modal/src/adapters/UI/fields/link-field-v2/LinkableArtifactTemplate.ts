@@ -59,7 +59,8 @@ export const getLinkableArtifactTemplate = (
     }
 
     return lit_html`
-        <span class="link-field-item"><span class="${item_classes}">${artifact.xref.ref}</span>
+        <span class="link-field-item">
+            <span class="${item_classes}">${artifact.xref.ref}</span>
             <span class="link-field-item-title">${artifact.title}</span>
         </span>
     `;

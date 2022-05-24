@@ -161,7 +161,12 @@ export const getLinkedArtifactTemplate = (
             ${getArtifactLinkTypeLabel(artifact)}
         </td>
         <td class="link-field-table-cell-xref ${getRemoveClass(artifact)}">
-            <a href="${artifact.uri}" class="link-field-artifact-link" data-test="artifact-link">
+            <a
+                href="${artifact.uri}"
+                class="link-field-artifact-link"
+                title="${artifact.title}"
+                data-test="artifact-link"
+            >
                 <span class="${getCrossRefClassesWithRemoval(artifact)}" data-test="artifact-xref">
                     ${artifact.xref.ref}
                 </span>
