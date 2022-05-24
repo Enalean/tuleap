@@ -20,6 +20,7 @@
  */
 
 use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
+use Tuleap\admin\ProjectEdit\ProjectEditDao;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
@@ -216,6 +217,26 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
 
         $project = $project_manager->getProjectByUnixName("deleted-project");
         $project_manager->updateStatus($project, PROJECT::STATUS_DELETED);
+
+        return $this;
+    }
+
+    public function markProjectsAsTemplate()
+    {
+        echo "Mark public-template and private-template as template";
+
+        $project_manager  = ProjectManager::instance();
+        $public_template  = $project_manager->getProjectByUnixName("public-template");
+        $private_template = $project_manager->getProjectByUnixName("private-template");
+
+        $project_edit_dao = new ProjectEditDao();
+        if ($public_template) {
+            $project_edit_dao->updateProjectStatusAndType("A", TemplateSingleton::TEMPLATE, $public_template->getID());
+        }
+
+        if ($private_template) {
+            $project_edit_dao->updateProjectStatusAndType("A", TemplateSingleton::TEMPLATE, $private_template->getID());
+        }
 
         return $this;
     }

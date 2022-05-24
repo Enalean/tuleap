@@ -40,7 +40,6 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedForPlatformException;
-use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -51,6 +50,8 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
+use URLVerification;
+use UserManager;
 
 final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -95,7 +96,11 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager  = \Mockery::mock(\EventManager::class);
         $this->retriever      = \Mockery::mock(ServiceEnableForXmlImportRetriever::class);
         $this->plugin_factory = $this->createMock(\PluginFactory::class);
-        $this->creator        = new RestProjectCreator(
+
+        $this->user_manager     = $this->createMock(UserManager::class);
+        $this->url_verification = $this->createMock(URLVerification::class);
+
+        $this->creator = new RestProjectCreator(
             $this->project_creator,
             $this->project_XML_importer,
             new TemplateFactory(
@@ -112,7 +117,8 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->template_dao,
                 M::mock(ProjectManager::class),
                 new \EventManager(),
-                new CollectCategorisedExternalTemplatesEvent()
+                $this->user_manager,
+                $this->url_verification
             )
         );
 

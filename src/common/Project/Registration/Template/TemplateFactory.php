@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
+use Project;
+use Project_AccessException;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Glyph\GlyphFinder;
@@ -31,6 +33,8 @@ use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
+use URLVerification;
+use UserManager;
 
 class TemplateFactory
 {
@@ -63,14 +67,16 @@ class TemplateFactory
         TemplateDao $template_dao,
         ProjectManager $project_manager,
         EventDispatcherInterface $event_dispatcher,
+        private UserManager $user_manager,
+        private URLVerification $url_verification,
     ) {
         $this->template_dao    = $template_dao;
         $this->templates       = [
             AgileALMTemplate::NAME => new AgileALMTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
-            ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
-            KanbanTemplate::NAME => new KanbanTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
-            IssuesTemplate::NAME => new IssuesTemplate($glyph_finder, $consistency_checker, $event_dispatcher),
-            EmptyTemplate::NAME => new EmptyTemplate($glyph_finder),
+            ScrumTemplate::NAME    => new ScrumTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
+            KanbanTemplate::NAME   => new KanbanTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
+            IssuesTemplate::NAME   => new IssuesTemplate($glyph_finder, $consistency_checker, $event_dispatcher),
+            EmptyTemplate::NAME    => new EmptyTemplate($glyph_finder),
         ];
         $this->project_manager = $project_manager;
         $this->glyph_finder    = $glyph_finder;
@@ -96,7 +102,9 @@ class TemplateFactory
             ),
             new TemplateDao(),
             \ProjectManager::instance(),
-            $event_manager
+            $event_manager,
+            \UserManager::instance(),
+            new URLVerification()
         );
     }
 
@@ -166,7 +174,7 @@ class TemplateFactory
         $project_templates = $this->project_manager->getSiteTemplates();
 
         foreach ($project_templates as $project_template) {
-            if ((int) $project_template->getGroupId() === \Project::ADMIN_PROJECT_ID) {
+            if ((int) $project_template->getGroupId() === \Project::ADMIN_PROJECT_ID || ! $this->userCanAccessTemplate($project_template)) {
                 continue;
             }
             $company_templates[] = new CompanyTemplate($project_template, $this->glyph_finder);
@@ -197,5 +205,14 @@ class TemplateFactory
         }
 
         return $templates_by_name;
+    }
+
+    private function userCanAccessTemplate(Project $project_template): bool
+    {
+        try {
+            return $this->url_verification->userCanAccessProject($this->user_manager->getCurrentUser(), $project_template);
+        } catch (Project_AccessException $exception) {
+            return false;
+        }
     }
 }

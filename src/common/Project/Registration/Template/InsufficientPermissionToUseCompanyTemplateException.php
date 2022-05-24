@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Project\Registration\Template;
 
 use Project;
 use Project_Creation_Exception;
 
-final class ProjectTemplateNotActiveException extends Project_Creation_Exception implements InvalidTemplateException
+final class InsufficientPermissionToUseCompanyTemplateException extends Project_Creation_Exception implements InvalidTemplateException
 {
-    private Project $project;
-
-    public function __construct(Project $project)
+    public function __construct(private Project $project)
     {
-        parent::__construct('Project #' . $project->getID() . ' is not active');
-        $this->project = $project;
+        parent::__construct(sprintf(_("Template %d is not valid: you don't have the permission to the access the project."), $this->project->getId()));
     }
 
     public function getI18NMessage(): string
     {
-        return sprintf(_('Project #%d is not active.'), $this->project->getID());
+        return $this->message;
     }
 }

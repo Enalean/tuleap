@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+        unix-name="private-template" full-name="Private Template" description="For template test" access="private">
+    <long-description>A private template test project</long-description>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_3</member>
+                <member format="username">rest_api_tester_5</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_3</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <services>
+    </services>
+</project>

@@ -282,7 +282,8 @@ class ProjectResource extends AuthenticatedResource
                 new ProjectCreationDataServiceFromXmlInheritor(
                     ServiceManager::instance(),
                 ),
-                $this->getBackendLogger()
+                $this->getBackendLogger(),
+                $this->getURLVerification()
             );
 
             $creation_data = $creation_data_post_project_builder->buildProjectCreationDataFromPOSTRepresentation(
@@ -603,7 +604,7 @@ class ProjectResource extends AuthenticatedResource
         $project = $this->project_manager->getProject($id);
         $user    = $this->user_manager->getCurrentUser();
 
-        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
+        ProjectAuthorization::userCanAccessProject($user, $project, $this->getURLVerification());
 
         return $project;
     }
@@ -909,7 +910,7 @@ class ProjectResource extends AuthenticatedResource
     {
         $project = $this->project_manager->getProject($project_id);
         $user    = $this->user_manager->getCurrentUser();
-        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
+        ProjectAuthorization::userCanAccessProject($user, $project, $this->getURLVerification());
 
         return true;
     }
@@ -1433,5 +1434,10 @@ class ProjectResource extends AuthenticatedResource
         }
 
         return $project_field_representations;
+    }
+
+    private function getURLVerification(): URLVerification
+    {
+        return new URLVerification();
     }
 }

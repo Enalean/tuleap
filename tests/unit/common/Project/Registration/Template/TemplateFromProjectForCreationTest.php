@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use PFUser;
+use PHPUnit\Framework\MockObject\Stub;
 use Project;
 use ProjectManager;
 use Tuleap\Project\REST\v1\ProjectPostRepresentation;
 use Tuleap\Test\PHPUnit\TestCase;
+use URLVerification;
 
 final class TemplateFromProjectForCreationTest extends TestCase
 {
@@ -38,11 +40,16 @@ final class TemplateFromProjectForCreationTest extends TestCase
      * @var PFUser&\PHPUnit\Framework\MockObject\MockObject
      */
     private $user;
+    /**
+     * @var URLVerification&Stub
+     */
+    private $url_verification;
 
     protected function setUp(): void
     {
-        $this->project_manager = $this->createMock(ProjectManager::class);
-        $this->user            = $this->createMock(PFUser::class);
+        $this->project_manager  = $this->createMock(ProjectManager::class);
+        $this->user             = $this->createMock(PFUser::class);
+        $this->url_verification = $this->createStub(URLVerification::class);
     }
 
     public function testGetTemplateFromProjectForCreationFromRESTRepresentation(): void
@@ -54,7 +61,8 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $template_from_project_for_creation = TemplateFromProjectForCreation::fromRESTRepresentation(
             $representation,
             $this->user,
-            $this->project_manager
+            $this->project_manager,
+            $this->url_verification
         );
 
         self::assertEquals($expected_project, $template_from_project_for_creation->getProject());
@@ -65,8 +73,10 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $project = $this->createMock(Project::class);
         $project->method('getID')->willReturn($project_id);
         $project->method('isError')->willReturn(false);
-        $project->method('isActive')->willReturn(false);
+        $project->method('isActive')->willReturn(true);
         $project->method('isTemplate')->willReturn(true);
+
+        $this->url_verification->method('userCanAccessProject')->willReturn(true);
 
         $this->project_manager->method('getProject')->with($project_id)->willReturn($project);
 
@@ -92,11 +102,12 @@ final class TemplateFromProjectForCreationTest extends TestCase
         TemplateFromProjectForCreation::fromRESTRepresentation(
             $representation,
             $this->user,
-            $this->project_manager
+            $this->project_manager,
+            $this->url_verification
         );
     }
 
-    public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateIsNotActiveAndNotMarkedAsTemplate(): void
+    public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateIsNotActive(): void
     {
         $representation = ProjectPostRepresentation::build(124);
 
@@ -104,7 +115,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
         $project->method('getID')->willReturn($representation->template_id);
         $project->method('isError')->willReturn(false);
         $project->method('isActive')->willReturn(false);
-        $project->method('isTemplate')->willReturn(false);
+        $project->method('isSystem')->willReturn(false);
 
         $this->project_manager->method('getProject')->with($representation->template_id)->willReturn($project);
 
@@ -112,7 +123,8 @@ final class TemplateFromProjectForCreationTest extends TestCase
         TemplateFromProjectForCreation::fromRESTRepresentation(
             $representation,
             $this->user,
-            $this->project_manager
+            $this->project_manager,
+            $this->url_verification
         );
     }
 
@@ -134,7 +146,31 @@ final class TemplateFromProjectForCreationTest extends TestCase
         TemplateFromProjectForCreation::fromRESTRepresentation(
             $representation,
             $this->user,
-            $this->project_manager
+            $this->project_manager,
+            $this->url_verification
+        );
+    }
+
+    public function testGetTemplateFromProjectForCreationIsNotValidWhenTemplateProjectToUseIsActiveButTheUserCanAccessTheProject(): void
+    {
+        $representation = ProjectPostRepresentation::build(125);
+
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn($representation->template_id);
+        $project->method('isError')->willReturn(false);
+        $project->method('isActive')->willReturn(true);
+        $project->method('isTemplate')->willReturn(true);
+
+        $this->url_verification->method('userCanAccessProject')->willReturn(false);
+
+        $this->project_manager->method('getProject')->with($representation->template_id)->willThrowException(new InsufficientPermissionToUseCompanyTemplateException($project));
+
+        $this->expectException(InsufficientPermissionToUseCompanyTemplateException::class);
+        TemplateFromProjectForCreation::fromRESTRepresentation(
+            $representation,
+            $this->user,
+            $this->project_manager,
+            $this->url_verification
         );
     }
 }

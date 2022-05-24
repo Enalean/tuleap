@@ -2593,8 +2593,8 @@ msgid "Project"
 msgstr "Projeto"
 
 #, php-format
-msgid "Project #%d is not active and is not a template"
-msgstr "O projeto #%d não está ativo e não é um modelo"
+msgid "Project #%d is not active."
+msgstr "O projeto #%d não está ativo."
 
 msgid "Project (read only)"
 msgstr "Projeto (somente leitura)"
@@ -3390,6 +3390,12 @@ msgstr ""
 #, php-format
 msgid "Template #%d is not valid"
 msgstr "O modelo #%d não é válido"
+
+#, php-format
+msgid ""
+"Template %d is not valid: you don't have the permission to the access the "
+"project."
+msgstr ""
 
 msgid "Template used by project"
 msgstr "Modelo utilizado pelo projeto"
