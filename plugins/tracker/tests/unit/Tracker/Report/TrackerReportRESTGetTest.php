@@ -83,22 +83,36 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(
             \Mockery::spy(\Tracker_FormElement_Field_Integer::class)
         );
-        $this->formelement_factory->shouldReceive('getFormElementByName')->times(2);
+        $this->formelement_factory->shouldReceive('getFormElementByName')->times(2)->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
 
         $this->report->getCriteria();
     }
 
+    public function testItThrowExceptionIfGivenFormelementsDontExist(): void
+    {
+        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_field')->andReturns(null);
+        $this->formelement_factory->shouldReceive('getFormElementById')->with('my_other_field')->andReturns(null);
+        $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(
+            \Mockery::spy(\Tracker_FormElement_Field::class)
+        );
+        $this->formelement_factory->shouldReceive('getFormElementByName')->times(2)->andReturn(null);
+         $this->expectException(Tracker_Report_InvalidRESTCriterionException::class);
+
+        $this->report->getCriteria();
+    }
+
+
     public function testItFetchesByNameIfTheFormElementByIdDoesNotExist(): void
     {
         $this->formelement_factory->shouldReceive('getFormElementById')->with(137)->andReturns(null)->once();
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 137)->once();
+        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 137)->once()->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
 
         $this->formelement_factory->shouldReceive('getFormElementById')->with('my_field')->andReturns(null)->once();
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 'my_field')->once();
+        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 'my_field')->once()->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
 
         $this->formelement_factory->shouldReceive('getFormElementById')->with('my_other_field')->andReturns(null)->once(
         );
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 'my_other_field')->once();
+        $this->formelement_factory->shouldReceive('getFormElementByName')->with(444, 'my_other_field')->once()->andReturn(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
 
         $this->report->getCriteria();
     }
@@ -146,7 +160,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
             $this->tracker_id,
             "my_field"
         )->andReturns($label);
-        $this->formelement_factory->shouldReceive('getFormElementByName')->with("my_other_field")->andReturns(null);
+        $this->formelement_factory->shouldReceive('getFormElementByName')->with($this->tracker_id, "my_other_field")->andReturns(\Mockery::spy(\Tracker_FormElement_Field_Integer::class));
 
         $integer->shouldReceive('setCriteriaValueFromREST')->once()->andReturns(true);
         $label->shouldReceive('setCriteriaValueFromREST')->once()->andReturns(false);

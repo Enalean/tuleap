@@ -168,8 +168,9 @@ class Tracker_Report_REST extends Tracker_Report
 
     public function getCriteria(): array
     {
-        $rank       = 0;
-        $tracker_id = $this->getTracker()->getId();
+        $rank                = 0;
+        $tracker_id          = $this->getTracker()->getId();
+        $non_existing_fields = [];
 
         foreach ($this->rest_criteria as $field_identifier => $criterion) {
             $formelement = $this->formelement_factory->getFormElementById($field_identifier);
@@ -178,10 +179,24 @@ class Tracker_Report_REST extends Tracker_Report
                 $formelement = $this->formelement_factory->getFormElementByName($tracker_id, $field_identifier);
             }
 
-            if ($formelement && $formelement->userCanRead($this->current_user)) {
+            if (! $formelement) {
+                $non_existing_fields[] = $field_identifier;
+                continue;
+            }
+
+            if (empty($non_existing_fields) && $formelement->userCanRead($this->current_user)) {
                 $this->addCriterionToFormElement($formelement, $criterion, $rank);
                 $rank++;
             }
+        }
+
+        if ($non_existing_fields) {
+            throw new Tracker_Report_InvalidRESTCriterionException(
+                "Following fields do not exist: " . implode(
+                    ', ',
+                    $non_existing_fields
+                )
+            );
         }
 
         return $this->criteria;

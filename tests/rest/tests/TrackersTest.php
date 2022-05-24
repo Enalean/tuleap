@@ -442,6 +442,19 @@ final class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testGetTrackerArtifactsBasicQueryWithNonExisingField()
+    {
+        $query    = json_encode(
+            [
+                "Nonexisting" => "lease",
+            ]
+        );
+        $request  = $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri() . '/artifacts?query=' . urlencode($query));
+        $response = $this->getResponse($request);
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
     public function testGetTrackerArtifactsBasicCounterQuery()
     {
         $query = json_encode(
