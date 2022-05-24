@@ -18,7 +18,7 @@
  */
 
 import { Settings } from "luxon";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 import { getTrackedTimes, addTime, deleteTime } from "./rest-querier.js";
 

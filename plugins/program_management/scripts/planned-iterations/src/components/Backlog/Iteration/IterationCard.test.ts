@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
-import { formatDateYearMonthDay } from "@tuleap/date-helper/src";
+import { formatDateYearMonthDay } from "@tuleap/date-helper";
 
 import IterationCard from "./IterationCard.vue";
 

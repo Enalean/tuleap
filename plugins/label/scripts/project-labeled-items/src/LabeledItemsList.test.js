@@ -19,7 +19,7 @@
 import Vue from "vue";
 import * as rest_querier from "./rest-querier.js";
 import LabeledItemsList from "./LabeledItemsList.vue";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 

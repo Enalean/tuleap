@@ -18,7 +18,7 @@
  */
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 import {
     getProjectsWithTimetracking,

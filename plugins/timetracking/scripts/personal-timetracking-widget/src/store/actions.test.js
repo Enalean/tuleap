@@ -19,7 +19,7 @@
 
 import * as actions from "./actions.js";
 import * as rest_querier from "../api/rest-querier.js";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,

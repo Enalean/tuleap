@@ -20,7 +20,7 @@
 import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";

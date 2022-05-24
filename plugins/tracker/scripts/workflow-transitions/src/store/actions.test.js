@@ -30,7 +30,7 @@ import {
 import * as rest_querier from "../api/rest-querier.js";
 import * as exception_handler from "./exception-handler.js";
 import { create } from "../support/factories.js";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("Store actions:", () => {
     let context;
