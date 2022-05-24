@@ -67,6 +67,7 @@ import type { GroupCollection } from "@tuleap/link-selector";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import type { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import type { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
+import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 
 const ARTIFACT_ID = 60;
 const FIELD_ID = 714;
@@ -159,7 +160,8 @@ describe(`LinkFieldController`, () => {
             },
             current_artifact_identifier,
             current_tracker_identifier,
-            cross_reference
+            cross_reference,
+            ControlLinkedArtifactsPopoversStub.build()
         );
     };
 

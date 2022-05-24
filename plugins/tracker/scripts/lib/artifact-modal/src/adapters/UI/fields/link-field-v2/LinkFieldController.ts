@@ -53,6 +53,10 @@ import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
+import type {
+    ControlLinkedArtifactsPopovers,
+    LinkedArtifactPopoverElement,
+} from "./LinkedArtifactsPopoversController";
 
 export type LinkFieldPresenterAndAllowedLinkTypes = {
     readonly field: LinkFieldPresenter;
@@ -70,6 +74,7 @@ export type LinkFieldControllerType = {
     addNewLink(artifact: LinkableArtifact): NewLinkCollectionPresenter;
     removeNewLink(link: NewLink): NewLinkCollectionPresenter;
     setSelectedLinkType(link_selector: LinkSelector, type: LinkType): LinkType;
+    initPopovers: (popover_elements: LinkedArtifactPopoverElement[]) => void;
 };
 
 const isCreationModeFault = (fault: Fault): boolean =>
@@ -110,7 +115,8 @@ export const LinkFieldController = (
     field: ArtifactLinkFieldStructure,
     current_artifact_identifier: CurrentArtifactIdentifier | null,
     current_tracker_identifier: CurrentTrackerIdentifier,
-    current_artifact_reference: ArtifactCrossReference | null
+    current_artifact_reference: ArtifactCrossReference | null,
+    control_popovers: ControlLinkedArtifactsPopovers
 ): LinkFieldControllerType => {
     const only_is_child_type = field.allowed_types.filter(
         (type) => type.shortname === IS_CHILD_LINK_TYPE
@@ -197,6 +203,10 @@ export const LinkFieldController = (
                 }
             );
             return type_setter.setSelectedLinkType(type);
+        },
+
+        initPopovers(popover_elements: LinkedArtifactPopoverElement[]): void {
+            control_popovers.initPopovers(popover_elements);
         },
     };
 };

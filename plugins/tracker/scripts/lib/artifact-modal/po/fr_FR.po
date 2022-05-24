@@ -156,6 +156,9 @@ msgstr "Note : un artéfact ne peut avoir qu'un seul parent."
 msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
+msgid "Open"
+msgstr "Ouvrez"
+
 msgid "Parent artifact"
 msgstr "Artéfact parent"
 
@@ -257,6 +260,9 @@ msgstr ""
 
 msgid "can only have one parent."
 msgstr "ne peut avoir qu'un seul parent."
+
+msgid "to remove link"
+msgstr "pour supprimer ce lien"
 
 msgid "{{ project_label }} - open {{ tracker_label }}"
 msgstr "{{ project_label }} - {{ tracker_label }} ouvert·e·s"

@@ -47,6 +47,7 @@ import { SetSelectedLinkTypeStub } from "../../../../../tests/stubs/SetSelectedL
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
+import { ControlLinkedArtifactsPopoversStub } from "../../../../../tests/stubs/ControlLinkedArtifactsPopoversStub";
 
 const NEW_ARTIFACT_ID = 81;
 
@@ -120,7 +121,8 @@ describe(`AddLinkButtonTemplate`, () => {
             },
             current_artifact_identifier,
             current_tracker_identifier,
-            ArtifactCrossReferenceStub.withRef("story #62")
+            ArtifactCrossReferenceStub.withRef("story #62"),
+            ControlLinkedArtifactsPopoversStub.build()
         );
 
         host = {
