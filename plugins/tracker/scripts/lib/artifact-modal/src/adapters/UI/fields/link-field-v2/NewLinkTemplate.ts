@@ -64,7 +64,12 @@ export const getNewLinkTemplate = (link: NewLink): UpdateFunction<LinkField> => 
                 ${getArtifactLinkTypeLabel(link)}
             </td>
             <td class="link-field-table-cell-xref">
-                <a href="${link.uri}" class="link-field-artifact-link" data-test="link-link">
+                <a
+                    href="${link.uri}"
+                    class="link-field-artifact-link"
+                    title="${link.title}"
+                    data-test="link-link"
+                >
                     <span class="${getCrossRefClasses(link)}" data-test="link-xref">
                         ${link.xref.ref}
                     </span>
