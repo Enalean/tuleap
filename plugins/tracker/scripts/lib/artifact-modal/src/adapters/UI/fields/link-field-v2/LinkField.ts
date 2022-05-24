@@ -280,30 +280,36 @@ export const LinkField = define<LinkField>({
         set: setCurrentLinkType,
     },
     content: (host) => html`
-        <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
-            ${host.field_presenter.label}
-        </label>
-        ${getLinkFieldCanOnlyHaveOneParentNote(host)}
-        <table id="tuleap-artifact-modal-link-table" class="tlp-table">
-            <tbody class="link-field-table-body">
-                ${host.linked_artifacts_presenter.linked_artifacts.map(getLinkedArtifactTemplate)}
-                ${host.new_links_presenter.map(getNewLinkTemplate)}
-                ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
-                ${getEmptyStateIfNeeded(host)}
-            </tbody>
-            <tfoot class="link-field-table-footer">
-                <tr class="link-field-table-row">
-                    <td class="link-field-table-footer-type">${getTypeSelectorTemplate(host)}</td>
-                    <td class="link-field-table-footer-input" colspan="2">
-                        <div class="link-field-selector-wrapper">
-                            <select data-select="artifact-link-select"></select>
-                        </div>
-                    </td>
-                    <td class="link-field-table-footer-add-link">
-                        ${getAddLinkButtonTemplate(host)}
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+        <div class="tracker-form-element" data-test="artifact-link-field">
+            <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
+                ${host.field_presenter.label}
+            </label>
+            ${getLinkFieldCanOnlyHaveOneParentNote(host)}
+            <table id="tuleap-artifact-modal-link-table" class="tlp-table">
+                <tbody class="link-field-table-body">
+                    ${host.linked_artifacts_presenter.linked_artifacts.map(
+                        getLinkedArtifactTemplate
+                    )}
+                    ${host.new_links_presenter.map(getNewLinkTemplate)}
+                    ${getSkeletonIfNeeded(host.linked_artifacts_presenter)}
+                    ${getEmptyStateIfNeeded(host)}
+                </tbody>
+                <tfoot class="link-field-table-footer">
+                    <tr class="link-field-table-row">
+                        <td class="link-field-table-footer-type">
+                            ${getTypeSelectorTemplate(host)}
+                        </td>
+                        <td class="link-field-table-footer-input" colspan="2">
+                            <div class="link-field-selector-wrapper">
+                                <select data-select="artifact-link-select"></select>
+                            </div>
+                        </td>
+                        <td class="link-field-table-footer-add-link">
+                            ${getAddLinkButtonTemplate(host)}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     `,
 });
