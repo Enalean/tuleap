@@ -109,8 +109,6 @@ describe("NewTuleapArtifactModalService", () => {
             const promise = NewTuleapArtifactModalService.initCreationModalModel(
                 tracker_id,
                 parent_artifact_id,
-                false,
-                false,
                 false
             );
 
@@ -318,8 +316,6 @@ describe("NewTuleapArtifactModalService", () => {
                     user_id,
                     tracker_id,
                     artifact_id,
-                    false,
-                    false,
                     false
                 );
 

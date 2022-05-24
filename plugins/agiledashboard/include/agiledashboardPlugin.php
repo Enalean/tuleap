@@ -639,8 +639,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
                         $permission_manager,
                         $widget_config_retriever,
                         $widget_kanban_config_updater,
-                        Tracker_ReportFactory::instance(),
-                        EventManager::instance()
+                        Tracker_ReportFactory::instance()
                     )
                 );
                 break;
@@ -655,8 +654,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
                         $permission_manager,
                         $widget_config_retriever,
                         $widget_kanban_config_updater,
-                        Tracker_ReportFactory::instance(),
-                        EventManager::instance()
+                        Tracker_ReportFactory::instance()
                     )
                 );
                 break;

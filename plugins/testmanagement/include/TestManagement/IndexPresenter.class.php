@@ -27,7 +27,6 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
-use Tuleap\Tracker\Modal\FeatureFlagArtifactModalLinksFieldV2;
 use Tuleap\User\REST\UserRepresentation;
 
 class IndexPresenter
@@ -120,8 +119,6 @@ class IndexPresenter
      */
     public $csrf_token_campaign_status;
 
-    public string $has_current_project_parents;
-
     /**
      * @psalm-readonly
      */
@@ -130,7 +127,6 @@ class IndexPresenter
      * @psalm-readonly
      */
     public string $project_icon;
-    public string $is_links_field_v2_enabled;
     /**
      * @psalm-readonly
      */
@@ -161,7 +157,6 @@ class IndexPresenter
         PFUser $current_user,
         object $milestone_representation,
         array $project_flags,
-        bool $has_current_project_parents,
         CSRFSynchronizerToken $csrf_token,
         string $platform_name,
         string $base_url,
@@ -214,15 +209,9 @@ class IndexPresenter
             $issue_tracker_id
         );
 
-        $this->csrf_token_campaign_status  = $csrf_token->getToken();
-        $this->has_current_project_parents = json_encode($has_current_project_parents, JSON_THROW_ON_ERROR);
+        $this->csrf_token_campaign_status = $csrf_token->getToken();
 
         $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
-
-        $this->is_links_field_v2_enabled = json_encode(
-            FeatureFlagArtifactModalLinksFieldV2::isArtifactModalLinksFieldV2Enabled(),
-            JSON_THROW_ON_ERROR
-        );
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

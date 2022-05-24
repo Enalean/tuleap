@@ -26,7 +26,6 @@ use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
 use TrackerFactory;
-use Tuleap\Event\Events\HasCurrentProjectParentProjects;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -75,9 +74,6 @@ class IndexController extends TestManagementController
             $milestone_representation = new \stdClass();
         }
 
-        $event = new HasCurrentProjectParentProjects($this->project);
-        $this->event_manager->dispatch($event);
-
         return $this->renderToString(
             'index',
             new IndexPresenter(
@@ -90,7 +86,6 @@ class IndexController extends TestManagementController
                 $current_user,
                 $milestone_representation,
                 $this->project_flags_builder->buildProjectFlags($this->project),
-                $event->hasProjectAtLeastOneParentProject(),
                 new CSRFSynchronizerToken("/plugins/testmanagement/?group_id=" . (int) $this->project->getID()),
                 \ForgeConfig::get('sys_name'),
                 \Tuleap\ServerHostname::HTTPSUrl(),

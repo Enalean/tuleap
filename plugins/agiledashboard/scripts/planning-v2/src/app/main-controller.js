@@ -51,20 +51,10 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         const is_list_picker_enabled = Boolean(JSON.parse(planning_init_data.isListPickerEnabled));
         SharedPropertiesService.setEnableListPicker(is_list_picker_enabled);
 
-        const is_links_field_v2_enabled = Boolean(
-            JSON.parse(planning_init_data.isLinksFieldV2Enabled)
-        );
-        SharedPropertiesService.setIsLinksFieldV2Enabled(is_links_field_v2_enabled);
-
         const trackers_disabling_list_picker = JSON.parse(
             planning_init_data.trackersIdsHavingListPickerDisabled
         );
         SharedPropertiesService.setTrackersDisablingListPicker(trackers_disabling_list_picker);
-
-        const has_current_project_parents = Boolean(
-            JSON.parse(planning_init_data.hasCurrentProjectParents)
-        );
-        SharedPropertiesService.setHasCurrentProjectParents(has_current_project_parents);
 
         const language = planning_init_data.language;
         initLocale(language);

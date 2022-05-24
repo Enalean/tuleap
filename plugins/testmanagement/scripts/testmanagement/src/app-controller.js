@@ -53,11 +53,6 @@ function TestManagementCtrl(
         const current_milestone = JSON.parse(testmanagement_init_data.currentMilestone);
         SharedPropertiesService.setCurrentMilestone(current_milestone);
 
-        const is_links_field_v2_enabled = Boolean(
-            JSON.parse(testmanagement_init_data.isLinksFieldV2Enabled)
-        );
-        SharedPropertiesService.setIsLinksFieldV2Enabled(is_links_field_v2_enabled);
-
         const project_public_name = testmanagement_init_data.projectPublicName;
         SharedPropertiesService.setProjectName(project_public_name);
         const project_url = testmanagement_init_data.projectUrl;
@@ -69,11 +64,6 @@ function TestManagementCtrl(
             testmanagement_init_data.trackersUsingListPicker
         );
         SharedPropertiesService.setTrackersUsingListPicker(trackers_ids_using_list_picker);
-
-        const has_current_project_parents = JSON.parse(
-            testmanagement_init_data.hasCurrentProjectParents
-        );
-        SharedPropertiesService.setHasCurrentProjectParents(has_current_project_parents);
 
         const csrf_token = testmanagement_init_data.csrfTokenCampaignStatus;
         SharedPropertiesService.setCSRFTokenCampaignStatus(csrf_token);

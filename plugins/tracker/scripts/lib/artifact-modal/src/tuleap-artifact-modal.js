@@ -31,7 +31,6 @@ import { setCatalog } from "./gettext-catalog";
 
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
-import LinkFieldDirective from "./fields/link-field/link-field-directive.js";
 import StaticOpenListFieldDirective from "./fields/open-list-field/static-open-list-field-directive.js";
 import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open-list-field-directive.js";
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
@@ -78,7 +77,6 @@ export default angular
     .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
     .constant("TuleapArtifactModalStructuralFields", STRUCTURAL_FIELDS)
     .controller("TuleapArtifactModalController", ArtifactModalController)
-    .directive("tuleapArtifactModalLinkField", LinkFieldDirective)
     .directive("tuleapArtifactModalStaticOpenListField", StaticOpenListFieldDirective)
     .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
     .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)

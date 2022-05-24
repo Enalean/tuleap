@@ -146,23 +146,9 @@
 
 <script type="text/ng-template" id="field-art_link.tpl.html">
 <tuleap-artifact-modal-link-field-v2
-    ng-if="modal.is_links_field_v2_enabled === true"
     controller="modal.getLinkFieldController(field)"
     ce-one-way
 ></tuleap-artifact-modal-link-field-v2>
-<div
-    ng-if="modal.is_links_field_v2_enabled === false"
-    class="field"
-    tuleap-artifact-modal-link-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-    artifact-id="modal.artifact_id"
-    tracker="modal.tracker"
-    parent-artifact-id="modal.parent_artifact_id"
-    parent-artifact="modal.parent"
-    is-list-picker-enabled="modal.is_list_picker_enabled"
-    has-current-project-parents="modal.has_current_project_parents"
-></div>
 </script>
 <script type="text/ng-template" id="field-burndown.tpl.html">
 <tuleap-artifact-modal-burndown-field

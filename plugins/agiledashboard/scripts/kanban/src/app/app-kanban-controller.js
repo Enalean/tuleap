@@ -458,9 +458,7 @@ function KanbanCtrl(
             self.kanban.tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabled(),
-            SharedPropertiesService.hasCurrentProjectParents(),
-            SharedPropertiesService.isLinksFieldV2Enabled()
+            SharedPropertiesService.isListPickerEnabled()
         );
     }
 
@@ -638,9 +636,7 @@ function KanbanCtrl(
                 kanban.tracker_id,
                 item.id,
                 callback,
-                SharedPropertiesService.isListPickerEnabled(),
-                SharedPropertiesService.hasCurrentProjectParents(),
-                SharedPropertiesService.isLinksFieldV2Enabled()
+                SharedPropertiesService.isListPickerEnabled()
             );
         }
     }
