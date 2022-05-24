@@ -180,8 +180,9 @@ describe(`Artifact Modal`, function () {
                 });
             });
 
-            getFieldWithLabel("Artifact link", "[data-test=artifactlink-field]").within(() => {
-                cy.get("[data-test=artifactlink-field-input]").type(this.artifact_link_id);
+            getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
+                selectLabelInLinkSelectorDropdown("Linked Artifact", this.artifact_link_id);
+                cy.get("[data-test=add-new-link-button]").click();
             });
 
             cy.get("[data-test=artifact-modal-save-button]").click();
@@ -342,8 +343,8 @@ describe(`Artifact Modal`, function () {
                 });
             });
 
-            getFieldWithLabel("Artifact link", "[data-test=artifactlink-field]").within(() => {
-                cy.get("[data-test=artifactlink-field-input]").clear().type(this.artifact_link_id);
+            getFieldWithLabel("Artifact link", "[data-test=artifact-link-field]").within(() => {
+                cy.get("[data-test=action-button]").click();
             });
 
             cy.get("[data-test=add-comment-form]").within(() => {
@@ -436,6 +437,22 @@ function selectLabelInListPickerDropdown(
         .within(() => {
             cy.get("[data-test-list-picker-dropdown-open]").within(() => {
                 cy.get("[data-test=list-picker-item]").contains(label).click();
+            });
+        });
+}
+
+function selectLabelInLinkSelectorDropdown(
+    label: string,
+    artifact_link_id: number
+): Cypress.Chainable<JQuery<HTMLBodyElement>> {
+    cy.get("[data-test=link-selector-selection]").click();
+    return cy
+        .root()
+        .parents("body")
+        .within(() => {
+            cy.get("[data-test=link-selector-search-field]").type(String(artifact_link_id));
+            cy.get("[data-test-link-selector-dropdown-open]").within(() => {
+                cy.get("[data-test=link-selector-item]").contains(label).click();
             });
         });
 }
