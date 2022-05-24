@@ -123,6 +123,9 @@ msgstr ""
 msgid "No follow-ups"
 msgstr ""
 
+msgid "No links"
+msgstr ""
+
 msgid "No possible parent found"
 msgstr ""
 
@@ -193,9 +196,6 @@ msgid "Text"
 msgstr ""
 
 msgid "The artifact will be linked to %s"
-msgstr ""
-
-msgid "There is no link yet"
 msgstr ""
 
 msgid "There was an error in the Markdown preview:"

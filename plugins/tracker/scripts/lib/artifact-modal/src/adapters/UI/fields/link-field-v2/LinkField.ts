@@ -180,18 +180,26 @@ export const getLinkFieldCanOnlyHaveOneParentNote = (
 ): UpdateFunction<LinkField> => {
     if (!host.field_presenter.current_artifact_reference) {
         return html`
-            ${getLinkFieldNoteText()}
+            <p class="link-field-artifact-can-have-only-one-parent-note">
+                ${getLinkFieldNoteText()}
+            </p>
         `;
     }
 
     const { ref: artifact_reference, color } = host.field_presenter.current_artifact_reference;
-    const badge_classes = [`tlp-badge-${color}`, "tlp-badge-outline", "tlp-badge-rounded"];
+    const badge_classes = [
+        `tlp-swatch-${color}`,
+        "cross-ref-badge",
+        "link-field-parent-note-xref-badge",
+    ];
     return html`
-        ${getLinkFieldNoteStartText()}
-        <span data-test="artifact-cross-ref-badge" class="${badge_classes}">
-            ${artifact_reference}
-        </span>
-        ${getLinkFieldCanHaveOnlyOneParent()}
+        <p class="link-field-artifact-can-have-only-one-parent-note">
+            ${getLinkFieldNoteStartText()}
+            <span data-test="artifact-cross-ref-badge" class="${badge_classes}">
+                ${artifact_reference}
+            </span>
+            ${getLinkFieldCanHaveOnlyOneParent()}
+        </p>
     `;
 };
 
@@ -249,7 +257,7 @@ export const LinkField = define<LinkField>({
         <label for="${"tracker_field_" + host.field_presenter.field_id}" class="tlp-label">
             ${host.field_presenter.label}
         </label>
-        <p>${getLinkFieldCanOnlyHaveOneParentNote(host)}</p>
+        ${getLinkFieldCanOnlyHaveOneParentNote(host)}
         <table id="tuleap-artifact-modal-link-table" class="tlp-table">
             <tbody class="link-field-table-body">
                 ${host.linked_artifacts_presenter.linked_artifacts.map(getLinkedArtifactTemplate)}
