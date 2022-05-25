@@ -47,7 +47,8 @@ describe("downloadCampaignAsDocx", () => {
             "en_US",
             "https://example.com/",
             101,
-            10
+            10,
+            []
         );
 
         expect(downloadExportDocumentMock).toHaveBeenCalledWith(

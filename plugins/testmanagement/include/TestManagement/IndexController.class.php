@@ -29,6 +29,7 @@ use TrackerFactory;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 
 class IndexController extends TestManagementController
 {
@@ -52,6 +53,7 @@ class IndexController extends TestManagementController
         TrackerFactory $tracker_factory,
         VisitRecorder $visit_recorder,
         ProjectFlagsBuilder $project_flags_builder,
+        private IRetrieveAllUsableTypesInProject $type_presenter_factory,
     ) {
         parent::__construct($request, $config, $event_manager);
 
@@ -90,6 +92,7 @@ class IndexController extends TestManagementController
                 \ForgeConfig::get('sys_name'),
                 \Tuleap\ServerHostname::HTTPSUrl(),
                 \Admin_Homepage_LogoFinder::getCurrentUrl(),
+                $this->type_presenter_factory->getAllUsableTypesInProject($this->project)
             )
         );
     }
