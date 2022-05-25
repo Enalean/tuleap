@@ -73,6 +73,7 @@ class AdminSidebarPresenter
         $pending_projects_count,
         $pending_news_count,
         $plugins,
+        public bool $has_invitations,
     ) {
         $this->all_users_count        = $all_users_count;
         $this->users_need_approval    = $users_need_approval;

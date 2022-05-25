@@ -35,27 +35,11 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
 {
     public const URL = '/admin/invitations/';
 
-    /**
-     * @var AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var InviteBuddyConfiguration
-     */
-    private $configuration;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
     public function __construct(
-        AdminPageRenderer $admin_page_renderer,
-        InviteBuddyConfiguration $configuration,
-        CSRFSynchronizerToken $csrf_token,
+        private AdminPageRenderer $admin_page_renderer,
+        private InviteBuddyConfiguration $configuration,
+        private CSRFSynchronizerToken $csrf_token,
     ) {
-        $this->admin_page_renderer = $admin_page_renderer;
-        $this->configuration       = $configuration;
-        $this->csrf_token          = $csrf_token;
     }
 
     public static function buildSelf(): self
@@ -74,7 +58,7 @@ class InviteBuddyAdminController implements DispatchableWithRequest, Dispatchabl
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        if (! $request->getCurrentUser()->isSuperUser()) {
+        if (! $request->getCurrentUser()->isSuperUser() || ! $this->configuration->canSiteAdminConfigureTheFeature()) {
             throw new ForbiddenException();
         }
 

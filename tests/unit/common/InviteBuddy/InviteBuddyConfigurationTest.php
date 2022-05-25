@@ -88,6 +88,20 @@ class InviteBuddyConfigurationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue((new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($user));
     }
 
+    public function testSiteAdminCanConfigureWhenNoPluginPreventIt(): void
+    {
+        $event_manager = new \EventManager();
+        self::assertTrue((new InviteBuddyConfiguration($event_manager))->canSiteAdminConfigureTheFeature());
+    }
+
+    public function testSiteAdminCannotConfigureWhenPluginPreventIt(): void
+    {
+        $event_manager = new \EventManager();
+        $event_manager->addClosureOnEvent(RegistrationGuardEvent::NAME, fn (RegistrationGuardEvent $event) => $event->disableRegistration());
+
+        self::assertFalse((new InviteBuddyConfiguration($event_manager))->canSiteAdminConfigureTheFeature());
+    }
+
     public function itReturnsTheNbMax(): void
     {
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
