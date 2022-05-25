@@ -92,22 +92,15 @@ class InviteBuddyAdminUpdateController implements DispatchableWithRequest
             return;
         }
 
-        if (
-            $this->dao->saveInt(
-                InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY,
-                $submitted_max_invitations_by_day
-            )
-        ) {
-            $layout->addFeedback(
-                \Feedback::INFO,
-                _("Invitations settings successfully updated.")
-            );
-        } else {
-            $layout->addFeedback(
-                \Feedback::ERROR,
-                _("An error occurred while updating the settings.")
-            );
-        }
+        $this->dao->saveInt(
+            InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY,
+            $submitted_max_invitations_by_day
+        );
+
+        $layout->addFeedback(
+            \Feedback::INFO,
+            _("Invitations settings successfully updated.")
+        );
 
         $this->redirect($layout);
     }
