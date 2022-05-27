@@ -622,9 +622,6 @@ msgstr[1] "Ocorreu um erro ao tentar enviar os convites"
 msgid "An error occurred while trying to update permissions delegations."
 msgstr "Ocorreu um erro ao tentar atualizar as permissões das delegações."
 
-msgid "An error occurred while updating the settings."
-msgstr "Ocorreu um erro ao atualizar as configurações."
-
 msgid ""
 "An error occurred with your upload. Please try again or choose another image."
 msgstr ""
