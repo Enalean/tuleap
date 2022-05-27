@@ -174,7 +174,6 @@ module.exports = {
                 "plugins/agiledashboard/scripts/permissions-per-group/**/*.vue",
                 "src/scripts/project/admin/services/**/*.vue",
                 "src/scripts/*/permissions-per-group/**/*.vue",
-                "src/scripts/vue-components/skeletons/SkeletonTable.vue",
             ],
             rules: {
                 "@typescript-eslint/explicit-function-return-type": "off",

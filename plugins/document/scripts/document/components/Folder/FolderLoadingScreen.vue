@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import SkeletonTable from "../../../../../../src/scripts/vue-components/skeletons/SkeletonTable.vue";
+import SkeletonTable from "./SkeletonTable.vue";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({ components: { SkeletonTable } })
