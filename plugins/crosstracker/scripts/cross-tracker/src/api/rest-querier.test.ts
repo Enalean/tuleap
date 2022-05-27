@@ -26,7 +26,7 @@ import {
     getTrackersOfProject,
     getCSVReport,
 } from "./rest-querier";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("rest-querier", () => {

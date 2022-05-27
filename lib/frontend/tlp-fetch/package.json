@@ -11,6 +11,10 @@
     ".": {
       "import": "./dist/tlp-fetch.es.js",
       "require": "./dist/tlp-fetch.umd.js"
+    },
+    "./mocks/tlp-fetch-mock-helper": {
+      "import": "./mocks/tlp-fetch-mock-helper.js",
+      "require": "./mocks/tlp-fetch-mock-helper.js"
     }
   },
   "dependencies": {

@@ -18,7 +18,7 @@
  */
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { GitRepositoryRecursiveGet } from "./rest-querier";
 import { postRepository, getRepositoryList, getForkedRepositoryList } from "./rest-querier";
 import type { Repository } from "../type";
