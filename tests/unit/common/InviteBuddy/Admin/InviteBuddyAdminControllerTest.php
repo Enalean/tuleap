@@ -29,6 +29,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -55,7 +56,8 @@ class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->admin_page_renderer = Mockery::mock(AdminPageRenderer::class);
         $this->configuration       = Mockery::mock(InviteBuddyConfiguration::class);
-        $this->csrf_token          = Mockery::mock(\CSRFSynchronizerToken::class);
+        $this->configuration->shouldReceive('canSiteAdminConfigureTheFeature')->andReturnTrue()->byDefault();
+        $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
 
         $this->controller = new InviteBuddyAdminController(
             $this->admin_page_renderer,
@@ -67,6 +69,20 @@ class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsExceptionIfUserIsNotSuperUser(): void
     {
         $user = Mockery::mock(\PFUser::class)->shouldReceive(['isSuperUser' => false])->getMock();
+
+        $this->expectException(ForbiddenException::class);
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($user)->build(),
+            LayoutBuilder::build(),
+            []
+        );
+    }
+
+    public function testItThrowsExceptionIfPlatformsCannotInvite(): void
+    {
+        $user = UserTestBuilder::anActiveUser()->withSiteAdministrator()->build();
+        $this->configuration->shouldReceive('canSiteAdminConfigureTheFeature')->andReturnFalse();
 
         $this->expectException(ForbiddenException::class);
 

@@ -14,6 +14,8 @@
         <a href="/admin/banner" class="admin-sidebar-section-nav-item">{{# gettext }}Platform banner{{/ gettext }}</a>
         <a href="/admin/dates-display" class="admin-sidebar-section-nav-item">{{# gettext }} Dates display {{/ gettext }}</a>
         <a href="/admin/release-note/" class="admin-sidebar-section-nav-item">{{# gettext }} Release note link {{/ gettext }}</a>
+        {{# has_invitations }}
         <a href="/admin/invitations/" class="admin-sidebar-section-nav-item">{{# gettext }}Invitations{{/ gettext }}</a>
+        {{/ has_invitations }}
     </nav>
 </section>

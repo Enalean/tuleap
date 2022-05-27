@@ -21,6 +21,7 @@
 namespace Tuleap\Admin;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\News\Admin\AdminNewsDao;
 use Tuleap\News\Admin\NewsRetriever;
 use User_UserStatusManager;
@@ -45,13 +46,15 @@ class AdminSidebarPresenterBuilder
 
     /** @var NewsRetriever */
     private $news_manager;
+    private InviteBuddyConfiguration $invitation_config;
 
     public function __construct()
     {
-        $this->user_manager     = UserManager::instance();
-        $this->project_manager  = ProjectManager::instance();
-        $this->event_dispatcher = EventManager::instance();
-        $this->news_manager     = new NewsRetriever(new AdminNewsDao());
+        $this->user_manager      = UserManager::instance();
+        $this->project_manager   = ProjectManager::instance();
+        $this->event_dispatcher  = EventManager::instance();
+        $this->news_manager      = new NewsRetriever(new AdminNewsDao());
+        $this->invitation_config = new InviteBuddyConfiguration($this->event_dispatcher);
     }
 
     public function build()
@@ -64,7 +67,8 @@ class AdminSidebarPresenterBuilder
             $this->allProjectsCount(),
             $this->pendingProjectsCount(),
             $this->pendingNewsCount(),
-            $this->getPlugins()
+            $this->getPlugins(),
+            $this->areInvitationsEnabled(),
         );
     }
 
@@ -117,5 +121,10 @@ class AdminSidebarPresenterBuilder
     private function pendingNewsCount()
     {
         return $this->news_manager->countPendingNews();
+    }
+
+    private function areInvitationsEnabled(): bool
+    {
+        return $this->invitation_config->canSiteAdminConfigureTheFeature();
     }
 }

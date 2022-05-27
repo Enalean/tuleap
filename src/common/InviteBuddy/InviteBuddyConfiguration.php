@@ -33,14 +33,8 @@ class InviteBuddyConfiguration
 
     private const CONFIG_MAX_INVITATIONS_BY_DAY_DEFAULT = 20;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $event_dispatcher;
-
-    public function __construct(EventDispatcherInterface $event_dispatcher)
+    public function __construct(private EventDispatcherInterface $event_dispatcher)
     {
-        $this->event_dispatcher = $event_dispatcher;
     }
 
     public function canBuddiesBeInvited(\PFUser $current_user): bool
@@ -53,6 +47,11 @@ class InviteBuddyConfiguration
     {
         return $this->isRegistrationPossible()
             && $this->getNbMaxInvitationsByDay() > 0;
+    }
+
+    public function canSiteAdminConfigureTheFeature(): bool
+    {
+        return $this->isRegistrationPossible();
     }
 
     public function getNbMaxInvitationsByDay(): int
