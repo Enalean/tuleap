@@ -35,7 +35,6 @@ module.exports = [
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             jquery: "jQuery",
-            tlp: "tlp",
         },
         module: {
             rules: [

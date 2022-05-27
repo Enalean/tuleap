@@ -2,8 +2,8 @@
   "name": "@tuleap/plugin-mytuleap_contact_support",
   "private": true,
   "dependencies": {
-    "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
+    "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
     "dompurify": "^2.3.6"
   },
   "devDependencies": {
