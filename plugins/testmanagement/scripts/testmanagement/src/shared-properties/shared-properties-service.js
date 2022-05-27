@@ -18,6 +18,7 @@ function SharedPropertiesService() {
         project_name: "",
         user_timezone: "",
         user_locale: "",
+        artifact_links_types: [],
     };
 
     return {
@@ -63,6 +64,8 @@ function SharedPropertiesService() {
         setCSRFTokenCampaignStatus,
         setFileUploadMaxSize,
         getFileUploadMaxSize,
+        setArtifactLinksTypes,
+        getArtifactLinksTypes,
     };
 
     function getPlatformLogoUrl() {
@@ -231,5 +234,13 @@ function SharedPropertiesService() {
 
     function getFileUploadMaxSize() {
         return property.file_upload_max_size;
+    }
+
+    function setArtifactLinksTypes(artifact_links_types) {
+        property.artifact_links_types = artifact_links_types;
+    }
+
+    function getArtifactLinksTypes() {
+        return property.artifact_links_types;
     }
 }

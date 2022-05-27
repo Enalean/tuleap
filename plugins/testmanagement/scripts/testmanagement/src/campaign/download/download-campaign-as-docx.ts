@@ -18,6 +18,7 @@
  */
 
 import type { Campaign } from "../../type";
+import type { ArtifactLinkType } from "@tuleap/plugin-docgen-docx/src";
 
 export async function downloadCampaignAsDocx(
     campaign: Campaign,
@@ -29,7 +30,8 @@ export async function downloadCampaignAsDocx(
     user_locale: string,
     base_url: string,
     project_id: number,
-    testdefinition_tracker_id: number | null
+    testdefinition_tracker_id: number | null,
+    artifact_links_types: ReadonlyArray<ArtifactLinkType>
 ): Promise<void> {
     const { downloadExportDocument } = await import(
         /* webpackChunkName: "testmanagement-download-export-doc" */ "../../helpers/ExportAsDocument/download-export-document"
@@ -53,7 +55,7 @@ export async function downloadCampaignAsDocx(
                 base_url.replace(/\/$/, "") +
                 `/plugins/testmanagement/?group_id=${project_id}#!/campaigns/${campaign.id}`,
             base_url,
-            artifact_links_types: [],
+            artifact_links_types: artifact_links_types,
             testdefinition_tracker_id,
         },
         downloadDocx,

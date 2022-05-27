@@ -27,6 +27,7 @@ use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\User\REST\UserRepresentation;
 
 class IndexPresenter
@@ -140,12 +141,15 @@ class IndexPresenter
      */
     public string $platform_logo_url;
 
+    public string $artifact_links_types;
+
     /**
      * @param int|false                         $campaign_tracker_id
      * @param int|false                         $test_definition_tracker_id
      * @param int|false                         $test_execution_tracker_id
      * @param int|false|null                    $issue_tracker_id
      * @param MilestoneRepresentation|\stdClass $milestone_representation
+     * @param TypePresenter[] $artifact_links_types
      */
     public function __construct(
         \Project $project,
@@ -161,6 +165,7 @@ class IndexPresenter
         string $platform_name,
         string $base_url,
         string $platform_logo_url,
+        array $artifact_links_types,
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
 
@@ -212,6 +217,8 @@ class IndexPresenter
         $this->csrf_token_campaign_status = $csrf_token->getToken();
 
         $this->file_upload_max_size = (int) \ForgeConfig::get('sys_max_size_upload');
+
+        $this->artifact_links_types = json_encode($artifact_links_types, JSON_THROW_ON_ERROR);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

@@ -77,6 +77,9 @@ function TestManagementCtrl(
             10
         );
         SharedPropertiesService.setFileUploadMaxSize(file_upload_max_size);
+        SharedPropertiesService.setArtifactLinksTypes(
+            JSON.parse(testmanagement_init_data.artifactLinksTypes)
+        );
 
         moveBreadCrumbs(
             project_public_name,

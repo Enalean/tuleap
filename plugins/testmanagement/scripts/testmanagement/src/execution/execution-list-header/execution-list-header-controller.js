@@ -69,7 +69,8 @@ export default function controller(
                 SharedPropertiesService.getUserLocale(),
                 SharedPropertiesService.getBaseUrl(),
                 SharedPropertiesService.getProjectId(),
-                SharedPropertiesService.getDefinitionTrackerId() || null
+                SharedPropertiesService.getDefinitionTrackerId() || null,
+                SharedPropertiesService.getArtifactLinksTypes() || []
             );
         } catch (e) {
             TlpModalService.open({
