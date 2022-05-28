@@ -20,16 +20,14 @@
 
 namespace Tuleap\XML;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\TemporaryTestDirectory;
 
 class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
-    private $fixtures;
-    private $destination;
+    private string $fixtures;
+    private string $destination;
 
     protected function setUp(): void
     {
@@ -44,7 +42,7 @@ class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testItMergesTwoXMLFilesInOne()
+    public function testItMergesTwoXMLFilesInOne(): void
     {
         $source1 = "$this->fixtures/source1.xml";
         $source2 = "$this->fixtures/source2.xml";
@@ -54,6 +52,6 @@ class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
         $merger = new ProjectXMLMerger();
         $merger->merge($source1, $source2, $this->destination);
 
-        $this->assertEquals($expected, file_get_contents($this->destination));
+        self::assertEquals($expected, file_get_contents($this->destination));
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Psalm\Plugin\ConcealedString;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\IssueBuffer;
@@ -32,8 +31,6 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class PreventConcealedStringMisusesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     protected function tearDown(): void
     {
         IssueBuffer::clear();
@@ -44,12 +41,12 @@ final class PreventConcealedStringMisusesTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame([ConcealedString::class], PreventConcealedStringMisuses::getClassLikeNames());
         $return_type = PreventConcealedStringMisuses::getMethodReturnType(
             new MethodReturnTypeProviderEvent(
-                \Mockery::mock(StatementsSource::class),
+                $this->createMock(StatementsSource::class),
                 ConcealedString::class,
                 'getstring',
                 [],
                 new Context(),
-                \Mockery::mock(CodeLocation::class)
+                $this->createMock(CodeLocation::class)
             )
         );
 

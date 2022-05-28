@@ -18,8 +18,11 @@
         <directory name="plugins/*/bin/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <directory name="tests/unit/common/Project/Registration/" />
+        <directory name="tests/unit/Tuleap/" />
+        <directory name="tests/unit/common/xml/" />
         <directory name="tests/integration/tests/SVNCore/" />
         <ignoreFiles>
+            <directory name="tests/unit/Tuleap/Tools"/>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/themes/FlamingParrot/vendor/"/>
             <directory name="src/themes/BurningParrot/vendor/"/>

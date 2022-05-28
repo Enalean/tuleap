@@ -27,22 +27,20 @@ use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\CommonMark\Renderer\Block\FencedCodeRenderer;
 use League\CommonMark\MarkdownConverter;
-use Mockery;
 use Tuleap\Markdown\CodeBlockFeaturesInterface;
 
 final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private MarkdownConverter $converter;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CodeBlockFeaturesInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject&CodeBlockFeaturesInterface
      */
     private $code_block_features;
 
+
     protected function setUp(): void
     {
-        $this->code_block_features = Mockery::mock(CodeBlockFeaturesInterface::class);
+        $this->code_block_features = $this->createMock(CodeBlockFeaturesInterface::class);
 
         $environment = new Environment();
         $environment->addExtension(new CommonMarkCoreExtension());
@@ -56,11 +54,11 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotConvertFencedCodesThatAreNotMermaid(): void
     {
         $this->code_block_features
-            ->shouldReceive('needsMermaid')
-            ->never();
+            ->expects(self::never())
+            ->method('needsMermaid');
         $this->code_block_features
-            ->shouldReceive('needsSyntaxHighlight')
-            ->never();
+            ->expects(self::never())
+            ->method('needsSyntaxHighlight');
 
         $result = $this->converter->convertToHtml(
             <<<MARKDOWN
@@ -99,11 +97,11 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItConvertFencedCodeThatIsFlaggedAsMermaid(): void
     {
         $this->code_block_features
-            ->shouldReceive('needsMermaid')
-            ->once();
+            ->expects(self::once())
+            ->method('needsMermaid');
         $this->code_block_features
-            ->shouldReceive('needsSyntaxHighlight')
-            ->never();
+            ->expects(self::never())
+            ->method('needsSyntaxHighlight');
 
         $result = $this->converter->convertToHtml(
             <<<MARKDOWN
@@ -142,11 +140,11 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItNeedsSyntaxHighlightingOnlyForNamedBlocksThatAreNotMermaid(): void
     {
         $this->code_block_features
-            ->shouldReceive('needsMermaid')
-            ->once();
+            ->expects(self::once())
+            ->method('needsMermaid');
         $this->code_block_features
-            ->shouldReceive('needsSyntaxHighlight')
-            ->once();
+            ->expects(self::once())
+            ->method('needsSyntaxHighlight');
 
         $result = $this->converter->convertToHtml(
             <<<MARKDOWN

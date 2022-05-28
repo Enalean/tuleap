@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\xml;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class XMLDateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testExtractFromNodeRaisesExceptionIfFormatIsNotISO8601(): void
     {
         $this->expectException(InvalidDateException::class);
@@ -65,7 +61,7 @@ class XMLDateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             (new \DateTimeImmutable())->setTimestamp(1234567890),
             XMLDateHelper::extractFromNode($xml)
         );
@@ -83,7 +79,7 @@ class XMLDateHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         XMLDateHelper::addChild($xml, 'myDate', $date);
 
-        $this->assertEquals('ISO8601', (string) $xml->myDate['format']);
-        $this->assertEquals('2009-02-14T00:31:30+01:00', (string) $xml->myDate);
+        self::assertEquals('ISO8601', (string) $xml->myDate['format']);
+        self::assertEquals('2009-02-14T00:31:30+01:00', (string) $xml->myDate);
     }
 }
