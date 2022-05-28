@@ -140,21 +140,6 @@
     margin-right: var(--tlp-small-spacing);
 }
 
-/* -------------------- WIDGETS ---------------------- */
-
-.widget-last-git-pushes-details {
-    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
-    font-size: 14px;
-}
-
-.widget-last-git-pushes-repository {
-    margin: 0 0 5px var(--tlp-medium-spacing);
-}
-
-.widget-last-git-pushes-project {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-
 /* -------------------- MEDIA QUERIES ---------------------- */
 
 @media screen and (max-width: 1300px) {

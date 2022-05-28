@@ -20,6 +20,8 @@
  */
 
 use Tuleap\date\RelativeDatesAssetsRetriever;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
 
 /**
  * Widget displaying last git pushes for the user
@@ -234,5 +236,15 @@ class Git_Widget_UserPushes extends Widget
         return [
             ['file' => RelativeDatesAssetsRetriever::retrieveAssetsUrl(), 'unique-name' => 'tlp-relative-dates'],
         ];
+    }
+
+    public function getStylesheetDependencies(): CssAssetCollection
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../frontend-assets',
+            '/assets/git'
+        );
+
+        return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($include_assets, 'bp-style')]);
     }
 }
