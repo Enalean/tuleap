@@ -1,4 +1,4 @@
-FROM gitlab/gitlab-ce:13.12.1-ce.0
+FROM gitlab/gitlab-ce:14.10.3-ce.0
 
 COPY entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
