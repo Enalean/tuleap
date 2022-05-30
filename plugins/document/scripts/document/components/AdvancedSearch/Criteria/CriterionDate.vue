@@ -31,8 +31,9 @@
             </select>
             <date-flat-picker
                 v-bind:id="id"
-                required="false"
+                v-bind:required="false"
                 v-bind:value="date"
+                v-model="date"
                 v-on:input="onChangeDate"
                 v-bind:data-test="id"
             />

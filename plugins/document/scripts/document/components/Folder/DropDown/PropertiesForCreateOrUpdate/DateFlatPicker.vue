@@ -64,6 +64,13 @@ export default class DateFlatPicker extends Vue {
             this.datepicker = datePicker(element, {
                 defaultDate: this.value,
                 onChange: this.onDatePickerChange,
+                allowInput: true,
+                errorHandler: (error) => {
+                    if (error.message.includes("Invalid date provided")) {
+                        return;
+                    }
+                    throw error;
+                },
             });
         }
     }
