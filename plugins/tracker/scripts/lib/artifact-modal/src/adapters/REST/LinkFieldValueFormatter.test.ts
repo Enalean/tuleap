@@ -23,10 +23,10 @@ import { VerifyLinkIsMarkedForRemovalStub } from "../../../tests/stubs/VerifyLin
 import { LinkedArtifactStub } from "../../../tests/stubs/LinkedArtifactStub";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 import { NewLinkStub } from "../../../tests/stubs/NewLinkStub";
-import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 import { RetrieveNewLinksStub } from "../../../tests/stubs/RetrieveNewLinksStub";
-import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
-import type { RetrieveNewLinks } from "../../domain/fields/link-field-v2/RetrieveNewLinks";
+import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
+import type { RetrieveNewLinks } from "../../domain/fields/link-field/RetrieveNewLinks";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 

@@ -18,26 +18,25 @@
  */
 
 import { getJSON, getAllJSON } from "@tuleap/fetch-result";
-import { Fault } from "@tuleap/fault";
-import { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
 import type { RetrieveParent } from "../../domain/parent/RetrieveParent";
-import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
-import { getArtifact } from "../../rest/rest-service";
-import type { RetrieveLinkTypes } from "../../domain/fields/link-field-v2/RetrieveLinkTypes";
-import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
-import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { RetrieveMatchingArtifact } from "../../domain/fields/link-field/RetrieveMatchingArtifact";
+import type { RetrieveLinkTypes } from "../../domain/fields/link-field/RetrieveLinkTypes";
+import type { RetrieveLinkedArtifactsByType } from "../../domain/fields/link-field/RetrieveLinkedArtifactsByType";
+import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
 import { LinkedArtifactProxy } from "./LinkedArtifactProxy";
 import type { CurrentArtifactIdentifier } from "../../domain/CurrentArtifactIdentifier";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import type { ParentArtifactIdentifier } from "../../domain/parent/ParentArtifactIdentifier";
-import type { LinkableNumber } from "../../domain/fields/link-field-v2/LinkableNumber";
+import type { LinkableNumber } from "../../domain/fields/link-field/LinkableNumber";
 import { ParentRetrievalFault } from "../../domain/parent/ParentRetrievalFault";
-import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
 import { LinkableArtifactProxy } from "./LinkableArtifactProxy";
-import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
-import type { RetrievePossibleParents } from "../../domain/fields/link-field-v2/RetrievePossibleParents";
-import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field-v2/PossibleParentsRetrievalFault";
+import type { LinkType } from "../../domain/fields/link-field/LinkType";
+import type { RetrievePossibleParents } from "../../domain/fields/link-field/RetrievePossibleParents";
+import { PossibleParentsRetrievalFault } from "../../domain/fields/link-field/PossibleParentsRetrievalFault";
 
 export type LinkedArtifactCollection = {
     readonly collection: ReadonlyArray<ArtifactWithStatus>;
@@ -55,12 +54,7 @@ type AllLinkTypesResponse = {
 
 export const TuleapAPIClient = (): TuleapAPIClientType => ({
     getParent: (artifact_id: ParentArtifactIdentifier): ResultAsync<ParentArtifact, Fault> =>
-        ResultAsync.fromPromise(getArtifact(artifact_id.id), (error) => {
-            if (error instanceof Error) {
-                return Fault.fromError(error);
-            }
-            return Fault.fromMessage("Unknown error");
-        }).mapErr(ParentRetrievalFault),
+        getJSON<ParentArtifact>(`/api/v1/artifacts/${artifact_id.id}`).mapErr(ParentRetrievalFault),
 
     getMatchingArtifact: (linkable_number: LinkableNumber): ResultAsync<LinkableArtifact, Fault> =>
         getJSON<ArtifactWithStatus>(`/api/v1/artifacts/${linkable_number.id}`).map(

@@ -17,11 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 
-export type NewLinkCollectionPresenter = readonly NewLink[];
+export interface LinkedArtifactPresenter extends LinkedArtifact {
+    readonly is_marked_for_removal: boolean;
+}
 
-export const NewLinkCollectionPresenter = {
-    buildEmpty: (): NewLinkCollectionPresenter => [],
-    fromLinks: (links: readonly NewLink[]): NewLinkCollectionPresenter => links,
+export const LinkedArtifactPresenter = {
+    fromLinkedArtifact: (
+        artifact: LinkedArtifact,
+        is_marked_for_removal: boolean
+    ): LinkedArtifactPresenter => ({
+        ...artifact,
+        is_marked_for_removal,
+    }),
 };

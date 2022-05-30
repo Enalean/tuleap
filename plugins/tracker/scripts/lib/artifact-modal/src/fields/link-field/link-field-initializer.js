@@ -1,15 +1,24 @@
-export { formatExistingValue };
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-function formatExistingValue(field, artifact_value) {
+export function formatExistingValue(field) {
     const { field_id, type, permissions } = field;
-    const link_ids = artifact_value.links.map(({ id }) => id);
-    const unformatted_links = link_ids.join(", ");
 
-    return {
-        field_id,
-        type,
-        permissions,
-        unformatted_links,
-        links: [{}],
-    };
+    return { field_id, type, permissions };
 }

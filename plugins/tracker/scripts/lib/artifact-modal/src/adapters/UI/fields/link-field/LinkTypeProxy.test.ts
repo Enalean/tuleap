@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { LinkTypeProxy } from "./LinkTypeProxy";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
-import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
 
 const LABEL = "Linked to";
 

@@ -20,7 +20,7 @@
 import { ArtifactCrossReferenceProxy } from "./ArtifactCrossReferenceProxy";
 import { ArtifactProjectProxy } from "./ArtifactProjectProxy";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
 
 export const LinkableArtifactProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): LinkableArtifact => ({

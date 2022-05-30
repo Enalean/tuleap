@@ -25,7 +25,7 @@ import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
-import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { LinkFieldController } from "./LinkFieldController";

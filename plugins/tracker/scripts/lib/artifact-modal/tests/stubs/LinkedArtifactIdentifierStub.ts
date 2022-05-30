@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifactIdentifier } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifactIdentifier } from "../../src/domain/fields/link-field/LinkedArtifact";
 
 export const LinkedArtifactIdentifierStub = {
     withId: (id: number): LinkedArtifactIdentifier => ({ _type: "LinkedArtifactIdentifier", id }),

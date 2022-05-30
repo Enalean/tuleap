@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifact } from "../../src/domain/fields/link-field/LinkedArtifact";
 import { LinkedArtifactIdentifierStub } from "./LinkedArtifactIdentifierStub";
 import { ArtifactCrossReferenceStub } from "./ArtifactCrossReferenceStub";
-import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
+import type { LinkType } from "../../src/domain/fields/link-field/LinkType";
 import { LinkTypeStub } from "./LinkTypeStub";
 
 export const LinkedArtifactStub = {

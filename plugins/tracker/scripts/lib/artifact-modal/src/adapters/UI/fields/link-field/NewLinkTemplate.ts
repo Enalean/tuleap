@@ -20,7 +20,7 @@
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
 import type { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import type { LinkField } from "./LinkField";
 import { getDefaultLinkTypeLabel, getRemoveLabel } from "../../../../gettext-catalog";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";

@@ -45,7 +45,7 @@ import "./fields/int-field/IntField";
 import "./fields/radio-buttons-field/RadioButtonsField";
 import "./fields/string-field/StringField";
 import "./fields/text-field/TextField";
-import "./adapters/UI/fields/link-field-v2/LinkField";
+import "./adapters/UI/fields/link-field/LinkField";
 import "./adapters/UI/fields/date-field/DateField";
 import "./adapters/UI/fields/burndown-field/BurndownField";
 import "./adapters/UI/fields/artifact-id-field/ArtifactIdField";

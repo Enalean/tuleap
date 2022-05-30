@@ -36,7 +36,7 @@ import type { LinkSelector } from "@tuleap/link-selector";
 import { createLinkSelector } from "@tuleap/link-selector";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { getLinkableArtifact, getLinkableArtifactTemplate } from "./LinkableArtifactTemplate";
-import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { getAddLinkButtonTemplate } from "./AddLinkButtonTemplate";
 import { getNewLinkTemplate } from "./NewLinkTemplate";
@@ -206,7 +206,7 @@ export const getLinkFieldCanOnlyHaveOneParentNote = (
 };
 
 export const LinkField = define<LinkField>({
-    tag: "tuleap-artifact-modal-link-field-v2",
+    tag: "tuleap-artifact-modal-link-field",
     artifact_link_select: ({ content }) => {
         const select = content().querySelector(`[data-select=artifact-link-select]`);
         if (!(select instanceof HTMLSelectElement)) {

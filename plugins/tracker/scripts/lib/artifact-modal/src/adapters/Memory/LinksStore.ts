@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AddLinkedArtifactCollection } from "../../domain/fields/link-field-v2/AddLinkedArtifactCollection";
-import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
-import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { AddLinkedArtifactCollection } from "../../domain/fields/link-field/AddLinkedArtifactCollection";
+import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
+import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 
 type LinksStoreType = AddLinkedArtifactCollection & RetrieveLinkedArtifactsSync;
 

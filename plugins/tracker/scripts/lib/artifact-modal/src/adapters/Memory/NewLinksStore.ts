@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AddNewLink } from "../../domain/fields/link-field-v2/AddNewLink";
-import type { NewLink } from "../../domain/fields/link-field-v2/NewLink";
-import type { RetrieveNewLinks } from "../../domain/fields/link-field-v2/RetrieveNewLinks";
-import type { DeleteNewLink } from "../../domain/fields/link-field-v2/DeleteNewLink";
+import type { AddNewLink } from "../../domain/fields/link-field/AddNewLink";
+import type { NewLink } from "../../domain/fields/link-field/NewLink";
+import type { RetrieveNewLinks } from "../../domain/fields/link-field/RetrieveNewLinks";
+import type { DeleteNewLink } from "../../domain/fields/link-field/DeleteNewLink";
 
 type NewLinksStoreType = AddNewLink & RetrieveNewLinks & DeleteNewLink;
 

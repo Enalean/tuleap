@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ControlLinkedArtifactsPopovers } from "../../src/adapters/UI/fields/link-field-v2/LinkedArtifactsPopoversController";
+import type { ControlLinkedArtifactsPopovers } from "../../src/adapters/UI/fields/link-field/LinkedArtifactsPopoversController";
 
 export const ControlLinkedArtifactsPopoversStub = {
     build: (): ControlLinkedArtifactsPopovers => ({

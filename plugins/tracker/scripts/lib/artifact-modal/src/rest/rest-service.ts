@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, recursiveGet, put, post, options } from "@tuleap/tlp-fetch";
+import { get, put, post, options } from "@tuleap/tlp-fetch";
 import type { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { resetError, setError } from "./rest-error-state";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
@@ -38,22 +38,16 @@ export function getTracker(tracker_id: number): Promise<TrackerRepresentation> {
     }, errorHandler);
 }
 
-export type ArtifactRepresentation = Pick<ArtifactResponseNoInstance, "id" | "title" | "xref">;
-
-export function getArtifact(artifact_id: number): Promise<ArtifactRepresentation> {
-    return get(encodeURI(`/api/v1/artifacts/${artifact_id}`)).then((response) => {
-        resetError();
-        return response.json();
-    }, errorHandler);
-}
-
 type EtagValue = string | null;
 type LastModifiedTimestamp = string | null;
 
-interface ArtifactRepresentationWithConcurrencyHeaders extends ArtifactRepresentation {
+type ArtifactRepresentationWithConcurrencyHeaders = Pick<
+    ArtifactResponseNoInstance,
+    "id" | "title" | "xref"
+> & {
     readonly Etag: EtagValue;
     readonly "Last-Modified": LastModifiedTimestamp;
-}
+};
 
 export function getArtifactWithCompleteTrackerStructure(
     artifact_id: number
@@ -67,20 +61,6 @@ export function getArtifactWithCompleteTrackerStructure(
             "Last-Modified": response.headers.get("Last-Modified"),
             ...(await response.json()),
         };
-    }, errorHandler);
-}
-
-export function getAllOpenParentArtifacts(
-    tracker_id: number,
-    limit: number,
-    offset: number
-): Promise<ArtifactRepresentation[]> {
-    return recursiveGet<ArtifactRepresentation[], ArtifactRepresentation>(
-        encodeURI(`/api/v1/trackers/${tracker_id}/parent_artifacts`),
-        { params: { limit, offset } }
-    ).then((parent_artifacts) => {
-        resetError();
-        return parent_artifacts;
     }, errorHandler);
 }
 
@@ -312,21 +292,6 @@ export async function getFileUploadRules(): Promise<FileUploadRulesRepresentatio
         disk_usage,
         max_chunk_size,
     };
-}
-
-export function getFirstReverseIsChildLink(artifact_id: number): Promise<ArtifactRepresentation[]> {
-    return get(encodeURI(`/api/v1/artifacts/${artifact_id}/linked_artifacts`), {
-        params: {
-            direction: "reverse",
-            nature: "_is_child",
-            limit: 1,
-            offset: 0,
-        },
-    }).then(async (response) => {
-        resetError();
-        const { collection } = await response.json();
-        return collection;
-    }, errorHandler);
 }
 
 async function errorHandler(error: FetchWrapperError): Promise<never> {

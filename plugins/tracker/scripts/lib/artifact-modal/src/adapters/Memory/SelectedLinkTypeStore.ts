@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SetSelectedLinkType } from "../../domain/fields/link-field-v2/SetSelectedLinkType";
-import type { RetrieveSelectedLinkType } from "../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
-import { LinkType } from "../../domain/fields/link-field-v2/LinkType";
+import type { SetSelectedLinkType } from "../../domain/fields/link-field/SetSelectedLinkType";
+import type { RetrieveSelectedLinkType } from "../../domain/fields/link-field/RetrieveSelectedLinkType";
+import { LinkType } from "../../domain/fields/link-field/LinkType";
 
 export type SelectedLinkTypeStoreType = SetSelectedLinkType & RetrieveSelectedLinkType;
 

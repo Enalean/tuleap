@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { VerifyIsAlreadyLinked } from "../../src/domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import type { VerifyIsAlreadyLinked } from "../../src/domain/fields/link-field/VerifyIsAlreadyLinked";
 
 export const VerifyIsAlreadyLinkedStub = {
     withAllArtifactsAlreadyLinked: (): VerifyIsAlreadyLinked => ({

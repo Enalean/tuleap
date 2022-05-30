@@ -19,7 +19,7 @@
 
 import { SelectedLinkTypeStore } from "./SelectedLinkTypeStore";
 import { UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
-import { FORWARD_DIRECTION } from "../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION } from "../../domain/fields/link-field/LinkType";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
 
 describe(`SelectedLinkTypeStore`, () => {

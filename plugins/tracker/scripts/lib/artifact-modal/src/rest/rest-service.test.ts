@@ -17,16 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as RestService from "./rest-service";
-import * as rest_error_state from "./rest-error-state";
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
-
-const noop = (): void => {
-    //Do nothing
-};
 
 describe("rest-service", () => {
     it("getTracker() - Given a tracker id, when I get the tracker, then a promise will be resolved with the tracker", async () => {
@@ -44,31 +39,6 @@ describe("rest-service", () => {
             label: "Functionize recklessly",
         });
         expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/trackers/84");
-    });
-
-    it("getArtifact() - Given an artifact id, when I get the artifact, then a promise will be resolved with an artifact object", async () => {
-        const return_json = {
-            id: 792,
-            values: [
-                {
-                    field_id: 74,
-                    label: "Kartvel",
-                    value: "ruralize",
-                },
-                {
-                    field_id: 31,
-                    label: "xenium",
-                    bind_value_ids: [96, 81],
-                },
-            ],
-        };
-        const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
-        mockFetchSuccess(tlpGetSpy, { return_json });
-
-        const artifact = await RestService.getArtifact(792);
-
-        expect(artifact).toEqual(return_json);
-        expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/792");
     });
 
     it("getArtifactWithCompleteTrackerStructure() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {
@@ -106,55 +76,6 @@ describe("rest-service", () => {
         const values = await RestService.getArtifactWithCompleteTrackerStructure(40);
 
         expect(values).toEqual({ ...return_json, Etag: "etag", "Last-Modified": "1629098386" });
-    });
-
-    describe("getAllOpenParentArtifacts() -", () => {
-        it("Given the id of a child tracker, when I get all the open parents for this tracker, then a promise will be resolved with the artifacts", async () => {
-            const tracker_id = 49;
-            const limit = 30;
-            const offset = 0;
-            const artifacts = [
-                { id: 21, title: "equationally" },
-                { id: 82, title: "brachiator" },
-            ];
-            const tlpRecursiveGetSpy = jest
-                .spyOn(tlp_fetch, "recursiveGet")
-                .mockResolvedValue(artifacts);
-
-            const values = await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
-
-            expect(values).toEqual(artifacts);
-            expect(tlpRecursiveGetSpy).toHaveBeenCalledWith(
-                "/api/v1/trackers/49/parent_artifacts",
-                {
-                    params: {
-                        limit,
-                        offset,
-                    },
-                }
-            );
-        });
-
-        it("When there is a REST error, then it will be shown", async () => {
-            const tracker_id = 12;
-            const limit = 30;
-            const offset = 0;
-            const error_json = {
-                error: {
-                    message: "No you cannot",
-                },
-            };
-
-            const setErrorSpy = jest.spyOn(rest_error_state, "setError").mockImplementation(noop);
-            mockFetchError(jest.spyOn(tlp_fetch, "recursiveGet"), { error_json });
-
-            await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset).then(
-                () => Promise.reject(new Error("Promise should be rejected")),
-                () => {
-                    expect(setErrorSpy).toHaveBeenCalledWith("No you cannot");
-                }
-            );
-        });
     });
 
     describe("searchUsers() -", () => {
@@ -479,58 +400,6 @@ describe("rest-service", () => {
                 max_chunk_size: 732798,
             });
             expect(tlpOptionsSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files");
-        });
-    });
-
-    describe("getFirstReverseIsChildLink() -", () => {
-        it("Given an artifact id, then an array containing the first reverse _is_child linked artifact will be returned", async () => {
-            const artifact_id = 20;
-            const collection = [{ id: 46 }];
-            const tlpGetSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(tlpGetSpy, {
-                return_json: { collection },
-            });
-
-            const result = await RestService.getFirstReverseIsChildLink(artifact_id);
-
-            expect(result).toEqual(collection);
-            expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/artifacts/20/linked_artifacts", {
-                params: {
-                    direction: "reverse",
-                    nature: "_is_child",
-                    limit: 1,
-                    offset: 0,
-                },
-            });
-        });
-
-        it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", async () => {
-            const artifact_id = 78;
-            mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), {
-                return_json: { collection: [] },
-            });
-
-            const result = await RestService.getFirstReverseIsChildLink(artifact_id);
-
-            expect(result).toEqual([]);
-        });
-
-        it("When there is a REST error, then it will be shown", async () => {
-            const artifact_id = 9;
-            const error_json = {
-                error: {
-                    message: "Invalid artifact id",
-                },
-            };
-            const setErrorSpy = jest.spyOn(rest_error_state, "setError").mockImplementation(noop);
-            mockFetchError(jest.spyOn(tlp_fetch, "get"), { error_json });
-
-            await RestService.getFirstReverseIsChildLink(artifact_id).then(
-                () => Promise.reject(new Error("Promise should be rejected")),
-                () => {
-                    expect(setErrorSpy).toHaveBeenCalledWith("Invalid artifact id");
-                }
-            );
         });
     });
 });

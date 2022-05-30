@@ -26,9 +26,9 @@ import {
     getRestoreLabel,
     getUnlinkLabel,
 } from "../../../../gettext-catalog";
-import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { FORWARD_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
 import type { LinkField } from "./LinkField";
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import type { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import {
     getArtifactLinkTypeLabel,
     getArtifactStatusBadgeClasses,

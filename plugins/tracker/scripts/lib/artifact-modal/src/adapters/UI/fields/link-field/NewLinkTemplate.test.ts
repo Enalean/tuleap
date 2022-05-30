@@ -24,7 +24,7 @@ import { NewLinkStub } from "../../../../../tests/stubs/NewLinkStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { IS_CHILD_LINK_TYPE, UNTYPED_LINK } from "@tuleap/plugin-tracker-constants";
-import type { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
+import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 import { LinkFieldController } from "./LinkFieldController";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
 import { RetrieveAllLinkedArtifactsStub } from "../../../../../tests/stubs/RetrieveAllLinkedArtifactsStub";

@@ -20,10 +20,10 @@
 import { Fault } from "@tuleap/fault";
 import { FaultFeedbackPresenter } from "./FaultFeedbackPresenter";
 import { setCatalog } from "../../../gettext-catalog";
-import { LinkRetrievalFault } from "../../../domain/fields/link-field-v2/LinkRetrievalFault";
+import { LinkRetrievalFault } from "../../../domain/fields/link-field/LinkRetrievalFault";
 import { ParentRetrievalFault } from "../../../domain/parent/ParentRetrievalFault";
-import { MatchingArtifactRetrievalFault } from "../../../domain/fields/link-field-v2/MatchingArtifactRetrievalFault";
-import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field-v2/PossibleParentsRetrievalFault";
+import { MatchingArtifactRetrievalFault } from "../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
+import { PossibleParentsRetrievalFault } from "../../../domain/fields/link-field/PossibleParentsRetrievalFault";
 
 const FAULT_MESSAGE = "An error occurred";
 
