@@ -341,6 +341,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-docman
 Share your data with project members.
 
+%package plugin-document
+Summary: Document UI
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
+%description plugin-document
+%{summary}.
+
 %package plugin-api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -385,13 +392,6 @@ Summary: Cross tracker search widget
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist},  tuleap-plugin-tracker
 %description plugin-crosstracker
-%{summary}.
-
-%package plugin-document
-Summary: Document UI
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
-%description plugin-document
 %{summary}.
 
 %package plugin-dynamic-credentials
@@ -581,7 +581,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/roadmap
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/baseline
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/velocity
@@ -1367,6 +1366,10 @@ fi
 %{APP_DIR}/plugins/docman
 %attr(00700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/docman
 
+%files plugin-document
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/document
+
 %files plugin-api-explorer
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/api_explorer
@@ -1394,10 +1397,6 @@ fi
 %files plugin-crosstracker
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/crosstracker
-
-%files plugin-document
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/document
 
 %files plugin-dynamic-credentials
 %defattr(-,root,root,-)
