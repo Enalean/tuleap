@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Profile;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\ForgeConfigSandbox;
@@ -30,19 +29,18 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ForceRegenerationDefaultAvatarCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     public function testCommandRemovesDefaultAvatar(): void
     {
         \ForgeConfig::set('sys_avatar_path', vfsStream::setup()->url());
 
-        $user_manager = \Mockery::mock(\UserManager::class);
-        $user_dao     = \Mockery::mock(\UserDao::class);
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_dao     = $this->createMock(\UserDao::class);
 
-        $user_dao->shouldReceive('searchUsersWithDefaultAvatar')->andReturn(\TestHelper::argListToDar([['user_id' => 102], ['user_id' => 103]]));
+        $user_dao->method('searchUsersWithDefaultAvatar')->willReturn(\TestHelper::argListToDar([['user_id' => 102], ['user_id' => 103]]));
         $user_102 = UserTestBuilder::aUser()->withId(102)->build();
-        $user_manager->shouldReceive('getUserInstanceFromRow')->andReturn(
+        $user_manager->method('getUserInstanceFromRow')->willReturn(
             $user_102,
             UserTestBuilder::aUser()->withId(103)->build(),
         );
@@ -56,7 +54,7 @@ final class ForceRegenerationDefaultAvatarCommandTest extends \Tuleap\Test\PHPUn
         $command_tester = new CommandTester($command);
         $command_tester->execute([]);
 
-        $this->assertEquals(0, $command_tester->getStatusCode());
-        $this->assertFileDoesNotExist($user_102_avatar_file_path);
+        self::assertEquals(0, $command_tester->getStatusCode());
+        self::assertFileDoesNotExist($user_102_avatar_file_path);
     }
 }

@@ -20,76 +20,72 @@
 
 namespace Tuleap;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
 
 require_once __DIR__ . '/../../../../src/www/include/service.php';
 
 class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     protected function setUp(): void
     {
         $this->template = [
             'name' => 'template-name',
             'id'   => 120,
         ];
-        $this->project  = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getGroupId')->andReturn(101);
-        $this->project->shouldReceive('getUnixName')->andReturn('h1tst');
+        $this->project  = $this->createMock(Project::class);
+        $this->project->method('getGroupId')->willReturn(101);
+        $this->project->method('getUnixName')->willReturn('h1tst');
     }
 
-    private function assertLinkEquals($link, $expected)
+    private function assertLinkEquals($link, $expected): void
     {
         $result = service_replace_template_name_in_link($link, $this->template, $this->project);
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 
-    public function testItReplacesNameIfLinkIsDashboard()
+    public function testItReplacesNameIfLinkIsDashboard(): void
     {
         $link     = '/projects/template-name/';
         $expected = '/projects/h1tst/';
         $this->assertLinkEquals($link, $expected);
     }
 
-    public function testItReplacesNameIfLinkContainesAmpersand()
+    public function testItReplacesNameIfLinkContainsAmpersand(): void
     {
         $link     = 'test=template-name&group=template-name';
         $expected = 'test=template-name&group=h1tst';
         $this->assertLinkEquals($link, $expected);
     }
 
-    public function testItReplacesGroupId()
+    public function testItReplacesGroupId(): void
     {
         $link     = '/www/?group_id=120';
         $expected = '/www/?group_id=101';
         $this->assertLinkEquals($link, $expected);
     }
 
-    public function testItDoesntReplaceGroupIdIfNoMatch()
+    public function testItDoesntReplaceGroupIdIfNoMatch(): void
     {
         $link     = '/www/?group_id=1204'; //template id is 120
         $expected = '/www/?group_id=1204';
         $this->assertLinkEquals($link, $expected);
     }
 
-    public function testItReplacesWebroot()
+    public function testItReplacesWebroot(): void
     {
         $link     = '/www/template-name/';
         $expected = '/www/h1tst/';
         $this->assertLinkEquals($link, $expected);
     }
 
-    public function testItReplacesWhenUsedAsQueryParameter()
+    public function testItReplacesWhenUsedAsQueryParameter(): void
     {
         $link     = 'group=template-name';
         $expected = 'group=h1tst';
         $this->assertLinkEquals($link, $expected);
     }
 
-    public function testItDoesntReplaceWhenNameIsPartOfAPluginName()
+    public function testItDoesntReplaceWhenNameIsPartOfAPluginName(): void
     {
         $this->template['name'] = 'agile';
         $link                   = '/plugins/agiledashboard/';

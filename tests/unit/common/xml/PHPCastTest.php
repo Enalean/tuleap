@@ -20,44 +20,40 @@
 
 namespace Tuleap\XML;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
 class PHPCastTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItTransformsZeroToFalse()
+    public function testItTransformsZeroToFalse(): void
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="0" />');
 
-        $this->assertFalse(PHPCast::toBoolean($xml['enabled']));
+        self::assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function testItTransformsOneToTrue()
+    public function testItTransformsOneToTrue(): void
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="1" />');
 
-        $this->assertTrue(PHPCast::toBoolean($xml['enabled']));
+        self::assertTrue(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function testItTransformsTrueToTrue()
+    public function testItTransformsTrueToTrue(): void
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="true" />');
 
-        $this->assertTrue(PHPCast::toBoolean($xml['enabled']));
+        self::assertTrue(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function testItTransformsFalseToFalse()
+    public function testItTransformsFalseToFalse(): void
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="false" />');
 
-        $this->assertFalse(PHPCast::toBoolean($xml['enabled']));
+        self::assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function testItTransformsGarbageToFalse()
+    public function testItTransformsGarbageToFalse(): void
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="stuff" />');
 
-        $this->assertFalse(PHPCast::toBoolean($xml['enabled']));
+        self::assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 }

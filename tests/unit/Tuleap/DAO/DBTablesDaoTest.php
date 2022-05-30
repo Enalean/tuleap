@@ -22,17 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\DAO;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBConnection;
 
 final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EasyDB
+     * @var EasyDB&\PHPUnit\Framework\MockObject\MockObject
      */
     private $easy_db;
     /**
@@ -42,9 +39,9 @@ final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $db_connection = \Mockery::mock(DBConnection::class);
-        $this->easy_db = \Mockery::mock(EasyDB::class);
-        $db_connection->shouldReceive('getDB')->andReturn($this->easy_db);
+        $db_connection = $this->createMock(DBConnection::class);
+        $this->easy_db = $this->createMock(EasyDB::class);
+        $db_connection->method('getDB')->willReturn($this->easy_db);
         $this->db_tables_dao = new DBTablesDao($db_connection);
     }
 
@@ -62,9 +59,13 @@ final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_path = vfsStream::setup()->url() . '/install.sql';
         file_put_contents($file_path, $queries);
 
-        $this->easy_db->shouldReceive('run')->with('CREATE TABLE A (id INT);')->once();
-        $this->easy_db->shouldReceive('run')->with('CREATE TABLE B (id INT);')->once();
-        $this->easy_db->shouldReceive('run')->with('INSERT INTO B SET id = 1;')->once();
+        $this->easy_db->method('run')->withConsecutive(
+            ['CREATE TABLE A (id INT);'],
+            ['CREATE TABLE B (id INT);'],
+            ['INSERT INTO B SET id = 1;'],
+        );
+
+        $this->expectNotToPerformAssertions();
 
         $this->db_tables_dao->updateFromFile($file_path);
     }

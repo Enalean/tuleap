@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\XML;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\GlobalLanguageMock;
@@ -30,21 +29,20 @@ use XMLImportHelper;
 
 class XMLImportHelperTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    public function testItImportsAnonymousUser()
+    public function testItImportsAnonymousUser(): void
     {
-        $user_manager  = \Mockery::spy(\UserManager::class);
+        $user_manager  = $this->createMock(\UserManager::class);
         $import_helper = new XMLImportHelper($user_manager);
-        $user_manager->shouldReceive('getUserByIdentifier')->andReturns(null);
-        $user_manager->shouldReceive('getUserAnonymous')->andReturns(new PFUser());
+        $user_manager->method('getUserByIdentifier')->willReturn(null);
+        $user_manager->method('getUserAnonymous')->willReturn(new PFUser());
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
 <user>veloc@example.com</user>');
 
         $user = $import_helper->getUser($xml);
 
-        $this->assertEquals('veloc@example.com', $user->getEmail());
+        self::assertEquals('veloc@example.com', $user->getEmail());
     }
 }

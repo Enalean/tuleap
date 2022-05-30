@@ -23,18 +23,14 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var MockInterface|ProcessFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&ProcessFactory
      */
     private $process_factory;
     private $control_command;
@@ -51,7 +47,7 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
     protected function setUp(): void
     {
         $this->root            = vfsStream::setup('slash');
-        $this->process_factory = \Mockery::mock(ProcessFactory::class);
+        $this->process_factory = $this->createMock(ProcessFactory::class);
         $this->control_command = new SystemControlCommand($this->process_factory, $this->root->url());
         $this->command_tester  = new CommandTester($this->control_command);
 
@@ -65,66 +61,66 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
         putenv('TLP_SYSTEMCTL');
     }
 
-    public function testItStartsTuleapCronttab()
+    public function testItStartsTuleapCronttab(): void
     {
         $this->command_tester->execute(['action' => 'start', 'targets' => ['tuleap']]);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
-        $this->assertEquals(0644, $this->root->getChild('etc/cron.d/tuleap')->getPermissions());
-        $this->assertEquals(vfsStream::OWNER_ROOT, $this->root->getChild('etc/cron.d/tuleap')->getUser());
+        self::assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
+        self::assertEquals(0644, $this->root->getChild('etc/cron.d/tuleap')->getPermissions());
+        self::assertEquals(vfsStream::OWNER_ROOT, $this->root->getChild('etc/cron.d/tuleap')->getUser());
 
-        $this->assertEquals("Starting tuleap...\nOK\n", $this->command_tester->getDisplay());
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEquals("Starting tuleap...\nOK\n", $this->command_tester->getDisplay());
+        self::assertEquals(0, $this->command_tester->getStatusCode());
     }
 
-    public function testItStopsTuleapCronttab()
+    public function testItStopsTuleapCronttab(): void
     {
         $this->command_tester->execute(['action' => 'stop', 'targets' => ['tuleap']]);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi-stop', $this->root->url() . '/etc/cron.d/tuleap');
-        $this->assertEquals(0644, $this->root->getChild('etc/cron.d/tuleap')->getPermissions());
-        $this->assertEquals(vfsStream::OWNER_ROOT, $this->root->getChild('etc/cron.d/tuleap')->getUser());
+        self::assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi-stop', $this->root->url() . '/etc/cron.d/tuleap');
+        self::assertEquals(0644, $this->root->getChild('etc/cron.d/tuleap')->getPermissions());
+        self::assertEquals(vfsStream::OWNER_ROOT, $this->root->getChild('etc/cron.d/tuleap')->getUser());
 
-        $this->assertEquals("Stopping tuleap...\nOK\n", $this->command_tester->getDisplay());
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEquals("Stopping tuleap...\nOK\n", $this->command_tester->getDisplay());
+        self::assertEquals(0, $this->command_tester->getStatusCode());
     }
 
-    public function testItRestartTuleapCronttab()
+    public function testItRestartTuleapCronttab(): void
     {
         $this->command_tester->execute(['action' => 'restart', 'targets' => ['tuleap']]);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
+        self::assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
 
-        $this->assertEquals("Restarting tuleap...\nOK\n", $this->command_tester->getDisplay());
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEquals("Restarting tuleap...\nOK\n", $this->command_tester->getDisplay());
+        self::assertEquals(0, $this->command_tester->getStatusCode());
     }
 
-    public function testEnableOnDockerIsSameAsStart()
+    public function testEnableOnDockerIsSameAsStart(): void
     {
         $this->command_tester->execute(['action' => 'enable', 'targets' => ['tuleap']]);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
+        self::assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
 
-        $this->assertEmpty($this->command_tester->getDisplay());
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEmpty($this->command_tester->getDisplay());
+        self::assertEquals(0, $this->command_tester->getStatusCode());
     }
 
-    public function testTuleapCronIsEnabled()
+    public function testTuleapCronIsEnabled(): void
     {
         copy(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
 
         $this->command_tester->execute(['action' => 'is-enabled', 'targets' => ['tuleap']]);
 
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEquals(0, $this->command_tester->getStatusCode());
     }
 
-    public function testTuleapCronIsDisabled()
+    public function testTuleapCronIsDisabled(): void
     {
         copy(__DIR__ . '/../../../../src/utils/cron.d/codendi-stop', $this->root->url() . '/etc/cron.d/tuleap');
 
         $this->command_tester->execute(['action' => 'is-enabled', 'targets' => ['tuleap']]);
 
-        $this->assertEquals(1, $this->command_tester->getStatusCode());
+        self::assertEquals(1, $this->command_tester->getStatusCode());
     }
 
     /**
@@ -132,21 +128,21 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
      * @testWith [ "mask" ]
      *           [ "is-active"]
      */
-    public function testDoingNothingWithActions(string $action)
+    public function testDoingNothingWithActions(string $action): void
     {
         $this->command_tester->execute(['action' => $action, 'targets' => ['tuleap']], ['capture_stderr_separately' => true]);
 
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
-        $this->assertEmpty($this->command_tester->getErrorOutput());
+        self::assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEmpty($this->command_tester->getDisplay());
+        self::assertEmpty($this->command_tester->getErrorOutput());
     }
 
-    public function testTuleapWithOtherCommands()
+    public function testTuleapWithOtherCommands(): void
     {
         $this->command_tester->execute(['action' => 'start', 'targets' => ['httpd', 'tuleap', 'nginx']]);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEquals("Starting tuleap...\nOK\nDoing nothing with start httpd, nginx...\nOK\n", $this->command_tester->getDisplay());
+        self::assertFileEquals(__DIR__ . '/../../../../src/utils/cron.d/codendi', $this->root->url() . '/etc/cron.d/tuleap');
+        self::assertEquals(0, $this->command_tester->getStatusCode());
+        self::assertEquals("Starting tuleap...\nOK\nDoing nothing with start httpd, nginx...\nOK\n", $this->command_tester->getDisplay());
     }
 }
