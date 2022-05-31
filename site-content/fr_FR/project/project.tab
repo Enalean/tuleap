@@ -407,21 +407,6 @@ project_admin_userperms	upd_user_perm	Mettre à jour les permissions
 
 #
 #-----------------------------------------------
-# Script: SF/www/project/export/artifact_deps_export.php
-#
-project_export_artifact_deps_export	at_not_created	L'objet ArtifactType n'a pu être créé
-project_export_artifact_deps_export	tracker_no_longer_valid	Cet outil de suivi n'est plus valide.
-project_export_artifact_deps_export	art_deps_export	Exportation des dépendances
-project_export_artifact_deps_export	no_deps_found	Aucune dépendance disponible. Impossible d'exporter des données.
-project_export_artifact_deps_export	db_access_err	Erreur lors de l'accès à la base de données des dépendances. Veuillez informer l'administrateur $1 de cette erreur.
-project_export_artifact_deps_export	deps_export_format	Format d'exportation des dépendances
-project_export_artifact_deps_export	deps_export_format_msg	Le format d'exportation des dépendances comprend les champs suivants. Les valeurs données en exemple indique le type des données.
-project_export_artifact_deps_export	create_proj_err	Erreur à la création de la table $1
-project_export_artifact_deps_export	security_violation	VIOLATION DE SECURITE !!! Nom de base de données non autorisé&nbsp;: $1
-project_export_artifact_deps_export	art_id_desc	Identifiant unique de l'artefact
-project_export_artifact_deps_export	depend_on_art	Dépend du/des artefacts
-#
-#-----------------------------------------------
 # Script: SF/www/project/export/artifact_export.php
 #
 project_export_artifact_export	ath_not_created	ArtifactTypeHtml n'a pu être créé
@@ -463,38 +448,6 @@ project_export_artifact_history_export	no_hist_found	Aucun historique de changem
 project_export_artifact_history_export	db_access_err	Erreur lors de l'accès à la base de données de cet outil de suivi. Veuillez informer l'administrateur $1 de cette erreur.
 project_export_artifact_history_export	hist_export_format	Format d'exportation de l'historique des changements
 project_export_artifact_history_export	hist_export_format_msg	L'exportation de l'historique des changements de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/bug_bug_deps_export.php
-#
-project_export_bug_deps_export	g_id	ID du projet
-project_export_bug_deps_export	bug_id	ID du bug
-project_export_bug_deps_export	depend_on_bug	Dépend du bug
-project_export_bug_deps_export	bug_id_desc	Identifiant unique du bug
-project_export_bug_deps_export	g_id_desc	Identifiant unique du projet
-#project_export_bug_deps_export	depend_on_bug_desc	Dépend du bug
-project_export_bug_deps_export	bug_deps_export	$1 Exporter
-project_export_bug_deps_export	no_bug_deps_found	Aucun $1 trouvé. Impossible d'exporter les données.
-project_export_bug_deps_export	db_access_err	Erreur lors de l'accès à votre base de données $1. Veuillez informer l'administrateur de $2 de cette erreur.
-project_export_bug_deps_export	bug_deps_export_format	<h3>Format d'exportation de $1</h3> <p>Les données exportées pour $1 comportent les champs suivants. Les valeurs données en exemple indique le type des données. <p>
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/bug_export.php
-#
-project_export_bug_export	depend_on_bugs	Dépend des bug(s)
-project_export_bug_export	depend_on_bugs_desc	Liste des bus dont celui-ci dépend
-#
-#-----------------------------------------------
-# Script: SF/www/project/export/index.php
-#
-project_export_index	online_help	aide en ligne
-project_export_index	legacy	Ancien
-project_export_index	export_x	Exporter $1
-project_export_index	support_request	Suivi de demandes de support
-project_export_index	direct_db_access	Accès direct à la base de données
-project_export_index	generate_full_db	Générer la base de données du projet</a> </b> (<- Cliquer sur ce lien pour générer la base)
-project_export_index	db_connection_params	Paramètres de connexion à la base de données&nbsp;:
-#
 #-----------------------------------------------
 # Script: SF/www/project/export/project_export_utils.php
 #
@@ -551,18 +504,6 @@ project_export_access_logs_export	user_desc	Auteur de l'accès
 project_export_access_logs_export	email_desc	Adresse e-mail de l'auteur de l'accès
 project_export_access_logs_export	page_desc	Page wiki accédée
 project_export_access_logs_export	local_time_desc	Heure locale de l'accès (H:m)
-#
-#-----------------------------------------------
-# Script: src/www/project/export/user_groups_export.php
-#
-project_export_user_groups	user_group	Groupe
-project_export_user_groups	user_username	Nom $1
-project_export_user_groups	user_realname	Nom complet
-project_export_user_groups	user_group_desc	Nom du groupe
-project_export_user_groups	user_username_desc	Nom du compte de l'utilisateur sur $1
-project_export_user_groups	user_realname_desc	Nom complet de l'utilisateur
-project_export_user_groups	exp_format	Format d'exporation des groupes d'utilisteurs
-project_export_user_groups	exp_format_msg	Le format d'exportation des groups d'utilisateurs comporte les champs suviants.
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php

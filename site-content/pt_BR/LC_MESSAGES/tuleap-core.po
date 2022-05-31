@@ -2599,9 +2599,6 @@ msgstr "O projeto #%d não está ativo e não é um modelo"
 msgid "Project (read only)"
 msgstr "Projeto (somente leitura)"
 
-msgid "Project Data Export"
-msgstr "Exportação de Dados do Projeto"
-
 msgid "Project Latest News"
 msgstr "Últimas Notícias do Projeto"
 
@@ -3187,9 +3184,6 @@ msgstr ""
 msgid "Show %1$s"
 msgstr "Mostrar %1$s"
 
-msgid "Show format"
-msgstr ""
-
 msgid "Show project announcement"
 msgstr "Mostrar anúncios do projeto"
 
@@ -3398,9 +3392,6 @@ msgid "Terms"
 msgstr ""
 
 msgid "Text"
-msgstr ""
-
-msgid "Text file export"
 msgstr ""
 
 msgid "Thank you for using Tuleap"
@@ -3923,10 +3914,6 @@ msgstr "Ferramentas"
 msgid "Trace and Track all types of activities."
 msgstr "Rastreie e acompanhe todos os tipos de atividades."
 
-#, php-format
-msgid "Tracker %s"
-msgstr "Tracker %s"
-
 msgid "Tracker email format"
 msgstr ""
 
@@ -4092,9 +4079,6 @@ msgstr "Grupo de usuários criado mas não consegue obter identificação."
 msgid "User group does not exist"
 msgstr "O grupo de usuários não existe"
 
-msgid "User groups definition"
-msgstr "Definições de grupos de usuário"
-
 msgid "User is already member of the project"
 msgstr "O usuário já é membro do projeto"
 
@@ -4106,9 +4090,6 @@ msgstr "Preferências do usuário atualizadas com sucesso"
 
 msgid "User profile"
 msgstr "Perfil de usuário"
-
-msgid "User status"
-msgstr "Status do usuário"
 
 msgid "Username"
 msgstr ""
@@ -4193,12 +4174,6 @@ msgstr ""
 
 msgid "Want to monitor this forum?"
 msgstr "Quer monitorar este fórum?"
-
-msgid ""
-"Warning! This section will be deleted in June 2022. If this feature is "
-"important to you, please contact your administrator or raise your concern on "
-"the following ticket:"
-msgstr ""
 
 msgid "Warnings"
 msgstr "Avisos"

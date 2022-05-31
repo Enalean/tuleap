@@ -231,68 +231,6 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
     $record['cc'] = implode(',', $cc);
 }
 
-function prepare_artifact_history_record($at, $art_field_fact, &$record)
-{
-    global $datetime_fmt;
-
-  /*
-           Prepare the column values in the bug history  record
-           Input: a row from the bug_history database (passed by
-                   reference.
-          Output: the same row with values transformed for export
-  */
-
-  // replace the modification date field with human readable dates
-    $record['date'] = format_date($datetime_fmt, $record['date']);
-
-    $field = $art_field_fact->getFieldFromName($record['field_name']);
-    if ($field) {
-        prepare_historic_value($record, $field, $at->getID(), 'old_value');
-        prepare_historic_value($record, $field, $at->getID(), 'new_value');
-    } else {
-        if (preg_match("/^(lbl_)/", $record['field_name']) && preg_match("/(_comment)$/", $record['field_name'])) {
-            $record['field_name'] = "comment";
-            $record['label']      = "comment";
-        }
-    }
-
-  // Decode the comment type value. If null make sure there is
-  // a blank entry in the array
-    if (isset($record['type'])) {
-        $field = $art_field_fact->getFieldFromName('comment_type_id');
-        if ($field) {
-            $values[]       = $record['type'];
-            $label_values   = $field->getLabelValues($at->getID(), $values);
-            $record['type'] = join(",", $label_values);
-        }
-    } else {
-        $record['type'] = '';
-    }
-}
-
-function prepare_historic_value(&$record, $field, $group_artifact_id, $name)
-{
-    if ($field->isSelectBox()) {
-        $record[$name] = $field->getValue($group_artifact_id, $record[$name]);
-    } elseif ($field->isDateField()) {
-      // replace the date fields (unix time) with human readable dates that
-      // is also accepted as a valid format in future import
-        if ($record[$name] == '') {
-        // if date undefined then set datetime to 0. Ideally should
-        // NULL as well but if we pass NULL it is interpreted as a string
-        // later in the process
-            $record[$name] = '0';
-        } else {
-            $record[$name] = format_date(ForgeConfig::get('datetime_fmt'), $record[$name]);
-        }
-    } elseif ($field->isFloat()) {
-        $record[$name] = number_format($record[$name], 2);
-    } else {
-      // all text fields converted from HTML to ASCII
-        $record[$name] = prepare_textarea($record[$name]);
-    }
-}
-
     /**
          *  Prepare the column values in the access logs  record
          *  @param: group_id: group id

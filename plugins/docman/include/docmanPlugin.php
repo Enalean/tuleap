@@ -183,8 +183,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook('getPermsLabelForWiki', 'getPermsLabelForWiki', false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipRepresentationEvent::NAME);
-        $this->addHook('project_export_entry', 'project_export_entry', false);
-        $this->addHook('project_export', 'project_export', false);
         $this->addHook('SystemEvent_PROJECT_RENAME', 'renameProject', false);
         $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir', false);
         $this->addHook('webdav_root_for_service', 'webdav_root_for_service', false);
@@ -601,40 +599,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             ob_start();
             $controller->process();
             $event->setOutput(ob_get_clean());
-        }
-    }
-
-    /**
-     *  hook to display the link to export project data
-     *  @param void
-     *  @return void
-     */
-    public function project_export_entry($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $params['entries'][] = [
-            'label'               => dgettext('tuleap-docman', 'Document Manager Permissions'),
-            'data_dl_href'     => '/project/export/index.php?group_id=' . urlencode((string) $params['group_id']) . '&export=plugin_docman_perms&show=csv',
-            'data_format_href' => '/project/export/index.php?group_id=' . urlencode((string) $params['group_id']) . '&export=plugin_docman_perms&show=format',
-        ];
-    }
-
-    /**
-     *  hook to display the link to export project data
-     *  @param void
-     *  @return void
-     */
-    public function project_export($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['export'] == 'plugin_docman_perms') {
-            include_once('Docman_PermissionsExport.class.php');
-            $request    = HTTPRequest::instance();
-            $permExport = new Docman_PermissionsExport($params['project']);
-            if ($request->get('show') == 'csv') {
-                $permExport->toCSV();
-            } else { // show = format
-                $permExport->renderDefinitionFormat();
-            }
-            exit;
         }
     }
 

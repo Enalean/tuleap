@@ -1,5 +1,4 @@
 <div class="tlp-framed-horizontally">
-    {{# has_feature_flag }}
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
@@ -17,83 +16,6 @@
                     <i class="fas fa-download tlp-button-icon" aria-hidden="true"></i>
                     {{# gettext }}Export project structure{{/ gettext }}
                 </a>
-            </section>
-        </div>
-    </section>
-    {{/ has_feature_flag }}
-
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">
-                    {{# gettext }}Text file export{{/ gettext }}
-                </h1>
-            </div>
-            <section class="tlp-pane-section">
-
-                <div class="tlp-alert-warning">
-                    {{# gettext }}Warning! This section will be deleted in June 2022. If this feature is important to you, please contact your administrator or raise your concern on the following ticket:{{/ gettext }}
-                    <a href="https://tuleap.net/plugins/tracker/?aid=24983">Removal of legacy project data export</a>
-                </div>
-
-                <table class="tlp-table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Data</th>
-                            <th>History</th>
-                            <th>Dependencies</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{# entries }}
-                            <tr>
-                                <td>
-                                    {{ label }}
-                                </td>
-                                <td>
-                                    {{# data_dl_href }}
-                                        <a href="{{ . }}" class="tlp-button-primary tlp-button-outline">
-                                            <i class="fas fa-download tlp-button-icon" aria-hidden="true"></i>
-                                            {{# gettext }}Export{{/ gettext }}
-                                        </a>
-                                    {{/ data_dl_href }}
-                                    {{# data_format_href }}
-                                        <a href="{{ . }}" class="tlp-button-primary tlp-button-outline">
-                                            {{# gettext }}Show format{{/ gettext }}
-                                        </a>
-                                    {{/ data_format_href }}
-                                </td>
-                                <td>
-                                    {{# history_dl_href }}
-                                        <a href="{{ . }}" class="tlp-button-primary tlp-button-outline">
-                                            <i class="fas fa-download tlp-button-icon" aria-hidden="true"></i>
-                                            {{# gettext }}Export{{/ gettext }}
-                                        </a>
-                                    {{/ history_dl_href }}
-                                    {{# history_format_href }}
-                                        <a href="{{ . }}" class="tlp-button-primary tlp-button-outline">
-                                            {{# gettext }}Show format{{/ gettext }}
-                                        </a>
-                                    {{/ history_format_href }}
-                                </td>
-                                <td>
-                                    {{# dependencies_dl_href }}
-                                        <a href="{{ . }}" class="tlp-button-primary tlp-button-outline">
-                                            <i class="fas fa-download tlp-button-icon" aria-hidden="true"></i>
-                                            {{# gettext }}Export{{/ gettext }}
-                                        </a>
-                                    {{/ dependencies_dl_href }}
-                                    {{# dependencies_format_href }}
-                                        <a href="{{ . }}" class="tlp-button-primary tlp-button-outline">
-                                            {{# gettext }}Show format{{/ gettext }}
-                                        </a>
-                                    {{/ dependencies_format_href }}
-                                </td>
-                            </tr>
-                        {{/ entries }}
-                    </tbody>
-                </table>
             </section>
         </div>
     </section>

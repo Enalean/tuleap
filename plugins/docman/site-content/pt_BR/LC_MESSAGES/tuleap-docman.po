@@ -771,9 +771,6 @@ msgstr ""
 msgid "Docman item"
 msgstr ""
 
-msgid "Docman permission export format"
-msgstr ""
-
 msgid "Document"
 msgstr ""
 
@@ -792,9 +789,6 @@ msgstr ""
 msgid "Document Manager"
 msgstr ""
 
-msgid "Document Manager Permissions"
-msgstr ""
-
 msgid "Document Manager already installed."
 msgstr ""
 
@@ -802,9 +796,6 @@ msgid "Document Reader"
 msgstr ""
 
 msgid "Document Writer"
-msgstr ""
-
-msgid "Document id"
 msgstr ""
 
 msgid "Document id:"
@@ -974,9 +965,6 @@ msgstr ""
 msgid "Every"
 msgstr "Cada"
 
-msgid "Export date"
-msgstr ""
-
 msgid "File"
 msgstr "Arquivo"
 
@@ -1094,9 +1082,6 @@ msgstr ""
 msgid "Icons"
 msgstr ""
 
-msgid "Id"
-msgstr ""
-
 msgid "Image Id:"
 msgstr ""
 
@@ -1201,9 +1186,6 @@ msgid "Keep the current table."
 msgstr ""
 
 msgid "Keep the lock:"
-msgstr ""
-
-msgid "Kind of item (file, link, wiki,...)"
 msgstr ""
 
 msgid "Label"
@@ -1462,11 +1444,6 @@ msgstr ""
 msgid "Old Value"
 msgstr ""
 
-msgid ""
-"One user group per column. Each one can have either READ, WRITE or MANAGE "
-"permission. An empty row means no access."
-msgstr ""
-
 msgid "Only admin can delete Project wide reports."
 msgstr ""
 
@@ -1512,9 +1489,6 @@ msgid "Paste in progress '%1$s' in '%2$s'"
 msgstr ""
 
 msgid "Paste in progress..."
-msgstr ""
-
-msgid "Path"
 msgstr ""
 
 msgid "Pattern"
@@ -1600,9 +1574,6 @@ msgid "Project"
 msgstr "Projeto"
 
 msgid "Project Documentation"
-msgstr ""
-
-msgid "Project data export"
 msgstr ""
 
 msgid "Project has no locked documents"
@@ -1740,9 +1711,6 @@ msgid "Reviewer"
 msgstr ""
 
 msgid "Reviewers were notified."
-msgstr ""
-
-msgid "Sample value"
 msgstr ""
 
 msgid "Save as"
@@ -1887,9 +1855,6 @@ msgstr ""
 #, php-format
 msgid ""
 "The <a href=\"%1$s\">selected version</a> has been successfully restored."
-msgstr ""
-
-msgid "The Item path in docman tree"
 msgstr ""
 
 msgid "The URL is required."
@@ -2178,9 +2143,6 @@ msgid "Use this property"
 msgstr ""
 
 msgid "Used"
-msgstr ""
-
-msgid "User Groups..."
 msgstr ""
 
 msgid "User groups"
