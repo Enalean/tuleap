@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,8 +32,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
-use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
-use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
+use Tuleap\Gitlab\API\GitlabProjectBuilder;
+use Tuleap\Gitlab\Artifact\MergeRequestTitleCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
@@ -45,50 +45,50 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\REST\Header;
 use UserManager;
 
-class GitlabBranchResource
+final class GitlabMergeRequestResource
 {
-    public const ROUTE = 'gitlab_branch';
+    public const ROUTE = 'gitlab_merge_request';
 
-     /**
-      * @url OPTIONS
-      */
+    /**
+     * @url OPTIONS
+     */
     public function options(): void
     {
         Header::allowOptionsPost();
     }
 
     /**
-     * Create a GitLab branch.
+     * Create a GitLab merge request.
      *
      * /!\ This route is under construction.
      * <br>
-     * Create a branch in a GitLab integration.
-     * The branch name is defined by Tuleap. The name will be like {prefix}TULEAP-{artifact_id}
+     * Create a merge request in a GitLab integration.
+     * The merge request title is defined by Tuleap. The title will be like TULEAP-{artifact_id}: {artifact_title}
+     * The merge request target branch is the GitLab repository default branch
      *
      * <br>
      * <br>
-     * A GitLab branch can be created like:
+     * A GitLab merge request can be created like:
      * <br>
      * <pre>
      * {<br>
      *   &nbsp;"gitlab_integration_id": 1,<br>
      *   &nbsp;"artifact_id": 123,<br>
-     *   &nbsp;"reference": "main"<br>
+     *   &nbsp;"source_branch": "dev_TULEAP-123",<br>
      *  }<br>
      * </pre>
-     *
      *
      * @url    POST
      * @access protected
      *
-     * @param GitlabBranchPOSTRepresentation $gitlab_branch {@from body}
+     * @param GitlabMergeRequestPOSTRepresentation $gitlab_merge_request {@from body}
      *
      * @status 201
      *
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function createGitlabBranch(GitlabBranchPOSTRepresentation $gitlab_branch): void
+    protected function createGitlabMergeRequest(GitlabMergeRequestPOSTRepresentation $gitlab_merge_request): void
     {
         $this->options();
 
@@ -100,7 +100,7 @@ class GitlabBranchResource
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
 
-        $branch_creator = new GitlabBranchCreator(
+        $gitlab_merge_request_creator = new GitlabMergeRequestCreator(
             Tracker_ArtifactFactory::instance(),
             new GitlabIntegrationAvailabilityChecker(
                 $plugin_manager,
@@ -116,16 +116,16 @@ class GitlabBranchResource
                     new KeyFactory()
                 )
             ),
+            new GitlabProjectBuilder($gitlab_api_client),
             $gitlab_api_client,
-            new BranchNameCreatorFromArtifact(
+            new MergeRequestTitleCreatorFromArtifact(
                 new Slugify(),
-                new CreateBranchPrefixDao()
             )
         );
 
-        $branch_creator->createBranchInGitlab(
+        $gitlab_merge_request_creator->createMergeRequestInGitlab(
             $current_user,
-            $gitlab_branch
+            $gitlab_merge_request
         );
     }
 }

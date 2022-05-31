@@ -22,6 +22,7 @@ namespace Tuleap\Gitlab\REST;
 
 use Project;
 use Tuleap\Gitlab\REST\v1\GitlabBranchResource;
+use Tuleap\Gitlab\REST\v1\GitlabMergeRequestResource;
 use Tuleap\Gitlab\REST\v1\GitlabProjectResource;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryResource;
@@ -38,6 +39,7 @@ class ResourcesInjector
         $restler->addAPIClass(GitlabProjectResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(GitlabRepositoryResource::class, GitlabRepositoryRepresentation::ROUTE);
         $restler->addAPIClass(GitlabBranchResource::class, GitlabBranchResource::ROUTE);
+        $restler->addAPIClass(GitlabMergeRequestResource::class, GitlabMergeRequestResource::ROUTE);
     }
 
     public function declareProjectGitlabResource(array &$resources, Project $project): void
