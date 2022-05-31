@@ -39,7 +39,7 @@ class b201808171523_add_table_source_artifact_id extends ForgeUpgrade_Bucket // 
                 source_platform VARCHAR(100) NOT NULL,
                 PRIMARY KEY (artifact_id),
                 INDEX (source_platform)
-                ); ENGINE=InnoDB;";
+                ) ENGINE=InnoDB;";
 
         $this->db->createTable('plugin_tracker_source_artifact_id', $sql);
     }

@@ -39,9 +39,6 @@ class b201907040905_add_project_ugroup_synchronized_membership extends \Tuleap\F
                 project_id INT(11) NOT NULL PRIMARY KEY,
                 is_activated TINYINT(1) NOT NULL DEFAULT 1
             ) ENGINE=InnoDB';
-        $res = $this->db->dbh->exec($sql);
-        if ($res === false) {
-            throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException('Unable to create Project Ugroup Synchronized Membership table');
-        }
+        $this->db->createTable('project_ugroup_synchronized_membership', $sql);
     }
 }
