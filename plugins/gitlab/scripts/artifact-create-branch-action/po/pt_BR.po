@@ -9,8 +9,16 @@ msgstr ""
 msgid "An error occurred while creating %{ branch_name }, please try again"
 msgstr ""
 
+msgid "An error occurred while creating the associated merge request."
+msgstr ""
+
 msgid "Close"
 msgstr "Fechar"
+
+msgid ""
+"Create a merge request based on this new branch to the default\n"
+"                                branch"
+msgstr ""
 
 msgid "Create branch"
 msgstr ""
@@ -25,6 +33,9 @@ msgid "GitLab repositories integrations"
 msgstr ""
 
 msgid "Must be an existing git commit SHA-1 or a branch name"
+msgstr ""
+
+msgid "The associated merge request has been created."
 msgstr ""
 
 msgid "The branch %{ branch_name } already exists on %{ repo_name }"

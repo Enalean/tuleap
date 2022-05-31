@@ -35,7 +35,7 @@ export function postGitlabBranch(
     gitlab_integration_id: number,
     artifact_id: number,
     reference: string
-): ResultAsync<void, Promise<GitLabBranchCreationError>> {
+): ResultAsync<GitLabIntegrationCreatedBranchInformation, Promise<GitLabBranchCreationError>> {
     const headers = {
         "content-type": "application/json",
     };
@@ -47,12 +47,10 @@ export function postGitlabBranch(
     });
 
     return ResultAsync.fromPromise(
-        (async (): Promise<void> => {
-            await post("/api/v1/gitlab_branch", {
-                headers: headers,
-                body: body,
-            });
-        })(),
+        post("/api/v1/gitlab_branch", {
+            headers,
+            body,
+        }).then((response) => response.json()),
         (err: unknown): Promise<GitLabBranchCreationError> => {
             const default_error = {
                 error_type: GitLabBranchCreationPossibleError.UNKNOWN,
@@ -86,8 +84,38 @@ export function postGitlabBranch(
     );
 }
 
+export function postGitlabMergeRequest(
+    gitlab_integration_id: number,
+    artifact_id: number,
+    source_branch: string
+): ResultAsync<void, unknown> {
+    const headers = {
+        "content-type": "application/json",
+    };
+
+    const body = JSON.stringify({
+        gitlab_integration_id: gitlab_integration_id,
+        artifact_id: artifact_id,
+        source_branch: source_branch,
+    });
+
+    return ResultAsync.fromPromise(
+        post("/api/v1/gitlab_merge_request", {
+            headers,
+            body,
+        }).then(() => {
+            // ignore response
+        }),
+        (err: unknown) => err
+    );
+}
+
 export interface GitLabIntegrationBranchInformation {
     readonly default_branch: string;
+}
+
+export interface GitLabIntegrationCreatedBranchInformation {
+    readonly branch_name: string;
 }
 
 export function getGitLabRepositoryBranchInformation(

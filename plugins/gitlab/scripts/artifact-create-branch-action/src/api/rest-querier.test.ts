@@ -21,6 +21,7 @@ import {
     getGitLabRepositoryBranchInformation,
     GitLabBranchCreationPossibleError,
     postGitlabBranch,
+    postGitlabMergeRequest,
 } from "./rest-querier";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
@@ -93,5 +94,20 @@ describe("postGitlabBranch", () => {
         await getGitLabRepositoryBranchInformation(12);
 
         expect(getSpy).toHaveBeenCalledWith("/api/v1/gitlab_repositories/12/branches");
+    });
+
+    it("asks to create the GitLab merge request", async () => {
+        const postSpy = jest.spyOn(tlp, "post");
+        mockFetchSuccess(postSpy);
+
+        const result = await postGitlabMergeRequest(1, 123, "prefix/tuleap-123");
+
+        expect(postSpy).toHaveBeenCalledWith("/api/v1/gitlab_merge_request", {
+            body: '{"gitlab_integration_id":1,"artifact_id":123,"source_branch":"prefix/tuleap-123"}',
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+        expect(result.isOk()).toBe(true);
     });
 });

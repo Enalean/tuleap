@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\REST\v1;
 
 use DateTimeImmutable;
+use Exception;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
@@ -38,9 +38,11 @@ use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class GitlabBranchCreatorTest extends TestCase
 {
@@ -91,7 +93,7 @@ final class GitlabBranchCreatorTest extends TestCase
             ->willReturn('tuleap-123-art_title');
     }
 
-    public function testItAsksToCreateTheBranch(): void
+    public function testItAsksToCreateTheBranchAndReturnsABranchRepresentation(): void
     {
         $user = $this->buildMockUser();
 
@@ -126,10 +128,12 @@ final class GitlabBranchCreatorTest extends TestCase
                 []
             );
 
-        $this->creator->createBranchInGitlab(
+        $representation = $this->creator->createBranchInGitlab(
             $user,
             $this->buildGitlabBranchPOSTRepresentation()
         );
+
+        self::assertSame("tuleap-123-art_title", $representation->branch_name);
     }
 
     public function testItThrowAnExceptionIfArtifactDoesNotExistOrUserCannotReadIt(): void
@@ -179,7 +183,7 @@ final class GitlabBranchCreatorTest extends TestCase
 
     public function testItThrowAnExceptionIfUserIsNotProjectMember(): void
     {
-        $user = $this->createMock(PFUser::class);
+        $user = UserTestBuilder::anActiveUser()->withoutMemberOfProjects()->build();
 
         $this->artifact_factory
             ->expects(self::once())
@@ -193,12 +197,6 @@ final class GitlabBranchCreatorTest extends TestCase
             ->expects(self::once())
             ->method('isGitlabIntegrationAvailableForProject')
             ->willReturn(true);
-
-        $user
-            ->expects(self::once())
-            ->method('isMember')
-            ->with(101)
-            ->willReturn(false);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
@@ -302,7 +300,10 @@ final class GitlabBranchCreatorTest extends TestCase
         );
     }
 
-    public function testItThrowAnExceptionIfGitlabAPIQueryHasError(): void
+    /**
+     * @dataProvider provideGitLabAPIExceptions
+     */
+    public function testItThrowAnExceptionIfGitlabAPIsInError(Exception $exception): void
     {
         $user = $this->buildMockUser();
 
@@ -336,16 +337,14 @@ final class GitlabBranchCreatorTest extends TestCase
                 "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
                 []
             )
-            ->willThrowException(
-                new GitlabRequestException(
-                    400,
-                    "Bad request"
-                )
-            );
-
+            ->willThrowException($exception);
 
         $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        if ($exception instanceof GitlabResponseAPIException) {
+            $this->expectExceptionCode(500);
+        } elseif ($exception instanceof GitlabRequestException) {
+            $this->expectExceptionCode(400);
+        }
 
         $this->creator->createBranchInGitlab(
             $user,
@@ -353,54 +352,19 @@ final class GitlabBranchCreatorTest extends TestCase
         );
     }
 
-    public function testItThrowAnExceptionIfGitlabAPIResponseIsInError(): void
+    public function provideGitLabAPIExceptions(): array
     {
-        $user = $this->buildMockUser();
-
-        $this->artifact_factory
-            ->expects(self::once())
-            ->method('getArtifactByIdUserCanView')
-            ->with($user, 123)
-            ->willReturn(
-                $this->buildMockArtifact()
-            );
-
-        $this->availability_checker
-            ->expects(self::once())
-            ->method('isGitlabIntegrationAvailableForProject')
-            ->willReturn(true);
-
-        $integration = $this->buildMockIntegration();
-
-        $credentials = $this->createMock(Credentials::class);
-        $this->credentials_retriever
-            ->expects(self::once())
-            ->method('getCredentials')
-            ->with($integration)
-            ->willReturn($credentials);
-
-        $this->gitlab_api_client
-            ->expects(self::once())
-            ->method('postUrl')
-            ->with(
-                $credentials,
-                "/projects/23/repository/branches?branch=tuleap-123-art_title&ref=main",
-                []
-            )
-            ->willThrowException(
-                new GitlabResponseAPIException(
+        return [
+            [
+                new GitlabRequestException(
+                    400,
                     "Bad request"
-                )
-            );
-
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(500);
-
-        $this->creator->createBranchInGitlab(
-            $user,
-            $this->buildGitlabBranchPOSTRepresentation()
-        );
+                ),
+            ],
+            [
+                new GitlabResponseAPIException("Bad request"),
+            ],
+        ];
     }
 
     private function buildGitlabBranchPOSTRepresentation(): GitlabBranchPOSTRepresentation
@@ -414,44 +378,20 @@ final class GitlabBranchCreatorTest extends TestCase
 
     private function buildMockArtifact(): Artifact
     {
-        $tracker = $this->createMock(Tracker::class);
-        $tracker
-            ->method('getProject')
-            ->willReturn(Project::buildForTest());
-        $tracker
-            ->method('getGroupId')
-            ->willReturn('101');
-
-        $artifact = $this->createMock(Artifact::class);
-        $artifact
-            ->method('getTracker')
-            ->willReturn($tracker);
-        $artifact->method('getId')->willReturn(123);
-        $artifact->method('getTitle')->willReturn('art title');
-
-        return $artifact;
+        return ArtifactTestBuilder::anArtifact(123)
+            ->inProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->withTitle('art title')
+            ->build();
     }
 
     private function buildMockUser(): PFUser
     {
-        $user = $this->createMock(PFUser::class);
-
-        $user
-            ->expects(self::once())
-            ->method('isMember')
-            ->with(101)
-            ->willReturn(true);
-
-        return $user;
+        return UserTestBuilder::anActiveUser()->withMemberOf(Project::buildForTest())->build();
     }
 
     private function mockIntegrationWithAnotherProject(): void
     {
-        $project_integration = $this->createMock(Project::class);
-        $project_integration
-            ->expects(self::once())
-            ->method('getID')
-            ->willReturn(102);
+        $project_integration = ProjectTestBuilder::aProject()->withId(102)->build();
 
         $integration = new GitlabRepositoryIntegration(
             1,
