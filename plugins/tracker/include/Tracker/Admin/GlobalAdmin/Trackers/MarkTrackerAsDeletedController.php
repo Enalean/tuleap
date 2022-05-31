@@ -35,6 +35,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
 class MarkTrackerAsDeletedController implements DispatchableWithRequest
 {
@@ -72,6 +73,7 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         EventManager $event_manager,
         ReferenceManager $reference_manager,
         FieldDao $field_dao,
+        private TriggersDao $triggers_dao,
     ) {
         $this->tracker_factory     = $tracker_factory;
         $this->token_provider      = $token_provider;
@@ -112,6 +114,10 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
         } elseif ($this->field_dao->doesTrackerHaveSourceSharedFields($tracker->getId()) === true) {
             throw new ForbiddenException(
                 dgettext('tuleap-tracker', 'You can\'t delete this tracker because it has at least one source shared field.')
+            );
+        } elseif ($this->triggers_dao->isTrackerImplicatedInTriggers($tracker->getId()) === true) {
+            throw new ForbiddenException(
+                dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is source or target of triggers.')
             );
         }
 

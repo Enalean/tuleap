@@ -39,6 +39,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
 class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -83,6 +84,8 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $field_dao;
 
+    private TriggersDao|Mockery\LegacyMockInterface|Mockery\MockInterface $triggers_dao;
+
     protected function setUp(): void
     {
         $token_provider            = Mockery::mock(CSRFSynchronizerTokenProvider::class);
@@ -91,6 +94,7 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->reference_manager   = Mockery::mock(ReferenceManager::class);
         $this->permissions_checker = Mockery::mock(GlobalAdminPermissionsChecker::class);
         $this->field_dao           = Mockery::mock(FieldDao::class);
+        $this->triggers_dao        = Mockery::mock(TriggersDao::class);
 
         $this->controller = new MarkTrackerAsDeletedController(
             $this->tracker_factory,
@@ -98,7 +102,8 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $token_provider,
             $this->event_manager,
             $this->reference_manager,
-            $this->field_dao
+            $this->field_dao,
+            $this->triggers_dao
         );
 
         $this->user    = Mockery::mock(PFUser::class);
@@ -256,6 +261,55 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    public function testItThrowsExceptionIfTrackerCannotBeDeletedIfItsSourceOrTargetOfTriggers(): void
+    {
+        $tracker = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                                      => 102,
+                    'getName'                                    => 'User story',
+                    'isDeleted'                                  => false,
+                    'getProject'                                 => $this->project,
+                    'getInformationsFromOtherServicesAboutUsage' => [
+                        'can_be_deleted' => true,
+                    ],
+                ]
+            )->getMock();
+
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->user)
+            ->once()
+            ->andReturnTrue();
+
+        $this->tracker_factory
+            ->shouldReceive('getTrackerById')
+            ->once()
+            ->andReturn($tracker);
+
+        $this->csrf
+            ->shouldReceive('check')
+            ->once();
+
+        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
+            ->once()
+            ->with(102)
+            ->andReturnFalse();
+
+        $this->triggers_dao->shouldReceive('isTrackerImplicatedInTriggers')
+            ->once()
+            ->with(102)
+            ->andReturnTrue();
+
+        $this->expectException(ForbiddenException::class);
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            Mockery::mock(BaseLayout::class),
+            ['id' => '102']
+        );
+    }
+
     public function testItDisplaysAnErrorMessageIfTrackerCannotBeMarkedAsDeletedInDB(): void
     {
         $tracker = Mockery::mock(Tracker::class)
@@ -287,6 +341,11 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
+            ->once()
+            ->with(102)
+            ->andReturnFalse();
+
+        $this->triggers_dao->shouldReceive('isTrackerImplicatedInTriggers')
             ->once()
             ->with(102)
             ->andReturnFalse();
@@ -342,6 +401,11 @@ class MarkTrackerAsDeletedControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
+            ->once()
+            ->with(102)
+            ->andReturnFalse();
+
+        $this->triggers_dao->shouldReceive('isTrackerImplicatedInTriggers')
             ->once()
             ->with(102)
             ->andReturnFalse();
