@@ -191,7 +191,7 @@ Hudson/Jenkins plugin for Tuleap Git repositories
 %package plugin-webdav
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-document
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
@@ -334,17 +334,12 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-create-test-env
 %{summary}.
 
-%package plugin-docman
-Summary: Docman plugin for Tuleap
+%package plugin-document
+Summary: Document plugin for Tuleap
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-docman
-Share your data with project members.
-
-%package plugin-document
-Summary: Document UI
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
+Obsoletes: tuleap-plugin-docman < 13.10
+Provides: tuleap-plugin-docman
 %description plugin-document
 %{summary}.
 
@@ -1361,14 +1356,11 @@ fi
 %{APP_DIR}/plugins/create_test_env
 %attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
 
-%files plugin-docman
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/docman
-%attr(00700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/docman
-
 %files plugin-document
 %defattr(-,root,root,-)
+%{APP_DIR}/plugins/docman
 %{APP_DIR}/plugins/document
+%attr(00700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/docman
 
 %files plugin-api-explorer
 %defattr(-,root,root,-)
