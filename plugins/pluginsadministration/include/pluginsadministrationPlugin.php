@@ -19,6 +19,8 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
@@ -31,6 +33,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
     public function __construct($id)
     {
         parent::__construct($id);
+        $this->addHook(GetConfigKeys::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -52,6 +55,11 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
             $this->pluginInfo = new PluginsAdministrationPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(\Tuleap\PluginsAdministration\PluginDisablerVerifier::class);
     }
 
     public function burning_parrot_get_stylesheets($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
