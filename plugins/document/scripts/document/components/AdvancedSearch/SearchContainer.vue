@@ -49,7 +49,6 @@ import SearchHeader from "./SearchHeader.vue";
 import { searchInFolder } from "../../api/rest-querier";
 import { Action } from "vuex-class";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
-import { isQueryEmpty } from "../../helpers/is-query-empty";
 import { getRouterQueryFromSearchParams } from "../../helpers/get-router-query-from-search-params";
 import SearchItemModals from "./SearchItemModals.vue";
 import emitter from "../../helpers/emitter";
@@ -123,10 +122,6 @@ export default class SearchContainer extends Vue {
     }
 
     search(new_query: AdvancedSearchParams, offset: number): void {
-        if (isQueryEmpty(new_query)) {
-            return;
-        }
-
         this.is_loading = true;
         this.error = null;
         this.results = null;
@@ -145,11 +140,7 @@ export default class SearchContainer extends Vue {
     }
 
     get can_result_table_be_displayed(): boolean {
-        return this.error === null && !this.is_query_empty;
-    }
-
-    get is_query_empty(): boolean {
-        return isQueryEmpty(this.query);
+        return this.error === null;
     }
 
     advancedSearch(params: AdvancedSearchParams): void {

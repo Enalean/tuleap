@@ -41,25 +41,9 @@ describe("SearchContainer", () => {
         searchInFolderMock.mockReset();
     });
 
-    it("should not display the table results if the query is empty", () => {
-        const wrapper = shallowMount(SearchContainer, {
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-            },
-        });
-
-        expect(wrapper.findComponent(SearchResultTable).exists()).toBe(false);
-        expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
-    });
-
     it("should automatically load the current folder so that breadcrumb is accurate when user refresh the page", () => {
+        searchInFolderMock.mockResolvedValue([]);
+
         const wrapper = shallowMount(SearchContainer, {
             propsData: {
                 query: buildAdvancedSearchParams(),
@@ -77,6 +61,8 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes global search", () => {
+        searchInFolderMock.mockResolvedValue([]);
+
         const router = new VueRouter();
         jest.spyOn(router, "push").mockImplementation();
 
@@ -117,6 +103,8 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes type", () => {
+        searchInFolderMock.mockResolvedValue([]);
+
         const router = new VueRouter();
         jest.spyOn(router, "push").mockImplementation();
 
@@ -154,6 +142,8 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes title", () => {
+        searchInFolderMock.mockResolvedValue([]);
+
         const router = new VueRouter();
         jest.spyOn(router, "push").mockImplementation();
 
@@ -191,6 +181,8 @@ describe("SearchContainer", () => {
     });
 
     it("should route to a new search if user changes description", () => {
+        searchInFolderMock.mockResolvedValue([]);
+
         const router = new VueRouter();
         jest.spyOn(router, "push").mockImplementation();
 
@@ -363,27 +355,9 @@ describe("SearchContainer", () => {
         expect(wrapper.findComponent(SearchResultError).exists()).toBe(false);
     });
 
-    it("should not search for items if query is empty", () => {
+    it("should display an error state if the query failed", async () => {
         searchInFolderMock.mockResolvedValue([]);
 
-        shallowMount(SearchContainer, {
-            localVue: createLocalVue().use(VueRouter),
-            propsData: {
-                query: buildAdvancedSearchParams(),
-                folder_id: 101,
-                offset: 0,
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {},
-                }),
-            },
-        });
-
-        expect(searchInFolderMock).not.toHaveBeenCalled();
-    });
-
-    it("should display an error state if the query failed", async () => {
         const wrapper = shallowMount(SearchContainer, {
             localVue: createLocalVue().use(VueRouter),
             propsData: {
@@ -419,6 +393,8 @@ describe("SearchContainer", () => {
         ["item-has-just-been-deleted"],
         ["item-has-just-been-updated"],
     ])("should reload the page whenever %s", (event) => {
+        searchInFolderMock.mockResolvedValue([]);
+
         const reload = jest.fn();
         Object.defineProperty(window, "location", {
             value: {
