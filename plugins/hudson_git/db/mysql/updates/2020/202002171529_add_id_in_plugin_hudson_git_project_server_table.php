@@ -34,10 +34,8 @@ class b202002171529_add_id_in_plugin_hudson_git_project_server_table extends For
 
     public function up()
     {
-        $this->db->dbh->beginTransaction();
         $this->dropPrimaryKey();
         $this->addIdColumn();
-        $this->db->dbh->commit();
     }
 
     private function addIdColumn(): void

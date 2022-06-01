@@ -32,10 +32,8 @@ class b201910151454_create_modal_new_layout_table extends ForgeUpgrade_Bucket //
 
     public function up(): void
     {
-        $this->db->dbh->beginTransaction();
         $this->createTable();
         $this->addAllExistingUserIds();
-        $this->db->dbh->commit();
     }
 
     private function createTable(): void

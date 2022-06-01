@@ -34,14 +34,12 @@ class b202003021509_add_and_populate_polling_url_tables extends ForgeUpgrade_Buc
 
     public function up()
     {
-        $this->db->dbh->beginTransaction();
         $this->createRepositoryTable();
         $this->createProjectTable();
         $this->populateRepositoryTable();
         $this->populateProjectTable();
         $this->dropOldColumnForRepository();
         $this->dropOldColumnForProject();
-        $this->db->dbh->commit();
     }
 
     private function createRepositoryTable(): void
