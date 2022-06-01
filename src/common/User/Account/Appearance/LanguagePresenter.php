@@ -28,23 +28,12 @@ namespace Tuleap\User\Account\Appearance;
  */
 final class LanguagePresenter
 {
-    /**
-     * @var string
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var bool
-     */
-    public $is_checked;
-
-    public function __construct(string $id, string $label, bool $is_checked)
-    {
-        $this->id         = $id;
-        $this->label      = $label;
-        $this->is_checked = $is_checked;
+    public function __construct(
+        public string $id,
+        public string $label,
+        public bool $is_checked,
+        public bool $is_official_language,
+        public string $beta_warning_text,
+    ) {
     }
 }

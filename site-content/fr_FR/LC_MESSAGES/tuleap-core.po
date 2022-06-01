@@ -4411,6 +4411,10 @@ msgstr "Wiki"
 msgid "Without any action from you,"
 msgstr "Si vous n'intervenez pas,"
 
+msgid "Work in progress, you might find untranslated strings."
+msgstr ""
+"Travail en cours, vous risquez de rencontrer des chaînes non traduites."
+
 msgid ""
 "Wow, wait a minute. You are about to remove the parent. Please confirm your "
 "action."

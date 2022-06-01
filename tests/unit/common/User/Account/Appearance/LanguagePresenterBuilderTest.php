@@ -24,6 +24,7 @@ namespace Tuleap\User\Account\Appearance;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Language\LocaleSwitcher;
 
 class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -47,12 +48,13 @@ class LanguagePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->andReturn('fr_FR');
 
-        $builder = new LanguagePresenterBuilder($factory);
+        $builder           = new LanguagePresenterBuilder($factory, new LocaleSwitcher());
+        $beta_warning_text = "Work in progress, you might find untranslated strings.";
         $this->assertEquals(
             [
-                new LanguagePresenter('en_US', 'English', false),
-                new LanguagePresenter('fr_FR', 'Français', true),
-                new LanguagePresenter('ja_JP', '日本語', false),
+                new LanguagePresenter('en_US', 'English', false, true, $beta_warning_text),
+                new LanguagePresenter('fr_FR', 'Français', true, true, $beta_warning_text),
+                new LanguagePresenter('ja_JP', '日本語', false, false, $beta_warning_text),
             ],
             $builder->getLanguagePresenterCollectionForUser($user)
         );

@@ -66,6 +66,15 @@
     display: none;
 }
 
+/* stylelint-disable selector-no-qualifying-type */
+input.user-preferences-language-radio {
+    vertical-align: middle;
+}
+
+.user-preferences-language-beta {
+    margin: 0 0 0 var(--tlp-small-spacing);
+}
+
 @media screen and (max-width: calc(1000px + var(--tlp-medium-spacing))) {
     .user-preferences-frame {
         max-width: none;
