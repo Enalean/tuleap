@@ -27,6 +27,8 @@ describe(`Planning view Explicit Backlog`, function () {
     beforeEach(function () {
         cy.preserveSessionCookies();
         cy.visitProjectService("explicit-backlog", "Agile Dashboard");
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get("body").as("body");
     });
     context("Explicit backlog project", () => {
         it(`Project Member can use Planning view`, function () {
@@ -62,6 +64,13 @@ describe(`Planning view Explicit Backlog`, function () {
             cy.log("load closed sprints");
             cy.get("[data-test=load-closed-milestones-button]").click();
             cy.contains("[data-test=milestone]", "Timely Electron");
+
+            cy.log("Viewed milestone must be in recent elements");
+            cy.get("@body").type("{s}");
+            cy.get("[data-test=switch-to-modal]").should("be.visible");
+
+            cy.get("[data-test=switch-to-filter]").type("Summer");
+            cy.get("[data-test=switch-to-recent-items]").should("contain", "Summer Swift");
         });
     });
 
