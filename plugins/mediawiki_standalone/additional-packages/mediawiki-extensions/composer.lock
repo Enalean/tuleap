@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c9359c6508923459b49eda9e204d02a",
+    "content-hash": "b5e42bc46a82e57e8d3a24b615d38da8",
     "packages": [
         {
             "name": "composer/installers",
@@ -325,16 +325,16 @@
         },
         {
             "name": "mediawiki/tuleap-integration",
-            "version": "1.0.0-beta",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "8bd84ca1d1112114fd272f9b6708cd647b37373a"
+                "reference": "4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/8bd84ca1d1112114fd272f9b6708cd647b37373a",
-                "reference": "8bd84ca1d1112114fd272f9b6708cd647b37373a",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec",
+                "reference": "4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec",
                 "shasum": ""
             },
             "require": {
@@ -345,11 +345,12 @@
                 "symfony/process": "~5"
             },
             "require-dev": {
-                "jakub-onderka/php-console-highlighter": "0.4.0",
-                "jakub-onderka/php-parallel-lint": "1.0.0",
-                "mediawiki/mediawiki-codesniffer": "29.0.0",
-                "mediawiki/minus-x": "1.0.0"
+                "mediawiki/mediawiki-codesniffer": "39.0.0",
+                "mediawiki/minus-x": "1.1.1",
+                "php-parallel-lint/php-console-highlighter": "1.0.0",
+                "php-parallel-lint/php-parallel-lint": "1.3.2"
             },
+            "default-branch": true,
             "type": "mediawiki-extension",
             "extra": {
                 "installer-name": "TuleapIntegration"
@@ -363,17 +364,20 @@
                 "test": [
                     "parallel-lint . --exclude vendor --exclude node_modules",
                     "minus-x check .",
-                    "phpcs -sp"
+                    "@phpcs"
                 ],
                 "fix": [
                     "minus-x fix .",
                     "phpcbf"
+                ],
+                "phpcs": [
+                    "phpcs -sp"
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/1.0.0-beta"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/master"
             },
-            "time": "2022-04-13T07:06:00+00:00"
+            "time": "2022-06-01T08:34:43+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
@@ -914,7 +918,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mediawiki/tuleap-integration": 10,
+        "mediawiki/tuleap-integration": 20,
         "mediawiki/tuleap-wiki-farm": 10,
         "mediawiki/tuleap-skin": 10
     },
