@@ -24,7 +24,6 @@ declare(ticks=1);
 
 namespace Tuleap\CLI\Command;
 
-use ForgeConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputArgument;
@@ -34,6 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Process\Process;
+use Tuleap\CLI\AssertRunner;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerAvailability;
 use TuleapCfg\Command\ProcessFactory;
@@ -71,6 +71,7 @@ class WorkerSupervisorCommand extends Command
         ProcessFactory $process_factory,
         LockFactory $lock_factory,
         WorkerAvailability $worker_availability,
+        private AssertRunner $assert_runner,
     ) {
         parent::__construct(self::NAME);
         $this->process_factory     = $process_factory;
@@ -109,7 +110,7 @@ class WorkerSupervisorCommand extends Command
 
     private function start(OutputInterface $output, bool $is_daemon): int
     {
-        $this->asserWhoIsRunning();
+        $this->assert_runner->assertProcessIsExecutedByExpectedUser();
 
         $this->registerSignalHandler();
 
@@ -198,14 +199,6 @@ class WorkerSupervisorCommand extends Command
                 continue;
             }
             $output->writeln(sprintf('%s [%d] %s', date('c'), $pid, OutputFormatter::escape($line)));
-        }
-    }
-
-    private function asserWhoIsRunning(): void
-    {
-        $user = posix_getpwuid(posix_geteuid());
-        if ($user['name'] !== ForgeConfig::get('sys_http_user')) {
-            throw new \RuntimeException(sprintf('Command must be run by %s', ForgeConfig::get('sys_http_user')));
         }
     }
 

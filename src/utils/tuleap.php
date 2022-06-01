@@ -232,7 +232,8 @@ $CLI_command_collector->addCommand(
         return new WorkerSupervisorCommand(
             new ProcessFactory(),
             new LockFactory(new SemaphoreStore()),
-            new \Tuleap\Queue\WorkerAvailability()
+            new \Tuleap\Queue\WorkerAvailability(),
+            \Tuleap\CLI\AssertRunner::asHTTPUser()
         );
     }
 );

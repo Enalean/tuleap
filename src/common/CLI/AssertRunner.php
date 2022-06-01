@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Configuration;
+namespace Tuleap\CLI;
 
-use Tuleap\Cryptography\ConcealedString;
-
-/**
- * @psalm-immutable
- */
-final class LocalSettingsRepresentation
+final class AssertRunner
 {
-    public const MEDIAWIKI_PHP_CLI = '/opt/remi/php74/root/usr/bin/php';
+    private function __construct(private string $username)
+    {
+    }
 
-    public string $php_cli_path = self::MEDIAWIKI_PHP_CLI;
+    public static function asHTTPUser(): self
+    {
+        return new self(\ForgeConfig::get('sys_http_user'));
+    }
 
-    public function __construct(
-        public ConcealedString $pre_shared_key,
-        public string $https_url,
-        public string $oauth2_client_id,
-        public ConcealedString $oauth2_client_secret,
-    ) {
+    public static function asCurrentProcessUser(): self
+    {
+        return new self(posix_getpwuid(posix_geteuid())['name']);
+    }
+
+    public function assertProcessIsExecutedByExpectedUser(): void
+    {
+        $user = posix_getpwuid(posix_geteuid());
+        if ($user['name'] !== $this->username) {
+            throw new \RuntimeException(sprintf('Command must be run by %s', $this->username));
+        }
     }
 }

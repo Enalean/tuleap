@@ -16,28 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Process\Process;
 
-/**
- * @psalm-immutable
- */
-final class LocalSettingsRepresentation
+final class MediaWikiUpdateScriptCaller
 {
-    public const MEDIAWIKI_PHP_CLI = '/opt/remi/php74/root/usr/bin/php';
+    public function __construct(private LoggerInterface $logger)
+    {
+    }
 
-    public string $php_cli_path = self::MEDIAWIKI_PHP_CLI;
-
-    public function __construct(
-        public ConcealedString $pre_shared_key,
-        public string $https_url,
-        public string $oauth2_client_id,
-        public ConcealedString $oauth2_client_secret,
-    ) {
+    public function runUpdate(): void
+    {
+        $process = new Process(
+            [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/maintenance/update.php', '--quick']
+        );
+        $process->mustRun();
+        $this->logger->debug($process->getOutput());
     }
 }
