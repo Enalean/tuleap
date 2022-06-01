@@ -29,7 +29,6 @@ use Service;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\ServiceUrlCollector;
 
 final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -37,14 +36,8 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
-    /**
-     * @var ServicePOSTDataBuilder
-     */
-    private $service_postdata_builder;
-    /**
-     * @var \EventManager|M\MockInterface
-     */
-    private $event_manager;
+    private ServicePOSTDataBuilder $service_postdata_builder;
+    private \EventManager $event_manager;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|\ServiceManager
      */
@@ -52,7 +45,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->event_manager            = M::mock(\EventManager::class);
+        $this->event_manager            = new \EventManager();
         $this->service_manager          = M::mock(\ServiceManager::class);
         $link_data_builder              = new ServiceLinkDataBuilder();
         $this->service_postdata_builder = new ServicePOSTDataBuilder(
@@ -178,15 +171,6 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'is_active'     => true,
             ]
         );
-        $this->event_manager->shouldReceive('processEvent')
-            ->with(
-                M::on(
-                    function (ServiceUrlCollector $event) {
-                        $event->setUrl('https://example.com/custom');
-                        return true;
-                    }
-                )
-            )->once();
 
         $post_data = $this->service_postdata_builder->buildFromService($service, false);
 
@@ -260,16 +244,6 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->event_manager->shouldReceive('processEvent')
-            ->with(
-                M::on(
-                    function (ServiceUrlCollector $event) {
-                        $event->setUrl('https://example.com/news');
-                        return true;
-                    }
-                )
-            )->once();
-
         $post_data = $this->service_postdata_builder->buildFromService($service, false);
 
         $this->assertSame('fas fa-rss', $post_data->getIconName());
@@ -324,32 +298,17 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->with('link', M::any(), M::any())
                 ->andReturn('https://example.com/custom');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $current_admin_service = new Service($project, ['label' => 'Admin', 'short_name' => Service::ADMIN, 'description' => 'admin']);
 
-        $current_admin_service = M::mock(Service::class);
-        $current_admin_service->shouldReceive([
-            'getInternationalizedName' => 'Admin',
-            'getInternationalizedDescription' => 'Admin',
-        ]);
-        $this->service_manager
-            ->shouldReceive('getListOfAllowedServicesForProject')
-            ->with($project)
-            ->once()
-            ->andReturn([
-                12 => $current_admin_service,
-            ]);
-
-        $admin_service = $this->service_postdata_builder->buildFromRequest($request, $project, $response);
+        $admin_service = $this->service_postdata_builder->buildFromRequest($request, $project, $current_admin_service, $response);
 
         $this->assertTrue($admin_service->isUsed());
     }
 
     public function testBuildFromRequestThrowsWhenIconIsInvalid(): void
     {
-        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
-                              ->with($project)
-                              ->andReturns([]);
+        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $service  = new Service($project, ['label' => 'foo', 'short_name' => 'bar', 'description' => 'baz']);
         $response = M::mock(BaseLayout::class);
         $request  = M::mock(\HTTPRequest::class);
         $request->shouldReceive('getValidated')
@@ -402,7 +361,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidServicePOSTDataException::class);
 
-        $this->service_postdata_builder->buildFromRequest($request, $project, $response);
+        $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
     }
 
     /**
@@ -421,15 +380,11 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getLabel' => 'plugin_svn:service_lbl_key',
                 'getInternationalizedDescription' => 'SVN plugin to manage multiple SVN repositories',
                 'getDescription' => 'plugin_svn:service_lbl_description',
+                'urlCanChange' => true,
             ]
         );
         $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
-        $this->service_manager
-            ->shouldReceive('getListOfAllowedServicesForProject')
-            ->with($project)
-            ->andReturns([
-                12 => $service,
-            ]);
+
         $response = M::mock(BaseLayout::class);
         $request  = M::mock(\HTTPRequest::class);
         $request->shouldReceive('getValidated')
@@ -469,9 +424,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->with('link', M::any(), M::any())
                 ->andReturn('https://example.com/custom');
 
-        $this->event_manager->shouldReceive('processEvent');
-
-        $service = $this->service_postdata_builder->buildFromRequest($request, $project, $response);
+        $service = $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
 
         $this->assertEquals($expected_label, $service->getLabel());
         $this->assertEquals($expected_description, $service->getDescription());

@@ -26,7 +26,6 @@ use Project;
 use Service;
 use ServiceManager;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\ServiceUrlCollector;
 
 class ServicePOSTDataBuilder
 {
@@ -56,7 +55,7 @@ class ServicePOSTDataBuilder
     /**
      * @throws InvalidServicePOSTDataException
      */
-    public function buildFromRequest(\HTTPRequest $request, Project $project, BaseLayout $response): ServicePOSTData
+    public function buildFromRequest(\HTTPRequest $request, Project $project, ?Service $service, BaseLayout $response): ServicePOSTData
     {
         $service_id        = $request->getValidated('service_id', 'int', 0);
         $short_name        = $request->getValidated('short_name', 'string', '');
@@ -83,19 +82,18 @@ class ServicePOSTDataBuilder
             }
         }
 
-        $current_services = $this->service_manager->getListOfAllowedServicesForProject($project);
-        if (isset($current_services[$service_id])) {
-            $current_version_of_service = $current_services[$service_id];
-            if ($label === $current_version_of_service->getInternationalizedName()) {
-                $label = $current_version_of_service->getLabel();
+        if ($service !== null) {
+            if ($label === $service->getInternationalizedName()) {
+                $label = $service->getLabel();
             }
-            if ($description === $current_version_of_service->getInternationalizedDescription()) {
-                $description = $current_version_of_service->getDescription();
+            if ($description === $service->getInternationalizedDescription()) {
+                $description = $service->getDescription();
             }
         }
 
         return $this->createServicePOSTData(
             $project,
+            $service,
             $service_id,
             $short_name,
             $label,
@@ -122,6 +120,7 @@ class ServicePOSTDataBuilder
 
         return $this->createServicePOSTData(
             $service->getProject(),
+            $service,
             $service->getId(),
             $service->getShortName(),
             $service->getLabel(),
@@ -142,6 +141,7 @@ class ServicePOSTDataBuilder
      */
     private function createServicePOSTData(
         Project $project,
+        ?Service $service,
         $service_id,
         $short_name,
         $label,
@@ -165,10 +165,8 @@ class ServicePOSTDataBuilder
             $this->checkIsInNewTab($is_in_iframe, $is_in_new_tab);
         }
 
-        $service_url_collector = new ServiceUrlCollector($project, $short_name);
-        $this->event_manager->processEvent($service_url_collector);
         $link = '';
-        if (! $service_url_collector->hasUrl() && $submitted_link) {
+        if ($service && $service->urlCanChange() && $submitted_link) {
             $this->checkLink($submitted_link);
             $link = $this->link_data_builder->substituteVariablesInLink($project, $submitted_link);
         }
@@ -292,6 +290,6 @@ class ServicePOSTDataBuilder
             return true;
         }
 
-        return (bool) $request->getValidated('is_used', 'uint', false);
+        return (int) $request->getValidated('is_used', 'uint', false) === 1;
     }
 }

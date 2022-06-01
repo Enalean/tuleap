@@ -77,7 +77,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $response = M::mock(BaseLayout::class);
         $this->data_builder->shouldReceive('buildFromRequest')
             ->once()
-            ->with($request, $project, $response)
+            ->with($request, $project, M::any(), $response)
             ->andThrow(new InvalidServicePOSTDataException());
 
         $response->shouldReceive('addFeedback')->once();

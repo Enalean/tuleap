@@ -20,6 +20,7 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
+use Tuleap\Docman\DocmanURL;
 use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
@@ -56,7 +57,6 @@ use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Request\CollectRoutesEvent;
@@ -81,10 +81,10 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook(DocmanURL::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(ExternalLinksManager::NAME);
         $this->addHook(ExternalLinkRedirector::NAME);
-        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(DocmanLinkProvider::NAME);
         $this->addHook(DocmanSettingsTabsPresenterCollection::NAME);
         $this->addHook(DetectEnhancementOfDocmanInterface::NAME);
@@ -275,21 +275,9 @@ class documentPlugin extends Plugin // phpcs:ignore
         return new DocumentTreeProjectExtractor(ProjectManager::instance());
     }
 
-    public function serviceUrlCollector(ServiceUrlCollector $collector): void
+    public function docmanURL(DocmanURL $docman_url): void
     {
-        if (! PluginManager::instance()->isPluginAllowedForProject($this, $collector->getProject()->getID())) {
-            return;
-        }
-
-        if ($collector->getServiceShortname() !== $this->getDocmanPlugin()->getServiceShortname()) {
-            return;
-        }
-
-        if (! $this->shouldUseDocumentUrl($collector->getProject())) {
-            return;
-        }
-
-        $collector->setUrl("/plugins/document/" . urlencode($collector->getProject()->getUnixNameLowerCase()) . "/");
+        $docman_url->setServiceUrl("/plugins/document/" . urlencode($docman_url->project->getUnixNameLowerCase()) . "/");
     }
 
     private function getDocmanPlugin(): DocmanPlugin

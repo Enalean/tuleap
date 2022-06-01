@@ -26,7 +26,6 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
@@ -99,7 +98,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook('plugin_statistics_service_usage');
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
 
         // Stats plugin
@@ -575,15 +573,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function service_classnames(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
-    }
-
-    public function serviceUrlCollector(ServiceUrlCollector $collector): void
-    {
-        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl(
-                sprintf('/plugins/mediawiki/wiki/%s', urlencode($collector->getProject()->getUnixName()))
-            );
-        }
     }
 
     public function rename_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

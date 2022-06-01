@@ -25,7 +25,6 @@ use PFUser;
 use Project;
 use Service;
 use ServiceManager;
-use Tuleap\Layout\ServiceUrlCollector;
 
 class ServicesPresenterBuilder
 {
@@ -58,16 +57,13 @@ class ServicesPresenterBuilder
 
     private function buildJSONPresenter(Service $service, Project $project, PFUser $user): ServiceJSONPresenter
     {
-        $service_link         = $this->getServiceLink($service, $project);
-        $is_link_customizable = $service_link === null;
-
         $service_disabled_collector = $this->isServiceDisabledByPlugin($service, $project, $user);
         return new ServiceJSONPresenter(
             $service->getId(),
             $service->getShortName(),
             $service->getInternationalizedName(),
             $service->getIconName(),
-            $service->getUrl($service_link),
+            $service->getUrl(),
             $service->getInternationalizedDescription(),
             $service->isActive(),
             $service->isUsed(),
@@ -75,7 +71,7 @@ class ServicesPresenterBuilder
             $service->isOpenedInNewTab(),
             $service->getRank(),
             $service->getScope() !== Service::SCOPE_SYSTEM,
-            $is_link_customizable,
+            $service->urlCanChange(),
             $service_disabled_collector->getReason()
         );
     }
@@ -104,15 +100,6 @@ class ServicesPresenterBuilder
         }
 
         return false;
-    }
-
-    private function getServiceLink(Service $service, Project $project): ?string
-    {
-        $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
-
-        $this->event_manager->processEvent($service_url_collector);
-
-        return $service_url_collector->getUrl();
     }
 
     private function isServiceDisabledByPlugin(Service $service, Project $project, PFUser $user): ServiceDisabledCollector

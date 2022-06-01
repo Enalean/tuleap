@@ -76,4 +76,14 @@ class ServiceMediawiki extends Service
 
         return $has_special_permission || $user->isMember($this->project->getID(), 'A');
     }
+
+    public function getUrl(?string $url = null): string
+    {
+        return sprintf('/plugins/mediawiki/wiki/%s', urlencode($this->project->getUnixName()));
+    }
+
+    public function urlCanChange(): bool
+    {
+        return false;
+    }
 }

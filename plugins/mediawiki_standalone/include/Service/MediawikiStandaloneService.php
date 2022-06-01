@@ -24,6 +24,9 @@ namespace Tuleap\MediawikiStandalone\Service;
 
 final class MediawikiStandaloneService extends \Service
 {
+    private const ICON_NAME          = 'fas fa-tlp-mediawiki';
+    private const SERVICE_URL_PREFIX = '/mediawiki/';
+
     public static function forServiceCreation(\Project $project): self
     {
         return new self(
@@ -43,7 +46,7 @@ final class MediawikiStandaloneService extends \Service
                 'server_id' => null,
                 'is_in_iframe' => 0,
                 'is_in_new_tab' => false,
-                'icon' => '',
+                'icon' => self::ICON_NAME,
             ],
         );
     }
@@ -66,5 +69,15 @@ final class MediawikiStandaloneService extends \Service
     public function getInternationalizedDescription(): string
     {
         return $this->getProjectAdministrationName();
+    }
+
+    public function getUrl(?string $url = null): string
+    {
+        return self::SERVICE_URL_PREFIX . $this->project->getUnixNameLowerCase();
+    }
+
+    public function urlCanChange(): bool
+    {
+        return false;
     }
 }

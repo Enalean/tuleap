@@ -82,7 +82,9 @@ class EditController implements DispatchableWithRequest
 
             $this->csrf_token->check(IndexController::getUrl($project));
 
-            $service_data = $this->builder->buildFromRequest($request, $project, $layout);
+            $all_services    = $this->service_manager->getListOfAllowedServicesForProject($project);
+            $current_service = $all_services[(int) $request->get('service_id')] ?? null;
+            $service_data    = $this->builder->buildFromRequest($request, $project, $current_service, $layout);
 
             $this->checkId($project, $layout, $service_data);
             if ($service_data->getId() === \Service::FAKE_ID_FOR_CREATION) {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Project\Service;
 
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -84,10 +83,13 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = UserTestBuilder::anActiveUser()->withId(101)->withAdministratorOf($project)->build();
         $request      = HTTPRequestBuilder::get()->withUser($current_user)->build();
 
+        $service_manager = $this->createMock(\ServiceManager::class);
+        $service_manager->method('getListOfAllowedServicesForProject')->willReturn([]);
+
         $inspector = new LayoutInspector();
         $response  = LayoutBuilder::buildWithInspector($inspector);
         $this->data_builder->method('buildFromRequest')
-            ->with($request, $project, $response)
+            ->with($request, $project, null, $response)
             ->willThrowException(new InvalidServicePOSTDataException());
 
         $controller = new EditController(
@@ -95,7 +97,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectAdministratorChecker(),
             $this->createMock(ServiceUpdator::class),
             $this->data_builder,
-            $this->createMock(\ServiceManager::class),
+            $service_manager,
             $this->csrf_token,
             new \EventManager(),
         );
@@ -127,7 +129,6 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $event_manager = new \EventManager();
-        $event_manager->addClosureOnEvent(ServiceUrlCollector::NAME, fn (ServiceUrlCollector $event) => $event->setUrl('/path/to'));
         $event_manager->addClosureOnEvent(AddMissingService::NAME, fn (AddMissingService $event) => $event->addService($service_to_activate));
 
         $service_updator = $this->createMock(ServiceUpdator::class);

@@ -97,7 +97,6 @@ use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -225,8 +224,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(CollectRoutesEvent::NAME);
-
-        $this->addHook(ServiceUrlCollector::NAME);
 
         $this->addHook(GetItemsReferencingWikiPageCollectionEvent::NAME);
 
@@ -1578,15 +1575,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);
-    }
-
-    public function serviceUrlCollector(ServiceUrlCollector $collector): void
-    {
-        if ($collector->getServiceShortname() !== $this->getServiceShortname()) {
-            return;
-        }
-
-        $collector->setUrl(DOCMAN_BASE_URL . "?group_id=" . $collector->getProject()->getID());
     }
 
     public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event): void

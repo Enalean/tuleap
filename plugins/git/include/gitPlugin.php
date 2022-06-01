@@ -67,7 +67,6 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitProjectRenamer;
-use Tuleap\Git\GitService;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
@@ -153,7 +152,6 @@ use Tuleap\GitBundle;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -332,7 +330,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(UserBecomesProjectAdmin::NAME);
         $this->addHook(UserIsNoLongerProjectAdmin::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
-        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectSuspendedAndNotBlockedWarningCollector::NAME);
         $this->addHook(ProjectUnixNameIsEditable::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
@@ -2732,13 +2729,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getCITokenManager(),
             EventManager::instance()
         );
-    }
-
-    public function serviceUrlCollector(ServiceUrlCollector $collector)
-    {
-        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl(GitService::getServiceUrlForProject($collector->getProject()));
-        }
     }
 
     /**

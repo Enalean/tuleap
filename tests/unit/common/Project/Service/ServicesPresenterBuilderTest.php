@@ -24,7 +24,6 @@ use EventManager;
 use Service;
 use ServiceManager;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Layout\ServiceUrlCollector;
 
 final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -104,22 +103,11 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
-        $event_manager = new class extends EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-                if ($event_name instanceof ServiceUrlCollector) {
-                    $event_name->setUrl("/external_url");
-                }
-                return $event_name;
-            }
-        };
-        $builder       = new ServicesPresenterBuilder($this->service_manager, $event_manager);
+        $builder = new ServicesPresenterBuilder($this->service_manager, new EventManager());
 
         $service_presenter = $builder->build($this->project, $this->csrf_token, $this->user);
         self::assertCount(1, $service_presenter->services);
         self::assertEquals('Tracker', $service_presenter->services[0]->label);
-        self::assertStringContainsString('/external_url', $service_presenter->services[0]->service_json);
     }
 
     public function testItCanBeDisabledByPlugins(): void

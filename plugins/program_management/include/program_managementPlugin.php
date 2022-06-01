@@ -31,7 +31,6 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
@@ -269,7 +268,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook(OriginalProjectCollector::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
         $this->addHook(BuildArtifactFormActionEvent::NAME);
@@ -314,15 +312,6 @@ final class program_managementPlugin extends Plugin
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function serviceUrlCollector(ServiceUrlCollector $collector): void
-    {
-        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl(
-                sprintf('/program_management/%s', urlencode($collector->getProject()->getUnixNameLowerCase()))
-            );
-        }
     }
 
     public function getPluginInfo(): PluginInfo

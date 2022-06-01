@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 
@@ -58,7 +57,6 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
-        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SERVICE_CLASSNAMES);
 
@@ -77,15 +75,6 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
     public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Baseline\BaselineTuleapService::class;
-    }
-
-    public function serviceUrlCollector(ServiceUrlCollector $collector)
-    {
-        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl(
-                $this->getPluginPath() . "/" . urlencode($collector->getProject()->getUnixNameLowerCase())
-            );
-        }
     }
 
     public function routeGetSlash(): ServiceController
