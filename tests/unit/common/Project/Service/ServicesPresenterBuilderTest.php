@@ -45,7 +45,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user;
     /**
-     * @var EventManager|\PHPUnit\Framework\MockObject\Stub
+     * @var EventManager
      */
     private $event_manager;
 
@@ -62,21 +62,6 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->csrf_token->method('getToken');
 
         $this->service_manager = $this->createStub(ServiceManager::class);
-
-        $event_manager = new class extends EventManager
-        {
-            public function processEvent($event_name, $params = [])
-            {
-                if ($event_name instanceof ServiceDisabledCollector) {
-                    $event_name->setIsDisabled("Disabled by plugin");
-                }
-                if ($event_name instanceof ServiceUrlCollector) {
-                    $event_name->setUrl("/external_url");
-                }
-                return $event_name;
-            }
-        };
-        $this->builder = new ServicesPresenterBuilder($this->service_manager, $event_manager);
     }
 
     public function testItBuildServiceWithoutAdminAndSummaryServices(): void
@@ -87,6 +72,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'short_name' => 'admin',
                 'service_id' => 10,
                 'is_active' => true,
+                'rank' => 100,
             ]
         );
 
@@ -96,6 +82,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'short_name' => 'summary',
                 'service_id' => 20,
                 'is_active' => true,
+                'rank' => 150,
             ]
         );
 
@@ -117,7 +104,19 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
-        $service_presenter = $this->builder->build($this->project, $this->csrf_token, $this->user);
+        $event_manager = new class extends EventManager
+        {
+            public function processEvent($event_name, $params = [])
+            {
+                if ($event_name instanceof ServiceUrlCollector) {
+                    $event_name->setUrl("/external_url");
+                }
+                return $event_name;
+            }
+        };
+        $builder       = new ServicesPresenterBuilder($this->service_manager, $event_manager);
+
+        $service_presenter = $builder->build($this->project, $this->csrf_token, $this->user);
         self::assertCount(1, $service_presenter->services);
         self::assertEquals('Tracker', $service_presenter->services[0]->label);
         self::assertStringContainsString('/external_url', $service_presenter->services[0]->service_json);
@@ -131,6 +130,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'short_name' => 'admin',
                 'service_id' => 10,
                 'is_active' => true,
+                'rank' => 100,
             ]
         );
 
@@ -140,6 +140,7 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'short_name' => 'summary',
                 'service_id' => 20,
                 'is_active' => true,
+                'rank' => 150,
             ]
         );
 
@@ -159,11 +160,81 @@ final class ServicesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-
         $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$admin_service, $summary_service, $tracker_service]);
 
-        $service_presenter = $this->builder->build($this->project, $this->csrf_token, $this->user);
+        $event_manager = new class extends EventManager
+        {
+            public function processEvent($event_name, $params = [])
+            {
+                if ($event_name instanceof ServiceDisabledCollector) {
+                    $event_name->setIsDisabled("Disabled by plugin");
+                }
+                return $event_name;
+            }
+        };
+        $builder       = new ServicesPresenterBuilder($this->service_manager, $event_manager);
+
+        $service_presenter = $builder->build($this->project, $this->csrf_token, $this->user);
         self::assertCount(1, $service_presenter->services);
         self::assertStringContainsString('"is_disabled_reason":"Disabled by plugin"', $service_presenter->services[0]->service_json);
+    }
+
+    public function testPluginCanInjectMissingServices(): void
+    {
+        $tracker_service = new Service(
+            $this->project,
+            [
+                'short_name' => 'tracker',
+                'service_id' => 102,
+                'is_active' => true,
+                'label' => 'Tracker',
+                'description' => 'description',
+                'is_used' => true,
+                'is_in_iframe' => false,
+                'rank' => 200,
+                'scope' => 'project',
+                'group_id' => 101,
+            ]
+        );
+
+        $this->service_manager->expects(self::once())->method('getListOfAllowedServicesForProject')->willReturn([$tracker_service]);
+
+        $extra_service = new class ($this->project) extends Service {
+            public function __construct(\Project $project)
+            {
+                parent::__construct(
+                    $project,
+                    [
+                        'short_name' => 'plugin_mediawiki_standalone',
+                        'service_id' => -1,
+                        'is_active' => true,
+                        'label' => 'Mediawiki',
+                        'description' => 'description',
+                        'is_used' => true,
+                        'is_in_iframe' => false,
+                        'rank' => 500,
+                        'scope' => 'project',
+                        'group_id' => 101,
+                    ]
+                );
+            }
+
+            public function getIcon(): string
+            {
+                return '';
+            }
+        };
+
+        $event_manager = new EventManager();
+        $event_manager->addClosureOnEvent(
+            AddMissingService::NAME,
+            fn (AddMissingService $event) => $event->addService($extra_service)
+        );
+
+        $builder = new ServicesPresenterBuilder($this->service_manager, $event_manager);
+
+        $service_presenter = $builder->build($this->project, $this->csrf_token, $this->user);
+        self::assertCount(2, $service_presenter->services);
+        self::assertEquals('plugin_mediawiki_standalone', $service_presenter->services[1]->short_name);
     }
 }

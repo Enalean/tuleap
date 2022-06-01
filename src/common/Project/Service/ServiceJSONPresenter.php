@@ -68,7 +68,6 @@ final class ServiceJSONPresenter
         $this->rank                 = $rank;
         $this->is_project_scope     = $is_project_scope;
         $this->is_link_customizable = $is_link_customizable;
-        $this->is_link_customizable = $is_link_customizable;
         $this->is_disabled_reason   = $is_disabled_reason;
     }
 }

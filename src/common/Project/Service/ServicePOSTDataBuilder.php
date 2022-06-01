@@ -58,7 +58,7 @@ class ServicePOSTDataBuilder
      */
     public function buildFromRequest(\HTTPRequest $request, Project $project, BaseLayout $response): ServicePOSTData
     {
-        $service_id        = $request->getValidated('service_id', 'uint', 0);
+        $service_id        = $request->getValidated('service_id', 'int', 0);
         $short_name        = $request->getValidated('short_name', 'string', '');
         $label             = $request->getValidated('label', 'string', '');
         $icon_name         = $request->getValidated('icon_name', 'string', '');

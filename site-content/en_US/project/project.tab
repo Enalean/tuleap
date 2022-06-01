@@ -341,7 +341,6 @@ project_admin_servicebar	cant_create_s	Can not create service
 project_admin_servicebar	s_create_success	Successfully Created Service
 project_admin_servicebar	s_add_success	Successfully Added Service to $1 Projects
 project_admin_servicebar	s_id_missed	The service ID is missing
-project_admin_servicebar	s_update_success	Successfully Updated Service
 project_admin_servicebar	edit_s_bar	Editing Service Bar
 project_admin_servicebar	edit_system_s	Editing System Services
 project_admin_servicebar	edit_s_for	Editing Services for <B>$1</B>

@@ -24,6 +24,30 @@ namespace Tuleap\MediawikiStandalone\Service;
 
 final class MediawikiStandaloneService extends \Service
 {
+    public static function forServiceCreation(\Project $project): self
+    {
+        return new self(
+            $project,
+            [
+                'service_id' => self::FAKE_ID_FOR_CREATION,
+                'group_id' => $project->getID(),
+                'label' => 'MediaWiki',
+                'description' => '',
+                'short_name' => 'plugin_mediawiki_standalone',
+                'link' => '#',
+                'is_active' => 1,
+                'is_used' => 0,
+                'scope' => self::SCOPE_SYSTEM,
+                'rank' => 161,
+                'location' => '',
+                'server_id' => null,
+                'is_in_iframe' => 0,
+                'is_in_new_tab' => false,
+                'icon' => '',
+            ],
+        );
+    }
+
     public function getIconName(): string
     {
         return 'fas fa-tlp-mediawiki';

@@ -21,6 +21,8 @@
 
 class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    public const FAKE_ID_FOR_CREATION = -1;
+
     public const SUMMARY   = 'summary';
     public const ADMIN     = 'admin';
     public const FORUM     = 'forum';

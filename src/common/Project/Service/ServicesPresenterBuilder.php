@@ -31,20 +31,18 @@ class ServicesPresenterBuilder
 {
     private const NONE_SERVICE_ID = 100;
 
-    private ServiceManager $service_manager;
-    private \EventManager $event_manager;
-
-    public function __construct(ServiceManager $service_manager, \EventManager $event_manager)
+    public function __construct(private ServiceManager $service_manager, private \EventManager $event_manager)
     {
-        $this->service_manager = $service_manager;
-        $this->event_manager   = $event_manager;
     }
 
     public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user): ServicesPresenter
     {
         $service_presenters = [];
         $allowed_services   = $this->service_manager->getListOfAllowedServicesForProject($project);
-        foreach ($allowed_services as $service) {
+        $add_missing        = $this->event_manager->dispatch(
+            new AddMissingService($project, $allowed_services)
+        );
+        foreach ($add_missing->getAllowedServices() as $service) {
             if (! $this->isServiceReadable($service, $user) || $this->isBannedService($service)) {
                 continue;
             }

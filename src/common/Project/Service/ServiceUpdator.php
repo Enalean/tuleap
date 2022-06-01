@@ -28,24 +28,8 @@ use ServiceManager;
 
 class ServiceUpdator
 {
-    /**
-     * @var ServiceDao
-     */
-    private $dao;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var ServiceManager
-     */
-    private $service_manager;
-
-    public function __construct(ServiceDao $dao, ProjectManager $project_manager, ServiceManager $service_manager)
+    public function __construct(private ServiceDao $dao, private ProjectManager $project_manager, private ServiceManager $service_manager)
     {
-        $this->dao             = $dao;
-        $this->project_manager = $project_manager;
-        $this->service_manager = $service_manager;
     }
 
     public function updateService(Project $project, ServicePOSTData $service_data, PFUser $user): void
@@ -72,5 +56,24 @@ class ServiceUpdator
         } else {
             $this->dao->updateServiceUsageByServiceID($project->getID(), $service_data->getId(), $service_data->isUsed());
         }
+    }
+
+    public function addSystemService(Project $project, \Service $service_data, PFUser $user): void
+    {
+        $this->dao->create(
+            $project->getID(),
+            $service_data->getLabel(),
+            $service_data->getIconName(),
+            $service_data->getDescription(),
+            $service_data->getShortName(),
+            $service_data->getUrl(),
+            $service_data->isActive(),
+            true,
+            $service_data->getScope(),
+            $service_data->getRank(),
+            $service_data->isOpenedInNewTab(),
+        );
+
+        $this->project_manager->clear($project->getID());
     }
 }

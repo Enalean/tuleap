@@ -25,60 +25,32 @@ use Feedback;
 use HTTPRequest;
 use Project;
 use ProjectManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ServiceManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Request\NotFoundException;
 
 class EditController implements DispatchableWithRequest
 {
-    /**
-     * @var ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var ProjectAdministratorChecker
-     */
-    private $administrator_checker;
-    /**
-     * @var ServiceUpdator
-     */
-    private $service_updator;
-    /**
-     * @var ServicePOSTDataBuilder
-     */
-    private $builder;
-    /**
-     * @var ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
     public function __construct(
-        ProjectRetriever $project_retriever,
-        ProjectAdministratorChecker $administrator_checker,
-        ServiceUpdator $service_updator,
-        ServicePOSTDataBuilder $builder,
-        ServiceManager $service_manager,
-        CSRFSynchronizerToken $csrf_token,
+        private ProjectByIDFactory $project_retriever,
+        private ProjectAdministratorChecker $administrator_checker,
+        private ServiceUpdator $service_updator,
+        private ServicePOSTDataBuilder $builder,
+        private ServiceManager $service_manager,
+        private CSRFSynchronizerToken $csrf_token,
+        private EventDispatcherInterface $dispatcher,
     ) {
-        $this->service_updator       = $service_updator;
-        $this->administrator_checker = $administrator_checker;
-        $this->builder               = $builder;
-        $this->service_manager       = $service_manager;
-        $this->project_retriever     = $project_retriever;
-        $this->csrf_token            = $csrf_token;
     }
 
     public static function buildSelf(): self
     {
         return new self(
-            ProjectRetriever::buildSelf(),
+            ProjectManager::instance(),
             new ProjectAdministratorChecker(),
             new ServiceUpdator(new \ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
             new ServicePOSTDataBuilder(
@@ -87,7 +59,8 @@ class EditController implements DispatchableWithRequest
                 new ServiceLinkDataBuilder()
             ),
             ServiceManager::instance(),
-            IndexController::getCSRFTokenSynchronizer()
+            IndexController::getCSRFTokenSynchronizer(),
+            \EventManager::instance(),
         );
     }
 
@@ -97,23 +70,37 @@ class EditController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
-        $user    = $request->getCurrentUser();
-        $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
-
-        $this->csrf_token->check(IndexController::getUrl($project));
+        try {
+            $project = $this->project_retriever->getValidProjectById((int) $variables['id']);
+        } catch (\Project_NotFoundException $exception) {
+            throw new NotFoundException(gettext('Project does not exist'));
+        }
 
         try {
+            $user = $request->getCurrentUser();
+            $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
+
+            $this->csrf_token->check(IndexController::getUrl($project));
+
             $service_data = $this->builder->buildFromRequest($request, $project, $layout);
 
             $this->checkId($project, $layout, $service_data);
-            $this->checkServiceIsAllowedForProject($project, $layout, $service_data);
-            $this->checkServiceCanBeUpdated($project, $service_data, $user);
-
-            $this->service_updator->updateService($project, $service_data, $user);
+            if ($service_data->getId() === \Service::FAKE_ID_FOR_CREATION) {
+                $add_missing_service = $this->dispatcher->dispatch(new AddMissingService($project, []));
+                foreach ($add_missing_service->getAllowedServices() as $missing_service) {
+                    if ($missing_service->getShortName() === $service_data->getShortName()) {
+                        $this->service_updator->addSystemService($project, $missing_service, $user);
+                        break;
+                    }
+                }
+            } else {
+                $this->checkServiceIsAllowedForProject($project, $layout, $service_data);
+                $this->checkServiceCanBeUpdated($project, $service_data, $user);
+                $this->service_updator->updateService($project, $service_data, $user);
+            }
             $layout->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 's_update_success')
+                _('Service updated successfully')
             );
             $this->redirectToServiceAdministration($project, $layout);
         } catch (InvalidServicePOSTDataException $exception) {
