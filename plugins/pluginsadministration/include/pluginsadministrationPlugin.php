@@ -21,8 +21,10 @@
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\GetConfigKeys;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginUpdateHookCommand;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -37,6 +39,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(CLICommandsCollector::NAME);
         $this->listenToCollectRouteEventWithDefaultController();
         bindtextdomain('tuleap-pluginsadministration', __DIR__ . '/../site-content');
     }
@@ -78,6 +81,16 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
             $params['javascript_files'][] = $core_assets->getFileURL('manage-allowed-projects-on-resource.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('pluginsadministration.js');
         }
+    }
+
+    public function collectCLICommands(CLICommandsCollector $collector): void
+    {
+        $collector->addCommand(
+            PluginUpdateHookCommand::NAME,
+            function (): PluginUpdateHookCommand {
+                return new PluginUpdateHookCommand(EventManager::instance(), \Tuleap\CLI\AssertRunner::asHTTPUser());
+            }
+        );
     }
 
     public function process(): void

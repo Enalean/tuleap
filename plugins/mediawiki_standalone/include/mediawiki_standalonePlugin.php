@@ -42,6 +42,7 @@ use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiSharedSecretGeneratorForgeConfigStore;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiUpdateScriptCaller;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
@@ -71,6 +72,7 @@ use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
+use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
@@ -132,6 +134,7 @@ final class mediawiki_standalonePlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CLICommandsCollector::NAME);
+        $this->addHook(PluginExecuteUpdateHookEvent::NAME);
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(GetConfigKeys::NAME);
 
@@ -307,6 +310,18 @@ final class mediawiki_standalonePlugin extends Plugin
                 return new GenerateLocalSettingsCommand($this->buildLocalSettingsInstantiator());
             }
         );
+    }
+
+    public function executeUpdateHook(PluginExecuteUpdateHookEvent $event): void
+    {
+        $logger = new BrokerLogger(
+            [
+                new TruncateLevelLogger($event->logger, \Psr\Log\LogLevel::INFO),
+                $this->getBackendLogger(),
+            ]
+        );
+        $logger->info('Execute MediaWiki update script');
+        (new MediaWikiUpdateScriptCaller($logger))->runUpdate();
     }
 
     private function buildLocalSettingsInstantiator(): LocalSettingsInstantiator

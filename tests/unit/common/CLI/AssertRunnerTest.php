@@ -20,24 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Configuration;
+namespace Tuleap\CLI;
 
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 
-/**
- * @psalm-immutable
- */
-final class LocalSettingsRepresentation
+final class AssertRunnerTest extends TestCase
 {
-    public const MEDIAWIKI_PHP_CLI = '/opt/remi/php74/root/usr/bin/php';
+    use ForgeConfigSandbox;
 
-    public string $php_cli_path = self::MEDIAWIKI_PHP_CLI;
+    public function testDoNotThrowsIfCurrentUseIsTheExpectedOne(): void
+    {
+        \ForgeConfig::set('sys_http_user', 'donotexist');
 
-    public function __construct(
-        public ConcealedString $pre_shared_key,
-        public string $https_url,
-        public string $oauth2_client_id,
-        public ConcealedString $oauth2_client_secret,
-    ) {
+        $this->expectException(\RuntimeException::class);
+        AssertRunner::asHTTPUser()->assertProcessIsExecutedByExpectedUser();
+    }
+
+    public function testDoesNotThrowWhenExecutedByTheExpectedUse(): void
+    {
+        \ForgeConfig::set('sys_http_user', posix_getpwuid(posix_geteuid())['name']);
+
+        AssertRunner::asHTTPUser()->assertProcessIsExecutedByExpectedUser();
+
+        $this->expectNotToPerformAssertions();
     }
 }
