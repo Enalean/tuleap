@@ -20,8 +20,17 @@
 
 namespace Tuleap\PluginsAdministration;
 
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyString;
+
+#[ConfigKeyCategory('Plugins administration')]
 class PluginDisablerVerifier
 {
+    #[ConfigKey("Prevent disabling some plugins in the web UI")]
+    #[ConfigKeyString('')]
+    public const SETTING_CANNOT_DISABLE_PLUGINS_WEB_UI = 'sys_plugins_that_can_not_be_disabled_from_the_web_ui';
+
     /**
      * @var string[]
      */

@@ -49,7 +49,7 @@ class PluginsAdministrationViews extends Views
         $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');
         $this->plugin_disabler_verifier = new PluginDisablerVerifier(
             $plugin_administration,
-            ForgeConfig::get('sys_plugins_that_can_not_be_disabled_from_the_web_ui')
+            ForgeConfig::get(PluginDisablerVerifier::SETTING_CANNOT_DISABLE_PLUGINS_WEB_UI)
         );
     }
 
