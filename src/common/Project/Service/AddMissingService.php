@@ -26,6 +26,15 @@ namespace Tuleap\Project\Service;
 use Service;
 use Tuleap\Event\Dispatchable;
 
+/**
+ * This event is used in project administration to be able to activate a Service that is not already present in the service list (in DB).
+ *
+ * For historical plugins (SQL based plugin's service declaration), it's mainly for projects created after plugin
+ * installation based on XML templates. When those templates don't mention a plugin (often because the plugin was created
+ * after the template) the plugin would not appear in Project Admin > Services without implementing this event.
+ *
+ * For new plugins (created after this event) it's the new way to declare a plugin for a project.
+ */
 final class AddMissingService implements Dispatchable
 {
     public const NAME = 'addMissingService';

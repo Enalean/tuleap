@@ -26,8 +26,9 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\ConfigDao;
-use Tuleap\Config\GetConfigKeys;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -73,7 +74,8 @@ use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
-use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginAddMissingServiceTrait;
+use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -86,9 +88,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../mediawiki/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class mediawiki_standalonePlugin extends Plugin
+final class mediawiki_standalonePlugin extends Plugin implements PluginWithService, PluginWithConfigKeys
 {
-    public const SERVICE_SHORTNAME = 'plugin_mediawiki_standalone';
+    use PluginAddMissingServiceTrait;
 
     public function __construct(?int $id)
     {
@@ -121,26 +123,23 @@ final class mediawiki_standalonePlugin extends Plugin
 
     public function getHooksAndCallbacks(): Collection
     {
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook(ProjectServiceBeforeActivation::NAME);
-        $this->addHook(ServiceDisabledCollector::NAME);
-        $this->addHook(AddMissingService::NAME);
-
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(PluginExecuteUpdateHookEvent::NAME);
         $this->addHook(WorkerEvent::NAME);
-        $this->addHook(GetConfigKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
 
     public function getServiceShortname(): string
     {
-        return self::SERVICE_SHORTNAME;
+        return MediawikiStandaloneService::SERVICE_SHORTNAME;
+    }
+
+    protected function getServiceClass(): string
+    {
+        return MediawikiStandaloneService::class;
     }
 
     public function postInstall(): void
@@ -151,7 +150,7 @@ final class mediawiki_standalonePlugin extends Plugin
 
     public function serviceClassnames(array &$params): void
     {
-        $params['classnames'][$this->getServiceShortname()] = MediawikiStandaloneService::class;
+        $params['classnames'][$this->getServiceShortname()] = $this->getServiceClass();
     }
 
     /**
@@ -159,7 +158,7 @@ final class mediawiki_standalonePlugin extends Plugin
      */
     public function serviceIsUsed(array $params): void
     {
-        if ($params['shortname'] === self::SERVICE_SHORTNAME && $params['is_used']) {
+        if ($params['shortname'] === MediawikiStandaloneService::SERVICE_SHORTNAME && $params['is_used']) {
             /*(new EnqueueTask())->enqueue(
                 new InstanceCreationWorkerEvent((int) $params['group_id'])
             );*/
@@ -176,19 +175,6 @@ final class mediawiki_standalonePlugin extends Plugin
         (new ServiceActivationHandler())->handle(new ServiceActivationServiceDisabledCollectorEvent($event));
     }
 
-    public function addMissingService(AddMissingService $event): void
-    {
-        if (! $this->isServiceAllowedForProject($event->project)) {
-            return;
-        }
-
-        $event->addService(
-            MediawikiStandaloneService::forServiceCreation(
-                $event->project
-            )
-        );
-    }
-
     public function workerEvent(WorkerEvent $event): void
     {
         (new InstanceManagement(
@@ -199,7 +185,7 @@ final class mediawiki_standalonePlugin extends Plugin
         ))->process($event);
     }
 
-    public function getConfigKeys(GetConfigKeys $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(MediawikiHTTPClientFactory::class);
     }
@@ -256,7 +242,10 @@ final class mediawiki_standalonePlugin extends Plugin
             ),
             \UserManager::instance(),
             new AppFactory(
-                new AppMatchingClientIDFilterAppTypeRetriever(new AppDao(), self::SERVICE_SHORTNAME),
+                new AppMatchingClientIDFilterAppTypeRetriever(
+                    new AppDao(),
+                    MediawikiStandaloneService::SERVICE_SHORTNAME
+                ),
                 \ProjectManager::instance()
             ),
             new ScopeExtractor($scope_builder),
@@ -272,7 +261,7 @@ final class mediawiki_standalonePlugin extends Plugin
             new MediawikiStandaloneOAuth2ConsentChecker(self::allowedOAuth2Scopes()),
             $logger,
             new SapiEmitter(),
-            new ServiceInstrumentationMiddleware(self::SERVICE_SHORTNAME),
+            new ServiceInstrumentationMiddleware(MediawikiStandaloneService::SERVICE_SHORTNAME),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
             new DisableCacheMiddleware()
         );

@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\ProgramService;
 
 final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam, SearchProgramsOfTeam
 {
@@ -56,7 +57,7 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
             $in_statement = EasyStatement::open()->in('group_id IN (?*)', $team_collection->getTeamIds());
             $sql          = "UPDATE service SET is_used = 0 WHERE short_name= ? AND $in_statement";
 
-            $parameters = array_merge([\program_managementPlugin::SERVICE_SHORTNAME], $in_statement->values());
+            $parameters = array_merge([ProgramService::SERVICE_SHORTNAME], $in_statement->values());
             $this->getDB()->safeQuery($sql, $parameters);
         });
     }

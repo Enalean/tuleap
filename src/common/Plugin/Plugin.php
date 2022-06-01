@@ -20,7 +20,12 @@
  */
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 
 /**
  * Plugin
@@ -151,10 +156,26 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getHooksAndCallbacks()
     {
-        if ($this instanceof PluginWithConfigKeys && ! $this->hooks->containsKey(\Tuleap\Config\GetConfigKeys::NAME)) {
-            $this->addHook(\Tuleap\Config\GetConfigKeys::NAME);
+        if ($this instanceof PluginWithConfigKeys) {
+            $this->addHookIfNotAlreadyListened(GetConfigKeys::NAME);
+        }
+        if ($this instanceof PluginWithService) {
+            $this->addHookIfNotAlreadyListened(Event::SERVICE_CLASSNAMES);
+            $this->addHookIfNotAlreadyListened(Event::SERVICES_ALLOWED_FOR_PROJECT);
+            $this->addHookIfNotAlreadyListened(Event::SERVICE_IS_USED);
+            $this->addHookIfNotAlreadyListened(ProjectServiceBeforeActivation::NAME);
+            $this->addHookIfNotAlreadyListened(ServiceDisabledCollector::NAME);
+            $this->addHookIfNotAlreadyListened(AddMissingService::NAME);
         }
         return $this->hooks->getValues();
+    }
+
+    private function addHookIfNotAlreadyListened(string $name): void
+    {
+        if ($this->hooks->containsKey($name)) {
+            return;
+        }
+        $this->addHook($name);
     }
 
     /**

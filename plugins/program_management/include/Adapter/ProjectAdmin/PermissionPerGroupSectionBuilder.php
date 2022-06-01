@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\ProjectAdmin;
 
 use TemplateRenderer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
+use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupCollection;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
@@ -43,7 +44,7 @@ final class PermissionPerGroupSectionBuilder
     public function collectSections(PermissionPerGroupPaneCollector $event): void
     {
         $project = $event->getProject();
-        $service = $project->getService(\program_managementPlugin::SERVICE_SHORTNAME);
+        $service = $project->getService(ProgramService::SERVICE_SHORTNAME);
         if ($service === null) {
             return;
         }

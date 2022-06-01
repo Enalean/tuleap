@@ -191,7 +191,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
 
         $project->expects(self::once())
             ->method('usesService')
-            ->with(\program_managementPlugin::SERVICE_SHORTNAME)
+            ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_program_management_used);
 
         return $project;

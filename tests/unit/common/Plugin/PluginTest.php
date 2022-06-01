@@ -21,6 +21,10 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 
 final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -400,6 +404,38 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         };
 
         self::assertArrayHasKey('getConfigKeys', $plugin->getHooksAndCallbacks()->toArray());
+    }
+
+    public function testImplementingPluginWithServiceIsEnoughToLisentToEvents(): void
+    {
+        $plugin = new class extends \Plugin implements PluginWithService {
+            public function serviceClassnames(array &$params): void
+            {
+            }
+
+            public function serviceIsUsed(array $params): void
+            {
+            }
+
+            public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event,): void
+            {
+            }
+
+            public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+            {
+            }
+
+            public function addMissingService(AddMissingService $event): void
+            {
+            }
+        };
+
+        self::assertArrayHasKey(Event::SERVICE_CLASSNAMES, $plugin->getHooksAndCallbacks()->toArray());
+        self::assertArrayHasKey(Event::SERVICES_ALLOWED_FOR_PROJECT, $plugin->getHooksAndCallbacks()->toArray());
+        self::assertArrayHasKey(Event::SERVICE_IS_USED, $plugin->getHooksAndCallbacks()->toArray());
+        self::assertArrayHasKey(ProjectServiceBeforeActivation::NAME, $plugin->getHooksAndCallbacks()->toArray());
+        self::assertArrayHasKey(ServiceDisabledCollector::NAME, $plugin->getHooksAndCallbacks()->toArray());
+        self::assertArrayHasKey(AddMissingService::NAME, $plugin->getHooksAndCallbacks()->toArray());
     }
 
     private function getFakePluginToTestHooks(): Plugin

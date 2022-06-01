@@ -27,6 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 
@@ -71,7 +72,7 @@ final class MediaWikiOAuth2AppSecretGeneratorDBStore implements MediaWikiOAuth2A
 
     private function getExistingMediawikiOAuth2AppID(): ?int
     {
-        $apps = $this->oauth2_app_dao->searchSiteLevelApps(\mediawiki_standalonePlugin::SERVICE_SHORTNAME);
+        $apps = $this->oauth2_app_dao->searchSiteLevelApps(MediawikiStandaloneService::SERVICE_SHORTNAME);
 
         foreach ($apps as $app) {
             return $app['id'];

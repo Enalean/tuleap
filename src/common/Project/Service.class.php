@@ -151,6 +151,13 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->data['link'] ?? '#';
     }
 
+    /**
+     * By default, url should be able to change to keep the compatibility with old services that rely on DB values for
+     * their URLs.
+     *
+     * Plus it's not safe to make all services with dedicated \Service sub class not URL modifiable because we know there
+     * are usage of this trick in the wild and this would generate massive regression.
+     */
     public function urlCanChange(): bool
     {
         return true;

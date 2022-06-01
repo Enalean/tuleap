@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-final class MediawikiStandaloneService extends \Service
+use Tuleap\Project\Service\ServiceForCreation;
+
+final class MediawikiStandaloneService extends \Service implements ServiceForCreation
 {
     private const ICON_NAME          = 'fas fa-tlp-mediawiki';
     private const SERVICE_URL_PREFIX = '/mediawiki/';
+    public const  SERVICE_SHORTNAME  = 'plugin_mediawiki_standalone';
 
     public static function forServiceCreation(\Project $project): self
     {
@@ -36,7 +39,7 @@ final class MediawikiStandaloneService extends \Service
                 'group_id' => $project->getID(),
                 'label' => 'MediaWiki',
                 'description' => '',
-                'short_name' => 'plugin_mediawiki_standalone',
+                'short_name' => self::SERVICE_SHORTNAME,
                 'link' => '#',
                 'is_active' => 1,
                 'is_used' => 0,

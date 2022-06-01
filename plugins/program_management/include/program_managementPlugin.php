@@ -190,6 +190,8 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\Template\Events\CollectCategorisedExternalTemplatesEvent;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Service\PluginAddMissingServiceTrait;
+use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -235,9 +237,9 @@ require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class program_managementPlugin extends Plugin
+final class program_managementPlugin extends Plugin implements PluginWithService
 {
-    public const SERVICE_SHORTNAME = 'plugin_program_management';
+    use PluginAddMissingServiceTrait;
 
     public function __construct(?int $id)
     {
@@ -266,8 +268,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook('project_is_deleted', 'projectIsDeleted');
         $this->addHook(BlockScrumAccess::NAME);
         $this->addHook(OriginalProjectCollector::NAME);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
         $this->addHook(BuildArtifactFormActionEvent::NAME);
@@ -287,8 +287,6 @@ final class program_managementPlugin extends Plugin
         $this->addHook(WorkflowDeletionEvent::NAME);
         $this->addHook(TransitionDeletionEvent::NAME);
         $this->addHook(CollectLinkedProjects::NAME);
-        $this->addHook(ServiceDisabledCollector::NAME);
-        $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(DisplayCreatedProjectModalPresenter::NAME);
         $this->addHook(CollectCategorisedExternalTemplatesEvent::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
@@ -304,14 +302,45 @@ final class program_managementPlugin extends Plugin
         return ['tracker', 'agiledashboard', 'cardwall'];
     }
 
-    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    protected function getServiceClass(): string
     {
-        $params['classnames'][$this->getServiceShortname()] = ProgramService::class;
+        return ProgramService::class;
+    }
+
+    public function serviceClassnames(array &$params): void
+    {
+        $params['classnames'][$this->getServiceShortname()] = $this->getServiceClass();
     }
 
     public function getServiceShortname(): string
     {
-        return self::SERVICE_SHORTNAME;
+        return ProgramService::SERVICE_SHORTNAME;
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $collector): void
+    {
+        $handler = new ServiceDisabledCollectorHandler(
+            new TeamDao(),
+            new ScrumBlocksServiceVerifier(
+                PlanningFactory::build(),
+                new UserManagerAdapter(UserManager::instance())
+            )
+        );
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($collector), $this->getServiceShortname());
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        $handler = new ProjectServiceBeforeActivationHandler(
+            new TeamDao(),
+            new ScrumBlocksServiceVerifier(PlanningFactory::build(), new UserManagerAdapter(UserManager::instance()))
+        );
+
+        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), $this->getServiceShortname());
+    }
+
+    public function serviceIsUsed(array $params): void
+    {
     }
 
     public function getPluginInfo(): PluginInfo
@@ -1149,28 +1178,6 @@ final class program_managementPlugin extends Plugin
         );
 
         $permission_per_group_section_builder->collectSections($event);
-    }
-
-    public function serviceDisabledCollector(ServiceDisabledCollector $collector): void
-    {
-        $handler = new ServiceDisabledCollectorHandler(
-            new TeamDao(),
-            new ScrumBlocksServiceVerifier(
-                PlanningFactory::build(),
-                new UserManagerAdapter(UserManager::instance())
-            )
-        );
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($collector), $this->getServiceShortname());
-    }
-
-    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
-    {
-        $handler = new ProjectServiceBeforeActivationHandler(
-            new TeamDao(),
-            new ScrumBlocksServiceVerifier(PlanningFactory::build(), new UserManagerAdapter(UserManager::instance()))
-        );
-
-        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), $this->getServiceShortname());
     }
 
     private function getComponentInvolvedVerifier(): ComponentInvolvedVerifier

@@ -24,9 +24,36 @@ namespace Tuleap\ProgramManagement;
 
 class ProgramService extends \Service
 {
+    private const ICON_NAME         = 'fas fa-sitemap';
+    public const  SERVICE_SHORTNAME = 'plugin_program_management';
+
+    public static function forServiceCreation(\Project $project): self
+    {
+        return new self(
+            $project,
+            [
+                'service_id' => self::FAKE_ID_FOR_CREATION,
+                'group_id' => $project->getID(),
+                'label' => 'plugin_program_management:service_lbl_key',
+                'description' => 'plugin_program_management:service_desc_key',
+                'short_name' => self::SERVICE_SHORTNAME,
+                'link' => '#',
+                'is_active' => 1,
+                'is_used' => 0,
+                'scope' => self::SCOPE_SYSTEM,
+                'rank' => 153,
+                'location' => '',
+                'server_id' => null,
+                'is_in_iframe' => 0,
+                'is_in_new_tab' => false,
+                'icon' => self::ICON_NAME,
+            ],
+        );
+    }
+
     public function getIconName(): string
     {
-        return 'fas fa-sitemap';
+        return self::ICON_NAME;
     }
 
     public function getInternationalizedName(): string
