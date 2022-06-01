@@ -1,4 +1,4 @@
-import file_modifications from "./code-collapse-service.fixtures.spec.js";
+import file_modifications from "./code-collapse-test-fixture.js";
 
 import {
     isThereACommentOnThisLine,
