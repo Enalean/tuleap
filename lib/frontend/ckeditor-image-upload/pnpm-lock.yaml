@@ -4,11 +4,11 @@ specifiers:
   '@tuleap/build-system-configurator': link:../build-system-configurator
   '@tuleap/tlp-fetch': link:../tlp-fetch
   '@types/ckeditor': ^4.9.10
-  tus-js-client: ^2.3.0
+  tus-js-client: ^2.3.1
 
 dependencies:
   '@tuleap/tlp-fetch': link:../tlp-fetch
-  tus-js-client: 2.3.0
+  tus-js-client: 2.3.1
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
@@ -110,8 +110,8 @@ packages:
     resolution: {integrity: sha1-52OI0heZLCUnUCQdPTlW/tmNj/Q=}
     dev: false
 
-  /tus-js-client/2.3.0:
-    resolution: {integrity: sha512-I4cSwm6N5qxqCmBqenvutwSHe9ntf81lLrtf6BmLpG2v4wTl89atCQKqGgqvkodE6Lx+iKIjMbaXmfvStTg01g==}
+  /tus-js-client/2.3.1:
+    resolution: {integrity: sha512-QEM7ySnthWT+wwePLTXVSQP8vBLCy0ZoJNDGFzNlsU+YVoK2WevIZwcRnKyo962xhYMiABe3aMvXvk4Ln+VRzQ==}
     dependencies:
       buffer-from: 0.1.2
       combine-errors: 3.0.3
@@ -119,11 +119,11 @@ packages:
       js-base64: 2.6.4
       lodash.throttle: 4.1.1
       proper-lockfile: 2.0.1
-      url-parse: 1.5.1
+      url-parse: 1.5.10
     dev: false
 
-  /url-parse/1.5.1:
-    resolution: {integrity: sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==}
+  /url-parse/1.5.10:
+    resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
