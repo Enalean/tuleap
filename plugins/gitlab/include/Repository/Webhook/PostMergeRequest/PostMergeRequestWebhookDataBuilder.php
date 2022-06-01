@@ -55,7 +55,7 @@ class PostMergeRequestWebhookDataBuilder
 
         $merge_request_id = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_ID_KEY];
         $title            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_TITLE_KEY];
-        $description      = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY];
+        $description      = (string) $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY];
         $state            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_STATE_KEY];
         $author_id        = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_AUTHOR_ID_KEY];
         $source_branch    = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_SOURCE_BRANCH];
@@ -93,7 +93,7 @@ class PostMergeRequestWebhookDataBuilder
      */
     private function checkNoMissingKeyInMergeRequestData(array $merge_request_content): void
     {
-        if (! isset($merge_request_content[self::OBJECT_ATTRIBUTES_KEY])) {
+        if (! array_key_exists(self::OBJECT_ATTRIBUTES_KEY, $merge_request_content)) {
             throw new MissingKeyException(self::OBJECT_ATTRIBUTES_KEY);
         }
 
@@ -108,7 +108,7 @@ class PostMergeRequestWebhookDataBuilder
         ];
 
         foreach ($required_keys as $required_key) {
-            if (! isset($merge_request_content[self::OBJECT_ATTRIBUTES_KEY][$required_key])) {
+            if (! array_key_exists($required_key, $merge_request_content[self::OBJECT_ATTRIBUTES_KEY])) {
                 throw new MissingKeyException($required_key . ' in ' . self::OBJECT_ATTRIBUTES_KEY);
             }
         }

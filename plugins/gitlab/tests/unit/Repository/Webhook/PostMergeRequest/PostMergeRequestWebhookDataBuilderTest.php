@@ -150,4 +150,27 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
             )
         );
     }
+
+    public function testItReturnsPostMergeRequestWebhookDataWithNullValues(): void
+    {
+        $webhook_content = [
+            'object_attributes' => [
+                'iid'         => 1,
+                'title'       => 'My Title',
+                'description' => null,
+                'state'       => 'closed',
+                'created_at'  => '2021-01-12 13:49:35 UTC',
+                'author_id'   => 10,
+                'source_branch' => 'some_feature',
+            ],
+        ];
+
+        $this->builder->build("Merge Request Hook", 123, "https://example.com", $webhook_content);
+
+        self::assertTrue(
+            $this->logger->hasDebugThatContains(
+                "Webhook merge request with id 1 retrieved.\nTitle: My Title\nSource branch: some_feature\nDescription: \n"
+            )
+        );
+    }
 }
