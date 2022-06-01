@@ -299,7 +299,7 @@ function gettextAngularJS(string $translated_plugin, string $path, array $manife
         $po       = escapeshellarg("$path/${gettext['po']}");
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-        executeCommandAndExitIfStderrNotEmpty("node_modules/.bin/angular-gettext-cli --files '$src/**/*.+(js|html|ts)' --exclude '**/*.+(spec|test).js' --dest $template");
+        executeCommandAndExitIfStderrNotEmpty("node_modules/.bin/angular-gettext-cli --files '$src/**/*.+(js|html|ts)' --exclude '**/*.+(test.js|test.ts|d.ts)' --dest $template");
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("$gettext_step_header Merging .pot file into .po files");
