@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Hook\CrossReferencesExtractor;
+namespace Tuleap\Git\Hook;
 
-require_once __DIR__ . '/../../bootstrap.php';
+use Psr\Log\Test\TestLogger;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Git_Hook_ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & CrossReferencesExtractor
+     */
     private $extract_cross_ref;
     private $log_pushes;
     private $parse_log;
@@ -38,17 +36,26 @@ class Git_Hook_ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->extract_cross_ref = \Mockery::spy(CrossReferencesExtractor::class);
-        $this->log_pushes        = \Mockery::spy(\Git_Hook_LogPushes::class);
-        $this->logger            = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
+        $this->log_pushes        = \Mockery::spy(\Tuleap\Git\Hook\LogPushes::class);
+        $this->logger            = new TestLogger();
+        $this->parse_log         = new ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
+    }
+
+    public function testItLogPush(): void
+    {
+        $push_details = \Mockery::spy(PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
+
+        $this->log_pushes->shouldReceive('executeForRepository')->with($push_details)->once();
+
+        $this->parse_log->execute($push_details);
     }
 
     public function testItExecutesExtractOnEachCommit(): void
     {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
+        $push_details = \Mockery::spy(PushDetails::class)->shouldReceive('getRevisionList')->andReturns(
+            ['469eaa9']
+        )->getMock();
 
         $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '469eaa9')->once();
 
@@ -57,7 +64,9 @@ class Git_Hook_ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExecutesExtractOnTag(): void
     {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
+        $push_details = \Mockery::spy(PushDetails::class)->shouldReceive('getRevisionList')->andReturns(
+            ['469eaa9']
+        )->getMock();
 
         $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '469eaa9')->once();
 
@@ -66,7 +75,7 @@ class Git_Hook_ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesntAttemptToExtractWhenBranchIsDeleted(): void
     {
-        $push_details = new Git_Hook_PushDetails(
+        $push_details = new PushDetails(
             \Mockery::mock(\GitRepository::class),
             \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build(),
             'refs/tags/v1',
@@ -86,16 +95,17 @@ class Git_Hook_ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExecutesExtractEvenWhenThereAreErrors(): void
     {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class);
+        $push_details = \Mockery::spy(PushDetails::class);
         $push_details->shouldReceive('getRevisionList')->andReturns(['0fb0737', '469eaa9']);
         $push_details->shouldReceive('getRepository')->andReturns(\Mockery::spy(\GitRepository::class));
 
         $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '0fb0737');
-        $this->logger->shouldReceive('error')->once();
         $this->extract_cross_ref->shouldReceive('extractCommitReference')
             ->with($push_details, '469eaa9')
-            ->andThrows(new Git_Command_Exception('whatever', ['whatever'], '234'));
+            ->andThrows(new \Git_Command_Exception('whatever', ['whatever'], '234'));
 
         $this->parse_log->execute($push_details);
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 }

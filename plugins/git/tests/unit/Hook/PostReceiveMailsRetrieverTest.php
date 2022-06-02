@@ -20,15 +20,13 @@
 
 namespace Tuleap\Git\Hook;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use GitRepository;
 use Mockery;
 use PFUser;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 
-class PostReceiveMailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostReceiveMailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -40,8 +38,6 @@ class PostReceiveMailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $project = \Mockery::spy(\Project::class, ['getID' => 42, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->repository = Mockery::mock(GitRepository::class);

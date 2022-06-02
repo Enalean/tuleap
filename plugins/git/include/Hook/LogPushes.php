@@ -1,10 +1,6 @@
 <?php
-/*
- * Copyright Enalean (c) 2011, 2012, 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\Hook;
+
+use GitDao;
+
 /**
  * Store push information in the database
  */
-class Git_Hook_LogPushes
+class LogPushes
 {
     /** @var GitDao */
     private $dao;
@@ -35,7 +35,7 @@ class Git_Hook_LogPushes
         $this->dao = $dao;
     }
 
-    public function executeForRepository(Git_Hook_PushDetails $push_details)
+    public function executeForRepository(PushDetails $push_details): void
     {
         $this->dao->logGitPush(
             $push_details->getRepository()->getId(),

@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +24,6 @@ namespace Tuleap\Git\Hook;
 
 use Git;
 use Git_Exec;
-use Git_Hook_PushDetails;
 use ReferenceManager;
 
 /**
@@ -52,7 +47,7 @@ class CrossReferencesExtractor
         $this->reference_manager = $reference_manager;
     }
 
-    public function extractCommitReference(Git_Hook_PushDetails $push_details, string $commit_sha1): void
+    public function extractCommitReference(PushDetails $push_details, string $commit_sha1): void
     {
         $rev_id = $push_details->getRepository()->getFullName() . '/' . $commit_sha1;
         $text   = $this->git_exec->catFile($commit_sha1);
@@ -65,7 +60,7 @@ class CrossReferencesExtractor
         );
     }
 
-    public function extractTagReference(Git_Hook_PushDetails $push_details): void
+    public function extractTagReference(PushDetails $push_details): void
     {
         $tag_reference = $push_details->getRefname();
         if (strpos($tag_reference, 'refs/tags') === 0) {

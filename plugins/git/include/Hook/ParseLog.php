@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,21 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Hook\CrossReferencesExtractor;
+namespace Tuleap\Git\Hook;
 
-class Git_Hook_ParseLog
+use Git_Command_Exception;
+
+class ParseLog
 {
     /** @var CrossReferencesExtractor */
     private $extract_cross_ref;
 
-    /** @var Git_Hook_LogPushes */
+    /** @var LogPushes */
     private $log_pushes;
 
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     public function __construct(
-        Git_Hook_LogPushes $log_pushes,
+        LogPushes $log_pushes,
         CrossReferencesExtractor $extract_cross_ref,
         \Psr\Log\LoggerInterface $logger,
     ) {
@@ -45,11 +43,11 @@ class Git_Hook_ParseLog
         $this->logger            = $logger;
     }
 
-    public function execute(Git_Hook_PushDetails $push_details)
+    public function execute(PushDetails $push_details)
     {
         $this->log_pushes->executeForRepository($push_details);
 
-        if ($push_details->getRefnameType() === Git_Hook_PushDetails::TYPE_ANNOTATED_TAG) {
+        if ($push_details->getRefnameType() === PushDetails::TYPE_ANNOTATED_TAG) {
             try {
                 $this->extract_cross_ref->extractTagReference($push_details);
             } catch (Git_Command_Exception $exception) {
