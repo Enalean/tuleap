@@ -27,7 +27,7 @@ exports[`ChartBadgeGenerator - When the badge is created, Then value of remainin
       />
       <text
         class="release-chart-end-icon fa"
-        style="font-family:'Font Awesome 5 Free';"
+        style="font-family:'Font Awesome 6 Free';"
         x="13"
         y="9"
       >

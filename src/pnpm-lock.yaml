@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@fortawesome/fontawesome-free': ^5.15.2
+  '@fortawesome/fontawesome-free': ^6.1.1
   '@joeattardi/emoji-button': ^4.6.2
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
@@ -67,7 +67,7 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@fortawesome/fontawesome-free': 5.15.4
+  '@fortawesome/fontawesome-free': 6.1.1
   '@joeattardi/emoji-button': 4.6.2
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
@@ -146,8 +146,8 @@ packages:
     requiresBuild: true
     dev: false
 
-  /@fortawesome/fontawesome-free/5.15.4:
-    resolution: {integrity: sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==}
+  /@fortawesome/fontawesome-free/6.1.1:
+    resolution: {integrity: sha512-J/3yg2AIXc9wznaVqpHVX3Wa5jwKovVF0AMYSnbmcXTiL3PpRPfF58pzWucCwEiCJBp+hCNRLWClTomD8SseKg==}
     engines: {node: '>=6'}
     requiresBuild: true
     dev: false
@@ -1240,7 +1240,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.10
     dev: false
 
   /jsonfile/5.0.0:

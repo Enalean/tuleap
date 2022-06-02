@@ -122,7 +122,7 @@
                     position: relative;
                     top: 2px;
                     color: #888888;
-                    font-family: "Font Awesome 5 Free";
+                    font-family: "Font Awesome 6 Free";
                     font-weight: 900;
                 }
 
@@ -166,7 +166,7 @@ span.select2 {
         // stylelint-disable-next-line selector-max-compound-selectors
         &::before {
             content: "\f02b"; // fa-tag
-            font-family: "Font Awesome 5 Free";
+            font-family: "Font Awesome 6 Free";
             font-weight: 900;
         }
 
@@ -184,7 +184,7 @@ span.select2 {
         // stylelint-disable-next-line selector-max-compound-selectors
         &:hover > .select2-selection__choice__remove::before {
             content: "\f057"; // fa-times-circle
-            font-family: "Font Awesome 5 Free";
+            font-family: "Font Awesome 6 Free";
             font-weight: 900;
         }
     }

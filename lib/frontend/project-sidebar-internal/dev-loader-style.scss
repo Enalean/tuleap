@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-@use "../../../themes/tlp/src/fonts/tlp-font/font-face" with (
-    $tlp-font-basepath: "../../../themes/tlp/src/"
+@use "@tuleap/tlp/src/fonts/tlp-font/font-face" with (
+    $tlp-font-basepath: "@tuleap/tlp/src/"
 );
 @use "@fortawesome/fontawesome-free/css/all.css";

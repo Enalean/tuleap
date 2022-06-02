@@ -82,6 +82,7 @@ watch(is_sidebar_collapsed, (): void => {
 @use "./Styles/sidebar-project";
 @use "@tuleap/burningparrot-theme/css/includes/logo";
 @use "@fortawesome/fontawesome-free/scss/fontawesome";
+@use "@fortawesome/fontawesome-free/scss/brands";
 @use "./Styles/fontawesome-classes";
 @use "@tuleap/tlp/src/fonts/tlp-font/icons";
 @use "@tuleap/tlp-popovers";
