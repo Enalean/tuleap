@@ -110,7 +110,7 @@ class PostPushWebhookCloseArtifactHandler
 
             if (! $action_enabled_for_repository_in_project) {
                 $this->logger->warning(
-                    "|  |  |_ Artifact #{$tuleap_reference->getId()} cannot be closed. " .
+                    "Artifact #{$tuleap_reference->getId()} cannot be closed. " .
                     "Either this artifact is not in a project where the GitLab repository is integrated in " .
                     "or the artifact closure action is not enabled. " .
                     "Skipping."
@@ -129,7 +129,7 @@ class PostPushWebhookCloseArtifactHandler
 
             if ($credentials === null) {
                 $this->logger->warning(
-                    "|  |  |_ Artifact #{$tuleap_reference->getId()} cannot be closed because no token found for integration. Skipping."
+                    "Artifact #{$tuleap_reference->getId()} cannot be closed because no token found for integration. Skipping."
                 );
                 return;
             }
@@ -165,9 +165,9 @@ class PostPushWebhookCloseArtifactHandler
                 $gitlab_repository_integration
             );
         } catch (ArtifactNotFoundException $e) {
-            $this->logger->error("|  |  |_ Artifact #{$tuleap_reference->getId()} not found");
+            $this->logger->error("Artifact #{$tuleap_reference->getId()} not found");
         } catch (NoPossibleValueException $e) {
-            $this->logger->error("|  |  |_ Artifact #{$tuleap_reference->getId()} cannot be closed. " . $e->getMessage());
+            $this->logger->error("Artifact #{$tuleap_reference->getId()} cannot be closed. " . $e->getMessage());
         }
     }
 }

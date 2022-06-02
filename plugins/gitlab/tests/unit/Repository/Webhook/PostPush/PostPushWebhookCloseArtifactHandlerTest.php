@@ -46,8 +46,9 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
 
-class PostPushWebhookCloseArtifactHandlerTest extends TestCase
+final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 {
+    private const POST_PUSH_LOG_PREFIX = '|  |  |_ ';
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitArtifactUpdater
      */
@@ -99,8 +100,6 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->artifact_updater        = $this->createMock(PostPushCommitArtifactUpdater::class);
         $this->artifact_retriever      = $this->createMock(ArtifactRetriever::class);
         $this->user_manager            = $this->createMock(UserManager::class);
@@ -147,7 +146,7 @@ class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             $this->repository_project_dao,
             $this->credentials_retriever,
             $this->gitlab_project_builder,
-            $this->logger
+            new PrefixedLogger($this->logger, self::POST_PUSH_LOG_PREFIX)
         );
     }
 

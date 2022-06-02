@@ -75,6 +75,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookCloseArtifactHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PrefixedLogger;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
@@ -123,8 +124,9 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class gitlabPlugin extends Plugin
 {
-    public const SERVICE_NAME   = "gitlab";
-    public const LOG_IDENTIFIER = "gitlab_syslog";
+    public const SERVICE_NAME          = "gitlab";
+    public const LOG_IDENTIFIER        = "gitlab_syslog";
+    private const POST_PUSH_LOG_PREFIX = '|  |  |_ ';
 
     public function __construct(?int $id)
     {
@@ -376,6 +378,7 @@ class gitlabPlugin extends Plugin
     public function routePostIntegrationWebhook(): IntegrationWebhookController
     {
         $logger            = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+        $prefixed_logger   = new PrefixedLogger($logger, self::POST_PUSH_LOG_PREFIX);
         $reference_manager = ReferenceManager::instance();
 
         $request_factory       = HTTPFactoryBuilder::requestFactory();
@@ -461,7 +464,7 @@ class gitlabPlugin extends Plugin
                                 $first_possible_value_retriever
                             ),
                             UserManager::instance(),
-                            $logger
+                            $prefixed_logger
                         ),
                         new ArtifactRetriever(Tracker_ArtifactFactory::instance()),
                         UserManager::instance(),
@@ -469,7 +472,7 @@ class gitlabPlugin extends Plugin
                         new GitlabRepositoryProjectDao(),
                         new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
                         new GitlabProjectBuilder($gitlab_api_client),
-                        $logger
+                        $prefixed_logger
                     ),
                     new PostPushWebhookActionBranchHandler(
                         new BranchNameTuleapReferenceParser(),
