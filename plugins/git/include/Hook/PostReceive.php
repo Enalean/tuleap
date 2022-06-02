@@ -28,6 +28,7 @@ use GitRepositoryFactory;
 use PFUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
 use Tuleap\Git\MarkTechnicalReference;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 
 /**
@@ -47,6 +48,8 @@ class PostReceive
         private WebhookRequestSender $webhook_request_sender,
         private PostReceiveMailSender $mail_sender,
         private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
+        private VerifyArtifactClosureIsAllowed $closure_verifier,
+        private DispatchGitPushReception $dispatcher,
     ) {
     }
 
@@ -97,12 +100,26 @@ class PostReceive
     /**
      * @throws \Git_Command_UnknownObjectTypeException
      */
-    private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void
-    {
+    private function executeForRepositoryAndUser(
+        GitRepository $repository,
+        PFUser $user,
+        string $oldrev,
+        string $newrev,
+        string $refname,
+    ): void {
         $this->ci_launcher->executeForRepository($repository);
 
         $push_details = $this->log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
         $this->parse_log->execute($push_details);
+        $this->dispatchAsynchronousMessageIfNeeded($repository);
+    }
+
+    private function dispatchAsynchronousMessageIfNeeded(GitRepository $repository): void
+    {
+        if (! $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId())) {
+            return;
+        }
+        $this->dispatcher->dispatchGitPushReception();
     }
 
     private function processGitWebhooks(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void

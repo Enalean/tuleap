@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `remote_project_deleted_date` INT(11) NULL,
   `remote_server_migration_status` ENUM("QUEUE", "DONE", "ERROR") NULL,
   `ci_token` TEXT NULL,
+  `allow_artifact_closure` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (`repository_id`),
   INDEX idx_project_repository(project_id, repository_id),
   INDEX idx_repository_creation_date(repository_creation_date)
