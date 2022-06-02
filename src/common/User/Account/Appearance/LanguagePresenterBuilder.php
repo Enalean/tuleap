@@ -24,17 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\Appearance;
 
 use BaseLanguageFactory;
+use Tuleap\Language\LocaleSwitcher;
 
 final class LanguagePresenterBuilder
 {
-    /**
-     * @var BaseLanguageFactory
-     */
-    private $language_factory;
-
-    public function __construct(BaseLanguageFactory $language_factory)
-    {
-        $this->language_factory = $language_factory;
+    public function __construct(
+        private BaseLanguageFactory $language_factory,
+        private LocaleSwitcher $locale_switcher,
+    ) {
     }
 
     /**
@@ -42,12 +39,30 @@ final class LanguagePresenterBuilder
      */
     public function getLanguagePresenterCollectionForUser(\PFUser $user): array
     {
-        $languages   = [];
+        $available_languages = new \ArrayObject();
+
         $user_locale = $user->getLocale();
         foreach ($this->language_factory->getAvailableLanguages() as $locale => $label) {
-            $is_checked  = $user_locale === $locale;
-            $languages[] = new LanguagePresenter($locale, $label, $is_checked);
+            $this->locale_switcher->setLocaleForSpecificExecutionContext(
+                $locale,
+                function () use ($locale, $label, $user_locale, $available_languages) {
+                    $is_official_language = in_array($locale, ['en_US', 'fr_FR'], true);
+
+                    $is_checked = $user_locale === $locale;
+                    $available_languages->append(
+                        new LanguagePresenter(
+                            $locale,
+                            $label,
+                            $is_checked,
+                            $is_official_language,
+                            _("Work in progress, you might find untranslated strings.")
+                        )
+                    );
+                }
+            );
         }
+
+        $languages = $available_languages->getArrayCopy();
 
         usort(
             $languages,

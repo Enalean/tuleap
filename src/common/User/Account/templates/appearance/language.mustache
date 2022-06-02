@@ -8,8 +8,16 @@
                 value="{{ id }}"
                 {{# is_checked }}checked{{/ is_checked }}
                 data-test="user-prefs-language-selector-{{ id }}"
+                class="user-preferences-language-radio"
             >
             {{ label }}
+            {{^ is_official_language }}
+                <span class="tlp-tooltip tlp-tooltip-right tlp-badge-secondary tlp-badge-outline user-preferences-language-beta"
+                      data-tlp-tooltip="{{ beta_warning_text }}"
+                >
+                    Beta
+                </span>
+            {{/ is_official_language }}
         </label>
     {{/ languages }}
 </div>

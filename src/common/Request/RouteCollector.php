@@ -87,6 +87,7 @@ use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationController;
@@ -370,7 +371,7 @@ class RouteCollector
             TemplateRendererFactory::build(),
             DisplayAppearanceController::getCSRFToken(),
             new AppearancePresenterBuilder(
-                new LanguagePresenterBuilder(new \BaseLanguageFactory()),
+                new LanguagePresenterBuilder(new \BaseLanguageFactory(), new LocaleSwitcher()),
                 new ThemeColorPresenterBuilder(new \ThemeVariant())
             )
         );
