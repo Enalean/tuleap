@@ -82,7 +82,7 @@ class PostPushCommitArtifactUpdater
         try {
             if (! $artifact->isOpen()) {
                 $this->logger->info(
-                    "|  |  |_ Artifact #{$artifact->getId()} is already closed and can not be closed automatically by GitLab commit #{$commit->getSha1()}"
+                    "Artifact #{$artifact->getId()} is already closed and can not be closed automatically by GitLab commit #{$commit->getSha1()}"
                 );
                 return;
             }
@@ -109,10 +109,10 @@ class PostPushCommitArtifactUpdater
             );
 
             if ($new_followups === null) {
-                $this->logger->error("|  |  |_ No new comment was created");
+                $this->logger->error("No new comment was created");
             }
         } catch (Tracker_NoChangeException | Tracker_Exception $e) {
-            $this->logger->error("|  |  |_ An error occurred during the creation of the comment");
+            $this->logger->error("An error occurred during the creation of the comment");
         } catch (SemanticStatusClosedValueNotFoundException $e) {
             $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
         }
@@ -128,7 +128,7 @@ class PostPushCommitArtifactUpdater
         } catch (
             SemanticDoneNotDefinedException | SemanticDoneValueNotFoundException $exception
         ) {
-            $this->logger->warning("|  |_ " . $exception->getMessage() . " Status semantic will be checked to close the artifact.");
+            $this->logger->warning($exception->getMessage() . " Status semantic will be checked to close the artifact.");
         }
 
         return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker_workflow_user, $artifact);
@@ -146,10 +146,10 @@ class PostPushCommitArtifactUpdater
             $new_followups = $artifact->createNewChangeset([], $no_semantic_comment, $tracker_workflow_user);
 
             if ($new_followups === null) {
-                $this->logger->error("|  |  |_ No new comment was created");
+                $this->logger->error("No new comment was created");
             }
         } catch (Tracker_NoChangeException | Tracker_Exception $e) {
-            $this->logger->error("|  |  |_ An error occurred during the creation of the comment");
+            $this->logger->error("An error occurred during the creation of the comment");
         }
     }
 
