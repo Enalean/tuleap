@@ -74,7 +74,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_PROJECT);
+        $this->setScope(self::SCOPE_SYSTEM);
 
         bindtextdomain('tuleap-document', __DIR__ . '/../site-content');
     }
