@@ -36,6 +36,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
+use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\ServerHostname;
 use Tuleap\System\ServiceControl;
@@ -69,6 +70,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         BackendSystem::class,
         ConfigurationVariables::class,
         ServerHostname::class,
+        ProjectExportController::class,
     ];
 
     /**

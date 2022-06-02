@@ -25,6 +25,7 @@ use HTTPRequest;
 use Project;
 use Service;
 use Tuleap\Label\CanProjectUseLabels;
+use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\Service\IndexController;
 
 class NavigationPresenterBuilder
@@ -137,9 +138,15 @@ class NavigationPresenterBuilder
             self::DATA_ENTRY_SHORTNAME,
             $current_pane_shortname,
             [
-                new NavigationDropdownItemPresenter(
-                    _('Project export'),
-                    '/project/' . urlencode((string) $project_id) . '/admin/export'
+                ...(
+                    \ForgeConfig::getFeatureFlag(ProjectExportController::FEATURE_FLAG_KEY)
+                        ? [
+                            new NavigationDropdownItemPresenter(
+                                _('Project export'),
+                                '/project/' . urlencode((string) $project_id) . '/admin/export'
+                            ),
+                        ]
+                        : []
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Project history'),

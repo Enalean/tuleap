@@ -928,9 +928,6 @@ msgstr "Visionneur du gestionnaire de document"
 msgid "Docman item"
 msgstr "Elément du docman"
 
-msgid "Docman permission export format"
-msgstr "Format d'export des données du Docman"
-
 msgid "Document"
 msgstr "Document"
 
@@ -949,9 +946,6 @@ msgstr "Recherche des Documents par Id"
 msgid "Document Manager"
 msgstr "Gestionnaire de document"
 
-msgid "Document Manager Permissions"
-msgstr "Documents : permissions"
-
 msgid "Document Manager already installed."
 msgstr "Gestionnaire de documents déjà installé."
 
@@ -960,9 +954,6 @@ msgstr "Lecteur de document"
 
 msgid "Document Writer"
 msgstr "Rédacteur de document"
-
-msgid "Document id"
-msgstr "Document id"
 
 msgid "Document id:"
 msgstr "Id. document :"
@@ -1140,9 +1131,6 @@ msgstr "Erreur: pas d'élément à traiter (ID)."
 msgid "Every"
 msgstr "Chaque"
 
-msgid "Export date"
-msgstr "Date de l'export"
-
 msgid "File"
 msgstr "Fichier"
 
@@ -1289,9 +1277,6 @@ msgstr ""
 msgid "Icons"
 msgstr "Icônes"
 
-msgid "Id"
-msgstr "Id"
-
 msgid "Image Id:"
 msgstr "Id de l'image :"
 
@@ -1409,9 +1394,6 @@ msgstr "Conserver l'ancienne table."
 
 msgid "Keep the lock:"
 msgstr "Garder la réservation :"
-
-msgid "Kind of item (file, link, wiki,...)"
-msgstr "Nature de l'item (fichier, lien, wiki, ...)"
 
 msgid "Label"
 msgstr "Label"
@@ -1678,14 +1660,6 @@ msgstr "Aujourd'hui obsolète"
 msgid "Old Value"
 msgstr "Ancienne valeur"
 
-msgid ""
-"One user group per column. Each one can have either READ, WRITE or MANAGE "
-"permission. An empty row means no access."
-msgstr ""
-"Un group par colonne. Chaque groupe peut avoir soit la permission \"READ\", "
-"\"WRITE\" ou \"MANAGE\". Une cellule vide signifie que le group "
-"correspondant n'as pas accès à la ressource."
-
 msgid "Only admin can delete Project wide reports."
 msgstr "Seuls les admins peuvent supprimer un rapport 'projet'."
 
@@ -1732,9 +1706,6 @@ msgstr "Coller '%1$s' dans '%2$s' en cours"
 
 msgid "Paste in progress..."
 msgstr "Coller en cours..."
-
-msgid "Path"
-msgstr "Chemin"
 
 msgid "Pattern"
 msgstr "Modèle"
@@ -1839,9 +1810,6 @@ msgstr "Projet"
 
 msgid "Project Documentation"
 msgstr "Documentation du projet"
-
-msgid "Project data export"
-msgstr "Export des données du projet"
 
 msgid "Project has no locked documents"
 msgstr "Le projet n'a pas de document réservé"
@@ -1981,9 +1949,6 @@ msgstr "Approbateur"
 
 msgid "Reviewers were notified."
 msgstr "Les approbateurs ont été notfiés."
-
-msgid "Sample value"
-msgstr "Valeur exemple"
 
 msgid "Save as"
 msgstr "Sauver en tant que"
@@ -2135,9 +2100,6 @@ msgid ""
 "The <a href=\"%1$s\">selected version</a> has been successfully restored."
 msgstr ""
 "La <a href=\"%1$s\">version sélectionnée</a> a été restaurée avec succès."
-
-msgid "The Item path in docman tree"
-msgstr "Le chemin vers l'item"
 
 msgid "The URL is required."
 msgstr "L'URL est requise."
@@ -2462,9 +2424,6 @@ msgstr "Utiliser cette propriété"
 
 msgid "Used"
 msgstr "Utilisée"
-
-msgid "User Groups..."
-msgstr "List des groupes d'utilisateurs..."
 
 msgid "User groups"
 msgstr "Groupes d'utilisateurs"

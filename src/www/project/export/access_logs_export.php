@@ -289,30 +289,3 @@ function export_plugin_logs($log, $project)
         echo build_csv_header($col_list, []) . $eol;
     }
 }
-
-
-$project = new Project($group_id);
-
-if (isset($export)) {
-    $export = (string) $export;
-    if ($export == 'access_logs') {
-        $span = 52 * 30.5;
-        $who  = "allusers";
-
-      // Send the result in CSV format
-        header('Content-Type: text/csv');
-        header('Content-Disposition: filename=access_logs.csv');
-
-        export_file_logs($project, $span, $who);
-        export_cvs_logs($project, $span, $who);
-        export_svn_logs($project, $span, $who);
-        export_wiki_pg_logs($project, $span, $who, 0);
-        export_wiki_att_logs($project, $span, $who);
-        export_all_plugins_logs($project, $span, $who);
-    } elseif ($export == "access_logs_format") {
-        $span = 52 * 30.5;
-        $who  = "allusers";
-        echo $GLOBALS['Language']->getText('project_export_bug_deps_export', 'bug_deps_export_format', [$GLOBALS['Language']->getText('project_admin_utils', 'access_logs')]);
-        export_wiki_pg_logs($project, $span, $who, 1);
-    }
-}

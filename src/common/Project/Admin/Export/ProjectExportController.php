@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Export;
 
 use Project;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
@@ -37,6 +38,9 @@ use Tuleap\Request\ProjectRetriever;
 
 final class ProjectExportController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
+    #[FeatureFlagConfigKey("Feature flag to allow project admin to export the XML structure of their project.")]
+    public const FEATURE_FLAG_KEY = 'allow_project_structure_xml_export';
+
     public function __construct(
         private ProjectRetriever $project_retriever,
         private ProjectAdministratorChecker $administrator_checker,
@@ -50,6 +54,10 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
      */
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        if (! \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
+            throw new NotFoundException();
+        }
+
         $project = $this->getProject($variables);
         $user    = $request->getCurrentUser();
         try {
@@ -59,57 +67,11 @@ final class ProjectExportController implements DispatchableWithRequest, Dispatch
         }
         $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
 
-        $group_id = $project->getID();
-
-        $entry_label                           = [];
-        $entry_data_export_links               = [];
-        $entry_data_export_format_links        = [];
-        $history_data_export_links             = [];
-        $history_data_export_format_links      = [];
-        $dependencies_data_export_links        = [];
-        $dependencies_data_export_format_links = [];
-
-        $entries = [];
-
-        if ($project->usesTracker()) {
-            $atf    = new \ArtifactTypeFactory($project);
-            $at_arr = $atf->getArtifactTypes();
-            if ($at_arr && count($at_arr) >= 1) {
-                foreach ($at_arr as $at) {
-                    $entries[] = [
-                        'label'                    => sprintf(_('Tracker %s'), $at->getName()),
-                        'data_dl_href'             => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&atid=' . urlencode((string) $at->getID()) . '&export=artifact',
-                        'data_format_href'         => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&atid=' . urlencode((string) $at->getID()) . '&export=artifact_format',
-                        'history_dl_href'          => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&atid=' . urlencode((string) $at->getID()) . '&export=artifact_history',
-                        'history_format_href'      => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&atid=' . urlencode((string) $at->getID()) . '&export=artifact_history_format',
-                        'dependencies_dl_href'     => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&atid=' . urlencode((string) $at->getID()) . '&export=artifact_deps',
-                        'dependencies_format_href' => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&atid=' . urlencode((string) $at->getID()) . '&export=artifact_deps_format',
-                    ];
-                }
-            }
-        }
-
-        $entries[] = [
-            'label'        => _('Access logs'),
-            'data_dl_href' => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&export=access_logs',
-        ];
-        $entries[] = [
-            'label'            => _('User groups definition'),
-            'data_dl_href'     => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&export=user_groups',
-            'data_format_href' => '/project/export/index.php?group_id=' . urlencode((string) $group_id) . '&export=user_groups_format',
-        ];
-        \EventManager::instance()->processEvent('project_export_entry', [
-            'group_id' => $group_id,
-            'entries'  => &$entries,
-        ]);
-
-        $title = _("Project Data Export");
+        $title = _("Project export");
         $this->displayHeader($title, $project, $layout);
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/project');
         $renderer->renderToPage('admin/export', [
-            'has_feature_flag' => $request->get('feature-flag-xml-structure'),
-            'entries'          => $entries,
-            'xml_export_href'  => '/project/' . urlencode((string) $group_id) . '/admin/export/xml',
+            'xml_export_href'  => '/project/' . urlencode((string) $project->getID()) . '/admin/export/xml',
         ]);
         $renderer->renderToPage('end-project-admin-content', []);
         site_project_footer([]);
