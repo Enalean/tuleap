@@ -385,8 +385,9 @@ packages:
       is-hexadecimal: 1.0.4
     dev: false
 
-  /prismjs/1.25.0:
-    resolution: {integrity: sha512-WCjJHl1KEWbnkQom1+SzftbtXMKQoezOCYs5rECqMN+jP+apI7ftoflyqigqzopSO3hMhTEb0mFClA8lkolgEg==}
+  /prismjs/1.28.0:
+    resolution: {integrity: sha512-8aaXdYvl1F7iC7Xm1spqSaY/OJBpYW3v+KJ+F17iYxvdc8sfjW194COK5wVhMZX45tGteiBQgdvD/nhxcRwylw==}
+    engines: {node: '>=6'}
     dev: false
 
   /prop-types/15.8.1:
@@ -539,7 +540,7 @@ packages:
       '@babel/runtime': 7.16.3
       highlight.js: 10.7.3
       lowlight: 1.20.0
-      prismjs: 1.25.0
+      prismjs: 1.28.0
       react: 17.0.2
       refractor: 3.5.0
     dev: false
@@ -571,7 +572,7 @@ packages:
     dependencies:
       hastscript: 6.0.0
       parse-entities: 2.0.0
-      prismjs: 1.25.0
+      prismjs: 1.28.0
     dev: false
 
   /regenerator-runtime/0.13.9:
