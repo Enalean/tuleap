@@ -311,7 +311,11 @@ final class mediawiki_standalonePlugin extends Plugin
             ]
         );
         $logger->info('Execute MediaWiki update script');
-        (new MediaWikiUpdateScriptCaller($logger))->runUpdate();
+        (new MediaWikiUpdateScriptCaller(
+            $this->buildSettingDirectoryPath(),
+            $this->buildLocalSettingsInstantiator(),
+            $logger
+        ))->runUpdate();
     }
 
     private function buildLocalSettingsInstantiator(): LocalSettingsInstantiator
@@ -330,10 +334,15 @@ final class mediawiki_standalonePlugin extends Plugin
                 new MediaWikiSharedSecretGeneratorForgeConfigStore(new ConfigDao())
             ),
             new LocalSettingsPersistToPHPFile(
-                ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName(),
+                $this->buildSettingDirectoryPath(),
                 new PHPStringMustacheRenderer(new TemplateCache(), __DIR__ . '/../templates/')
             ),
             $transaction_executor
         );
+    }
+
+    private function buildSettingDirectoryPath(): string
+    {
+        return ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName();
     }
 }
