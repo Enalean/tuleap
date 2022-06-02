@@ -249,10 +249,6 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     public function externalLinksManager(ExternalLinksManager $collector)
     {
-        if (! PluginManager::instance()->isPluginAllowedForProject($this, $collector->getProjectId())) {
-            return;
-        }
-
         $project = ProjectManager::instance()->getProject($collector->getProjectId());
 
         $collector->addExternalLink(new Link($project, $collector->getFolderId()));
@@ -260,11 +256,6 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     public function externalLinkRedirector(ExternalLinkRedirector $external_link_redirector)
     {
-        $project_id = $external_link_redirector->getProject()->getID();
-        if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
-            return;
-        }
-
         $external_link_redirector->checkAndStoreIfUserHasToBeenRedirected(
             $this->shouldUseDocumentUrl($external_link_redirector->getProject())
         );
@@ -317,10 +308,6 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     public function detectEnhancementOfDocmanInterface(DetectEnhancementOfDocmanInterface $event): void
     {
-        if (! PluginManager::instance()->isPluginAllowedForProject($this, $event->getProject()->getID())) {
-            return;
-        }
-
         $event->docmanInterfaceIsEnhanced();
     }
 
