@@ -17,26 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/* global jQuery:readonly tuleap:readonly codendi:readonly */
+/* global tuleap:readonly codendi:readonly */
 
-(function ($) {
-    $(document).ready(function () {
-        var hierarchy_containers = $(".artifact-hierarchy");
-        var type_containers = $(".artifact-type");
-
-        var containers = hierarchy_containers.add(type_containers);
-
-        containers.each(function () {
-            var container = $(this),
-                artifact_id = container.data("artifactId"),
-                //eslint-disable-next-line @typescript-eslint/no-unused-vars
-                hierarchy_viewer = new tuleap.artifact.HierarchyViewer(
-                    codendi.tracker.base_url,
-                    container.get(0),
-                    codendi.locales,
-                    codendi.imgroot,
-                    artifact_id
-                );
-        });
-    });
-})(jQuery);
+document.addEventListener("DOMContentLoaded", () => {
+    for (const container of document.querySelectorAll(".artifact-type")) {
+        const artifact_id = container.dataset.artifactId;
+        if (artifact_id) {
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const hierarchy_viewer = new tuleap.artifact.HierarchyViewer(
+                codendi.tracker.base_url,
+                container,
+                codendi.locales,
+                codendi.imgroot,
+                artifact_id
+            );
+        }
+    }
+});

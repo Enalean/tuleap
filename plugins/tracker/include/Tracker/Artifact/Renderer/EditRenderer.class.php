@@ -194,7 +194,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             }
         } else {
             if ($this->artifact->getTracker()->getChildren()) {
-                $view_collection->add(new Tracker_Artifact_View_Hierarchy($this->artifact, $request, $user));
+                $view_collection->add(new TypeView($this->artifact, $request, $user));
             }
         }
 
