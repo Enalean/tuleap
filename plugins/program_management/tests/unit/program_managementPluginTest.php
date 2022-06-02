@@ -20,10 +20,8 @@
 
 declare(strict_types=1);
 
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TimeboxArtifactLinkPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -66,21 +64,5 @@ final class program_managementPluginTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin->trackerAddSystemTypes($params);
 
         self::assertEquals([TimeboxArtifactLinkType::ART_LINK_SHORT_NAME], $types);
-    }
-
-    public function testSetsItsServiceURL(): void
-    {
-        $plugin    = new program_managementPlugin(1);
-        $collector = new ServiceUrlCollector(ProjectTestBuilder::aProject()->withUnixName('Foo')->build(), 'plugin_program_management');
-        $plugin->serviceUrlCollector($collector);
-        self::assertEquals('/program_management/foo', $collector->getUrl());
-    }
-
-    public function testDoesNotTouchURLOfOthersServices(): void
-    {
-        $plugin    = new program_managementPlugin(1);
-        $collector = new ServiceUrlCollector(ProjectTestBuilder::aProject()->withUnixName('bar')->build(), 'plugin_doingsomething');
-        $plugin->serviceUrlCollector($collector);
-        self::assertFalse($collector->hasUrl());
     }
 }

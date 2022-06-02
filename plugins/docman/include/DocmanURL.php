@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +21,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Docman;
 
-class BaselineTuleapService extends \Service
+use Tuleap\Event\Dispatchable;
+
+final class DocmanURL implements Dispatchable
 {
-    public function getIconName(): string
+    public const NAME = 'docmanURL';
+
+    /**
+     * @readonly
+     */
+    public \Project $project;
+
+    private string $url;
+
+    public function __construct(\Project $project)
     {
-        return 'fas fa-tlp-baseline';
+        $this->project = $project;
+        $this->url     = DOCMAN_BASE_URL . "?group_id=" . $project->getID();
     }
 
-    public function getUrl(?string $url = null): string
+    public function setServiceUrl(string $url): void
     {
-        return '/plugins/baseline/' . urlencode($this->project->getUnixNameLowerCase());
+        $this->url = $url;
     }
 
-    public function urlCanChange(): bool
+    public function getServiceURL(): string
     {
-        return false;
+        return $this->url;
     }
 }

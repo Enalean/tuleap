@@ -50,4 +50,14 @@ class ProgramService extends \Service
 
         return $description;
     }
+
+    public function getUrl(?string $url = null): string
+    {
+        return sprintf('/program_management/%s', urlencode($this->project->getUnixNameLowerCase()));
+    }
+
+    public function urlCanChange(): bool
+    {
+        return false;
+    }
 }

@@ -25,13 +25,44 @@ namespace Tuleap\Project\Service;
 
 class ProjectDefinedService extends \Service
 {
+    private const DEFAULT_ICON = 'fas fa-angle-double-right';
+
+    public static function forProjectServiceCreation(\Project $project): self
+    {
+        return new self(
+            $project,
+            [
+                'service_id' => self::FAKE_ID_FOR_CREATION,
+                'group_id' => $project->getID(),
+                'label' => '',
+                'description' => '',
+                'short_name' => '',
+                'link' => '#',
+                'is_active' => 1,
+                'is_used' => 1,
+                'scope' => self::SCOPE_PROJECT,
+                'rank' => 0,
+                'location' => '',
+                'server_id' => null,
+                'is_in_iframe' => 0,
+                'is_in_new_tab' => false,
+                'icon' => self::DEFAULT_ICON,
+            ],
+        );
+    }
+
     public function getIconName(): string
     {
-        return ($this->data['icon'] !== '') ? $this->data['icon'] : 'fas fa-angle-double-right';
+        return ($this->data['icon'] !== '') ? $this->data['icon'] : self::DEFAULT_ICON;
     }
 
     public function isOpenedInNewTab(): bool
     {
         return $this->data['is_in_new_tab'] === '1';
+    }
+
+    public function urlCanChange(): bool
+    {
+        return true;
     }
 }

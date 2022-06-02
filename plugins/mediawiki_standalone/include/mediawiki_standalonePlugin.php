@@ -34,7 +34,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\MediawikiStandalone\Configuration\GenerateLocalSettingsCommand;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
@@ -89,8 +88,7 @@ require_once __DIR__ . '/../../mediawiki/vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class mediawiki_standalonePlugin extends Plugin
 {
-    public const SERVICE_SHORTNAME   = 'plugin_mediawiki_standalone';
-    private const SERVICE_URL_PREFIX = '/mediawiki/';
+    public const SERVICE_SHORTNAME = 'plugin_mediawiki_standalone';
 
     public function __construct(?int $id)
     {
@@ -126,7 +124,6 @@ final class mediawiki_standalonePlugin extends Plugin
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ServiceDisabledCollector::NAME);
         $this->addHook(AddMissingService::NAME);
@@ -166,13 +163,6 @@ final class mediawiki_standalonePlugin extends Plugin
             /*(new EnqueueTask())->enqueue(
                 new InstanceCreationWorkerEvent((int) $params['group_id'])
             );*/
-        }
-    }
-
-    public function serviceUrlCollector(ServiceUrlCollector $collector): void
-    {
-        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl(self::SERVICE_URL_PREFIX . $collector->getProject()->getUnixNameLowerCase());
         }
     }
 

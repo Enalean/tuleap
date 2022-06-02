@@ -55,4 +55,14 @@ class ServiceDocman extends \Service
 
         return $description;
     }
+
+    public function getUrl(?string $url = null): string
+    {
+        return \EventManager::instance()->dispatch(new DocmanURL($this->project))->getServiceURL();
+    }
+
+    public function urlCanChange(): bool
+    {
+        return false;
+    }
 }

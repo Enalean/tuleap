@@ -136,15 +136,7 @@ class ProjectSidebarToolsBuilder
         if ($service->isIFrame()) {
             $link = '/service/?group_id=' . urlencode((string) $project_id) . '&id=' . urlencode((string) $service->getId());
         } else {
-            $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
-
-            $this->event_manager->processEvent($service_url_collector);
-
-            if ($service_url_collector->hasUrl()) {
-                $link = $service_url_collector->getUrl();
-            } else {
-                $link = $service->getUrl();
-            }
+            $link = $service->getUrl();
         }
         if ($project_id == 100) {
             if (strpos($link, '$projectname') !== false) {

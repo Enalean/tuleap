@@ -93,7 +93,7 @@ class AddController implements DispatchableWithRequest
         $this->csrf_token->check(IndexController::getUrl($project));
 
         try {
-            $service_data = $this->builder->buildFromRequest($request, $project, $layout);
+            $service_data = $this->builder->buildFromRequest($request, $project, ProjectDefinedService::forProjectServiceCreation($project), $layout);
 
             $this->checkShortname($project, $layout, $service_data);
             $this->checkScope($project, $layout, $service_data);
