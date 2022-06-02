@@ -117,7 +117,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $content .= '<dl>';
         $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
         $content .= '<table>';
-        $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Version Label:') . '</td><td><input type="text" name="version[label]" value="' . $label . '" /></td></tr>';
+        $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Version name:') . '</td><td><input type="text" name="version[label]" value="' . $label . '" /></td></tr>';
         $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Change Log:') . '</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">' . $changelog . '</textarea></td></tr>';
         $fields   = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
         if ($fields !== null) {

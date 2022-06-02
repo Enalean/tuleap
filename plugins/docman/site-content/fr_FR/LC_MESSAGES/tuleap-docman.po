@@ -637,7 +637,7 @@ msgid "Change <em>%1$s</em>"
 msgstr "Mise à jour de <em>%1$s</em>"
 
 msgid "Change Log"
-msgstr "Changement"
+msgstr "Description des changements"
 
 msgid "Change Log:"
 msgstr "Description des changements :"
@@ -2504,9 +2504,6 @@ msgstr "Version"
 msgid "Version %s (%s) successfully deleted"
 msgstr "Version %s (%s) supprimée"
 
-msgid "Version Label:"
-msgstr "Nom de version :"
-
 msgid "Version author"
 msgstr "Auteur de la version"
 
@@ -2515,6 +2512,9 @@ msgstr "Date de la version"
 
 msgid "Version label"
 msgstr "Label de la version"
+
+msgid "Version name:"
+msgstr "Nom de version :"
 
 msgid "Version number"
 msgstr "Numéro de la version"
