@@ -50,7 +50,6 @@ exports[`CriterionDate should render the component when date is set 1`] = `
     <date-flat-picker-stub
       data-test="document-criterion-date-create_date"
       id="document-criterion-date-create_date"
-      required="false"
       value="2022-01-01"
     />
   </div>
@@ -107,7 +106,6 @@ exports[`CriterionDate should render the component when no date set 1`] = `
     <date-flat-picker-stub
       data-test="document-criterion-date-create_date"
       id="document-criterion-date-create_date"
-      required="false"
       value=""
     />
   </div>

@@ -48,7 +48,7 @@
                 <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                 <date-flat-picker
                     v-bind:id="'document-new-obsolescence-date'"
-                    v-bind:required="true"
+                    v-bind:required="selected_value === 'fixed'"
                     v-model="obsolescence_date"
                     ref="input"
                 />
