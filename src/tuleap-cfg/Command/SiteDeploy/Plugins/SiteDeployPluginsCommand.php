@@ -26,6 +26,7 @@ namespace TuleapCfg\Command\SiteDeploy\Plugins;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Plugin\PluginLoader;
 use TuleapCfg\Command\ProcessFactory;
 
 final class SiteDeployPluginsCommand extends Command
@@ -44,6 +45,7 @@ final class SiteDeployPluginsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        PluginLoader::invalidateCache();
         $process = $this->process_factory->getProcessWithoutTimeout(
             ['sudo', '-u', 'codendiadm', 'tuleap', 'plugins_administration:update_hook']
         );
