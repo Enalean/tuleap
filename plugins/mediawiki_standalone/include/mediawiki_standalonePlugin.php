@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\CLICommandsCollector;
@@ -130,6 +131,7 @@ final class mediawiki_standalonePlugin extends Plugin
 
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(PluginExecuteUpdateHookEvent::NAME);
         $this->addHook(WorkerEvent::NAME);
@@ -290,6 +292,15 @@ final class mediawiki_standalonePlugin extends Plugin
             OAuth2ProjectReadScope::fromItself(),
             OAuth2MediawikiStandaloneReadScope::fromItself(),
         ];
+    }
+
+    public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
+    {
+        $collector->addOAuth2ScopeBuilder(
+            new AuthenticationScopeBuilderFromClassNames(
+                OAuth2MediawikiStandaloneReadScope::class
+            )
+        );
     }
 
     public function collectCLICommands(CLICommandsCollector $collector): void
