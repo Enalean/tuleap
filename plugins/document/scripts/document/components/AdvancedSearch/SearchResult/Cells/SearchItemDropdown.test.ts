@@ -54,7 +54,6 @@ describe("SearchItemDropdown", () => {
         const mount_point = document.createElement("div");
 
         parent_container = document.createElement("div");
-        parent_container.classList.add("document-search-table-container");
         parent_container.appendChild(mount_point);
 
         document.body.appendChild(parent_container);
@@ -84,10 +83,6 @@ describe("SearchItemDropdown", () => {
     it("should display a spinner if real item is not loaded", () => {
         expect(wrapper.find("[data-test=spinner]").exists()).toBe(true);
         expect(wrapper.findComponent(DropDownMenuTreeView).exists()).toBe(false);
-    });
-
-    it("should observe the resize of the body to adapt the position of trigger button", () => {
-        expect(observe).toHaveBeenCalledWith(document.body);
     });
 
     it("should display the menu as soon as the user click on the trigger and the real item is loaded", () => {
