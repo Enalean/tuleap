@@ -26,6 +26,12 @@ class PluginInfo extends \PluginInfo
     {
         parent::__construct($plugin);
 
-        $this->setPluginDescriptor(new PluginDescriptor());
+        $this->setPluginDescriptor(
+            new \PluginDescriptor(
+                dgettext('tuleap-botmattermost', 'Bot Mattermost'),
+                dgettext('tuleap-botmattermost', 'Bot to send notifications in Mattermost'),
+                dgettext('tuleap-botmattermost', 'Bot to send notifications in Mattermost')
+            )
+        );
     }
 }
