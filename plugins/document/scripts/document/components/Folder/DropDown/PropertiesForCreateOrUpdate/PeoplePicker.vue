@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { autocomplete_users_for_select2 } from "../../../../../../../../src/scripts/tuleap/autocomplete-for-select2.js";
+import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 import emitter from "../../../../helpers/emitter";
 
 export default {

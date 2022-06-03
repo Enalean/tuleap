@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/core": "link:../../src",
+    "@tuleap/autocomplete-for-select2": "link:../../lib/frontend/autocomplete-for-select2",
     "@tuleap/filter-inline-table": "link:../../lib/frontend/filter-table",
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/project-privacy-helper": "link:../../lib/frontend/project-privacy-helper",

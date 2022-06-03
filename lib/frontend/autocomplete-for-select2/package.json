@@ -1,0 +1,27 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/autocomplete-for-select2",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/autocomplete-for-select2.es.js",
+  "main": "dist/autocomplete-for-select2.umd.js",
+  "types": "src/autocomplete-for-select2.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/autocomplete-for-select2.es.js",
+      "require": "./dist/autocomplete-for-select2.umd.js"
+    }
+  },
+  "dependencies": {
+    "@tuleap/html-escaper": "link:../html-escaper"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}
