@@ -6,6 +6,7 @@ specifiers:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
   '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
   '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
+  '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
   '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   angular: ^1.8.2
@@ -28,6 +29,7 @@ dependencies:
   '@tuleap/angular-tlp': link:../../../../lib/frontend/angular-tlp
   '@tuleap/html-escaper': link:../../../../lib/frontend/html-escaper
   '@tuleap/plugin-agiledashboard-card-fields': link:../lib/card-fields
+  '@tuleap/plugin-agiledashboard-shared': link:../lib/shared
   '@tuleap/plugin-tracker-artifact-modal': link:../../../tracker/scripts/lib/artifact-modal
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   angular: 1.8.2

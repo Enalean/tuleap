@@ -1,0 +1,28 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-agiledashboard-shared",
+  "homepage": "https://www.tuleap.org",
+  "license": "MIT",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/plugin-agiledashboard-shared.es.js",
+  "main": "dist/plugin-agiledashboard-shared.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin-agiledashboard-shared.es.js",
+      "require": "./dist/plugin-agiledashboard-shared.umd.js"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../../lib/frontend/build-system-configurator"
+  },
+  "dependencies": {
+    "@tuleap/tlp-fetch": "link:../../../../../lib/frontend/tlp-fetch"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

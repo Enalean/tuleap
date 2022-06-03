@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { extractErrorMessage } from "../../../../shared/error-message-helper";
+import { extractErrorMessage } from "@tuleap/plugin-agiledashboard-shared";
 
 export default RestErrorService;
 
