@@ -29,7 +29,13 @@ class Info extends PluginFileInfo
     {
         parent::__construct($plugin, 'config');
 
-        $this->setPluginDescriptor(new Descriptor());
+        $this->setPluginDescriptor(
+            new \PluginDescriptor(
+                dgettext('tuleap-mytuleap_contact_support', 'myTuleap contact support'),
+                dgettext('tuleap-mytuleap_contact_support', 'Display a contact support modal'),
+                dgettext('tuleap-mytuleap_contact_support', 'Display a contact support modal')
+            )
+        );
     }
 
     protected function getDefaultConfPath(Plugin $plugin, $incname)
