@@ -264,7 +264,7 @@ describe("Project admin", function () {
                 cy.get("[data-test=save-service-modifications]").click();
             });
 
-            cy.get("[data-test=feedback]").contains("Successfully Updated Service", {
+            cy.get("[data-test=feedback]").contains("Service updated successfully", {
                 timeout: 40000,
             });
         });
