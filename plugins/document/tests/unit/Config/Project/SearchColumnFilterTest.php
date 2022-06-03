@@ -60,6 +60,7 @@ final class SearchColumnFilterTest extends TestCase
         $this->metadata_factory
             ->method('getMetadataForGroup')
             ->willReturn([
+                             $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_ID_LABEL),
                              $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
                              $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
                              $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
@@ -70,11 +71,6 @@ final class SearchColumnFilterTest extends TestCase
 
         $selected_columns = $this->search_column_filter->getColumns($project, $this->metadata_factory);
         $expected_columns = [
-            [
-                "name" => "id",
-                "label" => "Id",
-                "is_selected" => false,
-            ],
             [
                 "name" => "description",
                 "label" => "Description",

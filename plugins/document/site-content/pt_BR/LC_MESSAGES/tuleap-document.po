@@ -96,13 +96,14 @@ msgid "Please contact your site administrator."
 msgstr ""
 
 msgid ""
-"Please note: the  <span class=\"tlp-badge-secondary\"> Title </span> column "
-"will always be available."
+"Please note: the <span class=\"tlp-badge-secondary\"> Global search </span> "
+"criteria will always be displayed."
 msgstr ""
 
 msgid ""
-"Please note: the <span class=\"tlp-badge-secondary\"> Global search </span> "
-"criteria will always be displayed."
+"Please note: the <span class=\"tlp-badge-secondary\"> Id </span> and the\n"
+"                        <span class=\"tlp-badge-secondary\"> Title </span> "
+"columns will always be available."
 msgstr ""
 
 msgid "Project not found"
