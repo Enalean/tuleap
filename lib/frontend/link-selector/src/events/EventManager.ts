@@ -33,10 +33,10 @@ import {
 } from "../helpers/keys-helper";
 
 export class EventManager {
-    private escape_key_handler!: (event: Event) => void;
+    private escape_key_handler!: (event: KeyboardEvent) => void;
     private click_outside_handler!: (event: Event) => void;
-    private keyboard_events_handler!: (event: Event) => void;
-    private prevent_form_submit_on_enter_handler!: (event: Event) => void;
+    private keyboard_events_handler!: (event: KeyboardEvent) => void;
+    private prevent_form_submit_on_enter_handler!: (event: KeyboardEvent) => void;
     private has_keyboard_selection_occurred = false;
 
     constructor(
@@ -77,8 +77,8 @@ export class EventManager {
         this.doc.removeEventListener("keypress", this.prevent_form_submit_on_enter_handler);
     }
 
-    private attachEscapeKeyPressedEvent(): (event: Event) => void {
-        const handler = (event: Event): void => {
+    private attachEscapeKeyPressedEvent(): (event: KeyboardEvent) => void {
+        const handler = (event: KeyboardEvent): void => {
             this.handleEscapeKey(event);
         };
 
@@ -161,7 +161,7 @@ export class EventManager {
     }
 
     private attachSearchEvent(search_field_element: HTMLInputElement): void {
-        search_field_element.addEventListener("keyup", (event: Event) => {
+        search_field_element.addEventListener("keyup", (event: KeyboardEvent) => {
             if (isArrowUp(event) || isArrowDown(event) || isTabKey(event) || isShiftKey(event)) {
                 return;
             }
@@ -179,7 +179,7 @@ export class EventManager {
             this.dropdown_manager.openLinkSelector();
         });
 
-        search_field_element.addEventListener("keydown", (event: Event) => {
+        search_field_element.addEventListener("keydown", (event: KeyboardEvent) => {
             if (isTabKey(event)) {
                 this.resetHighlight();
             }
@@ -216,7 +216,7 @@ export class EventManager {
         this.list_item_highlighter.resetHighlight();
     }
 
-    private handleEscapeKey(event: Event): void {
+    private handleEscapeKey(event: KeyboardEvent): void {
         if (isEscapeKey(event)) {
             this.resetHighlight();
             this.dropdown_manager.closeLinkSelector();
@@ -236,8 +236,8 @@ export class EventManager {
         });
     }
 
-    private attachKeyboardNavigationEvents(): (event: Event) => void {
-        const handler = (event: Event): void => {
+    private attachKeyboardNavigationEvents(): (event: KeyboardEvent) => void {
+        const handler = (event: KeyboardEvent): void => {
             const is_dropdown_open = this.dropdown_manager.isDropdownOpen();
             if (isTabKey(event) && is_dropdown_open) {
                 this.dropdown_manager.closeLinkSelector();
@@ -273,8 +273,8 @@ export class EventManager {
         return handler;
     }
 
-    private preventEnterKeyInSearchFieldToSubmitForm(): (event: Event) => void {
-        const handler = (event: Event): void => {
+    private preventEnterKeyInSearchFieldToSubmitForm(): (event: KeyboardEvent) => void {
+        const handler = (event: KeyboardEvent): void => {
             if (
                 event.target &&
                 event.target instanceof HTMLElement &&

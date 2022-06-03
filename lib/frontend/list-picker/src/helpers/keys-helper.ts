@@ -17,56 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function isEscapeKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return (
-        keyboard_event.key === "Escape" ||
-        keyboard_event.key === "Esc" ||
-        keyboard_event.keyCode === 27
-    );
+export function isEscapeKey(event: KeyboardEvent): boolean {
+    return event.key === "Escape" || event.key === "Esc" || event.keyCode === 27;
 }
 
-export function isBackspaceKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Backspace" || keyboard_event.keyCode === 8;
+export function isBackspaceKey(event: KeyboardEvent): boolean {
+    return event.key === "Backspace" || event.keyCode === 8;
 }
 
-export function isEnterKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Enter" || keyboard_event.keyCode === 13;
+export function isEnterKey(event: KeyboardEvent): boolean {
+    return event.key === "Enter" || event.keyCode === 13;
 }
 
-export function isArrowDown(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "ArrowDown" || keyboard_event.keyCode === 40;
+export function isArrowDown(event: KeyboardEvent): boolean {
+    return event.key === "ArrowDown" || event.keyCode === 40;
 }
 
-export function isArrowUp(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "ArrowUp" || keyboard_event.keyCode === 38;
+export function isArrowUp(event: KeyboardEvent): boolean {
+    return event.key === "ArrowUp" || event.keyCode === 38;
 }
 
-export function isTabKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Tab" || keyboard_event.keyCode === 9;
+export function isTabKey(event: KeyboardEvent): boolean {
+    return event.key === "Tab" || event.keyCode === 9;
 }
 
-export function isShiftKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Shift" || keyboard_event.keyCode === 16;
-}
-
-function getKeyboardEvent(event: Event): KeyboardEvent {
-    if (!(event instanceof KeyboardEvent)) {
-        throw new Error("Event is not a keyboard event");
-    }
-
-    return event;
+export function isShiftKey(event: KeyboardEvent): boolean {
+    return event.key === "Shift" || event.keyCode === 16;
 }
