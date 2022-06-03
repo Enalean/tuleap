@@ -26,6 +26,12 @@ class PluginInfo extends \PluginInfo
     {
         parent::__construct($plugin);
 
-        $this->setPluginDescriptor(new PluginDescriptor());
+        $this->setPluginDescriptor(
+            new \PluginDescriptor(
+                dgettext('tuleap-enalean_licensemanager', 'Enalean License Manager'),
+                dgettext('tuleap-enalean_licensemanager', 'Manage usage of license for Tuleap'),
+                dgettext('tuleap-enalean_licensemanager', 'Manage usage of license for Tuleap')
+            )
+        );
     }
 }

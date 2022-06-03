@@ -34,7 +34,6 @@ use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Webhook\Emitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once 'constants.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class enalean_licensemanagerPlugin extends Plugin
