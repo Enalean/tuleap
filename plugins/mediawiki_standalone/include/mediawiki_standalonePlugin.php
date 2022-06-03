@@ -45,6 +45,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDB
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiSharedSecretGeneratorForgeConfigStore;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiUpdateScriptCaller;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
+use Tuleap\MediawikiStandalone\Configuration\ProjectMediaWikiServiceDAO;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
@@ -314,6 +315,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         (new MediaWikiUpdateScriptCaller(
             $this->buildSettingDirectoryPath(),
             $this->buildLocalSettingsInstantiator(),
+            new ProjectMediaWikiServiceDAO(),
             $logger
         ))->runUpdate();
     }

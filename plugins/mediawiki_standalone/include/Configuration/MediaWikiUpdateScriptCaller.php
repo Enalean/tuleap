@@ -34,26 +34,28 @@ final class MediaWikiUpdateScriptCaller
     public function __construct(
         private string $path_setting_directory,
         private LocalSettingsInstantiator $local_settings_instantiator,
+        private ProjectMediaWikiServiceDAO $project_mediawiki_service_dao,
         private LoggerInterface $logger,
     ) {
     }
 
     public function runUpdate(): void
     {
-        $this->installRootInstance();
+        $this->installFarmInstance();
         $this->logger->debug('Update MediaWiki standalone Tuleap managed LocalSettings file');
         $this->local_settings_instantiator->instantiateLocalSettings();
-        $this->updateRootInstance();
+        $this->updateFarmInstance();
+        $this->updateProjectInstances();
     }
 
-    private function installRootInstance(): void
+    private function installFarmInstance(): void
     {
         if (file_exists($this->path_setting_directory . '/' . self::LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI)) {
-            $this->logger->debug('MediaWiki standalone root instance is already installed');
+            $this->logger->debug('MediaWiki standalone farm instance is already installed');
             return;
         }
 
-        $this->logger->info('Install MediaWiki standalone root instance');
+        $this->logger->info('Install MediaWiki standalone farm instance');
         $this->executeMediaWikiManagementCommand(
             [
                 LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI,
@@ -63,7 +65,7 @@ final class MediaWikiUpdateScriptCaller
                 '--dbserver',
                 \ForgeConfig::get(DBConfig::CONF_HOST),
                 '--dbname',
-                'plugin_mediawiki_standalone_root',
+                'plugin_mediawiki_standalone_farm',
                 '--dbuser',
                 \ForgeConfig::get(DBConfig::CONF_DBUSER),
                 '--dbpass',
@@ -76,12 +78,23 @@ final class MediaWikiUpdateScriptCaller
         );
     }
 
-    private function updateRootInstance(): void
+    private function updateFarmInstance(): void
     {
-        $this->logger->debug('Updating MediaWiki standalone root instance');
+        $this->logger->debug('Updating MediaWiki standalone farm instance');
         $this->executeMediaWikiManagementCommand(
             [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/maintenance/update.php', '--quick']
         );
+    }
+
+    private function updateProjectInstances(): void
+    {
+        $this->logger->debug('Updating MediaWiki standalone project instances');
+        foreach ($this->project_mediawiki_service_dao->searchAllProjectsWithMediaWikiStandaloneServiceEnabled() as ['project_name' => $project_name]) {
+            $this->logger->debug('Updating MediaWiki project instance of project ' . $project_name);
+            $this->executeMediaWikiManagementCommand(
+                [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/maintenance/update.php', '--quick', '--sfr', $project_name]
+            );
+        }
     }
 
     private function executeMediaWikiManagementCommand(array $command): void
