@@ -2,9 +2,7 @@
 
 exports[`SearchItemDropdown should render the dropdown with the menu detached 1`] = `
 <body>
-  <div
-    class="document-search-table-container"
-  >
+  <div>
     <div
       class="tlp-dropdown document-search-dropdown"
     >

@@ -97,28 +97,7 @@ const dropdown_button = ref<InstanceType<typeof HTMLButtonElement> | null>(null)
 const dropdown_menu = ref<InstanceType<typeof HTMLElement> | null>(null);
 const dropdown_container = ref<InstanceType<typeof HTMLElement> | null>(null);
 
-let table_container: HTMLElement | null;
 let dropdown: null | Dropdown = null;
-
-function setRightPositionOfDropdown(): void {
-    if (!dropdown_container.value) {
-        return;
-    }
-
-    if (!dropdown_button.value) {
-        return;
-    }
-
-    if (!table_container) {
-        return;
-    }
-
-    const left = table_container.clientWidth - dropdown_button.value.clientWidth;
-
-    dropdown_container.value.style.left = `calc(${left}px - var(--tlp-medium-spacing))`;
-}
-
-let resize_observer: ResizeObserver | null;
 
 function hideActionMenu(): void {
     if (dropdown && dropdown.is_shown) {
@@ -137,11 +116,6 @@ onMounted(() => {
         return;
     }
 
-    resize_observer = new ResizeObserver(setRightPositionOfDropdown);
-    resize_observer.observe(document.body);
-
-    table_container = dropdown_container.value.closest(".document-search-table-container");
-
     dropdown = createDropdown(dropdown_button.value);
     dropdown.addEventListener(EVENT_TLP_DROPDOWN_SHOWN, onDropdownShown);
     dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, onDropdownHidden);
@@ -155,10 +129,6 @@ onBeforeUnmount(() => {
     if (dropdown) {
         dropdown.removeEventListener(EVENT_TLP_DROPDOWN_SHOWN, onDropdownShown);
         dropdown.removeEventListener(EVENT_TLP_DROPDOWN_HIDDEN, onDropdownHidden);
-    }
-
-    if (resize_observer) {
-        resize_observer.unobserve(document.body);
     }
 
     if (dropdown_menu.value) {

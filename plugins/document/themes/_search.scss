@@ -204,7 +204,7 @@
         position: absolute;
         z-index: 1;
         top: 0;
-        right: var(--tlp-medium-spacing);
+        right: 0;
     }
 
     &.document-search-result-title-cell-dropdown-shown > .tlp-dropdown {
