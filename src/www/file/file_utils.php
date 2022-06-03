@@ -1207,10 +1207,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                 $package_id = $res2->getPackageID();
                             }
                         }
-                        if (! isset($res2)) {
-                            continue;
-                        }
-                        if ($new_release_id[$index] == $release_id || $res2) {
+                        if ($new_release_id[$index] == $release_id || (isset($res2) && $res2)) {
                             if (! isset($release_time)) {
                                 continue;
                             }
