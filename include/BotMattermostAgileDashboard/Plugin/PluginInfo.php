@@ -26,6 +26,12 @@ class PluginInfo extends \PluginInfo
     {
         parent::__construct($plugin);
 
-        $this->setPluginDescriptor(new PluginDescriptor());
+        $this->setPluginDescriptor(
+            new \PluginDescriptor(
+                dgettext('tuleap-botmattermost_agiledashboard', 'Bot Mattermost-Agile Dashboard'),
+                dgettext('tuleap-botmattermost_agiledashboard', 'Bot to send stand-up summary in mattermost'),
+                dgettext('tuleap-botmattermost_agiledashboard', 'Bot to send stand-up summary in mattermost')
+            )
+        );
     }
 }
