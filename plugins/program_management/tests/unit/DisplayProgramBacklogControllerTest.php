@@ -202,7 +202,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $project->method('getIconUnicodeCodepoint')->willReturn('');
         $project->expects(self::once())
             ->method('usesService')
-            ->with(\program_managementPlugin::SERVICE_SHORTNAME)
+            ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_service_active);
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
     }

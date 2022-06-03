@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
+use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -36,7 +37,7 @@ final class ProjectServiceBeforeActivationProxyTest extends TestCase
     {
         $this->event = new ProjectServiceBeforeActivation(
             new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
-            \program_managementPlugin::SERVICE_SHORTNAME,
+            ProgramService::SERVICE_SHORTNAME,
             UserTestBuilder::buildWithDefaults()
         );
 
@@ -51,7 +52,7 @@ final class ProjectServiceBeforeActivationProxyTest extends TestCase
 
     public function testItVerifyEventIsForService(): void
     {
-        $this->assertTrue($this->proxy->isForServiceShortName(\program_managementPlugin::SERVICE_SHORTNAME));
+        $this->assertTrue($this->proxy->isForServiceShortName(ProgramService::SERVICE_SHORTNAME));
     }
 
     public function testItVerifyEventIsNotForService(): void

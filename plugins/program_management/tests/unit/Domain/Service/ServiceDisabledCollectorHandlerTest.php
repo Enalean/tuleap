@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Service;
 
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
+use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyScrumBlocksServiceActivationStub;
 use Tuleap\Project\Service\ServiceDisabledCollector;
@@ -35,7 +36,11 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
 
     protected function setUp(): void
     {
-        $this->event = new ServiceDisabledCollector(new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']), \program_managementPlugin::SERVICE_SHORTNAME, UserTestBuilder::aUser()->build());
+        $this->event = new ServiceDisabledCollector(
+            new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
+            ProgramService::SERVICE_SHORTNAME,
+            UserTestBuilder::aUser()->build()
+        );
     }
 
     public function testItDoesNothingForOtherPlugins(): void
@@ -53,7 +58,7 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
         $checker = VerifyIsTeamStub::withNotValidTeam();
         $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withoutScrum());
 
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), ProgramService::SERVICE_SHORTNAME);
 
         self::assertEmpty($this->event->getReason());
     }
@@ -63,7 +68,7 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
         $checker = VerifyIsTeamStub::withValidTeam();
         $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withoutScrum());
 
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), ProgramService::SERVICE_SHORTNAME);
 
         self::assertNotEmpty($this->event->getReason());
     }
@@ -73,7 +78,7 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
         $checker = VerifyIsTeamStub::withNotValidTeam();
         $handler = new ServiceDisabledCollectorHandler($checker, VerifyScrumBlocksServiceActivationStub::withScrum());
 
-        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ServiceDisabledCollectorProxy::fromEvent($this->event), ProgramService::SERVICE_SHORTNAME);
 
         self::assertNotEmpty($this->event->getReason());
     }

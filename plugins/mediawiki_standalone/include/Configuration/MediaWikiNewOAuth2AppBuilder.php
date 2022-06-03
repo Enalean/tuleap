@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\OAuth2ServerCore\App\NewOAuth2App;
 use Tuleap\ServerHostname;
 
@@ -41,7 +42,7 @@ final class MediaWikiNewOAuth2AppBuilder
             ServerHostname::HTTPSUrl() . self::OAUTH2_REDIRECT_ENDPOINT,
             true,
             $this->hasher,
-            \mediawiki_standalonePlugin::SERVICE_SHORTNAME,
+            MediawikiStandaloneService::SERVICE_SHORTNAME,
         );
     }
 }

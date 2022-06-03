@@ -251,7 +251,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
         $project->method('getIconUnicodeCodepoint')->willReturn("");
         $project->expects(self::once())
             ->method('usesService')
-            ->with(\program_managementPlugin::SERVICE_SHORTNAME)
+            ->with(ProgramService::SERVICE_SHORTNAME)
             ->willReturn($is_service_active);
 
         return $project;

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement;
 
 use HTTPRequest;
-use program_managementPlugin;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -101,7 +100,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
     {
         $project = $this->getProject($variables);
 
-        if (! $project->usesService(program_managementPlugin::SERVICE_SHORTNAME)) {
+        if (! $project->usesService(ProgramService::SERVICE_SHORTNAME)) {
             throw new NotFoundException(
                 dgettext('tuleap-program_management', 'Program management service is disabled.')
             );

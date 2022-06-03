@@ -30,12 +30,16 @@ final class ServiceActivationHandler
     public function handle(ServiceActivation $service_activation): void
     {
         $project = $service_activation->getProject();
-        if ($service_activation->isForService(\mediawiki_standalonePlugin::SERVICE_SHORTNAME) && $project->usesService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME)) {
+        if ($service_activation->isForService(MediawikiStandaloneService::SERVICE_SHORTNAME) && $project->usesService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME)) {
             $service_activation->cannotBeActivated(dgettext('tuleap-mediawiki_standalone', 'The MediaWiki standalone service cannot activated when the Mediawiki service is active'));
             return;
         }
 
-        if ($service_activation->isForService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME) && $project->usesService(\mediawiki_standalonePlugin::SERVICE_SHORTNAME)) {
+        if (
+            $service_activation->isForService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME) && $project->usesService(
+                MediawikiStandaloneService::SERVICE_SHORTNAME
+            )
+        ) {
             $service_activation->cannotBeActivated(dgettext('tuleap-mediawiki_standalone', 'The Mediawiki service cannot activated when the MediaWiki standalone service is active'));
         }
     }

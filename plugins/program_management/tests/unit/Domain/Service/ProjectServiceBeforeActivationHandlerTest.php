@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Service;
 
 use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
+use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyScrumBlocksServiceActivationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -38,7 +39,7 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
 
         $event = new ProjectServiceBeforeActivation(
             new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
-            \program_managementPlugin::SERVICE_SHORTNAME,
+            ProgramService::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
         $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), 'other_plugin');
@@ -54,10 +55,10 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
 
         $event = new ProjectServiceBeforeActivation(
             new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
-            \program_managementPlugin::SERVICE_SHORTNAME,
+            ProgramService::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
-        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), ProgramService::SERVICE_SHORTNAME);
 
         self::assertEmpty($event->getWarningMessage());
         self::assertFalse($event->doesPluginSetAValue());
@@ -70,10 +71,10 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
 
         $event = new ProjectServiceBeforeActivation(
             new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
-            \program_managementPlugin::SERVICE_SHORTNAME,
+            ProgramService::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
-        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), ProgramService::SERVICE_SHORTNAME);
 
         self::assertNotEmpty($event->getWarningMessage());
         self::assertTrue($event->doesPluginSetAValue());
@@ -86,10 +87,10 @@ final class ProjectServiceBeforeActivationHandlerTest extends \Tuleap\Test\PHPUn
 
         $event = new ProjectServiceBeforeActivation(
             new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']),
-            \program_managementPlugin::SERVICE_SHORTNAME,
+            ProgramService::SERVICE_SHORTNAME,
             UserTestBuilder::aUser()->build()
         );
-        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), \program_managementPlugin::SERVICE_SHORTNAME);
+        $handler->handle(ProjectServiceBeforeActivationProxy::fromEvent($event), ProgramService::SERVICE_SHORTNAME);
 
         self::assertNotEmpty($event->getWarningMessage());
         self::assertTrue($event->doesPluginSetAValue());
