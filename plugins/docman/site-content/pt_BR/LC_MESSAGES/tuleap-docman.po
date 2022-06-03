@@ -2181,9 +2181,6 @@ msgstr "Versão"
 msgid "Version %s (%s) successfully deleted"
 msgstr ""
 
-msgid "Version Label:"
-msgstr ""
-
 msgid "Version author"
 msgstr ""
 
@@ -2191,6 +2188,9 @@ msgid "Version date"
 msgstr ""
 
 msgid "Version label"
+msgstr ""
+
+msgid "Version name:"
 msgstr ""
 
 msgid "Version number"

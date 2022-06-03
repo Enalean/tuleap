@@ -67,7 +67,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $titles[] = dgettext('tuleap-docman', 'Version');
                 $titles[] = dgettext('tuleap-docman', 'Date');
                 $titles[] = dgettext('tuleap-docman', 'Author');
-                $titles[] = dgettext('tuleap-docman', 'Label');
+                $titles[] = dgettext('tuleap-docman', 'Name');
                 $titles[] = dgettext('tuleap-docman', 'Change Log');
                 $titles[] = dgettext('tuleap-docman', 'Approval');
                 $titles[] = dgettext('tuleap-docman', 'Delete');
