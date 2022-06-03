@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Update to FontAwesome 6
+
 ## 2.0.1
 
 * Shortcuts are not triggered anymore when the user is editing (this is an addition to the fix made in 2.0.0)

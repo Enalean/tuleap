@@ -21,7 +21,7 @@
  */
 
 import "./dev-loader-style.scss";
-import "../../../themes/tlp/src/scss/tlp-vars-orange.scss";
+import "@tuleap/tlp/src/scss/tlp-vars-orange.scss";
 import { installProjectSidebarElement } from "./src/main";
 import { example_config } from "./src/project-sidebar-example-config";
 

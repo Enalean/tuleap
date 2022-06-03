@@ -50,7 +50,7 @@ export function addBadgeCaption(
     function addIconFlag(): void {
         badge
             .append("text")
-            .attr("style", "font-family:'Font Awesome 5 Free';")
+            .attr("style", "font-family:'Font Awesome 6 Free';")
             .attr("class", "release-chart-end-icon fa")
             .attr("x", badge_props.x + badge_props.width / 2 - X_AXIS_TO_CENTER_FLAG)
             .attr("y", badge_props.y - Y_AXIS_TO_CENTER_FLAG)
