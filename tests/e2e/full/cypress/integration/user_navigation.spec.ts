@@ -66,7 +66,7 @@ describe("Navigation", function () {
                 cy.get("[data-test=legacy-search-button]").click();
 
                 cy.get("[data-test=words]").should("have.value", "Backlog");
-                cy.get("[data-test=switch-to-modal]").should("not.exist");
+                cy.get("[data-test=switch-to-modal]").should("not.be.visible");
                 cy.get("[data-test=search-form]").within(() => {
                     cy.get("[data-test=words]").clear().type("Explicit{enter}");
                 });
