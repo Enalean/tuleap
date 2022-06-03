@@ -27,6 +27,8 @@ import {
     isTabKey,
 } from "./keys-helper";
 
+const chrome_native_autofill_event = {} as KeyboardEvent;
+
 describe("keys-helper", () => {
     describe("isEscapeKey", () => {
         it("should return true", () => {
@@ -37,8 +39,8 @@ describe("keys-helper", () => {
             );
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isEscapeKey(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isEscapeKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -49,8 +51,8 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isBackspaceKey(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isBackspaceKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -61,8 +63,8 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isEnterKey(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isEnterKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -73,8 +75,8 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isArrowDown(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isArrowDown(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -85,8 +87,8 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isArrowUp(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isArrowUp(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -97,8 +99,8 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isTabKey(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isTabKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 
@@ -109,8 +111,8 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the event is not a KeyboardEvent", () => {
-            expect(() => isShiftKey(new Event("mouseenter"))).toThrowError();
+        it("does not recognize Chrome native autofill event as a key", () => {
+            expect(isShiftKey(chrome_native_autofill_event)).toBe(false);
         });
     });
 });

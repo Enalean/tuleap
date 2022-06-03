@@ -17,46 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function isEscapeKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Escape" || keyboard_event.key === "Esc";
+export function isEscapeKey(event: KeyboardEvent): boolean {
+    return event.key === "Escape" || event.key === "Esc";
 }
 
-export function isEnterKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Enter";
+export function isEnterKey(event: KeyboardEvent): boolean {
+    return event.key === "Enter";
 }
 
-export function isArrowDown(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "ArrowDown";
+export function isArrowDown(event: KeyboardEvent): boolean {
+    return event.key === "ArrowDown";
 }
 
-export function isArrowUp(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "ArrowUp";
+export function isArrowUp(event: KeyboardEvent): boolean {
+    return event.key === "ArrowUp";
 }
 
-export function isTabKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Tab";
+export function isTabKey(event: KeyboardEvent): boolean {
+    return event.key === "Tab";
 }
 
-export function isShiftKey(event: Event): event is KeyboardEvent {
-    const keyboard_event = getKeyboardEvent(event);
-
-    return keyboard_event.key === "Shift";
-}
-
-function getKeyboardEvent(event: Event): KeyboardEvent {
-    if (!(event instanceof KeyboardEvent)) {
-        throw new Error("Event is not a keyboard event");
-    }
-
-    return event;
+export function isShiftKey(event: KeyboardEvent): boolean {
+    return event.key === "Shift";
 }
