@@ -210,6 +210,7 @@ use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Widget\ProjectRendererWidgetXMLImporter;
+use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -2052,7 +2053,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
             new CSRFSynchronizerTokenProvider(),
             EventManager::instance(),
             ReferenceManager::instance(),
-            new FieldDao()
+            new FieldDao(),
+            new TriggersDao()
         );
     }
 
@@ -2086,7 +2088,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
             TemplateRendererFactory::build(),
             new TrackerInNewDropdownDao(),
             new CSRFSynchronizerTokenProvider(),
-            new FieldDao()
+            new FieldDao(),
+            new TriggersDao()
         );
     }
 

@@ -38,6 +38,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 
 class TrackersDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
@@ -84,6 +85,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         TrackerInNewDropdownDao $in_new_dropdown_dao,
         CSRFSynchronizerTokenProvider $token_provider,
         FieldDao $field_dao,
+        private TriggersDao $triggers_dao,
     ) {
         $this->project_manager     = $project_manager;
         $this->tracker_manager     = $tracker_manager;
@@ -118,6 +120,9 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
             } elseif ($this->field_dao->doesTrackerHaveSourceSharedFields($tracker_id) === true) {
                 $can_be_deleted        = false;
                 $cannot_delete_message = dgettext('tuleap-tracker', 'You can\'t delete this tracker because it has at least one source shared field.');
+            } elseif ($this->triggers_dao->isTrackerImplicatedInTriggers($tracker_id) === true) {
+                $can_be_deleted        = false;
+                $cannot_delete_message = dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is source or target of triggers.');
             }
 
             $trackers[] = new TrackerPresenter(
