@@ -88,7 +88,7 @@ class GitlabBranchResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function createGitlabBranch(GitlabBranchPOSTRepresentation $gitlab_branch): void
+    protected function createGitlabBranch(GitlabBranchPOSTRepresentation $gitlab_branch): GitlabBranchRepresentation
     {
         $this->options();
 
@@ -123,7 +123,7 @@ class GitlabBranchResource
             )
         );
 
-        $branch_creator->createBranchInGitlab(
+        return $branch_creator->createBranchInGitlab(
             $current_user,
             $gitlab_branch
         );

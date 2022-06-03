@@ -103,6 +103,15 @@
                                 {{ branch_name_placeholder }}
                             </code>
                         </div>
+                        <div class="artifact-create-gitlab-merge-request">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="checkbox" v-model="must_create_gitlab_mr" />
+                                <translate>
+                                    Create a merge request based on this new branch to the default
+                                    branch
+                                </translate>
+                            </label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="reset" class="btn btn-secondary" data-dismiss="modal">
@@ -130,7 +139,11 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import jquery from "jquery";
-import { GitLabBranchCreationPossibleError, postGitlabBranch } from "../api/rest-querier";
+import {
+    GitLabBranchCreationPossibleError,
+    postGitlabBranch,
+    postGitlabMergeRequest,
+} from "../api/rest-querier";
 import * as codendi from "codendi";
 import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
 
@@ -148,6 +161,7 @@ export default class App extends Vue {
     private selected_integration: GitlabIntegrationWithDefaultBranch | null = null;
     private reference = "";
     private is_creating_branch = false;
+    private must_create_gitlab_mr = false;
     private error_message = "";
 
     mounted(): void {
@@ -179,24 +193,53 @@ export default class App extends Vue {
             return;
         }
         this.is_creating_branch = true;
-        const result = postGitlabBranch(integration.id, this.artifact_id, this.reference);
-        await result.match(
-            () => {
-                const success_message = this.$gettextInterpolate(
+        const create_branch_result = postGitlabBranch(
+            integration.id,
+            this.artifact_id,
+            this.reference
+        );
+        await create_branch_result.match(
+            async (branch) => {
+                let success_message = this.$gettextInterpolate(
                     this.$gettext(
                         'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
                     ),
                     {
-                        branch_name: this.branch_name_placeholder,
+                        branch_name: branch.branch_name,
                         branch_url:
-                            integration.gitlab_repository_url +
-                            "/-/tree/" +
-                            this.branch_name_placeholder, // The branch name is not escaped in the URL on purpose: GL expects it raw
+                            integration.gitlab_repository_url + "/-/tree/" + branch.branch_name, // The branch name is not escaped in the URL on purpose: GL expects it raw
                         repo_url: integration.gitlab_repository_url,
                         repo_name: integration.name,
                     }
                 );
+
                 codendi.feedback.log("info", success_message);
+
+                if (this.must_create_gitlab_mr) {
+                    const create_merge_request_result = postGitlabMergeRequest(
+                        integration.id,
+                        this.artifact_id,
+                        branch.branch_name
+                    );
+                    await create_merge_request_result.match(
+                        () => {
+                            codendi.feedback.log(
+                                "info",
+                                this.$gettext("The associated merge request has been created.")
+                            );
+                        },
+                        (error) => {
+                            codendi.feedback.log(
+                                "error",
+                                this.$gettext(
+                                    "An error occurred while creating the associated merge request."
+                                )
+                            );
+                            throw error;
+                        }
+                    );
+                }
+
                 jquery(this.$el).modal("hide");
             },
             async (error_promise) => {
@@ -241,6 +284,10 @@ export default class App extends Vue {
 
 .artifact-create-gitlab-branch-form-block {
     margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.artifact-create-gitlab-merge-request {
+    margin: var(--tlp-medium-spacing) 0 0;
 }
 
 .branch-creation-error {

@@ -65,7 +65,7 @@ class GitlabBranchCreator
     public function createBranchInGitlab(
         PFUser $current_user,
         GitlabBranchPOSTRepresentation $gitlab_branch,
-    ): void {
+    ): GitlabBranchRepresentation {
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView(
             $current_user,
             $gitlab_branch->artifact_id
@@ -123,5 +123,7 @@ class GitlabBranchCreator
         } catch (GitlabResponseAPIException $exception) {
             throw new RestException(500, $exception->getMessage());
         }
+
+        return GitlabBranchRepresentation::build($branch_name);
     }
 }
