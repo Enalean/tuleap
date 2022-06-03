@@ -230,9 +230,6 @@ msgstr "Désinstaller le plugin"
 msgid "Update properties"
 msgstr "Mettre à jour les propriétés"
 
-msgid "Version"
-msgstr "Version"
-
 msgid "Warning"
 msgstr "Attention"
 

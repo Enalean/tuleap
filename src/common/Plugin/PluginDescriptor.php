@@ -25,7 +25,6 @@
 class PluginDescriptor
 {
     public $name;
-    public $version;
     public $description;
     /**
      * @var string
@@ -38,7 +37,6 @@ class PluginDescriptor
     public function __construct(string $name = '', $version = '', string $description = '')
     {
         $this->name        = $name;
-        $this->version     = $version;
         $this->description = $description;
         $this->icon_name   = '';
     }
@@ -47,19 +45,13 @@ class PluginDescriptor
     {
         return $this->name;
     }
-    public function getVersion()
-    {
-        return $this->version;
-    }
+
     public function getDescription()
     {
         return $this->description;
     }
 
-    public function setVersionFromFile($path)
+    public function setVersionFromFile($path): void
     {
-        if (is_file($path)) {
-            $this->version = trim(file_get_contents($path));
-        }
     }
 }

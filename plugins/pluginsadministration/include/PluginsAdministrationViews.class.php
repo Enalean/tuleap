@@ -179,7 +179,6 @@ class PluginsAdministrationViews extends Views
         return new PluginPropertiesPresenter(
             $plugin->getId(),
             $name,
-            $descriptor->getVersion(),
             $descriptor->getDescription(),
             $plugin->getScope(),
             $is_there_enable_switch,
@@ -250,7 +249,6 @@ class PluginsAdministrationViews extends Views
                     'id'            => $plugin->getId(),
                     'name'          => $name,
                     'description'   => $descriptor->getDescription(),
-                    'version'       => $descriptor->getVersion(),
                     'available'     => $available,
                     'scope'         => $plugin->getScope(),
                     'dont_touch'    => $dont_touch,
@@ -281,7 +279,6 @@ class PluginsAdministrationViews extends Views
             $plugins[] = [
                 'id'                          => $plugin['id'],
                 'name'                        => $plugin['name'],
-                'version'                     => $plugin['version'],
                 'description'                 => $plugin['description'],
                 'enable_url'                  => $this->getEnableUrl($plugin['id'], $plugin['available'], 'installed'),
                 'scope'                       => $this->getScopeLabel((int) $plugin['scope']),
@@ -316,7 +313,6 @@ class PluginsAdministrationViews extends Views
                 'name'                        => $plugin->getName(),
                 'full_name'                   => $descriptor->getFullName(),
                 'description'                 => $descriptor->getDescription(),
-                'version'                     => $descriptor->getVersion(),
                 'is_there_readme'             => false,
                 'is_there_unmet_dependencies' => false,
             ];
