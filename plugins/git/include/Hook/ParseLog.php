@@ -21,29 +21,18 @@
 namespace Tuleap\Git\Hook;
 
 use Git_Command_Exception;
+use Psr\Log\LoggerInterface;
 
 class ParseLog
 {
-    /** @var CrossReferencesExtractor */
-    private $extract_cross_ref;
-
-    /** @var LogPushes */
-    private $log_pushes;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
     public function __construct(
-        LogPushes $log_pushes,
-        CrossReferencesExtractor $extract_cross_ref,
-        \Psr\Log\LoggerInterface $logger,
+        private LogPushes $log_pushes,
+        private CrossReferencesExtractor $extract_cross_ref,
+        private LoggerInterface $logger,
     ) {
-        $this->log_pushes        = $log_pushes;
-        $this->extract_cross_ref = $extract_cross_ref;
-        $this->logger            = $logger;
     }
 
-    public function execute(PushDetails $push_details)
+    public function execute(PushDetails $push_details): void
     {
         $this->log_pushes->executeForRepository($push_details);
 

@@ -21586,32 +21586,6 @@
       <code>$push_details-&gt;getUser()-&gt;getId()</code>
     </InvalidScalarArgument>
   </file>
-  <file src="plugins/git/include/Hook/ParseLog.php">
-    <MissingReturnType occurrences="1">
-      <code>execute</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Hook/PostReceive.php">
-    <MissingParamType occurrences="12">
-      <code>$newrev</code>
-      <code>$newrev</code>
-      <code>$newrev</code>
-      <code>$oldrev</code>
-      <code>$oldrev</code>
-      <code>$oldrev</code>
-      <code>$refname</code>
-      <code>$refname</code>
-      <code>$refname</code>
-      <code>$repository_path</code>
-      <code>$repository_path</code>
-      <code>$user_name</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>execute</code>
-      <code>executeForRepositoryAndUser</code>
-      <code>processGitWebhooks</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/Hook/PostReceiveMailSender.php">
     <MissingParamType occurrences="8">
       <code>$mail_raw_output</code>
@@ -21635,18 +21609,6 @@
       <code>addUgroups</code>
       <code>addUsers</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Hook/PushDetails.php">
-    <MissingParamType occurrences="3">
-      <code>$refname</code>
-      <code>$rev_type</code>
-      <code>$type</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$refname</code>
-      <code>$rev_type</code>
-      <code>$type</code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/git/include/PathJoinUtil.php">
     <MissingParamType occurrences="3">
