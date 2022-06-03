@@ -33,7 +33,7 @@
         <select
             class="tlp-form-element tlp-select"
             v-bind:id="`document-${currentlyUpdatedItemProperty.short_name}`"
-            v-on:input="$emit('input', $event.target.value)"
+            v-on:input="oninput"
             v-model="value"
             v-bind:required="currentlyUpdatedItemProperty.is_required"
             data-test="document-custom-list-select"
@@ -55,6 +55,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { ListValue, Property } from "../../../../../type";
 import { namespace } from "vuex-class";
+import emitter from "../../../../../helpers/emitter";
 
 const properties = namespace("properties");
 
@@ -77,6 +78,15 @@ export default class CustomPropertyListSingleValue extends Vue {
             return;
         }
         this.project_properties_list_possible_values = values;
+    }
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLSelectElement) {
+            emitter.emit("update-custom-property", {
+                property_short_name: this.currentlyUpdatedItemProperty.short_name,
+                value: $event.target.value,
+            });
+        }
     }
 }
 </script>

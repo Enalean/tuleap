@@ -40,7 +40,7 @@
             v-bind:id="`document-{{currentlyUpdatedItemProperty.short_name}}`"
             v-bind:required="currentlyUpdatedItemProperty.is_required"
             v-model="value"
-            v-on:input="$emit('input', value)"
+            v-on:input="oninput"
         ></textarea>
     </div>
 </template>
@@ -48,6 +48,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import type { Property } from "../../../../../type";
+import emitter from "../../../../../helpers/emitter";
 
 @Component
 export default class CustomPropertyText extends Vue {
@@ -55,5 +56,14 @@ export default class CustomPropertyText extends Vue {
     readonly currentlyUpdatedItemProperty!: Property;
 
     private value = String(this.currentlyUpdatedItemProperty.value);
+
+    oninput($event: Event): void {
+        if ($event.target instanceof HTMLTextAreaElement) {
+            emitter.emit("update-custom-property", {
+                property_short_name: this.currentlyUpdatedItemProperty.short_name,
+                value: $event.target.value,
+            });
+        }
+    }
 }
 </script>

@@ -49,6 +49,11 @@ export interface MaxArchiveSizeThresholdExceededEvent {
     detail: { current_folder_size: number };
 }
 
+export interface UpdateCustomEvent {
+    readonly property_short_name: string;
+    readonly value: string;
+}
+
 export type Events = {
     "update-status-property": string;
     "update-title-property": string;
@@ -77,6 +82,7 @@ export type Events = {
     "item-has-just-been-updated": void;
     "item-is-being-uploaded": void;
     "update-lock": boolean;
+    "update-custom-property": UpdateCustomEvent;
 };
 
 export default mitt<Events>();

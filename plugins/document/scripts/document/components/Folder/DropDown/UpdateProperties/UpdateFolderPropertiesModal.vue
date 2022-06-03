@@ -114,6 +114,7 @@ export default {
         emitter.on("update-status-property", this.updateStatusValue);
         emitter.on("update-title-property", this.updateTitleValue);
         emitter.on("update-description-property", this.updateDescriptionValue);
+        emitter.on("update-custom-property", this.updateCustomProperty);
     },
     beforeDestroy() {
         emitter.off("properties-recursion-list", this.show);
@@ -125,6 +126,7 @@ export default {
         emitter.off("update-status-property", this.updateStatusValue);
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);
+        emitter.off("update-custom-property", this.updateCustomProperty);
     },
     methods: {
         show() {
@@ -170,6 +172,15 @@ export default {
         },
         updateDescriptionValue(description) {
             this.item_to_update.description = description;
+        },
+        updateCustomProperty(event) {
+            if (!this.formatted_item_properties) {
+                return;
+            }
+            const item_properties = this.formatted_item_properties.find(
+                (property) => property.short_name === event.property_short_name
+            );
+            item_properties.value = event.value;
         },
     },
 };

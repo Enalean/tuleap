@@ -22,6 +22,9 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyString from "./CustomPropertyString.vue";
 import type { Property } from "../../../../../type";
+import emitter from "../../../../../helpers/emitter";
+
+jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyString", () => {
     function createWrapper(property: Property): Wrapper<CustomPropertyString> {
@@ -81,5 +84,27 @@ describe("CustomPropertyString", () => {
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
+    });
+
+    it(`User can choose a string value`, () => {
+        const currentlyUpdatedItemProperty = {
+            value: "string value",
+            is_required: true,
+            name: "field",
+            type: "string",
+            short_name: "custom_property",
+        } as Property;
+        const wrapper = createWrapper(currentlyUpdatedItemProperty);
+        const string_input = wrapper.get("[data-test=document-string-input]");
+
+        if (!(string_input.element instanceof HTMLInputElement)) {
+            throw new Error("Could not find string element in component");
+        }
+
+        string_input.setValue("a value");
+        expect(emitter.emit).toHaveBeenCalledWith("update-custom-property", {
+            property_short_name: "custom_property",
+            value: "a value",
+        });
     });
 });

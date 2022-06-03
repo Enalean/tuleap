@@ -22,6 +22,9 @@ import { shallowMount } from "@vue/test-utils";
 import CustomPropertyText from "./CustomPropertyText.vue";
 import type { Property } from "../../../../../type";
 import localVue from "../../../../../helpers/local-vue";
+import emitter from "../../../../../helpers/emitter";
+
+jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyText", () => {
     function createWrapper(property: Property): Wrapper<CustomPropertyText> {
@@ -85,5 +88,27 @@ describe("CustomPropertyText", () => {
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
 
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeTruthy();
+    });
+
+    it(`User can choose a text value`, () => {
+        const currentlyUpdatedItemProperty = {
+            value: "text value",
+            is_required: true,
+            name: "field",
+            type: "text",
+            short_name: "custom_property",
+        } as Property;
+        const wrapper = createWrapper(currentlyUpdatedItemProperty);
+        const text_input = wrapper.get("[data-test=document-text-input]");
+
+        if (!(text_input.element instanceof HTMLTextAreaElement)) {
+            throw new Error("Could not find text element in component");
+        }
+
+        text_input.setValue("a value");
+        expect(emitter.emit).toHaveBeenCalledWith("update-custom-property", {
+            property_short_name: "custom_property",
+            value: "a value",
+        });
     });
 });

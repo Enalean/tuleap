@@ -18,23 +18,22 @@
   -
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <custom-property-text
         v-if="itemProperty.type === 'text'"
         v-bind:currently-updated-item-property="itemProperty"
-        v-model="itemProperty.value"
+        v-bind:value="itemProperty.value"
         data-test="document-custom-property-text"
     />
     <custom-property-string
         v-else-if="itemProperty.type === 'string'"
         v-bind:currently-updated-item-property="itemProperty"
-        v-model="itemProperty.value"
+        v-bind:value="itemProperty.value"
         data-test="document-custom-property-string"
     />
     <custom-property-list-single-value
         v-else-if="itemProperty.type === 'list' && !itemProperty.is_multiple_value_allowed"
-        v-model="itemProperty.value"
+        v-bind:value="itemProperty.value"
         v-bind:currently-updated-item-property="itemProperty"
         data-test="document-custom-property-list-single"
     />
@@ -47,7 +46,6 @@
         v-else-if="itemProperty.type === 'date'"
         v-bind:currently-updated-item-property="itemProperty"
         data-test="document-custom-property-date"
-        v-model="itemProperty.value"
     />
 </template>
 <script>
