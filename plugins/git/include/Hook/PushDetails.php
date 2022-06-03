@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\Hook;
+
+use GitRepository;
+use PFUser;
+
 /**
  * Store informations about a push
  */
-class Git_Hook_PushDetails
+class PushDetails
 {
     public const ACTION_ERROR  = 'error';
     public const ACTION_CREATE = 'create';
@@ -48,8 +49,14 @@ class Git_Hook_PushDetails
     private $user;
     private $refname;
 
-    public function __construct(GitRepository $repository, PFUser $user, $refname, $type, $rev_type, array $revision_list)
-    {
+    public function __construct(
+        GitRepository $repository,
+        PFUser $user,
+        $refname,
+        $type,
+        $rev_type,
+        array $revision_list,
+    ) {
         $this->repository    = $repository;
         $this->user          = $user;
         $this->refname       = $refname;
@@ -61,7 +68,7 @@ class Git_Hook_PushDetails
     /**
      * The repository where the push was made
      *
-     *  @return GitRepository
+     * @return GitRepository
      */
     public function getRepository()
     {

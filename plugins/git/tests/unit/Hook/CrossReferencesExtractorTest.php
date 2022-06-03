@@ -27,13 +27,10 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook;
 
 use Git;
-use Git_Hook_PushDetails;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -62,14 +59,12 @@ class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $reference_manager;
     /**
-     * @var Git_Hook_PushDetails
+     * @var PushDetails
      */
     private $push_details;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
 
         $this->git_exec_repo = \Mockery::spy(\Git_Exec::class);
@@ -90,7 +85,7 @@ class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->post_receive = new CrossReferencesExtractor($this->git_exec_repo, $this->reference_manager);
 
-        $this->push_details = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
+        $this->push_details = new PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
     }
 
     public function testItGetsEachRevisionContent(): void
@@ -151,7 +146,7 @@ class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), 'arch/x86_64/dev/469eaa9', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
-        $push_details = new Git_Hook_PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
+        $push_details = new PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
         $this->post_receive->extractCommitReference($push_details, '469eaa9');
     }
 
@@ -168,7 +163,7 @@ class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         )
             ->once();
 
-        $tag_push_details = new Git_Hook_PushDetails(
+        $tag_push_details = new PushDetails(
             $this->repository,
             $this->user,
             'refs/tags/v1',
@@ -193,7 +188,7 @@ class CrossReferencesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         )
             ->once();
 
-        $tag_push_details = new Git_Hook_PushDetails(
+        $tag_push_details = new PushDetails(
             $this->repository,
             $this->user,
             'v1',

@@ -26,6 +26,10 @@
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
 use Tuleap\Git\Hook\CrossReferencesExtractor;
+use Tuleap\Git\Hook\PostReceive;
+use Tuleap\Git\Hook\LogPushes;
+use Tuleap\Git\Hook\ParseLog;
+use Tuleap\Git\Hook\LogAnalyzer;
 use Tuleap\Git\Webhook\GitWebhookStatusLogger;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -80,8 +84,8 @@ $mail_builder = new MailBuilder(
 );
 
 $webhook_dao  = new \Tuleap\Git\Webhook\WebhookDao();
-$post_receive = new Git_Hook_PostReceive(
-    new Git_Hook_LogAnalyzer(
+$post_receive = new PostReceive(
+    new LogAnalyzer(
         $git_exec,
         $logger
     ),
@@ -97,10 +101,8 @@ $post_receive = new Git_Hook_PostReceive(
         new Git_Ci_Dao(),
         $logger
     ),
-    new Git_Hook_ParseLog(
-        new Git_Hook_LogPushes(
-            $git_dao
-        ),
+    new ParseLog(
+        new LogPushes($git_dao),
         new CrossReferencesExtractor(
             $git_exec,
             ReferenceManager::instance()

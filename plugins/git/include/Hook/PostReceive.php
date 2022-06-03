@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registered trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,22 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\Hook;
+
+use EventManager;
+use Git_Ci_Launcher;
+use Git_Exec;
+use Git_SystemEventManager;
+use GitRepository;
+use GitRepositoryFactory;
+use PFUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
-use Tuleap\Git\Hook\PostReceiveExecuteEvent;
-use Tuleap\Git\Hook\PostReceiveMailSender;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Webhook\WebhookRequestSender;
+use UserManager;
 
 /**
  * Central access point for things that needs to happen when post-receive is
  * executed
  */
-class Git_Hook_PostReceive
+class PostReceive
 {
-    /** @var Git_Hook_LogAnalyzer */
+    /** @var LogAnalyzer */
     private $log_analyzer;
 
-    /** @var GitRepositoryFactory  */
+    /** @var GitRepositoryFactory */
     private $repository_factory;
 
     /** @var UserManager */
@@ -46,7 +50,7 @@ class Git_Hook_PostReceive
     /** @var Git_Ci_Launcher */
     private $ci_launcher;
 
-    /** @var Git_Hook_ParseLog */
+    /** @var ParseLog */
     private $parse_log;
 
     /** @var Git_SystemEventManager */
@@ -67,11 +71,11 @@ class Git_Hook_PostReceive
     private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater;
 
     public function __construct(
-        Git_Hook_LogAnalyzer $log_analyzer,
+        LogAnalyzer $log_analyzer,
         GitRepositoryFactory $repository_factory,
         UserManager $user_manager,
         Git_Ci_Launcher $ci_launcher,
-        Git_Hook_ParseLog $parse_log,
+        ParseLog $parse_log,
         Git_SystemEventManager $system_event_manager,
         EventManager $event_manager,
         WebhookRequestSender $webhook_request_sender,
@@ -96,7 +100,9 @@ class Git_Hook_PostReceive
         if ($repository !== null) {
             $this->system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
 
-            $this->default_branch_post_receive_updater->updateDefaultBranchWhenNeeded(Git_Exec::buildFromRepository($repository));
+            $this->default_branch_post_receive_updater->updateDefaultBranchWhenNeeded(
+                Git_Exec::buildFromRepository($repository)
+            );
         }
     }
 

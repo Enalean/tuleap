@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registered trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Git\Hook;
+
+use Git_Command_Exception;
+use Git_Exec;
+use GitRepository;
+use PFUser;
+
 /**
  * Analyze a push a provide a high level object (PushDetails) that knows if push
  * is a branch creation or a tag deletion, etc.
  */
-class Git_Hook_LogAnalyzer
+class LogAnalyzer
 {
     public const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
 
@@ -45,32 +48,39 @@ class Git_Hook_LogAnalyzer
     /**
      * Behaviour extracted from official email hook prep_for_email() function
      */
-    public function getPushDetails(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): Git_Hook_PushDetails
-    {
-        $change_type   = Git_Hook_PushDetails::ACTION_ERROR;
+    public function getPushDetails(
+        GitRepository $repository,
+        PFUser $user,
+        string $oldrev,
+        string $newrev,
+        string $refname,
+    ): PushDetails {
+        $change_type   = PushDetails::ACTION_ERROR;
         $revision_list = [];
         $rev_type      = '';
         try {
             if ($oldrev == self::FAKE_EMPTY_COMMIT) {
                 $revision_list = $this->exec_repo->revListSinceStart($refname, $newrev);
-                $change_type   = Git_Hook_PushDetails::ACTION_CREATE;
+                $change_type   = PushDetails::ACTION_CREATE;
             } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
-                $change_type = Git_Hook_PushDetails::ACTION_DELETE;
+                $change_type = PushDetails::ACTION_DELETE;
             } else {
                 $revision_list = $this->exec_repo->revList($oldrev, $newrev);
-                $change_type   = Git_Hook_PushDetails::ACTION_UPDATE;
+                $change_type   = PushDetails::ACTION_UPDATE;
             }
 
-            if ($change_type == Git_Hook_PushDetails::ACTION_DELETE) {
+            if ($change_type == PushDetails::ACTION_DELETE) {
                 $rev_type = $this->exec_repo->getObjectType($oldrev);
             } else {
                 $rev_type = $this->exec_repo->getObjectType($newrev);
             }
         } catch (Git_Command_Exception $exception) {
-            $this->logger->error(self::class . " {$repository->getFullName()} $refname $oldrev $newrev " . $exception->getMessage());
+            $this->logger->error(
+                self::class . " {$repository->getFullName()} $refname $oldrev $newrev " . $exception->getMessage()
+            );
         }
 
-        return new Git_Hook_PushDetails(
+        return new PushDetails(
             $repository,
             $user,
             $refname,
