@@ -44,7 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         switch_button.addEventListener("change", function () {
-            if (!switch_button.checked && modal) {
+            if (
+                (!switch_button.checked || switch_button.dataset.withDisabledDependencies) &&
+                modal
+            ) {
                 modal.show();
             } else {
                 form.submit();

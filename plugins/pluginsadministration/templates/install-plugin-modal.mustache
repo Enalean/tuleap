@@ -23,7 +23,12 @@
             <input type="hidden" name="confirm" value="1">
 
             {{# is_there_unmet_dependencies }}
-                <p>{{ error_install_dependency }}</p>
+                <p>
+                    {{# dgettext }}
+                        tuleap-pluginsadministration |
+                        There are unmet dependencies that prevent you from installing these plugins:
+                    {{/ dgettext }}
+                </p>
 
                 <ul>
                 {{# unmet_dependencies }}
@@ -43,13 +48,21 @@
         </div>
         <div class="tlp-modal-footer">
             <button type="button"
-                class="{{# is_there_unmet_dependencies }}tlp-button-danger{{/ is_there_unmet_dependencies }}
+                class="{{# is_there_unmet_dependencies }}tlp-button-danger tlp-button-outline{{/ is_there_unmet_dependencies }}
                 {{^ is_there_unmet_dependencies }}tlp-button-primary tlp-button-outline{{/ is_there_unmet_dependencies }}
                 tlp-modal-action"
                 data-dismiss="modal"
             >
                 {{ install_modal_cancel }}
             </button>
+            {{# is_there_unmet_dependencies }}
+                <button type="submit" class="tlp-button-danger tlp-modal-action">
+                    {{# dgettext }}
+                        tuleap-pluginsadministration |
+                        Install plugin and its dependencies
+                    {{/ dgettext }}
+                </button>
+            {{/ is_there_unmet_dependencies }}
             {{^ is_there_unmet_dependencies }}
                 <button type="submit" class="tlp-button-primary tlp-modal-action">
                     <i class="fa fa-download tlp-button-icon"></i> {{ install_modal_submit }}

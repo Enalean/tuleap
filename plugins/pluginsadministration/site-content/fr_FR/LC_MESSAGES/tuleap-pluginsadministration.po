@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 
 #, php-format
 msgid "%1$s is now available."
@@ -85,8 +85,14 @@ msgstr ""
 "sécurité, il est fortement conseillé de désactiver cette fonctionnalité. "
 "Veuillez consulter le guide déploiement pour plus d'informations."
 
+msgid "Enable plugin and its dependencies"
+msgstr "Activer le plugin ainsi que ses dépendances"
+
 msgid "Enabled?"
 msgstr "Activé ?"
+
+msgid "Enabling a plugin"
+msgstr "Activation d'un plugin"
 
 msgid "Filter on name or description"
 msgstr "Nom, description"
@@ -102,6 +108,9 @@ msgstr "Installer"
 
 msgid "Install plugin"
 msgstr "Installer le plugin"
+
+msgid "Install plugin and its dependencies"
+msgstr "Installer le plugin ainsi que ses dépendances"
 
 msgid "Installed plugins"
 msgstr "Plugins installés"
@@ -195,6 +204,10 @@ msgstr "La fonctionnalité sera désactivée pour tous les utilisateurs."
 
 msgid "The plugin has been successfully installed"
 msgstr "Le plugin a été installé avec succès"
+
+msgid ""
+"There are unmet dependencies that prevent you from enabling these plugins:"
+msgstr "Impossible d'activer ce plugin sans avoir activé au préalable :"
 
 msgid ""
 "There are unmet dependencies that prevent you from installing these plugins:"

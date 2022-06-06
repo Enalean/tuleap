@@ -136,9 +136,15 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->getPluginDuringInstall($name); // ensures the plugin actually exists
             $plugin = $this->installPlugin($name);
         }
+        $this->enablePluginAndItsDependencies($plugin);
+
+        return $plugin;
+    }
+
+    public function enablePluginAndItsDependencies(Plugin $plugin): void
+    {
         $this->recursivelyActivatePlugin($plugin);
         $this->site_cache->invalidatePluginBasedCaches();
-        return $plugin;
     }
 
     /**

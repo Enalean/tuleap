@@ -47,6 +47,9 @@ class PluginPropertiesPresenter
      */
     public $is_enabled;
 
+    /**
+     * @param string[] $disabled_dependencies
+     */
     public function __construct(
         $id,
         $name,
@@ -56,6 +59,8 @@ class PluginPropertiesPresenter
         $enable_url,
         $are_there_dependencies,
         $dependencies,
+        public bool $are_there_disabled_dependencies,
+        public array $disabled_dependencies,
         $is_there_readme,
         $readme,
         $are_there_additional_options,
