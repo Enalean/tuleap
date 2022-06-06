@@ -29,5 +29,6 @@ $data_builder
     ->delegateForgePermissions()
     ->deleteTracker()
     ->deleteProject()
+    ->markProjectsAsTemplate()
     ->suspendProject()
     ->createProjectField();

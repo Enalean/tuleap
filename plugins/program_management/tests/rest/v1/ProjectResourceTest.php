@@ -489,7 +489,7 @@ final class ProjectResourceTest extends \RestBase
         $this->updateArtifactLinks($program_increment['id'], [], $program_increment['artifact_link_id']);
 
         // US1 is linked in top backlog (linked into sprint), US2 is no longer present
-        $this->checkLinksArePresentInReleaseTopBacklog($team_id, [$user_story1['id']]);
+        $this->checkLinksArePresentInReleaseTopBacklog($release_mirror['id'], [$user_story1['id']]);
     }
 
     /**

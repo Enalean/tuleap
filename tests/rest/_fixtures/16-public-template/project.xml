@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+        unix-name="public-template" full-name="Public Template" description="For template test" access="public">
+    <long-description>A public template test project</long-description>
+    <services>
+    </services>
+</project>

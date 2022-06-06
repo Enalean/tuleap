@@ -24,10 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project_AccessPrivateException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\XML\ProjectXMLMerger;
+use URLVerification;
+use UserManager;
 
 final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,20 +40,34 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private TemplateFactory $factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ConsistencyChecker
+     * @var MockObject&ConsistencyChecker
      */
     private $consistency_checker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\ProjectManager
+     * @var MockObject&\ProjectManager
      */
     private $project_manager;
+
+    /**
+     * @var UserManager&MockObject
+     */
+    private $user_manager;
+    /**
+     * @var URLVerification&MockObject
+     */
+    private $url_verification;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
         \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('TemplateFactoryTest')->url());
 
+        $this->user = UserTestBuilder::aUser()->build();
+
         $this->consistency_checker = $this->createMock(ConsistencyChecker::class);
         $this->project_manager     = $this->createMock(\ProjectManager::class);
+        $this->user_manager        = $this->createMock(UserManager::class);
+        $this->url_verification    = $this->createMock(URLVerification::class);
 
         $this->factory = new TemplateFactory(
             new GlyphFinder(new \EventManager()),
@@ -57,6 +76,8 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createMock(TemplateDao::class),
             $this->project_manager,
             new \EventManager(),
+            $this->user_manager,
+            $this->url_verification
         );
     }
 
@@ -130,7 +151,7 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->getTemplate(ScrumTemplate::NAME);
     }
 
-    public function testItReturnsCompanyTemplateWhenTheTemplateIdIsNot100(): void
+    public function testItReturnsCompanyTemplateWhenTheTemplateIdIsNot100AndUserCanAccess(): void
     {
         $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
 
@@ -152,6 +173,9 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $template120->method('getDescription')->willReturn("All about us");
         $template120->method('getPublicName')->willReturn("Lyudi Invalidy Company");
 
+        $this->user_manager->method('getCurrentUser')->willReturn($this->user);
+        $this->url_verification->method("userCanAccessProject")->with($this->user, $template100)->willReturn(true);
+
         $site_templates = [$template100, $template110, $template120];
         $this->project_manager->method('getSiteTemplates')->willReturn($site_templates);
 
@@ -162,5 +186,23 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_company_templates = [$hustler_template, $invalidy_template];
 
         self::assertEquals($expected_company_templates, $this->factory->getCompanyTemplateList());
+    }
+
+    public function testItDoesNotReturnsCompanyTemplateWhenTheUserCannotAccessIt(): void
+    {
+        $this->consistency_checker->method('areAllServicesAvailable')->willReturn(true);
+
+        $template110 = $this->createMock(\Project::class);
+        $template110->expects(self::once())->method('getGroupId')->willReturn("110");
+        $template110->method('getUnixNameLowerCase')->willReturn("hustler-company");
+        $template110->method('getDescription')->willReturn("New Jack City");
+        $template110->method('getPublicName')->willReturn("Hustler Company");
+
+        $this->project_manager->method('getSiteTemplates')->willReturn([$template110]);
+
+        $this->user_manager->method('getCurrentUser')->willReturn($this->user);
+        $this->url_verification->method("userCanAccessProject")->with($this->user, $template110)->willThrowException(new Project_AccessPrivateException());
+
+        self::assertEmpty($this->factory->getCompanyTemplateList());
     }
 }

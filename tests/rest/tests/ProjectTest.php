@@ -56,11 +56,11 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100,
+            'template_id' => $this->project_public_template_id,
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_5_NAME,
             $this->request_factory->createRequest(
                 'POST',
                 'projects?dry_run=true'
@@ -86,7 +86,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'short_name',
             'description' => '',
             'is_public' => true,
-            'template_id' => 100,
+            'template_id' => $this->project_public_template_id,
             'categories' => [
                 [
                     'category_id' => 15,
@@ -102,7 +102,7 @@ class ProjectTest extends ProjectBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_5_NAME,
             $this->request_factory->createRequest(
                 'POST',
                 'projects?dry_run=true'
@@ -159,11 +159,11 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100,
+            'template_id' => $this->project_public_template_id,
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_5_NAME,
             $this->request_factory->createRequest(
                 'POST',
                 'projects?dry_run=true'
@@ -182,11 +182,11 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100,
+            'template_id' => $this->project_public_template_id,
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_5_NAME,
             $this->request_factory->createRequest(
                 'POST',
                 'projects'
@@ -201,8 +201,54 @@ class ProjectTest extends ProjectBase
 
         $this->removeAdminFromProjectMembers(
             $create_project_id,
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_5_NAME,
         );
+    }
+
+    public function testPOSTForRegularUserWithTemplateProjectUserCantAccess()
+    {
+        $post_resource = json_encode([
+                                         'label'       => 'Test from template without access',
+                                         'shortname'   => 'template-no-access-user',
+                                         'description' => 'Test project template for REST API Project Creation',
+                                         'is_public'   => true,
+                                         'template_id' => $this->project_private_template_id,
+                                     ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
+            )
+        );
+
+        self::assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testPOSTForRegularUserWithPrivateTemplateProjectUserCanAccess()
+    {
+        $post_resource = json_encode([
+                                         'label'       => 'Test from private template with access',
+                                         'shortname'   => 'template-private-user-access',
+                                         'description' => 'Test project template for REST API Project Creation',
+                                         'is_public'   => true,
+                                         'template_id' => $this->project_private_template_id,
+                                     ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_5_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects'
+            )->withBody(
+                $this->stream_factory->createStream($post_resource)
+            )
+        );
+
+        self::assertEquals(201, $response->getStatusCode());
     }
 
     /**
@@ -350,7 +396,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9748',
             'description' => 'Test of Request 9748 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100,
+            'template_id' => $this->project_public_template_id,
         ]);
 
         $response = $this->getResponseByName(

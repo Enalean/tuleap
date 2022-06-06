@@ -40,7 +40,7 @@ class ProjectTest extends ProjectBase
             'shortname'  => 'test9747-ro',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
-            'template_id' => 100,
+            'template_id' => $this->project_public_template_id,
         ]);
 
         $response = $this->getResponse(

@@ -45,6 +45,8 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
     protected $project_public_with_membership_id;
     protected $project_future_releases_id;
     protected $project_services_id;
+    protected $project_public_template_id;
+    protected $project_private_template_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -121,16 +123,26 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
             $this->initUserGroupsId();
         }
 
-        $this->project_private_member_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $this->project_private_member_id         = $this->getProjectId(
+            REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME
+        );
         $this->project_private_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
         $this->project_public_id                 = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
-        $this->project_public_member_id          = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
+        $this->project_public_member_id          = $this->getProjectId(
+            REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME
+        );
         $this->project_pbi_id                    = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
         $this->project_deleted_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
-        $this->project_suspended_id              = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
-        $this->project_public_with_membership_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME);
+        $this->project_suspended_id              = $this->getProjectId(
+            REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME
+        );
+        $this->project_public_with_membership_id = $this->getProjectId(
+            REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
+        );
         $this->project_future_releases_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_FUTURE_RELEASES);
         $this->project_services_id               = $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES);
+        $this->project_public_template_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_TEMPLATE);
+        $this->project_private_template_id       = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_TEMPLATE);
 
         $this->getTrackerIdsForProjectPrivateMember();
     }

@@ -75,7 +75,8 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
             $this->xml_file_content_retriever,
             $this->service_manager,
             $this->from_xml_inheritor,
-            new NullLogger()
+            new NullLogger(),
+            new \URLVerification()
         );
     }
 

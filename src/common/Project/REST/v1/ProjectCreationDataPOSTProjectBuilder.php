@@ -37,6 +37,7 @@ use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use URLVerification;
 use XML_RNGValidator;
 
 class ProjectCreationDataPOSTProjectBuilder
@@ -55,6 +56,7 @@ class ProjectCreationDataPOSTProjectBuilder
         ServiceManager $service_manager,
         ProjectCreationDataServiceFromXmlInheritor $from_xml_inheritor,
         LoggerInterface $logger,
+        private URLVerification $url_verification,
     ) {
         $this->project_manager            = $project_manager;
         $this->template_factory           = $template_factory;
@@ -93,7 +95,8 @@ class ProjectCreationDataPOSTProjectBuilder
                 TemplateFromProjectForCreation::fromRESTRepresentation(
                     $post_representation,
                     $user,
-                    $this->project_manager
+                    $this->project_manager,
+                    $this->url_verification
                 ),
                 $data
             );
