@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/autocomplete-for-select2": "link:../../lib/frontend/autocomplete-for-select2",
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
     "@tuleap/keyboard-shortcuts": "link:../../lib/frontend/keyboard-shortcuts",
     "@tuleap/list-picker": "link:../../lib/frontend/list-picker",

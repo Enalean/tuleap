@@ -26,7 +26,7 @@ import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { escaper } from "@tuleap/html-escaper";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
-import { autocomplete_users_for_select2 } from "../../../tuleap/autocomplete-for-select2";
+import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 import { initImportMembersPreview } from "./members-import/project-admin-members-import";
 import type { GetText } from "@tuleap/gettext";
 import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";

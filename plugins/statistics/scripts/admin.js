@@ -21,6 +21,10 @@ import { datePicker, createModal } from "tlp";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
+import {
+    autocomplete_users_for_select2,
+    autocomplete_projects_for_select2,
+} from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", function () {
     var date_picker_elements = document.querySelectorAll(".tlp-input-date");
@@ -37,14 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var project_selectors = document.querySelectorAll(".project-autocompleter");
     [].forEach.call(project_selectors, function (project_selector) {
-        tuleap.autocomplete_projects_for_select2(project_selector, {
+        autocomplete_projects_for_select2(project_selector, {
             include_private_projects: true,
         });
     });
 
     var user_selectors = document.querySelectorAll(".user-autocompleter");
     [].forEach.call(user_selectors, function (user_selector) {
-        tuleap.autocomplete_users_for_select2(user_selector, {
+        autocomplete_users_for_select2(user_selector, {
             internal_users_only: true,
         });
     });

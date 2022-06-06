@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/autocomplete-for-select2": "link:../../lib/frontend/autocomplete-for-select2",
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",

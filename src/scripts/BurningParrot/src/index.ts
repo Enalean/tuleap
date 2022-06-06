@@ -27,7 +27,6 @@ import { init as initNavbarPinned } from "../../tuleap/navbar-pinned";
 import { init as initSidebar } from "./sidebar";
 import { initHelpDropdown } from "./help-dropdown";
 import { init as initInviteBuddies } from "./invite-buddies";
-import * as autocomplete from "../../tuleap/autocomplete-for-select2";
 import "../../global-shortcuts/index";
 
 declare global {
@@ -52,7 +51,5 @@ document.addEventListener("DOMContentLoaded", () => {
     initInviteBuddies();
 });
 
-// tuleap.autocomplete* is still used by siteadmin scripts which may run without listening to DOMContentLoaded
 const tuleap = window.tuleap || {};
-Object.assign(tuleap, autocomplete);
 window.tuleap = tuleap;

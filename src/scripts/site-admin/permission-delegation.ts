@@ -17,7 +17,7 @@
 
 import { createModal } from "tlp";
 
-import { autocomplete_users_for_select2 as autocomplete } from "../tuleap/autocomplete-for-select2.js";
+import { autocomplete_users_for_select2 as autocomplete } from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", function () {
     const add_group = document.querySelector("#siteadmin-permission-delegation-add-group"),

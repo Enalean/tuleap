@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/autocomplete-for-select2": "link:../../lib/frontend/autocomplete-for-select2",
     "@tuleap/filter-inline-table": "link:../../lib/frontend/filter-table",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",

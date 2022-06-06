@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
@@ -39,6 +40,7 @@ specifiers:
   vuex-shared-mutations: ^1.0.2
 
 dependencies:
+  '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/keyboard-shortcuts': link:../../lib/frontend/keyboard-shortcuts
   '@tuleap/list-picker': link:../../lib/frontend/list-picker

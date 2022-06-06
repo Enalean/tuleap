@@ -18,7 +18,7 @@
  */
 
 import { createModal, openTargetModalIdOnClick } from "tlp";
-import { autocomplete_projects_for_select2 as autocomplete } from "../../../tuleap/autocomplete-for-select2";
+import { autocomplete_projects_for_select2 as autocomplete } from "@tuleap/autocomplete-for-select2";
 import { getPOFileFromLocale, initGettext } from "@tuleap/gettext";
 import type { GetText } from "@tuleap/gettext";
 import { initIconPicker } from "./helpers/icon-picker-initializer";

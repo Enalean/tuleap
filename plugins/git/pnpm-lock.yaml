@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@tuleap/core': link:../../src
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
@@ -27,7 +27,7 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
-  '@tuleap/core': link:../../src
+  '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper

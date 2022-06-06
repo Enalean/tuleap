@@ -16,7 +16,7 @@
  */
 
 import { datePicker, select2 } from "tlp";
-import { autocomplete_users_for_select2 } from "../tuleap/autocomplete-for-select2";
+import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", () => {
     const sub_events_panels = document.querySelectorAll(
