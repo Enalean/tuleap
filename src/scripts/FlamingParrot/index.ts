@@ -22,7 +22,6 @@ import { initMainPosition } from "../tuleap/main-position";
 import { initHeaderPosition } from "../tuleap/header-position";
 import { init as initNavbarPinned } from "../tuleap/navbar-pinned";
 import { init as initInviteBuddies } from "./invite-buddies";
-import { createPopover } from "@tuleap/tlp-popovers";
 import { init as initNavbarDropdown } from "../navbar-dropdowns/navbar-dropdown";
 
 import "./sidebar";
@@ -31,7 +30,7 @@ import "./help-dropdown";
 import "../global-shortcuts/index";
 import "./help-window";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     initSidebarPosition();
     const main = document.querySelector(".main");
     if (main instanceof HTMLElement) {
@@ -41,5 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initHeaderPosition();
     initNavbarPinned();
     initInviteBuddies();
+    // Workaround minification issue: by forcing the module to be wrapped in a Promise we ensure the code is isolated
+    // from the rest of the codebase so identifiers cannot be shadowed by mistake by something else
+    const { createPopover } = await import(/* webpackMode: "eager" */ "@tuleap/tlp-popovers");
     initNavbarDropdown(createPopover);
 });
