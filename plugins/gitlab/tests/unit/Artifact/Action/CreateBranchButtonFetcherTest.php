@@ -144,7 +144,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $button_action = $this->fetcher->getActionButton($artifact, $user);
 
         self::assertNotNull($button_action);
-        self::assertSame('Create GitLab branch', $button_action->getLinkPresenter()->link_label);
+        self::assertSame('Create GitLab branch and merge request', $button_action->getLinkPresenter()->link_label);
         self::assertNotNull($button_action->getLinkPresenter()->data);
         self::assertCount(3, $button_action->getLinkPresenter()->data);
         self::assertSame(
@@ -238,7 +238,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $button_action = $this->fetcher->getActionButton($artifact, $user);
 
         self::assertNotNull($button_action);
-        self::assertSame('Create GitLab branch', $button_action->getLinkPresenter()->link_label);
+        self::assertSame('Create GitLab branch and merge request', $button_action->getLinkPresenter()->link_label);
         self::assertNotNull($button_action->getLinkPresenter()->data);
         self::assertCount(3, $button_action->getLinkPresenter()->data);
         self::assertSame(
