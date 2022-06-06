@@ -20,7 +20,10 @@
 
 <template>
     <div class="tlp-form-element document-search-criterion document-search-criterion-text">
-        <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
+        <div class="document-search-criterion-with-popover">
+            <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
+            <search-information-popover v-bind:description="popover_description" />
+        </div>
         <input
             type="text"
             class="tlp-input"
@@ -35,8 +38,18 @@
 <script setup lang="ts">
 import type { SearchCriterionText } from "../../../type";
 import { computed } from "@vue/composition-api";
+import SearchInformationPopover from "./SearchInformationPopover.vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+
+const { interpolate, $gettext } = useGettext();
 
 const props = defineProps<{ criterion: SearchCriterionText; value: string }>();
+
+const popover_description = computed((): string => {
+    return interpolate($gettext("Search in the '%{label}' property of the document."), {
+        label: props.criterion.label,
+    });
+});
 
 const id = computed((): string => {
     return "document-criterion-text-" + props.criterion.name;

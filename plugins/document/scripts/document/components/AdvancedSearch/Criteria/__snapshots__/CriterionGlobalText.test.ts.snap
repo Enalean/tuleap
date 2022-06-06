@@ -16,7 +16,9 @@ exports[`CriterionGlobalText should render the component 1`] = `
       Global search
     </label>
      
-    <search-information-popover-stub />
+    <search-information-popover-stub
+      description="Global search will search in all text properties of document (but does not look inside the document)."
+    />
   </div>
    
   <input

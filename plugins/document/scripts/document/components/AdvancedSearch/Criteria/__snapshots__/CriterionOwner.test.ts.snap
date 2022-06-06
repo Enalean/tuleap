@@ -36,9 +36,9 @@ exports[`CriterionOwner should render the component 1`] = `
           <h1
             class="tlp-popover-title"
             data-current-language="en_US"
-            data-msgid="Owner search information"
+            data-msgid="Search help"
           >
-            Owner search information
+            Search help
           </h1>
         </div>
          

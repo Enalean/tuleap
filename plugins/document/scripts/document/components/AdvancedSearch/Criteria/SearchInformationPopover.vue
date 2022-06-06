@@ -26,13 +26,10 @@
         <section class="tlp-popover popover-search" ref="popover_content">
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title" v-translate>Global search information</h1>
+                <h1 class="tlp-popover-title" v-translate>Search help</h1>
             </div>
             <div class="tlp-popover-body">
-                <p v-translate>
-                    Global search will search in all text properties of document (but does not look
-                    inside the document).
-                </p>
+                <p>{{ props.description }}</p>
                 <p v-translate>Search allowed pattern:</p>
                 <ul>
                     <li>{{ exact_message_pattern }}</li>
@@ -52,6 +49,8 @@ import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api"
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const { $gettext } = useGettext();
+
+const props = defineProps<{ description: string }>();
 
 const popover = ref<Popover | undefined>();
 
@@ -94,11 +93,12 @@ const finishing_message_pattern = computed((): string => {
 });
 
 const containing_message_pattern = computed((): string => {
-    return $gettext('lorem => exactly "lorem"');
+    return $gettext('*lorem* => contains "lorem"');
 });
 </script>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
+
 export default defineComponent({});
 </script>

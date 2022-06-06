@@ -30,7 +30,7 @@
                 <section class="tlp-popover" ref="popover_content">
                     <div class="tlp-popover-arrow"></div>
                     <div class="tlp-popover-header">
-                        <h1 class="tlp-popover-title" v-translate>Owner search information</h1>
+                        <h1 class="tlp-popover-title" v-translate>Search help</h1>
                     </div>
                     <div class="tlp-popover-body">
                         <p>

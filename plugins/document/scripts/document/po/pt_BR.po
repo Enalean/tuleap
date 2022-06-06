@@ -25,6 +25,9 @@ msgstr ""
 msgid "*lorem => finishing by \"lorem\""
 msgstr ""
 
+msgid "*lorem* => contains \"lorem\""
+msgstr ""
+
 msgid "1 warning"
 msgid_plural "%{ nb_warnings } warnings"
 msgstr[0] ""
@@ -277,13 +280,9 @@ msgstr ""
 msgid "Global search"
 msgstr ""
 
-msgid "Global search information"
-msgstr ""
-
 msgid ""
 "Global search will search in all text properties of document (but does not "
-"look\n"
-"                inside the document)."
+"look inside the document)."
 msgstr ""
 
 msgid "Go to Document manager home page"
@@ -468,9 +467,6 @@ msgstr ""
 msgid "Owner"
 msgstr "Proprietário"
 
-msgid "Owner search information"
-msgstr ""
-
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 
@@ -542,6 +538,12 @@ msgid "Search allowed pattern:"
 msgstr ""
 
 msgid "Search criteria"
+msgstr ""
+
+msgid "Search help"
+msgstr ""
+
+msgid "Search in the '%{label}' property of the document."
 msgstr ""
 
 msgid "Search in whole project documentation"
