@@ -22,6 +22,8 @@ namespace Tuleap\Git\Hook;
 
 use Mockery;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
+use Tuleap\Git\Stub\DispatchGitPushReceptionStub;
+use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -69,6 +71,8 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $default_branch_post_receive_updater;
     private PushDetails $push_details;
+    private VerifyArtifactClosureIsAllowedStub $closure_verifier;
+    private DispatchGitPushReceptionStub $dispatcher;
 
     protected function setUp(): void
     {
@@ -81,6 +85,8 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->parse_log                           = \Mockery::spy(ParseLog::class);
         $this->system_event_manager                = \Mockery::spy(\Git_SystemEventManager::class);
         $this->default_branch_post_receive_updater = $this->createMock(DefaultBranchPostReceiveUpdater::class);
+        $this->closure_verifier                    = VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed();
+        $this->dispatcher                          = DispatchGitPushReceptionStub::withCount();
 
         $this->repository->shouldReceive('getNotifiedMails')->andReturns([]);
     }
@@ -97,7 +103,9 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\EventManager::class),
             \Mockery::spy(WebhookRequestSender::class),
             \Mockery::spy(PostReceiveMailSender::class),
-            $this->createStub(DefaultBranchPostReceiveUpdater::class)
+            $this->createStub(DefaultBranchPostReceiveUpdater::class),
+            $this->closure_verifier,
+            $this->dispatcher
         );
         $post_receive->execute(
             self::REPOSITORY_PATH,
@@ -159,7 +167,6 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-
         $this->push_details = $this->getPushDetailsWithNewRevision();
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
@@ -170,13 +177,35 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersACiBuild(): void
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns(\Mockery::spy(\PFUser::class));
-
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
         $this->push_details = $this->getPushDetailsWithNewRevision();
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
         $this->ci_launcher->shouldReceive('executeForRepository')->with($this->repository)->once();
         $this->executePostReceive();
+    }
+
+    public function testItDispatchesAnAsynchronousMessage(): void
+    {
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
+        $this->push_details = $this->getPushDetailsWithNewRevision();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+
+        $this->executePostReceive();
+        self::assertSame(1, $this->dispatcher->getCallCount());
+    }
+
+    public function testIfArtifactClosureIsDisallowedItDoesNotDispatch(): void
+    {
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
+        $this->push_details = $this->getPushDetailsWithNewRevision();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+        $this->closure_verifier = VerifyArtifactClosureIsAllowedStub::withNeverAllowed();
+
+        $this->executePostReceive();
+        self::assertSame(0, $this->dispatcher->getCallCount());
     }
 
     private function getPushDetailsWithoutRevisions(): PushDetails
@@ -215,7 +244,9 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(\EventManager::class),
             $this->createStub(WebhookRequestSender::class),
             $this->createStub(PostReceiveMailSender::class),
-            $this->default_branch_post_receive_updater
+            $this->default_branch_post_receive_updater,
+            $this->closure_verifier,
+            $this->dispatcher
         );
         $post_receive->beforeParsingReferences(self::REPOSITORY_PATH);
     }
