@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 replacement=`echo $REALTIME_KEY | sed "s|/|\\\\\/|g"`
 sed -s -i "s/private_key_to_change/$replacement/" /etc/tuleap-realtime/config.json

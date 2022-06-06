@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright (c) Enalean, 2021-Present. All Rights Reserved.
 #

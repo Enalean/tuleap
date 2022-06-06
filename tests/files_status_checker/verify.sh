@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set +ex
 
 repository_to_inspect="$1"

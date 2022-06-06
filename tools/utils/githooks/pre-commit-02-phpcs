@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # PHP CodeSniffer pre-commit hook for git
 readonly COMMIT_INTRODUCING_PSR2='7bf3932edde43583f4a5889e76896c3cdfe5444b'
 readonly TMP_STAGING_DIR=$(mktemp -d)

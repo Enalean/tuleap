@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 /bin/cp -f /usr/share/tuleap/tools/docker/tuleap-aio-dev/run-dev.service /etc/systemd/system
 

@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # This file is part of Tuleap
 # Copyright (c) Enalean, 2015 - Present. All rights reserved
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #
-# 
+#
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public
@@ -40,7 +40,7 @@ SSL_CERT="$CERTDIR/localhost.crt"
 SSL_CSR="$CERTDIR/localhost.csr"
 
 # Remove existing key and certificate
-if [ -f $SSL_CSR ]; then 
+if [ -f $SSL_CSR ]; then
   $TAR cf /var/tmp/oldcert.tar $SSL_KEY $SSL_CERT $SSL_CSR
 fi
 $RM -f $SSL_KEY
@@ -53,7 +53,7 @@ $CHMOD go-rwx $SSL_KEY
 
 # Create new certificate, valid for 10 years
 umask 77
-# All in one (no CSR) 
+# All in one (no CSR)
 #$OPENSSL req -new -key $SSL_KEY -x509 -days 3650 -out $SSL_CERT
 
 # Generate Certificate Signing Request (CSR)

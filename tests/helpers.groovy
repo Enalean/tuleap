@@ -4,7 +4,7 @@ def getModifiedFilesSinceFirstParentOfCurrentCommit(String path) {
     dir (path) {
         return sh(
             returnStdout: true,
-            script: """#!/bin/bash
+            script: """#!/usr/bin/env bash
             changes=\$(git diff --name-only --diff-filter=ACMTUXB --no-renames \${GIT_COMMIT}^)
             if [ \$(echo "\$changes" | wc -l) -ge 1000 ]; then
                 echo -n "."
