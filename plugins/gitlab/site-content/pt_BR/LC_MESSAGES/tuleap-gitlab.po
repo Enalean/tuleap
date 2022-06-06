@@ -9,7 +9,7 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-msgid "Create GitLab branch"
+msgid "Create GitLab branch and merge request"
 msgstr ""
 
 msgid "GitLab"

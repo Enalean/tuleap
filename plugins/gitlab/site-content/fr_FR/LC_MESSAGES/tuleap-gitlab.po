@@ -15,8 +15,8 @@ msgstr ""
 msgid "Closed"
 msgstr "Fermée"
 
-msgid "Create GitLab branch"
-msgstr "Créer une branche GitLab"
+msgid "Create GitLab branch and merge request"
+msgstr "Créer une branche et une demande de fusion GitLab"
 
 msgid "GitLab"
 msgstr "GitLab"
