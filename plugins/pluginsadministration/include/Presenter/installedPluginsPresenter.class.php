@@ -53,11 +53,6 @@ class PluginsAdministration_Presenter_InstalledPluginsPresenter
         return dgettext('tuleap-pluginsadministration', 'Name');
     }
 
-    public function version_table_head()
-    {
-        return dgettext('tuleap-pluginsadministration', 'Version');
-    }
-
     public function description_table_head()
     {
         return dgettext('tuleap-pluginsadministration', 'Description');

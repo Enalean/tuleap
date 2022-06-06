@@ -27,7 +27,6 @@ class PluginPropertiesPresenter
 {
     public $id;
     public $name;
-    public $version;
     public $description;
     public $scope;
     public $is_there_enable_switch;
@@ -51,7 +50,6 @@ class PluginPropertiesPresenter
     public function __construct(
         $id,
         $name,
-        $version,
         $description,
         $scope,
         $is_there_enable_switch,
@@ -67,7 +65,6 @@ class PluginPropertiesPresenter
     ) {
         $this->id                           = $id;
         $this->name                         = $name;
-        $this->version                      = $version;
         $this->description                  = $description;
         $this->scope                        = $this->getScopeLabel((int) $scope);
         $this->is_there_enable_switch       = $is_there_enable_switch;
@@ -83,7 +80,6 @@ class PluginPropertiesPresenter
 
         $this->properties_pane_title              = dgettext('tuleap-pluginsadministration', 'Properties');
         $this->properties_pane_name               = dgettext('tuleap-pluginsadministration', 'Name');
-        $this->properties_pane_version            = dgettext('tuleap-pluginsadministration', 'Version');
         $this->properties_pane_description        = dgettext('tuleap-pluginsadministration', 'Description');
         $this->properties_pane_scope              = dgettext('tuleap-pluginsadministration', 'Scope');
         $this->properties_pane_dependencies       = dgettext('tuleap-pluginsadministration', 'Dependencies');

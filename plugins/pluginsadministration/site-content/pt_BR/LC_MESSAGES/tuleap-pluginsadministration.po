@@ -208,9 +208,6 @@ msgstr ""
 msgid "Update properties"
 msgstr ""
 
-msgid "Version"
-msgstr "Versão"
-
 msgid "Warning"
 msgstr ""
 

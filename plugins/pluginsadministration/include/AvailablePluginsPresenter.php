@@ -29,7 +29,6 @@ class AvailablePluginsPresenter
     public $not_installed_tab_label;
     public $not_installed_pane_label;
     public $plugin_table_head;
-    public $version_table_head;
     public $description_table_head;
     public $install_label;
     public $filter_label;
@@ -48,7 +47,6 @@ class AvailablePluginsPresenter
         $this->not_installed_tab_label  = dgettext('tuleap-pluginsadministration', 'Available plugins');
         $this->not_installed_pane_label = dgettext('tuleap-pluginsadministration', 'Plugins');
         $this->plugin_table_head        = dgettext('tuleap-pluginsadministration', 'Name');
-        $this->version_table_head       = dgettext('tuleap-pluginsadministration', 'Version');
         $this->description_table_head   = dgettext('tuleap-pluginsadministration', 'Description');
         $this->install_label            = dgettext('tuleap-pluginsadministration', 'Install');
         $this->install_modal_title      = dgettext('tuleap-pluginsadministration', 'Install plugin');
