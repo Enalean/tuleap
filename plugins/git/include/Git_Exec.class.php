@@ -292,13 +292,11 @@ class Git_Exec
     }
 
     /**
-     * Return content of an object
+     * Returns content of an object
      *
-     * @param String $rev
-     *
-     * @return String
+     * @throws Git_Command_Exception
      */
-    public function catFile($rev)
+    public function catFile(string $rev): string
     {
         $output = [];
         $this->gitCmdWithOutput('cat-file -p ' . escapeshellarg($rev), $output);
@@ -306,13 +304,12 @@ class Git_Exec
     }
 
     /**
-     * Return the object type (commit, tag, etc);
+     * Returns the object type (commit, tag, etc);
      *
-     * @param String $rev
      * @throws Git_Command_UnknownObjectTypeException
-     * @return String
+     * @throws Git_Command_Exception
      */
-    public function getObjectType($rev)
+    public function getObjectType(string $rev): string
     {
         $output = [];
         $this->gitCmdWithOutput('cat-file -t ' . escapeshellarg($rev), $output);

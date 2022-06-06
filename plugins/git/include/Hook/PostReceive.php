@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Hook;
 
-use EventManager;
 use Git_Ci_Launcher;
 use Git_Exec;
 use Git_SystemEventManager;
@@ -30,7 +29,6 @@ use PFUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Webhook\WebhookRequestSender;
-use UserManager;
 
 /**
  * Central access point for things that needs to happen when post-receive is
@@ -38,63 +36,21 @@ use UserManager;
  */
 class PostReceive
 {
-    /** @var LogAnalyzer */
-    private $log_analyzer;
-
-    /** @var GitRepositoryFactory */
-    private $repository_factory;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var Git_Ci_Launcher */
-    private $ci_launcher;
-
-    /** @var ParseLog */
-    private $parse_log;
-
-    /** @var Git_SystemEventManager */
-    private $system_event_manager;
-
-    /** @var EventManager */
-    private $event_manager;
-
-    /**
-     * @var WebhookRequestSender
-     */
-    private $webhook_request_sender;
-
-    /**
-     * @var PostReceiveMailSender
-     */
-    private $mail_sender;
-    private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater;
-
     public function __construct(
-        LogAnalyzer $log_analyzer,
-        GitRepositoryFactory $repository_factory,
-        UserManager $user_manager,
-        Git_Ci_Launcher $ci_launcher,
-        ParseLog $parse_log,
-        Git_SystemEventManager $system_event_manager,
-        EventManager $event_manager,
-        WebhookRequestSender $webhook_request_sender,
-        PostReceiveMailSender $mail_sender,
-        DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
+        private LogAnalyzer $log_analyzer,
+        private GitRepositoryFactory $repository_factory,
+        private \UserManager $user_manager,
+        private Git_Ci_Launcher $ci_launcher,
+        private ParseLog $parse_log,
+        private Git_SystemEventManager $system_event_manager,
+        private \EventManager $event_manager,
+        private WebhookRequestSender $webhook_request_sender,
+        private PostReceiveMailSender $mail_sender,
+        private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
     ) {
-        $this->log_analyzer                        = $log_analyzer;
-        $this->repository_factory                  = $repository_factory;
-        $this->user_manager                        = $user_manager;
-        $this->ci_launcher                         = $ci_launcher;
-        $this->parse_log                           = $parse_log;
-        $this->system_event_manager                = $system_event_manager;
-        $this->event_manager                       = $event_manager;
-        $this->webhook_request_sender              = $webhook_request_sender;
-        $this->mail_sender                         = $mail_sender;
-        $this->default_branch_post_receive_updater = $default_branch_post_receive_updater;
     }
 
-    public function beforeParsingReferences($repository_path): void
+    public function beforeParsingReferences(string $repository_path): void
     {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
@@ -106,7 +62,10 @@ class PostReceive
         }
     }
 
-    public function execute($repository_path, $user_name, $oldrev, $newrev, $refname)
+    /**
+     * @throws \Git_Command_UnknownObjectTypeException
+     */
+    public function execute(string $repository_path, string $user_name, string $oldrev, string $newrev, string $refname): void
     {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
@@ -135,7 +94,10 @@ class PostReceive
         }
     }
 
-    private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    /**
+     * @throws \Git_Command_UnknownObjectTypeException
+     */
+    private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void
     {
         $this->ci_launcher->executeForRepository($repository);
 
@@ -143,7 +105,7 @@ class PostReceive
         $this->parse_log->execute($push_details);
     }
 
-    private function processGitWebhooks(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    private function processGitWebhooks(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void
     {
         $this->webhook_request_sender->sendRequests($repository, $user, $oldrev, $newrev, $refname);
     }

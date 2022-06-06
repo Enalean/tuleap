@@ -24,29 +24,19 @@ namespace Tuleap\Git\Hook;
 
 use Git;
 use Git_Exec;
-use ReferenceManager;
 
 /**
  * Extract references usage in commit messages
  */
 class CrossReferencesExtractor
 {
-    /**
-     * @var Git_Exec
-     */
-    private $git_exec;
-
-    /**
-     * @var ReferenceManager
-     */
-    private $reference_manager;
-
-    public function __construct(Git_Exec $git_exec, ReferenceManager $reference_manager)
+    public function __construct(private Git_Exec $git_exec, private \ReferenceManager $reference_manager)
     {
-        $this->git_exec          = $git_exec;
-        $this->reference_manager = $reference_manager;
     }
 
+    /**
+     * @throws \Git_Command_Exception
+     */
     public function extractCommitReference(PushDetails $push_details, string $commit_sha1): void
     {
         $rev_id = $push_details->getRepository()->getFullName() . '/' . $commit_sha1;
@@ -60,6 +50,9 @@ class CrossReferencesExtractor
         );
     }
 
+    /**
+     * @throws \Git_Command_Exception
+     */
     public function extractTagReference(PushDetails $push_details): void
     {
         $tag_reference = $push_details->getRefname();

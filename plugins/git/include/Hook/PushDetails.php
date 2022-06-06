@@ -42,85 +42,60 @@ class PushDetails
     public const TYPE_TRACKING_BRANCH = 'tracking_branch';
     public const TYPE_UNKNOWN         = '';
 
-    private $type;
-    private $rev_type;
-    private $revision_list;
-    private $repository;
-    private $user;
-    private $refname;
-
     public function __construct(
-        GitRepository $repository,
-        PFUser $user,
-        $refname,
-        $type,
-        $rev_type,
-        array $revision_list,
+        private GitRepository $repository,
+        private PFUser $user,
+        private string $refname,
+        private string $type,
+        private string $rev_type,
+        private array $revision_list,
     ) {
-        $this->repository    = $repository;
-        $this->user          = $user;
-        $this->refname       = $refname;
-        $this->type          = $type;
-        $this->rev_type      = $rev_type;
-        $this->revision_list = $revision_list;
     }
 
     /**
      * The repository where the push was made
-     *
-     * @return GitRepository
      */
-    public function getRepository()
+    public function getRepository(): GitRepository
     {
         return $this->repository;
     }
 
     /**
      * Who made the push
-     *
-     * @return PFUser
      */
-    public function getUser()
+    public function getUser(): PFUser
     {
         return $this->user;
     }
 
     /**
      * On which element in the repository the push was done (branch, tag, etc)
-     *
-     * @return String
      */
-    public function getRefname()
+    public function getRefname(): string
     {
         return $this->refname;
     }
 
     /**
      * Operation type (create, update, delete)
-     *
-     * @return String
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
      * What object type (commit, tag)
-     *
-     * @return String
      */
-    public function getRevType()
+    public function getRevType(): string
     {
         return $this->rev_type;
     }
 
     /**
      * What kind of reference was updated (tag, annotated_tag, commit, tracking_branch)
-     *
-     * @return String
      */
-    public function getRefnameType()
+    public function getRefnameType(): string
     {
         if (strpos($this->refname, 'refs/tags/') === 0) {
             switch ($this->rev_type) {
@@ -142,9 +117,9 @@ class PushDetails
     /**
      * List of impacted revisions
      *
-     * @return String[] A list of sha1
+     * @return string[] A list of sha1
      */
-    public function getRevisionList()
+    public function getRevisionList(): array
     {
         return $this->revision_list;
     }

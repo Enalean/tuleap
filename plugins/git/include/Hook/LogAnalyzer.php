@@ -24,6 +24,7 @@ use Git_Command_Exception;
 use Git_Exec;
 use GitRepository;
 use PFUser;
+use Psr\Log\LoggerInterface;
 
 /**
  * Analyze a push a provide a high level object (PushDetails) that knows if push
@@ -33,20 +34,13 @@ class LogAnalyzer
 {
     public const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
 
-    /** @var Git_Exec */
-    private $exec_repo;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    public function __construct(Git_Exec $git_exec, \Psr\Log\LoggerInterface $logger)
+    public function __construct(private Git_Exec $exec_repo, private LoggerInterface $logger)
     {
-        $this->exec_repo = $git_exec;
-        $this->logger    = $logger;
     }
 
     /**
      * Behaviour extracted from official email hook prep_for_email() function
+     * @throws \Git_Command_UnknownObjectTypeException
      */
     public function getPushDetails(
         GitRepository $repository,
@@ -69,7 +63,7 @@ class LogAnalyzer
                 $change_type   = PushDetails::ACTION_UPDATE;
             }
 
-            if ($change_type == PushDetails::ACTION_DELETE) {
+            if ($change_type === PushDetails::ACTION_DELETE) {
                 $rev_type = $this->exec_repo->getObjectType($oldrev);
             } else {
                 $rev_type = $this->exec_repo->getObjectType($newrev);

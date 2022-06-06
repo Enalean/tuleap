@@ -30,47 +30,59 @@ final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & CrossReferencesExtractor
      */
     private $extract_cross_ref;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface & LogPushes
+     */
     private $log_pushes;
-    private $parse_log;
-    private $logger;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
         $this->extract_cross_ref = \Mockery::spy(CrossReferencesExtractor::class);
         $this->log_pushes        = \Mockery::spy(\Tuleap\Git\Hook\LogPushes::class);
         $this->logger            = new TestLogger();
-        $this->parse_log         = new ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
+    }
+
+    private function executeParseLog(PushDetails $push_details): void
+    {
+        $parse_log = new ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
+        $parse_log->execute($push_details);
     }
 
     public function testItLogPush(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class)->shouldReceive('getRevisionList')->andReturns(['469eaa9'])->getMock();
+        $push_details = \Mockery::spy(PushDetails::class)
+            ->shouldReceive('getRevisionList')
+            ->andReturns(['469eaa9'])
+            ->getMock();
 
         $this->log_pushes->shouldReceive('executeForRepository')->with($push_details)->once();
 
-        $this->parse_log->execute($push_details);
+        $this->executeParseLog($push_details);
     }
 
     public function testItExecutesExtractOnEachCommit(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class)->shouldReceive('getRevisionList')->andReturns(
-            ['469eaa9']
-        )->getMock();
+        $push_details = \Mockery::spy(PushDetails::class)
+            ->shouldReceive('getRevisionList')
+            ->andReturns(['469eaa9', '5eb01f0'])
+            ->getMock();
 
-        $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '469eaa9')->once();
+        $this->extract_cross_ref->shouldReceive('extractCommitReference')->twice();
 
-        $this->parse_log->execute($push_details);
+        $this->executeParseLog($push_details);
     }
 
     public function testItExecutesExtractOnTag(): void
     {
-        $push_details = \Mockery::spy(PushDetails::class)->shouldReceive('getRevisionList')->andReturns(
-            ['469eaa9']
-        )->getMock();
+        $push_details = \Mockery::spy(PushDetails::class)
+            ->shouldReceive('getRevisionList')
+            ->andReturns(['469eaa9'])
+            ->getMock();
 
         $this->extract_cross_ref->shouldReceive('extractCommitReference')->with($push_details, '469eaa9')->once();
 
-        $this->parse_log->execute($push_details);
+        $this->executeParseLog($push_details);
     }
 
     public function testItDoesntAttemptToExtractWhenBranchIsDeleted(): void
@@ -90,7 +102,7 @@ final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->extract_cross_ref->shouldReceive('extractTagReference')->once();
 
-        $this->parse_log->execute($push_details);
+        $this->executeParseLog($push_details);
     }
 
     public function testItExecutesExtractEvenWhenThereAreErrors(): void
@@ -104,7 +116,7 @@ final class ParseLogTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($push_details, '469eaa9')
             ->andThrows(new \Git_Command_Exception('whatever', ['whatever'], '234'));
 
-        $this->parse_log->execute($push_details);
+        $this->executeParseLog($push_details);
 
         self::assertTrue($this->logger->hasErrorRecords());
     }
