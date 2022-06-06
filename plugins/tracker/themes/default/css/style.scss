@@ -873,13 +873,11 @@ select.tracker-report-expert-allowed-fields {
 }
 
 .tracker_artifact_followups {
-    margin: 20px 0 0;
-    padding: 0;
-    list-style-type: none;
+    margin: var(--tlp-medium-spacing) 0 0;
 }
 
 .tracker_artifact_followup {
-    margin: 20px 0;
+    margin: var(--tlp-medium-spacing) 0;
     clear: both;
     border-top: 1px solid #e0e0e0;
     border-right: 1px solid #e0e0e0;

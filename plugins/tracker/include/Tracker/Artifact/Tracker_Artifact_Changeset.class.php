@@ -921,9 +921,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         $classnames    = 'tracker_artifact_followup ';
         $classnames   .= $this->getFollowUpClassnames($diff_to_previous, $user);
-        $comment_html  = '<li id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up" data-changeset-id="followup_' . $this->getId() . '" data-project-id="' . $project_id . '">';
+        $comment_html  = '<article id="followup_' . $this->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up" data-changeset-id="followup_' . $this->getId() . '" data-project-id="' . $project_id . '">';
         $comment_html .= $comment_content;
-        $comment_html .= '</li>';
+        $comment_html .= '</article>';
 
         return $comment_html;
     }
