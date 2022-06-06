@@ -20,6 +20,8 @@ DROP TABLE IF EXISTS plugin_docman_approval;
 DROP TABLE IF EXISTS plugin_docman_approval_user;
 DROP TABLE IF EXISTS plugin_docman_item_deleted;
 DROP TABLE IF EXISTS plugin_docman_tokens;
+DROP TABLE IF EXISTS plugin_document_search_criteria;
+DROP TABLE IF EXISTS plugin_document_search_columns;
 
 DELETE FROM service WHERE short_name='docman';
 

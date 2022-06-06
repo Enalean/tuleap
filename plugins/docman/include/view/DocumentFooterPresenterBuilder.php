@@ -22,26 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\view;
 
-use EventManager;
 use PFUser;
 use Tuleap\Docman\DocumentFooterPresenter;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
+use Tuleap\Docman\ExternalLinks\Link;
 
 class DocumentFooterPresenterBuilder
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(\ProjectManager $project_manager, EventManager $event_manager)
+    public function __construct(private \ProjectManager $project_manager)
     {
-        $this->project_manager = $project_manager;
-        $this->event_manager   = $event_manager;
     }
 
     public function build(
@@ -53,12 +42,12 @@ class DocumentFooterPresenterBuilder
         $is_folder_in_migrated_view = $this->isFolderInMigratedView($params, $item);
         $folder_id                  = $this->getFolderId($is_folder_in_migrated_view, $item);
 
-        $collector = new ExternalLinksManager($project_id, $folder_id);
+        $project   = $this->project_manager->getProject($project_id);
+        $collector = new ExternalLinksManager();
         if ($is_folder_in_migrated_view === true && ! $user->isAnonymous()) {
-            $this->event_manager->processEvent($collector);
+            $collector->addExternalLink(new Link($project, $folder_id));
         }
 
-        $project = $this->project_manager->getProject($project_id);
 
         return new DocumentFooterPresenter($project, $collector);
     }

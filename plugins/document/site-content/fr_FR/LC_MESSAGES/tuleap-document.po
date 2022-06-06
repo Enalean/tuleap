@@ -130,9 +130,6 @@ msgstr ""
 "Proposer de remplir le journal des modifications après le glissé déposé "
 "d'une nouvelle version d'un fichier"
 
-msgid "Provides a modern interface for the Document Manager service"
-msgstr "Fournit une interface moderne au service de gestion des documents"
-
 msgid "Save configuration"
 msgstr "Sauvegarder la configuration"
 

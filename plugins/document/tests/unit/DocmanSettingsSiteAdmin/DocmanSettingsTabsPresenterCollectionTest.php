@@ -32,25 +32,52 @@ class DocmanSettingsTabsPresenterCollectionTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $collection = new DocmanSettingsTabsPresenterCollection();
 
-        $another_tab = new class ('/url', 'Another Tab') extends DocmanSettingsTabPresenter {
-        };
-
-        $collection->add($another_tab);
-
         $tabs = $collection->getTabs('/admin/document/files-upload-limits');
-        $this->assertEquals('/admin/document/files-upload-limits', $tabs[0]->url);
-        $this->assertEquals('File upload limits', $tabs[0]->label);
-        $this->assertTrue($tabs[0]->is_active);
-        $this->assertEquals('/url', $tabs[1]->url);
-        $this->assertEquals('Another Tab', $tabs[1]->label);
-        $this->assertFalse($tabs[1]->is_active);
+        $this->assertEquals(
+            [
+                '/admin/document/files-upload-limits',
+                '/admin/document/files-download-limits',
+                '/admin/document/history-enforcement',
+            ],
+            array_map(
+                static fn (DocmanSettingsTabPresenter $tab) => $tab->url,
+                $tabs,
+            )
+        );
+        $this->assertEquals(
+            [
+                true,
+                false,
+                false,
+            ],
+            array_map(
+                static fn (DocmanSettingsTabPresenter $tab) => $tab->is_active,
+                $tabs,
+            )
+        );
 
-        $tabs = $collection->getTabs('/url');
-        $this->assertEquals('/admin/document/files-upload-limits', $tabs[0]->url);
-        $this->assertEquals('File upload limits', $tabs[0]->label);
-        $this->assertFalse($tabs[0]->is_active);
-        $this->assertEquals('/url', $tabs[1]->url);
-        $this->assertEquals('Another Tab', $tabs[1]->label);
-        $this->assertTrue($tabs[1]->is_active);
+        $tabs = $collection->getTabs('/admin/document/history-enforcement');
+        $this->assertEquals(
+            [
+                '/admin/document/files-upload-limits',
+                '/admin/document/files-download-limits',
+                '/admin/document/history-enforcement',
+            ],
+            array_map(
+                static fn (DocmanSettingsTabPresenter $tab) => $tab->url,
+                $tabs,
+            )
+        );
+        $this->assertEquals(
+            [
+                false,
+                false,
+                true,
+            ],
+            array_map(
+                static fn (DocmanSettingsTabPresenter $tab) => $tab->is_active,
+                $tabs,
+            )
+        );
     }
 }

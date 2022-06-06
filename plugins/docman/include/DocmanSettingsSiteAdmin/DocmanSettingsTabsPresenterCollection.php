@@ -37,12 +37,9 @@ class DocmanSettingsTabsPresenterCollection implements Dispatchable
     {
         $this->tabs = [
             new FileUploadTabPresenter(),
+            new \Tuleap\Document\Config\Admin\FileDownloadTabPresenter(),
+            new \Tuleap\Document\Config\Admin\HistoryEnforcementTabPresenter(),
         ];
-    }
-
-    public function add(DocmanSettingsTabPresenter $tab): void
-    {
-        $this->tabs[] = $tab;
     }
 
     /**

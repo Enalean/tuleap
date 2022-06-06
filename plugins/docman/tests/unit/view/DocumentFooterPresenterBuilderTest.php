@@ -25,6 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -34,10 +35,6 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var PFUser
      */
     private $user;
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
     /**
      * @var int
      */
@@ -59,19 +56,16 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
-        $this->project    = Mockery::mock(Project::class);
+        $this->project    = ProjectTestBuilder::aProject()->withUnixName('projectshortname')->build();
         $this->project_id = 101;
-        $this->project->shouldReceive('getUnixNameLowerCase')->andReturn('projectshortname');
 
         $project_manager = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->with($this->project_id)->andReturn($this->project);
 
-        $this->event_manager = Mockery::mock(\EventManager::class);
-
-        $this->builder = new DocumentFooterPresenterBuilder($project_manager, $this->event_manager);
+        $this->builder = new DocumentFooterPresenterBuilder($project_manager);
     }
 
-    public function testItShouldNotRaiseAnEventWhenFolderIsNotInAMigratedView()
+    public function testItShouldNotAddLinkWhenFolderIsNotInAMigratedView()
     {
         $item   = [
             "parent_id" => 0,
@@ -82,12 +76,15 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'item' => $item,
         ];
 
-        $this->builder->build($params, $this->project_id, $item, $this->user);
-
-        $this->event_manager->shouldReceive('processEvent')->never();
+        self::assertCount(
+            0,
+            $this->builder
+                ->build($params, $this->project_id, $item, $this->user)
+                ->links
+        );
     }
 
-    public function testItShouldRaiseAnEventWhenFolderIsInAMigratedView()
+    public function testItShouldAddLinkWhenFolderIsInAMigratedView()
     {
         $item   = [
             "parent_id" => 3,
@@ -99,8 +96,11 @@ class DocumentFooterPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'action' => 'show',
         ];
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-
-        $this->builder->build($params, $this->project_id, $item, $this->user);
+        self::assertCount(
+            1,
+            $this->builder
+                ->build($params, $this->project_id, $item, $this->user)
+                ->links
+        );
     }
 }

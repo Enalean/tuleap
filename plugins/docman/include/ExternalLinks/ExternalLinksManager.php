@@ -22,32 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
-use Tuleap\Event\Dispatchable;
 
-class ExternalLinksManager implements Dispatchable
+final class ExternalLinksManager
 {
-    public const NAME = 'externalLinksManager';
-
     /**
-     * @var array
+     * @var Link[]
      */
     private $external_links = [];
-    /**
-     * @var int
-     */
-    private $project_id;
-    /**
-     * @var int
-     */
-    private $folder_id;
 
-    public function __construct(int $project_id, int $folder_id)
-    {
-        $this->project_id = $project_id;
-        $this->folder_id  = $folder_id;
-    }
-
-    public function addExternalLink(Link $external_link)
+    public function addExternalLink(Link $external_link): void
     {
         $this->external_links[] = $external_link;
     }
@@ -57,18 +40,11 @@ class ExternalLinksManager implements Dispatchable
         return count($this->external_links) > 0;
     }
 
-    public function getProjectId(): int
-    {
-        return $this->project_id;
-    }
-
+    /**
+     * @return Link[]
+     */
     public function getLinks(): array
     {
         return $this->external_links;
-    }
-
-    public function getFolderId(): int
-    {
-        return $this->folder_id;
     }
 }

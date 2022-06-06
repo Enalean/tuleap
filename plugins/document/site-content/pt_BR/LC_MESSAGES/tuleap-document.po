@@ -112,9 +112,6 @@ msgstr ""
 msgid "Propose changelog after new file version drag and drop"
 msgstr ""
 
-msgid "Provides a modern interface for the Document Manager service"
-msgstr ""
-
 msgid "Save configuration"
 msgstr "Salvar configuração"
 

@@ -25,7 +25,7 @@ namespace Tuleap\Document\Config\Admin;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollectionBuilder;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -36,33 +36,11 @@ class FilesDownloadLimitsAdminController implements DispatchableWithRequest, Dis
 {
     public const URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-download-limits';
 
-    /**
-     * @var AdminPageRenderer
-     */
-    private $admin_page_renderer;
-    /**
-     * @var FileDownloadLimitsBuilder
-     */
-    private $limits_builder;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $token;
-    /**
-     * @var DocmanSettingsTabsPresenterCollectionBuilder
-     */
-    private $tabs_presenter_collection_builder;
-
     public function __construct(
-        AdminPageRenderer $admin_page_renderer,
-        FileDownloadLimitsBuilder $limits_builder,
-        CSRFSynchronizerToken $token,
-        DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder,
+        private AdminPageRenderer $admin_page_renderer,
+        private FileDownloadLimitsBuilder $limits_builder,
+        private CSRFSynchronizerToken $token,
     ) {
-        $this->admin_page_renderer               = $admin_page_renderer;
-        $this->limits_builder                    = $limits_builder;
-        $this->token                             = $token;
-        $this->tabs_presenter_collection_builder = $tabs_presenter_collection_builder;
     }
 
     public static function buildSelf(): self
@@ -71,7 +49,6 @@ class FilesDownloadLimitsAdminController implements DispatchableWithRequest, Dis
             new AdminPageRenderer(),
             new FileDownloadLimitsBuilder(),
             new CSRFSynchronizerToken(self::URL),
-            new DocmanSettingsTabsPresenterCollectionBuilder(\EventManager::instance())
         );
     }
 
@@ -88,7 +65,7 @@ class FilesDownloadLimitsAdminController implements DispatchableWithRequest, Dis
             new FilesDownloadLimitsAdminPresenter(
                 $this->token,
                 $this->limits_builder->build(),
-                $this->tabs_presenter_collection_builder->build(),
+                new DocmanSettingsTabsPresenterCollection(),
                 self::URL
             )
         );
