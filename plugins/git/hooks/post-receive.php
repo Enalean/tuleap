@@ -132,7 +132,8 @@ $post_receive = new PostReceive(
     ),
     new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()),
     $git_dao,
-    new \Tuleap\Git\Hook\GitPushReceptionDispatcher($logger)
+    new \Tuleap\Git\Hook\GitPushReceptionDispatcher($logger),
+    new \Tuleap\Git\Hook\DefaultBranchVerifier($git_exec)
 );
 
 $post_receive->beforeParsingReferences($repository_path);

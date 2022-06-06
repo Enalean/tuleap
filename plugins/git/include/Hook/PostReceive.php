@@ -50,6 +50,7 @@ class PostReceive
         private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
         private VerifyArtifactClosureIsAllowed $closure_verifier,
         private DispatchGitPushReception $dispatcher,
+        private VerifyIsDefaultBranch $default_branch_verifier,
     ) {
     }
 
@@ -111,12 +112,15 @@ class PostReceive
 
         $push_details = $this->log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
         $this->parse_log->execute($push_details);
-        $this->dispatchAsynchronousMessageIfNeeded($repository);
+        $this->dispatchAsynchronousMessageIfNeeded($push_details);
     }
 
-    private function dispatchAsynchronousMessageIfNeeded(GitRepository $repository): void
+    private function dispatchAsynchronousMessageIfNeeded(PushDetails $details): void
     {
-        if (! $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId())) {
+        if (! $this->closure_verifier->isArtifactClosureAllowed((int) $details->getRepository()->getId())) {
+            return;
+        }
+        if (! $this->default_branch_verifier->isDefaultBranch($details->getRefname())) {
             return;
         }
         $this->dispatcher->dispatchGitPushReception();

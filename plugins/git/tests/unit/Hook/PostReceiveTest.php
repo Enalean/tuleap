@@ -24,6 +24,7 @@ use Mockery;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
 use Tuleap\Git\Stub\DispatchGitPushReceptionStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
+use Tuleap\Git\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -70,9 +71,9 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&DefaultBranchPostReceiveUpdater
      */
     private $default_branch_post_receive_updater;
-    private PushDetails $push_details;
     private VerifyArtifactClosureIsAllowedStub $closure_verifier;
     private DispatchGitPushReceptionStub $dispatcher;
+    private VerifyIsDefaultBranchStub $default_branch_verifier;
 
     protected function setUp(): void
     {
@@ -87,6 +88,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->default_branch_post_receive_updater = $this->createMock(DefaultBranchPostReceiveUpdater::class);
         $this->closure_verifier                    = VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed();
         $this->dispatcher                          = DispatchGitPushReceptionStub::withCount();
+        $this->default_branch_verifier             = VerifyIsDefaultBranchStub::withAlwaysDefaultBranch();
 
         $this->repository->shouldReceive('getNotifiedMails')->andReturns([]);
     }
@@ -105,7 +107,8 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(PostReceiveMailSender::class),
             $this->createStub(DefaultBranchPostReceiveUpdater::class),
             $this->closure_verifier,
-            $this->dispatcher
+            $this->dispatcher,
+            $this->default_branch_verifier,
         );
         $post_receive->execute(
             self::REPOSITORY_PATH,
@@ -129,6 +132,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->with('john_doe')->once();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithoutRevisions());
 
         $this->executePostReceive();
     }
@@ -145,6 +149,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithoutRevisions());
 
         $this->executePostReceive();
     }
@@ -154,11 +159,10 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->push_details = $this->getPushDetailsWithoutRevisions();
         $this->log_analyzer->shouldReceive('getPushDetails')
             ->with($this->repository, Mockery::any(), self::OLD_REV_SHA1, self::NEW_REV_SHA1, self::MASTER_REF_NAME)
             ->once()
-            ->andReturns($this->push_details);
+            ->andReturns($this->getPushDetailsWithoutRevisions());
 
         $this->executePostReceive();
     }
@@ -167,10 +171,10 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->push_details = $this->getPushDetailsWithNewRevision();
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+        $push_details = $this->getPushDetailsWithNewRevision();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($push_details);
 
-        $this->parse_log->shouldReceive('execute')->with($this->push_details)->once();
+        $this->parse_log->shouldReceive('execute')->with($push_details)->once();
         $this->executePostReceive();
     }
 
@@ -178,8 +182,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->push_details = $this->getPushDetailsWithNewRevision();
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
 
         $this->ci_launcher->shouldReceive('executeForRepository')->with($this->repository)->once();
         $this->executePostReceive();
@@ -189,8 +192,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->push_details = $this->getPushDetailsWithNewRevision();
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
 
         $this->executePostReceive();
         self::assertSame(1, $this->dispatcher->getCallCount());
@@ -200,9 +202,19 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->push_details = $this->getPushDetailsWithNewRevision();
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
         $this->closure_verifier = VerifyArtifactClosureIsAllowedStub::withNeverAllowed();
+
+        $this->executePostReceive();
+        self::assertSame(0, $this->dispatcher->getCallCount());
+    }
+
+    public function testIfPushIsNotOnDefaultBranchItDoesNotDispatch(): void
+    {
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
+        $this->default_branch_verifier = VerifyIsDefaultBranchStub::withNeverDefaultBranch();
 
         $this->executePostReceive();
         self::assertSame(0, $this->dispatcher->getCallCount());
@@ -246,7 +258,8 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(PostReceiveMailSender::class),
             $this->default_branch_post_receive_updater,
             $this->closure_verifier,
-            $this->dispatcher
+            $this->dispatcher,
+            $this->default_branch_verifier,
         );
         $post_receive->beforeParsingReferences(self::REPOSITORY_PATH);
     }
