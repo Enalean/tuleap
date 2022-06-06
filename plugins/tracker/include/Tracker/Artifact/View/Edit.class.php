@@ -131,7 +131,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $html .= '<div id="tracker_artifact_followup_comments-content">';
         $html .= $this->fetchSettingsButton($invert_order, $display_changes);
         $html .= '<h1 id="tracker_artifact_followups">' . dgettext('tuleap-tracker', 'Follow-ups') . '</h1>';
-        $html .= '<ul class="tracker_artifact_followups" data-test="artifact-followups">';
+        $html .= '<section class="tracker_artifact_followups" data-test="artifact-followups">';
 
         $comments = $this->artifact->getFollowupsContent();
         if ($invert_order) {
@@ -142,7 +142,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
             $html .= $this->fetchAddNewComment($tracker, $submitted_comment);
         }
 
-        $html .= '</ul>';
+        $html .= '</section>';
         $html .= '</div>';
         $html .= '</div>';
 
@@ -218,9 +218,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
 
     private function fetchAddNewComment(Tracker $tracker, $submitted_comment)
     {
-        $html  = '<li>';
-        $html .= '<div>';
-        $hp    = Codendi_HTMLPurifier::instance();
+        $html = '<div>';
+        $hp   = Codendi_HTMLPurifier::instance();
 
         if (count($responses = $tracker->getCannedResponseFactory()->getCannedResponses($tracker))) {
             $html .= '<p><b>' . dgettext('tuleap-tracker', 'Use a Canned Response:') . '</b>&nbsp;';
@@ -266,10 +265,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                 false,
             );
             $html .= $this->fetchReplyByMailHelp();
-            $html .= '</div>';
         }
 
-        $html .= '</li>';
+        $html .= '</div>';
 
         return $html;
     }
