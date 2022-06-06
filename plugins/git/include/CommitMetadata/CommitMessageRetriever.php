@@ -20,9 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\CommitMetadata;
 
-interface DispatchGitPushReception
+final class CommitMessageRetriever implements RetrieveCommitMessage
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    public function __construct(private \Git_Exec $git_exec)
+    {
+    }
+
+    public function getCommitMessage(string $ref): string
+    {
+        $commit_message = $this->git_exec->getCommitMessage($ref);
+        return implode("\n", $commit_message);
+    }
 }

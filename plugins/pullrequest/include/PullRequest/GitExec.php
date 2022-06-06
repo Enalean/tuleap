@@ -143,16 +143,6 @@ class GitExec extends Git_Exec
         return $output;
     }
 
-    public function getCommitMessage($ref)
-    {
-        $ref    = escapeshellarg($ref);
-        $cmd    = "log -1 $ref --pretty=%B";
-        $output = [];
-
-        $this->gitCmdWithOutput($cmd, $output);
-        return $output;
-    }
-
     public function getShortStat($ref_base, $ref_compare)
     {
         return $this->parseDiffNumStatOutput(

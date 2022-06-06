@@ -28,6 +28,8 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
+    private const NULL_SHA1 = '0000000000000000000000000000000000000000';
+
     private $fixture_dir;
     private $git_exec;
     private $symlink_repo;
@@ -182,11 +184,43 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($res);
     }
 
+    public function testItReturnsEachLineOfTheCommitMessage(): void
+    {
+        touch("$this->fixture_dir/toto");
+        $this->git_exec->add("$this->fixture_dir/toto");
+        $message = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n"
+            . "\n"
+            . "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\n"
+            . "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\n"
+            . "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\n"
+            . "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"
+            . "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n";
+        $this->git_exec->commit($message);
+        $command = new System_Command();
+        $output  = $command->exec(
+            sprintf('%1$s -C %2$s rev-parse HEAD', Git_Exec::getGitCommand(), $this->fixture_dir)
+        );
+        if (count($output) < 1) {
+            throw new Exception('Expected to find the commit we just made');
+        }
+        $commit_sha1 = $output[0];
+
+        $result = $this->git_exec->getCommitMessage($commit_sha1);
+
+        self::assertCount(8, $result);
+        self::assertSame($message, implode("\n", $result));
+    }
+
+    public function testItThrowsWhenTheReferenceDoesNotExist(): void
+    {
+        $this->expectException(\Git_Command_Exception::class);
+        $this->git_exec->getCommitMessage(self::NULL_SHA1);
+    }
+
     public function testRetrievesDefaultBranch(): void
     {
         self::assertEquals('main', $this->git_exec->getDefaultBranch());
     }
-
 
     public function testSetDefaultBranch(): void
     {

@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Hook\Asynchronous;
 
-interface DispatchGitPushReception
+interface BuildCommitAnalysisProcessor
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor;
 }

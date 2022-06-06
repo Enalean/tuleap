@@ -20,9 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Hook\Asynchronous;
 
-interface DispatchGitPushReception
+use Tuleap\Git\CommitMetadata\CommitMessageRetriever;
+
+final class CommitAnalysisProcessorBuilder implements BuildCommitAnalysisProcessor
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor
+    {
+        return new CommitAnalysisProcessor(
+            \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
+            new CommitMessageRetriever(\Git_Exec::buildFromRepository($repository))
+        );
+    }
 }

@@ -132,7 +132,7 @@ $post_receive = new PostReceive(
     ),
     new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()),
     $git_dao,
-    new \Tuleap\Git\Hook\GitPushReceptionDispatcher($logger),
+    new \Tuleap\Git\Hook\GitPushReceptionDispatcher(new \Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessorBuilder()),
     new \Tuleap\Git\Hook\DefaultBranchVerifier($git_exec)
 );
 

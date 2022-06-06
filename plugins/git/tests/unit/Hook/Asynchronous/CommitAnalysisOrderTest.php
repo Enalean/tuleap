@@ -20,28 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Hook\Asynchronous;
 
-use Tuleap\Git\Hook\PushDetails;
+use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-final class DispatchGitPushReceptionStub implements \Tuleap\Git\Hook\DispatchGitPushReception
+final class CommitAnalysisOrderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private function __construct(private int $call_count = 0)
-    {
-    }
+    private const COMMIT_SHA1 = 'bb7870508a';
 
-    public static function withCount(): self
+    public function testItBuildsFromComponents(): void
     {
-        return new self();
-    }
+        $hash    = CommitHash::fromString(self::COMMIT_SHA1);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->build();
 
-    public function dispatchGitPushReception(PushDetails $details): void
-    {
-        $this->call_count++;
-    }
+        $order = CommitAnalysisOrder::fromComponents($hash, $user, $project);
 
-    public function getCallCount(): int
-    {
-        return $this->call_count;
+        self::assertSame($hash, $order->getCommitHash());
+        self::assertSame($user, $order->getPusher());
+        self::assertSame($project, $order->getProject());
     }
 }

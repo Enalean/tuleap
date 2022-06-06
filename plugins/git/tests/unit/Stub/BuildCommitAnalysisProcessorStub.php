@@ -20,9 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Stub;
 
-interface DispatchGitPushReception
+use Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessor;
+
+final class BuildCommitAnalysisProcessorStub implements \Tuleap\Git\Hook\Asynchronous\BuildCommitAnalysisProcessor
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    private function __construct(private CommitAnalysisProcessor $processor)
+    {
+    }
+
+    public static function withProcessor(CommitAnalysisProcessor $processor): self
+    {
+        return new self($processor);
+    }
+
+    public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor
+    {
+        return $this->processor;
+    }
 }
