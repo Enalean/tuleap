@@ -249,6 +249,14 @@ Requires: php-mediawiki-tuleap-123 >= 1.23.9-17
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
+%package plugin-mediawiki-standalone
+Summary: MediaWiki Standalone plugin
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: mediawiki-%{name}-flavor = @@VERSION@@
+%description plugin-mediawiki-standalone
+%{summary}.
+
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
@@ -508,14 +516,6 @@ Provides: tuleap-plugin-textualreport
 
 %if %{with experimental}
 
-%package plugin-mediawiki-standalone
-Summary: MediaWiki Standalone plugin
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: mediawiki-%{name}-flavor = @@VERSION@@
-%description plugin-mediawiki-standalone
-%{summary}.
-
 %endif
 
 #
@@ -592,7 +592,6 @@ done
 %endif
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki_standalone
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -816,6 +815,12 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 
+## Plugin mediawiki_standalone
+%{__install} plugins/mediawiki_standalone/etc/systemd/mediawiki-tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/projects
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/images
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/cache
+
 #
 ## Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -861,12 +866,6 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 %endif
 
 %if %{with experimental}
-
-## Plugin mediawiki_standalone
-%{__install} plugins/mediawiki_standalone/etc/systemd/mediawiki-tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/projects
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/images
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/cache
 
 %endif
 
@@ -1303,6 +1302,14 @@ fi
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/master
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/projects
 
+%files plugin-mediawiki-standalone
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/mediawiki_standalone
+%{_unitdir}/mediawiki-tuleap-php-fpm.service
+%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/projects
+%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/images
+%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/cache
+
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/openidconnectclient
@@ -1460,14 +1467,6 @@ fi
 %endif
 
 %if %{with experimental}
-
-%files plugin-mediawiki-standalone
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/mediawiki_standalone
-%{_unitdir}/mediawiki-tuleap-php-fpm.service
-%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/projects
-%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/images
-%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/cache
 
 %endif
 
