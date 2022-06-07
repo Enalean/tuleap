@@ -209,7 +209,7 @@ final class RepositoryTest extends TestBase
     public function testOPTIONSBranches(): void
     {
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'));
-        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSBranchesWithReadOnlyAdmin(): void
@@ -219,7 +219,7 @@ final class RepositoryTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testGETBranches(): void
@@ -303,6 +303,79 @@ final class RepositoryTest extends TestBase
                 ],
             ]
         );
+    }
+
+    public function testCreateABranch(): void
+    {
+        $post_payload = json_encode(
+            [
+                'branch_name' => "newbranch01",
+                'reference' => "branch_file_02",
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory
+                ->createRequest('POST', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches')
+                ->withBody($this->stream_factory->createStream($post_payload)),
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    public function testCreateABranchMustFailWithNonValidBranchName(): void
+    {
+        $post_payload = json_encode(
+            [
+                'branch_name' => 'newbran~01',
+                'reference' => "branch_file_02",
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory
+                ->createRequest('POST', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches')
+                ->withBody($this->stream_factory->createStream($post_payload)),
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testCreateABranchMustFailWithNonExistingReference(): void
+    {
+        $post_payload = json_encode(
+            [
+                'branch_name' => 'newbranch02',
+                'reference' => "non_existing_branch",
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory
+                ->createRequest('POST', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches')
+                ->withBody($this->stream_factory->createStream($post_payload)),
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testCreateABranchMustBeForbiddenForUserThatCannotWriteInRepository(): void
+    {
+        $post_payload = json_encode(
+            [
+                'branch_name' => "newbranch02",
+                'reference' => "branch_file_02",
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->request_factory
+                ->createRequest('POST', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches')
+                ->withBody($this->stream_factory->createStream($post_payload)),
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testOPTIONSTags(): void

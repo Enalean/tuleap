@@ -499,4 +499,14 @@ class Git_Exec
                ' --work-tree=' . escapeshellarg($this->work_tree) .
                ' --git-dir=' . escapeshellarg($this->git_dir);
     }
+
+    /**
+     * @throws Git_Command_Exception
+     */
+    public function updateRef(string $reference, string $new_value): bool
+    {
+        $cmd = 'update-ref ' . escapeshellarg($reference) . ' ' . escapeshellarg($new_value);
+
+        return $this->gitCmd($cmd);
+    }
 }
