@@ -43,7 +43,8 @@ msgid "Switch to…"
 msgstr "Basculer vers…"
 
 msgid "You didn't visit recently any items matching your query."
-msgstr "Vous n'avez pas visité d'élément récemment qui corresponde à votre recherche."
+msgstr ""
+"Vous n'avez pas visité d'élément récemment qui corresponde à votre recherche."
 
 msgid "You don't belong to any projects"
 msgstr "Vous n'appartenez à aucun projet"

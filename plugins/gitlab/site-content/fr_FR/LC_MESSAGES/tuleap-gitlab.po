@@ -14,7 +14,8 @@ msgstr ""
 
 #, php-format
 msgid "An error occurred while creating the branch on GitLab: %s"
-msgstr "Une erreur est survenue lors de la création de la branche sur Gitlab: %s"
+msgstr ""
+"Une erreur est survenue lors de la création de la branche sur Gitlab: %s"
 
 msgid "Closed"
 msgstr "Fermée"

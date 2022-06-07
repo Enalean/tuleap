@@ -95,7 +95,8 @@ msgstr "Date de soumission"
 
 msgid "The initial query contains trackers from inactive projects:"
 msgstr ""
-"La requête initiale comporte des outils de suivi provenant de projets inactifs :"
+"La requête initiale comporte des outils de suivi provenant de projets "
+"inactifs :"
 
 msgid "Title"
 msgstr "Titre"
