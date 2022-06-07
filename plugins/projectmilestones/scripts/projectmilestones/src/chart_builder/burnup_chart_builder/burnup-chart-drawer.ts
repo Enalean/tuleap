@@ -18,25 +18,22 @@
  *
  */
 
-import type {
-    ChartPropsWhithoutTooltip,
-    XYScale,
-} from "../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWithoutTooltip, XYScale } from "@tuleap/chart-builder";
 import type { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
-import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
-import { max } from "d3-array";
-import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
-import { select } from "d3-selection";
-import { curveMonotoneX } from "d3-shape";
 import {
+    getDaysToDisplay,
+    buildGraphScales,
     drawCurve,
     drawIdealLine,
-} from "../../../../../../../src/scripts/charts-builders/chart-lines-service";
+    buildChartLayout,
+    TimeScaleLabelsFormatter,
+} from "@tuleap/chart-builder";
+import { max } from "d3-array";
+import { select } from "d3-selection";
+import { curveMonotoneX } from "d3-shape";
 import { getLastGenericBurnupData } from "../chart-data-service";
 import { addScaleLines } from "../chart-scale-drawer";
 import { getCoordinatesScaleLines } from "../chart-scale-helper";
-import { buildChartLayout } from "../../../../../../../src/scripts/charts-builders/chart-layout-builder";
-import { TimeScaleLabelsFormatter } from "../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
 import { getDisplayableDataForBurnup } from "../chart-data-service";
 
@@ -46,7 +43,7 @@ const DEFAULT_TOTAL_EFFORT = 5;
 
 function createBurnupChart(
     chart_container: HTMLElement,
-    chart_props: ChartPropsWhithoutTooltip,
+    chart_props: ChartPropsWithoutTooltip,
     generic_burnup_data: GenericBurnupData
 ): void {
     const x_axis_tick_values = getDaysToDisplay(generic_burnup_data),

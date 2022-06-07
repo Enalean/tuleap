@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
@@ -16,7 +17,6 @@ specifiers:
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.3.0
   d3-array: ^3.0.1
-  d3-scale: ^4.0.0
   d3-selection: ^3.0.0
   d3-shape: ^3.0.1
   sprintf-js: ^1.1.2
@@ -30,13 +30,13 @@ specifiers:
 
 dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
+  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   d3-array: 3.0.1
-  d3-scale: 4.0.0
   d3-selection: 3.0.0
   d3-shape: 3.0.1
   sprintf-js: 1.1.2
@@ -141,37 +141,9 @@ packages:
       internmap: 2.0.1
     dev: false
 
-  /d3-color/3.0.1:
-    resolution: {integrity: sha512-6/SlHkDOBLyQSJ1j1Ghs82OIUXpKWlR0hCsw0XrLSQhuUPuCSmLQ1QPH98vpnQxMUQM2/gfAkUEWsupVpd9JGw==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-format/3.0.1:
-    resolution: {integrity: sha512-hdL7+HBIohpgfolhBxr1KX47VMD6+vVD/oEFrxk5yhmzV2prk99EkFKYpXuhVkFpTgHdJ6/4bYcjdLPPXV4tIA==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-interpolate/3.0.1:
-    resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-color: 3.0.1
-    dev: false
-
   /d3-path/3.0.1:
     resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
     engines: {node: '>=12'}
-    dev: false
-
-  /d3-scale/4.0.0:
-    resolution: {integrity: sha512-foHQYKpWQcyndH1CGoHdUC4PECxTxonzwwBXGT8qu+Drb1FIc6ON6dG2P5f4hRRMkLiIKeWK7iFtdznDUrnuPQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-array: 3.0.1
-      d3-format: 3.0.1
-      d3-interpolate: 3.0.1
-      d3-time: 3.0.0
-      d3-time-format: 4.0.0
     dev: false
 
   /d3-selection/3.0.0:
@@ -184,20 +156,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       d3-path: 3.0.1
-    dev: false
-
-  /d3-time-format/4.0.0:
-    resolution: {integrity: sha512-nzaCwlj+ZVBIlFuVOT1RmU+6xb/7D5IcnhHzHQcBgS/aTa5K9fWZNN5LCXA27LgF5WxoSNJqKBbLcGMtM6Ca6A==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-time: 3.0.0
-    dev: false
-
-  /d3-time/3.0.0:
-    resolution: {integrity: sha512-zmV3lRnlaLI08y9IMRXSDshQb5Nj77smnfpnd2LrBa/2K281Jijactokeak14QacHs/kKq0AQ121nidNYlarbQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-array: 3.0.1
     dev: false
 
   /de-indent/1.0.2:

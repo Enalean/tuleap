@@ -28,14 +28,14 @@ import { Component, Prop } from "vue-property-decorator";
 import type { MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import { createBurndownChart } from "../../../../../chart_builder/burndown_chart_builder/burndown-chart-drawer";
-import type { ChartPropsWhithoutTooltip } from "../../../../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 
 @Component
 export default class Burndown extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
 
-    getChartProps(container_width: number, container_height: number): ChartPropsWhithoutTooltip {
+    getChartProps(container_width: number, container_height: number): ChartPropsWithoutTooltip {
         return {
             graph_width: container_width,
             graph_height: container_height,

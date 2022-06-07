@@ -6,6 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
+    "@tuleap/chart-builder": "link:../../lib/frontend/chart-builder",
     "@tuleap/copy-to-clipboard": "link:../../lib/frontend/copy-to-clipboard",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
@@ -22,8 +23,6 @@
     "@tuleap/tooltip": "link:../../lib/frontend/tooltip",
     "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
     "d3-array": "^3.0.1",
-    "d3-axis": "^3.0.0",
-    "d3-scale": "^4.0.0",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "dompurify": "^2.3.6",

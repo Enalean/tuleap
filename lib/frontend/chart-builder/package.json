@@ -1,0 +1,39 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/chart-builder",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/chart-builder.es.js",
+  "main": "dist/chart-builder.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/chart-builder.es.js",
+      "require": "./dist/chart-builder.umd.js"
+    }
+  },
+  "dependencies": {
+    "@tuleap/gettext": "link:../gettext",
+    "d3-array": "3.0.1",
+    "d3-axis": "3.0.0",
+    "d3-scale": "4.0.0",
+    "d3-selection": "3.0.0",
+    "d3-shape": "3.0.1",
+    "moment": "2.29.3",
+    "sprintf-js": "1.1.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../po-gettext-plugin",
+    "@types/d3-scale": "4.0.0",
+    "@types/d3-selection": "3.0.0",
+    "@types/d3-shape": "3.0.1"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "jest"
+  }
+}

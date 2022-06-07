@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
-import french_translations from "../po/fr_FR.po";
+import type { XYScale } from "./type";
 
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations("fr_FR", "burndown-chart", french_translations);
-gettext_provider.setTextDomain("burndown-chart");
+type BarChartMargins = {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+};
 
-export { gettext_provider };
+type BarChartScales = {
+    margins: BarChartMargins;
+    graph_width: number;
+    graph_height: number;
+    y_axis_maximum: number;
+    x_axis_tick_values: string[];
+    bands_paddings: number;
+};
+
+export function buildBarChartScales(params: BarChartScales): XYScale;

@@ -33,7 +33,8 @@ module.exports = [
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
         resolve: {
             alias: {
-                "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
+                // deduplicate moment that is also used by chart-builder
+                moment$: path.resolve(__dirname, "node_modules/moment"),
             },
         },
         module: {

@@ -21,22 +21,22 @@
 import { max } from "d3-array";
 import { select } from "d3-selection";
 import { curveMonotoneX } from "d3-shape";
-import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
-import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
+import {
+    buildGraphScales,
+    getDaysToDisplay,
+    drawCurve,
+    drawIdealLine,
+    buildChartLayout,
+    TimeScaleLabelsFormatter,
+} from "@tuleap/chart-builder";
 import type { BurndownData } from "../../type";
 
 import type {
-    ChartPropsWhithoutTooltip,
+    ChartPropsWithoutTooltip,
     PropertiesBuilderGraph,
     XYScale,
-} from "../../../../../../../src/scripts/charts-builders/type";
+} from "@tuleap/chart-builder";
 import { addScaleLines } from "../chart-scale-drawer";
-import {
-    drawCurve,
-    drawIdealLine,
-} from "../../../../../../../src/scripts/charts-builders/chart-lines-service";
-import { buildChartLayout } from "../../../../../../../src/scripts/charts-builders/chart-layout-builder";
-import { TimeScaleLabelsFormatter } from "../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
 import { getDisplayableData, getLastData } from "../chart-data-service";
 import { addBadgeCaption } from "../chart-badge-generator";
@@ -48,7 +48,7 @@ export { createBurndownChart, getMaxRemainingEffort };
 
 function createBurndownChart(
     chart_container: HTMLElement,
-    chart_props: ChartPropsWhithoutTooltip,
+    chart_props: ChartPropsWithoutTooltip,
     burndown_data: BurndownData,
     id_milestone: number
 ): void {
