@@ -86,12 +86,6 @@ class PluginsAdministrationActions extends Actions
 
                 if ($plugin) {
                     $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-pluginsadministration', 'The plugin has been successfully installed'));
-
-                    $post_install = $this->plugin_manager->getPostInstall($name);
-                    if ($post_install) {
-                        $GLOBALS['Response']->addFeedback('info', '<pre>' . $post_install . '</pre>', CODENDI_PURIFIER_DISABLED);
-                    }
-
                     $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id=' . $plugin->getId());
                 }
             } catch (Exception $exception) {
