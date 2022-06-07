@@ -794,9 +794,11 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getProperties: function () {
+    _getProperties: function (is_root) {
         var a = Builder.node("a", {
-            href: this.defaultUrl + "&action=details",
+            href: is_root
+                ? this.docman.options.document_path + "/"
+                : this.docman.options.document_path + "/preview/" + this.item_id,
             class: "docman_item_option_details",
             title: this.docman.options.language.action_details,
         });
@@ -896,10 +898,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 
                         // Disable other "edit actions"
                         this.docman.actionsForItem[this.item_id].canLock = false;
-                        //this.docman.actionsForItem[this.item_id].canDelete     = false;
-                        //this.docman.actionsForItem[this.item_id].canMove       = false;
-                        //this.docman.actionsForItem[this.item_id].canUpdate     = false;
-                        //this.docman.actionsForItem[this.item_id].canNewVersion = true
 
                         // Hide menu
                         this.hide();
@@ -979,9 +977,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         var feedback = $("feedback");
                         feedback.appendChild(ul);
                         feedback.show();
-
-                        // There is sth to paste.
-                        //this.docman.actionsForItem[this.item_id].canPaste = true;
 
                         // There is something to paste & user have write permission on a folder -> user can paste inside that folder.
                         $H(this.docman.actionsForItem)
@@ -1298,7 +1293,8 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         }
 
         // Properties
-        ul.appendChild(this._getProperties());
+        const is_root = Number(this.docman.actionsForItem[this.item_id].parent_id) === 0;
+        ul.appendChild(this._getProperties(is_root));
 
         actions_panel.appendChild(ul);
 

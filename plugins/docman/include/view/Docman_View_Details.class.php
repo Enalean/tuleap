@@ -55,15 +55,6 @@ class Docman_View_Details extends Docman_View_Display
         $item_factory = $this->_getItemFactory();
         $details      = new Docman_View_ItemDetails($params['item'], $url);
         $sections     = [];
-        if ($user_can_read || $user_can_read_obsolete) {
-            if ($view && $section == 'properties') {
-                $props = $view;
-            } else {
-                $props = new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $params['theme_path'], $user_can_write, $token);
-            }
-            $sections['properties'] = true;
-            $details->addSection($props);
-        }
         if ($user_can_write) {
             if ($view && $section == 'actions') {
                 $actions = $view;

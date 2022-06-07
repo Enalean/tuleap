@@ -28,6 +28,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
+use Tuleap\Document\Tree\DocumentItemPreviewUrlBuilder;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
@@ -594,6 +595,10 @@ class Docman_Controller extends Controler
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'details':
+                if ($this->request->get('section') === 'properties') {
+                    $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing properties via the old interface is not supported.'));
+                    $GLOBALS['Response']->redirect(DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item));
+                }
                 $this->view = ucfirst($view);
                 break;
             case \Docman_View_Admin_View::IDENTIFIER:
@@ -1272,15 +1277,8 @@ class Docman_Controller extends Controler
                 break;
 
             case 'edit':
-                if (! $dpm->userCanUpdateItemProperties($this->getUser(), $item)) {
-                    $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
-                    $this->view                              = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = ['action'  => 'details', 'id' => $item->getId()];
-                } else {
-                    $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                    $mdFactory->appendAllListOfValuesToItem($item);
-                    $this->view = 'Edit';
-                }
+                $GLOBALS['Response']->addFeedback(\Feedback::WARN, dgettext('tuleap-docman', 'Your link is not anymore valid: accessing properties via the old interface is not supported.'));
+                $GLOBALS['Response']->redirect(DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item));
                 break;
             case 'delete':
                 if ($this->userCannotDelete($user, $item)) {

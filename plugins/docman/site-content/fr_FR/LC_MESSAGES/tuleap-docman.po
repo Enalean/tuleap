@@ -197,17 +197,6 @@ msgstr ""
 "êtes sur le point de supprimer une version du fichier.</p><p>Êtes-vous sûr "
 "de vouloir la supprimer ?</p>"
 
-#, php-format
-msgid ""
-"<h3>Confirm recursive application of default values.</h3><p>You are about to "
-"apply the values selected in <strong>Default Values</strong> field set below "
-"on <strong>%1$s documents and %2$s folders</strong>.</p>"
-msgstr ""
-"<h3>Confirmation de l'application récursive des valeurs par défaut.</"
-"h3><p>Vous êtes sur le point d'appliquer les valeurs sélectionnées dans dans "
-"l'ensemble de champ <strong>Valeur par défaut</strong> ci-dessous sur "
-"<strong>%1$s documents and %2$s folders</strong>.</p>"
-
 msgid ""
 "<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
 "the referenced wiki page will no longer exist in wiki service too.</em></p>"
@@ -446,15 +435,6 @@ msgstr "Ajouter les membres d'un groupe d'utilisateurs :"
 msgid "Apply a naming pattern on files."
 msgstr "Applique un modèle de nommage sur les fichiers."
 
-msgid "Apply on documents & folders"
-msgstr "Appliquer sur les documents et les dossiers"
-
-msgid "Apply on folders only"
-msgstr "Appliquer seulement sur les dossiers"
-
-msgid "Apply<br>recursively"
-msgstr "Appliquer<br>récursivement"
-
 msgid "Approval"
 msgstr "Approbation"
 
@@ -573,13 +553,6 @@ msgstr "Mauvais type de propriété"
 
 msgid "Begin"
 msgstr "Début"
-
-msgid ""
-"By default the update only affect folders, if you want to update the "
-"documents too with the select box below."
-msgstr ""
-"Par défaut les mise à jour n'affecte que les dossiers, vous pouvez également "
-"mettre à jour les documents avec la liste déroulante ci-dessous."
 
 #, php-format
 msgid "Can't delete folder %s because it is not empty."
@@ -1026,10 +999,6 @@ msgstr "Modification"
 
 msgid "Edit properties"
 msgstr "Editer les propriétés"
-
-#, php-format
-msgid "Edit properties of %1$s"
-msgstr "Edition des propriétés de %1$s"
 
 msgid "Element successfully deleted."
 msgstr "L'élément a bien été supprimé."
@@ -1848,9 +1817,6 @@ msgstr "Rang"
 msgid "Rank:"
 msgstr "Rang :"
 
-msgid "Recursion options"
-msgstr "Options de récursion"
-
 msgid "Redirect to document with given id."
 msgstr "Redirige au document correspondant à l'ID donné."
 
@@ -2444,9 +2410,6 @@ msgstr "Valider"
 msgid "Validity:"
 msgstr "Validité :"
 
-msgid "Value"
-msgstr "Valeur"
-
 msgid "Value \"%2$s\" in \"%1$s\" property"
 msgstr "Valeur \"%2$s\" de la propriété \"%1$s\""
 
@@ -3023,6 +2986,13 @@ msgstr ""
 "--\n"
 "Ceci est un message généré automatiquement. Merci de ne pas répondre à cet "
 "email."
+
+msgid ""
+"Your link is not anymore valid: accessing properties via the old interface "
+"is not supported."
+msgstr ""
+"Votre lien n'est plus valide : accéder aux propriétés via l'ancienne "
+"interface n'est pas supporté."
 
 msgid ""
 "Your message is not valid, you can not send the default message or an empty "

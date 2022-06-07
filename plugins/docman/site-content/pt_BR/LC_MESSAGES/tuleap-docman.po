@@ -152,13 +152,6 @@ msgid ""
 "this version?</p>"
 msgstr ""
 
-#, php-format
-msgid ""
-"<h3>Confirm recursive application of default values.</h3><p>You are about to "
-"apply the values selected in <strong>Default Values</strong> field set below "
-"on <strong>%1$s documents and %2$s folders</strong>.</p>"
-msgstr ""
-
 msgid ""
 "<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, "
 "the referenced wiki page will no longer exist in wiki service too.</em></p>"
@@ -345,15 +338,6 @@ msgstr ""
 msgid "Apply a naming pattern on files."
 msgstr ""
 
-msgid "Apply on documents & folders"
-msgstr ""
-
-msgid "Apply on folders only"
-msgstr ""
-
-msgid "Apply<br>recursively"
-msgstr ""
-
 msgid "Approval"
 msgstr ""
 
@@ -454,11 +438,6 @@ msgid "Bad property type"
 msgstr ""
 
 msgid "Begin"
-msgstr ""
-
-msgid ""
-"By default the update only affect folders, if you want to update the "
-"documents too with the select box below."
 msgstr ""
 
 #, php-format
@@ -866,10 +845,6 @@ msgid "Edit"
 msgstr "Editar"
 
 msgid "Edit properties"
-msgstr ""
-
-#, php-format
-msgid "Edit properties of %1$s"
 msgstr ""
 
 msgid "Element successfully deleted."
@@ -1613,9 +1588,6 @@ msgstr ""
 msgid "Rank:"
 msgstr ""
 
-msgid "Recursion options"
-msgstr ""
-
 msgid "Redirect to document with given id."
 msgstr ""
 
@@ -2162,9 +2134,6 @@ msgstr ""
 msgid "Validity:"
 msgstr ""
 
-msgid "Value"
-msgstr ""
-
 msgid "Value \"%2$s\" in \"%1$s\" property"
 msgstr ""
 
@@ -2616,6 +2585,11 @@ msgid ""
 "--\n"
 "This is an automatic email sent by a robot. Please do not reply to this "
 "email."
+msgstr ""
+
+msgid ""
+"Your link is not anymore valid: accessing properties via the old interface "
+"is not supported."
 msgstr ""
 
 msgid ""
