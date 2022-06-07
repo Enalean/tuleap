@@ -98,10 +98,13 @@ final class SearchView extends AdminView implements DispatchableWithBurningParro
 
                 $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__);
                 $renderer->renderToPage('search-view', [
-                    'post_url'   => self::getUrl($project),
-                    'csrf_token' => self::getCSRF($project),
-                    'criteria'   => $this->criteria_filter->getCriteria($project, $metadata_factory),
-                    'columns'    => $this->column_filter->getColumns($project, $metadata_factory),
+                    'post_url'            => self::getUrl($project),
+                    'csrf_token'          => self::getCSRF($project),
+                    'criteria'            => $this->criteria_filter->getCriteria($project, $metadata_factory),
+                    'columns'             => $this->column_filter->getColumns($project, $metadata_factory),
+                    'id_label'            => dgettext('tuleap-document', 'Id'),
+                    'title_label'         => dgettext('tuleap-document', 'Title'),
+                    'global_search_label' => dgettext('tuleap-document', 'Global search'),
                 ]);
             }
         );

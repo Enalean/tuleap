@@ -63,6 +63,9 @@ msgstr ""
 msgid "Following criteria will be displayed in the search pane."
 msgstr ""
 
+msgid "Global search"
+msgstr ""
+
 msgid ""
 "Hence, Tuleap will avoid users from forgetting to communicate changes made "
 "in the document."
@@ -95,15 +98,10 @@ msgstr "Nenhum"
 msgid "Please contact your site administrator."
 msgstr ""
 
-msgid ""
-"Please note: the <span class=\"tlp-badge-secondary\"> Global search </span> "
-"criteria will always be displayed."
+msgid "Please note: the %s and %s columns will always be displayed."
 msgstr ""
 
-msgid ""
-"Please note: the <span class=\"tlp-badge-secondary\"> Id </span> and the\n"
-"                        <span class=\"tlp-badge-secondary\"> Title </span> "
-"columns will always be available."
+msgid "Please note: the criterion %s will always be displayed."
 msgstr ""
 
 msgid "Project not found"
@@ -147,6 +145,9 @@ msgid ""
 msgstr ""
 
 msgid "Those settings apply when downloading a folder as a zip archive."
+msgstr ""
+
+msgid "Title"
 msgstr ""
 
 msgid "Type"
