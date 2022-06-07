@@ -20,9 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\CommitMetadata;
 
-interface DispatchGitPushReception
+interface RetrieveCommitMessage
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    /**
+     * @throws \Git_Command_Exception
+     */
+    public function getCommitMessage(string $ref): string;
 }

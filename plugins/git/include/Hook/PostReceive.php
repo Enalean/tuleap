@@ -123,7 +123,7 @@ class PostReceive
         if (! $this->default_branch_verifier->isDefaultBranch($details->getRefname())) {
             return;
         }
-        $this->dispatcher->dispatchGitPushReception();
+        $this->dispatcher->dispatchGitPushReception($details);
     }
 
     private function processGitWebhooks(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void

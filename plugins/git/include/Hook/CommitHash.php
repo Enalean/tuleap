@@ -22,25 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook;
 
-use Tuleap\Git\Hook\Asynchronous\BuildCommitAnalysisProcessor;
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
-
-final class GitPushReceptionDispatcher implements DispatchGitPushReception
+/**
+ * I hold the SHA-1 hash of a git commit
+ * @psalm-immutable
+ */
+final class CommitHash
 {
-    public function __construct(private BuildCommitAnalysisProcessor $builder)
+    private function __construct(private string $sha1)
     {
     }
 
-    public function dispatchGitPushReception(PushDetails $details): void
+    public static function fromString(string $sha1): self
     {
-        $pusher     = $details->getUser();
-        $repository = $details->getRepository();
-        $project    = $repository->getProject();
-        $processor  = $this->builder->getProcessor($repository);
-        foreach ($details->getRevisionList() as $commit_sha1) {
-            $processor->process(
-                CommitAnalysisOrder::fromComponents(CommitHash::fromString($commit_sha1), $pusher, $project)
-            );
-        }
+        return new self($sha1);
+    }
+
+    public function __toString(): string
+    {
+        return $this->sha1;
     }
 }

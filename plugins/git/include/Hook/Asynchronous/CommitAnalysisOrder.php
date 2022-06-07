@@ -20,9 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Hook\Asynchronous;
 
-interface DispatchGitPushReception
+use Tuleap\Git\Hook\CommitHash;
+
+final class CommitAnalysisOrder
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    private function __construct(private CommitHash $commit_hash, private \PFUser $pusher, private \Project $project)
+    {
+    }
+
+    public static function fromComponents(CommitHash $commit_hash, \PFUser $pusher, \Project $project): self
+    {
+        return new self($commit_hash, $pusher, $project);
+    }
+
+    public function getCommitHash(): CommitHash
+    {
+        return $this->commit_hash;
+    }
+
+    public function getPusher(): \PFUser
+    {
+        return $this->pusher;
+    }
+
+    public function getProject(): \Project
+    {
+        return $this->project;
+    }
 }

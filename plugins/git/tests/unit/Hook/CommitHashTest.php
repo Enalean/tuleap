@@ -22,25 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook;
 
-use Tuleap\Git\Hook\Asynchronous\BuildCommitAnalysisProcessor;
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
-
-final class GitPushReceptionDispatcher implements DispatchGitPushReception
+final class CommitHashTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function __construct(private BuildCommitAnalysisProcessor $builder)
-    {
-    }
+    private const COMMIT_SHA1 = '021edd5653';
 
-    public function dispatchGitPushReception(PushDetails $details): void
+    public function testItBuildsFromSha1String(): void
     {
-        $pusher     = $details->getUser();
-        $repository = $details->getRepository();
-        $project    = $repository->getProject();
-        $processor  = $this->builder->getProcessor($repository);
-        foreach ($details->getRevisionList() as $commit_sha1) {
-            $processor->process(
-                CommitAnalysisOrder::fromComponents(CommitHash::fromString($commit_sha1), $pusher, $project)
-            );
-        }
+        $hash = CommitHash::fromString(self::COMMIT_SHA1);
+        self::assertSame(self::COMMIT_SHA1, (string) $hash);
     }
 }

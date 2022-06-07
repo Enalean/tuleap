@@ -20,9 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Stub;
 
-interface DispatchGitPushReception
+final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\RetrieveCommitMessage
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    private function __construct(private bool $should_throw, private string $return_value)
+    {
+    }
+
+    public static function withMessage(string $message): self
+    {
+        return new self(false, $message);
+    }
+
+    public static function withError(): self
+    {
+        return new self(true, '');
+    }
+
+    public function getCommitMessage(string $ref): string
+    {
+        if ($this->should_throw) {
+            throw new \Git_Command_Exception('log', [], 1);
+        }
+        return $this->return_value;
+    }
 }

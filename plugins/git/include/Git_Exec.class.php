@@ -292,6 +292,19 @@ class Git_Exec
     }
 
     /**
+     * @throws Git_Command_Exception
+     */
+    public function getCommitMessage(string $ref): array
+    {
+        $ref    = escapeshellarg($ref);
+        $cmd    = "log -1 $ref --pretty=%B";
+        $output = [];
+
+        $this->gitCmdWithOutput($cmd, $output);
+        return $output;
+    }
+
+    /**
      * Returns content of an object
      *
      * @throws Git_Command_Exception
