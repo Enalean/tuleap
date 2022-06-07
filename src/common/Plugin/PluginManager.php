@@ -212,13 +212,6 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->site_cache->invalidatePluginBasedCaches();
         return $this->plugin_factory->removePlugin($plugin);
     }
-    public function getPostInstall($name)
-    {
-        $path_to_file = '/' . $this->getValidatedName($name) . '/POSTINSTALL.txt';
-        return file_exists(ForgeConfig::get('sys_pluginsroot') . $path_to_file) ?
-            file_get_contents(ForgeConfig::get('sys_pluginsroot') . $path_to_file) :
-            false;
-    }
 
     public function getInstallReadme($name)
     {
