@@ -23,9 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-interface ServiceActivation
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+
+final class ServiceAvailabilityProjectServiceBeforeAvailabilityEvent implements ServiceAvailability
 {
-    public function isForService(string $service_shortname): bool;
-    public function getProject(): \Project;
-    public function cannotBeActivated(string $reason): void;
+    public function __construct(private ProjectServiceBeforeActivation $event)
+    {
+    }
+
+    public function isForService(string $service_shortname): bool
+    {
+        return $this->event->isForService($service_shortname);
+    }
+
+    public function getProject(): \Project
+    {
+        return $this->event->getProject();
+    }
+
+    public function cannotBeActivated(string $reason): void
+    {
+        $this->event->pluginSetAValue();
+        $this->event->setWarningMessage($reason);
+    }
 }

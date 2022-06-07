@@ -23,30 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-final class StubServiceActivation implements ServiceActivation
+interface ServiceAvailability
 {
-    /**
-     * @psalm-readonly
-     * @psalm-allow-private-mutation
-     */
-    public bool $cannot_be_activated = false;
-
-    public function __construct(private string $service_shortname, private \Project $project)
-    {
-    }
-
-    public function isForService(string $service_shortname): bool
-    {
-        return $this->service_shortname === $service_shortname;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
-    }
-
-    public function cannotBeActivated(string $reason): void
-    {
-        $this->cannot_be_activated = true;
-    }
+    public function isForService(string $service_shortname): bool;
+    public function getProject(): \Project;
+    public function cannotBeActivated(string $reason): void;
 }

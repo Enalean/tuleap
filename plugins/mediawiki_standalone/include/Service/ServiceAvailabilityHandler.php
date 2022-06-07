@@ -23,24 +23,24 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-final class ServiceActivationHandler
+final class ServiceAvailabilityHandler
 {
     private const LEGACY_MEDIAWIKI_SERVICE_SHORTNAME = 'plugin_mediawiki';
 
-    public function handle(ServiceActivation $service_activation): void
+    public function handle(ServiceAvailability $service_availability): void
     {
-        $project = $service_activation->getProject();
-        if ($service_activation->isForService(MediawikiStandaloneService::SERVICE_SHORTNAME) && $project->usesService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME)) {
-            $service_activation->cannotBeActivated(dgettext('tuleap-mediawiki_standalone', 'The MediaWiki standalone service cannot activated when the Mediawiki service is active'));
+        $project = $service_availability->getProject();
+        if ($service_availability->isForService(MediawikiStandaloneService::SERVICE_SHORTNAME) && $project->usesService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME)) {
+            $service_availability->cannotBeActivated(dgettext('tuleap-mediawiki_standalone', 'The MediaWiki standalone service cannot activated when the Mediawiki service is active'));
             return;
         }
 
         if (
-            $service_activation->isForService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME) && $project->usesService(
+            $service_availability->isForService(self::LEGACY_MEDIAWIKI_SERVICE_SHORTNAME) && $project->usesService(
                 MediawikiStandaloneService::SERVICE_SHORTNAME
             )
         ) {
-            $service_activation->cannotBeActivated(dgettext('tuleap-mediawiki_standalone', 'The Mediawiki service cannot activated when the MediaWiki standalone service is active'));
+            $service_availability->cannotBeActivated(dgettext('tuleap-mediawiki_standalone', 'The Mediawiki service cannot activated when the MediaWiki standalone service is active'));
         }
     }
 }

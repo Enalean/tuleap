@@ -53,9 +53,9 @@ use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
-use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
-use Tuleap\MediawikiStandalone\Service\ServiceActivationProjectServiceBeforeActivationEvent;
-use Tuleap\MediawikiStandalone\Service\ServiceActivationServiceDisabledCollectorEvent;
+use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityHandler;
+use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityProjectServiceBeforeAvailabilityEvent;
+use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityServiceDisabledCollectorEvent;
 use Tuleap\OAuth2ServerCore\App\AppDao;
 use Tuleap\OAuth2ServerCore\App\AppFactory;
 use Tuleap\OAuth2ServerCore\App\AppMatchingClientIDFilterAppTypeRetriever;
@@ -161,21 +161,21 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
      */
     public function serviceIsUsed(array $params): void
     {
-        if ($params['shortname'] === MediawikiStandaloneService::SERVICE_SHORTNAME && $params['is_used']) {
-            /*(new EnqueueTask())->enqueue(
+        /*if ($params['shortname'] === MediawikiStandaloneService::SERVICE_SHORTNAME && $params['is_used']) {
+            (new EnqueueTask())->enqueue(
                 new InstanceCreationWorkerEvent((int) $params['group_id'])
-            );*/
-        }
+            );
+        }*/
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        (new ServiceActivationHandler())->handle(new ServiceActivationProjectServiceBeforeActivationEvent($event));
+        (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event));
     }
 
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
-        (new ServiceActivationHandler())->handle(new ServiceActivationServiceDisabledCollectorEvent($event));
+        (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
     }
 
     public function workerEvent(WorkerEvent $event): void

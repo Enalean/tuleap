@@ -26,20 +26,20 @@ namespace Tuleap\MediawikiStandalone\Service;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class ServiceActivationHandlerTest extends TestCase
+final class ServiceAvailabilityHandlerTest extends TestCase
 {
-    private ServiceActivationHandler $handler;
+    private ServiceAvailabilityHandler $handler;
 
     protected function setUp(): void
     {
-        $this->handler = new ServiceActivationHandler();
+        $this->handler = new ServiceAvailabilityHandler();
     }
 
     public function testCannotActivateTheMediawikiServiceWhenTheMediawikiStandaloneServiceIsEnabled(): void
     {
         $project = $this->createStub(\Project::class);
         $project->method('usesService')->willReturn(true);
-        $service_activation = new StubServiceActivation('plugin_mediawiki', $project);
+        $service_activation = new StubServiceAvailability('plugin_mediawiki', $project);
         $this->handler->handle($service_activation);
 
         self::assertTrue($service_activation->cannot_be_activated);
@@ -49,7 +49,7 @@ final class ServiceActivationHandlerTest extends TestCase
     {
         $project = $this->createStub(\Project::class);
         $project->method('usesService')->willReturn(true);
-        $service_activation = new StubServiceActivation('plugin_mediawiki_standalone', $project);
+        $service_activation = new StubServiceAvailability('plugin_mediawiki_standalone', $project);
         $this->handler->handle($service_activation);
 
         self::assertTrue($service_activation->cannot_be_activated);
@@ -57,7 +57,7 @@ final class ServiceActivationHandlerTest extends TestCase
 
     public function testDoesNothingWhenItIsNotAboutMediawikiServices(): void
     {
-        $service_activation = new StubServiceActivation('some_service', ProjectTestBuilder::aProject()->build());
+        $service_activation = new StubServiceAvailability('some_service', ProjectTestBuilder::aProject()->build());
         $this->handler->handle($service_activation);
 
         self::assertFalse($service_activation->cannot_be_activated);
