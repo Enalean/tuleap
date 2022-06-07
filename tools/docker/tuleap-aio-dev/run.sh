@@ -66,6 +66,8 @@ else
     tuleap-cfg site-deploy:fpm --development --php-version=$PHP_VERSION
     tuleap-cfg site-deploy:nginx --development
 
+    cp -f /etc/pki/tls/certs/localhost.cert.pem /etc/pki/ca-trust/source/anchors/tuleap-web-cert.pem
+
     while [ ! -f /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem ]; do
         echo "Waiting for Tuleap Realtime certificate…"
         sleep 1
