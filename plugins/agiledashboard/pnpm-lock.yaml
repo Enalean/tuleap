@@ -16,7 +16,6 @@ specifiers:
   d3-scale: ^4.0.0
   d3-selection: ^3.0.0
   d3-shape: ^3.0.1
-  lodash: ^4.17.20
   moment: ^2.29.3
   node-gettext: ^3.0.0
   sprintf-js: ^1.1.2
@@ -36,7 +35,6 @@ dependencies:
   d3-scale: 4.0.0
   d3-selection: 3.0.0
   d3-shape: 3.0.1
-  lodash: 4.17.20
   moment: 2.29.3
   node-gettext: 3.0.0
   sprintf-js: 1.1.2
@@ -326,10 +324,6 @@ packages:
 
   /lodash.get/4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
-    dev: false
-
-  /lodash/4.17.20:
-    resolution: {integrity: sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==}
     dev: false
 
   /moment/2.29.3:
