@@ -1274,9 +1274,6 @@ msgstr ""
 "<em>Position</em> permet de sélectionner la position au sein du dossier "
 "sélectionné.</li></ul>"
 
-msgid "Icons"
-msgstr "Icônes"
-
 msgid "Image Id:"
 msgstr "Id de l'image :"
 
@@ -2160,7 +2157,7 @@ msgid ""
 "document update, an empty space is returned."
 msgstr ""
 "Le dernier nom de version du document. Si un document est créé ou si aucun "
-"nom de version est donné lors de la mise à jour, un espace vide est retourné"
+"nom de version est donné lors de la mise à jour, un espace vide est retourné."
 
 #, php-format
 msgid "The list type property %s can accept only one value."

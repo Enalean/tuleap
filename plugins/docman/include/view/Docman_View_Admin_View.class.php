@@ -55,8 +55,7 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
         $actual = $sBo->getView();
 
         $renderer->renderToPage('admin/display-preferences', [
-            'is_tree'  => $actual === 'Tree',
-            'is_icons' => $actual === 'Icons',
+            'is_tree'  => $actual === 'Tree' || $actual === 'Icons',
             'is_table' => $actual === 'Table',
         ]);
     }
