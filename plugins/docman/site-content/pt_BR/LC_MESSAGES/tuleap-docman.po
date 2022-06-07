@@ -1079,9 +1079,6 @@ msgid ""
 "the position within the selected folder.</li></ul>"
 msgstr ""
 
-msgid "Icons"
-msgstr ""
-
 msgid "Image Id:"
 msgstr ""
 

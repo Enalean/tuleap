@@ -85,12 +85,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
                          alt="' . dgettext('tuleap-docman', 'Tree') . '"
                          /> ';
         $html .= '<input type="image"
-                         name="selected_view[Icons]"
-                         src="' . $this->_controller->plugin->getThemePath() . '/images/ic/view-Icons.png"
-                         title="' . dgettext('tuleap-docman', 'Icons') . '"
-                         alt="' . dgettext('tuleap-docman', 'Icons') . '"
-                         /> ';
-        $html .= '<input type="image"
                          name="selected_view[Table]"
                          src="' . $this->_controller->plugin->getThemePath() . '/images/ic/view-Table.png"
                          title="' . dgettext('tuleap-docman', 'Table') . '"
@@ -192,9 +186,9 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
     public static function getDefaultViews()
     {
-        return ['Tree'   => 'Tree',
-                     'Icons'  => 'Icons',
-                     'Table'  => 'Table',
+        return [
+            'Tree'  => 'Tree',
+            'Table' => 'Table',
         ];
     }
 }
