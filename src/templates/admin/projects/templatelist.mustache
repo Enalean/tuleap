@@ -15,20 +15,26 @@
                     <table class="tlp-table" id="siteadmin-templates">
                         <thead>
                             <tr>
-                                <th class="siteadmin-templates-name">{{ project_name_header }}</th>
-                                <th class="siteadmin-templates-name">{{ unix_group_name_header }}</th>
-                                <th></th>
+                                <th class="siteadmin-templates-column">{{ project_name_header }}</th>
+                                <th class="siteadmin-templates-column">{{ unix_group_name_header }}</th>
+                                <th class="siteadmin-templates-column">{{ project_status_label }}</th>
+                              <th></th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {{# templates }}
                                 <tr>
-                                    <td class="tlp-table-cell-filterable siteadmin-templates-name">
+                                    <td class="tlp-table-cell-filterable siteadmin-templates-column">
                                         <a href="/admin/groupedit.php?group_id={{ id }}">{{ name }}</a>
                                     </td>
-                                    <td class="tlp-table-cell-filterable siteadmin-templates-name">
+                                    <td class="tlp-table-cell-filterable siteadmin-templates-column">
                                         {{ unix_name }}
+                                    </td>
+                                    <td class="tlp-table-cell-filterable siteadmin-templates-column">
+                                      {{# access_presenter }}
+                                        {{> project-access}}
+                                      {{/ access_presenter }}
                                     </td>
                                     <td class="tlp-table-cell-actions">
                                         <a href="/project/{{ id }}/admin/services" class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline">

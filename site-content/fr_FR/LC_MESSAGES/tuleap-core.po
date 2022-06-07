@@ -4107,7 +4107,7 @@ msgid "Unix Group Name"
 msgstr "Nom du groupe unix"
 
 msgid "Unix name"
-msgstr "Now unix"
+msgstr "Nom unix"
 
 msgid "Up to 2 categories can be used as flag."
 msgstr "Jusqu'à 2 catégories peuvent être utilisées en tant que marqueur."
