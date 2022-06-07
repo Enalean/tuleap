@@ -54,8 +54,6 @@ class EditController implements DispatchableWithRequest
             new ProjectAdministratorChecker(),
             new ServiceUpdator(new \ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
             new ServicePOSTDataBuilder(
-                \EventManager::instance(),
-                \ServiceManager::instance(),
                 new ServiceLinkDataBuilder()
             ),
             ServiceManager::instance(),

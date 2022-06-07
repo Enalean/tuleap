@@ -156,8 +156,6 @@ class ServiceResource extends AuthenticatedResource
     private function getServicePOSTDataFromBody(Service $service, ServiceRepresentation $body): ServicePOSTData
     {
         $builder = new ServicePOSTDataBuilder(
-            \EventManager::instance(),
-            \ServiceManager::instance(),
             new ServiceLinkDataBuilder()
         );
 
