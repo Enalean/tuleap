@@ -128,17 +128,16 @@ const webpack_config_for_kanban = {
     },
     resolve: {
         alias: {
-            // angular alias for angular-async (otherwise it is included twice)
-            // and for the artifact modal
+            // deduplicate angular that is also used by artifact-modal and angular-async
             angular$: path.resolve(__dirname, "./scripts/kanban/node_modules/angular"),
             "angular-sanitize$": path.resolve(
                 __dirname,
                 "./scripts/kanban/node_modules/angular-sanitize"
             ),
-            // cumulative-flow-chart
-            d3$: path.resolve(__dirname, "node_modules/d3"),
+            // deduplicate lodash that is also used by artifact-modal
             lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),
-            moment$: path.resolve(__dirname, "node_modules/moment"),
+            // deduplicate moment that is also used by artifact-modal and card-fields
+            moment$: path.resolve(__dirname, "./scripts/kanban/node_modules/moment"),
         },
         extensions: [".ts", ".js"],
     },
