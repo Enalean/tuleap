@@ -20,16 +20,37 @@
 import { FetchWrapperError, get, post } from "@tuleap/tlp-fetch";
 import { ResultAsync } from "neverthrow";
 
-interface GitLabBranchCreationError {
+interface GitLabRestError {
     readonly error_message?: unknown;
     readonly i18n_error_message?: string;
+}
+
+function extractI18NErrorFromRestError(err: unknown): Promise<GitLabRestError> {
+    const default_error: GitLabRestError = {
+        error_message: err,
+    };
+
+    if (!(err instanceof FetchWrapperError)) {
+        return Promise.resolve(default_error);
+    }
+
+    return ResultAsync.fromPromise(err.response.json(), () => default_error).match(
+        (response_json) => {
+            if (Object.prototype.hasOwnProperty.call(response_json.error, "i18n_error_message")) {
+                return { i18n_error_message: response_json.error.i18n_error_message };
+            }
+
+            return { error_message: response_json.error };
+        },
+        () => default_error
+    );
 }
 
 export function postGitlabBranch(
     gitlab_integration_id: number,
     artifact_id: number,
     reference: string
-): ResultAsync<GitLabIntegrationCreatedBranchInformation, Promise<GitLabBranchCreationError>> {
+): ResultAsync<GitLabIntegrationCreatedBranchInformation, Promise<GitLabRestError>> {
     const headers = {
         "content-type": "application/json",
     };
@@ -45,30 +66,8 @@ export function postGitlabBranch(
             headers,
             body,
         }).then((response) => response.json()),
-        (err: unknown): Promise<GitLabBranchCreationError> => {
-            const default_error: GitLabBranchCreationError = {
-                error_message: err,
-            };
-
-            if (!(err instanceof FetchWrapperError)) {
-                return Promise.resolve(default_error);
-            }
-
-            return ResultAsync.fromPromise(err.response.json(), () => default_error).match(
-                (response_json) => {
-                    if (
-                        Object.prototype.hasOwnProperty.call(
-                            response_json.error,
-                            "i18n_error_message"
-                        )
-                    ) {
-                        return { i18n_error_message: response_json.error.i18n_error_message };
-                    }
-
-                    return { error_message: response_json.error };
-                },
-                () => default_error
-            );
+        (err: unknown): Promise<GitLabRestError> => {
+            return extractI18NErrorFromRestError(err);
         }
     );
 }
@@ -77,7 +76,7 @@ export function postGitlabMergeRequest(
     gitlab_integration_id: number,
     artifact_id: number,
     source_branch: string
-): ResultAsync<void, unknown> {
+): ResultAsync<void, Promise<GitLabRestError>> {
     const headers = {
         "content-type": "application/json",
     };
@@ -95,7 +94,9 @@ export function postGitlabMergeRequest(
         }).then(() => {
             // ignore response
         }),
-        (err: unknown) => err
+        (err: unknown): Promise<GitLabRestError> => {
+            return extractI18NErrorFromRestError(err);
+        }
     );
 }
 

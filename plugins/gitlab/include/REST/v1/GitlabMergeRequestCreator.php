@@ -33,6 +33,7 @@ use Tuleap\Gitlab\Artifact\MergeRequestTitleCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 
 class GitlabMergeRequestCreator
@@ -117,9 +118,16 @@ class GitlabMergeRequestCreator
                 []
             );
         } catch (GitlabRequestException $exception) {
+            if (stripos($exception->getMessage(), "Forbidden")) {
+                throw new I18NRestException(
+                    $exception->getErrorCode(),
+                    sprintf(dgettext('tuleap-gitlab', "Forbidden, please check that you have merge permission on repository %s"), $integration->getName())
+                );
+            }
+
             throw new RestException(
                 $exception->getErrorCode(),
-                "An error occurred while creating the merge request on GitLab: " . $exception->getMessage()
+                sprintf(dgettext('tuleap-gitlab', "An error occurred while creating the merge request on GitLab: %s"), $exception->getMessage())
             );
         } catch (GitlabResponseAPIException $exception) {
             throw new RestException(500, $exception->getMessage());
