@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,18 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-process.env.DISABLE_TS_TYPECHECK = "true";
-
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...jest_base_config,
-    displayName: "planning-v2",
-    moduleNameMapper: {
-        ...jest_base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
-        // The artifact modal module causes lots of WARNING: Tried to load AngularJS more than once.
-        "^angular$": "<rootDir>/node_modules/angular/index.js",
-    },
-    setupFilesAfterEnv: [...jest_base_config.setupFilesAfterEnv, "./test-load-jquery.js"],
-    testRunner: "jest-jasmine2",
-};
+import jQuery from "jquery";
+window.jQuery = jQuery;
