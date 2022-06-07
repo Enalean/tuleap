@@ -38,16 +38,10 @@ msgstr ""
 msgid "The associated merge request has been created."
 msgstr ""
 
-msgid "The branch %{ branch_name } already exists on %{ repo_name }"
-msgstr ""
-
 msgid ""
 "The branch <a href=\"%{ branch_url }\">%{ branch_name }</a> has been "
 "successfully created on <a href=\"%{ repo_url }\">%{ repo_name }</a>"
 msgstr ""
 
 msgid "The following branch will be created"
-msgstr ""
-
-msgid "The reference %{ ref_name } does not seem to exist on %{ repo_name }"
 msgstr ""

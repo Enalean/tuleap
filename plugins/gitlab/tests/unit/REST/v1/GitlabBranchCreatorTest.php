@@ -362,6 +362,18 @@ final class GitlabBranchCreatorTest extends TestCase
                 ),
             ],
             [
+                new GitlabRequestException(
+                    400,
+                    "Branch already exists (Bad Request)"
+                ),
+            ],
+            [
+                new GitlabRequestException(
+                    400,
+                    "Invalid reference name"
+                ),
+            ],
+            [
                 new GitlabResponseAPIException("Bad request"),
             ],
         ];

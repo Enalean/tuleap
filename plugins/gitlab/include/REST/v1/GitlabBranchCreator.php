@@ -33,6 +33,7 @@ use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\REST\I18NRestException;
 
 class GitlabBranchCreator
 {
@@ -116,9 +117,23 @@ class GitlabBranchCreator
                 []
             );
         } catch (GitlabRequestException $exception) {
+            if (stripos($exception->getMessage(), "invalid reference name")) {
+                throw new I18NRestException(
+                    $exception->getErrorCode(),
+                    sprintf(dgettext('tuleap-gitlab', "The reference %s does not seem to exist on %s "), $gitlab_branch->reference, $integration->getName())
+                );
+            }
+
+            if (stripos($exception->getMessage(), "branch already exists")) {
+                throw new I18NRestException(
+                    $exception->getErrorCode(),
+                    sprintf(dgettext('tuleap-gitlab', "The branch %s already exists on %s "), $branch_name, $integration->getName())
+                );
+            }
+
             throw new RestException(
                 $exception->getErrorCode(),
-                "An error occurred while creating the branch on GitLab: " . $exception->getMessage()
+                sprintf(dgettext('tuleap-gitlab', "An error occurred while creating the branch on GitLab: %s"), $exception->getMessage())
             );
         } catch (GitlabResponseAPIException $exception) {
             throw new RestException(500, $exception->getMessage());

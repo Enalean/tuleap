@@ -20,15 +20,9 @@
 import { FetchWrapperError, get, post } from "@tuleap/tlp-fetch";
 import { ResultAsync } from "neverthrow";
 
-export const GitLabBranchCreationPossibleError = {
-    INVALID_REF: "invalid_ref",
-    BRANCH_ALREADY_EXIST: "branch_already_exist",
-    UNKNOWN: "unknown",
-};
-
 interface GitLabBranchCreationError {
-    readonly error_type: typeof GitLabBranchCreationPossibleError[keyof typeof GitLabBranchCreationPossibleError];
-    readonly initial_error: unknown;
+    readonly error_message?: unknown;
+    readonly i18n_error_message?: string;
 }
 
 export function postGitlabBranch(
@@ -52,31 +46,26 @@ export function postGitlabBranch(
             body,
         }).then((response) => response.json()),
         (err: unknown): Promise<GitLabBranchCreationError> => {
-            const default_error = {
-                error_type: GitLabBranchCreationPossibleError.UNKNOWN,
-                initial_error: err,
+            const default_error: GitLabBranchCreationError = {
+                error_message: err,
             };
 
-            if (!(err instanceof FetchWrapperError) || err.response.status !== 400) {
+            if (!(err instanceof FetchWrapperError)) {
                 return Promise.resolve(default_error);
             }
 
             return ResultAsync.fromPromise(err.response.json(), () => default_error).match(
                 (response_json) => {
-                    let error_type = default_error.error_type;
-
-                    const lowercase_response_text = response_json.error.message.toLowerCase();
-
-                    if (lowercase_response_text.includes("invalid reference name")) {
-                        error_type = GitLabBranchCreationPossibleError.INVALID_REF;
-                    } else if (lowercase_response_text.includes("branch already exists")) {
-                        error_type = GitLabBranchCreationPossibleError.BRANCH_ALREADY_EXIST;
+                    if (
+                        Object.prototype.hasOwnProperty.call(
+                            response_json.error,
+                            "i18n_error_message"
+                        )
+                    ) {
+                        return { i18n_error_message: response_json.error.i18n_error_message };
                     }
 
-                    return {
-                        ...default_error,
-                        error_type,
-                    };
+                    return { error_message: response_json.error };
                 },
                 () => default_error
             );
