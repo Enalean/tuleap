@@ -21,7 +21,9 @@
 namespace Tuleap\PluginsAdministration\LifecycleHookCommand;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\AssertRunner;
@@ -31,8 +33,11 @@ final class PluginUpdateHookCommand extends Command
 {
     public const NAME = 'plugins_administration:update_hook';
 
-    public function __construct(private EventDispatcherInterface $event_dispatcher, private AssertRunner $assert_runner)
-    {
+    public function __construct(
+        private EventDispatcherInterface $event_dispatcher,
+        private AssertRunner $assert_runner,
+        private LoggerInterface $logger,
+    ) {
         parent::__construct(self::NAME);
     }
 
@@ -46,7 +51,15 @@ final class PluginUpdateHookCommand extends Command
         $this->assert_runner->assertProcessIsExecutedByExpectedUser();
 
         $output->writeln('<info>Execute plugin update hooks</info>');
-        $this->event_dispatcher->dispatch(new PluginExecuteUpdateHookEvent(new ConsoleLogger($output)));
+        try {
+            $this->event_dispatcher->dispatch(new PluginExecuteUpdateHookEvent(new ConsoleLogger($output)));
+        } catch (\Exception $exception) {
+            $message = 'An error has been encountered while running plugin update hooks';
+            $output->writeln('<error>' . OutputFormatter::escape($message) . '</error>');
+            $this->logger->error($message, ['exception' => $exception]);
+            throw $exception;
+        }
+        $output->writeln('<info>Plugin update hooks have been executed</info>');
         return 0;
     }
 }

@@ -88,7 +88,11 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         $collector->addCommand(
             PluginUpdateHookCommand::NAME,
             function (): PluginUpdateHookCommand {
-                return new PluginUpdateHookCommand(EventManager::instance(), \Tuleap\CLI\AssertRunner::asHTTPUser());
+                return new PluginUpdateHookCommand(
+                    EventManager::instance(),
+                    \Tuleap\CLI\AssertRunner::asHTTPUser(),
+                    $this->getBackendLogger()
+                );
             }
         );
     }

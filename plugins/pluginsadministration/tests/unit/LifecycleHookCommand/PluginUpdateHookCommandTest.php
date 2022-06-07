@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\PluginsAdministration\LifecycleHookCommand;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\NullLogger;
+use Psr\Log\Test\TestLogger;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\CLI\AssertRunner;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -43,10 +45,31 @@ final class PluginUpdateHookCommandTest extends TestCase
             }
         };
 
-        $command_tester = new CommandTester(new PluginUpdateHookCommand($event_dispatcher, AssertRunner::asCurrentProcessUser()));
+        $command_tester = new CommandTester(new PluginUpdateHookCommand($event_dispatcher, AssertRunner::asCurrentProcessUser(), new NullLogger()));
 
         $command_tester->execute([]);
 
         self::assertTrue($event_dispatcher->has_been_called_with_expected_event);
+    }
+
+    public function testLogsErrorWhenSomethingBadHappen(): void
+    {
+        $event_dispatcher = new class implements EventDispatcherInterface {
+            public function dispatch(object $event): object
+            {
+                throw new \Exception("Something bad");
+            }
+        };
+
+        $logger         = new TestLogger();
+        $command_tester = new CommandTester(new PluginUpdateHookCommand($event_dispatcher, AssertRunner::asCurrentProcessUser(), $logger));
+
+        $this->expectException(\Exception::class);
+        try {
+            $command_tester->execute([]);
+        } catch (\Exception $exception) {
+            self::assertTrue($logger->hasErrorRecords());
+            throw $exception;
+        }
     }
 }
