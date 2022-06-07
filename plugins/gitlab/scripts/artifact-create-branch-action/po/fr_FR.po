@@ -16,7 +16,8 @@ msgstr ""
 "réessayer"
 
 msgid "An error occurred while creating the associated merge request."
-msgstr "Une erreur est survenue pendant la création de la demande de fusion associée."
+msgstr ""
+"Une erreur est survenue pendant la création de la demande de fusion associée."
 
 msgid "Close"
 msgstr "Fermer"
@@ -24,7 +25,9 @@ msgstr "Fermer"
 msgid ""
 "Create a merge request based on this new branch to the default\n"
 "                                branch"
-msgstr "Créer une demande de fusion basée sur cette nouvelle branche en intégration dans la branche par défaut."
+msgstr ""
+"Créer une demande de fusion basée sur cette nouvelle branche en intégration "
+"dans la branche par défaut."
 
 msgid "Create branch"
 msgstr "Créer la branche"
@@ -44,9 +47,6 @@ msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
 msgid "The associated merge request has been created."
 msgstr "La demande de fusion associée a bien été créée."
 
-msgid "The branch %{ branch_name } already exists on %{ repo_name }"
-msgstr "La branch %{ branch_name } existe déjà dans le dépôt %{ repo_name }"
-
 msgid ""
 "The branch <a href=\"%{ branch_url }\">%{ branch_name }</a> has been "
 "successfully created on <a href=\"%{ repo_url }\">%{ repo_name }</a>"
@@ -56,7 +56,3 @@ msgstr ""
 
 msgid "The following branch will be created"
 msgstr "La branche suivante sera créée"
-
-msgid "The reference %{ ref_name } does not seem to exist on %{ repo_name }"
-msgstr ""
-"La référence %{ ref_name } ne semble pas exister dans le dépôt %{ repo_name }"

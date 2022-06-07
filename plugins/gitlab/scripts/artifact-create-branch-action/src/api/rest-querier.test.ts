@@ -19,7 +19,6 @@
 import * as tlp from "@tuleap/tlp-fetch";
 import {
     getGitLabRepositoryBranchInformation,
-    GitLabBranchCreationPossibleError,
     postGitlabBranch,
     postGitlabMergeRequest,
 } from "./rest-querier";
@@ -41,49 +40,35 @@ describe("postGitlabBranch", () => {
         expect(result.isOk()).toBe(true);
     });
 
-    it("detects errors possibly caused by an invalid reference name", async () => {
+    it("displays the i18n_error", async () => {
         const postSpy = jest.spyOn(tlp, "post");
+
         mockFetchError(postSpy, {
             status: 400,
-            error_json: { error: { message: "Invalid reference name: invalid_ref" } },
+            error_json: { error: { i18n_error_message: "Invalid reference name: invalid_ref" } },
         });
 
         const result = await postGitlabBranch(1, 123, "invalid_ref");
 
-        let error_type: string | null = null;
+        let error_message: string | undefined;
         if (result.isErr()) {
-            error_type = (await result.error).error_type;
+            error_message = (await result.error).i18n_error_message;
         }
-        expect(error_type).toBe(GitLabBranchCreationPossibleError.INVALID_REF);
+        expect(error_message).toBe("Invalid reference name: invalid_ref");
     });
 
-    it("detects errors possibly caused by an already existing branch name", async () => {
+    it("display not internationalized errors", async () => {
         const postSpy = jest.spyOn(tlp, "post");
-        mockFetchError(postSpy, {
-            status: 400,
-            error_json: { error: { message: "Branch already exists" } },
-        });
-
-        const result = await postGitlabBranch(1, 123, "invalid_ref");
-
-        let error_type: string | null = null;
-        if (result.isErr()) {
-            error_type = (await result.error).error_type;
-        }
-        expect(error_type).toBe(GitLabBranchCreationPossibleError.BRANCH_ALREADY_EXIST);
-    });
-
-    it("does not mark all errors as caused by invalid reference name", async () => {
-        const postSpy = jest.spyOn(tlp, "post");
-        mockFetchError(postSpy, { status: 500 });
+        mockFetchError(postSpy, { status: 500, error_json: { error: { message: "Oh snap" } } });
 
         const result = await postGitlabBranch(1, 123, "main");
 
-        let error_type: string | null = null;
+        let error_message;
         if (result.isErr()) {
-            error_type = (await result.error).error_type;
+            error_message = (await result.error).error_message;
         }
-        expect(error_type).toBe(GitLabBranchCreationPossibleError.UNKNOWN);
+
+        expect(error_message).toStrictEqual({ message: "Oh snap" });
     });
 
     it("retrieves branch information of a GitLab integration", async () => {

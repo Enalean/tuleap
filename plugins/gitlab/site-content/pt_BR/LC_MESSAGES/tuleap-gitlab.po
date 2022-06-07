@@ -6,6 +6,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#, php-format
+msgid "An error occurred while creating the branch on GitLab: %s"
+msgstr ""
+
 msgid "Closed"
 msgstr ""
 
@@ -70,9 +74,17 @@ msgid "The GitLab repository integration cannot be found."
 msgstr ""
 
 #, php-format
+msgid "The branch %s already exists on %s "
+msgstr ""
+
+#, php-format
 msgid ""
 "The project reference based on the keyword '%s' is overriding the system "
 "reference used by the GitLab plugin."
+msgstr ""
+
+#, php-format
+msgid "The reference %s does not seem to exist on %s "
 msgstr ""
 
 #, php-format

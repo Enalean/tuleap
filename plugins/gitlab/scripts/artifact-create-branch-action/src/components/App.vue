@@ -139,11 +139,7 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import jquery from "jquery";
-import {
-    GitLabBranchCreationPossibleError,
-    postGitlabBranch,
-    postGitlabMergeRequest,
-} from "../api/rest-querier";
+import { postGitlabBranch, postGitlabMergeRequest } from "../api/rest-querier";
 import * as codendi from "codendi";
 import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
 
@@ -246,31 +242,19 @@ export default class App extends Vue {
                 const error = await error_promise;
                 this.is_creating_branch = false;
 
-                switch (error.error_type) {
-                    case GitLabBranchCreationPossibleError.INVALID_REF:
-                        this.error_message = this.$gettextInterpolate(
-                            this.$gettext(
-                                "The reference %{ ref_name } does not seem to exist on %{ repo_name }"
-                            ),
-                            { ref_name: this.reference, repo_name: integration.name }
-                        );
-                        break;
-                    case GitLabBranchCreationPossibleError.BRANCH_ALREADY_EXIST:
-                        this.error_message = this.$gettextInterpolate(
-                            this.$gettext(
-                                "The branch %{ branch_name } already exists on %{ repo_name }"
-                            ),
-                            { branch_name: this.branch_name, repo_name: integration.name }
-                        );
-                        break;
-                    default:
-                        this.error_message = this.$gettextInterpolate(
-                            this.$gettext(
-                                "An error occurred while creating %{ branch_name }, please try again"
-                            ),
-                            { branch_name: this.branch_name }
-                        );
-                        throw error.initial_error;
+                if (
+                    Object.prototype.hasOwnProperty.call(error, "i18n_error_message") &&
+                    error.i18n_error_message
+                ) {
+                    this.error_message = error.i18n_error_message;
+                } else {
+                    this.error_message = this.$gettextInterpolate(
+                        this.$gettext(
+                            "An error occurred while creating %{ branch_name }, please try again"
+                        ),
+                        { branch_name: this.branch_name }
+                    );
+                    throw error.error_message;
                 }
             }
         );

@@ -12,6 +12,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+#, php-format
+msgid "An error occurred while creating the branch on GitLab: %s"
+msgstr "Une erreur est survenue lors de la création de la branche sur Gitlab: %s"
+
 msgid "Closed"
 msgstr "Fermée"
 
@@ -78,12 +82,20 @@ msgid "The GitLab repository integration cannot be found."
 msgstr "L'intégration du dépôt GitLab n'a pas été trouvée."
 
 #, php-format
+msgid "The branch %s already exists on %s "
+msgstr "La branche %s existe déjà sur %s"
+
+#, php-format
 msgid ""
 "The project reference based on the keyword '%s' is overriding the system "
 "reference used by the GitLab plugin."
 msgstr ""
 "La référence de projet basée sur le mot-clé '%s' surcharge la référence "
 "système utilisée par le plugin GitLab."
+
+#, php-format
+msgid "The reference %s does not seem to exist on %s "
+msgstr "La référence %s semble manquante sur %s"
 
 #, php-format
 msgid ""
