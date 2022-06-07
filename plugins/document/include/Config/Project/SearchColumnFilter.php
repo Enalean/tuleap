@@ -39,7 +39,7 @@ final class SearchColumnFilter
 
         $selectable_columns = array_filter(
             $all_columns,
-            static fn(SearchColumn $column) => $column->getName() !== \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL
+            static fn(SearchColumn $column) => $column->getName() !== \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL && $column->getName() !== \Docman_MetadataFactory::HARDCODED_METADATA_ID_LABEL
         );
 
         $selected_columns_names = $this->columns_dao->searchByProjectId((int) $project->getID());

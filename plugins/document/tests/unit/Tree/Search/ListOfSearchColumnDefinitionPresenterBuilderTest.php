@@ -27,7 +27,7 @@ use Tuleap\Document\Config\Project\IRetrieveColumns;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
+final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 {
     public function testItBuildsPresenters(): void
     {
@@ -69,8 +69,8 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "title",
                 "id",
+                "title",
                 "description",
                 "owner",
                 "update_date",
@@ -86,7 +86,7 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         );
     }
 
-    public function testItReturnsOnlyColumnsSelectedByConfigurationIncludingTitle(): void
+    public function testItReturnsOnlyColumnsSelectedByConfigurationIncludingIdAndTitle(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -119,6 +119,7 @@ class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
 
         self::assertEquals(
             [
+                "id",
                 "title",
                 "update_date",
                 "create_date",

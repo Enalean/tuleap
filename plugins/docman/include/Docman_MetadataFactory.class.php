@@ -43,6 +43,7 @@ class Docman_MetadataFactory
     public const HARDCODED_METADATA_UPDATE_DATE_LABEL  = 'update_date';
     public const HARDCODED_METADATA_STATUS_LABEL       = 'status';
     public const HARDCODED_METADATA_OBSOLESCENCE_LABEL = 'obsolescence_date';
+    public const HARDCODED_METADATA_ID_LABEL           = 'id';
     public const HARDCODED_METADATA_LABELS             = [
         self::HARDCODED_METADATA_TITLE_LABEL,
         self::HARDCODED_METADATA_DESCRIPTION_LABEL,

@@ -26,7 +26,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class SearchColumnCollectionBuilderTest extends TestCase
 {
-    public function testGetColumnsAlwaysReturnTitleAtFirstPositionBecauseItIsTheOnlyColumnThatHasALinkToRetrieveTheItem(): void
+    public function testGetColumnsAlwaysReturnIdAndTitleAtFirstPosition(): void
     {
         $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
         $metadata_factory
@@ -35,7 +35,8 @@ final class SearchColumnCollectionBuilderTest extends TestCase
 
         $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
 
-        self::assertEquals("title", $collection->getColumnNames()[0]);
+        self::assertEquals("id", $collection->getColumnNames()[0]);
+        self::assertEquals("title", $collection->getColumnNames()[1]);
     }
 
     public function testItReturnsIdThenHardcodedPropertiesThenLocationThenCustomProperties(): void
@@ -59,8 +60,8 @@ final class SearchColumnCollectionBuilderTest extends TestCase
 
         self::assertEquals(
             [
-                "title",
                 "id",
+                "title",
                 "description",
                 "owner",
                 "update_date",

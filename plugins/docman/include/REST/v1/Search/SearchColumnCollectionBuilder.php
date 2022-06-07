@@ -27,9 +27,7 @@ final class SearchColumnCollectionBuilder
     public function getCollection(\Docman_MetadataFactory $metadata_factory): SearchColumnCollection
     {
         $columns = new SearchColumnCollection();
-        $this->addMandatoryFirstColumn($columns);
-
-        $columns->add(SearchColumn::buildForHardcodedProperty("id", dgettext('tuleap-document', 'Id')));
+        $this->addMandatoryFirstColumns($columns);
 
         $all_metadata   = $metadata_factory->getMetadataForGroup(true);
         $custom_columns = [];
@@ -57,8 +55,9 @@ final class SearchColumnCollectionBuilder
         return $columns;
     }
 
-    private function addMandatoryFirstColumn(SearchColumnCollection $columns): void
+    private function addMandatoryFirstColumns(SearchColumnCollection $columns): void
     {
+        $columns->add(SearchColumn::buildForHardcodedProperty("id", dgettext('tuleap-document', 'Id')));
         $columns->add(SearchColumn::buildForHardcodedProperty("title", dgettext('tuleap-document', 'Title')));
     }
 }
