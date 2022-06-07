@@ -37,20 +37,11 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     use ForgeConfigSandbox;
 
     private ServicePOSTDataBuilder $service_postdata_builder;
-    private \EventManager $event_manager;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\ServiceManager
-     */
-    private $service_manager;
 
     protected function setUp(): void
     {
-        $this->event_manager            = new \EventManager();
-        $this->service_manager          = M::mock(\ServiceManager::class);
         $link_data_builder              = new ServiceLinkDataBuilder();
         $this->service_postdata_builder = new ServicePOSTDataBuilder(
-            $this->event_manager,
-            $this->service_manager,
             $link_data_builder
         );
 

@@ -25,9 +25,9 @@ use Project_Creation_Exception;
 
 final class InsufficientPermissionToUseCompanyTemplateException extends Project_Creation_Exception implements InvalidTemplateException
 {
-    public function __construct(private Project $project)
+    public function __construct(Project $project)
     {
-        parent::__construct(sprintf(_("Template %d is not valid: you don't have the permission to the access the project."), $this->project->getId()));
+        parent::__construct(sprintf(_("Template %d is not valid: you don't have the permission to the access the project."), $project->getId()));
     }
 
     public function getI18NMessage(): string

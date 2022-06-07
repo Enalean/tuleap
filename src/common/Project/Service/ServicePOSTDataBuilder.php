@@ -24,32 +24,13 @@ use Codendi_Request;
 use Feedback;
 use Project;
 use Service;
-use ServiceManager;
 use Tuleap\Layout\BaseLayout;
 
 class ServicePOSTDataBuilder
 {
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ServiceManager
-     */
-    private $service_manager;
-    /**
-     * @var ServiceLinkDataBuilder
-     */
-    private $link_data_builder;
-
     public function __construct(
-        \EventManager $event_manager,
-        ServiceManager $service_manager,
-        ServiceLinkDataBuilder $link_data_builder,
+        private ServiceLinkDataBuilder $link_data_builder,
     ) {
-        $this->event_manager     = $event_manager;
-        $this->service_manager   = $service_manager;
-        $this->link_data_builder = $link_data_builder;
     }
 
     /**

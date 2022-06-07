@@ -73,8 +73,6 @@ class AddController implements DispatchableWithRequest
             new ProjectAdministratorChecker(),
             new ServiceCreator(new \ServiceDao(), ProjectManager::instance()),
             new ServicePOSTDataBuilder(
-                \EventManager::instance(),
-                \ServiceManager::instance(),
                 new ServiceLinkDataBuilder()
             ),
             IndexController::getCSRFTokenSynchronizer()

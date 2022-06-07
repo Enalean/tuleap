@@ -139,8 +139,6 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectAdministratorChecker(),
             $service_updator,
             new ServicePOSTDataBuilder(
-                $event_manager,
-                $service_manager,
                 new ServiceLinkDataBuilder(),
             ),
             $service_manager,
