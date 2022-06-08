@@ -23,26 +23,30 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-use Tuleap\Project\Service\ServiceDisabledCollector;
-
-final class ServiceActivationServiceDisabledCollectorEvent implements ServiceActivation
+final class StubServiceAvailability implements ServiceAvailability
 {
-    public function __construct(private ServiceDisabledCollector $event)
+    /**
+     * @psalm-readonly
+     * @psalm-allow-private-mutation
+     */
+    public bool $cannot_be_activated = false;
+
+    public function __construct(private string $service_shortname, private \Project $project)
     {
     }
 
     public function isForService(string $service_shortname): bool
     {
-        return $this->event->isForService($service_shortname);
+        return $this->service_shortname === $service_shortname;
     }
 
     public function getProject(): \Project
     {
-        return $this->event->getProject();
+        return $this->project;
     }
 
     public function cannotBeActivated(string $reason): void
     {
-        $this->event->setIsDisabled($reason);
+        $this->cannot_be_activated = true;
     }
 }

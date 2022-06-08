@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Service;
 
-use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 
-final class ServiceActivationProjectServiceBeforeActivationEvent implements ServiceActivation
+final class ServiceAvailabilityServiceDisabledCollectorEvent implements ServiceAvailability
 {
-    public function __construct(private ProjectServiceBeforeActivation $event)
+    public function __construct(private ServiceDisabledCollector $event)
     {
     }
 
@@ -43,7 +43,6 @@ final class ServiceActivationProjectServiceBeforeActivationEvent implements Serv
 
     public function cannotBeActivated(string $reason): void
     {
-        $this->event->pluginSetAValue();
-        $this->event->setWarningMessage($reason);
+        $this->event->setIsDisabled($reason);
     }
 }

@@ -28,14 +28,14 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class ServiceActivationProjectServiceBeforeActivationEventTest extends TestCase
+final class ServiceAvailabilityProjectServiceBeforeActivationEventTest extends TestCase
 {
     public function testServiceActivationPassInformationToTheUnderlyingEvent(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
         $event   = new ProjectServiceBeforeActivation($project, 'my_service', UserTestBuilder::buildWithDefaults());
 
-        $service_activation = new ServiceActivationProjectServiceBeforeActivationEvent($event);
+        $service_activation = new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event);
 
         self::assertSame($project, $service_activation->getProject());
         self::assertTrue($service_activation->isForService('my_service'));
