@@ -22,7 +22,7 @@ namespace Tuleap\ReferenceAliasSVN;
 
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Reference\Reference;
-use ReferenceInstance;
+use Tuleap\Reference\ReferenceInstance;
 use ProjectManager;
 use Project_NotFoundException;
 
@@ -99,10 +99,7 @@ class ReferencesBuilder
             return null;
         }
 
-        $ref_instance = new ReferenceInstance($match[0], $reference, $ref);
-        $ref_instance->computeGotoLink($keyword, $value, $project_id);
-
-        return $ref_instance;
+        return new ReferenceInstance($match[0], $reference, $value, $keyword, $project_id);
     }
 
     /**

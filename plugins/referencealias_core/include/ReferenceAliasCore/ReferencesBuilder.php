@@ -23,7 +23,7 @@ namespace Tuleap\ReferenceAliasCore;
 use Project;
 use ProjectManager;
 use Reference;
-use ReferenceInstance;
+use Tuleap\Reference\ReferenceInstance;
 use ReferenceManager;
 
 class ReferencesBuilder
@@ -77,7 +77,7 @@ class ReferencesBuilder
 
     /**
      * Callback for when references are matched in a text
-     * @return ReferenceInstance or null
+     * @return ReferenceInstance | null
      */
     public function referenceFromMatch($match, $project_id)
     {
@@ -92,9 +92,7 @@ class ReferencesBuilder
             return null;
         }
 
-        $ref_instance = new ReferenceInstance($match[0], $reference, $ref);
-        $ref_instance->computeGotoLink($keyword, $value, $project_id);
-        return $ref_instance;
+        return new ReferenceInstance($match[0], $reference, $value, $keyword, $project_id);
     }
 
     /**

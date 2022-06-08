@@ -19,71 +19,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Reference;
+
+use Reference;
+
 /**
- * Reference Instance class
  * Stores a reference as extracted from some user text.
  * Only valid Reference Instances are created (i.e., the corresponding "Reference" object must exist).
  */
-class ReferenceInstance
+final class ReferenceInstance
 {
-    public $match;
-    public $gotoLink;
-    public $reference;
-    public $value;
+    /** @psalm-readonly */
+    private GotoLink $gotoLink;
 
     /**
-     * Constructor
      * Note that we need a valid reference parameter
      */
-    public function __construct($match, $ref, $value)
-    {
-        $this->reference = $ref;
-        $this->match     = $match;
-        $this->value     = $value;
+    public function __construct(
+        /** @psalm-readonly */
+        private string $match,
+        /** @psalm-readonly */
+        private Reference $reference,
+        /** @psalm-readonly */
+        private string $value,
+        string $keyword,
+        int $project_id,
+    ) {
+        $this->gotoLink = GotoLink::fromComponents($keyword, $value, $project_id);
     }
 
-    /** Accessors */
-    public function getMatch()
+    /** @psalm-mutation-free */
+    public function getMatch(): string
     {
         return $this->match;
     }
 
-    /**
-     * @return Reference
-     */
-    public function getReference()
+    /** @psalm-mutation-free */
+    public function getReference(): Reference
     {
         return $this->reference;
     }
-    public function getGotoLink()
-    {
-        return $this->gotoLink;
-    }
-    public function getValue()
+
+    /** @psalm-mutation-free */
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     @return string full link (with http://servername...) if needed.
-    */
-    public function getFullGotoLink()
+    public function getFullGotoLink(): string
     {
-        return \Tuleap\ServerHostname::HTTPSUrl() . $this->gotoLink;
-    }
-
-    /**
-     * Compute GotoLink according to the extracted match.
-     */
-    public function computeGotoLink($keyword, $value, $group_id)
-    {
-        // If no group_id from context, the default is "100".
-        // Don't use it in the link...
-        $group_param = '';
-        if ($group_id != 100) {
-            $group_param = "&group_id=$group_id";
-        }
-
-        $this->gotoLink = "/goto?key=" . urlencode($keyword) . "&val=" . urlencode($value) . $group_param;
+        return $this->gotoLink->getFullGotoLink();
     }
 }
