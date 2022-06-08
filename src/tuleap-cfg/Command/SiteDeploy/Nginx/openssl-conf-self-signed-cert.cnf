@@ -1,0 +1,7 @@
+[req]
+distinguished_name = req
+
+[root_ca]
+basicConstraints = critical,CA:TRUE,pathlen:1
+subjectKeyIdentifier = hash
+keyUsage = critical,keyCertSign,keyEncipherment,digitalSignature
