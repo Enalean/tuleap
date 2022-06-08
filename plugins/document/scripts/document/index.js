@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_icon = vue_mount_point.dataset.projectIcon;
     const filename_pattern = vue_mount_point.dataset.filenamePattern;
     const is_filename_pattern_enforced = Boolean(vue_mount_point.dataset.isFilenamePatternEnforced);
+    const can_user_switch_to_old_ui = Boolean(vue_mount_point.dataset.canUserSwitchToOldUi);
 
     const consider_string_criteria_as_text = (criterion) => ({
         ...criterion,
@@ -125,6 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         forbid_writers_to_delete,
         filename_pattern,
         is_filename_pattern_enforced,
+        can_user_switch_to_old_ui,
     };
 
     const AppComponent = Vue.extend(App);

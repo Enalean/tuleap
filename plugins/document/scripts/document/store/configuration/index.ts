@@ -53,6 +53,7 @@ export interface ConfigurationState {
     readonly forbid_writers_to_delete: boolean;
     readonly filename_pattern: string;
     readonly is_filename_pattern_enforced: boolean;
+    readonly can_user_switch_to_old_ui: boolean;
 }
 
 export function createConfigurationModule(

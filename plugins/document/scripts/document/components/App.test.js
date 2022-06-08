@@ -176,7 +176,7 @@ describe("App", () => {
         expect(wrapper.findComponent(LoadingError).exists()).toBeTruthy();
     });
 
-    it(`Does not display link back to old UI for anonymous`, () => {
+    it(`Does not display link back to old UI if user is not allowed to`, () => {
         state = {
             error: {
                 has_folder_permission_error: false,
@@ -186,7 +186,7 @@ describe("App", () => {
                 has_document_lock_error: false,
             },
             configuration: {
-                user_id: 0,
+                can_user_switch_to_old_ui: false,
                 project_id: 101,
             },
         };
@@ -196,7 +196,7 @@ describe("App", () => {
         expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeFalsy();
     });
 
-    it(`Displays a switch back link for connected users`, () => {
+    it(`Displays a switch back link if user is allowed to`, () => {
         state = {
             error: {
                 has_folder_permission_error: false,
@@ -206,7 +206,7 @@ describe("App", () => {
                 has_document_lock_error: false,
             },
             configuration: {
-                user_id: 1,
+                can_user_switch_to_old_ui: true,
                 project_id: 101,
             },
         };

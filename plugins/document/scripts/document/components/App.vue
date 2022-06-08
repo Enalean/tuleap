@@ -34,7 +34,7 @@
         />
         <router-view v-else />
         <global-error-modal v-if="has_global_modal_error" />
-        <switch-to-old-u-i v-if="user_id !== 0" />
+        <switch-to-old-u-i v-if="can_user_switch_to_old_ui" />
         <post-item-deletion-notification />
     </div>
 </template>
@@ -72,7 +72,7 @@ export default {
             "has_document_lock_error",
             "has_global_modal_error",
         ]),
-        ...mapState("configuration", ["user_id"]),
+        ...mapState("configuration", ["can_user_switch_to_old_ui"]),
         ...mapGetters(["is_uploading"]),
     },
     created() {
