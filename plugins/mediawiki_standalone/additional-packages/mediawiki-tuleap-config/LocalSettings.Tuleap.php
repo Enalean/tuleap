@@ -81,4 +81,6 @@ $GLOBALS['wgTuleapOAuth2Config']['redirectUri']
     = $GLOBALS['wgServer'] . '/mediawiki/_oauth/Special:TuleapLogin/callback';
 
 wfLoadSkin('TuleapSkin');
+
+$GLOBALS['wgSkipSkins'] = ['timeless', 'monobook', 'vector'];
 // Tuleap Specific - END ###
