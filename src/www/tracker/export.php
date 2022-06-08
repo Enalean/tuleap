@@ -138,7 +138,7 @@ if ($result && $rows > 0) {
     if ($result) {
         echo '<P>' . $Language->getText('project_export_artifact_export', 'no_art_found');
     } else {
-        echo '<P>' . $Language->getText('project_export_artifact_export', 'db_access_err', ForgeConfig::get('sys_name'));
+        echo '<P>' . $Language->getText('project_export_artifact_export', 'db_access_err', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
         echo '<br>' . db_error();
     }
     site_project_footer([]);

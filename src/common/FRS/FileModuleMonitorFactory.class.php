@@ -252,7 +252,7 @@ class FileModuleMonitorFactory
         $subject = $GLOBALS['Language']->getText(
             'file_filemodule_monitor',
             'mail_subject',
-            [ForgeConfig::get('sys_name'),
+            [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
             $package->getName()]
         );
 

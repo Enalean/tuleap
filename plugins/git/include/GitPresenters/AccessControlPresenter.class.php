@@ -96,7 +96,7 @@ class GitPresenters_AccessControlPresenter
         $warnings,
     ) {
         $this->is_control_limited     = $is_control_limited;
-        $this->limited_control_notice = sprintf(dgettext('tuleap-git', 'You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to %1$s <strong>ARE NOT propagated to Gerrit</strong>.'), \ForgeConfig::get('sys_name'));
+        $this->limited_control_notice = sprintf(dgettext('tuleap-git', 'You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to %1$s <strong>ARE NOT propagated to Gerrit</strong>.'), \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
 
         $this->label_read  = dgettext('tuleap-git', 'Read');
         $this->label_write = dgettext('tuleap-git', 'Write');

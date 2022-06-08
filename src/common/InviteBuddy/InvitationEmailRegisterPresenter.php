@@ -58,6 +58,6 @@ class InvitationEmailRegisterPresenter
         $this->has_custom_message = $custom_message && trim($custom_message) !== "";
 
         $this->current_user_real_name = (string) $current_user->getRealName();
-        $this->instance_name          = (string) ForgeConfig::get('sys_name');
+        $this->instance_name          = (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
     }
 }

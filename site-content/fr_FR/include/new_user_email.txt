@@ -5,9 +5,9 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
 
-$title = "Bienvenue sur ".\ForgeConfig::get('sys_name')." !";
+$title = "Bienvenue sur ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." !";
 
-$section_one = "Merci d'avoir créé votre compte utilisateur sur le site ".\ForgeConfig::get('sys_name').". \nVotre nom d'utilisateur est : ";
+$section_one = "Merci d'avoir créé votre compte utilisateur sur le site ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME).". \nVotre nom d'utilisateur est : ";
 
 $section_two = "Pour commencer, nous avons besoin de confirmer votre adresse mail, cliquez sur le lien pour finaliser la création de compte : ";
 
@@ -17,7 +17,7 @@ $redirect_button = "Confirmez votre adresse mail";
 
 $thanks = "Merci !";
 
-$signature = "- L'équipe ".\ForgeConfig::get('sys_name');
+$signature = "- L'équipe ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
 
 $help = "Pour toute demande d'aide contactez : ".\ForgeConfig::get('sys_email_admin');
 

@@ -44,7 +44,7 @@ class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         \ForgeConfig::set('svn_prefix', '/svnroot');
-        \ForgeConfig::set('sys_name', 'Platform');
+        \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Platform');
     }
 
     private function givenAFullApacheConf(): string

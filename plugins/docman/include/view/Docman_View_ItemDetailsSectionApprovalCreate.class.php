@@ -176,7 +176,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '<h3>' . dgettext('tuleap-docman', 'Notification') . '</h3>';
         $html .= '<div id="docman_approval_table_create_notification">';
         if (! $this->table->isClosed()) {
-            $html .= '<div class="docman_help">' . sprintf(dgettext('tuleap-docman', '%1$s can notify approval members in two ways:<ul><li><strong>All at once:</strong> notify all reviewers who did not commit themselves yet.</li><li><strong>Sequential:</strong> notify reviewers (who did not commit themselves) one after another. If someone reject the document, the sequence stops.</li></ul>After an approver is notified by the approval table, it is informed of any later modification done on the document.'), ForgeConfig::get('sys_name')) . '</div>';
+            $html .= '<div class="docman_help">' . sprintf(dgettext('tuleap-docman', '%1$s can notify approval members in two ways:<ul><li><strong>All at once:</strong> notify all reviewers who did not commit themselves yet.</li><li><strong>Sequential:</strong> notify reviewers (who did not commit themselves) one after another. If someone reject the document, the sequence stops.</li></ul>After an approver is notified by the approval table, it is informed of any later modification done on the document.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '</div>';
         }
         $html .= '<table>';
         $html .= '<tr>';

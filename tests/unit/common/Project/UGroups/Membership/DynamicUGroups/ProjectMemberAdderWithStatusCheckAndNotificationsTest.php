@@ -69,7 +69,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tuleap\Test
         $this->base_language      = M::mock(\BaseLanguage::class);
         $this->mail_factory       = M::mock(MailFactory::class);
         \ForgeConfig::set('sys_noreply', 'noreply@tuleap.example.com');
-        \ForgeConfig::set('sys_name', 'Tuleap');
+        \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Tuleap');
         \ForgeConfig::set('sys_email_admin', 'admin@tuleap.example.com');
 
         $this->an_active_user    = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);

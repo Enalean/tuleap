@@ -29,7 +29,7 @@ class HeadersSender
      */
     public function sendHeaders(): void
     {
-        header('WWW-Authenticate: Basic realm="' . \ForgeConfig::get('sys_name') . ' WebDAV Authentication"');
+        header('WWW-Authenticate: Basic realm="' . \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' WebDAV Authentication"');
         header('HTTP/1.0 401 Unauthorized');
 
         // text returned when user hit cancel

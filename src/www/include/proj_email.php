@@ -27,7 +27,7 @@ function send_new_project_email(Project $project)
     foreach ($admin_ugroup->getMembers() as $user) {
         /** @var PFUser $user */
         $language  = $user->getLanguage();
-        $subject   = ForgeConfig::get('sys_name') . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
+        $subject   = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
         $presenter = new MailPresenterFactory();
 
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/mail/');

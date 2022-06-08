@@ -70,7 +70,7 @@ function news_header($params)
     } else {
         $HTML->header($params);
         echo '
-			<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
+			<H2>' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
     }
     if (! isset($params['pv']) || ! $params['pv']) {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -402,9 +402,9 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $mail = new Codendi_Mail();
     $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail->setTo(ForgeConfig::get('sys_email_admin'), true); // Don't invalidate admin email!
-    $mail->setSubject($Language->getText('news_utils', 'news_request', [ForgeConfig::get('sys_name')]));
+    $mail->setSubject($Language->getText('news_utils', 'news_request', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]));
     $body  = '';
-    $body .= $Language->getText('news_utils', 'news_request_mail_intro', [ForgeConfig::get('sys_name')]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_intro', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_project', [$group->getPublicName(), $group->getUnixName()]) . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', [$user->getName()]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_summary', [$summary]) . ForgeConfig::get('sys_lf');

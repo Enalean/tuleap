@@ -7,28 +7,28 @@
 //
 //
 
-$body = "You are now a registered user on ".\ForgeConfig::get('sys_name')
-.". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get('sys_name')." Web Site. "
+$body = "You are now a registered user on ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
+.". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." Web Site. "
 ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
 ."project.\n\n\n We highly recommend that you browse through the site, read "
 ."the Site Documentation (<". $base_url ."/help/>) and finalize the setup of your User Profile (<". $base_url ."/account/>) "
 ."(Define your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
-.\ForgeConfig::get('sys_name')." and speak of ".\ForgeConfig::get('sys_name')." around you. \n\n\n-- The ".\ForgeConfig::get('sys_name')." Team";
+.\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." and speak of ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." around you. \n\n\n-- The ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." Team";
 
 
-$title = "Account creation on ".\ForgeConfig::get('sys_name')." !";
+$title = "Account creation on ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." !";
 
-$section_one = "You are now a registered user on ".\ForgeConfig::get('sys_name').". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get('sys_name')." Web Site. "
+$section_one = "You are now a registered user on ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME).". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." Web Site. "
 ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.";
 
 $section_two = "We highly recommend that you browse through the site, read the Site Documentation (<". $base_url ."/help/>) "
 ."and finalize the setup of your User Profile (<". $base_url ."/account/>) (Define your preferences, etc.)";
 
-$section_three = "Enjoy the site, provide us with feedback on ways that we can improve" .\ForgeConfig::get('sys_name')." and speak of ".\ForgeConfig::get('sys_name')." around you.";
+$section_three = "Enjoy the site, provide us with feedback on ways that we can improve" .\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." and speak of ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." around you.";
 
 $thanks = "Thanks!";
 
-$signature = "- The team at ".\ForgeConfig::get('sys_name');
+$signature = "- The team at ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
 
 $help = "For any help contact: ".\ForgeConfig::get('sys_email_admin');
 

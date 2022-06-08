@@ -54,17 +54,17 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
 
     public function get_thanks()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'thanks', [ForgeConfig::get('sys_name')]);
+        return $GLOBALS['Language']->getText('mail_outline', 'thanks', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]);
     }
 
     public function get_signature()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'signature', [ForgeConfig::get('sys_name')]);
+        return $GLOBALS['Language']->getText('mail_outline', 'signature', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]);
     }
 
     public function get_section_one()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'section_one', [ForgeConfig::get('sys_name')]);
+        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'section_one', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]);
     }
 
     public function get_section_two()

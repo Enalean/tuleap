@@ -247,7 +247,7 @@ class Docman_ApprovalTableNotificationCycle
         $project         = $project_manager->getProject($this->item->getGroupId());
         $reviewUrl       = $this->getReviewUrl();
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was rejected by a reviewer'), ForgeConfig::get('sys_name'), $this->item->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was rejected by a reviewer'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
 
         $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was  rejected by %3$s <%4$s>.
 Direct access to the approval table:
@@ -289,7 +289,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
             $comment = dgettext('tuleap-docman', 'with comments');
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by a reviewer %3$s'), ForgeConfig::get('sys_name'), $this->item->getTitle(), $comment);
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by a reviewer %3$s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle(), $comment);
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -330,7 +330,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
             $comment = dgettext('tuleap-docman', 'with comments');
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by last reviewer %3$s'), ForgeConfig::get('sys_name'), $this->item->getTitle(), $comment);
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] \'%2$s\' was approved by last reviewer %3$s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle(), $comment);
 
         return $this->mail_notification_builder->buildAndSendEmail(
             $project,
@@ -353,7 +353,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         $project         = $project_manager->getProject($this->item->getGroupId());
         $reviewUrl       = $this->getReviewUrl();
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer will not review \'%2$s\''), ForgeConfig::get('sys_name'), $this->item->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer will not review \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
 
         $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' will not be reviewed by %3$s <%4$s>.
 
@@ -391,7 +391,7 @@ The notification sequence is on hold until %1$s approves or rejects the document
             $commentSeq .= "\n";
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer commented \'%2$s\''), ForgeConfig::get('sys_name'), $this->item->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] a reviewer commented \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
 
         $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was commented (but neither approved nor rejected) by \'%2$s\' <%3$s>.
 %5$s
@@ -534,7 +534,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
     public function getNotificationSubject()
     {
-        return sprintf(dgettext('tuleap-docman', '[%1$s] Please review \'%2$s\''), ForgeConfig::get('sys_name'), $this->item->getTitle());
+        return sprintf(dgettext('tuleap-docman', '[%1$s] Please review \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $this->item->getTitle());
     }
 
     public function getNotificationBodyText()
@@ -562,7 +562,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
                 $notifStyle = sprintf(dgettext('tuleap-docman', 'Sequence.
 %1$s notifies reviewers one after another.
-People *will not be notified* to review the document *until you approved it*.'), ForgeConfig::get('sys_name'));
+People *will not be notified* to review the document *until you approved it*.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
                 break;
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
                 $notifStyle = dgettext('tuleap-docman', 'All at once');

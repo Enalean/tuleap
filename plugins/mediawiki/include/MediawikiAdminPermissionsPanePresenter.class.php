@@ -62,7 +62,7 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
 
     public function help_intro()
     {
-        return sprintf(dgettext('tuleap-mediawiki', 'Here you can map groups between %1$s and MediaWiki'), ForgeConfig::get('sys_name'));
+        return sprintf(dgettext('tuleap-mediawiki', 'Here you can map groups between %1$s and MediaWiki'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
     }
 
     public function help_link()

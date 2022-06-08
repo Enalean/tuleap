@@ -56,7 +56,7 @@ class SVN_AccessFile_Presenter
 
     public function policy()
     {
-        return $GLOBALS['Language']->getText('svn_admin_access_control', 'def_policy', ForgeConfig::get('sys_name'));
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'def_policy', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
     }
 
     public function permissions_warning()

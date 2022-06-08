@@ -103,7 +103,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print '</h2>';
 
         print '<h3>';
-        print sprintf(dgettext('tuleap-ldap', 'First login to %1$s'), \ForgeConfig::get('sys_name'));
+        print sprintf(dgettext('tuleap-ldap', 'First login to %1$s'), \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
         print '</h3>';
 
         print '<p>' . dgettext('tuleap-ldap', 'Thank you to fill the following before accessing your data:') . '</p>';
@@ -153,7 +153,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
 <td><strong>' . $this->html_purifier->purify($currentUser->getEmail()) . '</strong></td>
 </tr>
 <tr>
-<td>' . sprintf(dgettext('tuleap-ldap', '%1$s internal login:'), \ForgeConfig::get('sys_name')) . '</td>
+<td>' . sprintf(dgettext('tuleap-ldap', '%1$s internal login:'), \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '</td>
 <td>' . $this->html_purifier->purify($currentUser->getUserName()) . '<br>
 ' . dgettext('tuleap-ldap', '<em>Required for CVS, FTP and Subversion accesses</em>.') . '
 </td>

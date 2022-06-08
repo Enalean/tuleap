@@ -20,6 +20,6 @@
 ?>
 <h3 class="footer-section-title">API</h3>
 <p class="footer-paragraph">
-    <?php echo \ForgeConfig::get('sys_name') ?>
+    <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) ?>
     provides a <a href="<?php echo Codendi_HTMLPurifier::instance()->purify($endpoint_url); ?>">REST&nbsp;API</a>.
 </p>

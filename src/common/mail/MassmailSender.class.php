@@ -44,7 +44,7 @@ class MassmailSender
         $mail->setTo($user->getEmail());
         $mail->addAdditionalHeader('Reply-To', $user->getEmail());
         $mail->setBccUser($receivers);
-        $mail->setSubject("[" . ForgeConfig::get('sys_name') . "] [" . $project_name . "] " . $subject);
+        $mail->setSubject("[" . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . "] [" . $project_name . "] " . $subject);
         $mail->setBodyText($hp->purify($html_body, CODENDI_PURIFIER_STRIP_HTML));
 
         $mail->setBodyHtml($html_body);

@@ -86,7 +86,7 @@ if (! $project->isPublic()) {
 }
     echo '</p>
 	<h3>' . _('CVS Tracking') .
-'</H3><p>' . sprintf(_('When CVS tracking is on, the commits (file change, addition and removal) are registered in the %1$s database so that they can be browsed and searched. Else commits are not logged in the database; only the CVS history is available'), ForgeConfig::get('sys_name')) .
+'</H3><p>' . sprintf(_('When CVS tracking is on, the commits (file change, addition and removal) are registered in the %1$s database so that they can be browsed and searched. Else commits are not logged in the database; only the CVS history is available'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) .
         '<p>' . _('CVS Tracking') .
         '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="tracked"> ' .
         '<OPTION VALUE="1"' . (($cvs_tracked == '1') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'on') . '</OPTION>' .

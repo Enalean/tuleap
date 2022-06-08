@@ -168,10 +168,10 @@ class MailPresenterFactory
             _('Account creation!'),
             sprintf(_('A new user has just registered on %1$s.
 
-User Name:'), ForgeConfig::get('sys_name'), $attributes_presenter["login"]),
+User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $attributes_presenter["login"]),
             _('Please click on the following URL to approve the registration:'),
             _('Thanks!'),
-            sprintf(_('- The team at %1$s.'), ForgeConfig::get('sys_name')),
+            sprintf(_('- The team at %1$s.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)),
             $attributes_presenter["color_logo"],
             $redirect_url,
             _('Confirm the account creation'),

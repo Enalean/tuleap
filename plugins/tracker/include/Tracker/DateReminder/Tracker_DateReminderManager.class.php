@@ -302,7 +302,7 @@ class Tracker_DateReminderManager
         $output  = '+============== ' . '[' . $this->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ' . $artifact->fetchMailTitle($recipient) . ' ==============+';
         $output .= PHP_EOL;
 
-        $output .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), ForgeConfig::get('sys_name'), $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
+        $output .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
         $output .= PHP_EOL;
         $output .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact here: %1$s'), $link);
         $output .= PHP_EOL;
@@ -325,7 +325,7 @@ class Tracker_DateReminderManager
         $link   = \Tuleap\ServerHostname::HTTPSUrl() . TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
 
         $output  = '<h1>' . $hp->purify($artifact->fetchMailTitle($recipient, $format, false)) . '</h1>' . PHP_EOL;
-        $output .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify(ForgeConfig::get('sys_name')), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
+        $output .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify(ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
         $output .= '<br>';
         $output .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact <a href="%1$s">here</a>.'), $link);
         $output .= '<br>';

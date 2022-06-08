@@ -46,7 +46,7 @@ class SpecificLoginPresenter
 
     public function help_subject() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return sprintf(_('Unable to login under %1$s'), ForgeConfig::get('sys_name'));
+        return sprintf(_('Unable to login under %1$s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
     }
 
     public function account_login_login_with_tuleap() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

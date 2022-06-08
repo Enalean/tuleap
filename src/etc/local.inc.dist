@@ -240,9 +240,6 @@ $sys_disable_subdomains = 0;
 // Should be either 'ldap' or 'codendi'
 $sys_auth_type = 'codendi';
 
-// System name to be used in Web pages, documentation,etc.
-$sys_name = 'Tuleap';
-
 // Email address pointing to the Tuleap site administrators
 // for use Web pages, documentation,etc.
 $sys_email_admin = 'codendi-admin@%sys_default_domain%';

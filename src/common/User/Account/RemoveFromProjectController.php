@@ -108,7 +108,7 @@ final class RemoveFromProjectController extends DispatchablePSR15Compatible
 
         $mail = new \Codendi_Mail();
         $mail->setTo(implode(',', $administrators));
-        $mail->setSubject(sprintf(_("%s : user %s removed from project '%s'"), ForgeConfig::get('sys_name'), $user->getName(), $project_name));
+        $mail->setSubject(sprintf(_("%s : user %s removed from project '%s'"), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $user->getName(), $project_name));
         $link_members = sprintf('%s/project/%s/admin/members', \Tuleap\ServerHostname::HTTPSUrl(), urlencode((string) $project_id));
         $mail->setBodyText(
             sprintf(

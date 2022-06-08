@@ -163,7 +163,7 @@ If you consider that the upload has been well done, you can modify the value in 
     {
         $mail =  new Codendi_Mail();
 
-        $subject = ForgeConfig::get('sys_name') . ' Error in ' . $file->getFileLocation();
+        $subject = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' Error in ' . $file->getFileLocation();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setBcc($user->getEmail());
         $mail->setSubject($subject);

@@ -114,12 +114,12 @@ class User_LoginPresenter
 
     public function help_subject()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return sprintf(_('Unable to login under %1$s'), ForgeConfig::get('sys_name'));
+        return sprintf(_('Unable to login under %1$s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
     }
 
     public function account_login_page_title()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [ForgeConfig::get('sys_name')]);
+        return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]);
     }
 
     public function account_login_name()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

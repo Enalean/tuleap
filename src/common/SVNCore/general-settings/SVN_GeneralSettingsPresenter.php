@@ -61,7 +61,7 @@ class SVN_GeneralSettingsPresenter
 
     public function tracking_comment()
     {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'tracking_comment', ForgeConfig::get('sys_name'));
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'tracking_comment', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
     }
 
     public function on()
@@ -99,7 +99,7 @@ class SVN_GeneralSettingsPresenter
         return $GLOBALS['Language']->getText(
             'svn_admin_general_settings',
             'preamble',
-            ['/svn/?func=info&group_id=' . $this->project->getID(), ForgeConfig::get('sys_name')]
+            ['/svn/?func=info&group_id=' . $this->project->getID(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]
         );
     }
 

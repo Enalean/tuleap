@@ -72,8 +72,8 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('svn_prefix', $this->tmp_dir . '/svnroot');
         $this->initial_tmp_dir = ForgeConfig::get('tmp_dir');
         ForgeConfig::set('tmp_dir', $this->tmp_dir . '/tmp');
-        $this->initial_sys_name = ForgeConfig::get('sys_name');
-        ForgeConfig::set('sys_name', 'Tuleap test');
+        $this->initial_sys_name = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+        ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Tuleap test');
         $this->initial_svnadmin_cmd = ForgeConfig::get('svnadmin_cmd');
         ForgeConfig::set('svnadmin_cmd', '/usr/bin/svnadmin --config-dir ' . __DIR__ . '/_fixtures/.subversion');
 
@@ -112,7 +112,7 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('codendi_bin_prefix', $this->initial_codendi_bin_prefix);
         ForgeConfig::set('svn_prefix', $this->initial_svn_prefix);
         ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
-        ForgeConfig::set('sys_name', $this->initial_sys_name);
+        ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, $this->initial_sys_name);
         ForgeConfig::set('svnadmin_cmd', $this->initial_svnadmin_cmd);
     }
 

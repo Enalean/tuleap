@@ -162,7 +162,7 @@ class HeaderPresenterBuilder
 
     private function getPageTitle()
     {
-        $page_title = \ForgeConfig::get('sys_name');
+        $page_title = \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
 
         if (! empty($this->title)) {
             $page_title = $this->title . ' - ' . $page_title;

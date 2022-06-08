@@ -98,7 +98,7 @@ class AdditionalModalPresenterBuilder
                 'ugroup_name'             => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
                 'ldap_group_name'         => $ldap_group ? $ldap_group->getGroupCommonName() : '',
                 'ldap_group_display_name' => $ldap_group ? $ldap_group->getGroupDisplayName() : '',
-                'sys_name'                => ForgeConfig::get('sys_name'),
+                'sys_name'                => ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
                 'is_preserved'            => $this->isPreserved($ugroup, $bind_option),
                 'is_synchronized'         => $this->isSynchronized($ugroup, $synchro),
                 'locale'                  => $this->request->getCurrentUser()->getLocale(),

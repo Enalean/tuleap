@@ -44,17 +44,17 @@ class TuleapRegisterMail
     public function getMail($login, $confirm_hash, $base_url, $from, $to, $presenter_role)
     {
         if ($presenter_role === "user") {
-            $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', ForgeConfig::get('sys_name'));
+            $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
             include($GLOBALS['Language']->getContent('include/new_user_email'));
         } elseif ($presenter_role === "admin") {
-            $subject = sprintf(_('Welcome to %1$s!'), ForgeConfig::get('sys_name'));
+            $subject = sprintf(_('Welcome to %1$s!'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
             include($GLOBALS['Language']->getContent('account/new_account_email'));
         } elseif ($presenter_role === "admin-notification") {
             $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
             $subject      = sprintf(_('New User Registered: %1$s'), $login);
             $message      = $this->createNotificationMessageText($login, $redirect_url);
         } else {
-            $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get('sys_name'));
+            $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
             include($GLOBALS['Language']->getContent('admin/new_account_email'));
         }
 
@@ -132,12 +132,12 @@ class TuleapRegisterMail
         $message = _('Account creation!') . "\n\n"
            . sprintf(_('A new user has just registered on %1$s.
 
-User Name:'), ForgeConfig::get('sys_name')) . " "
+User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . " "
            . $login . _('.') . "\n\n"
            . _('Please click on the following URL to approve the registration:') . "\n\n"
            . "<" . $redirect_url . ">\n\n"
            . _('Thanks!') . "\n\n"
-           . sprintf(_('- The team at %1$s.'), ForgeConfig::get('sys_name')) . "\n\n";
+           . sprintf(_('- The team at %1$s.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . "\n\n";
 
         return $message;
     }

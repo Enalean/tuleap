@@ -341,7 +341,7 @@ if ($request->isPost() && $request->exist('Register')) {
 
             if ($admin_creation) {
                 $title            = _('The user account was created.');
-                $content          = sprintf(_('Please note the login <span class="confirmation-user">%3$s</span> and password <span class="confirmation-user">%4$s</span>'), $hp->purify($request->get('form_realname')), ForgeConfig::get('sys_name'), $hp->purify($request->get('form_loginname')), $hp->purify($request->get('form_pw')));
+                $content          = sprintf(_('Please note the login <span class="confirmation-user">%3$s</span> and password <span class="confirmation-user">%4$s</span>'), $hp->purify($request->get('form_realname')), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $hp->purify($request->get('form_loginname')), $hp->purify($request->get('form_pw')));
                 $thanks           = '';
                 $is_thanks        = false;
                 $redirect_url     = '/admin';

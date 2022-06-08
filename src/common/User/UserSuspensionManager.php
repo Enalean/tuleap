@@ -177,7 +177,7 @@ class UserSuspensionManager
         $presenter = $this->mail_presenter_factory->createMailAccountSuspensionAlertPresenter($last_access_date, $suspension_date, $language);
         $this->mail->setFrom(ForgeConfig::get('sys_noreply'));
         $this->mail->setTo($user->getEmail());
-        $subject = sprintf(_('%s - Account suspension notification'), ForgeConfig::get('sys_name'));
+        $subject = sprintf(_('%s - Account suspension notification'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
         $this->mail->setSubject($subject);
         $this->mail->setBodyHtml($this->renderer->renderToString('mail-suspension-alert', $presenter), Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
         return $this->mail->send();
@@ -193,7 +193,7 @@ class UserSuspensionManager
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay, $date);
         $end_date   = $start_date->modify('+23hours 59 minutes 59 seconds');
         $this->logger->info(
-            "Idle accounts: querying users that last accessed " . ForgeConfig::get('sys_name') .
+            "Idle accounts: querying users that last accessed " . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) .
             " between " . $start_date->format('Y-m-d\TH:i:sO') . " and " . $end_date->format('Y-m-d\TH:i:sO')
         );
         return $this->dao->getIdleAccounts($start_date, $end_date);
@@ -382,7 +382,7 @@ class UserSuspensionManager
         $presenter = $this->mail_presenter_factory->createMailAccountSuspensionPresenter($last_access_date, $language);
         $this->mail->setFrom(ForgeConfig::get('sys_noreply'));
         $this->mail->setTo($user->getEmail());
-        $subject = sprintf(_('%s - Account suspension'), ForgeConfig::get('sys_name'));
+        $subject = sprintf(_('%s - Account suspension'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
         $this->mail->setSubject($subject);
         $this->mail->setBodyHtml($this->renderer->renderToString('mail-suspension', $presenter), Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
         return $this->mail->send();
@@ -396,7 +396,7 @@ class UserSuspensionManager
         $last_valid_access_start = $last_valid_access_end->sub(new DateInterval(self::ONE_DAY_INTERVAL));
 
         $this->logger->info(
-            "Inactive accounts: querying users that last accessed " . ForgeConfig::get('sys_name') .
+            "Inactive accounts: querying users that last accessed " . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) .
             " between  " . $last_valid_access_start->format('Y-m-d\TH:i:sO') . "and " .
             $last_valid_access_end->format('Y-m-d\TH:i:sO')
         );

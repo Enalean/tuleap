@@ -88,7 +88,7 @@ if (user_isloggedin()) {
         echo '
         <H3>' . $Language->getText('news_submit', 'submit_news_for', $hp->purify($project->getPublicName())) . '</H3>
         <P>
-        ' . $Language->getText('news_submit', 'post_explain', ForgeConfig::get('sys_name')) . '
+        ' . $Language->getText('news_submit', 'post_explain', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '
         <P>
         <FORM ACTION="" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $hp->purify($group_id) . '">
@@ -120,7 +120,7 @@ if (user_isloggedin()) {
         </label>
 
         <br>
-        ' . $Language->getText('news_submit', 'news_promote', ForgeConfig::get('sys_name')) . '
+        ' . $Language->getText('news_submit', 'news_promote', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '
         <label class="radio">
             <INPUT TYPE="RADIO" NAME="promote_news" VALUE="3">
             ' . $Language->getText('global', 'yes') . '
@@ -130,10 +130,10 @@ if (user_isloggedin()) {
             ' . $Language->getText('global', 'no') . '
         </label>
 
-        ' . $Language->getText('news_submit', 'promote_warn', ForgeConfig::get('sys_name'));
+        ' . $Language->getText('news_submit', 'promote_warn', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
 
         if ($project->getId() != Project::SITE_NEWS_PROJECT_ID) {
-            echo '<br><br>' . $Language->getText('news_submit', 'send_news_by_email', ForgeConfig::get('sys_name')) . ':<br>';
+            echo '<br><br>' . $Language->getText('news_submit', 'send_news_by_email', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . ':<br>';
             echo news_fetch_ugroups($project);
         }
 

@@ -87,7 +87,7 @@ class NewDropdownPresenterBuilder
         }
 
         $sections[] = new NewDropdownLinkSectionPresenter(
-            \ForgeConfig::get('sys_name'),
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
             [
                 new NewDropdownLinkPresenter('/project/new', _('Start a new project'), 'fa-archive', []),
             ],

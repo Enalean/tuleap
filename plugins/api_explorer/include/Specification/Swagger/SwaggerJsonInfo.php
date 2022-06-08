@@ -49,7 +49,7 @@ final class SwaggerJsonInfo
     {
         return new self(
             $version,
-            \ForgeConfig::get('sys_name') . ' API'
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' API'
         );
     }
 }

@@ -1106,7 +1106,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             'description' => '',
             'link'        => '<![CDATA[' . $server_url . '/tracker/?atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . ']]>',
             'language'    => 'en-us',
-            'copyright'   => $GLOBALS['Language']->getText('rss', 'copyright', [$GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y', time())]),
+            'copyright'   => $GLOBALS['Language']->getText('rss', 'copyright', [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::LONG_ORG_NAME), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),date('Y', time())]),
             'pubDate'     => gmdate('D, d M Y h:i:s', $this->getLastUpdateDate()) . ' GMT',
         ]);
         $result     = $this->getFollowups();

@@ -53,7 +53,7 @@ class InviteBuddiesPresenter
     ) {
         $this->can_buddies_be_invited = $can_buddies_be_invited;
         $this->is_limit_reached       = $is_limit_reached;
-        $this->instance_name          = (string) \ForgeConfig::get('sys_name');
+        $this->instance_name          = (string) \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         $this->max_limit_by_day       = $max_limit_by_day;
     }
 
