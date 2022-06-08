@@ -96,7 +96,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $html = dgettext('tuleap-tracker', '<p>The <strong>title</strong> summarizes an artifact and will be used in RSS feeds or in the widget MyArtifact.</p>');
+        $html = "<p>" . dgettext('tuleap-tracker', 'The title summarizes an artifact and will be used in various places: widgets, artifact links, email notifications, ...') . "</p>";
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
             $html    .= sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be summarized by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
@@ -107,95 +107,47 @@ class Tracker_Semantic_Title extends Tracker_Semantic
         return $html;
     }
 
-    /**
-     * Display the form to let the admin change the semantic
-     *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
-     *
-     * @return void
-     */
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
-        $html = '';
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
-        if ($text_fields = Tracker_FormElementFactory::instance()->getUsedTextFields($this->tracker)) {
-            $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
-            $html  .= $this->getCSRFToken()->fetchHTMLInput();
-            $select = '<select name="text_field_id">';
-            if (! $this->getFieldId()) {
-                $select .= '<option value="-1" selected="selected">' . dgettext('tuleap-tracker', 'Choose a field...') . '</option>';
-            }
-            foreach ($text_fields as $text_field) {
-                if ($text_field->getId() == $this->getFieldId()) {
-                    $selected = ' selected="selected" ';
-                } else {
-                    $selected = '';
-                }
-                $select .= '<option value="' . $text_field->getId() . '" ' . $selected . '>' . $hp->purify($text_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
-            }
-            $select .= '</select>';
+        $template_rendreder      = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $admin_presenter_builder = new \Tuleap\Tracker\Semantic\Title\AdminPresenterBuilder(Tracker_FormElementFactory::instance());
 
-            $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
-            $unset_btn .= dgettext('tuleap-tracker', 'Unset this semantic') . '</button>';
+        echo $template_rendreder->renderToString(
+            'semantics/admin-title',
+            $admin_presenter_builder->build($this, $this->tracker, $this->getCSRFToken())
+        );
 
-            $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
-            $submit_btn .= $GLOBALS['Language']->getText('global', 'save_change') . '</button>';
-
-            if (! $this->getFieldId()) {
-                $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>');
-                $html .= '<p>' . dgettext('tuleap-tracker', 'Feel free to choose one:') . ' ';
-                $html .= $select . ' <br> ' . $submit_btn;
-                $html .= '</p>';
-            } else {
-                $html .= sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be summarized by the field <strong>%1$s</strong>.</p>'), $select);
-                $html .= $submit_btn . ' ' . $GLOBALS['Language']->getText('global', 'or') . ' ' . $unset_btn;
-            }
-            $html .= '</form>';
-        } else {
-            $html .= dgettext('tuleap-tracker', 'You cannot define the <em>title</em> semantic since there isn\'t any text field in the tracker');
-        }
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
-        echo $html;
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
-    /**
-     * Process the form
-     *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
-     *
-     * @return void
-     */
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
             if ($field = Tracker_FormElementFactory::instance()->getUsedTextFieldById($this->tracker, $request->get('text_field_id'))) {
                 $this->text_field = $field;
                 if ($this->save()) {
-                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The title is now: %1$s'), $field->getLabel()));
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Semantic title updated'));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to save the title'));
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Unable to save the title'));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The field you submitted is not a text field'));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'The field you submitted is not a text field'));
             }
         } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
             if ($this->delete()) {
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Title semantic has been unset'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Semantic title unset'));
                 $GLOBALS['Response']->redirect($this->getUrl());
             } else {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to save the title'));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'Unable to save the title'));
             }
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
