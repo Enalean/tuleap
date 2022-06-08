@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Docman\View\DocmanViewURLBuilder;
+use Tuleap\Document\Tree\DocumentItemPreviewUrlBuilder;
 
 class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
 {
@@ -139,13 +139,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
 
                 $table .= "<td>";
                 $table .= '<span style="white-space: nowrap;">';
-                $url    = DocmanViewURLBuilder::buildActionUrl(
-                    $item,
-                    $params,
-                    ['action' => 'details', 'id' => $item->getId()],
-                    false,
-                    true
-                );
+                $url    = DocumentItemPreviewUrlBuilder::buildSelf()->getUrl($item);
                 $table .= '<a data-help-window href="' . $url . '">';
                 $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table .= '</a>';

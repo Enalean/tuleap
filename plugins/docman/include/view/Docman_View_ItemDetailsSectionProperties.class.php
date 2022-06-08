@@ -147,7 +147,6 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
             $html .= $this->_getDefaultValuesFields();
         }
 
-        $html .= $this->_getAdditionalRows();
         return $html;
     }
 
@@ -159,16 +158,6 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     public function _showField($field)
     {
         return $field->getValue();
-    }
-
-    public function _getAdditionalRows()
-    {
-        $html = '';
-
-        if ($this->user_can_write) {
-            $html .= '<p><a href="' . $this->url . '&amp;action=edit&amp;id=' . $this->item->getid() . '">' . dgettext('tuleap-docman', 'Edit properties') . '</a></p>';
-        }
-        return $html;
     }
 
     public function _getInheritableMetadata()

@@ -23,6 +23,7 @@
 {
     /* protected */ public function _scripts($params)
     {
+        $project = ProjectManager::instance()->getProject((int) $params['group_id']);
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
         $di = $this->_getDocmanIcons($params);
         echo json_encode(array_merge(
@@ -31,6 +32,7 @@
                 'spinner'       => $di->getSpinner(),
                 'pluginPath'    => $this->_controller->pluginPath,
                 'themePath'     => $this->_controller->themePath,
+                'document_path' => "/plugins/document/" . urlencode($project->getUnixNameLowerCase()),
                 'language'      => [
                     'btn_close'                => $GLOBALS['Language']->getText('global', 'btn_close'),
                     'new_in'                   => dgettext('tuleap-docman', 'In:&nbsp;'),

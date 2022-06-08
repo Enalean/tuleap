@@ -79,6 +79,7 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
 
         // Approval tables
         $this->actions['canApproval'] = true;
+        $this->actions['parent_id']   = $item->getParentId();
 
         return $this->actions;
     }
