@@ -58,7 +58,7 @@ class ServiceDocman extends \Service
 
     public function getUrl(?string $url = null): string
     {
-        return \EventManager::instance()->dispatch(new DocmanURL($this->project))->getServiceURL();
+        return "/plugins/document/" . urlencode($this->project->getUnixNameLowerCase()) . "/";
     }
 
     public function urlCanChange(): bool

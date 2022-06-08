@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
-use Tuleap\Event\Dispatchable;
 
-class ExternalLinkRedirector implements Dispatchable
+final class ExternalLinkRedirector
 {
-    public const NAME = 'externalLinkRedirector';
     /**
      * @var null | int
      */

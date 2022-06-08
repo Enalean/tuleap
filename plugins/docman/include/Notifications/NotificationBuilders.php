@@ -30,10 +30,9 @@ use EventManager;
 use MailBuilder;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
-use Tuleap\Docman\ExternalLinks\LegacyLinkProvider;
 use Tuleap\Docman\ResponseFeedbackWrapper;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
@@ -229,12 +228,6 @@ class NotificationBuilders
 
     private function getProvider(Project $project): ILinkUrlProvider
     {
-        $provider      = new LegacyLinkProvider(
-            \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
-        );
-        $link_provider = new DocmanLinkProvider($project, $provider);
-        EventManager::instance()->processEvent($link_provider);
-
-        return $link_provider->getProvider();
+        return new DocumentLinkProvider(\Tuleap\ServerHostname::HTTPSUrl(), $project);
     }
 }

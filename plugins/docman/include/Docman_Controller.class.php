@@ -28,7 +28,6 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
-use Tuleap\Docman\View\Admin\AdminTabsCollector;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
@@ -601,12 +600,11 @@ class Docman_Controller extends Controler
                 $this->view = 'Admin_View';
                 break;
             case 'admin':
-                $tabs = $this->getEventManager()
-                    ->dispatch(new AdminTabsCollector($this->getProject(), '', $this->getDefaultUrl()))
-                    ->getTabs();
-                if (! empty($tabs)) {
-                    $GLOBALS['Response']->redirect($tabs[0]->url);
-                }
+                $GLOBALS['Response']->redirect(
+                    \Tuleap\Document\Config\Project\SearchView::getUrl(
+                        ProjectManager::instance()->getProject((int) $root->getGroupId())
+                    )
+                );
                 break;
             case \Docman_View_Admin_Permissions::IDENTIFIER:
                 $this->view = 'Admin_Permissions';

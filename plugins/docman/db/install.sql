@@ -452,6 +452,23 @@ CREATE TABLE plugin_docman_new_version_upload(
     INDEX idx_item_id (item_id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_document_search_criteria
+(
+    id         INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    project_id int(11)          NOT NULL,
+    name       varchar(255)     NOT NULL default '',
+    INDEX project_idx(project_id)
+) ENGINE = InnoDB;
+
+CREATE TABLE plugin_document_search_columns
+(
+    id         INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    project_id int(11)          NOT NULL,
+    name       varchar(255)     NOT NULL default '',
+    INDEX project_idx(project_id)
+) ENGINE = InnoDB;
+
+
 INSERT INTO forgeconfig VALUES ('plugin_docman_max_number_of_files', 50);
 -- 67108864 = 64MB
 INSERT INTO forgeconfig VALUES ('plugin_docman_max_file_size', 67108864);

@@ -40,7 +40,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
     /* protected */ public function _footer($params)
     {
-        $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance(), EventManager::instance());
+        $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance());
         $presenter = $builder->build($params, $params['group_id'], $params['item']->toRow(), $params['user']);
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(

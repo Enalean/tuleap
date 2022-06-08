@@ -24,6 +24,7 @@
  *
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
@@ -40,7 +41,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\DocmanLegacyController;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollectionBuilder;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocumentFilesUploadLimitsSaver;
@@ -49,10 +49,8 @@ use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadCORS;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
-use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
-use Tuleap\Docman\ExternalLinks\LegacyLinkProvider;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
@@ -71,6 +69,7 @@ use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
 use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
@@ -90,9 +89,32 @@ use Tuleap\Docman\XML\Import\PostFolderImporter;
 use Tuleap\Docman\XML\Import\VersionImporter;
 use Tuleap\Docman\XML\XMLExporter;
 use Tuleap\Docman\XML\XMLImporter;
+use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
+use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
+use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
+use Tuleap\Document\Config\Admin\HistoryEnforcementAdminSaveController;
+use Tuleap\Document\Config\FileDownloadLimitsBuilder;
+use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
+use Tuleap\Document\Config\ModalDisplayer;
+use Tuleap\Document\Config\Project\SearchColumnFilter;
+use Tuleap\Document\Config\Project\SearchColumnsDao;
+use Tuleap\Document\Config\Project\SearchCriteriaDao;
+use Tuleap\Document\Config\Project\SearchCriteriaFilter;
+use Tuleap\Document\Config\Project\SearchView;
+use Tuleap\Document\Config\Project\UpdateSearchView;
+use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
+use Tuleap\Document\DownloadFolderAsZip\ZipStreamerLoggingHelper;
+use Tuleap\Document\DownloadFolderAsZip\ZipStreamMailNotificationSender;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\Document\PermissionDeniedDocumentMailSender;
+use Tuleap\Document\Tree\DocumentTreeController;
+use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
+use Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder;
+use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
@@ -104,6 +126,8 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -122,6 +146,7 @@ use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../document/vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class DocmanPlugin extends Plugin implements PluginWithConfigKeys
@@ -157,6 +182,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     {
         parent::__construct($id);
         bindtextdomain('tuleap-docman', __DIR__ . '/../site-content');
+        bindtextdomain('tuleap-document', __DIR__ . '/../../document/site-content');
 
         $this->addHook('cssfile', 'cssFile', false);
         $this->addHook('javascript_file');
@@ -1466,6 +1492,108 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         );
     }
 
+    public function routeGet(): DocumentTreeController
+    {
+        $history_enforcement_settings_builder = new HistoryEnforcementSettingsBuilder();
+        $settings_DAO                         = new SettingsDAO();
+        $filename_pattern_retriever           = new FilenamePatternRetriever($settings_DAO);
+
+        return new DocumentTreeController(
+            $this->getProjectExtractor(),
+            $this->getPluginInfo(),
+            new FileDownloadLimitsBuilder(),
+            new ModalDisplayer(
+                $filename_pattern_retriever,
+                $history_enforcement_settings_builder->build()
+            ),
+            $filename_pattern_retriever,
+            new ProjectFlagsBuilder(new ProjectFlagsDao()),
+            new \Docman_ItemDao(),
+            new ListOfSearchCriterionPresenterBuilder(
+                new SearchCriteriaDao(),
+            ),
+            new \Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder(
+                new \Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder(),
+                new SearchColumnsDao(),
+            ),
+            new \Tuleap\Docman\Settings\ForbidWritersSettings($settings_DAO)
+        );
+    }
+    public function routeDownloadFolderAsZip(): DocumentFolderZipStreamer
+    {
+        return new DocumentFolderZipStreamer(
+            new BinaryFileResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory()
+            ),
+            $this->getProjectExtractor(),
+            UserManager::instance(),
+            new ZipStreamerLoggingHelper(),
+            new ZipStreamMailNotificationSender(),
+            new \Tuleap\Document\DownloadFolderAsZip\FolderSizeIsAllowedChecker(
+                new \Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor(),
+            ),
+            new \Tuleap\Document\Config\FileDownloadLimitsBuilder(),
+            new SapiEmitter(),
+            new \Tuleap\Http\Server\SessionWriteCloseMiddleware(),
+            new ServiceInstrumentationMiddleware('document')
+        );
+    }
+
+    public function routeAdminSearch(): SearchView
+    {
+        $search_criteria_dao = new SearchCriteriaDao();
+        return new SearchView(
+            $this->getProjectExtractor(),
+            new SearchColumnFilter(new SearchColumnCollectionBuilder(), new SearchColumnsDao()),
+            new SearchCriteriaFilter(
+                new ListOfSearchCriterionPresenterBuilder($search_criteria_dao),
+                $search_criteria_dao
+            )
+        );
+    }
+
+    public function routeUpdateAdminSearch(): UpdateSearchView
+    {
+        return new UpdateSearchView(
+            $this->getProjectExtractor(),
+            new SearchColumnsDao(),
+            new SearchCriteriaDao(),
+        );
+    }
+
+    public function routeSendRequestMail(): PermissionDeniedDocumentMailSender
+    {
+        return new PermissionDeniedDocumentMailSender(
+            new PlaceHolderBuilder(\ProjectManager::instance()),
+            new CSRFSynchronizerToken('plugin-document')
+        );
+    }
+
+    public function routeGetDocumentSettingsNewUI(): FilesDownloadLimitsAdminController
+    {
+        return FilesDownloadLimitsAdminController::buildSelf();
+    }
+
+    public function routePostDocumentSettingsNewUI(): FilesDownloadLimitsAdminSaveController
+    {
+        return FilesDownloadLimitsAdminSaveController::buildSelf();
+    }
+
+    public function routeGetHistoryEnforcementSettingsNewUI(): HistoryEnforcementAdminController
+    {
+        return HistoryEnforcementAdminController::buildSelf();
+    }
+
+    public function routePostHistoryEnforcementSettingsNewUI(): HistoryEnforcementAdminSaveController
+    {
+        return HistoryEnforcementAdminSaveController::buildSelf();
+    }
+
+    private function getProjectExtractor(): DocumentTreeProjectExtractor
+    {
+        return new DocumentTreeProjectExtractor(ProjectManager::instance());
+    }
 
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
@@ -1483,13 +1611,39 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
             $r->get('/download/{file_id:\d+}[/{version_id:\d+}]', $this->getRouteHandler('routeFileDownload'));
         });
+
+        $event->getRouteCollector()->addGroup('/plugins/document', function (\FastRoute\RouteCollector $r) {
+            $r->post(
+                '/PermissionDeniedRequestMessage/{project_id:\d+}',
+                $this->getRouteHandler('routeSendRequestMail')
+            );
+            $r->get(
+                '/{project_name:[A-z0-9-]+}/folders/{folder_id:\d+}/download-folder-as-zip',
+                $this->getRouteHandler('routeDownloadFolderAsZip')
+            );
+            $r->get(
+                '/{project_name:[A-z0-9-]+}/admin-search',
+                $this->getRouteHandler('routeAdminSearch')
+            );
+            $r->post(
+                '/{project_name:[A-z0-9-]+}/admin-search',
+                $this->getRouteHandler('routeUpdateAdminSearch')
+            );
+            $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
+        });
+
+        $event->getRouteCollector()->addGroup(self::ADMIN_BASE_URL, function (\FastRoute\RouteCollector $r) {
+            $r->get('/files-download-limits', $this->getRouteHandler('routeGetDocumentSettingsNewUI'));
+            $r->post('/files-download-limits', $this->getRouteHandler('routePostDocumentSettingsNewUI'));
+            $r->get('/history-enforcement', $this->getRouteHandler('routeGetHistoryEnforcementSettingsNewUI'));
+            $r->post('/history-enforcement', $this->getRouteHandler('routePostHistoryEnforcementSettingsNewUI'));
+        });
     }
 
     public function routeGetDocumentSettings(): DocmanFilesUploadLimitsAdminController
     {
         return new DocmanFilesUploadLimitsAdminController(
             new AdminPageRenderer(),
-            new DocmanSettingsTabsPresenterCollectionBuilder(EventManager::instance())
         );
     }
 
@@ -1562,13 +1716,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     private function getProvider(Project $project): ILinkUrlProvider
     {
-        $provider      = new LegacyLinkProvider(
-            \Tuleap\ServerHostname::HTTPSUrl() . '/?group_id=' . urlencode((string) $project->getID())
-        );
-        $link_provider = new DocmanLinkProvider($project, $provider);
-        EventManager::instance()->processEvent($link_provider);
-
-        return $link_provider->getProvider();
+        return new DocumentLinkProvider(\Tuleap\ServerHostname::HTTPSUrl(), $project);
     }
 
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void

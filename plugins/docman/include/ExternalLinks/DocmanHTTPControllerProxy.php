@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\ExternalLinks;
 
 use Docman_ItemDao;
+use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Request\NotFoundException;
 
 class DocmanHTTPControllerProxy
@@ -77,20 +78,18 @@ class DocmanHTTPControllerProxy
             (int) $root_folder['item_id']
         );
 
-        $this->processEventWhenNeeded($request, $redirector);
+        if ($this->parameters_extractor->extractRequestIsForOldUIParams($request)) {
+            $retriever = new DocumentUsageRetriever();
+
+            $redirector->checkAndStoreIfUserHasToBeenRedirected(
+                $retriever->shouldUseDocument($user, $request->getProject())
+            );
+        }
 
         if ($redirector->shouldRedirectUserOnNewUI()) {
             $GLOBALS['HTML']->redirect($redirector->getUrlRedirection());
         } else {
             $this->docman_HTTP_controller->process();
-        }
-    }
-
-
-    private function processEventWhenNeeded(\HTTPRequest $request, ExternalLinkRedirector $redirector): void
-    {
-        if ($this->parameters_extractor->extractRequestIsForOldUIParams($request)) {
-            $this->event_manager->processEvent($redirector);
         }
     }
 }

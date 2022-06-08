@@ -26,8 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollectionBuilder;
 use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -45,21 +43,15 @@ final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\T
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminPageRenderer
      */
     private $admin_page_renderer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DocmanSettingsTabsPresenterCollectionBuilder
-     */
-    private $tabs_collection_builder;
 
     protected function setUp(): void
     {
-        $this->admin_page_renderer     = Mockery::mock(AdminPageRenderer::class);
-        $this->tabs_collection_builder = Mockery::mock(DocmanSettingsTabsPresenterCollectionBuilder::class);
+        $this->admin_page_renderer = Mockery::mock(AdminPageRenderer::class);
 
         $this->controller = new HistoryEnforcementAdminController(
             $this->admin_page_renderer,
             new HistoryEnforcementSettingsBuilder(),
             Mockery::mock(\CSRFSynchronizerToken::class),
-            $this->tabs_collection_builder
         );
     }
 
@@ -86,16 +78,6 @@ final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\T
         $this->admin_page_renderer
             ->shouldReceive('renderANoFramedPresenter')
             ->once();
-
-        $tabs_collection = Mockery::mock(DocmanSettingsTabsPresenterCollection::class);
-        $tabs_collection
-            ->shouldReceive('getTabs')
-            ->andReturn([]);
-
-        $this->tabs_collection_builder
-            ->shouldReceive('build')
-            ->once()
-            ->andReturn($tabs_collection);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),

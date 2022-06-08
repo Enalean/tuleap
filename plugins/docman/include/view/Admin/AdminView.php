@@ -24,6 +24,7 @@ namespace Tuleap\Docman\View\Admin;
 
 use Docman_View_Admin_FilenamePattern;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
+use Tuleap\Document\Config\Project\SearchView;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -188,13 +189,67 @@ abstract class AdminView
     }
 
     /**
-     * @return array[]
+     * @return AdminTabPresenter[]
      */
     private function getTabs(\Project $project, string $default_url): array
     {
-        return \EventManager::instance()
-            ->dispatch(new AdminTabsCollector($project, $this->getIdentifier(), $default_url))
-            ->getTabs();
+        return [
+            new AdminTabPresenter(
+                SearchView::getTabTitle(),
+                SearchView::getTabDescription(),
+                SearchView::getUrl($project),
+                $this->getIdentifier() === SearchView::IDENTIFIER,
+            ),
+            new AdminTabPresenter(
+                \Docman_View_Admin_Permissions::getTabTitle(),
+                \Docman_View_Admin_Permissions::getTabDescription(),
+                DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_Permissions::IDENTIFIER],
+                    false,
+                ),
+                $this->getIdentifier() === \Docman_View_Admin_Permissions::IDENTIFIER,
+            ),
+            new AdminTabPresenter(
+                \Docman_View_Admin_Metadata::getTabTitle(),
+                \Docman_View_Admin_Metadata::getTabDescription(),
+                DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_Metadata::IDENTIFIER],
+                    false,
+                ),
+                in_array(
+                    $this->getIdentifier(),
+                    [
+                        \Docman_View_Admin_Metadata::IDENTIFIER,
+                        \Docman_View_Admin_MetadataDetails::IDENTIFIER,
+                        \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
+                        \Docman_View_Admin_MetadataImport::IDENTIFIER,
+                    ],
+                    true
+                ),
+            ),
+            new AdminTabPresenter(
+                \Docman_View_Admin_Obsolete::getTabTitle(),
+                \Docman_View_Admin_Obsolete::getTabDescription(),
+                DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_Obsolete::IDENTIFIER],
+                    false,
+                ),
+                $this->getIdentifier() === \Docman_View_Admin_Obsolete::IDENTIFIER,
+            ),
+            new AdminTabPresenter(
+                \Docman_View_Admin_LockInfos::getTabTitle(),
+                \Docman_View_Admin_LockInfos::getTabDescription(),
+                DocmanViewURLBuilder::buildUrl(
+                    $default_url,
+                    ['action' => \Docman_View_Admin_LockInfos::IDENTIFIER],
+                    false,
+                ),
+                $this->getIdentifier() === \Docman_View_Admin_LockInfos::IDENTIFIER,
+            ),
+        ];
     }
 
     /**
@@ -202,14 +257,10 @@ abstract class AdminView
      */
     private function getExtraTabs(string $default_url, \Project $project): array
     {
-        $interface = \EventManager::instance()->dispatch(new DetectEnhancementOfDocmanInterface($project));
-
         $tab = [
             [
                 'id' => "legacy-view",
-                'title' => $interface->isEnhanced()
-                    ? \Docman_View_Admin_View::getTabTitleWhenInterfaceIsEnhanced()
-                    : \Docman_View_Admin_View::getTabTitle(),
+                'title' => \Docman_View_Admin_View::getTabTitle(),
                 'description' => \Docman_View_Admin_View::getTabDescription(),
                 'url' => DocmanViewURLBuilder::buildUrl(
                     $default_url,

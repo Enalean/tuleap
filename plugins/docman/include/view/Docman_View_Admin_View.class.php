@@ -31,17 +31,12 @@ class Docman_View_Admin_View extends \Tuleap\Docman\View\Admin\AdminView
 
     protected function getTitle(array $params): string
     {
-        return self::getTabTitle();
-    }
-
-    public static function getTabTitleWhenInterfaceIsEnhanced(): string
-    {
-        return dgettext('tuleap-docman', 'Display (legacy)');
+        return dgettext('tuleap-docman', 'Display');
     }
 
     public static function getTabTitle(): string
     {
-        return dgettext('tuleap-docman', 'Display');
+        return dgettext('tuleap-docman', 'Display (legacy)');
     }
 
     public static function getTabDescription(): string

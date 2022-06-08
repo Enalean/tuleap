@@ -1,0 +1,4 @@
+Document manager
+================
+
+This plugin provides a document manager for projects.
