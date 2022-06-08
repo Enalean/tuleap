@@ -49,7 +49,6 @@ msgstr "Veuillez sélectionner un fichier à téléverser"
 msgid "Preview loading..."
 msgstr "Chargement de l'aperçu..."
 
-
 msgid "Recent Icons"
 msgstr "Icones récentes"
 

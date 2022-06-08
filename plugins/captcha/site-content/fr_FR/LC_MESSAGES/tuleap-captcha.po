@@ -34,7 +34,9 @@ msgstr ""
 "merci de réessayer"
 
 msgid "You can get the required keys from the Google reCAPTCHA administration"
-msgstr "Vous pouvez obtenir les clés requises depuis l'administration Google reCAPTCHA"
+msgstr ""
+"Vous pouvez obtenir les clés requises depuis l'administration Google "
+"reCAPTCHA"
 
 msgid "Your keys has been successfully saved"
 msgstr "Vos clés ont sauvegardées avec succès"

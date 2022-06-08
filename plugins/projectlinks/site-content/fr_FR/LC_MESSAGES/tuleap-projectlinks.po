@@ -202,10 +202,10 @@ msgstr "Mise à jour OK (%1$s)"
 msgid "update details"
 msgstr "Mettre à jour les détails"
 
-#, fuzzy, php-format
+#, php-format
 msgid "update failed (MySQL reason: \"%1$s\")"
-msgstr "La mise à jour a échoué"
+msgstr ""
 
-#, fuzzy, php-format
+#, php-format
 msgid "update failed [%2$s] (MySQL reason: \"%1$s\")"
-msgstr "La mise à jour a échoué [%2$s]"
+msgstr ""

@@ -4428,7 +4428,9 @@ msgstr ""
 
 msgid ""
 "You can't delete this tracker because it is source or target of triggers."
-msgstr "Cet outil de suivi ne peut pas être supprimé car il est source ou cible de déclencheurs."
+msgstr ""
+"Cet outil de suivi ne peut pas être supprimé car il est source ou cible de "
+"déclencheurs."
 
 #, php-format
 msgid "You can't delete this tracker because it is used in: %1$s"

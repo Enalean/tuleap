@@ -126,7 +126,7 @@ if (! $plugin) {
 
     info("[core] Merging .pot file into .po files");
     $site_content = escapeshellarg("$basedir/site-content");
-    exec("find $site_content -name 'tuleap-core.po' -exec msgmerge --update \"{}\" $template \;");
+    exec("find $site_content -name 'tuleap-core.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
 
     $core_manifest = "$basedir/build-manifest.json";
     $json          = json_decode(file_get_contents($core_manifest), true);
@@ -250,7 +250,7 @@ EOS;
 
     info("[$translated_plugin] Merging .pot file into .po files");
     $site_content = escapeshellarg("$path/site-content");
-    exec("find $site_content -name 'tuleap-$translated_plugin.po' -exec msgmerge --update \"{}\" $template \;");
+    exec("find $site_content -name 'tuleap-$translated_plugin.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
 }
 
 function gettextJS($translated_plugin, $path, $manifest_json)
@@ -282,7 +282,7 @@ function gettextJS($translated_plugin, $path, $manifest_json)
                         > $template");
 
         info("[$translated_plugin][js][$component] Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }
 
@@ -303,7 +303,7 @@ function gettextAngularJS(string $translated_plugin, string $path, array $manife
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("$gettext_step_header Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }
 
@@ -331,7 +331,7 @@ function gettextVue($translated_plugin, $path, $manifest_json)
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }
 
@@ -359,7 +359,7 @@ function gettextVue3(string $translated_plugin, string $path, array $manifest_js
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }
 
@@ -387,7 +387,7 @@ function gettextTS($translated_plugin, $path, $manifest_json)
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("[$translated_plugin][ts][$component] Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }
 
@@ -443,6 +443,6 @@ function gettextSmarty($translated_plugin, $path, $manifest_json)
         executeCommandAndExitIfStderrNotEmpty("rm $template_smarty");
 
         info("[$translated_plugin][smarty][$component] Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }
