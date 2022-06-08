@@ -17,7 +17,10 @@
 
                     {{# dgettext }}
                         tuleap-document |
-                        Please note: the <span class="tlp-badge-secondary"> Global search </span> criteria will always be displayed.
+                        Please note: the criterion %s will always be displayed. |
+                        <span class="tlp-badge-secondary">
+                            {{ global_search_label }}
+                        </span>
                     {{/ dgettext }}
                 </p>
                 <div class="tlp-form-element">
@@ -42,8 +45,9 @@
 
                     {{# dgettext }}
                         tuleap-document |
-                        Please note: the <span class="tlp-badge-secondary"> Id </span> and the
-                        <span class="tlp-badge-secondary"> Title </span> columns will always be available.
+                        Please note: the %s and %s columns will always be displayed. |
+                        <span class="tlp-badge-secondary">{{ id_label }}</span> |
+                        <span class="tlp-badge-secondary">{{ title_label }}</span>
                     {{/ dgettext }}
                 </p>
                 <div class="tlp-form-element">
