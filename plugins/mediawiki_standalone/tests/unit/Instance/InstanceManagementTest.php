@@ -36,6 +36,11 @@ use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
+/**
+ * @covers \Tuleap\MediawikiStandalone\Instance\CreateInstance
+ * @covers \Tuleap\MediawikiStandalone\Instance\ResumeInstance
+ * @covers \Tuleap\MediawikiStandalone\Instance\SuspendInstance
+ */
 final class InstanceManagementTest extends TestCase
 {
     use ForgeConfigSandbox;
@@ -87,19 +92,37 @@ final class InstanceManagementTest extends TestCase
     public function testCreationIsSuccessful(): void
     {
         $this->mediawiki_client->on(
-            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'PUT'),
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
             function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(404);
+            }
+        );
+
+        $create_has_been_called = false;
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'PUT'),
+            function () use (&$create_has_been_called) {
+                $create_has_been_called = true;
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
         );
 
+
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
+        self::assertTrue($create_has_been_called);
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testCreationIsError(): void
     {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(404);
+            }
+        );
+
         $this->mediawiki_client->on(
             new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'PUT'),
             function () {
@@ -110,6 +133,30 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($this->logger->hasErrorThatContains(CreateInstance::class . ' error'));
+    }
+
+    public function testCreationRequestWhenInstanceIsSuspendedMeansResume(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200)->withBody(HTTPFactoryBuilder::streamFactory()->createStream('{"name":"gpig","directory":"/gpig","database":"mediawiki_102","scriptPath":"/mediawiki/gpig","created":"20220607172633","status":"suspended","data":{"projectId":102}}'));
+            }
+        );
+
+        $resume_has_been_called = false;
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/resume/gpig$', null, 'POST'),
+            function () use (&$resume_has_been_called) {
+                $resume_has_been_called = true;
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertTrue($resume_has_been_called);
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testSuspendIsSuccessful(): void

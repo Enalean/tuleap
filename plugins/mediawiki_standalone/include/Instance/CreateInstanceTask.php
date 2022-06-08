@@ -21,17 +21,35 @@
 
 declare(strict_types=1);
 
+
 namespace Tuleap\MediawikiStandalone\Instance;
 
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\RequestInterface;
+use Tuleap\Queue\QueueTask;
 
 /**
- * Interface for simple Mediawiki Operations that only have one HTTP request to do
+ * @psalm-immutable
  */
-interface InstanceOperation
+final class CreateInstanceTask implements QueueTask
 {
-    public function getTopic(): string;
+    private int $project_id;
 
-    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface;
+    public function __construct(\Project $project)
+    {
+        $this->project_id = (int) $project->getID();
+    }
+
+    public function getTopic(): string
+    {
+        return CreateInstance::TOPIC;
+    }
+
+    public function getPayload(): array
+    {
+        return ['project_id' => $this->project_id];
+    }
+
+    public function getPreEnqueueMessage(): string
+    {
+        return '';
+    }
 }

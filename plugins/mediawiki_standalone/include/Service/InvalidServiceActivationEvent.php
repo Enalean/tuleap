@@ -21,17 +21,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
-
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\RequestInterface;
+namespace Tuleap\MediawikiStandalone\Service;
 
 /**
- * Interface for simple Mediawiki Operations that only have one HTTP request to do
+ * @psalm-immutable
  */
-interface InstanceOperation
+final class InvalidServiceActivationEvent extends ServiceActivationEvent
 {
-    public function getTopic(): string;
+    public function __construct()
+    {
+    }
 
-    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface;
+    public function isValid(): bool
+    {
+        return false;
+    }
 }

@@ -21,17 +21,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Instance;
+namespace Tuleap\MediawikiStandalone\Service;
 
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\RequestInterface;
+use Tuleap\MediawikiStandalone\Instance\CreateInstanceTask;
+use Tuleap\MediawikiStandalone\Instance\SuspendInstanceTask;
+use Tuleap\Queue\EnqueueTaskInterface;
 
-/**
- * Interface for simple Mediawiki Operations that only have one HTTP request to do
- */
-interface InstanceOperation
+final class ServiceActivationHandler
 {
-    public function getTopic(): string;
+    public function __construct(private EnqueueTaskInterface $enqueue_task)
+    {
+    }
 
-    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface;
+    public function handle(ServiceActivationEvent $event): void
+    {
+        if (! $event->isValid()) {
+            return;
+        }
+
+        match ($event->is_used) {
+            true =>  $this->enqueue_task->enqueue(new CreateInstanceTask($event->project)),
+            false => $this->enqueue_task->enqueue(new SuspendInstanceTask($event->project)),
+        };
+    }
 }
