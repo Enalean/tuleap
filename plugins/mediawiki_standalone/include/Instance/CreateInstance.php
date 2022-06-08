@@ -23,14 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 
-final class CreateInstance implements InstanceOperation
+final class CreateInstance
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
 
@@ -52,9 +55,39 @@ final class CreateInstance implements InstanceOperation
         return new self($project);
     }
 
-    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface
+    public function sendRequest(ClientInterface $client, RequestFactoryInterface $request_factory, LoggerInterface $logger): void
     {
-        return $request_factory->createRequest('PUT', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/' . urlencode($this->project->getUnixNameLowerCase()))
+        try {
+            $logger->info(sprintf("Processing %s: ", self::TOPIC));
+            $request = $request_factory->createRequest(
+                'GET',
+                ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/' . urlencode(
+                    $this->project->getUnixNameLowerCase()
+                )
+            );
+            $logger->debug(sprintf('%s %s', $request->getMethod(), (string) $request->getUri()));
+            $response = $client->sendRequest($request);
+            $logger->debug($response->getBody()->getContents());
+            $response->getBody()->rewind();
+            match ($response->getStatusCode()) {
+                404 => $this->createInstance($client, $request_factory, $logger),
+                200 => $this->resumeInstance($client, $request_factory, $logger, $response),
+                default => $logger->warning(sprintf('Mediawiki %s warning (%d): %s', self::class, $response->getStatusCode(), $response->getReasonPhrase()))
+            };
+        } catch (ClientExceptionInterface $e) {
+            $logger->error(sprintf('Cannot connect to mediawiki REST API: %s (%s)', $e->getMessage(), $e::class), ['exception' => $e]);
+        } catch (\JsonException $e) {
+            $logger->error(sprintf('Invalid json. %s: %s', $e->getMessage(), $e->getTraceAsString()));
+        }
+    }
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws \JsonException
+     */
+    private function createInstance(ClientInterface $client, RequestFactoryInterface $request_factory, LoggerInterface $logger): void
+    {
+        $request = $request_factory->createRequest('PUT', ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/' . urlencode($this->project->getUnixNameLowerCase()))
             ->withBody(
                 HTTPFactoryBuilder::streamFactory()->createStream(
                     \json_encode(
@@ -66,10 +99,38 @@ final class CreateInstance implements InstanceOperation
                     )
                 )
             );
+        $logger->debug(sprintf('%s %s', $request->getMethod(), (string) $request->getUri()));
+        $response = $client->sendRequest($request);
+        if ($response->getStatusCode() !== 200) {
+            $logger->error(sprintf('Mediawiki %s error (%d): %s', self::class, $response->getStatusCode(), $response->getReasonPhrase()));
+            return;
+        }
+        $logger->info(sprintf('Mediawiki %s success', self::class));
     }
 
-    public function getTopic(): string
+    /**
+     * @throws ClientExceptionInterface
+     * @throws \JsonException
+     */
+    private function resumeInstance(ClientInterface $client, RequestFactoryInterface $request_factory, LoggerInterface $logger, ResponseInterface $response): void
     {
-        return self::TOPIC;
+        $payload = \json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        if (! isset($payload['status']) || $payload['status'] !== 'suspended') {
+            $logger->error('Cannot resume instance. Invalid payload: ' . print_r($payload, true));
+        }
+
+        $request = $request_factory->createRequest(
+            'POST',
+            ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/resume/' . urlencode(
+                $this->project->getUnixNameLowerCase()
+            )
+        );
+        $logger->debug(sprintf('%s %s', $request->getMethod(), (string) $request->getUri()));
+        $response = $client->sendRequest($request);
+        if ($response->getStatusCode() !== 200) {
+            $logger->error(sprintf('Mediawiki %s error (%d): %s', self::class, $response->getStatusCode(), $response->getReasonPhrase()));
+            return;
+        }
+        $logger->info(sprintf('Mediawiki %s success resumed', self::class));
     }
 }

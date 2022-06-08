@@ -25,7 +25,7 @@ namespace Tuleap\Queue;
 
 use Psr\Log\LoggerInterface;
 
-final class EnqueueTask
+final class EnqueueTask implements EnqueueTaskInterface
 {
     private LoggerInterface $logger;
 

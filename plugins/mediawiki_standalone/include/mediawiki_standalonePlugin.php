@@ -53,6 +53,8 @@ use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
+use Tuleap\MediawikiStandalone\Service\ServiceActivationEvent;
+use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityHandler;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityProjectServiceBeforeAvailabilityEvent;
 use Tuleap\MediawikiStandalone\Service\ServiceAvailabilityServiceDisabledCollectorEvent;
@@ -79,6 +81,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\PluginAddMissingServiceTrait;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
+use Tuleap\Queue\EnqueueTask;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Templating\TemplateCache;
@@ -161,11 +164,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
      */
     public function serviceIsUsed(array $params): void
     {
-        /*if ($params['shortname'] === MediawikiStandaloneService::SERVICE_SHORTNAME && $params['is_used']) {
-            (new EnqueueTask())->enqueue(
-                new InstanceCreationWorkerEvent((int) $params['group_id'])
-            );
-        }*/
+        (new ServiceActivationHandler(new EnqueueTask()))->handle(ServiceActivationEvent::fromEvent($params, ProjectManager::instance()));
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void

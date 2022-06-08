@@ -39,7 +39,7 @@ final class InstanceManagement
     {
         try {
             if (($create_event = CreateInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
-                $this->sendRequest($create_event);
+                $create_event->sendRequest($this->client_factory->getHTTPClient(), $this->http_factory, $this->logger);
                 return;
             }
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
