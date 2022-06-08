@@ -373,6 +373,12 @@ final class GitlabMergeRequestCreatorTest extends TestCase
                 ),
             ],
             [
+                new GitlabRequestException(
+                    400,
+                    "403 Forbidden (Forbidden)"
+                ),
+            ],
+            [
                 new GitlabResponseAPIException("Error"),
             ],
         ];

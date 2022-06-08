@@ -17,11 +17,22 @@ msgid "An error occurred while creating the branch on GitLab: %s"
 msgstr ""
 "Une erreur est survenue lors de la création de la branche sur Gitlab: %s"
 
+#, php-format
+msgid "An error occurred while creating the merge request on GitLab: %s"
+msgstr ""
+"Une erreur est survenue lors de la création de la branche sur Gitlab: %s"
+
 msgid "Closed"
 msgstr "Fermée"
 
 msgid "Create GitLab branch and merge request"
 msgstr "Créer une branche et une demande de fusion GitLab"
+
+#, php-format
+msgid "Forbidden, please check that you have merge permission on repository %s"
+msgstr ""
+"Interdit, merci de vérifier que vous avez les permissions de fusion sur le "
+"dépot %s"
 
 msgid "GitLab"
 msgstr "GitLab"
@@ -97,6 +108,10 @@ msgstr ""
 #, php-format
 msgid "The reference %s does not seem to exist on %s "
 msgstr "La référence %s semble manquante sur %s"
+
+#, php-format
+msgid "The repository %s is not found on GitLab server"
+msgstr "Le dépôt %s n'existe pas sur le server GitLab"
 
 #, php-format
 msgid ""

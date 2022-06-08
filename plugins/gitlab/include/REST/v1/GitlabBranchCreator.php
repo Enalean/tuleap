@@ -131,6 +131,13 @@ class GitlabBranchCreator
                 );
             }
 
+            if (stripos($exception->getMessage(), "Repository Not Found")) {
+                throw new I18NRestException(
+                    $exception->getErrorCode(),
+                    sprintf(dgettext('tuleap-gitlab', "The repository %s is not found on GitLab server"), $integration->getName())
+                );
+            }
+
             throw new RestException(
                 $exception->getErrorCode(),
                 sprintf(dgettext('tuleap-gitlab', "An error occurred while creating the branch on GitLab: %s"), $exception->getMessage())

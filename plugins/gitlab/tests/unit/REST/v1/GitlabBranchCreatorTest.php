@@ -374,6 +374,12 @@ final class GitlabBranchCreatorTest extends TestCase
                 ),
             ],
             [
+                new GitlabRequestException(
+                    400,
+                    "404 Repository Not Found (Not Found)"
+                ),
+            ],
+            [
                 new GitlabResponseAPIException("Bad request"),
             ],
         ];

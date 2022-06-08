@@ -224,14 +224,27 @@ export default class App extends Vue {
                                 this.$gettext("The associated merge request has been created.")
                             );
                         },
-                        (error) => {
-                            codendi.feedback.log(
-                                "error",
-                                this.$gettext(
-                                    "An error occurred while creating the associated merge request."
-                                )
-                            );
-                            throw error;
+                        async (error_promise) => {
+                            const merge_error = await error_promise;
+                            this.is_creating_branch = false;
+
+                            if (
+                                Object.prototype.hasOwnProperty.call(
+                                    merge_error,
+                                    "i18n_error_message"
+                                ) &&
+                                merge_error.i18n_error_message
+                            ) {
+                                codendi.feedback.log("error", merge_error.i18n_error_message);
+                            } else {
+                                codendi.feedback.log(
+                                    "error",
+                                    this.$gettext(
+                                        "An error occurred while creating the associated merge request."
+                                    )
+                                );
+                                throw merge_error.error_message;
+                            }
                         }
                     );
                 }
