@@ -104,7 +104,7 @@ pipeline {
                     dir 'sources/tools/utils/nix/'
                     filename 'build-tools.dockerfile'
                     reuseNode true
-                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only'
+                    args '--tmpfs /tmp:rw,noexec,nosuid --read-only'
                 }
             }
             steps {
@@ -112,6 +112,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
                         sh '''
                         export HOME=/tmp/tuleap_build
+                        mkdir /tmp/tuleap_build
                         pnpm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}"
                         pnpm publish --access public --filter "@tuleap/*" --no-git-checks
                         '''
