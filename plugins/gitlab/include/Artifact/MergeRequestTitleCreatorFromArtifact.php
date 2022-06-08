@@ -28,13 +28,15 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class MergeRequestTitleCreatorFromArtifact
 {
+    private const DRAFT_PREFIX = "Draft:";
+
     public function __construct(private SlugifyInterface $slugify)
     {
     }
 
     public function getMergeRequestTitle(Artifact $artifact): string
     {
-        return sprintf('TULEAP-%d%s', $artifact->getId(), $this->getSlugifiedArtifactTitle($artifact));
+        return sprintf(self::DRAFT_PREFIX . ' TULEAP-%d%s', $artifact->getId(), $this->getSlugifiedArtifactTitle($artifact));
     }
 
     private function getSlugifiedArtifactTitle(Artifact $artifact): string

@@ -142,7 +142,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=TULEAP-123%3A+art-title",
+                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123%3A+art-title",
                 []
             );
 
@@ -425,7 +425,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=TULEAP-123%3A+art-title",
+                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123%3A+art-title",
                 []
             )
             ->willThrowException($exception);

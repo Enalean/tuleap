@@ -64,7 +64,8 @@ final class GitlabMergeRequestResource
      * <br>
      * Create a merge request in a GitLab integration.
      * The merge request title is defined by Tuleap. The title will be like TULEAP-{artifact_id}: {artifact_title}
-     * The merge request target branch is the GitLab repository default branch
+     * The merge request target branch is the GitLab repository default branch.
+     * The merge request will be in draft.
      *
      * <br>
      * <br>
