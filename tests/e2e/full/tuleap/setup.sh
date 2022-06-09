@@ -91,7 +91,6 @@ enable_plugins() {
         git \
         docman \
         mediawiki \
-        document \
         taskboard \
         crosstracker \
         timetracking \
