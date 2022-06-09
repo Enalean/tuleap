@@ -155,7 +155,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="' . $purifier->purify(db_result($result, 0, 'summary')) . '"><BR>
 		<B>' . $Language->getText('news_admin_index', 'details') . ':</B><BR>
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">' . $purifier->purify(db_result($result, 0, 'details')) . '</TEXTAREA><P>
-		<B>' . $purifier->purify($Language->getText('news_admin_index', 'if_edit_delete', ForgeConfig::get('sys_name'))) . '</B><BR>
+		<B>' . $purifier->purify($Language->getText('news_admin_index', 'if_edit_delete', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME))) . '</B><BR>
 		<INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '">
 		</FORM>';
     } else {

@@ -58,7 +58,7 @@ class LoginController implements DispatchableWithRequestNoAuthz
         $presenter = $this->connector_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);
 
         $layout->header([
-            'title' => sprintf(_('%1$s login'), ForgeConfig::get('sys_name')),
+            'title' => sprintf(_('%1$s login'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)),
             'body_class' => ['login-page'],
         ]);
         $renderer = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);

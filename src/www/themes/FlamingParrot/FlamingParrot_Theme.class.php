@@ -128,7 +128,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     public function header(array $params): void
     {
         $this->header_has_been_written = true;
-        $title                         = ForgeConfig::get('sys_name');
+        $title                         = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         if (! empty($params['title'])) {
             $title = $params['title'] . ' - ' . $title;
         }

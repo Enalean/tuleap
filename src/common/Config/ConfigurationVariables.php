@@ -45,6 +45,11 @@ final class ConfigurationVariables
     #[ConfigKeyString]
     public const NOREPLY = 'sys_noreply';
 
+    #[ConfigKey('Name of the instance')]
+    #[ConfigKeyHelp('The name of the instance is used in various web pages and mails')]
+    #[ConfigKeyString('Tuleap')]
+    public const NAME = 'sys_name';
+
     #[ConfigKey('Company/organization running the system (short)')]
     #[ConfigKeyHelp('Short version or abbreviation commonly used')]
     #[ConfigCannotBeModifiedYet]

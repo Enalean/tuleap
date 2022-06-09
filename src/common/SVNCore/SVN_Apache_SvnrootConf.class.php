@@ -74,7 +74,7 @@ class SVN_Apache_SvnrootConf
     {
         $log_file_path = ForgeConfig::get(self::CONFIG_SVN_LOG_PATH);
         $headers       = '';
-        $headers      .= "# " . ForgeConfig::get('sys_name') . " SVN repositories\n";
+        $headers      .= "# " . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . " SVN repositories\n";
         $headers      .= '# Generated at ' . date('c') . "\n";
         $headers      .= "# Custom log file for SVN queries\n";
         $headers      .= 'CustomLog ' . $log_file_path . ' "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";

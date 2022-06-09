@@ -61,10 +61,10 @@ class FormPresenter
         $this->svn_paths_helper      = dgettext('tuleap-hudson_svn', 'If empty, every commits will trigger a build.');
         $this->svn_paths_label       = dgettext('tuleap-hudson_svn', 'Only when commit occurs on following paths:');
         $this->svn_paths_placeholder = dgettext('tuleap-hudson_svn', 'One path per line...');
-        $this->params_header         = sprintf(dgettext('tuleap-hudson_svn', '%1$s will automatically pass following parameters to the job:'), ForgeConfig::get("sys_name"));
+        $this->params_header         = sprintf(dgettext('tuleap-hudson_svn', '%1$s will automatically pass following parameters to the job:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
 
         $this->project_param_description    = BuildParams::BUILD_PARAMETER_PROJECT . ' : ' . dgettext('tuleap-hudson_svn', 'Identifier (String) of the current project.');
-        $this->user_param_description       = BuildParams::BUILD_PARAMETER_USER . ' : ' . sprintf(dgettext('tuleap-hudson_svn', 'Identifier (String) of %1$s user who made the commit.'), ForgeConfig::get("sys_name"));
+        $this->user_param_description       = BuildParams::BUILD_PARAMETER_USER . ' : ' . sprintf(dgettext('tuleap-hudson_svn', 'Identifier (String) of %1$s user who made the commit.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
         $this->repository_param_description = BuildParams::BUILD_PARAMETER_REPOSITORY . ' : ' . dgettext('tuleap-hudson_svn', 'URL (String) of the updated repository (https://svn.example.com/svnplugin/ExampleDepot/).');
         $this->path_param_description       = BuildParams::BUILD_PARAMETER_PATH . ' : ' . dgettext('tuleap-hudson_svn', 'Value (string) of paths impacted by commit. Please note that paths are end of line separated.');
     }

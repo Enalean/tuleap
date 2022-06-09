@@ -186,7 +186,7 @@ class Massmail extends SystemEvent
             'sf'      => 'Site Updates Subcribers',
             'all'     => 'All Users',
             'admin'   => 'Project Administrators',
-            'sfadmin' => ForgeConfig::get('sys_name') . ' Administrators',
+            'sfadmin' => ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' Administrators',
             'devel'   => 'Project Developers',
         ];
 

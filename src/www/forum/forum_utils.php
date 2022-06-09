@@ -82,7 +82,7 @@ function forum_header($params)
             } else {
                 $HTML->header($params);
                 echo '
-					<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . _('News') . '</A></H2><P>';
+					<H2>' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' <A HREF="/news/">' . _('News') . '</A></H2><P>';
             }
 
             echo '<TABLE><TR><TD VALIGN="TOP">';

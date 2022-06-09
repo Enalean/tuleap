@@ -58,7 +58,7 @@ class MyWelcomeMessage extends Widget
             $this->user,
             $this->getFileNameForUser($this->user),
             [
-                'site_name'               => ForgeConfig::get('sys_name'),
+                'site_name'               => ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
                 'sys_long_org_name'       => ForgeConfig::get('sys_long_org_name'),
                 'site_name_is_not_tuleap' => ! $this->isSiteNameTuleap(),
             ]
@@ -67,7 +67,7 @@ class MyWelcomeMessage extends Widget
 
     private function isSiteNameTuleap()
     {
-        return strtolower(ForgeConfig::get('sys_name')) == 'tuleap';
+        return strtolower(ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) == 'tuleap';
     }
 
     private function getFileNameForUser(PFUser $user)

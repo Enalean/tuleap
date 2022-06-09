@@ -89,7 +89,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
         $this->user    = Mockery::mock(\PFUser::class);
         $this->project = Mockery::mock(\Project::class)->shouldReceive(['getPublicName' => 'Smartoid'])->getMock();
 
-        \ForgeConfig::set('sys_name', 'ACME');
+        \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'ACME');
     }
 
     public function testNoSectionsWhenUserCannotCreateProject(): void

@@ -38,7 +38,7 @@ final class MediaWikiNewOAuth2AppBuilder
     public function buildMediawikiOAuth2App(): NewOAuth2App
     {
         return NewOAuth2App::fromSiteAdministrationAppData(
-            sprintf('%s MediaWiki', \ForgeConfig::get('sys_name')),
+            sprintf('%s MediaWiki', \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)),
             ServerHostname::HTTPSUrl() . self::OAUTH2_REDIRECT_ENDPOINT,
             true,
             $this->hasher,

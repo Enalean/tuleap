@@ -11,7 +11,7 @@ if (! $exchange_policy_url) {
 }
 ?>
 
-<h1>Conditions générales d'utilisation de <?=\ForgeConfig::get('sys_name')?></h1>
+<h1>Conditions générales d'utilisation de <?=\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)?></h1>
 
 <section class="tlp-pane">
     <div class="tlp-pane-container">
@@ -21,7 +21,7 @@ if (! $exchange_policy_url) {
         <section class="tlp-pane-section">
             <h2 class="tlp-pane-subtitle">1. ACCEPTATION DES CONDITIONS GENERALES</h2>
 
-<p>L'utilisation de <?php echo \ForgeConfig::get('sys_name'); ?> et de ses
+<p>L'utilisation de <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> et de ses
 services (comme défini ci-dessous) est à tout moment soumise aux
 conditions générales d'utilisation (CGU) qui peuvent être mises à jour
 comme indiqué ci-dessous. Chaque utilisateur peut à tout moment
@@ -32,12 +32,12 @@ consulter la dernière version des CGU sur&nbsp;:
 De plus, l'utilisation d'un service en particulier peut faire l'objet
 de règles particulières ("Règles spécifiques à un service") publiées
 de temps à autre et incluses dans ces CGU par cette
-référence. L'utilisation de <?php echo \ForgeConfig::get('sys_name'); ?> et/ou
+référence. L'utilisation de <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> et/ou
 de ses services constitue une acceptation totale des CGU; si un
 utilisateur n'accepte pas les CGU, il ou elle n'est pas en droit
-d'utiliser <?php echo \ForgeConfig::get('sys_name'); ?> ou un quelconque de
+d'utiliser <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ou un quelconque de
 ses services, comme défini ci-dessous, et ne doit pas accéder à <?php
-echo \ForgeConfig::get('sys_name'); ?> ou ses services.  </p>
+echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ou ses services.  </p>
 
 <p> Lors d'un changement des CGU, une notification écrite sera envoyée
 per e-mail aux utilisateurs connus au plus tard 15 jours à
@@ -47,24 +47,24 @@ spécifiques à un service apparaissent normalement, référençant le
 changement sur la page de garde de ce service et en incluant un lien
 vers la version antérieure des règles spécifiques à un service.</p>
 
-<p> <?php echo \ForgeConfig::get('sys_name'); ?> se réserve le droit à tout
+<p> <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> se réserve le droit à tout
 moment de modifier ou d'interrompre, temporairement ou de façon
-permanente, <?php echo \ForgeConfig::get('sys_name'); ?> ou l'un de ses
+permanente, <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ou l'un de ses
 services en tout ou partie en notifiant les utilisateurs comme décrit
 ci-dessus, ou immédiatement, dans le cas où des difficultés techniques
-surviendraient. <?php echo \ForgeConfig::get('sys_name'); ?> ne peut être tenu
+surviendraient. <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ne peut être tenu
 pour légalement responsable vis à vis des utilisateurs ou de parties
 tierces pour ces modifications, suspensions ou interruptions sauf dans
 les cas explicitement mentionnés dans ce document.  </p>
 
-<p> <?php echo \ForgeConfig::get('sys_name'); ?> est un site Web appartenant à
+<p> <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> est un site Web appartenant à
 et géré par <?php echo \ForgeConfig::get('sys_org_name'); ?> dans le but de
 promouvoir le développement logiciel collaboratif et la réutilisation
 de composants logiciels selon les termes de la <a
 href="<?php echo $exchange_policy_url ?>"
 target="_blank" rel="noreferrer">Politique d'échange générale de <?php echo
 \ForgeConfig::get('sys_org_name'); ?></a>.  Enregistrer votre projet
-sur <?php echo \ForgeConfig::get('sys_name'); ?> implique que vous comprenez
+sur <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> implique que vous comprenez
 les termes de cette politique générale et que vous prenez l'engagement
 de vous y conformer.  <p>
 
@@ -72,7 +72,7 @@ de vous y conformer.  <p>
     <section class="tlp-pane-section">
             <h2 class="tlp-pane-subtitle">2. DESCRIPTION DU SERVICE</h2>
 
-<p> <P> <?php echo \ForgeConfig::get('sys_name'); ?> offre actuellement aux
+<p> <P> <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> offre actuellement aux
 utilisateurs un accès à une riche collection de ressources accessibles
 en ligne chez <?php echo \ForgeConfig::get('sys_org_name'); ?> pour des
 activités de développement logiciel et de création de contenu,
@@ -99,11 +99,11 @@ de ceux-ci) par cet utilisateur. </p>
 compte à la fin du processus d'enregistrement et il/elle est
 entièrement responsable du maintien de la confidentialité de ces
 informations et totalement responsables des activités se déroulant
-sous ce compte utilisateur. <?php echo \ForgeConfig::get('sys_name'); ?> ne
+sous ce compte utilisateur. <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ne
 peut être tenu pour responsable des pertes ou dommages de données
 consécutives aux manquements de l'utilisateur à ces règles, y compris
 toute perte ou dommage résultant de l'oubli de (a) notifier
-immédiatement <?php echo \ForgeConfig::get('sys_name'); ?> de tout usage
+immédiatement <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> de tout usage
 illégal de son compte ou mot de passe ou tout autre faille de sécurité
 et (b) de se déconnecter de son compte à la fin d'une session de
 travail.</p>
@@ -118,48 +118,48 @@ quel qu'il soit (appelé collectivement "contenu"), publié publiquement
 ou transmis de façon privée, est sous la seule responsabilité de la
 personne qui est à l'origine de la diffusion de ce contenu. Cela
 signifie que l'utilisateur, et non l'équipe <?php echo
-\ForgeConfig::get('sys_name'); ?>, est entièrement responsable de l'ensemble du
+\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>, est entièrement responsable de l'ensemble du
 contenu téléchargé, posté, envoyé par e-mail ou par tout autre moyen
-vers <?php echo \ForgeConfig::get('sys_name'); ?>. Aucun utilisateur ne doit
+vers <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>. Aucun utilisateur ne doit
 transmettre de contenu ou conduire ou participer à aucune activité sur
-<?php echo \ForgeConfig::get('sys_name'); ?> et ses services qui, au regard de
-l'équipe <?php echo \ForgeConfig::get('sys_name'); ?>, est en contradiction
+<?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> et ses services qui, au regard de
+l'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>, est en contradiction
 avec les règles de conduite internes de <?php echo
 \ForgeConfig::get('sys_org_name'); ?>.  </p>
 
-<p> L'équipe <?php echo \ForgeConfig::get('sys_name'); ?> ne revoit ni ne
+<p> L'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ne revoit ni ne
 filtre aucun contenu, mais se réserve le droit de refuser ou de
 détruire tout contenu dont il aurait connaissance qui ne serait pas
 conforme aux objectifs du projets. De plus, l'équipe <?php echo
-\ForgeConfig::get('sys_name'); ?> a le droit (mais pas l'obligation) à sa seule
+\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> a le droit (mais pas l'obligation) à sa seule
 discrétion de refuser ou de détruire tout contenu venant en violation
-des CGU ou à caractère illégal. L'équipe <?php echo \ForgeConfig::get('sys_name');
+des CGU ou à caractère illégal. L'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
 ?> ne contrôle pas le contenu posté via les services et ne garantit
 donc pas l'exactitude, l'intégrité ou la qualité de ce contenu. En
-aucune circonstance, l'équipe <?php echo \ForgeConfig::get('sys_name'); ?> ne
+aucune circonstance, l'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ne
 pourra être tenue pour responsable du contenu, y compris, mais non
 limité à, la responsabilité pour toute erreur ou omission ou pour
 toute perte ou dommage de toute sorte résultant de l'utilisation de
 contenu posté, envoyé par e-mail ou publié de tout autre façon via
-<?php echo \ForgeConfig::get('sys_name'); ?> ou ses services.  </p>
+<?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ou ses services.  </p>
 
     </section>
     <section class="tlp-pane-section">
             <h2 class="tlp-pane-subtitle">5. PRATIQUES GENERALES CONCERNANT L'UTILISATION ET LE STOCKAGE</h2>
 
-<p> <?php echo \ForgeConfig::get('sys_name'); ?> se réserve le droit d'établir
+<p> <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> se réserve le droit d'établir
 des pratiques générales et certaines limites concernant l'utilisation
 des services, comme définies par les règles spécifiques d'utilisation
-des services. Bien que l'équipe <?php echo \ForgeConfig::get('sys_name'); ?>
+des services. Bien que l'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>
 fasse son possible pour sauvegarder les données du site et mettre
 cette sauvegarde à disposition en cas de perte ou de destruction, elle
 ne peut être tenue pour responsable de la destruction ou de
 l'impossibilité de stocker un message ou tout autre forme de
 communication ou contenu maintenu ou transmis par un service. L'équipe
-<?php echo \ForgeConfig::get('sys_name'); ?> se réserve le droit de désactiver
+<?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> se réserve le droit de désactiver
 et d'archiver les comptes utilisateurs et projets qui demeurent
 inactifs durant une longue période.  L'équipe <?php echo
-\ForgeConfig::get('sys_name'); ?> se réserve le droit de modifier ces pratiques
+\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> se réserve le droit de modifier ces pratiques
 générales et les règles spécifiques d'utilisation des services à tout
 moment, à sa seule discrétion, en notifiant les utilisateurs comme
 décrit dans la section 1 ci-dessus.
@@ -177,13 +177,13 @@ Utilisation des services non cohérente avec les objectifs du projet;
 règles de <?php echo \ForgeConfig::get('sys_org_name'); ?> (par exemple à
 l'occasion du départ d'un employé).  </p>
 
-<p> La résiliation d'un accès à <?php echo \ForgeConfig::get('sys_name'); ?>
+<p> La résiliation d'un accès à <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>
 ou ses services peut être rendue effective sans notification préalable
 et, au moment de cette résiliation, peut amener à la désactivation ou
 la destruction d'un compte utilisateur et/ou empêcher tout accès
 ultérieur aux fichiers, aux services ou au site <?php echo
-\ForgeConfig::get('sys_name'); ?>.  <?php echo \ForgeConfig::get('sys_name'); ?>
-l'équipe <?php echo \ForgeConfig::get('sys_name'); ?> ne peut être passible de
+\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>.  <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?>
+l'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> ne peut être passible de
 sanction de la part de tout utilisateur ou partie tierce pour la
 résiliation d'un accès utilisateur ou d'un compte.  </p>
 
@@ -193,7 +193,7 @@ résiliation d'un accès utilisateur ou d'un compte.  </p>
             <h2 class="tlp-pane-subtitle">7. VIOLATIONS</h2>
 
 <p>
-Veuillez informer <a href="/contact.php">l'équipe <?php echo \ForgeConfig::get('sys_name'); ?></a> de toute violation des CGU, toute violation alléguée de copyright ou de tout autre sujet.
+Veuillez informer <a href="/contact.php">l'équipe <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?></a> de toute violation des CGU, toute violation alléguée de copyright ou de tout autre sujet.
 </p>
 
 

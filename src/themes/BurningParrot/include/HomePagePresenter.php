@@ -73,7 +73,7 @@ class HomePagePresenter
         $this->login_url                  = $login_url;
 
         $purifier        = Codendi_HTMLPurifier::instance();
-        $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title', \ForgeConfig::get('sys_name'));
+        $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title', \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
 
         $this->purified_welcome_message = $purifier->purify($welcome_message, CODENDI_PURIFIER_LIGHT);
         $this->purified_headline        = $purifier->purify($headline, CODENDI_PURIFIER_LIGHT);

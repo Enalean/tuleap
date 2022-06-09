@@ -72,7 +72,7 @@ class TestPlanPresenterBuilder
             $this->definition_tracker_retriever->getTestDefinitionTracker($project, $user),
             $expand_backlog_item_id,
             $highlight_test_definition_id,
-            \ForgeConfig::get('sys_name'),
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
             \Admin_Homepage_LogoFinder::getCurrentUrl(),
             \Tuleap\ServerHostname::HTTPSUrl(),
             $this->type_presenter_factory->getAllUsableTypesInProject($project),

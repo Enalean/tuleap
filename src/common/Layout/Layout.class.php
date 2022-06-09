@@ -327,7 +327,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             }
         }
         $hp    = Codendi_HTMLPurifier::instance();
-        $title = ($params['title'] ? $params['title'] . ' - ' : '') . ForgeConfig::get('sys_name');
+        $title = ($params['title'] ? $params['title'] . ' - ' : '') . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         echo '<!DOCTYPE html>' . "\n";
         echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
                 <head>
@@ -544,11 +544,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         //Basic feeds
         echo $this->getRssFeed(
-            $hp->purify(ForgeConfig::get('sys_name') . ' - ' . $GLOBALS['Language']->getText('include_layout', 'latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify(ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' - ' . $GLOBALS['Language']->getText('include_layout', 'latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfnews.php'
         );
         echo $this->getRssFeed(
-            $hp->purify(ForgeConfig::get('sys_name') . ' - ' . $GLOBALS['Language']->getText('include_layout', 'newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify(ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' - ' . $GLOBALS['Language']->getText('include_layout', 'newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfprojects.php'
         );
     }

@@ -65,7 +65,7 @@ class InvitationEmailNotifier
         ?string $custom_message,
     ): void {
         $mail->setTo($recipient_user->getEmail());
-        $mail->setSubject(sprintf(_('Invitation to log on to %s'), ForgeConfig::get('sys_name')));
+        $mail->setSubject(sprintf(_('Invitation to log on to %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
 
         $login_url = ServerHostname::HTTPSUrl() . '/account/login.php';
 
@@ -84,7 +84,7 @@ class InvitationEmailNotifier
         ?string $custom_message,
     ): void {
         $mail->setTo($external_email);
-        $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get('sys_name')));
+        $mail->setSubject(sprintf(_('Invitation to register to %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
 
         $register_url = ServerHostname::HTTPSUrl() . '/account/register.php';
 

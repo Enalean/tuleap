@@ -56,7 +56,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('sys_name', 'Tuleap');
+        \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Tuleap');
         $pane_factory = $this->createMock(Planning_MilestonePaneFactory::class);
         $pane_factory->method('getPanePresenterData')->willReturn($this->createMock(PanePresenterData::class));
 

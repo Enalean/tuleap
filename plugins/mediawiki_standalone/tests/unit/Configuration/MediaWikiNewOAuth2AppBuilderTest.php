@@ -33,7 +33,7 @@ final class MediaWikiNewOAuth2AppBuilderTest extends TestCase
     public function testBuildsNewMediawikiOAuth2App(): void
     {
         \ForgeConfig::set('sys_default_domain', 'example.com');
-        \ForgeConfig::set('sys_name', 'MyTuleapInstance');
+        \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'MyTuleapInstance');
 
         $builder = new MediaWikiNewOAuth2AppBuilder(new SplitTokenVerificationStringHasher());
 

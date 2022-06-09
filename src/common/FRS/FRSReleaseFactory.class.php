@@ -531,7 +531,7 @@ class FRSReleaseFactory
         $subject = ' ' . $GLOBALS['Language']->getText(
             'file_admin_editreleases',
             'file_rel_notice_subject',
-            [ForgeConfig::get('sys_name'), $release->getProject()->getPublicName(), $package->getName()]
+            [ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $release->getProject()->getPublicName(), $package->getName()]
         );
 
         $body_text    = $this->getEmailBody($release, $package);

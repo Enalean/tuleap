@@ -68,7 +68,7 @@ class AccessKeyCreationNotifier
             ),
             $description,
             implode(', ', $scope_names),
-            \ForgeConfig::get('sys_name'),
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
             $this->buildURLToAccountAccessTokenSection()
         );
 

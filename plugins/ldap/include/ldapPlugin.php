@@ -400,7 +400,7 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             if ($event->user->getLdapId() != null) {
-                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get('sys_name')));
+                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
                 return;
             }
         }

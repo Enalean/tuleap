@@ -109,7 +109,7 @@ class LDAP_SyncReminderNotificationManager
         $project                   = $this->projectManager->getProjectByUnixName($unixProjectName);
         $publicProjectName         = $project->getPublicName();
         $purifiedPublicProjectName = Codendi_HTMLPurifier::instance()->purify($publicProjectName, CODENDI_PURIFIER_LIGHT);
-        return $GLOBALS['Language']->getOverridableText('plugin_ldap', 'ldap_sync_reminder_mail_notification_body', [$user->getRealName(), $user->getEmail(), $project_url, $purifiedPublicProjectName, ForgeConfig::get('sys_name')]);
+        return $GLOBALS['Language']->getOverridableText('plugin_ldap', 'ldap_sync_reminder_mail_notification_body', [$user->getRealName(), $user->getEmail(), $project_url, $purifiedPublicProjectName, ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]);
     }
 
     /**

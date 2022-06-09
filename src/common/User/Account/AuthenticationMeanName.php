@@ -36,7 +36,7 @@ final class AuthenticationMeanName implements Dispatchable
 
     public function __construct()
     {
-        $this->name = (string) \ForgeConfig::get('sys_name');
+        $this->name = (string) \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
     }
 
     public function getName(): string

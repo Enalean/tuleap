@@ -45,7 +45,7 @@ class Widget_ProjectDescription extends Widget // phpcs:ignore PSR1.Classes.Clas
         $html = '';
 
         if ($project->getStatus() == 'H') {
-            $html .= '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home', 'not_official_site', ForgeConfig::get('sys_name')) . '</p>';
+            $html .= '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home', 'not_official_site', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)) . '</p>';
         }
 
         if ($project->getDescription()) {

@@ -32,7 +32,7 @@ class SVN_Apache_SvnrootConfTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        ForgeConfig::set('sys_name', 'Platform');
+        ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Platform');
         ForgeConfig::set('sys_dbhost', 'db_server');
         ForgeConfig::set('sys_dbname', 'db');
         ForgeConfig::set('svn_prefix', '/bla');

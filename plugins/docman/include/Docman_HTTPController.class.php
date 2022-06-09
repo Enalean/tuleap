@@ -121,7 +121,7 @@ class Docman_HTTPController extends Docman_Controller
             $directUrl = $baseUrl . '&action=show';
             $detailUrl = $baseUrl . '&action=details';
 
-            $subj = sprintf(dgettext('tuleap-docman', '[%1$s] Document \'%2$s\' will be obsolete in one month'), ForgeConfig::get('sys_name'), $item->getTitle());
+            $subj = sprintf(dgettext('tuleap-docman', '[%1$s] Document \'%2$s\' will be obsolete in one month'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $item->getTitle());
             $body = sprintf(dgettext('tuleap-docman', 'As document owner, you are notified of the obsolescence in one month of the
 document:
 Title: %1$s

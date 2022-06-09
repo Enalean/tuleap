@@ -527,7 +527,7 @@ display:inline;
                                    <tr>
                                       <td valign="bottom">
                                          <div>
-                                             <img src="<?php echo $http_url ?>/images/organization_logo_mail.png" alt="<?php echo \ForgeConfig::get('sys_name') ?>" />
+                                             <img src="<?php echo $http_url ?>/images/organization_logo_mail.png" alt="<?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) ?>" />
                                          </div>
                                       </td>
                                     </tr>

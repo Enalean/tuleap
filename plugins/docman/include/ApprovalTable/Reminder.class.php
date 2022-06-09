@@ -168,7 +168,7 @@ class Docman_ApprovalTableReminder
             return false;
         }
 
-        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] [Reminder] Please review \'%2$s\''), ForgeConfig::get('sys_name'), $docmanItem->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] [Reminder] Please review \'%2$s\''), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $docmanItem->getTitle());
 
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
@@ -240,7 +240,7 @@ class Docman_ApprovalTableReminder
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
                 $notifStyle = sprintf(dgettext('tuleap-docman', 'Sequence.
 %1$s notifies reviewers one after another.
-People *will not be notified* to review the document *until you approved it*.'), ForgeConfig::get('sys_name'));
+People *will not be notified* to review the document *until you approved it*.'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
                 break;
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
                 $notifStyle = dgettext('tuleap-docman', 'All at once');

@@ -65,7 +65,7 @@ final class MetricsAuthentication implements MiddlewareInterface
         if (! $credential->doesCredentialMatch(self::USERNAME, $this->getSecret())) {
             return $this->response_factory->createResponse(401)->withHeader(
                 'WWW-Authenticate',
-                'Basic realm="' . ForgeConfig::get('sys_name') . ' /metrics authentication"'
+                'Basic realm="' . ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME) . ' /metrics authentication"'
             );
         }
 

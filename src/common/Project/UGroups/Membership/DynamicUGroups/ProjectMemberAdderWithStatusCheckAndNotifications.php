@@ -86,7 +86,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         $mail = $this->mail_factory->getMail();
         $mail->setTo($user->getEmail());
         $mail->setFrom(\ForgeConfig::get('sys_noreply'));
-        $mail->setSubject($this->language->getOverridableText('include_account', 'welcome', [\ForgeConfig::get('sys_name'), $project->getPublicName()]));
+        $mail->setSubject($this->language->getOverridableText('include_account', 'welcome', [\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $project->getPublicName()]));
         $mail->setBodyText($this->getMessageBody($project));
         if (! $mail->send()) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(_('Unable to send email to user, please contact %s'), \ForgeConfig::get('sys_email_admin')));

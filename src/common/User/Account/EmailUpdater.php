@@ -33,14 +33,14 @@ class EmailUpdater
     {
         $subject = sprintf(
             _('[%s] Email change confirmation'),
-            \ForgeConfig::get('sys_name')
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
         );
         $message = sprintf(
             _("You have requested a change of email address on %s.\nPlease visit the following URL to complete the email change:\n\n%s%s\n\n-- The %s Team"),
-            \ForgeConfig::get('sys_name'),
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
             $server_url,
             ConfirmNewEmailController::getUrlToSelf($current_user->getConfirmHash()),
-            \ForgeConfig::get('sys_name')
+            \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
         );
 
         $mail = new \Codendi_Mail();

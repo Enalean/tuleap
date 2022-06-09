@@ -253,7 +253,7 @@ final class EmailNotificationTask implements PostCreationTask
      * */
     private function getDefaultSenderName()
     {
-        return ForgeConfig::get('sys_name');
+        return ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
     }
 
     /**
