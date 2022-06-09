@@ -22,7 +22,6 @@ import {
     displayEmbeddedInLargeMode,
     displayEmbeddedInNarrowMode,
     setUserPreferenciesForFolder,
-    setUserPreferenciesForUI,
 } from "./preferencies-actions";
 import type { UserPreferenciesFolderSetPayload } from "./preferencies-actions";
 import type { Embedded, RootState } from "../../type";
@@ -73,24 +72,6 @@ describe("setUserPreferenciesForFolder", () => {
 
         expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
         expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
-    });
-});
-
-describe("setUserPreferenciesForUI", () => {
-    it("sets the user preference to old ui", async () => {
-        const context: ActionContext<PreferenciesState, RootState> = {
-            rootState: {
-                configuration: { user_id: 102, project_id: 110 },
-            },
-        } as unknown as ActionContext<PreferenciesState, RootState>;
-
-        const addUserLegacyUIPreferency = jest
-            .spyOn(rest_querier, "addUserLegacyUIPreferency")
-            .mockReturnValue(Promise.resolve());
-
-        await setUserPreferenciesForUI(context);
-
-        expect(addUserLegacyUIPreferency).toHaveBeenCalled();
     });
 });
 

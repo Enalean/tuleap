@@ -18,7 +18,6 @@
  */
 
 import {
-    addUserLegacyUIPreferency,
     deleteUserPreferenciesForFolderInProject,
     getPreferenceForEmbeddedDisplay,
     patchUserPreferenciesForFolderInProject,
@@ -31,7 +30,6 @@ import type { Item, RootState } from "../../type";
 
 export interface PreferenciesActions extends ActionTree<PreferenciesState, RootState> {
     readonly setUserPreferenciesForFolder: typeof setUserPreferenciesForFolder;
-    readonly setUserPreferenciesForUI: typeof setUserPreferenciesForUI;
     readonly displayEmbeddedInNarrowMode: typeof displayEmbeddedInNarrowMode;
     readonly displayEmbeddedInLargeMode: typeof displayEmbeddedInLargeMode;
     readonly getEmbeddedFileDisplayPreference: typeof getEmbeddedFileDisplayPreference;
@@ -59,18 +57,6 @@ export const setUserPreferenciesForFolder = async (
         }
 
         await patchUserPreferenciesForFolderInProject(user_id, project_id, payload.folder_id);
-    } catch (exception) {
-        await context.dispatch("error/handleErrors", exception);
-    }
-};
-
-export const setUserPreferenciesForUI = async (
-    context: ActionContext<PreferenciesState, RootState>
-): Promise<void> => {
-    try {
-        const user_id = parseInt(context.rootState.configuration.user_id, 10);
-        const project_id = parseInt(context.rootState.configuration.project_id, 10);
-        await addUserLegacyUIPreferency(user_id, project_id);
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);
     }

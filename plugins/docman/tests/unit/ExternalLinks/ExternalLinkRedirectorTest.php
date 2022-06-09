@@ -63,11 +63,11 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(true);
 
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+        $redirector->checkAndStoreIfUserHasToBeenRedirected();
         $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 
-    public function testItShouldNotRedirectWhenUserPreferenceIsForNewDocmanAndRequestIsForDocmanAdministrationUI(): void
+    public function testItShouldNotRedirectWhenRequestIsForDocmanAdministrationUI(): void
     {
         $folder_id      = 10;
         $root_folder_id = 3;
@@ -76,11 +76,11 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive("exist")->with("action")->andReturn(true);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+        $redirector->checkAndStoreIfUserHasToBeenRedirected();
         $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 
-    public function testItShouldRedirectUserWhenShouldRedirectUserIsSetToTrue(): void
+    public function testItShouldNotAutomaticallyRedirectUser(): void
     {
         $folder_id      = 10;
         $root_folder_id = 3;
@@ -90,28 +90,11 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
-        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
-
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
-        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
-        $this->assertEquals("/plugins/document/project-short-name/10", $redirector->getUrlRedirection());
-    }
-
-    public function testItShouldNotRedirectUserWhenShouldRedirectUserIsSetToFalse(): void
-    {
-        $folder_id      = 10;
-        $root_folder_id = 3;
-        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
-
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(false);
+        $redirector->checkAndStoreIfUserHasToBeenRedirected();
         $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 
-    public function testItShouldStoreDocumentIdWhenUrlIsForAccessingToASpecificDocument(): void
+    public function testItShouldRedirectWhenUrlIsForAccessingToASpecificDocument(): void
     {
         $folder_id      = 10;
         $root_folder_id = 3;
@@ -125,27 +108,7 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
 
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
-
-        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
-        $this->assertEquals("/plugins/document/project-short-name/preview/10", $redirector->getUrlRedirection());
-    }
-
-    public function testItDoesNotUseUserPReferencyWhenUrlIsForAccessingToASpecificDocument(): void
-    {
-        $folder_id      = 10;
-        $root_folder_id = 3;
-        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
-
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
-        $this->request->shouldReceive("exist")->with("id")->andReturn($folder_id);
-        $this->request->shouldReceive("get")->with("id")->andReturn($folder_id);
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-
-        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
-
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(false);
+        $redirector->checkAndStoreIfUserHasToBeenRedirected();
 
         $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
         $this->assertEquals("/plugins/document/project-short-name/preview/10", $redirector->getUrlRedirection());
@@ -165,7 +128,7 @@ class ExternalLinkRedirectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
 
-        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+        $redirector->checkAndStoreIfUserHasToBeenRedirected();
 
         $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
         $this->assertEquals("/plugins/document/project-short-name/", $redirector->getUrlRedirection());

@@ -23,12 +23,11 @@ import localVue from "../../helpers/local-vue";
 
 import SwitchToOldUI from "./SwitchToOldUI.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import * as location_helper from "../../helpers/location-helper";
 
 import VueRouter from "vue-router";
 
 describe("SwitchToOldUI", () => {
-    let factory, state, store, router, redirect_to_url;
+    let factory, state, store, router;
 
     beforeEach(() => {
         state = {
@@ -67,11 +66,11 @@ describe("SwitchToOldUI", () => {
                 router,
             });
         };
-        redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
     });
+
     it(`Given an user who browse a folder ( != root folder)
         The user wants to switch to old UI from this folder
-        Then he is redirected on the old UI into the good folder`, async () => {
+        Then he is redirected on the old UI into the good folder`, () => {
         router.push({
             name: "folder",
             params: {
@@ -82,18 +81,12 @@ describe("SwitchToOldUI", () => {
 
         expect(wrapper.vm.$route.name).toBe("folder");
 
-        wrapper.get("a").trigger("click");
-
-        await wrapper.vm.$nextTick().then(() => {});
-
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/plugins/docman/?group_id=100&action=show&id=20"
-        );
+        wrapper.get("a").element.href = "/plugins/docman/?group_id=100&action=show&id=20";
     });
 
     it(`Given an user toggle the quick look of an item
         The user wants to switch to old UI
-        Then he is redirected on the old UI into the current folder`, async () => {
+        Then he is redirected on the old UI into the current folder`, () => {
         router.push({
             name: "preview",
             params: {
@@ -106,17 +99,12 @@ describe("SwitchToOldUI", () => {
 
         expect(wrapper.vm.$route.name).toBe("preview");
 
-        wrapper.get("a").trigger("click");
-
-        await wrapper.vm.$nextTick().then(() => {});
-
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/plugins/docman/?group_id=100&action=show&id=25"
-        );
+        wrapper.get("a").element.href = "/plugins/docman/?group_id=100&action=show&id=25";
     });
+
     it(`Given an user who browse the root folder
         The user wants to switch to old UI
-        Then he is redirected on the old UI into the root folder`, async () => {
+        Then he is redirected on the old UI into the root folder`, () => {
         router.push({
             name: "root_folder",
         });
@@ -125,10 +113,6 @@ describe("SwitchToOldUI", () => {
 
         expect(wrapper.vm.$route.name).toBe("root_folder");
 
-        wrapper.get("a").trigger("click");
-
-        await wrapper.vm.$nextTick().then(() => {});
-
-        expect(redirect_to_url).toHaveBeenCalledWith("/plugins/docman/?group_id=100");
+        wrapper.get("a").element.href = "/plugins/docman/?group_id=100";
     });
 });

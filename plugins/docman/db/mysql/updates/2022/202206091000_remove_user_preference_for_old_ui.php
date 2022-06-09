@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document;
-
-use PFUser;
-use Project;
-
-class DocumentUsageRetriever
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class b202206091000_remove_user_preference_for_old_ui extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function shouldUseDocument(?PFUser $user, Project $project): bool
+    public function description(): string
     {
-        if (! $user) {
-            return false;
-        }
+        return "Remove preference for old docman interface";
+    }
 
-        $user_new_ui_preference = $user->getPreference("plugin_docman_display_new_ui_" . $project->getID());
-        if ($user_new_ui_preference === '1') {
-            return true;
-        }
-
-        if ($user_new_ui_preference === '0') {
-            return false;
-        }
-
-        return true;
+    public function up(): void
+    {
+        $this->api->dbh->exec(
+            "DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman_display_new_ui_%'"
+        );
     }
 }
