@@ -21,7 +21,6 @@ import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 import {
-    addUserLegacyUIPreferency,
     deleteUserPreferenciesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
 } from "./preferencies-rest-querier";
@@ -63,16 +62,6 @@ describe("User preferences", () => {
             expect(tlpDel).toHaveBeenCalledWith(
                 "/api/users/102/preferences?key=plugin_docman_hide_110_30"
             );
-        });
-    });
-
-    describe("addUserLegacyUIPreferency() -", () => {
-        it("should set the current user's preferencies to old UI", async () => {
-            const tlpPatch = jest.spyOn(tlp_fetch, "patch");
-            mockFetchSuccess(tlpPatch, { return_json: JSON.stringify({ id: 10 }) });
-
-            await addUserLegacyUIPreferency(user_id, project_id);
-            expect(tlpPatch).toHaveBeenCalled();
         });
     });
 });

@@ -85,7 +85,7 @@ final class ExternalLinkRedirector
         return $this->should_redirect_user;
     }
 
-    public function checkAndStoreIfUserHasToBeenRedirected(bool $should_use_document_url): void
+    public function checkAndStoreIfUserHasToBeenRedirected(): void
     {
         if ($this->user->isAnonymous()) {
             return;
@@ -99,7 +99,6 @@ final class ExternalLinkRedirector
         }
 
         $this->checkAndStoreDocumentIdIfUserCanAccessToLegacyLinkToDocumentUrl();
-        $this->useUserPreferencesWhenUserTryToAccessToDocument($should_use_document_url);
     }
 
     public function getProject(): \Project
@@ -112,17 +111,6 @@ final class ExternalLinkRedirector
         if ($this->request->exist("group_id") && $this->request->exist("id")) {
             $this->document_id          = (int) $this->request->get("id");
             $this->should_redirect_user = true;
-        }
-    }
-
-    /**
-     * In notifications we always write url with new links,
-     * If user try to access to a document from an old mail, he should be redirected to the preview
-     */
-    private function useUserPreferencesWhenUserTryToAccessToDocument(bool $should_use_document_url): void
-    {
-        if (! $this->document_id) {
-            $this->should_redirect_user = $should_use_document_url;
         }
     }
 }

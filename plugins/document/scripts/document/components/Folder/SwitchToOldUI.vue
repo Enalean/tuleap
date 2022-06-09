@@ -21,7 +21,6 @@
     <div class="document-switch-to-docman">
         <a
             v-bind:href="redirect_url"
-            v-on:click.prevent="redirectUser()"
             class="document-switch-to-docman-link"
             data-test="document-switch-to-old-ui"
         >
@@ -35,7 +34,6 @@
 
 <script>
 import { mapState } from "vuex";
-import { redirectToUrl } from "../../helpers/location-helper";
 
 export default {
     name: "SwitchToOldUI",
@@ -60,12 +58,6 @@ export default {
                 );
             }
             return "/plugins/docman/?group_id=" + encoded_project_id;
-        },
-    },
-    methods: {
-        async redirectUser() {
-            await this.$store.dispatch("preferencies/setUserPreferenciesForUI");
-            redirectToUrl(this.redirect_url);
         },
     },
 };

@@ -23,7 +23,6 @@ import { del, get, patch } from "@tuleap/tlp-fetch";
 export {
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
-    addUserLegacyUIPreferency,
     removeUserPreferenceForEmbeddedDisplay,
     getPreferenceForEmbeddedDisplay,
     setNarrowModeForEmbeddedDisplay,
@@ -59,20 +58,6 @@ async function deleteUserPreferenciesForFolderInProject(
     const key = `plugin_docman_hide_${project_id}_${folder_id}`;
 
     await deleteUserPreference(user_id, key);
-}
-
-async function addUserLegacyUIPreferency(user_id: number, project_id: number): Promise<void> {
-    const key = `plugin_docman_display_new_ui_${project_id}`;
-
-    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            key,
-            value: "0",
-        }),
-    });
 }
 
 async function setNarrowModeForEmbeddedDisplay(
