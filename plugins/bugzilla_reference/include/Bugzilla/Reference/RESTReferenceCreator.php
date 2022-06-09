@@ -26,7 +26,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
-use ReferenceInstance;
+use Tuleap\Reference\GotoLink;
 
 class RESTReferenceCreator
 {
@@ -133,14 +133,12 @@ class RESTReferenceCreator
 
     private function getLinkToSource(CrossReference $cross_reference)
     {
-        $reverse_reference_instance = new ReferenceInstance(null, null, $cross_reference->getRefTargetId());
-        $reverse_reference_instance->computeGotoLink(
+        $link = GotoLink::fromComponents(
             $cross_reference->getRefSourceKey(),
             $cross_reference->getRefSourceId(),
             $cross_reference->getRefSourceGid()
         );
-
-        return $reverse_reference_instance->getFullGotoLink();
+        return $link->getFullGotoLink();
     }
 
     private function getBaseUrl(Reference $bugzilla)

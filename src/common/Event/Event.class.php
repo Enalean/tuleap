@@ -861,7 +861,7 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * Parameters:
      *  - cross_reference            => CrossReference (IN)
-     *  - reverse_reference_instance => ReferenceInstance (IN)
+     *  - reverse_reference_instance => Tuleap\Reference\ReferenceInstance (IN)
      */
     public const POST_REFERENCE_EXTRACTED = 'post_reference_extracted';
 

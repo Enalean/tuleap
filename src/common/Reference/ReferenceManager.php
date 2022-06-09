@@ -22,6 +22,7 @@
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
+use Tuleap\Reference\ReferenceInstance;
 use Tuleap\Reference\ReferenceValidator;
 use Tuleap\Reference\ReservedKeywordsRetriever;
 use Tuleap\Reference\NatureCollection;
@@ -62,7 +63,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
      *      'regexp' => PCRE compatible regular expression matching references,
      *      'cb'     => PHP callback of a function taking a regexp match
      *                  followed by the project group_id  and returning a
-     *                  ReferenceInstance (or null if this is not a reference)
+     *                  Tuleap\Reference\ReferenceInstance (or null if this is not a reference)
      *   )
      *   ...
      * )
@@ -988,7 +989,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
      * extract references from text $html (same as extractReferences) but returns them grouped by Description, and removes the duplicates references
      * @param $html the text to be extracted
      * @param $group_id the group_id of the project
-     * @return array referenceinstance with the following structure: array[$description][$match] = {ReferenceInstance}
+     * @return array referenceinstance with the following structure: array[$description][$match] = {Tuleap\Reference\ReferenceInstance}
      */
     public function extractReferencesGrouped($html, $group_id)
     {
@@ -1179,7 +1180,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 
     // Get a Reference object from a matching pattern
     // if it is not a reference (e.g. wrong keyword) return null;
-    private function _getReferenceInstanceFromMatch($match) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    private function _getReferenceInstanceFromMatch($match): ?ReferenceInstance // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Analyse match
         $key   = strtolower($match['key']);
@@ -1187,12 +1188,16 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 
         $ref = $this->getReferenceFromMatch($match);
 
-        $refInstance = null;
-        if ($ref) {
-            $refInstance = new ReferenceInstance($key . " #" . $match['project_name'] . $value, $ref, $value);
-            $refInstance->computeGotoLink($key, $value, $ref->getGroupId());
+        if (! $ref) {
+            return null;
         }
-        return $refInstance;
+        return new ReferenceInstance(
+            $key . " #" . $match['project_name'] . $value,
+            $ref,
+            $value,
+            $key,
+            $ref->getGroupId(),
+        );
     }
 
     private function getReference($key, $value, $ref_gid)

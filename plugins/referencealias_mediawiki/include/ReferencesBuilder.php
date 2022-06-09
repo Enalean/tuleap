@@ -23,7 +23,7 @@ namespace Tuleap\ReferenceAliasMediawiki;
 
 use Project;
 use Reference;
-use ReferenceInstance;
+use Tuleap\Reference\ReferenceInstance;
 use ProjectManager;
 
 class ReferencesBuilder
@@ -91,9 +91,7 @@ class ReferencesBuilder
             return null;
         }
 
-        $ref_instance = new ReferenceInstance($match[0], $reference, $ref);
-        $ref_instance->computeGotoLink($keyword, $value, $reference->getGroupId());
-        return $ref_instance;
+        return new ReferenceInstance($match[0], $reference, $value, $keyword, $reference->getGroupId());
     }
 
     /**
