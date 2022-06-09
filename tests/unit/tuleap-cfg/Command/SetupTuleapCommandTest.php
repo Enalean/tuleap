@@ -91,7 +91,6 @@ final class SetupTuleapCommandTest extends TestCase
 
         self::assertEquals('tuleap.example.com', $sys_default_domain);
         self::assertEquals('lists.tuleap.example.com', $sys_lists_host);
-        self::assertEquals('tuleap.example.com', $sys_fullname);
         self::assertEquals('codendi-admin@tuleap.example.com', $sys_email_admin);
         self::assertEquals('codendi-contact@tuleap.example.com', $sys_email_contact);
         self::assertEquals('"Tuleap" <noreply@tuleap.example.com>', $sys_noreply);

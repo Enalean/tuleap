@@ -71,7 +71,7 @@ class MailBuilder
             $presenter = new MailPresenter(
                 $notification->getServiceName(),
                 $notification->getGotoLink(),
-                ForgeConfig::get('sys_fullname')
+                ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
             );
 
             $mail->setSubject($this->renderer->renderToString(self::TRUNCATED_SUBJECT_TEMPLATE, $presenter));

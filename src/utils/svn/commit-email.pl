@@ -538,7 +538,7 @@ my @body;
 my $goto_link = "$server_url/goto?key=rev&val=$rev&group_id=$group_id";
 
 if (&isGroupUsingTruncatedMails) {
-  push(@body, "There was an update on $sys_fullname for you: $goto_link");
+  push(@body, "There was an update on $sys_name for you: $goto_link");
 } else {
   push(@body, sprintf("SVN Repository: %s\n",$repos));
   push(@body, sprintf("Changes by:     %s  on %s\n","$fullname <$mailname>", $date));
@@ -600,7 +600,7 @@ foreach my $project (@project_settings_list) {
     my $subject;
 
     if (&isGroupUsingTruncatedMails) {
-      $subject = "New SVN notification on $sys_fullname";
+      $subject = "New SVN notification on $sys_name";
     } else {
       if ($commondir ne '') {
         $subject = "r$rev - in $commondir: $dirlist";

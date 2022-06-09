@@ -111,18 +111,18 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
                 'environment' => [],
                 'tests' => function () {
                     ForgeConfig::loadInSequence();
-                    self::assertEquals('%sys_fullname%', ForgeConfig::get('sys_fullname'));
+                    self::assertEquals('%sys_default_domain%', ForgeConfig::get('sys_default_domain'));
                 },
             ],
             'Value is set in local.inc' => [
                 'local_inc' => [
-                    'sys_fullname' => 'Matchete',
+                    'sys_default_domain' => 'tuleap.example.com',
                 ],
                 'database' => [],
                 'environment' => [],
                 'tests' => function () {
                     ForgeConfig::loadInSequence();
-                    self::assertEquals('Matchete', ForgeConfig::get('sys_fullname'));
+                    self::assertEquals('tuleap.example.com', ForgeConfig::get('sys_default_domain'));
                 },
             ],
             'Value is set in database' => [

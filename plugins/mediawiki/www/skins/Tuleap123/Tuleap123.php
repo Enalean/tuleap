@@ -280,7 +280,7 @@ class Tuleap123Template extends BaseTemplate
 
     private function addForgeBackLinksToSidebar()
     {
-        $forge_name    = forge_get_config('sys_fullname');
+        $forge_name    = \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         $added_toolbox = [];
 
         if ($this->isUserAnonymous()) {

@@ -95,7 +95,7 @@ class WikiAttachmentRevision
                     [ForgeConfig::get('sys_email_admin'),
                                                               $this->attachmentId,
                                                               $this->revision,
-                          ForgeConfig::get('sys_fullname')]
+                          ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]
                 ),
                 E_USER_ERROR
             );
