@@ -123,7 +123,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }

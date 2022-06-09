@@ -225,15 +225,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     /**
      * Get the "select" statement to retrieve field values
-     * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        $R1 = 'R1_' . $this->field->id;
         $R2 = 'R2_' . $this->field->id;
-        $R3 = 'R3_' . $this->field->id;
-        return "$R2.id AS `" . $this->field->name . "`";
+        return "$R2.id AS " . $this->field->getQuerySelectName();
     }
 
     /**
@@ -265,10 +262,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby()
+    public function getQueryOrderby(): string
     {
-        $uh = UserHelper::instance();
-        $R1 = 'R1_' . $this->field->id;
         $R2 = 'R2_' . $this->field->id;
         return "$R2.ugroup_id";
     }
@@ -276,9 +271,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
-        $R1 = 'R1_' . $this->field->id;
         $R2 = 'R2_' . $this->field->id;
         return "$R2.id";
     }

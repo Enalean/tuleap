@@ -185,11 +185,11 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         $R2 = 'R2_' . $this->id;
 
-        return "$R2.value AS `" . $this->name . "`";
+        return "$R2.value AS " . $this->getQuerySelectName();
     }
 
     /**

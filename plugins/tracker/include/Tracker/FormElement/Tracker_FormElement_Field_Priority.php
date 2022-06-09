@@ -91,12 +91,11 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
     /**
      * Get the "select" statement to retrieve field values
-     * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        return "R_{$this->id}.rank AS `$this->name`";
+        return "R_{$this->id}.rank AS " . $this->getQuerySelectName();
     }
 
     /**

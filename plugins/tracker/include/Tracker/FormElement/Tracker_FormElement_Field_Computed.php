@@ -627,7 +627,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }

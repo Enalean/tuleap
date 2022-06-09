@@ -162,9 +162,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @see getQueryFrom
      *
-     * @return string
      */
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return $this->getBind()->getQuerySelect();
     }
@@ -205,7 +204,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby()
+    public function getQueryOrderby(): string
     {
         return $this->getBind()->getQueryOrderby();
     }
@@ -213,7 +212,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         return $this->getBind()->getQueryGroupby();
     }

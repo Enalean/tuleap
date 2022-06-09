@@ -70,9 +70,8 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
-        $R1 = 'R1_' . $this->id;
         $R2 = 'R2_' . $this->id;
         return "$R2.value";
     }

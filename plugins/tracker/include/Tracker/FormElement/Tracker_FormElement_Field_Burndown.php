@@ -447,8 +447,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
+        return '';
     }
 
     public function getQueryFrom()

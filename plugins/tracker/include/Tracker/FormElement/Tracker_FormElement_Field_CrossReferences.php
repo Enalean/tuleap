@@ -139,7 +139,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }

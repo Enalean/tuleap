@@ -69,7 +69,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }

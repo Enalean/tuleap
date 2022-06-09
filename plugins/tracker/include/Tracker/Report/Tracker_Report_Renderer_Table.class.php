@@ -1213,7 +1213,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     foreach ($columns as $key => $column) {
                         if ($column['field']->isUsed()) {
-                            $field_name = $column['field']->name;
+                            $field_name = Tracker_FormElement_Field::PREFIX_NAME_SQL_COLUMN . $column['field']->name;
                             $value      = isset($row[$field_name]) ? $row[$field_name] : null;
                             $html      .= '<td data-column-id="' . $purifier->purify($key) . '">';
 
