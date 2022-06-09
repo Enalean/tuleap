@@ -990,6 +990,12 @@ if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
     usermod -a -G gitolite codendiadm
 fi
 
+%post plugin-mediawiki-standalone
+if [ $1 -eq 1 ]; then
+    /usr/bin/systemctl enable mediawiki-tuleap-php-fpm.service &>/dev/null || :
+    /usr/bin/systemctl mask php74-php-fpm || :
+fi
+
 %preun
 if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
@@ -1004,6 +1010,14 @@ fi
 if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
 fi
+
+%preun plugin-mediawiki-standalone
+if [ $1 -eq 0 ]; then
+    /usr/bin/systemctl stop tuleap.service &>/dev/null || :
+
+    /usr/bin/systemctl disable mediawiki-tuleap-php-fpm.service &>/dev/null || :
+fi
+
 
 %postun
 /usr/bin/systemctl unmask php80-php-fpm || :
