@@ -36,7 +36,7 @@ final class CreatedFileRepresentation
      */
     public $download_href;
     /**
-     * @var ?string
+     * @var ?string URL to upload the file using the <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
      */
     public $upload_href;
 
