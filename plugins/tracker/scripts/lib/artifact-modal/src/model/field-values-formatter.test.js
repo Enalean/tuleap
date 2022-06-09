@@ -24,10 +24,11 @@ import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttac
 describe("TuleapArtifactFieldValues", () => {
     describe("getSelectedValues() -", () => {
         describe("Given a map of artifact field values", () => {
-            it("and given a tracker containing those fields, when I get the fields' selected values, then a map containing all the fields provided and also containing default values for all the other fields of the tracker will be returned", () => {
+            it("and given a tracker containing those fields, when I get the fields' selected values, then a map containing all the fields provided and also containing default values for all the other fields of the tracker will be returned except non existing fields", () => {
                 const artifact_values = {
                     655: { field_id: 655, value: "alumna Aurora Arpin" },
                     378: { field_id: 378, bind_value_ids: [667, 967] },
+                    666: { field_id: 666, value: "whatever" },
                     320: {
                         field_id: 320,
                         links: [{ id: 158 }, { id: 434 }],
@@ -64,6 +65,13 @@ describe("TuleapArtifactFieldValues", () => {
                             label: "rani",
                             name: "troot",
                             type: "art_link",
+                            permissions: ["read", "update", "create"],
+                        },
+                        {
+                            field_id: 666,
+                            label: "External field",
+                            name: "external",
+                            type: "external_field",
                             permissions: ["read", "update", "create"],
                         },
                     ],

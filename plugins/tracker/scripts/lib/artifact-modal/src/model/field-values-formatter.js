@@ -27,6 +27,7 @@ import {
 import { formatExistingValue as formatForTextFieldValue } from "../fields/text-field/text-field-value-formatter.js";
 import { cleanValue as defaultForIntField } from "../fields/int-field/int-field-value-formatter";
 import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttach";
+import { Fault, isFault } from "@tuleap/fault";
 
 /**
  * For every field in the tracker, creates a field object with the value from the given artifact
@@ -48,7 +49,10 @@ export function getSelectedValues(artifact_values, tracker) {
                 type: field.type,
             };
         } else if (artifact_value) {
-            values[field.field_id] = formatExistingValue(field, artifact_value);
+            const result = formatExistingValue(field, artifact_value);
+            if (!isFault(result)) {
+                values[field.field_id] = result;
+            }
         } else {
             values[field.field_id] = getDefaultValue(field);
         }
@@ -104,8 +108,15 @@ function formatExistingValue(field, artifact_value) {
         case "art_link":
             value_obj = formatForLinkField(field, artifact_value);
             break;
-        default:
+        case "string":
+        case "int":
+        case "float":
+        case "Encrypted":
+        case "burnup":
+        case "burndown":
             break;
+        default:
+            return Fault.fromMessage("Unknown field");
     }
 
     return value_obj;
