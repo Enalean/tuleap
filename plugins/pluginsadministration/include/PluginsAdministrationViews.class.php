@@ -44,9 +44,10 @@ class PluginsAdministrationViews extends Views
     public function __construct(&$controler, $view = null)
     {
         $this->View($controler, $view);
-        $this->plugin_manager           = PluginManager::instance();
-        $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
-        $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');
+        $this->plugin_manager    = PluginManager::instance();
+        $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
+        $plugin_administration   = $this->plugin_manager->getPluginByName('pluginsadministration');
+        assert($plugin_administration instanceof PluginsAdministrationPlugin);
         $this->plugin_disabler_verifier = new PluginDisablerVerifier(
             $plugin_administration,
             ForgeConfig::get(PluginDisablerVerifier::SETTING_CANNOT_DISABLE_PLUGINS_WEB_UI)
@@ -74,6 +75,11 @@ class PluginsAdministrationViews extends Views
             case 'restrict':
                 $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
                 $plugin                     = $plugin_factory->getPluginById($request->get('plugin_id'));
+
+                if (! $plugin) {
+                    $GLOBALS['HTML']->redirect('/plugins/pluginsadministration/');
+                    return;
+                }
 
                 if ($plugin->getScope() !== Plugin::SCOPE_PROJECT) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'This project cannot be restricted');
@@ -174,7 +180,7 @@ class PluginsAdministrationViews extends Views
         $additional_options           = $plugin->getAdministrationOptions();
         $are_there_additional_options = ! empty($additional_options);
 
-        $is_enabled             = (bool) $this->plugin_manager->isPluginAvailable($plugin);
+        $is_enabled             = $this->plugin_manager->isPluginEnabled($plugin);
         $is_there_enable_switch = (strcasecmp($plugin::class, 'PluginsAdministrationPlugin') !== 0);
 
         $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');
@@ -209,14 +215,14 @@ class PluginsAdministrationViews extends Views
         return array_values(
             array_filter(
                 $dependencies,
-                fn (string $plugin_name) => $this->plugin_manager->getAvailablePluginByName($plugin_name) === null
+                fn (string $plugin_name) => $this->plugin_manager->getEnabledPluginByName($plugin_name) === null
             )
         );
     }
 
     private function getEnableUrl(int $id, bool $is_enabled, string $view): string
     {
-        $action = $is_enabled ? 'unavailable' : 'available';
+        $action = $is_enabled ? 'disable' : 'enable';
 
         return '?' .
             http_build_query(
@@ -257,7 +263,7 @@ class PluginsAdministrationViews extends Views
             foreach ($plugins as $plugin) {
                 $plug_info  = $plugin->getPluginInfo();
                 $descriptor = $plug_info->getPluginDescriptor();
-                $available  = $this->plugin_manager->isPluginAvailable($plugin);
+                $is_enabled = $this->plugin_manager->isPluginEnabled($plugin);
                 $name       = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = $plugin::class;
@@ -269,7 +275,7 @@ class PluginsAdministrationViews extends Views
                     'id'            => $plugin->getId(),
                     'name'          => $name,
                     'description'   => $descriptor->getDescription(),
-                    'available'     => $available,
+                    'is_enabled'    => $is_enabled,
                     'scope'         => $plugin->getScope(),
                     'dont_touch'    => $dont_touch,
                     'dont_restrict' => $dont_restrict];
@@ -289,6 +295,9 @@ class PluginsAdministrationViews extends Views
         $plugins = [];
         foreach ($this->_plugins as $plugin_row) {
             $plugin = $this->plugin_manager->getPluginById($plugin_row['id']);
+            if (! $plugin) {
+                continue;
+            }
 
             $is_there_unmet_dependencies = false;
             $unmet_dependencies          = $this->dependency_solver->getInstalledDependencies($plugin);
@@ -300,7 +309,7 @@ class PluginsAdministrationViews extends Views
             $disabled_dependencies           = $this->getDisabledDependencies($plugin->getDependencies());
             $are_there_disabled_dependencies = ! empty($disabled_dependencies);
 
-            $enable_url = $this->getEnableUrl($plugin_row['id'], $plugin_row['available'], 'installed');
+            $enable_url = $this->getEnableUrl($plugin_row['id'], $plugin_row['is_enabled'], 'installed');
 
             $plugins[] = [
                 'id'                              => $plugin_row['id'],
@@ -315,7 +324,7 @@ class PluginsAdministrationViews extends Views
                 'disabled_dependencies'           => $disabled_dependencies,
                 'unmet_dependencies'              => $unmet_dependencies,
                 'csrf_token'                      => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
-                'is_enabled'                      => $plugin_row['available'],
+                'is_enabled'                      => $plugin_row['is_enabled'],
             ];
         }
 
@@ -351,7 +360,7 @@ class PluginsAdministrationViews extends Views
                 $plugin_presenter['readme']          = $readme;
             }
 
-            $dependencies = $this->dependency_solver->getUnmetInstalledDependencies($plugin->getName());
+            $dependencies = $this->dependency_solver->getUninstalledDependencies($plugin->getName());
             if (! empty($dependencies)) {
                 $plugin_presenter['is_there_unmet_dependencies'] = true;
                 $plugin_presenter['unmet_dependencies']          = $dependencies;

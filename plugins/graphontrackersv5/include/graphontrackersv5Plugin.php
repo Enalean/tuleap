@@ -321,7 +321,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public function javascript_file(array $params): void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
-        if ($tracker_plugin->currentRequestIsForPlugin()) {
+        if ($tracker_plugin && $tracker_plugin->currentRequestIsForPlugin()) {
             $layout = $params['layout'];
             assert($layout instanceof \Tuleap\Layout\BaseLayout);
             $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'graphontrackersv5.js'));

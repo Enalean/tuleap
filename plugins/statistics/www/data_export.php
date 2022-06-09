@@ -25,7 +25,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $plugin_manager = PluginManager::instance();
 $plugin         = $plugin_manager->getPluginByName('statistics');
-if (! $plugin || ! $plugin_manager->isPluginAvailable($plugin)) {
+if (! $plugin || ! $plugin_manager->isPluginEnabled($plugin)) {
     $GLOBALS['HTML']->redirect('/');
 }
 

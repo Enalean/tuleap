@@ -78,7 +78,7 @@ class ServiceTracker extends Service
     {
         $plugin_manager = PluginManager::instance();
         $p              = $plugin_manager->getPluginByName('tracker');
-        if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed($project->getGroupId())) {
+        if ($p && $plugin_manager->isPluginEnabled($p) && $p->isAllowed($project->getGroupId())) {
             return true;
         }
         return false;

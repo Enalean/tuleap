@@ -23,4 +23,4 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
 $plugin_manager = PluginManager::instance();
-$plugin_manager->installAndActivate('testplan');
+$plugin_manager->installAndEnable('testplan');

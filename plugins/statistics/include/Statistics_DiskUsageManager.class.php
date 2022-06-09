@@ -734,7 +734,9 @@ class Statistics_DiskUsageManager
     {
         $pluginManager = PluginManager::instance();
         $p             = $pluginManager->getPluginByName('statistics');
-        $info          = $p->getPluginInfo();
+        assert($p instanceof StatisticsPlugin);
+        $info = $p->getPluginInfo();
+
         return $info->getPropertyValueForName($name);
     }
 }

@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/MediawikiSiteAdminController.class.php';
 
 $plugin_manager = PluginManager::instance();
 $mw_plugin      = $plugin_manager->getPluginByName('mediawiki');
-if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
+if (! $mw_plugin || ! $plugin_manager->isPluginEnabled($mw_plugin)) {
     $GLOBALS['Response']->redirect('/');
     exit;
 }

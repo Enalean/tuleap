@@ -47,11 +47,11 @@ class PluginsAdministration extends Controler
 
         if ($request->exist('action')) {
             switch ($request->get('action')) {
-                case 'available':
-                    $this->action = 'available';
+                case 'enable':
+                    $this->action = 'enable';
                     break;
-                case 'unavailable':
-                    $this->action = 'unavailable';
+                case 'disable':
+                    $this->action = 'disable';
                     break;
                 case 'install':
                     if ($request->exist('confirm')) {

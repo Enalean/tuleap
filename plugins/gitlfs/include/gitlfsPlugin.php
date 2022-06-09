@@ -314,10 +314,11 @@ class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
     private function getGitPlugin()
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
-        if ($git_plugin === null) {
-            throw new RuntimeException('Git Plugin can not be found but the Git LFS is enabled');
+        if ($git_plugin instanceof GitPlugin) {
+            return $git_plugin;
         }
-        return $git_plugin;
+
+        throw new RuntimeException('Git Plugin can not be found but the Git LFS is enabled');
     }
 
     /**

@@ -7,11 +7,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, php-format
-msgid "%1$s is now available."
+msgid "%1$s is now disabled."
 msgstr ""
 
 #, php-format
-msgid "%1$s is now unavailable. Web space and CGI remain accessible!"
+msgid "%1$s is now enabled."
 msgstr ""
 
 #, php-format
@@ -30,9 +30,6 @@ msgstr ""
 msgid "Allow all the projects to use this plugin"
 msgstr ""
 
-msgid "Avail this plugin"
-msgstr ""
-
 msgid "Available plugins"
 msgstr "Plugins disponíveis"
 
@@ -44,6 +41,14 @@ msgstr ""
 
 msgid "Cancel"
 msgstr "Cancelar"
+
+#, php-format
+msgid "Cannot disable %1$s. Please disable the following plugins before: %2$s"
+msgstr ""
+
+#, php-format
+msgid "Cannot enable %1$s. Please enable the following plugins before: %2$s"
+msgstr ""
 
 msgid "Confirm disable of plugin"
 msgstr ""
@@ -60,10 +65,10 @@ msgstr "Descrição"
 msgid "Details"
 msgstr "Detalhes"
 
-msgid "Disabling a plugin"
+msgid "Disable this plugin"
 msgstr ""
 
-msgid "Do not avail this plugin"
+msgid "Disabling a plugin"
 msgstr ""
 
 msgid ""
@@ -73,6 +78,9 @@ msgid ""
 msgstr ""
 
 msgid "Enable plugin and its dependencies"
+msgstr ""
+
+msgid "Enable this plugin"
 msgstr ""
 
 msgid "Enabled?"
@@ -201,15 +209,6 @@ msgstr ""
 
 #, php-format
 msgid "This section allows to define which projects will be able to use %1$s."
-msgstr ""
-
-#, php-format
-msgid "Unable to avail %1$s. Please avail the following plugins before: %2$s"
-msgstr ""
-
-#, php-format
-msgid ""
-"Unable to unavail %1$s. Please unavail the following plugins before:  %2$s"
 msgstr ""
 
 msgid "Uninstall"

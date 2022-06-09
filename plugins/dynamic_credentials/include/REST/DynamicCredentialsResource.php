@@ -120,6 +120,7 @@ class DynamicCredentialsResource
     private function getRequestSignatureVerifier()
     {
         $plugin = \PluginFactory::instance()->getPluginByName(\dynamic_credentialsPlugin::NAME);
+        assert($plugin instanceof \dynamic_credentialsPlugin);
         return new RequestSignatureVerifier($plugin->getPluginInfo());
     }
 }

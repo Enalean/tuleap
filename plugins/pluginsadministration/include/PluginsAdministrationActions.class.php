@@ -36,35 +36,36 @@ class PluginsAdministrationActions extends Actions
     public function __construct($controler)
     {
         parent::__construct($controler);
-        $this->plugin_manager           = PluginManager::instance();
-        $this->dependency_solver        = new PluginDependencySolver($this->plugin_manager);
-        $plugin_administration          = $this->plugin_manager->getPluginByName('pluginsadministration');
+        $this->plugin_manager    = PluginManager::instance();
+        $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
+        $plugin_administration   = $this->plugin_manager->getPluginByName('pluginsadministration');
+        assert($plugin_administration instanceof PluginsAdministrationPlugin);
         $this->plugin_disabler_verifier = new PluginDisablerVerifier(
             $plugin_administration,
             ForgeConfig::get(PluginDisablerVerifier::SETTING_CANNOT_DISABLE_PLUGINS_WEB_UI)
         );
     }
 
-    public function available()
+    public function enable(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request     = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
             $plugin_manager = $this->plugin_manager;
-            $dependencies   = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
+            $dependencies   = $this->dependency_solver->getDisabledDependencies($plugin_data['plugin']);
             if ($dependencies && ! $request->get('with-dependencies')) {
-                $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to avail %1$s. Please avail the following plugins before: %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
+                $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Cannot enable %1$s. Please enable the following plugins before: %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
-            if (! $plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
+            if (! $plugin_manager->isPluginEnabled($plugin_data['plugin'])) {
                 if ($dependencies) {
                     $plugin_manager->enablePluginAndItsDependencies($plugin_data['plugin']);
                 } else {
-                    $plugin_manager->availablePlugin($plugin_data['plugin']);
+                    $plugin_manager->enablePlugin($plugin_data['plugin']);
                 }
-                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now available.'), $plugin_data['name']));
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now enabled.'), $plugin_data['name']));
             }
         }
 
@@ -75,7 +76,7 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
 
-    public function install()
+    public function install(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
@@ -96,22 +97,22 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=available');
     }
 
-    public function unavailable()
+    public function disable(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request     = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin_data['plugin'])) {
             $plugin_manager = $this->plugin_manager;
-            $dependencies   = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
+            $dependencies   = $this->dependency_solver->getEnabledDependencies($plugin_data['plugin']);
             if ($dependencies) {
-                $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to unavail %1$s. Please unavail the following plugins before:  %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
+                $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Cannot disable %1$s. Please disable the following plugins before: %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
-            if ($plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
-                $plugin_manager->unavailablePlugin($plugin_data['plugin']);
-                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now unavailable. Web space and CGI remain accessible!'), $plugin_data['name']));
+            if ($plugin_manager->isPluginEnabled($plugin_data['plugin'])) {
+                $plugin_manager->disablePlugin($plugin_data['plugin']);
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now disabled.'), $plugin_data['name']));
             }
         }
 
@@ -122,7 +123,7 @@ class PluginsAdministrationActions extends Actions
         $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=installed');
     }
 
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $plugin = $this->_getPluginFromRequest();

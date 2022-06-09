@@ -135,7 +135,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
         $shortname = 'shortname';
         $pm        = \Mockery::spy(\PluginManager::class);
 
-        $pm->shouldReceive('pluginIsCustom')->once()->andReturns(false);
+        $pm->shouldReceive('isACustomPlugin')->once()->andReturns(false);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
@@ -155,7 +155,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
         $shortname = 'shortname';
         $pm        = \Mockery::spy(\PluginManager::class);
-        $pm->shouldReceive('pluginIsCustom')->andReturns(false, true, true);
+        $pm->shouldReceive('isACustomPlugin')->andReturns(false, true, true);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
@@ -261,7 +261,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
-        $pm->shouldReceive('pluginIsCustom')->andReturns(false);
+        $pm->shouldReceive('isACustomPlugin')->andReturns(false);
 
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
@@ -275,7 +275,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
-        $pm->shouldReceive('pluginIsCustom')->andReturns(true);
+        $pm->shouldReceive('isACustomPlugin')->andReturns(true);
 
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
@@ -289,7 +289,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR
 
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
-        $pm->shouldReceive('pluginIsCustom')->andReturns(false);
+        $pm->shouldReceive('isACustomPlugin')->andReturns(false);
 
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);

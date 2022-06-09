@@ -30,7 +30,7 @@ class DynamicCredentialsPluginRESTInitializer
     public function initialize()
     {
         $plugin_manager = PluginManager::instance();
-        $plugin_manager->installAndActivate(\dynamic_credentialsPlugin::NAME);
+        $plugin_manager->installAndEnable(\dynamic_credentialsPlugin::NAME);
         $plugin = $plugin_manager->getPluginByName(\dynamic_credentialsPlugin::NAME);
 
         $public_key          = self::PUBLIC_KEY;

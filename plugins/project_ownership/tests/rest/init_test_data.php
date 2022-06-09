@@ -21,4 +21,4 @@
 require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
 $plugin_manager = PluginManager::instance();
-$plugin_manager->installAndActivate('project_ownership');
+$plugin_manager->installAndEnable('project_ownership');

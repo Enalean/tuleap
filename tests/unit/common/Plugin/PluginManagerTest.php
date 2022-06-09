@@ -63,15 +63,15 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($plugins, $pm->getAllPlugins());
     }
 
-    public function testIsPluginAvailable(): void
+    public function testIsPluginEnable(): void
     {
         //The plugins
         $plugin = \Mockery::spy(\Plugin::class);
 
         //The plugin factory
         $plugin_factory = \Mockery::spy(\PluginFactory::class);
-        $plugin_factory->shouldReceive('isPluginAvailable')->once()->andReturns(true);
-        $plugin_factory->shouldReceive('isPluginAvailable')->once()->andReturns(false);
+        $plugin_factory->shouldReceive('isPluginEnabled')->once()->andReturns(true);
+        $plugin_factory->shouldReceive('isPluginEnabled')->once()->andReturns(false);
 
         //The plugins manager
         $pm = new PluginManager(
@@ -81,19 +81,18 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\Tuleap\Markdown\ContentInterpretor::class)
         );
 
-        $this->assertTrue($pm->isPluginAvailable($plugin));
-        $this->assertFalse($pm->isPluginAvailable($plugin));
+        $this->assertTrue($pm->isPluginEnabled($plugin));
+        $this->assertFalse($pm->isPluginEnabled($plugin));
     }
 
     public function testEnablePlugin(): void
     {
         //The plugins
         $plugin = \Mockery::spy(\Plugin::class);
-        $plugin->shouldReceive('canBeMadeAvailable')->andReturns(true);
 
         //The plugin factory
         $plugin_factory = \Mockery::spy(\PluginFactory::class);
-        $plugin_factory->shouldReceive('availablePlugin')->once();
+        $plugin_factory->shouldReceive('enablePlugin')->once();
 
         $site_cache = \Mockery::spy(\SiteCache::class);
         $site_cache->shouldReceive('invalidatePluginBasedCaches')->once();
@@ -106,7 +105,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\Tuleap\Markdown\ContentInterpretor::class)
         );
 
-        $pm->availablePlugin($plugin);
+        $pm->enablePlugin($plugin);
     }
 
     public function testDisablePlugin(): void
@@ -116,7 +115,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         //The plugin factory
         $plugin_factory = \Mockery::spy(\PluginFactory::class);
-        $plugin_factory->shouldReceive('unavailablePlugin')->once();
+        $plugin_factory->shouldReceive('disablePlugin')->once();
 
         $site_cache = \Mockery::spy(\SiteCache::class);
         $site_cache->shouldReceive('invalidatePluginBasedCaches')->once();
@@ -129,7 +128,7 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\Tuleap\Markdown\ContentInterpretor::class)
         );
 
-        $pm->unavailablePlugin($plugin);
+        $pm->disablePlugin($plugin);
     }
 
     public function testInstallPlugin(): void

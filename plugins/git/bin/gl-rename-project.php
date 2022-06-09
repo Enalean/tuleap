@@ -39,7 +39,7 @@ $driver      = new Git_GitoliteDriver(
     $url_manager,
     new GitDao(),
     new Git_Mirror_MirrorDao(),
-    PluginManager::instance()->getPluginByName('git'),
+    $git_plugin,
     null,
     null,
     null,

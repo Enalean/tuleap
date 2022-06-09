@@ -272,7 +272,7 @@ class Tuleap123Template extends BaseTemplate
     {
         $plugin_manager = PluginManager::instance();
         $mw_plugin      = $plugin_manager->getPluginByName('mediawiki');
-        if ($mw_plugin && $plugin_manager->isPluginAvailable($mw_plugin)) {
+        if ($mw_plugin && $plugin_manager->isPluginEnabled($mw_plugin)) {
             return $mw_plugin->getMediawikiManager();
         }
         throw new Exception('Mediawiki plugin not available');

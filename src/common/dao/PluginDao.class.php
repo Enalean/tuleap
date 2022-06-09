@@ -23,6 +23,8 @@
  */
 class PluginDao extends DataAccessObject
 {
+    public const ENABLED_COLUMN = 'available';
+
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -60,41 +62,51 @@ class PluginDao extends DataAccessObject
     }
 
     /**
-    * Searches Plugin by Available
-    * @return DataAccessResult
+    * @return DataAccessResult|false
     */
-    public function searchByAvailable($available)
+    public function searchEnabledPlugins(): mixed
     {
-        $sql = sprintf(
-            "SELECT * FROM plugin WHERE available = %s ORDER BY id",
-            $this->da->quoteSmart($available)
-        );
+        $sql = "SELECT *
+                FROM plugin
+                WHERE available = 1
+                ORDER BY id";
+
         return $this->retrieve($sql);
     }
 
 
     /**
-    * create a row in the table plugin
-    * @return true or id(auto_increment) if there is no error
+    * @return int|false
     */
-    public function create($name, $available)
+    public function create(string $name): mixed
     {
         $sql = sprintf(
-            "INSERT INTO plugin (name, available) VALUES (%s, %s);",
-            $this->da->quoteSmart($name),
-            $this->da->quoteSmart($available)
+            "INSERT INTO plugin (name, available) VALUES (%s, 0);",
+            $this->da->quoteSmart($name)
         );
         return $this->updateAndGetLastId($sql);
     }
 
-    public function updateAvailableByPluginId($available, $id)
+    public function enablePlugin(int $id): void
     {
         $sql = sprintf(
-            "UPDATE plugin SET available = %s WHERE id = %s",
-            $this->da->quoteSmart($available),
+            "UPDATE plugin
+                    SET available = 1
+                    WHERE id = %s",
             $this->da->quoteSmart($id)
         );
-        return $this->update($sql);
+        $this->update($sql);
+    }
+
+    public function disablePlugin(int $id): void
+    {
+        $sql = sprintf(
+            "UPDATE plugin
+                    SET available = 0
+                    WHERE id = %s",
+            $this->da->quoteSmart($id)
+        );
+        $this->update($sql);
     }
 
     public function removeById($id)
@@ -116,6 +128,8 @@ class PluginDao extends DataAccessObject
             $_usage,
             $pluginId
         );
+
+        /** @psalm-suppress DeprecatedMethod */
         return $this->update($sql);
     }
 
@@ -127,12 +141,6 @@ class PluginDao extends DataAccessObject
                        ' WHERE id = %d',
             $pluginId
         );
-        return $this->retrieve($sql);
-    }
-
-    public function getAvailablePluginsWithoutOrder()
-    {
-        $sql = 'SELECT * FROM plugin WHERE available = 1';
         return $this->retrieve($sql);
     }
 }

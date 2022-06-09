@@ -340,7 +340,7 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request_instrumentation->shouldReceive('increment')->once();
 
         $this->plugin_manager->shouldReceive('getPluginByName')->with('foobar')->andReturns(
-            new class ($controller) {
+            new class ($controller) extends \Plugin {
                 private $controller;
 
                 public function __construct($controller)

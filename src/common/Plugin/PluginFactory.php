@@ -26,7 +26,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * @var array
      *
-     * @psalm-var array{by_name: array, by_id: array, available: array, unavailable: array}
+     * @psalm-var array{by_name: array, by_id: array, enabled: array, disabled: array}
      */
     private $retrieved_plugins;
 
@@ -54,8 +54,8 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->retrieved_plugins = [
             'by_name'     => [],
             'by_id'       => [],
-            'available'   => [],
-            'unavailable' => [],
+            'enabled'   => [],
+            'disabled' => [],
         ];
         $this->name_by_id        = [];
         $this->custom_plugins    = [];
@@ -81,68 +81,62 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         self::$instance = null;
     }
 
-    public function getPluginById($id)
+    public function getPluginById(int $id): ?Plugin
     {
         if (! isset($this->retrieved_plugins['by_id'][$id])) {
             $dar = $this->plugin_dao->searchById($id);
             if ($row = $dar->getRow()) {
                 $p = $this->getInstancePlugin($id, $row);
             } else {
-                $this->retrieved_plugins['by_id'][$id] = false;
+                $this->retrieved_plugins['by_id'][$id] = null;
             }
         }
         return $this->retrieved_plugins['by_id'][$id];
     }
 
-    /**
-     * @psalm-ignore-falsable-return
-     */
-    public function getPluginByName($name): Plugin|false
+    public function getPluginByName($name): ?Plugin
     {
         if (! isset($this->retrieved_plugins['by_name'][$name])) {
             $dar = $this->plugin_dao->searchByName($name);
             if ($row = $dar->getRow()) {
                 $p = $this->getInstancePlugin($row['id'], $row);
             } else {
-                $this->retrieved_plugins['by_name'][$name] = false;
+                $this->retrieved_plugins['by_name'][$name] = null;
             }
         }
         return $this->retrieved_plugins['by_name'][$name];
     }
 
     /**
-     * create a plugin in the db
-     * @return Plugin|false the new plugin or false if there is already the plugin (same name)
+     * @return Plugin|null the new plugin or null if there is already the plugin (same name)
      */
-    public function createPlugin($name)
+    public function createPlugin($name): ?Plugin
     {
-        $p   = false;
+        $p   = null;
         $dar = $this->plugin_dao->searchByName($name);
         if (! $dar->getRow()) {
-            $id = $this->plugin_dao->create($name, 0);
+            $id = $this->plugin_dao->create($name);
             if (is_int($id)) {
-                $p = $this->getInstancePlugin($id, ['name' => $name, 'available' => 0]);
-                if ($p && $p->getScope() === Plugin::SCOPE_PROJECT && $p->isRestrictedByDefault) {
-                    $this->plugin_dao->restrictProjectPluginUse($id, true);
-                }
+                $p = $this->getInstancePlugin($id, ['name' => $name, PluginDao::ENABLED_COLUMN => false]);
             }
         }
         return $p;
     }
 
     /**
-     * @return Plugin|false
+     * @psalm-param array{name: string, available: bool} $row
+     *
      */
-    private function getInstancePlugin($id, $row)
+    private function getInstancePlugin(int $id, array $row): ?Plugin
     {
         if (! isset($this->retrieved_plugins['by_id'][$id])) {
-            $this->retrieved_plugins['by_id'][$id] = false;
+            $this->retrieved_plugins['by_id'][$id] = null;
             $p                                     = $this->instantiatePlugin($id, $row['name']);
             if ($p) {
-                $this->retrieved_plugins['by_id'][$id]                                           = $p;
-                $this->retrieved_plugins['by_name'][$row['name']]                                = $p;
-                $this->retrieved_plugins[($row['available'] ? 'available' : 'unavailable')][$id] = $p;
-                $this->name_by_id[$id]                                                           = $row['name'];
+                $this->retrieved_plugins['by_id'][$id]                                                    = $p;
+                $this->retrieved_plugins['by_name'][$row['name']]                                         = $p;
+                $this->retrieved_plugins[($row[PluginDao::ENABLED_COLUMN] ? 'enabled' : 'disabled')][$id] = $p;
+                $this->name_by_id[$id]                                                                    = $row['name'];
                 if ($p->isCustom()) {
                     $this->custom_plugins[$id] = $p;
                 }
@@ -287,34 +281,20 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @return array of enabled or disabled plugins depends on parameters
+     * @return Plugin[]
      */
-    private function getAvailableOrUnavailablePlugins($map, $criteria)
+    public function getEnabledPlugins(): array
     {
-        $dar = $this->plugin_dao->searchByAvailable($criteria);
+        $dar = $this->plugin_dao->searchEnabledPlugins();
+        if (! $dar) {
+            return [];
+        }
+
         while ($row = $dar->getRow()) {
             $p = $this->getInstancePlugin($row['id'], $row);
         }
-         return $this->retrieved_plugins[$map];
-    }
-    /**
-     * @return array of unavailable plugins
-     */
-    public function getUnavailablePlugins()
-    {
-         return $this->getAvailableOrUnavailablePlugins('unavailable', 0);
-    }
-    /**
-     * @return Plugin[]
-     */
-    public function getAvailablePlugins()
-    {
-         return $this->getAvailableOrUnavailablePlugins('available', 1);
-    }
 
-    public function getAvailablePluginsWithoutOrder()
-    {
-        return $this->plugin_dao->getAvailablePluginsWithoutOrder();
+        return $this->retrieved_plugins['enabled'];
     }
 
     /**
@@ -332,31 +312,31 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $all_plugins;
     }
 
-    public function isPluginAvailable(Plugin $plugin): bool
+    public function isPluginEnabled(Plugin $plugin): bool
     {
-        return isset($this->retrieved_plugins['available'][$plugin->getId()]);
+        return isset($this->retrieved_plugins['enabled'][$plugin->getId()]);
     }
 
     /**
-     * available plugin
+     * enabled plugin
      */
-    public function availablePlugin(Plugin $plugin): void
+    public function enablePlugin(Plugin $plugin): void
     {
-        if (! $this->isPluginAvailable($plugin)) {
-            $this->plugin_dao->updateAvailableByPluginId('1', $plugin->getId());
-            $this->retrieved_plugins['available'][$plugin->getId()] = $plugin;
-            unset($this->retrieved_plugins['unavailable'][$plugin->getId()]);
+        if (! $this->isPluginEnabled($plugin)) {
+            $this->plugin_dao->enablePlugin($plugin->getId());
+            $this->retrieved_plugins['enabled'][$plugin->getId()] = $plugin;
+            unset($this->retrieved_plugins['disabled'][$plugin->getId()]);
         }
     }
     /**
-     * unavailable plugin
+     * disabled plugin
      */
-    public function unavailablePlugin(Plugin $plugin): void
+    public function disablePlugin(Plugin $plugin): void
     {
-        if ($this->isPluginAvailable($plugin)) {
-            $this->plugin_dao->updateAvailableByPluginId('0', $plugin->getId());
-            $this->retrieved_plugins['unavailable'][$plugin->getId()] = $plugin;
-            unset($this->retrieved_plugins['available'][$plugin->getId()]);
+        if ($this->isPluginEnabled($plugin)) {
+            $this->plugin_dao->disablePlugin($plugin->getId());
+            $this->retrieved_plugins['disabled'][$plugin->getId()] = $plugin;
+            unset($this->retrieved_plugins['enabled'][$plugin->getId()]);
         }
     }
 
@@ -400,8 +380,8 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $id =  $plugin->getId();
         unset($this->retrieved_plugins['by_id'][$id]);
         unset($this->retrieved_plugins['by_name'][$this->name_by_id[$id]]);
-        unset($this->retrieved_plugins['available'][$id]);
-        unset($this->retrieved_plugins['unavailable'][$id]);
+        unset($this->retrieved_plugins['enabled'][$id]);
+        unset($this->retrieved_plugins['disabled'][$id]);
         unset($this->name_by_id[$id]);
         return $this->plugin_dao->removeById($plugin->getId());
     }
@@ -422,23 +402,9 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return self::verifyPluginName($name);
     }
 
-    public function pluginIsCustom($plugin)
+    public function isACustomPlugin(Plugin $plugin): bool
     {
         return isset($this->custom_plugins[$plugin->getId()]);
-    }
-
-    public function getProjectsByPluginId($plugin)
-    {
-        $project_ids = [];
-        $dar         = $this->plugin_restrictor->searchAllowedProjectsOnPlugin($plugin);
-
-        if ($dar && ! $dar->isError()) {
-            while ($row = $dar->getRow()) {
-                $project_ids[] = $row['project_id'];
-            }
-        }
-
-        return $project_ids;
     }
 
     public function addProjectForPlugin($plugin, $project_id)

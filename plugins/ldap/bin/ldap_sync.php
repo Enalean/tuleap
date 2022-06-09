@@ -31,8 +31,8 @@ $time_start = microtime(true);
 
 // First: check if LDAP plugin is active
 $pluginManager = PluginManager::instance();
-$ldapPlugin    = $pluginManager->getPluginByName('ldap');
-if ($pluginManager->isPluginAvailable($ldapPlugin)) {
+$ldapPlugin    = $pluginManager->getEnabledPluginByName('ldap');
+if ($ldapPlugin instanceof LdapPlugin) {
     $ldapQuery = new LDAP_DirectorySynchronization($ldapPlugin->getLdap(), $ldapPlugin->getLogger());
     //If script is executed with --dry-run option
     if (isset($argv[1]) && $argv[1] == "--dry-run") {

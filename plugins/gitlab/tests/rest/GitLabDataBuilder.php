@@ -34,7 +34,7 @@ class GitLabDataBuilder extends REST_TestDataBuilder
 
     public function setUp()
     {
-        PluginManager::instance()->installAndActivate('gitlab');
+        PluginManager::instance()->installAndEnable('gitlab');
 
         $gitlab_integration_project = $this->getGitlabIntegrationProject();
         $this->insertFakeGitlabRepository($gitlab_integration_project);

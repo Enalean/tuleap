@@ -500,6 +500,9 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     public function collectLabeledItems(LabeledItemCollection $event)
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
+        if (! ($git_plugin instanceof GitPlugin)) {
+            throw new Exception("Pullrequest plugin cannot find git plugin");
+        }
 
         $labeled_item_collector = new LabeledItemCollector(
             new PullRequestLabelDao(),

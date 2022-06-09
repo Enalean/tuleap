@@ -23,9 +23,10 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
 {
-    protected function _displayEvolutionData($row)
+    private function displayEvolutionData(array $row): void
     {
         echo '<td>' . $this->sizeReadable($row['start_size']) . '</td>';
         echo '<td>' . $this->sizeReadable($row['end_size']) . '</td>';
@@ -90,7 +91,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
                 $totalStartSize += $row['start_size'];
                 $totalEndSize   += $row['end_size'];
                 $totalEvolution += $row['evolution'];
-                $this->_displayEvolutionData($row);
+                $this->displayEvolutionData($row);
                 echo '</tr>';
             }
             echo '<tr class="' . util_get_alt_row_color($i++) . '">';
@@ -139,7 +140,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
         if ($project->userIsAdmin($user)) {
             $pluginManager = PluginManager::instance();
             $p             = $pluginManager->getPluginByName('statistics');
-            $html         .= '<a href="' . $p->getPluginPath() . '/project_stat.php?group_id=' . $groupId . '">' . $graph . '</a>';
+            assert($p instanceof StatisticsPlugin);
+            $html .= '<a href="' . $p->getPluginPath() . '/project_stat.php?group_id=' . $groupId . '">' . $graph . '</a>';
         } else {
             $html .= $graph;
         }

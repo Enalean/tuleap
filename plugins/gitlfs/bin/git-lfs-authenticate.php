@@ -38,6 +38,8 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitlfsPlugin.php';
 
 try {
+    $plugin = PluginManager::instance()->getEnabledPluginByName('gitlfs');
+    assert($plugin === null || $plugin instanceof gitlfsPlugin);
     $project_manager = ProjectManager::instance();
     $ssh_auth        = new SSHAuthenticate(
         $project_manager,
@@ -53,7 +55,7 @@ try {
             )
         ),
         new UserOperationFactory(),
-        PluginManager::instance()->getAvailablePluginByName('gitlfs')
+        $plugin
     );
     $response        = $ssh_auth->main($_SERVER['GL_USER'], $argv);
     echo \json_encode($response, JSON_FORCE_OBJECT);

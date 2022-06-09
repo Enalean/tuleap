@@ -86,7 +86,7 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('graphontrackersv5')
             ->willReturn($plugin);
         $this->plugin_factory
-            ->method('isPluginAvailable')
+            ->method('isPluginEnabled')
             ->with($plugin)
             ->willReturn(false);
 
@@ -108,7 +108,7 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->plugin_factory
             ->method('getPluginByName')
-            ->willReturn(false);
+            ->willReturn(null);
 
         $this->assertFalse(
             $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures/project.xml', ['graphontrackersv5'])
@@ -132,7 +132,7 @@ class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with('graphontrackersv5')
             ->willReturn($plugin);
         $this->plugin_factory
-            ->method('isPluginAvailable')
+            ->method('isPluginEnabled')
             ->with($plugin)
             ->willReturn(true);
 

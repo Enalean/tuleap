@@ -132,7 +132,7 @@ $sql = "SELECT
      GROUP BY frs_release.release_id";
 dumpStats($dao, $sql, $archive, "nb-files-per-releases.csv");
 
-if ($plugin_manager->getAvailablePluginByName('git')) {
+if ($plugin_manager->getEnabledPluginByName('git')) {
     $sql = "SELECT
             project_id,
             count(*) AS nb
@@ -144,7 +144,7 @@ if ($plugin_manager->getAvailablePluginByName('git')) {
 }
 
 
-if ($plugin_manager->getAvailablePluginByName('svn')) {
+if ($plugin_manager->getEnabledPluginByName('svn')) {
     $sql = "SELECT
             project_id,
             count(*) AS nb
@@ -155,7 +155,7 @@ if ($plugin_manager->getAvailablePluginByName('svn')) {
     dumpStats($dao, $sql, $archive, "nb-svn-repositories-per-projects.csv");
 }
 
-if ($plugin_manager->getAvailablePluginByName('tracker')) {
+if ($plugin_manager->getEnabledPluginByName('tracker')) {
     $sql = "SELECT
             tracker.group_id,
             count(*) AS nb

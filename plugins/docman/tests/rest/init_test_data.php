@@ -26,7 +26,7 @@ use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanProjectBuilder;
 
 $plugin_manager = PluginManager::instance();
-$plugin_manager->installAndActivate('docman');
+$plugin_manager->installAndEnable('docman');
 
 $data_builder = new DocmanDataBuilder(
     new DocmanProjectBuilder(DocmanDataBuilder::PROJECT_NAME)

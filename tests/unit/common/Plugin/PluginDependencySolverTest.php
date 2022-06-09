@@ -78,7 +78,7 @@ final class PluginDependencySolverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             ['fusionforge_compat'],
-            $solver->getUnmetInstalledDependencies('mediawiki')
+            $solver->getUninstalledDependencies('mediawiki')
         );
     }
 
@@ -92,7 +92,7 @@ final class PluginDependencySolverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertEquals(
             [],
-            $solver->getUnmetInstalledDependencies('mediawiki')
+            $solver->getUninstalledDependencies('mediawiki')
         );
     }
 }

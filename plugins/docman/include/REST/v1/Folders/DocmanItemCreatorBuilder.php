@@ -79,7 +79,8 @@ final class DocmanItemCreatorBuilder
         $document_upload_path_allocator = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
 
         $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        $docman_root   = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        assert($docman_plugin instanceof \DocmanPlugin);
+        $docman_root = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
 
         $docman_file_storage = new Docman_FileStorage($docman_root);
 

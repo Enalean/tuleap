@@ -29,7 +29,8 @@ $gitolite_var_path       = ForgeConfig::get('sys_data_dir') . '/gitolite';
 $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';
 
 $git_plugin = PluginManager::instance()->getPluginByName('git');
-$logger     = $git_plugin->getLogger();
+assert($git_plugin instanceof GitPlugin);
+$logger = $git_plugin->getLogger();
 
 $runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(
     new SystemEventProcessManager(new LockFactory(new SemaphoreStore())),

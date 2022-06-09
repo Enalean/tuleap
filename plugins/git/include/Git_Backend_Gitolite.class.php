@@ -522,8 +522,10 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     protected function getGitPlugin()
     {
         if (! $this->gitPlugin) {
-            $plugin_manager  = PluginManager::instance();
-            $this->gitPlugin = $plugin_manager->getPluginByName('git');
+            $plugin_manager = PluginManager::instance();
+            $plugin         = $plugin_manager->getPluginByName('git');
+            assert($plugin instanceof GitPlugin);
+            $this->gitPlugin = $plugin;
         }
         return $this->gitPlugin;
     }

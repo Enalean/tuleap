@@ -41,7 +41,7 @@ class ServiceEnableForXmlImportRetriever implements Dispatchable
     public function __construct(\PluginFactory $plugin_factory)
     {
         $this->plugin_factory = $plugin_factory;
-        $this->plugin_factory->getAvailablePlugins();
+        $this->plugin_factory->getEnabledPlugins();
     }
 
     public function addServiceByName(string $service_name): void

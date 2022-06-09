@@ -79,7 +79,7 @@ final class PluginInstallCommand extends Command
     private function installPlugin(OutputInterface $output, string $plugin_name): void
     {
         $output->write("Install $plugin_name...");
-        $this->plugin_manager->installAndActivate($plugin_name);
+        $this->plugin_manager->installAndEnable($plugin_name);
         $output->writeln("[OK]");
     }
 }
