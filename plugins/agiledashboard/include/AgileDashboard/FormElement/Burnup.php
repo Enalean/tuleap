@@ -285,8 +285,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
+        return '';
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)

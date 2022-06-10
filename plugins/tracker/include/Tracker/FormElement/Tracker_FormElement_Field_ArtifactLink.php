@@ -418,7 +418,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }

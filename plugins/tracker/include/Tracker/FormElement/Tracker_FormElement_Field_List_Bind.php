@@ -326,10 +326,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
 
     /**
      * Get the "select" statement to retrieve field values
-     * @return string
      * @see getQueryFrom
      */
-    abstract public function getQuerySelect();
+    abstract public function getQuerySelect(): string;
 
     /**
      * Get the "select" statement to retrieve field values with their decorator if they exist
@@ -393,12 +392,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
     /**
      * Get the "order by" statement to retrieve field values
      */
-    abstract public function getQueryOrderby();
+    abstract public function getQueryOrderby(): string;
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    abstract public function getQueryGroupby();
+    abstract public function getQueryGroupby(): string;
 
     public function getSelectOptionStyles($value_id)
     {

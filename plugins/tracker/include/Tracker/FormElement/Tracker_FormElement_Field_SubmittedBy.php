@@ -64,10 +64,10 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         // SubmittedOn is stored in the artifact
-        return "a.submitted_by AS `" . $this->name . "`";
+        return "a.submitted_by AS " . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()
@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         // SubmittedOn is stored in the artifact
         return 'a.submitted_by';
@@ -94,9 +94,9 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby()
+    public function getQueryOrderby(): string
     {
-        return $this->name;
+        return $this->getQuerySelectName();
     }
 
     public static function getFactoryLabel()

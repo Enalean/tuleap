@@ -444,10 +444,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
      /**
-     * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }

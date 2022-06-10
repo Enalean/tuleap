@@ -68,10 +68,10 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         //Last update date is stored in the changeset (the date of the changeset)
-        return "c.submitted_on AS `" . $this->name . "`";
+        return "c.submitted_on AS " . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()
@@ -83,7 +83,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         //Last update date is stored in the changeset (the date of the changeset)
         return 'c.submitted_on';

@@ -35,15 +35,15 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        return "a.per_tracker_artifact_id AS `" . $this->name . "`";
+        return "a.per_tracker_artifact_id AS " . $this->getQuerySelectName();
     }
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         return "a.per_tracker_artifact_id";
     }

@@ -38,9 +38,9 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        return "a.id AS `" . $this->name . "`";
+        return "a.id AS " . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()
@@ -51,7 +51,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         return "a.id";
     }

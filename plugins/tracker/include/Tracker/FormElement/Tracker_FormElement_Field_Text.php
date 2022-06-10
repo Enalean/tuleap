@@ -83,11 +83,10 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        $R1 = 'R1_' . $this->id;
         $R2 = 'R2_' . $this->id;
-        return "$R2.value AS `" . $this->name . "`";
+        return "$R2.value AS " . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()

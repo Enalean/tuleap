@@ -150,10 +150,9 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
 
     /**
      * Get the "select" statement to retrieve field values
-     * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }
@@ -205,7 +204,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public function getQueryOrderby()
+    public function getQueryOrderby(): string
     {
         return '';
     }
@@ -213,7 +212,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         return '';
     }

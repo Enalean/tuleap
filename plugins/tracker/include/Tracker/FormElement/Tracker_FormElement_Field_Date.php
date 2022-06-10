@@ -413,11 +413,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        $R1 = 'R1_' . $this->id;
         $R2 = 'R2_' . $this->id;
-        return "$R2.value AS `" . $this->name . "`";
+        return "$R2.value AS " . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()
@@ -432,9 +431,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
-        $R1 = 'R1_' . $this->id;
         $R2 = 'R2_' . $this->id;
         return "$R2.value";
     }

@@ -67,9 +67,9 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
-        return "c.submitted_by AS `" . $this->name . "`";
+        return "c.submitted_by AS " . $this->getQuerySelectName();
     }
 
     public function getQueryFrom()
@@ -84,14 +84,9 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return " LEFT JOIN  user AS $R2 ON ($R2.user_id = c.submitted_by ) ";
     }
 
-    public function getQueryGroupby()
+    public function getQueryGroupby(): string
     {
         return '';
-    }
-
-    public function getQueryOrderby()
-    {
-        return $this->name;
     }
 
     public static function getFactoryLabel()
