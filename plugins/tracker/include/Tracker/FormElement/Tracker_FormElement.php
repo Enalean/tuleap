@@ -21,9 +21,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
-use Tuleap\Tracker\FormElement\FormElementTypeUpdater;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
+use Tuleap\Tracker\FormElement\FormElementTypeCannotBeChangedException;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
@@ -314,7 +314,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         } elseif ($request->get('change-type')) {
             try {
                 $this->updateFormElementType($request->get('change-type'));
-            } catch (FormElementTypeUpdateErrorException $exception) {
+            } catch (FormElementTypeUpdateErrorException | FormElementTypeCannotBeChangedException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
                     $exception->getMessage()
@@ -330,22 +330,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * @throws FormElementTypeUpdateErrorException
+     * @throws FormElementTypeCannotBeChangedException
      */
-    private function updateFormElementType(string $new_type): void
+    protected function updateFormElementType(string $new_type): void
     {
-        $db_transaction = new \Tuleap\DB\DBTransactionExecutorWithConnection(
-            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
-        );
-
-        $updater = new FormElementTypeUpdater(
-            $db_transaction,
-            Tracker_FormElementFactory::instance()
-        );
-
-        $updater->updateFormElementType(
-            $this,
-            $new_type
-        );
+        throw new FormElementTypeCannotBeChangedException();
     }
 
     /**

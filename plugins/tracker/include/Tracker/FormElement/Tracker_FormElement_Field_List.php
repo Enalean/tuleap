@@ -20,12 +20,15 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset\ItemsDatasetBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\FormElement\ListFormElementTypeUpdater;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
@@ -1617,7 +1620,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         //Select default values
         $html .= '<p>';
         $html .= '<strong>' . dgettext('tuleap-tracker', 'Select default value') . '</strong><br />';
-        $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
+
+        if ($this->isMultiple()) {
+            $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
+        } else {
+            $none_value             = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            $is_none_value_selected = count($default_values) === 0 ? 'selected="selected"' : '';
+
+            $html .= '<select name="bind[default][]" class="bind_default_values">';
+            $html .= '<option value="' . $none_value->getId() . '" ' . $is_none_value_selected . '>' . $none_value->getLabel() . '</option>';
+        }
+
         foreach ($this->getAllVisibleValues() as $v) {
             $selected = isset($default_values[$v->getId()]) ? 'selected="selected"' : '';
             $html    .= '<option value="' . $v->getId() . '" ' . $selected . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
@@ -1626,5 +1639,24 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '</p>';
 
         return $html;
+    }
+
+    protected function updateFormElementType(string $new_type): void
+    {
+        $db_transaction = new \Tuleap\DB\DBTransactionExecutorWithConnection(
+            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
+        );
+
+        $updater = new ListFormElementTypeUpdater(
+            $db_transaction,
+            Tracker_FormElementFactory::instance(),
+            new FieldDao(),
+            new BindDefaultValueDao()
+        );
+
+        $updater->updateFormElementType(
+            $this,
+            $new_type
+        );
     }
 }
