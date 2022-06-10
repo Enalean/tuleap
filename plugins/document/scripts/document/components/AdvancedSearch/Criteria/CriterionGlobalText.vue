@@ -22,7 +22,7 @@
     <div class="tlp-form-element document-search-criterion document-search-criterion-text">
         <div class="document-search-criterion-with-popover">
             <label class="tlp-label" for="document-global-search" v-translate>Global search</label>
-            <search-information-popover />
+            <search-information-popover v-bind:description="popover_description" />
         </div>
 
         <input
@@ -38,8 +38,18 @@
 
 <script setup lang="ts">
 import SearchInformationPopover from "./SearchInformationPopover.vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed } from "@vue/composition-api";
+
+const { $gettext } = useGettext();
 
 defineProps<{ value: string }>();
+
+const popover_description = computed((): string => {
+    return $gettext(
+        "Global search will search in all text properties of document (but does not look inside the document)."
+    );
+});
 </script>
 
 <script lang="ts">

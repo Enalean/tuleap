@@ -26,7 +26,13 @@ jest.mock("tlp");
 
 describe("SearchInformationPopover", () => {
     it("should display a popover content", () => {
-        const wrapper = shallowMount(SearchInformationPopover, { localVue });
+        const wrapper = shallowMount(SearchInformationPopover, {
+            localVue,
+            propsData: {
+                criterion: "Cars",
+                description: "Cars go brrrrrr",
+            },
+        });
 
         expect(wrapper).toMatchSnapshot();
     });

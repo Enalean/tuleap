@@ -4,12 +4,20 @@ exports[`CriterionText should render the component 1`] = `
 <div
   class="tlp-form-element document-search-criterion document-search-criterion-text"
 >
-  <label
-    class="tlp-label"
-    for="document-criterion-text-title"
+  <div
+    class="document-search-criterion-with-popover"
   >
-    Title
-  </label>
+    <label
+      class="tlp-label"
+      for="document-criterion-text-title"
+    >
+      Title
+    </label>
+     
+    <search-information-popover-stub
+      description="Search in the 'Title' property of the document."
+    />
+  </div>
    
   <input
     class="tlp-input"

@@ -34,6 +34,9 @@ msgstr "%{ from } – %{ to } sur %{ total }"
 msgid "*lorem => finishing by \"lorem\""
 msgstr "*lorem => finissant par \"lorem\""
 
+msgid "*lorem* => contains \"lorem\""
+msgstr "*lorem* => contenant \"lorem\""
+
 msgid "1 warning"
 msgid_plural "%{ nb_warnings } warnings"
 msgstr[0] "1 avertissement"
@@ -302,13 +305,9 @@ msgstr "Se placer dans la barre de recherche"
 msgid "Global search"
 msgstr "Recherche globale"
 
-msgid "Global search information"
-msgstr "Information sur la recherche globale"
-
 msgid ""
 "Global search will search in all text properties of document (but does not "
-"look\n"
-"                inside the document)."
+"look inside the document)."
 msgstr ""
 "La recherche globale va chercher dans toutes les propriétés textes d'un "
 "document (mais ne va pas chercher à l'intérieur du document)."
@@ -498,9 +497,6 @@ msgstr "Autres informations"
 msgid "Owner"
 msgstr "Propriétaire"
 
-msgid "Owner search information"
-msgstr "Information sur la recherche de propriétaire"
-
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
@@ -580,6 +576,12 @@ msgstr "Modèles de recherche authorisés :"
 
 msgid "Search criteria"
 msgstr "Critères de recherche"
+
+msgid "Search help"
+msgstr "Aide sur la recherche"
+
+msgid "Search in the '%{label}' property of the document."
+msgstr "Recherche dans la propriété '%{label}' du document."
 
 msgid "Search in whole project documentation"
 msgstr "Chercher dans toute la documentation du projet"
