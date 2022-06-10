@@ -145,7 +145,10 @@ class TrackerFieldsResource extends AuthenticatedResource
      *
      * Only File field allows this route.
      *
-     * /!\ This route is under construction and subject to changes /!\
+     * <br>
+     *
+     * After having uploaded the files, you need to update (or create) an artifact with the file ID
+     * you got from this endpoint.
      *
      * @url POST {id}/files
      *
@@ -157,6 +160,7 @@ class TrackerFieldsResource extends AuthenticatedResource
      * @status 201
      * @throws RestException 403
      * @throws RestException 404
+     * @return CreatedFileRepresentation The representation gives you the upload URL to use with tus
      */
     protected function postFiles(int $id, FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
     {
