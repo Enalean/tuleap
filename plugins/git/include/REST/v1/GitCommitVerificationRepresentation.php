@@ -23,7 +23,7 @@ namespace Tuleap\Git\REST\v1;
 class GitCommitVerificationRepresentation
 {
     /**
-     * @var null|string
+     * @var string | null
      */
     public $signature;
 

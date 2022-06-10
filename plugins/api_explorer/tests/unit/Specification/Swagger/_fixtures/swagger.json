@@ -31,12 +31,12 @@
             "required": true
           },
           {
+            "name": "some",
+            "type": "string",
             "default": "default value",
             "description": "",
             "in": "query",
-            "name": "some",
-            "required": false,
-            "type": "string"
+            "required": false
           }
         ],
         "summary": "Get demo representation \ud83d\udd13",
@@ -45,10 +45,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "$ref": "#\/definitions\/SwaggerJsonDemoRepresentation"
             }
           }
         }
@@ -78,15 +75,12 @@
           }
         ],
         "summary": "Put demo representation \ud83d\udd10",
-        "description": "This endpoint can be accessed with an OAuth 2.0 access token with the scope <strong>write:demo</strong>.",
+        "description": "This endpoint can be accessed with an OAuth 2.0 access token with the scope <strong>write:demo<\/strong>.",
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           },
           "400": {
@@ -98,7 +92,9 @@
             "api_access_key": []
           },
           {
-            "oauth2": ["write:demo"]
+            "oauth2": [
+              "write:demo"
+            ]
           }
         ]
       }
