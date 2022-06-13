@@ -30,6 +30,7 @@ class TemplateListPresenter
     public $services_button_label;
     public $templates;
     public $navbar;
+    public string $project_status_label;
 
     public function __construct(
         ProjectCreationNavBarPresenter $navbar,
@@ -41,6 +42,7 @@ class TemplateListPresenter
         $this->templates = $templates_presenters;
 
         $this->project_name_header    = _('Project name');
+        $this->project_status_label   = _('Project visibility');
         $this->unix_group_name_header = _('Unix name');
         $this->services_button_label  = _('Configure services');
     }

@@ -22,6 +22,7 @@ namespace Tuleap\Project\Admin;
 
 use EventManager;
 use Project;
+use Tuleap\Project\ProjectAccessPresenter;
 
 class TemplatePresenter
 {
@@ -38,12 +39,15 @@ class TemplatePresenter
     public $name;
     public $unix_name;
     public $additional_buttons;
+    public ProjectAccessPresenter $access_presenter;
 
     public function __construct(Project $template)
     {
-        $this->id        = $template->getId();
-        $this->name      = $template->getPublicName();
-        $this->unix_name = $template->getUnixNameMixedCase();
+        $this->id               = $template->getId();
+        $this->name             = $template->getPublicName();
+        $this->unix_name        = $template->getUnixNameMixedCase();
+        $this->access_presenter = new ProjectAccessPresenter($template->getAccess());
+
 
         $this->additional_buttons = [];
         EventManager::instance()->processEvent(self::EVENT_ADDITIONAL_ADMIN_BUTTONS, [

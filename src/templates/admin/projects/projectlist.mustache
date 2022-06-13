@@ -109,12 +109,7 @@
                                     </td>
                                     <td>
                                         {{# access_presenter }}
-                                            <i class="fas fa-fw siteadmin-projectlist-result-project-access-icon
-                                                {{# is_wide_open }}fa-tlp-unlock-plus-r{{/ is_wide_open }}
-                                                {{# is_open }}fa-lock-open{{/ is_open }}
-                                                {{# is_closed }}fa-lock{{/ is_closed }}
-                                                {{# is_closed_incl_restricted }}fa-tlp-lock-plus-r{{/ is_closed_incl_restricted }}
-                                            "></i> {{ access }}
+                                          {{> project-access}}
                                         {{/ access_presenter }}
                                     </td>
                                     <td class="tlp-table-cell-actions">
