@@ -99,7 +99,7 @@ class PostPushCommitArtifactUpdater
             $new_followups = $artifact->createNewChangeset(
                 $fields_data,
                 PostPushTuleapArtifactCommentBuilder::buildComment(
-                    $this->getTuleapUserNameFromGitlabCommitter($commit),
+                    $this->getUserClosingTheArtifactFromGitlabWebhook($commit)->getName(),
                     $commit,
                     $tuleap_reference,
                     $gitlab_repository_integration,
@@ -140,8 +140,11 @@ class PostPushCommitArtifactUpdater
         PostPushCommitWebhookData $commit,
     ): void {
         try {
-            $committer           = $this->getTuleapUserNameFromGitlabCommitter($commit);
-            $no_semantic_comment = "$committer attempts to close this artifact from GitLab but neither done nor status semantic defined.";
+            $committer           = $this->getUserClosingTheArtifactFromGitlabWebhook($commit);
+            $no_semantic_comment = sprintf(
+                '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+                $committer->getName()
+            );
 
             $new_followups = $artifact->createNewChangeset([], $no_semantic_comment, $tracker_workflow_user);
 
@@ -153,16 +156,13 @@ class PostPushCommitArtifactUpdater
         }
     }
 
-    private function getTuleapUserNameFromGitlabCommitter(PostPushCommitWebhookData $commit): string
+    private function getUserClosingTheArtifactFromGitlabWebhook(PostPushCommitWebhookData $commit): UserClosingTheArtifact
     {
         $tuleap_user = $this->user_manager->getUserByEmail($commit->getAuthorEmail());
 
         if (! $tuleap_user) {
-            $committer = $commit->getAuthorName();
-        } else {
-            $committer = '@' . $tuleap_user->getUserName();
+            return UserClosingTheArtifact::fromUsername($commit->getAuthorName());
         }
-
-        return $committer;
+        return UserClosingTheArtifact::fromUser($tuleap_user);
     }
 }
