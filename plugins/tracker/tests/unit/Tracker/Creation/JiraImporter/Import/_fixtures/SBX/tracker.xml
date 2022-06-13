@@ -167,7 +167,7 @@
           </bind>
         </formElement>
         <formElement type="msb" ID="bug_fixversions" rank="1">
-          <name><![CDATA[fixVersions]]></name>
+          <name><![CDATA[fixversions]]></name>
           <label><![CDATA[Version(s) corrigée(s)]]></label>
           <bind type="static" is_rank_alpha="0">
             <items>
@@ -596,7 +596,7 @@
         <field_change field_name="status" type="list" bind="static">
           <value format="id"><![CDATA[1]]></value>
         </field_change>
-        <field_change field_name="fixVersions" type="list" bind="static">
+        <field_change field_name="fixversions" type="list" bind="static">
           <value/>
         </field_change>
         <field_change type="text" field_name="customfield_10231">
@@ -738,7 +738,7 @@
         <field_change field_name="status" type="list" bind="static">
           <value format="id"><![CDATA[1]]></value>
         </field_change>
-        <field_change field_name="fixVersions" type="list" bind="static">
+        <field_change field_name="fixversions" type="list" bind="static">
           <value/>
         </field_change>
         <field_change type="text" field_name="customfield_10231">
@@ -880,7 +880,7 @@
         <field_change field_name="status" type="list" bind="static">
           <value format="id"><![CDATA[1]]></value>
         </field_change>
-        <field_change field_name="fixVersions" type="list" bind="static">
+        <field_change field_name="fixversions" type="list" bind="static">
           <value format="id"><![CDATA[bug_fixversions_1_0]]></value>
         </field_change>
         <field_change type="text" field_name="customfield_10231">

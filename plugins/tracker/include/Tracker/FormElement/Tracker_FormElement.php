@@ -162,7 +162,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->id          = (int) $id;
         $this->tracker_id  = (int) $tracker_id;
         $this->parent_id   = (int) $parent_id;
-        $this->name        = $name;
+        $this->name        = trim($name);
         $this->label       = $label;
         $this->description = $description;
         $this->use_it      = false;
@@ -850,7 +850,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             return false;
         }
         $this->parent_id     = isset($properties['parent_id'])     ? (int) $properties['parent_id']                : $this->parent_id;
-        $this->name          = isset($properties['name'])          ? $properties['name']                           : $this->name;
+        $this->name          = trim($properties['name'] ?? $this->name);
         $this->label         = isset($properties['label'])         ? $properties['label']                          : $this->label;
         $this->description   = isset($properties['description'])   ? $properties['description']                    : $this->description;
         $this->use_it        = isset($properties['use_it'])        ? ($properties['use_it'] ? true : false)        : $this->use_it;

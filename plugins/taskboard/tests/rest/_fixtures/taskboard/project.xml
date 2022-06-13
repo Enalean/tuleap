@@ -1331,7 +1331,7 @@
           </formElements>
         </formElement>
         <formElement type="fieldset" ID="F585960" rank="666666">
-          <name>Contributors</name>
+          <name>contributors</name>
           <label><![CDATA[Contributors]]></label>
           <formElements>
             <formElement type="sb" ID="F696969" rank="0">

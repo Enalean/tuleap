@@ -27,7 +27,10 @@
     </attribute>
   </optional>
   <element name="name">
-    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>
+    <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+      <param name="minLength">1</param>
+      <param name="pattern">\s*[a-z0-9_\-]+\s*</param>
+    </data>
   </element>
   <element name="label">
     <data type="string" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>

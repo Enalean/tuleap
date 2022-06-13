@@ -163,7 +163,7 @@ tracker =
         attribute required { "0" | "1" }?, # default is false
         attribute notifications { "0" | "1" }?, # default is false
 
-        element name { xsd:string },
+        element name { lowercase_alphanum_non_empty_string },
         element label { xsd:string },
         element description { xsd:string }?,
 
@@ -570,3 +570,4 @@ tracker =
         )
 
 non_empty_string = xsd:string { minLength = "1" pattern = "(\s*\S+\s*)+" }
+lowercase_alphanum_non_empty_string = xsd:string { minLength = "1" pattern = "\s*[a-z0-9_\-]+\s*" }
