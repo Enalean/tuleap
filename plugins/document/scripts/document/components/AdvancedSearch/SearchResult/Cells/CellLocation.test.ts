@@ -21,9 +21,18 @@ import type { ItemSearchResult } from "../../../../type";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue";
 import CellLocation from "./CellLocation.vue";
+import VueRouter from "vue-router";
 
 describe("CellLocation", () => {
-    it("should display path to the item", () => {
+    it("should display path via the router link and the folder separators", () => {
+        const router = new VueRouter({
+            routes: [
+                {
+                    path: "/",
+                    name: "search",
+                },
+            ],
+        });
         const wrapper = shallowMount(CellLocation, {
             localVue,
             propsData: {
@@ -44,11 +53,12 @@ describe("CellLocation", () => {
                     ],
                 } as unknown as ItemSearchResult,
             },
+            router,
             stubs: {
                 "tlp-relative-date": true,
             },
         });
 
-        expect(wrapper.text()).toContain("Path/To/Folder");
+        expect(wrapper.element).toMatchSnapshot();
     });
 });
