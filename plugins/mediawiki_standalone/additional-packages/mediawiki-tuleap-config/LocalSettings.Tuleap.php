@@ -23,6 +23,10 @@ $GLOBALS['wgGroupPermissions']['user']['editmyprivateinfo'] = false;
 $GLOBALS['wgPasswordResetRoutes']                           = ['username' => false, 'email' => false];
 // Block the createaccount page, users are expected to use their Tuleap accounts
 $GLOBALS['wgGroupPermissions']['*']['createaccount'] = false;
+// Disable email features
+$GLOBALS['wgEnableEmail']         = false;
+$GLOBALS['wgEnableUserEmail']     = false;
+$GLOBALS['wgEmailAuthentication'] = false;
 
 // Third Party Extensions - START ###
 // ERM27085 - Extensions that were enabled in MediaWiki 1.23
