@@ -32,7 +32,7 @@ class TuleapLocalSettingsGenerator extends LocalSettingsGenerator
 require_once( "$IP/LocalSettings.local.php" );
 ### Farm Instance Configuration Dispatcher ###
 $GLOBALS['wgTuleapFarmConfig'] = [
-	'instanceDir' => '/data/lib/tuleap/mediawiki-standalone/projects/'
+	'instanceDir' => '/var/lib/tuleap/mediawiki-standalone/projects/'
 ];
 require_once( "$IP/extensions/TuleapWikiFarm/TuleapWikiFarm.setup.php" );
 HERE;

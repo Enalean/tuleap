@@ -79,6 +79,8 @@ $GLOBALS['wgMathoidCli']                 = [
 $GLOBALS['wgExternalLinkTarget'] = '_blank';
 $GLOBALS['wgUrlProtocols'][]     = 'file://';
 $GLOBALS['wgUrlProtocols'][]     = 'redis://'; // From old MediaWiki 1.23
+
+$GLOBALS['wgEnableUploads'] = true;
 // MediaWiki Core default settings - END ###
 
 // Tuleap Specific - START ###
