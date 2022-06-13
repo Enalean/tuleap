@@ -141,6 +141,7 @@ class DocumentTreePresenter
     public string $filename_pattern;
 
     public bool $is_filename_pattern_enforced;
+    public bool $can_user_switch_to_old_ui;
 
     public function __construct(
         \Project $project,
@@ -191,5 +192,7 @@ class DocumentTreePresenter
 
         $this->filename_pattern             = $filename_pattern->getPattern();
         $this->is_filename_pattern_enforced = $filename_pattern->isEnforced();
+
+        $this->can_user_switch_to_old_ui = SwitchToOldUi::isAllowed($user, $project);
     }
 }
