@@ -68,6 +68,7 @@ final class InstanceManagementTest extends TestCase
                 }
             },
             HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
             new class implements ProjectByIDFactory {
                 public function getValidProjectById(int $project_id): \Project
                 {
@@ -213,5 +214,47 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => ResumeInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($this->logger->hasErrorThatContains(ResumeInstance::class . ' error'));
+    }
+
+    public function testLogsOutUserOnAllInstancesIsSuccessful(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/\*/terminate-sessions$', null, 'POST'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => []]));
+
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testLogsOutUserOnSpecificIsSuccessful(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/gpig/terminate-sessions$', null, 'POST'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testLogsOutUserIsError(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/gpig/terminate-sessions$', null, 'POST'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(422);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertTrue($this->logger->hasErrorThatContains(LogUsersOutInstance::class . ' error'));
     }
 }
