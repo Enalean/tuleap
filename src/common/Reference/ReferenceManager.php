@@ -663,6 +663,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
                 (?<final_value_sequence>\w|&amp;|&)                         # Any word, & or &amp;
                 (?<extended_value_sequence>(?&final_value_sequence)|-|_|\.) # <final_value_sequence>, -, _ or .
             )
+            (?:(?P<context_word>\w+)\s)?
             (?P<key>\w+)
             \s          #blank separator
             \#          #dash (2 en 1)
@@ -689,15 +690,23 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
     /**
      * @return string html link tag to the reference instance
      */
-    private function buildLinkForReference(ReferenceInstance $ref_instance)
+    private function buildLinkForReference(ReferenceInstance $ref_instance): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $ref      = $ref_instance->getReference();
 
         $reference_description_translation = new ReferenceDescriptionTranslation($ref);
 
-        return '<a href="' . $ref_instance->getFullGotoLink() . '" title="' . $purifier->purify($reference_description_translation->getTranslatedDescription()) .
-            '" class="cross-reference">' . $purifier->purify($ref_instance->getMatch()) . '</a>';
+        $context_word            = $ref_instance->getContextWord();
+        $context_word_with_space = $context_word !== '' ? $context_word . ' ' : '';
+
+        return sprintf(
+            '%s<a href="%s" title="%s" class="cross-reference">%s</a>',
+            $purifier->purify($context_word_with_space),
+            $ref_instance->getFullGotoLink(),
+            $purifier->purify($reference_description_translation->getTranslatedDescription()),
+            $purifier->purify($ref_instance->getMatch())
+        );
     }
 
     /**
@@ -1197,6 +1206,7 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             $value,
             $key,
             $ref->getGroupId(),
+            $match['context_word'],
         );
     }
 

@@ -46,6 +46,8 @@ final class ReferenceInstance
         private string $value,
         string $keyword,
         int $project_id,
+        /** @psalm-readonly */
+        private string $context_word,
     ) {
         $this->gotoLink = GotoLink::fromComponents($keyword, $value, $project_id);
     }
@@ -66,6 +68,12 @@ final class ReferenceInstance
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    /** @psalm-mutation-free */
+    public function getContextWord(): string
+    {
+        return $this->context_word;
     }
 
     public function getFullGotoLink(): string

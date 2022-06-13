@@ -99,7 +99,7 @@ class ReferencesBuilder
             return null;
         }
 
-        return new ReferenceInstance($match[0], $reference, $value, $keyword, $project_id);
+        return new ReferenceInstance($match[0], $reference, $value, $keyword, $project_id, '');
     }
 
     /**

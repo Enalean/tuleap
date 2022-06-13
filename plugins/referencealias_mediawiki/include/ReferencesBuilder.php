@@ -91,7 +91,7 @@ class ReferencesBuilder
             return null;
         }
 
-        return new ReferenceInstance($match[0], $reference, $value, $keyword, $reference->getGroupId());
+        return new ReferenceInstance($match[0], $reference, $value, $keyword, $reference->getGroupId(), '');
     }
 
     /**

@@ -31,19 +31,22 @@ final class ReferenceInstanceTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromComponents(): void
     {
-        $reference = ReferenceBuilder::anArtReference()->build();
-        $match     = 'art #' . self::ARTIFACT_ID;
-        $instance  = new ReferenceInstance(
+        $reference    = ReferenceBuilder::anArtReference()->build();
+        $match        = 'art #' . self::ARTIFACT_ID;
+        $context_word = 'closes';
+        $instance     = new ReferenceInstance(
             $match,
             $reference,
             (string) self::ARTIFACT_ID,
             'art',
-            self::PROJECT_ID
+            self::PROJECT_ID,
+            $context_word
         );
 
         self::assertSame($match, $instance->getMatch());
         self::assertSame($reference, $instance->getReference());
         self::assertSame((string) self::ARTIFACT_ID, $instance->getValue());
+        self::assertSame($context_word, $instance->getContextWord());
         self::assertStringContainsString('/goto', $instance->getFullGotoLink());
     }
 }
