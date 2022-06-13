@@ -60,7 +60,7 @@ describe("Docman", function () {
             it("switch back on legacy ui", function () {
                 //document is available on new instance, so we must switch back to old UI
                 //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
-                cy.visit(`/plugins/docman/?group_id=${this.project_id}`);
+                cy.visitServiceInCurrentProject("Documents");
                 cy.get("[data-test=document-switch-to-old-ui]").click();
 
                 cy.get("[data-test=toolbar]").contains("Admin").click();
@@ -250,7 +250,7 @@ describe("Docman", function () {
         it("switch back on legacy ui", function () {
             //document is available on new instance, so we must switch back to old UI
             //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
-            cy.visit(`/plugins/docman/?group_id=${this.project_id}`);
+            cy.visitProjectService(project_unixname, "Documents");
             cy.get("[data-test=document-switch-to-old-ui]").click();
         });
 
