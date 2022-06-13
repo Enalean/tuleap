@@ -54,19 +54,10 @@ describe("Docman", function () {
     context("Project administrators", function () {
         it("can access to admin section", function () {
             cy.visit("/plugins/docman/?group_id=" + this.project_id + "&action=admin");
+            cy.contains("Properties").should("have.attr", "href").as("manage_properties_url");
         });
 
         context("document properties", function () {
-            it("switch back on legacy ui", function () {
-                //document is available on new instance, so we must switch back to old UI
-                //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
-                cy.visitServiceInCurrentProject("Documents");
-                cy.get("[data-test=document-switch-to-old-ui]").click();
-
-                cy.get("[data-test=toolbar]").contains("Admin").click();
-                cy.contains("Properties").should("have.attr", "href").as("manage_properties_url");
-            });
-
             it("cannot create a document when a mandatory property is not filled", function () {
                 cy.visit(this.manage_properties_url);
                 cy.get("[data-test=docman-admin-properties-create-button]").click();
@@ -245,13 +236,6 @@ describe("Docman", function () {
 
         beforeEach(() => {
             cy.preserveSessionCookies();
-        });
-
-        it("switch back on legacy ui", function () {
-            //document is available on new instance, so we must switch back to old UI
-            //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
-            cy.visitProjectService(project_unixname, "Documents");
-            cy.get("[data-test=document-switch-to-old-ui]").click();
         });
 
         context("docman permissions", function () {
