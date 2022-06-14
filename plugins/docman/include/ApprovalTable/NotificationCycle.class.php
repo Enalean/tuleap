@@ -310,11 +310,16 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($this->item->getGroupId());
+        $service         = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
+        assert($service instanceof \Tuleap\Docman\ServiceDocman);
 
         $reviewUrl = $this->getReviewUrl();
-        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
-        $propUrl   = $baseUrl . '&action=edit&id=' . $this->item->getId();
-        $body      = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was approved by last reviewer: %3$s <%4$s>.
+        $baseUrl   = \Tuleap\ServerHostname::HTTPSUrl() . $service->getUrl();
+        $propUrl   = $baseUrl;
+        if ($this->item->getParentId()) {
+            $propUrl .= 'preview/' . urlencode((string) $this->item->getId());
+        }
+        $body = sprintf(dgettext('tuleap-docman', 'Your document \'%1$s\' was approved by last reviewer: %3$s <%4$s>.
 You can access to the table with the following link:
 <%2$s>
 
