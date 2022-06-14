@@ -168,6 +168,13 @@ msgstr ""
 "commande et mettez à jour la pull request."
 
 msgid ""
+"Pull request cannot be merged because source and destination branches have "
+"the very same content."
+msgstr ""
+"La pull request ne peut pas être intégrée car les branches source et "
+"destination ont exactement le même contenu."
+
+msgid ""
 "Pull request destination has diverged. Merge will not resolve in a fast-"
 "forward. You can proceed with the merge, or cancel and update your pull "
 "request."

@@ -123,7 +123,19 @@
                 </div>
             </div>
 
-            <div ng-if="! overview.isConflictingMerge() && ! overview.isUnknownMerge() && ! overview.isNonFastForwardMerge()">
+            <div ng-if="overview.isSameReferencesMerge()" class="tlp-alert-warning">
+                {{ 'Pull request cannot be merged because source and destination branches have the very same content.' | translate }}
+                <div>
+                    <button ng-if="overview.hasMergeRight()" class="tlp-button-warning" disabled="true">
+                        <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
+                    </button>
+                    <button ng-if="overview.hasAbandonRight()" class="tlp-button-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
+                        <i class="tlp-button-icon far fa-trash-alt"></i> {{ 'Abandon' | translate }}
+                    </button>
+                </div>
+            </div>
+
+            <div ng-if="! overview.isConflictingMerge() && ! overview.isUnknownMerge() && ! overview.isSameReferencesMerge() && ! overview.isNonFastForwardMerge()">
                 <button ng-if="overview.hasMergeRight()" class="tlp-button-success" ng-disabled="overview.operationInProgress" ng-click="overview.checkMerge()">
                     <i class="tlp-button-icon fas fa-code-branch fa-rotate-270"></i> {{ 'Merge' | translate }}
                 </button>
