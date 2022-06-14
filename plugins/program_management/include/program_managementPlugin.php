@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
@@ -265,7 +266,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(PlanningAdministrationDelegation::NAME);
         $this->addHook('tracker_usage', 'trackerUsage');
-        $this->addHook('project_is_deleted', 'projectIsDeleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(BlockScrumAccess::NAME);
         $this->addHook(OriginalProjectCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
@@ -816,9 +817,11 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         }
     }
 
-    public function projectIsDeleted(): void
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        (new WorkspaceDAO())->dropUnusedComponents();
+        if ($event->status === \Project::STATUS_DELETED) {
+            (new WorkspaceDAO())->dropUnusedComponents();
+        }
     }
 
     public function externalParentCollector(OriginalProjectCollector $original_project_collector): void

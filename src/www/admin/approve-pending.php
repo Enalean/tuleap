@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\User\Admin\PendingProjectBuilder;
@@ -73,7 +74,7 @@ if ($action == 'activate') {
         // Do nothing
     }
 
-    $event_manager->processEvent('project_is_deleted', ['group_id' => $group_id]);
+    $event_manager->dispatch(new ProjectStatusUpdate($project, Project::STATUS_DELETED));
     $GLOBALS['Response']->redirect('/admin/approve-pending.php');
 }
 

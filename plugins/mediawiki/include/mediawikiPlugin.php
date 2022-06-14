@@ -21,6 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
@@ -74,7 +75,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook(RegisterProjectCreationEvent::NAME);
 
         $this->addHook(Event::RENAME_PROJECT, 'rename_project');
-        $this->addHook('project_is_deleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
@@ -818,11 +819,11 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         );
     }
 
-    public function project_is_deleted(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        if (! empty($params['group_id'])) {
+        if ($event->status === \Project::STATUS_DELETED) {
             $clean_unused = $this->getCleanUnused($this->getBackendLogger());
-            $clean_unused->purgeProject($params['group_id']);
+            $clean_unused->purgeProject($event->project->getID());
         }
     }
 

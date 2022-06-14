@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Http\HttpClientFactory;
@@ -51,7 +52,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
-        $this->addHook('project_is_deleted', 'projectIsDeleted', false);
+        $this->addHook(ProjectStatusUpdate::NAME);
 
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
@@ -122,17 +123,12 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         );
     }
 
-    /**
-     * When a project is deleted,
-     * we delete all the hudson jobs of this project
-     *
-     * @param mixed $params ($param['group_id'] the ID of the deleted project)
-     */
-    public function projectIsDeleted($params)
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        $group_id = $params['group_id'];
-        $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar      = $job_dao->deleteHudsonJobsByGroupID($group_id);
+        if ($event->status === \Project::STATUS_DELETED) {
+            $job_dao = new PluginHudsonJobDao();
+            $job_dao->deleteHudsonJobsByGroupID($event->project->getID());
+        }
     }
 
 
