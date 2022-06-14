@@ -2334,6 +2334,9 @@ msgstr "Tentative de mise à jour d'une propriété inconnue '%1$s'"
 msgid "Type"
 msgstr "Type"
 
+msgid "Unable to find the document."
+msgstr "Le document est introuvable."
+
 #, php-format
 msgid "Unable to remove monitoring for group '%1$s'"
 msgstr "Impossible de supprimer le monitoring pour le groupe '%1$s'"

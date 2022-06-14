@@ -1,0 +1,38 @@
+<form method="post" action="{{ form_url }}">
+    <input type="hidden" name="docman_func" value="show_docman" />
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="docman_id">
+            {{# dgettext }}tuleap-docman | Search document id{{/ dgettext }}
+        </label>
+        <div class="tlp-form-element tlp-form-element-append">
+            <input type="number"
+                   name="docman_id"
+                   data-test="document-search-id"
+                   value="{{ docman_id }}"
+                   id="docman_id"
+                   class="tlp-input"
+                   placeholder="123"
+            />
+            <button type="submit"
+                   data-test="document-button-search"
+                   class="tlp-append tlp-button-primary"
+            >
+                {{# dgettext }}tuleap-docman | Search {{/ dgettext }}
+            </button>
+        </div>
+    </div>
+</form>
+
+{{# is_searching }}
+    <br>
+    {{# matching_document }}
+        <p>
+            <a href="{{ url }}">{{ title }}</a>
+        </p>
+    {{/ matching_document }}
+    {{^ matching_document }}
+        <p class="tlp-text-danger">
+            {{# dgettext }}tuleap-docman | Unable to find the document.{{/ dgettext }}
+        </p>
+    {{/ matching_document }}
+{{/ is_searching }}

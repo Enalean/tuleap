@@ -2060,6 +2060,9 @@ msgstr ""
 msgid "Type"
 msgstr "Tipo"
 
+msgid "Unable to find the document."
+msgstr ""
+
 #, php-format
 msgid "Unable to remove monitoring for group '%1$s'"
 msgstr ""
