@@ -41,6 +41,7 @@ final class PlanningJavascriptDependenciesProvider implements JavascriptDependen
         return [
             ['file' => $core_include_assets->getFileURL('ckeditor.js')],
             ['file' => $this->agiledashboard_include_assets->getFileURL('planning-v2.js')],
+            ['file' => $this->agiledashboard_include_assets->getFileURL('scrum-header.js')],
         ];
     }
 }

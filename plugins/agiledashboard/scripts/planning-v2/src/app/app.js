@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../../../scrum-header.js";
-
 import angular from "angular";
 import ngAnimate from "angular-animate";
 import ngSanitize from "angular-sanitize";
