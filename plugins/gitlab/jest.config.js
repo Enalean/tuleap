@@ -17,8 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const path = require("path");
+
 const { jest_base_config } = require("@tuleap/build-system-configurator");
 module.exports = {
     ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
+    moduleNameMapper: {
+        ...jest_base_config.moduleNameMapper,
+        "^@vue/composition-api$": path.resolve(__dirname, "./node_modules/@vue/composition-api/"),
+    },
     displayName: "gitlab",
 };

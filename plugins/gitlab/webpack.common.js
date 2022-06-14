@@ -41,7 +41,6 @@ module.exports = [
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
         externals: {
             codendi: "codendi",
-            jquery: "jQuery",
         },
         module: {
             rules: [
@@ -54,12 +53,21 @@ module.exports = [
         },
         resolve: {
             extensions: [".ts", ".js", ".vue"],
+            alias: {
+                "@vue/composition-api": path.resolve(
+                    __dirname,
+                    "node_modules",
+                    "@vue",
+                    "composition-api"
+                ),
+            },
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(true),
+            require("unplugin-vue2-script-setup/webpack")(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {

@@ -21,6 +21,7 @@ import Vue from "vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import App from "./components/App.vue";
 import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
+import VueCompositionAPI from "@vue/composition-api";
 
 export async function init(create_branch_link: HTMLElement): Promise<void> {
     const user_locale = document.body.dataset.userLocale;
@@ -28,6 +29,7 @@ export async function init(create_branch_link: HTMLElement): Promise<void> {
         return;
     }
 
+    Vue.use(VueCompositionAPI);
     Vue.config.language = user_locale;
 
     await initVueGettext(
@@ -59,5 +61,6 @@ export async function init(create_branch_link: HTMLElement): Promise<void> {
             artifact_id,
         },
     }).$mount();
+
     document.body.appendChild(app.$el);
 }

@@ -3,11 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
-  '@types/bootstrap': ^4.5.1
-  '@types/jquery': ^3.5.5
-  jquery: ^3.6.0
+  '@vue/composition-api': ^1.4.4
   neverthrow: ^4.2.1
   vue: ^2.6.14
   vue-class-component: ^7.2.6
@@ -15,50 +16,33 @@ specifiers:
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
+  '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
+  '@vue/composition-api': 1.6.2_vue@2.6.14
   neverthrow: 4.2.1
   vue: 2.6.14
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
-  '@types/bootstrap': 4.6.0
-  '@types/jquery': 3.5.5
-  jquery: 3.6.0
   vue-class-component: 7.2.6_vue@2.6.14
   vue-property-decorator: 9.1.2_zrnidtknow37s43kh2nsmp2h4u
 
 packages:
 
-  /@types/bootstrap/4.6.0:
-    resolution: {integrity: sha512-uf3yXgYm9bUGGIKNoXHrBzbmXtm8QEM9dDwI+EDarocllEMBx7f3Mv5yCEj4OqkLihkhGlEzT9L1TlZ5IN793g==}
+  /@vue/composition-api/1.6.2_vue@2.6.14:
+    resolution: {integrity: sha512-g6pCOaAB5Z987EwCBIDanRlramrgnWfrrYS8F/0axn2AL8EvyfAebDcLTSr48hac0G0rqC9ODp5LWaiupzl6Tw==}
+    peerDependencies:
+      vue: '>= 2.5 < 3'
     dependencies:
-      '@types/jquery': 3.5.5
-      popper.js: 1.16.1
-    dev: true
-
-  /@types/jquery/3.5.5:
-    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
-    dependencies:
-      '@types/sizzle': 2.3.3
-    dev: true
-
-  /@types/sizzle/2.3.3:
-    resolution: {integrity: sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==}
-    dev: true
-
-  /jquery/3.6.0:
-    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
-    dev: true
+      vue: 2.6.14
+    dev: false
 
   /neverthrow/4.2.1:
     resolution: {integrity: sha512-faWQGNqVQrXOuG8K7E0PRzsfBHzfVqeDX9nwawKDseuH/qEGIH02Nrq03OJOs5eTFML03xeol3otzagPoHyEPA==}
     dev: false
-
-  /popper.js/1.16.1:
-    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
-    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
-    dev: true
 
   /vue-class-component/7.2.6_vue@2.6.14:
     resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
