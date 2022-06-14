@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
@@ -49,6 +50,7 @@ use Tuleap\MediawikiStandalone\Configuration\ProjectMediaWikiServiceDAO;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
+use Tuleap\MediawikiStandalone\Instance\ProjectStatusHandler;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
@@ -137,6 +139,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
+        $this->addHook(ProjectStatusUpdate::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -202,6 +205,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     public function siteAccessChange(): void
     {
         (new EnqueueTask())->enqueue(LogUsersOutInstanceTask::logsOutUserOnAllInstances());
+    }
+
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
+    {
+        (new ProjectStatusHandler(new EnqueueTask()))->handle($event->project, $event->status);
     }
 
     public function workerEvent(WorkerEvent $event): void

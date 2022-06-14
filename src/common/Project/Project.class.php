@@ -301,6 +301,26 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return isset($data[$service_short_name]) && $data[$service_short_name]['is_used'];
     }
 
+    /**
+     * This method is designed to work only with @see \Tuleap\Test\Builders\ProjectTestBuilder moreover it only works
+     * to be able to use @see usesService (and friends) in tests. Using this for other service releated methods **will**
+     * break.
+     *
+     * @psalm-internal Tuleap\Test\Builders
+     */
+    public function addUsedServices(string ...$service_short_names): void
+    {
+        if ($this->services !== null || $this->service_data_array !== null) {
+            throw new LogicException('This method is not supposed to be called after caching of Services');
+        }
+
+        $this->service_data_array = [];
+        $this->services           = []; // Gonna break tests that rely on Services but needed to stop caching in @see cacheServices
+        foreach ($service_short_names as $short_name) {
+            $this->service_data_array[$short_name] = ['is_used' => true];
+        }
+    }
+
     /*
         The URL for this project's home page
     */
