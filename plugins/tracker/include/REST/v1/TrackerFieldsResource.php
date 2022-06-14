@@ -156,8 +156,6 @@ class TrackerFieldsResource extends AuthenticatedResource
      *
      * @param int                    $id                        The id of the field
      *
-     *
-     * @status 201
      * @throws RestException 403
      * @throws RestException 404
      */

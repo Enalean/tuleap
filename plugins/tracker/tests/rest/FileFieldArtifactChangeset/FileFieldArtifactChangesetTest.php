@@ -78,7 +78,7 @@ class FileFieldArtifactChangesetTest extends TrackerBase
         ];
 
         $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$file_field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEquals(200, $response1->getStatusCode());
         $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotEmpty($response1_json['upload_href']);
         $this->assertNotEmpty($response1_json['download_href']);
