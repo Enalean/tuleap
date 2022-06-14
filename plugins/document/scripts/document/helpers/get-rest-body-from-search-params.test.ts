@@ -43,42 +43,95 @@ describe("get-rest-body-from-search-params", () => {
             status: "",
             sort: null,
         };
-        expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({});
+        expect(getRestBodyFromSearchParams(query_params)).toStrictEqual({
+            sort: [{ name: "update_date", order: "desc" }],
+        });
     });
 
     it.each<[Partial<AdvancedSearchParams>, SearchBodyRest]>([
-        [{}, {}],
-        [{ global_search: "lorem" }, { global_search: "lorem" }],
-        [{ id: "123" }, { properties: [{ name: "id", value: "123" }] }],
-        [{ id: "" }, {}],
-        [{ filename: "bob.jpg" }, { properties: [{ name: "filename", value: "bob.jpg" }] }],
-        [{ filename: "" }, {}],
-        [{ type: "folder" }, { properties: [{ name: "type", value: "folder" }] }],
+        [{}, { sort: [{ name: "update_date", order: "desc" }] }],
+        [
+            { global_search: "lorem" },
+            { global_search: "lorem", sort: [{ name: "update_date", order: "desc" }] },
+        ],
+        [
+            { id: "123" },
+            {
+                properties: [{ name: "id", value: "123" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
+        [{ id: "" }, { sort: [{ name: "update_date", order: "desc" }] }],
+        [
+            { filename: "bob.jpg" },
+            {
+                properties: [{ name: "filename", value: "bob.jpg" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
+        [{ filename: "" }, { sort: [{ name: "update_date", order: "desc" }] }],
+        [
+            { type: "folder" },
+            {
+                properties: [{ name: "type", value: "folder" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
         [
             { global_search: "lorem", type: "folder" },
-            { global_search: "lorem", properties: [{ name: "type", value: "folder" }] },
+            {
+                global_search: "lorem",
+                properties: [{ name: "type", value: "folder" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
         ],
-        [{ title: "lorem" }, { properties: [{ name: "title", value: "lorem" }] }],
-        [{ description: "lorem" }, { properties: [{ name: "description", value: "lorem" }] }],
-        [{ owner: "lorem" }, { properties: [{ name: "owner", value: "lorem" }] }],
+        [
+            { title: "lorem" },
+            {
+                properties: [{ name: "title", value: "lorem" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
+        [
+            { description: "lorem" },
+            {
+                properties: [{ name: "description", value: "lorem" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
+        [
+            { owner: "lorem" },
+            {
+                properties: [{ name: "owner", value: "lorem" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
         [
             { create_date: { date: "2022-01-30", operator: "<" } },
             {
                 properties: [
                     { name: "create_date", value_date: { date: "2022-01-30", operator: "<" } },
                 ],
+                sort: [{ name: "update_date", order: "desc" }],
             },
         ],
-        [{ create_date: { date: "", operator: "<" } }, {}],
+        [
+            { create_date: { date: "", operator: "<" } },
+            { sort: [{ name: "update_date", order: "desc" }] },
+        ],
         [
             { update_date: { date: "2022-01-30", operator: "<" } },
             {
                 properties: [
                     { name: "update_date", value_date: { date: "2022-01-30", operator: "<" } },
                 ],
+                sort: [{ name: "update_date", order: "desc" }],
             },
         ],
-        [{ update_date: { date: "", operator: "<" } }, {}],
+        [
+            { update_date: { date: "", operator: "<" } },
+            { sort: [{ name: "update_date", order: "desc" }] },
+        ],
         [
             { obsolescence_date: { date: "2022-01-30", operator: "<" } },
             {
@@ -88,11 +141,27 @@ describe("get-rest-body-from-search-params", () => {
                         value_date: { date: "2022-01-30", operator: "<" },
                     },
                 ],
+                sort: [{ name: "update_date", order: "desc" }],
             },
         ],
-        [{ obsolescence_date: { date: "", operator: "<" } }, {}],
-        [{ status: "draft" }, { properties: [{ name: "status", value: "draft" }] }],
-        [{ field_2: "lorem" }, { properties: [{ name: "field_2", value: "lorem" }] }],
+        [
+            { obsolescence_date: { date: "", operator: "<" } },
+            { sort: [{ name: "update_date", order: "desc" }] },
+        ],
+        [
+            { status: "draft" },
+            {
+                properties: [{ name: "status", value: "draft" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
+        [
+            { field_2: "lorem" },
+            {
+                properties: [{ name: "field_2", value: "lorem" }],
+                sort: [{ name: "update_date", order: "desc" }],
+            },
+        ],
         [
             { field_2: { date: "2022-01-30", operator: "<" } },
             {
@@ -102,9 +171,13 @@ describe("get-rest-body-from-search-params", () => {
                         value_date: { date: "2022-01-30", operator: "<" },
                     },
                 ],
+                sort: [{ name: "update_date", order: "desc" }],
             },
         ],
-        [{ field_2: { date: "", operator: "<" } }, {}],
+        [
+            { field_2: { date: "", operator: "<" } },
+            { sort: [{ name: "update_date", order: "desc" }] },
+        ],
     ])("should return the body based on search parameters (%s, %s)", (params, expected) => {
         expect(getRestBodyFromSearchParams(buildAdvancedSearchParams(params))).toStrictEqual(
             expected

@@ -34,7 +34,7 @@ describe("build-advanced-search-params", () => {
             update_date: null,
             obsolescence_date: null,
             status: "",
-            sort: null,
+            sort: { name: "update_date", order: "desc" },
         };
         expect(buildAdvancedSearchParams()).toStrictEqual(expected);
     });
@@ -53,7 +53,7 @@ describe("build-advanced-search-params", () => {
             obsolescence_date: null,
             status: "",
             field_2: "ipsum",
-            sort: null,
+            sort: { name: "update_date", order: "desc" },
         };
         expect(
             buildAdvancedSearchParams({ title: "lorem", type: "folder", field_2: "ipsum" })
