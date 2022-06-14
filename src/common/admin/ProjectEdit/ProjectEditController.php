@@ -130,9 +130,9 @@ class ProjectEditController
         $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . urlencode($project_id));
     }
 
-    private function propagateStatusChange(Project $project, $form_status)
+    private function propagateStatusChange(Project $project, string $form_status): void
     {
-        if (! isset($form_status) && $form_status || ! $form_status) {
+        if (! in_array($form_status, [Project::STATUS_SUSPENDED, Project::STATUS_ACTIVE, Project::STATUS_DELETED], true)) {
             return;
         }
 
@@ -141,26 +141,7 @@ class ProjectEditController
             $new_status_label = $this->getStatusLabel($form_status);
             $this->project_history_dao->groupAddHistory('status', $old_status_label . " :: " . $new_status_label, $project->group_id);
 
-            $event_params = [
-                'group_id' => $project->group_id,
-            ];
-
-            if ($form_status === Project::STATUS_SUSPENDED) {
-                $this->event_manager->processEvent(
-                    'project_is_suspended',
-                    $event_params
-                );
-            } elseif ($form_status === Project::STATUS_ACTIVE) {
-                $this->event_manager->processEvent(
-                    'project_is_active',
-                    $event_params
-                );
-            } elseif ($form_status === Project::STATUS_DELETED) {
-                $this->event_manager->processEvent(
-                    'project_is_deleted',
-                    $event_params
-                );
-            }
+            $this->event_manager->dispatch(new ProjectStatusUpdate($project, $form_status));
         }
     }
 

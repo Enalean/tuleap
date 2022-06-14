@@ -24,6 +24,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\BurningParrotCompatiblePageEvent;
@@ -185,7 +186,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
         $this->addHook('codendi_daily_start');
-        $this->addHook('project_is_deleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('project_admin_remove_user');
         $this->addHook('logs_daily');
@@ -817,13 +818,10 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys
         $backend->chgrp($svn_project_folder, $backend->getHTTPUser());
     }
 
-    public function project_is_deleted($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        if (! empty($params['group_id'])) {
-            $project = ProjectManager::instance()->getProject($params['group_id']);
-            if ($project) {
-                $this->getRepositoryDeleter()->deleteProjectRepositories($project);
-            }
+        if ($event->status === \Project::STATUS_DELETED) {
+            $this->getRepositoryDeleter()->deleteProjectRepositories($event->project);
         }
     }
 

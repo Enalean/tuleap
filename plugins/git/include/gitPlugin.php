@@ -22,6 +22,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
@@ -238,9 +239,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(GetReferenceEvent::NAME);
         $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
         $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
-        $this->addHook('project_is_deleted');
-        $this->addHook('project_is_suspended');
-        $this->addHook('project_is_active');
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir', false);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -1207,36 +1206,13 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    /**
-     * When project is deleted all its git repositories are archived and marked as deleted
-     *
-     * @param Array $params Parameters contining project id
-     *
-     * @return void
-     */
-    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        if (! empty($params['group_id'])) {
-            $project = ProjectManager::instance()->getProject($params['group_id']);
-            if ($project) {
-                $repository_manager = $this->getRepositoryManager();
-                $repository_manager->deleteProjectRepositories($project);
-            }
-        }
-    }
-
-    public function project_is_active(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (! empty($params['group_id'])) {
-            $this->getGitSystemEventManager()->queueRegenerateGitoliteConfig($params['group_id']);
-        }
-    }
-
-    public function project_is_suspended(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (! empty($params['group_id'])) {
-            $this->getGitSystemEventManager()->queueProjectIsSuspended($params['group_id']);
-        }
+        match ($event->status) {
+            Project::STATUS_ACTIVE    => $this->getGitSystemEventManager()->queueRegenerateGitoliteConfig($event->project->getID()),
+            Project::STATUS_SUSPENDED => $this->getGitSystemEventManager()->queueProjectIsSuspended($event->project->getID()),
+            Project::STATUS_DELETED   => $this->getRepositoryManager()->deleteProjectRepositories($event->project),
+        };
     }
 
     /**

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
@@ -105,7 +106,7 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(SwaggerJsonSecurityDefinitionsCollection::NAME);
         $this->addHook(PasswordUserPostUpdateEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
-        $this->addHook('project_is_deleted', 'projectIsDeleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -603,11 +604,13 @@ final class oauth2_serverPlugin extends Plugin
         (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByExpirationDate($current_time);
     }
 
-    public function projectIsDeleted(): void
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeInNonExistingOrDeletedProject();
-        (new AuthorizationDao())->deleteAuthorizationsInNonExistingOrDeletedProject();
-        (new AppDao())->deleteAppsInNonExistingOrDeletedProject();
+        if ($event->status === \Project::STATUS_DELETED) {
+            (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeInNonExistingOrDeletedProject();
+            (new AuthorizationDao())->deleteAuthorizationsInNonExistingOrDeletedProject();
+            (new AppDao())->deleteAppsInNonExistingOrDeletedProject();
+        }
     }
 
     public function retrieveRESTSwaggerJsonSecurityDefinitions(SwaggerJsonSecurityDefinitionsCollection $collection): void

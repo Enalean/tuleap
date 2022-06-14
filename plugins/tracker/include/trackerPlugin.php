@@ -19,6 +19,7 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
@@ -273,7 +274,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
-        $this->addHook('project_is_deleted', 'project_is_deleted', false);
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
@@ -986,21 +987,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         return new ServiceActivator(ServiceManager::instance(), TrackerV3::instance(), new ServiceCreator(new ServiceDao()));
     }
 
-    /**
-     * When a project is deleted, we delete all its trackers
-     *
-     * @param mixed $params ($param['group_id'] the ID of the deleted project)
-     *
-     * @return void
-     */
-    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        $group_id = $params['group_id'];
-        if ($group_id) {
-            EventManager::instance()->processEvent(new ProjectDeletionEvent($group_id));
+        if ($event->status === \Project::STATUS_DELETED) {
+            EventManager::instance()->processEvent(new ProjectDeletionEvent($event->project->getID()));
 
             $tracker_manager = new TrackerManager();
-            $tracker_manager->deleteProjectTrackers($group_id);
+            $tracker_manager->deleteProjectTrackers((int) $event->project->getID());
         }
     }
 

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\AgileDashboard\AgileDashboardLegacyController;
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
@@ -250,7 +251,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
             $this->addHook(TrackerCrumbInContext::NAME);
             $this->addHook(HistoryQuickLinkCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
-            $this->addHook('project_is_deleted');
+            $this->addHook(ProjectStatusUpdate::NAME);
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
             $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
@@ -1768,11 +1769,11 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
         return new AgileDashboard_Milestone_MilestoneDao();
     }
 
-    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        if (! empty($params['group_id'])) {
+        if ($event->status === \Project::STATUS_DELETED) {
             $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
-            $artifact_explicit_backlog_dao->removeExplicitBacklogOfProject((int) $params['group_id']);
+            $artifact_explicit_backlog_dao->removeExplicitBacklogOfProject((int) $event->project->getID());
         }
     }
 

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;
@@ -51,7 +52,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetProjectWidgetList::NAME);
         $this->addHook(GetUserWidgetList::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook('project_is_deleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(ConfigureAtXMLImport::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -91,11 +92,11 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         $event->addWidget(MyProjectMilestones::NAME);
     }
 
-    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        if (! empty($params['group_id'])) {
+        if ($event->status === \Project::STATUS_DELETED) {
             $milestone_dao = new ProjectMilestonesDao();
-            $milestone_dao->deleteAllPluginWithProject((int) $params['group_id']);
+            $milestone_dao->deleteAllPluginWithProject((int) $event->project->getID());
         }
     }
     /**

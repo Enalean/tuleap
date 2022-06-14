@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
@@ -60,9 +61,7 @@ class SystemEventManager
             Event::SVN_AUTH_CACHE_CHANGE,
             Event::UPDATE_ALIASES,
             'approve_pending_project',
-            'project_is_deleted',
-            'project_is_active',
-            'project_is_suspended',
+            ProjectStatusUpdate::NAME,
             'project_admin_add_user',
             'project_admin_remove_user',
             'project_admin_activate_user',
@@ -162,6 +161,26 @@ class SystemEventManager
     public function addSystemEvent($event, $params)
     {
         //$event = constant(strtoupper($event));
+        if ($event instanceof ProjectStatusUpdate) {
+            match ($event->status) {
+                Project::STATUS_ACTIVE => $this->createEvent(
+                    SystemEvent::TYPE_PROJECT_ACTIVE,
+                    $event->project->getID(),
+                    SystemEvent::PRIORITY_LOW
+                ),
+                Project::STATUS_SUSPENDED => $this->createEvent(
+                    SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH,
+                    $event->project->getID(),
+                    SystemEvent::PRIORITY_LOW
+                ),
+                Project::STATUS_DELETED => $this->createEvent(
+                    SystemEvent::TYPE_PROJECT_DELETE,
+                    $event->project->getID(),
+                    SystemEvent::PRIORITY_LOW
+                ),
+            };
+            return;
+        }
         switch ($event) {
             case Event::SYSTEM_CHECK:
                 if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::SYSTEM_CHECK, null)) {
@@ -191,27 +210,6 @@ class SystemEventManager
                     SystemEvent::TYPE_PROJECT_CREATE,
                     $params['group_id'],
                     SystemEvent::PRIORITY_MEDIUM
-                );
-                break;
-            case 'project_is_deleted':
-                $this->createEvent(
-                    SystemEvent::TYPE_PROJECT_DELETE,
-                    $params['group_id'],
-                    SystemEvent::PRIORITY_LOW
-                );
-                break;
-            case 'project_is_active':
-                $this->createEvent(
-                    SystemEvent::TYPE_PROJECT_ACTIVE,
-                    $params['group_id'],
-                    SystemEvent::PRIORITY_LOW
-                );
-                break;
-            case 'project_is_suspended':
-                $this->createEvent(
-                    SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH,
-                    $params['group_id'],
-                    SystemEvent::PRIORITY_LOW
                 );
                 break;
             case Event::PROJECT_RENAME:

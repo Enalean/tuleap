@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -71,9 +72,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         $this->addHook(ApproveProjectAdministratorRemoval::NAME);
         $this->addHook(ProjectImportCleanupUserCreatorFromAdministrators::NAME);
         $this->addHook(UserWithStarBadgeCollector::NAME);
-        $this->addHook('project_is_suspended');
-        $this->addHook('project_is_active');
-        $this->addHook('project_is_deleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
 
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
@@ -209,27 +208,11 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         $params['types'] = array_merge($params['types'], [ProjectOwnerStatusNotificationSystemEvent::NAME]);
     }
 
-    public function project_is_suspended(array $params) //phpcs:ignore
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         $this->getSystemEventManager()->queueNotifyProjectStatusChange(
-            $params['group_id'],
-            Project::STATUS_SUSPENDED
-        );
-    }
-
-    public function project_is_active(array $params) //phpcs:ignore
-    {
-        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
-            $params['group_id'],
-            Project::STATUS_ACTIVE
-        );
-    }
-
-    public function project_is_deleted(array $params) //phpcs:ignore
-    {
-        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
-            $params['group_id'],
-            Project::STATUS_DELETED
+            $event->project->getID(),
+            $event->status
         );
     }
 

@@ -28,6 +28,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Config\ConfigClassProvider;
@@ -223,7 +224,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook('permission_request_information', 'permissionRequestInformation', false);
 
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
-        $this->addHook('project_is_deleted', 'project_is_deleted', false);
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
@@ -1006,22 +1007,14 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->cleanUnusedResources();
     }
 
-    /**
-     * Function called when a project is deleted.
-     * It Marks all project documents as deleted
-     *
-     * @param mixed $params ($param['group_id'] the ID of the deleted project)
-     *
-     * @return void
-     */
-    public function project_is_deleted($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        $groupId = $params['group_id'];
-        if ($groupId) {
+        if ($event->status === \Project::STATUS_DELETED) {
             $docmanItemFactory = new Docman_ItemFactory();
-            $docmanItemFactory->deleteProjectTree($groupId);
+            $docmanItemFactory->deleteProjectTree((int) $event->project->getID());
+
+            $this->cleanUnusedResources();
         }
-        $this->cleanUnusedResources();
     }
 
     /**

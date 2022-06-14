@@ -22,6 +22,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemOperator;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -100,7 +101,7 @@ class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
         $this->addHook(CollectGitRoutesEvent::NAME);
         $this->addHook(\Tuleap\Git\PostInitGitRepositoryWithDataEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
-        $this->addHook('project_is_deleted');
+        $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook('plugin_statistics_disk_usage_collect_project');
         $this->addHook('plugin_statistics_disk_usage_service_label');
@@ -393,9 +394,11 @@ class gitlfsPlugin extends \Plugin implements PluginWithConfigKeys
         );
     }
 
-    public function project_is_deleted($params) // phpcs:ignore
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        $this->cleanUnusedResources();
+        if ($event->status === \Project::STATUS_DELETED) {
+            $this->cleanUnusedResources();
+        }
     }
 
     private function cleanUnusedResources()
