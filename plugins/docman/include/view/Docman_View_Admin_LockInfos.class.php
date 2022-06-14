@@ -114,12 +114,16 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
                 }
                 $parent   = $dIF->getItemFromDb($item->getParentId());
                 $content .= '<tr>';
-                $content .= '<td>' . '<a href="/plugins/docman/?group_id=' . $params['group_id'] . '&action=details&id=' . $item->getId() . '">' . $item->getTitle() . '</a></td>';
+                $content .= '<td>' . '<a href="/plugins/docman/?group_id=' . urlencode((string) $params['group_id']) . '&action=details&id=' . urlencode((string) $item->getId()) . '">';
+                $content .= $hp->purify($item->getTitle());
+                $content .= '</a></td>';
                 $content .= '<td>';
                 if ($parent === null || $dIF->isRoot($parent)) {
                     $content .= '</td>';
                 } else {
-                    $content .=  '<a href="' . $this->defaultUrl . '&action=show&id=' . $parent->getId() . '">' . $parent->getTitle() . '</a></td>';
+                    $content .=  '<a href="' . $this->defaultUrl . '&action=show&id=' . urlencode((string) $parent->getId()) . '">';
+                    $content .= $hp->purify($parent->getTitle());
+                    $content .= '</a></td>';
                 }
                 $content .= '<td>' . $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) . '</td>';
                 $content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) . '</td>';
