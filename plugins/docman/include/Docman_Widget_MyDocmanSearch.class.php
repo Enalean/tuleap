@@ -83,7 +83,10 @@ class Docman_Widget_MyDocmanSearch extends Widget
                 $itemPerm = $dPm->userCanAccess($user, $docman_id);
 
                 if ($itemPerm) {
-                    $html .= '<p><a data-test="document-search-link" href="/plugins/docman/?group_id=' . $res['group_id'] . '&action=details&id=' . $docman_id . '&section=properties">Show &quot;' . $res['title'] . '&quot; Properties</a></p>';
+                    $purifier = Codendi_HTMLPurifier::instance();
+                    $html    .= '<p><a data-test="document-search-link" href="/plugins/docman/?group_id=' . urlencode((string) $res['group_id']) . '&action=details&id=' . urlencode((string) $docman_id) . '&section=properties">Show &quot;';
+                    $html    .=  $purifier->purify($res['title']);
+                    $html    .= '&quot; Properties</a></p>';
                     return $html;
                 }
             }
