@@ -47,6 +47,7 @@ use ProjectManager;
 use SystemEventManager;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+use Tuleap\Git\Branch\BranchCreationExecutor;
 use Tuleap\Git\CIBuilds\BuildStatusChangePermissionDAO;
 use Tuleap\Git\CIBuilds\BuildStatusChangePermissionManager;
 use Tuleap\Git\CIBuilds\CITokenDao;
@@ -90,6 +91,7 @@ use Tuleap\Git\Permissions\RegexpTemplateDao;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
+use Tuleap\Git\REST\v1\Branch\BranchCreator;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation;
@@ -814,9 +816,9 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param int $id Id of the git repository
      */
-    public function optionsGetBranches($id)
+    public function optionsGetPostBranches($id): void
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPost();
     }
 
     /**
@@ -886,10 +888,42 @@ class RepositoryResource extends AuthenticatedResource
             }
         }
 
-        $this->sendAllowHeaders();
+        $this->optionsGetPostBranches($id);
         Header::sendPaginationHeaders($limit, $offset, $total_size, self::MAX_LIMIT);
 
         return $result;
+    }
+
+    /**
+     * Create a Git branch
+     *
+     * Create a branch in a git repository.<br/>
+     * To create a branch, you have to provide the branch name and the reference (another branch name or a commit SHA1)
+     *
+     * @url POST {id}/branches
+     *
+     * @access protected
+     *
+     * @param int $id Id of the git repository
+     * @param GitBranchPOSTRepresentation $representation The representation of the POST data {@from body}
+     *
+     * @status 201
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function createBranch($id, GitBranchPOSTRepresentation $representation): void
+    {
+        $this->checkAccess();
+        $this->optionsGetPostBranches($id);
+
+        $repository = $this->getRepositoryForCurrentUser($id);
+
+        (new BranchCreator(new Git_Exec($repository->getFullPath(), $repository->getFullPath()), new BranchCreationExecutor()))->createBranch(
+            $this->getCurrentUser(),
+            $repository,
+            $representation
+        );
     }
 
     /**
@@ -1056,7 +1090,7 @@ class RepositoryResource extends AuthenticatedResource
         GitRepository $repository,
         PFUser $user,
         GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit,
-    ) {
+    ): void {
         $server_id   = $migrate_to_gerrit->server;
         $permissions = $migrate_to_gerrit->permissions;
 
@@ -1069,7 +1103,7 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         try {
-            return $this->migration_handler->migrate($repository, $server_id, $permissions, $user);
+            $this->migration_handler->migrate($repository, $server_id, $permissions, $user);
         } catch (RepositoryCannotBeMigratedOnRestrictedGerritServerException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (RepositoryCannotBeMigratedException $exception) {
@@ -1086,7 +1120,12 @@ class RepositoryResource extends AuthenticatedResource
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getRepository(PFUser $user, $id)
+    /**
+     * @return GitRepository|\GitRepositoryGitoliteAdmin
+     *
+     * @throws RestException
+     */
+    private function getRepository(PFUser $user, $id): GitRepository
     {
         try {
             $repository = $this->repository_factory->getRepositoryByIdUserCanSee($user, $id);
@@ -1147,12 +1186,9 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
-     * @param $id
-     *
-     * @return GitRepository
      * @throws RestException
      */
-    private function getRepositoryForCurrentUser($id)
+    private function getRepositoryForCurrentUser($id): GitRepository
     {
         $user = $this->getCurrentUser();
 

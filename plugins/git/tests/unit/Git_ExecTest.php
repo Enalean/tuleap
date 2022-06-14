@@ -227,4 +227,15 @@ final class Git_ExecTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_exec->setDefaultBranch('foo');
         self::assertEquals('foo', $this->git_exec->getDefaultBranch());
     }
+
+    public function testUpdateRef(): void
+    {
+        //we must add content
+        file_put_contents("$this->fixture_dir/toto", "stuff");
+        $this->git_exec->add("$this->fixture_dir/toto");
+        $this->git_exec->commit("add stuff");
+
+        $this->git_exec->updateRef('refs/heads/new_branch', 'main');
+        self::assertEqualsCanonicalizing(["main", "new_branch"], $this->git_exec->getAllBranchesSortedByCreationDate());
+    }
 }
