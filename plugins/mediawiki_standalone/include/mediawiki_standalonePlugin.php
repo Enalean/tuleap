@@ -47,6 +47,7 @@ use Tuleap\MediawikiStandalone\Configuration\MediaWikiUpdateScriptCaller;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\Configuration\ProjectMediaWikiServiceDAO;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
+use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
@@ -134,6 +135,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(PluginExecuteUpdateHookEvent::NAME);
         $this->addHook(WorkerEvent::NAME);
+        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook(Event::SITE_ACCESS_CHANGE);
 
         return parent::getHooksAndCallbacks();
     }
@@ -177,12 +180,37 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
     }
 
+    /**
+     * @see Event::PROJECT_ACCESS_CHANGE
+     * @param array{project_id: int} $params
+     */
+    public function projectAccessChange(array $params): void
+    {
+        $task = LogUsersOutInstanceTask::logsOutUserOfAProjectFromItsID(
+            $params['project_id'],
+            ProjectManager::instance()
+        );
+
+        if ($task !== null) {
+            (new EnqueueTask())->enqueue($task);
+        }
+    }
+
+    /**
+     * @see Event::SITE_ACCESS_CHANGE
+     */
+    public function siteAccessChange(): void
+    {
+        (new EnqueueTask())->enqueue(LogUsersOutInstanceTask::logsOutUserOnAllInstances());
+    }
+
     public function workerEvent(WorkerEvent $event): void
     {
         (new InstanceManagement(
             $this->getBackendLogger(),
             new MediawikiHTTPClientFactory(),
             HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
             ProjectManager::instance(),
         ))->process($event);
     }

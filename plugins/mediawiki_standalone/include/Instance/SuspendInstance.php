@@ -26,6 +26,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
@@ -52,7 +53,7 @@ final class SuspendInstance implements InstanceOperation
         return new self($project);
     }
 
-    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface
+    public function getRequest(RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory): RequestInterface
     {
         return $request_factory->createRequest(
             'POST',

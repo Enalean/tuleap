@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -30,12 +29,11 @@ use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 
-final class ResumeInstance implements InstanceOperation
+final class LogUsersOutInstance implements InstanceOperation
 {
-    public const TOPIC = 'tuleap.mediawiki-standalone.instance-resume';
+    public const TOPIC = 'tuleap.mediawiki-standalone.instance-log-users-out';
 
-
-    private function __construct(private \Project $project)
+    private function __construct(private ?\Project $project)
     {
     }
 
@@ -46,7 +44,7 @@ final class ResumeInstance implements InstanceOperation
         }
         $payload = $event->getPayload();
         if (! isset($payload['project_id']) || ! is_int($payload['project_id'])) {
-            throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
+            return new self(null);
         }
 
         $project = $project_factory->getValidProjectById($payload['project_id']);
@@ -57,8 +55,17 @@ final class ResumeInstance implements InstanceOperation
     {
         return $request_factory->createRequest(
             'POST',
-            ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/instance/resume/' . urlencode($this->project->getUnixNameLowerCase())
-        );
+            ServerHostname::HTTPSUrl() . '/mediawiki/w/rest.php/tuleap/maintenance/' . urlencode($this->getInstanceNameQualifier()) . '/terminate-sessions'
+        )->withBody($stream_factory->createStream('{}'));
+    }
+
+    private function getInstanceNameQualifier(): string
+    {
+        if ($this->project === null) {
+            return '*';
+        }
+
+        return $this->project->getUnixNameLowerCase();
     }
 
     public function getTopic(): string

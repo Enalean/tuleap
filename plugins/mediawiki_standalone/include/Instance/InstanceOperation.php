@@ -25,6 +25,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Interface for simple Mediawiki Operations that only have one HTTP request to do
@@ -33,5 +34,8 @@ interface InstanceOperation
 {
     public function getTopic(): string;
 
-    public function getRequest(RequestFactoryInterface $request_factory): RequestInterface;
+    public function getRequest(
+        RequestFactoryInterface $request_factory,
+        StreamFactoryInterface $stream_factory,
+    ): RequestInterface;
 }

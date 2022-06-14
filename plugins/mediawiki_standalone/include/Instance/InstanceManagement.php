@@ -25,21 +25,27 @@ namespace Tuleap\MediawikiStandalone\Instance;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 
 final class InstanceManagement
 {
-    public function __construct(private LoggerInterface $logger, private MediawikiClientFactory $client_factory, private RequestFactoryInterface $http_factory, private ProjectByIDFactory $project_factory)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+        private MediawikiClientFactory $client_factory,
+        private RequestFactoryInterface $http_request_factory,
+        private StreamFactoryInterface $http_stream_factory,
+        private ProjectByIDFactory $project_factory,
+    ) {
     }
 
     public function process(WorkerEvent $worker_event): void
     {
         try {
             if (($create_event = CreateInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
-                $create_event->sendRequest($this->client_factory->getHTTPClient(), $this->http_factory, $this->logger);
+                $create_event->sendRequest($this->client_factory->getHTTPClient(), $this->http_request_factory, $this->logger);
                 return;
             }
             if (($suspension_event = SuspendInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
@@ -48,6 +54,10 @@ final class InstanceManagement
             }
             if (($resume = ResumeInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->sendRequest($resume);
+                return;
+            }
+            if (($log_users_out = LogUsersOutInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
+                $this->sendRequest($log_users_out);
                 return;
             }
         } catch (\Exception $e) {
@@ -59,7 +69,7 @@ final class InstanceManagement
     {
         try {
             $this->logger->info(sprintf("Processing %s: ", $event->getTopic()));
-            $request = $event->getRequest($this->http_factory);
+            $request = $event->getRequest($this->http_request_factory, $this->http_stream_factory);
             $this->logger->debug(sprintf('%s %s', $request->getMethod(), (string) $request->getUri()));
             $response = $this->client_factory->getHTTPClient()->sendRequest($request);
             $this->logger->debug((string) $response->getBody());
