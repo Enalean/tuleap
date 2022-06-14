@@ -115,7 +115,7 @@
                             <properties rows="10" cols="100"/>
                         </formElement>
                         <formElement type="text" ID="F141" rank="2" required="1">
-                            <name>Required Text</name>
+                            <name>required_text</name>
                             <label>Required Text</label>
                             <properties rows="10" cols="100"/>
                         </formElement>

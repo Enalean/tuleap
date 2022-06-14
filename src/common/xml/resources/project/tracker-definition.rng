@@ -392,7 +392,7 @@
     </optional>
     <!-- default is false -->
     <element name="name">
-      <data type="string"/>
+      <ref name="lowercase_alphanum_non_empty_string"/>
     </element>
     <element name="label">
       <data type="string"/>
@@ -1316,6 +1316,12 @@
     <data type="string">
       <param name="minLength">1</param>
       <param name="pattern">(\s*\S+\s*)+</param>
+    </data>
+  </define>
+  <define name="lowercase_alphanum_non_empty_string">
+    <data type="string">
+      <param name="minLength">1</param>
+      <param name="pattern">\s*[a-z0-9_\-]+\s*</param>
     </data>
   </define>
 </grammar>

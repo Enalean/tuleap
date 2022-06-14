@@ -49,7 +49,7 @@ abstract class XMLField extends XMLFormElement
 
     public static function fromTrackerAndName(XMLTracker $tracker, string $name): static
     {
-        return new static(FieldNameFormatter::getFormattedName($tracker->item_name . '_' . $name), $name);
+        return new static(FieldNameFormatter::getFormattedName($tracker->item_name . '_' . $name), FieldNameFormatter::getFormattedName($name));
     }
 
     /**

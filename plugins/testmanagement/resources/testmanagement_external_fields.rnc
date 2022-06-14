@@ -8,7 +8,7 @@ element externalField {
     attribute id { xsd:long }?,
     attribute tracker_id { xsd:long }?,
     attribute parent_id { xsd:long }?,
-    element name { xsd:string },
+    element name { xsd:string { minLength = "1" pattern = "\s*[a-z0-9_\-]+\s*" } },
     element label { xsd:string },
     element description { xsd:string }?
 }
