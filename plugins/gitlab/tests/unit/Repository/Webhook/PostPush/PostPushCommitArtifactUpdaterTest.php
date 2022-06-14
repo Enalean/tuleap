@@ -23,26 +23,34 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
-use PFUser;
 use Project;
 use Psr\Log\NullLogger;
-use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 
-class PostPushCommitArtifactUpdaterTest extends TestCase
+final class PostPushCommitArtifactUpdaterTest extends TestCase
 {
+    private const COMMITTER_EMAIL     = 'mail@example.com';
+    private const COMMIT_SHA1         = '99aa042c9c';
+    private const COMMITTER_USERNAME  = 'asticotc';
+    private const REPOSITORY_NAME     = 'MyRepo';
+    private const STATUS_FIELD_ID     = 18;
+    private const DONE_BIND_VALUE_ID  = 1234;
+    private const DONE_LABEL          = 'Done';
+    private const COMMITTER_FULL_NAME = "Coco L'Asticot";
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&StatusValueRetriever
      */
@@ -55,17 +63,18 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitWebhookData
-     */
-    private $webhook_data;
 
     private PostPushCommitArtifactUpdater $updater;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&Artifact
+     */
+    private Artifact $artifact;
+    private Tracker_Workflow_WorkflowUser $workflow_user;
+    private string $success_message;
+    private string $no_semantic_defined_message;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
         $this->done_value_retriever   = $this->createMock(DoneValueRetriever::class);
         $this->user_manager           = $this->createMock(UserManager::class);
@@ -77,589 +86,275 @@ class PostPushCommitArtifactUpdaterTest extends TestCase
             new NullLogger()
         );
 
-        $this->webhook_data = $this->createMock(PostPushCommitWebhookData::class);
+        $this->workflow_user = new Tracker_Workflow_WorkflowUser(
+            [
+                'user_id'     => Tracker_Workflow_WorkflowUser::ID,
+                'language_id' => 'en',
+            ]
+        );
+
+        $this->artifact = $this->createMock(Artifact::class);
+
+        $this->success_message             = sprintf(
+            'solved by @%s with gitlab_commit #%s/%s',
+            self::COMMITTER_USERNAME,
+            self::REPOSITORY_NAME,
+            self::COMMIT_SHA1
+        );
+        $this->no_semantic_defined_message = sprintf(
+            '@%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+            self::COMMITTER_USERNAME
+        );
+    }
+
+    private function addComment(): void
+    {
+        $webhook_data = new PostPushCommitWebhookData(
+            self::COMMIT_SHA1,
+            'Irrelevant',
+            'Irrelevant',
+            'irrelevant',
+            1361860767,
+            self::COMMITTER_EMAIL,
+            self::COMMITTER_FULL_NAME
+        );
+
+        $this->updater->addTuleapArtifactCommentNoSemanticDefined(
+            $this->artifact,
+            $this->workflow_user,
+            $webhook_data
+        );
     }
 
     public function testItDoesNotAddArtifactCommentWithoutStatusUpdatedIfAnErrorOccursDuringTheCommentCreation(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-        $message  = "@asticotc attempts to close this artifact from GitLab but neither done nor status semantic defined.";
+        $this->mockCommitterMatchingTuleapUser();
 
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
-
-        $artifact->method("createNewChangeset")
-            ->with([], $message, $tracker_workflow_user)
+        $this->artifact->expects(self::once())
+            ->method("createNewChangeset")
+            ->with([], $this->no_semantic_defined_message, $this->workflow_user)
             ->willThrowException(new Tracker_NoChangeException(1, 'xref'));
 
-        $this->updater->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $this->webhook_data);
+        $this->addComment();
     }
 
     public function testItDoesNotAddArtifactCommentWithoutStatusUpdatedIfTheCommentIsNotCreated(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-        $message  = "@asticotc attempts to close this artifact from GitLab but neither done nor status semantic defined.";
+        $this->mockCommitterMatchingTuleapUser();
 
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
+        $this->artifact->expects(self::once())
+            ->method("createNewChangeset")
+            ->with([], $this->no_semantic_defined_message, $this->workflow_user)
+            ->willReturn(null);
 
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
-
-        $artifact->method("createNewChangeset")->with([], $message, $tracker_workflow_user)->willReturn(null);
-
-        $this->updater->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $this->webhook_data);
+        $this->addComment();
     }
 
     public function testItCreatesANewCommentWithoutStatusUpdatedWithTheTuleapUsernameIfTheTuleapUserExists(): void
     {
-        $artifact = $this->createMock(Artifact::class);
+        $this->mockCommitterMatchingTuleapUser();
 
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
+        $this->artifact->expects(self::once())
+            ->method("createNewChangeset")
+            ->with([], $this->no_semantic_defined_message, $this->workflow_user)
+            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
-
-        $message = "@asticotc attempts to close this artifact from GitLab but neither done nor status semantic defined.";
-        $artifact->method("createNewChangeset")->with([], $message, $tracker_workflow_user)->willReturn($this->createMock(Tracker_Artifact_Changeset::class));
-
-        $this->updater->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $this->webhook_data);
+        $this->addComment();
     }
 
     public function testItCreatesANewCommentWithoutStatusUpdatedWithTheGitlabCommitterAuthorIfTheTuleapUserDoesNotExist(): void
     {
-        $artifact = $this->createMock(Artifact::class);
+        $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
 
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
+        $message = sprintf(
+            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+            self::COMMITTER_FULL_NAME
         );
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->method("getAuthorName")->willReturn("Coco L'Asticot");
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn(null);
-
-        $message = "Coco L'Asticot attempts to close this artifact from GitLab but neither done nor status semantic defined.";
-        $artifact
+        $this->artifact
             ->expects(self::once())
             ->method("createNewChangeset")
-            ->with([], $message, $tracker_workflow_user)
-            ->willReturn($this->createMock(Tracker_Artifact_Changeset::class));
+            ->with([], $message, $this->workflow_user)
+            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
-        $this->updater->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $this->webhook_data);
+        $this->addComment();
+    }
+
+    private function close(): void
+    {
+        $webhook_data = new PostPushCommitWebhookData(
+            self::COMMIT_SHA1,
+            'Irrelevant',
+            'Irrelevant',
+            'irrelevant',
+            1361860767,
+            self::COMMITTER_EMAIL,
+            self::COMMITTER_USERNAME
+        );
+
+        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $status_field
+            ->method('getId')
+            ->willReturn(self::STATUS_FIELD_ID);
+        $status_field
+            ->method('getFieldData')
+            ->with(self::DONE_LABEL)
+            ->willReturn(self::DONE_BIND_VALUE_ID);
+
+        $this->mockCommitterMatchingTuleapUser();
+        $reference   = new WebhookTuleapReference(12, 'resolves');
+        $integration = new GitlabRepositoryIntegration(
+            1,
+            12,
+            self::REPOSITORY_NAME,
+            '',
+            'https://example.com',
+            new DateTimeImmutable(),
+            Project::buildForTest(),
+            false
+        );
+        $this->updater->closeTuleapArtifact(
+            $this->artifact,
+            $this->workflow_user,
+            $webhook_data,
+            $reference,
+            $status_field,
+            $integration
+        );
     }
 
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfAnErrorOccursDuringTheCommentCreation(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-
-        $artifact->method('isOpen')->willReturn(true);
-        $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
-
-        $this->webhook_data
-            ->expects(self::once())
-            ->method("getSha1")
-            ->willReturn("azer12563");
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $status_field
-            ->expects(self::once())
-            ->method('getId')
-            ->willReturn(18);
-
-        $status_field
-            ->expects(self::once())
-            ->method('getFieldData')
-            ->with("Done")
-            ->willReturn(1234);
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
+        $this->artifact->method('isOpen')->willReturn(true);
 
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($artifact, $tracker_workflow_user)
-            ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
+            ->with($this->artifact, $this->workflow_user)
+            ->willReturn($this->getDoneValue());
 
-        $artifact->method("createNewChangeset")
-            ->with([18 => 1234], $message, $tracker_workflow_user)
+        $this->artifact->method("createNewChangeset")
+            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
             ->willThrowException(new Tracker_NoChangeException(1, 'xref'));
 
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->close();
     }
 
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfNoPossibleValueAreFound(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-
-        $artifact->method('isOpen')->willReturn(true);
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-
-        $this->expectException(NoPossibleValueException::class);
+        $this->artifact->method('isOpen')->willReturn(true);
 
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($artifact, $tracker_workflow_user)
+            ->with($this->artifact, $this->workflow_user)
             ->willThrowException(new NoPossibleValueException());
 
-        $artifact->expects(self::never())->method("createNewChangeset");
+        $this->artifact->expects(self::never())->method("createNewChangeset");
 
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->expectException(NoPossibleValueException::class);
+        $this->close();
     }
 
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfCommentIsNotCreated(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-
-        $artifact->method('isOpen')->willReturn(true);
-        $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
-
-        $this->webhook_data
-            ->expects(self::once())
-            ->method("getSha1")
-            ->willReturn("azer12563");
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $status_field
-            ->expects(self::once())
-            ->method('getId')
-            ->willReturn(18);
-        $status_field
-            ->expects(self::once())
-            ->method('getFieldData')
-            ->with("Done")
-            ->willReturn(1234);
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
+        $this->artifact->method('isOpen')->willReturn(true);
 
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($artifact, $tracker_workflow_user)
-            ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
+            ->with($this->artifact, $this->workflow_user)
+            ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, self::DONE_LABEL, "", 1, false));
 
-        $artifact->method("createNewChangeset")->with([18 => 1234], $message, $tracker_workflow_user)->willReturn(null);
+        $this->artifact->method("createNewChangeset")
+            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
+            ->willReturn(null);
 
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->close();
     }
 
     public function testItAddArtifactCommentWithoutStatusUpdatedIfNotCloseStatusSemanticDefined(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-
-        $artifact->method('isOpen')->willReturn(true);
-        $message = '@asticotc attempts to close this artifact from GitLab but neither done nor status semantic defined.';
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
+        $this->artifact->method('isOpen')->willReturn(true);
 
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($artifact, $tracker_workflow_user)
+            ->with($this->artifact, $this->workflow_user)
             ->willThrowException(new SemanticDoneValueNotFoundException());
 
         $this->status_value_retriever
             ->expects(self::once())
             ->method("getFirstClosedValueUserCanRead")
-            ->with($tracker_workflow_user, $artifact)
+            ->with($this->workflow_user, $this->artifact)
             ->willThrowException(new SemanticStatusClosedValueNotFoundException());
 
-        $artifact->method("createNewChangeset")->with([], $message, $tracker_workflow_user)->willReturn(null);
+        $this->artifact->method("createNewChangeset")
+            ->with([], $this->no_semantic_defined_message, $this->workflow_user)
+            ->willReturn(null);
 
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->close();
     }
 
     public function testItDoesNothingIfArtifactIsAlreadyClosed(): void
     {
-        $this->webhook_data
-            ->expects(self::once())
-            ->method("getSha1")
-            ->willReturn("azer12563");
+        $this->artifact->method('isOpen')->willReturn(false);
+        $this->artifact->method('getId')->willReturn(25);
+        $this->artifact->expects(self::never())->method("createNewChangeset");
 
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->method('isOpen')->willReturn(false);
-        $artifact->method('getId')->willReturn(25);
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolve");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-
-        $artifact->expects(self::never())->method("createNewChangeset");
-
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->close();
     }
 
     public function testItClosesArtifactWithDoneValue(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-
-        $artifact->method('isOpen')->willReturn(true);
-        $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
-
-        $this->webhook_data
-            ->expects(self::once())
-            ->method("getSha1")
-            ->willReturn("azer12563");
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $status_field
-            ->expects(self::once())
-            ->method('getId')
-            ->willReturn(18);
-        $status_field
-            ->expects(self::once())
-            ->method('getFieldData')
-            ->with("Done")
-            ->willReturn(1234);
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
+        $this->artifact->method('isOpen')->willReturn(true);
 
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($artifact, $tracker_workflow_user)
-            ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
+            ->with($this->artifact, $this->workflow_user)
+            ->willReturn($this->getDoneValue());
 
-        $artifact->method("createNewChangeset")->with([18 => 1234], $message, $tracker_workflow_user)
-            ->willReturn(
-                $this->createMock(Tracker_Artifact_Changeset::class)
-            );
+        $this->artifact->method("createNewChangeset")
+            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
+            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->close();
     }
 
     public function testItClosesArtifactWithFirstClosedStatusValue(): void
     {
-        $artifact = $this->createMock(Artifact::class);
-
-        $artifact->method('isOpen')->willReturn(true);
-        $message = 'solved by @asticotc with gitlab_commit #MyRepo/azer12563';
-
-        $this->webhook_data
-            ->expects(self::once())
-            ->method("getSha1")
-            ->willReturn("azer12563");
-
-        $tracker_workflow_user = new Tracker_Workflow_WorkflowUser(
-            [
-                "user_id" => Tracker_Workflow_WorkflowUser::ID,
-                'language_id' => 'en',
-            ]
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $status_field
-            ->expects(self::once())
-            ->method('getId')
-            ->willReturn(18);
-        $status_field
-            ->expects(self::once())
-            ->method('getFieldData')
-            ->with("Done")
-            ->willReturn(1234);
-
-        $committer_email = "committer@example.com";
-        $this->webhook_data->method("getAuthorEmail")->willReturn($committer_email);
-        $this->webhook_data->expects(self::never())->method("getAuthorName");
-        $committer = new PFUser(
-            [
-                "user_id"   => 102,
-                "email"     => "mail@example.com",
-                "user_name" => "asticotc",
-                'language_id' => 'en',
-            ]
-        );
-        $this->user_manager->method("getUserByEmail")->with($committer_email)->willReturn($committer);
-
         $this->done_value_retriever
             ->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
-            ->with($artifact, $tracker_workflow_user)
-            ->willThrowException(
-                new SemanticDoneValueNotFoundException()
-            );
+            ->with($this->artifact, $this->workflow_user)
+            ->willThrowException(new SemanticDoneValueNotFoundException());
 
         $this->status_value_retriever
             ->expects(self::once())
             ->method("getFirstClosedValueUserCanRead")
-            ->with($tracker_workflow_user, $artifact)
-            ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, "Done", "", 1, false));
+            ->with($this->workflow_user, $this->artifact)
+            ->willReturn($this->getDoneValue());
 
-        $artifact->method("createNewChangeset")->with([18 => 1234], $message, $tracker_workflow_user)
-            ->willReturn(
-                $this->createMock(Tracker_Artifact_Changeset::class)
-            );
+        $this->artifact->method('isOpen')->willReturn(true);
 
-        $this->updater->closeTuleapArtifact(
-            $artifact,
-            $tracker_workflow_user,
-            $this->webhook_data,
-            $reference,
-            $status_field,
-            $integration
-        );
+        $this->artifact->method("createNewChangeset")
+            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
+            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
+
+        $this->close();
+    }
+
+    private function mockCommitterMatchingTuleapUser(): void
+    {
+        $committer = UserTestBuilder::aUser()
+            ->withEmail(self::COMMITTER_EMAIL)
+            ->withUserName(self::COMMITTER_USERNAME)
+            ->build();
+        $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn($committer);
+    }
+
+    private function getDoneValue(): Tracker_FormElement_Field_List_Bind_StaticValue
+    {
+        return new Tracker_FormElement_Field_List_Bind_StaticValue(14, self::DONE_LABEL, '', 1, false);
     }
 }
