@@ -1213,7 +1213,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     foreach ($columns as $key => $column) {
                         if ($column['field']->isUsed()) {
-                            $field_name = Tracker_FormElement_Field::PREFIX_NAME_SQL_COLUMN . $column['field']->name;
+                            $field_name = $column['field']->getPrefixedName();
                             $value      = isset($row[$field_name]) ? $row[$field_name] : null;
                             $html      .= '<td data-column-id="' . $purifier->purify($key) . '">';
 
@@ -1714,7 +1714,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if (isset($aggregates[$column['field']->getId()])) {
                         if ($a = $column['field']->getQuerySelectAggregate($aggregates[$column['field']->getId()])) {
                             foreach ($a['separate_queries'] as $sel) {
-                                $queries['aggregates_group_by'][$column['field']->getName() . '_' . $sel['function']] = "SELECT " .
+                                $queries['aggregates_group_by'][$column['field']->getPrefixedName() . '_' . $sel['function']] = "SELECT " .
                                     $sel['select'] .
                                     $from . ' ' . $column['field']->getQueryFromAggregate() .
                                     $where .
@@ -2184,7 +2184,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $line = [];
 
-        $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
+        $value  = isset($row[$column['field']->getPrefixedName()]) ? $row[$column['field']->getPrefixedName()] : null;
         $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
 
         if (
@@ -2215,7 +2215,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $format
             );
         } else {
-            $value  = isset($row[$column['field']->getName()]) ? $row[$column['field']->getName()] : null;
+            $value  = isset($row[$column['field']->getPrefixedName()]) ? $row[$column['field']->getPrefixedName()] : null;
             $line[] = $column['field']->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
         }
 

@@ -48364,7 +48364,7 @@
       <code>retrieve</code>
     </DeprecatedMethod>
     <InvalidArrayOffset occurrences="1">
-      <code>$queries['aggregates_group_by'][$column['field']-&gt;getName() . '_' . $sel['function']]</code>
+      <code>$queries['aggregates_group_by'][$column['field']-&gt;getPrefixedName() . '_' . $sel['function']]</code>
     </InvalidArrayOffset>
     <InvalidScalarArgument occurrences="2">
       <code>$value</code>
