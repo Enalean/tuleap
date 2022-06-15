@@ -212,7 +212,9 @@ describe("SearchResultTable", () => {
             },
         });
 
-        wrapper.get("[data-test=sort-title]").trigger("click");
+        const title_element = wrapper.get("[data-test=sort-title]");
+        expect(title_element.classes()).toContain("document-search-column-is-sortable");
+        title_element.trigger("click");
         expect(router.replace).toHaveBeenCalledWith({
             name: "search",
         });
@@ -289,7 +291,11 @@ describe("SearchResultTable", () => {
                 },
             });
 
-            wrapper.get(`[data-test=sort-${column.name}]`).trigger("click");
+            const column_element = wrapper.get(`[data-test=sort-${column.name}]`);
+            expect(column_element.classes()).not.toContain("document-search-column-is-sortable");
+
+            column_element.trigger("click");
+
             expect(router.replace).not.toHaveBeenCalledWith({
                 name: "search",
             });

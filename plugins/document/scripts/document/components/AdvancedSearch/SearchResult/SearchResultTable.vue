@@ -120,7 +120,7 @@ function hasDescSort(column: SearchResultColumnDefinition): boolean {
 }
 
 function toggleSort(column: SearchResultColumnDefinition): void {
-    if (column.name === "location" || column.is_multiple_value_allowed) {
+    if (!isColumnSortable(column)) {
         return;
     }
 
@@ -164,7 +164,9 @@ function th_classes(column: SearchResultColumnDefinition): string[] {
         classes.push("tlp-table-cell-numeric");
     }
 
-    classes.push("document-search-column-is-sortable");
+    if (isColumnSortable(column)) {
+        classes.push("document-search-column-is-sortable");
+    }
 
     return classes;
 }
@@ -183,6 +185,9 @@ function informIsScrolling(): void {
     }
 }
 
+function isColumnSortable(column: SearchResultColumnDefinition): boolean {
+    return column.name !== "location" && !column.is_multiple_value_allowed;
+}
 onMounted(() => {
     if (table_container.value) {
         table_container.value.addEventListener("scroll", informIsScrolling, { passive: true });
