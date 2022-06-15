@@ -25,10 +25,10 @@ namespace Tuleap\MediawikiStandalone\Service;
 
 use Tuleap\MediawikiStandalone\Instance\CreateInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\SuspendInstanceTask;
-use Tuleap\Queue\EnqueueTaskInterface;
 use Tuleap\Queue\QueueTask;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 final class ServiceActivationHandlerTest extends TestCase
@@ -42,13 +42,7 @@ final class ServiceActivationHandlerTest extends TestCase
             ProjectTestBuilder::aProject()->withId(112)->build(),
         );
 
-        $enqueue_task = new class implements EnqueueTaskInterface {
-            public ?QueueTask $queue_task = null;
-            public function enqueue(QueueTask $event): void
-            {
-                $this->queue_task = $event;
-            }
-        };
+        $enqueue_task = new EnqueueTaskStub();
 
         $handler = new ServiceActivationHandler($enqueue_task);
         $handler->handle(

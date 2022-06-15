@@ -38,6 +38,8 @@ final class ProjectTestBuilder
         'access'          => '',
     ];
 
+    private ?array $used_service_short_names = null;
+
     public function __construct()
     {
         $this->data['type'] = (string) TemplateSingleton::PROJECT;
@@ -50,7 +52,12 @@ final class ProjectTestBuilder
 
     public function build(): Project
     {
-        return new Project($this->data);
+        $project = new Project($this->data);
+        if ($this->used_service_short_names !== null) {
+            $project->addUsedServices(...$this->used_service_short_names);
+        }
+
+        return $project;
     }
 
     public function withId(int $id): self
@@ -106,6 +113,18 @@ final class ProjectTestBuilder
     public function withIcon(string $icon_codepoint): self
     {
         $this->data['icon_codepoint'] = EmojiCodepointConverter::convertEmojiToStoreFormat($icon_codepoint);
+        return $this;
+    }
+
+    public function withUsedService(string $service_short_name): self
+    {
+        $this->used_service_short_names[] = $service_short_name;
+        return $this;
+    }
+
+    public function withoutServices(): self
+    {
+        $this->used_service_short_names = [];
         return $this;
     }
 }
