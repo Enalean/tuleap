@@ -40,12 +40,10 @@ final class ProjectStatusHandler
         if (! $project->usesService(MediawikiStandaloneService::SERVICE_SHORTNAME)) {
             return;
         }
-        if ($status === \Project::STATUS_DELETED) {
-            return; // not implemented yet, otherwise psalm complains about incomplete match
-        }
         match ($status) {
             \Project::STATUS_ACTIVE    => $this->enqueue_task->enqueue(new ResumeInstanceTask($project)),
             \Project::STATUS_SUSPENDED => $this->enqueue_task->enqueue(new SuspendInstanceTask($project)),
+            \Project::STATUS_DELETED   => $this->enqueue_task->enqueue(new DeleteInstanceTask($project)),
         };
     }
 }

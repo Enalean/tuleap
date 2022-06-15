@@ -112,6 +112,8 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $project = $this->createMock(\Project::class);
         $project->method('getID')->willReturn('120');
         $project->method('getMinimalRank')->willReturn(1);
+        $project->method('isError')->willReturn(false);
+        $project->method('isDeleted')->willReturn(false);
         $current_user    = UserTestBuilder::anActiveUser()->withId(101)->withAdministratorOf($project)->build();
         $request_builder = HTTPRequestBuilder::get()->withUser($current_user);
 

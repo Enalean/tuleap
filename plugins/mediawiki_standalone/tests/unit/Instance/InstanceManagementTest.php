@@ -30,20 +30,23 @@ use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ServerHostname;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 /**
  * @covers \Tuleap\MediawikiStandalone\Instance\CreateInstance
  * @covers \Tuleap\MediawikiStandalone\Instance\ResumeInstance
  * @covers \Tuleap\MediawikiStandalone\Instance\SuspendInstance
+ * @covers \Tuleap\MediawikiStandalone\Instance\DeleteInstance
  */
 final class InstanceManagementTest extends TestCase
 {
     use ForgeConfigSandbox;
+
+    private const DELETED_PROJECT_ID = 130;
 
     private TestLogger $logger;
     private Client $mediawiki_client;
@@ -55,6 +58,8 @@ final class InstanceManagementTest extends TestCase
         $this->logger           = new TestLogger();
         $this->mediawiki_client = new Client();
         $this->mediawiki_client->setDefaultResponse(HTTPFactoryBuilder::responseFactory()->createResponse(400, 'Should be overridden in tests'));
+        $project_120               = ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build();
+        $project_130               = ProjectTestBuilder::aProject()->withId(self::DELETED_PROJECT_ID)->withUnixName('foo')->withStatusDeleted()->build();
         $this->instance_management = new InstanceManagement(
             $this->logger,
             new class ($this->mediawiki_client) implements MediawikiClientFactory {
@@ -69,15 +74,7 @@ final class InstanceManagementTest extends TestCase
             },
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            new class implements ProjectByIDFactory {
-                public function getValidProjectById(int $project_id): \Project
-                {
-                    if ($project_id !== 120) {
-                        throw new \Project_NotFoundException();
-                    }
-                    return ProjectTestBuilder::aProject()->withId(120)->withUnixName('gpig')->build();
-                }
-            },
+            ProjectByIDFactoryStub::buildWith($project_120, $project_130),
         );
 
         parent::setUp();
@@ -256,5 +253,37 @@ final class InstanceManagementTest extends TestCase
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($this->logger->hasErrorThatContains(LogUsersOutInstance::class . ' error'));
+    }
+
+    public function testDeleteIsSuccessful(): void
+    {
+        $delete_has_been_called = false;
+
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/foo$', null, 'DELETE'),
+            function () use (&$delete_has_been_called) {
+                $delete_has_been_called = true;
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => DeleteInstance::TOPIC, 'payload' => ['project_id' => self::DELETED_PROJECT_ID]]));
+
+        self::assertTrue($delete_has_been_called);
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testDeleteIsError(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'DELETE'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(404);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => DeleteInstance::TOPIC, 'payload' => ['project_id' => self::DELETED_PROJECT_ID]]));
+
+        self::assertTrue($this->logger->hasErrorThatContains(DeleteInstance::class . ' error'));
     }
 }

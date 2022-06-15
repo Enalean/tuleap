@@ -21,16 +21,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project;
+namespace Tuleap\MediawikiStandalone\Instance;
 
-use Project_NotFoundException;
+use Tuleap\Queue\QueueTask;
 
-interface ProjectByIDFactory
+/**
+ * @psalm-immutable
+ */
+final class DeleteInstanceTask implements QueueTask
 {
-    /**
-     * @throws Project_NotFoundException
-     */
-    public function getValidProjectById(int $project_id): \Project;
+    private int $project_id;
 
-    public function getProjectById(int $project_id): \Project;
+    public function __construct(\Project $project)
+    {
+        $this->project_id = (int) $project->getID();
+    }
+
+    public function getTopic(): string
+    {
+        return DeleteInstance::TOPIC;
+    }
+
+    public function getPayload(): array
+    {
+        return ['project_id' => $this->project_id];
+    }
+
+    public function getPreEnqueueMessage(): string
+    {
+        return sprintf('Delete MediaWiki instance %d', $this->project_id);
+    }
 }

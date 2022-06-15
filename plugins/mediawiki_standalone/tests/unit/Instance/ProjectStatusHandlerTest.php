@@ -66,6 +66,11 @@ final class ProjectStatusHandlerTest extends TestCase
                 'project' => $project_without_service,
                 'status' => \Project::STATUS_SUSPENDED,
             ],
+            'when project os deleted, delete task is emitted' => [
+                'expected_task' => new DeleteInstanceTask($project_with_mediawiki_service),
+                'project' => $project_with_mediawiki_service,
+                'status' => \Project::STATUS_DELETED,
+            ],
         ];
     }
 }
