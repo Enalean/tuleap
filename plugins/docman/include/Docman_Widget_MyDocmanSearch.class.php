@@ -64,36 +64,51 @@ class Docman_Widget_MyDocmanSearch extends Widget
             $url = '?dashboard_id=' . urlencode($request->get('dashboard_id'));
         }
 
-        $html .= '<form method="post" action="' . $url . '">';
-        $html .= '<input type="hidden" name="docman_func" value="show_docman" />';
-        $html .= '<div class="tlp-form-element">
-                    <label class="tlp-label" for="docman_id">' .
-            dgettext('tuleap-docman', 'Search document id') .
-            '</label>
-                    <input type="text" name="docman_id" data-test="document-search-id" value="' . $docman_id . '" id="docman_id" class="tlp-input" placeholder="123"/>
-                  </div>';
-        $html .= '<input type="submit" data-test="document-button-search" class="tlp-button-primary" value="' . dgettext('tuleap-docman', 'Search') . '"/>';
-        $html .= '</form>';
+        $is_searching      = $func === 'show_docman' && $docman_id;
+        $matching_document = $is_searching ? $this->getMatchingDocumentPresenter((int) $docman_id, $user) : null;
 
-        if (($func == 'show_docman') && $docman_id) {
-            $res = $this->returnAllowedGroupId($docman_id, $user);
-
-            if ($res) {
-                $dPm      = Docman_PermissionsManager::instance($res['group_id']);
-                $itemPerm = $dPm->userCanAccess($user, $docman_id);
-
-                if ($itemPerm) {
-                    $purifier = Codendi_HTMLPurifier::instance();
-                    $html    .= '<p><a data-test="document-search-link" href="/plugins/docman/?group_id=' . urlencode((string) $res['group_id']) . '&action=details&id=' . urlencode((string) $docman_id) . '&section=properties">Show &quot;';
-                    $html    .=  $purifier->purify($res['title']);
-                    $html    .= '&quot; Properties</a></p>';
-                    return $html;
-                }
-            }
-            $html .= '<p data-test="document-search-result">' . dgettext('tuleap-docman', 'You do not have the permission to access the document') . '</p>';
-        }
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/widget');
+        $html    .= $renderer->renderToString('my-docman-search', [
+            'form_url'          => $url,
+            'docman_id'         => $docman_id,
+            'is_searching'      => $is_searching,
+            'matching_document' => $matching_document,
+        ]);
 
         return $html;
+    }
+
+    /**
+     * @psalm-return array{url: string, title: string}|null
+     */
+    private function getMatchingDocumentPresenter(int $item_id, PFUser $user): ?array
+    {
+        $res = $this->returnAllowedGroupId($item_id, $user);
+        if (! $res) {
+            return null;
+        }
+
+        $project        = ProjectManager::instance()->getProject($res['group_id']);
+        $docman_service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
+        if (! $docman_service) {
+            return null;
+        }
+        assert($docman_service instanceof \Tuleap\Docman\ServiceDocman);
+
+        $permissions_manager = Docman_PermissionsManager::instance((int) $project->getID());
+        if (! $permissions_manager->userCanAccess($user, $item_id)) {
+            return null;
+        }
+
+        $item_url = $docman_service->getUrl();
+        if ($res['parent_id']) {
+            $item_url .= 'preview/' . urlencode((string) $item_id);
+        }
+
+        return [
+            'url'   => $item_url,
+            'title' => $res['title'],
+        ];
     }
 
     /**
@@ -109,11 +124,11 @@ class Docman_Widget_MyDocmanSearch extends Widget
      * @param $docman_id int  Document Id
      * @param $user      User User Id
      * @return array|0
-     * @psalm-return array{group_id: int, title:string}|0
+     * @psalm-return array{group_id: int, parent_id: int, title:string}|0
      **/
     public function returnAllowedGroupId($docman_id, $user)
     {
-        $sql_group = 'SELECT group_id,title FROM  plugin_docman_item WHERE' .
+        $sql_group = 'SELECT group_id, parent_id, title FROM  plugin_docman_item WHERE' .
                          ' item_id = ' . db_ei($docman_id);
 
         $res_group = db_query($sql_group);
@@ -121,8 +136,9 @@ class Docman_Widget_MyDocmanSearch extends Widget
         if ($res_group && db_numrows($res_group) == 1) {
             $row = db_fetch_array($res_group);
             $res = [
-                'group_id' => (int) $row['group_id'],
-                'title'    => (string) $row['title'],
+                'group_id'  => (int) $row['group_id'],
+                'title'     => (string) $row['title'],
+                'parent_id' => (int) $row['parent_id'],
             ];
 
             $project = ProjectManager::instance()->getProject($res['group_id']);
