@@ -25,15 +25,9 @@
             v-if="item.user_can_write"
             data-test="document-item-action-new-button"
         />
-        <details-item-button
-            v-bind:item="item"
-            v-else
-            data-test="document-item-action-details-button"
-            v-bind:button-class="'tlp-dropdown-split-button-main'"
-        />
         <drop-down-button
             v-bind:is-in-large-mode="false"
-            v-bind:is-appended="true"
+            v-bind:is-appended="item.user_can_write"
             v-bind:is-in-quick-look-mode="false"
             v-bind:is-in-folder-empty-state="false"
         >
@@ -44,12 +38,11 @@
 
 <script>
 import NewItemButton from "./ActionsButton/NewItemButton.vue";
-import DetailsItemButton from "./ActionsButton/DetailsItemButton.vue";
 import DropDownButton from "./DropDown/DropDownButton.vue";
 import DropDownCurrentFolder from "./DropDown/DropDownCurrentFolder.vue";
 export default {
     name: "FolderHeaderAction",
-    components: { DropDownCurrentFolder, DropDownButton, DetailsItemButton, NewItemButton },
+    components: { DropDownCurrentFolder, DropDownButton, NewItemButton },
     props: {
         item: Object,
     },

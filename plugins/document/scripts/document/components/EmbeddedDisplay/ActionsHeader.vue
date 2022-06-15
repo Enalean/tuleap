@@ -30,15 +30,9 @@
                     data-test="item-action-create-new-version-button"
                     v-if="item.user_can_write"
                 />
-                <details-item-button
-                    v-bind:item="item"
-                    v-bind:button-class="'tlp-dropdown-split-button-main'"
-                    v-else
-                    data-test="item-action-details-button"
-                />
                 <drop-down-button
                     v-bind:is-in-large-mode="false"
-                    v-bind:is-appended="true"
+                    v-bind:is-appended="item.user_can_write"
                     v-bind:is-in-quick-look-mode="false"
                     v-bind:is-in-folder-empty-state="false"
                 >
@@ -51,7 +45,6 @@
 
 <script setup lang="ts">
 import CreateNewItemVersionButton from "../Folder/DropDown/NewVersion/NewItemVersionButton.vue";
-import DetailsItemButton from "../Folder/ActionsButton/DetailsItemButton.vue";
 import DropDownButton from "../Folder/DropDown/DropDownButton.vue";
 import DropDownDisplayedEmbedded from "../Folder/DropDown/DropDownDisplayedEmbedded.vue";
 import type { Item } from "../../type";
