@@ -93,9 +93,8 @@ class GitBundle
         $dump_path_on_filesystem,
         ArchiveInterface $archive,
     ) {
-        $command = "umask 77 && cd " . escapeshellarg($repository_path) .
-            " && " . \Git_Exec::getGitCommand() . " bundle create " . escapeshellarg($file_name) . " --all" .
-            " && mv " . escapeshellarg($file_name) . " " . escapeshellarg($dump_path_on_filesystem);
+        $command = "sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-create-bundle.sh " . escapeshellarg($repository_path) . " " . escapeshellarg($file_name) .
+            " && mv " . escapeshellarg($repository_path . "/" . $file_name) . " " . escapeshellarg($dump_path_on_filesystem);
 
         $this->system_command->exec($command);
 
