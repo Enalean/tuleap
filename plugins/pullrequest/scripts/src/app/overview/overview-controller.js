@@ -46,6 +46,7 @@ function OverviewController(
         isConflictingMerge,
         isNonFastForwardMerge,
         isUnknownMerge,
+        isSameReferencesMerge,
         showEditionForm,
         $onInit: init,
     });
@@ -98,6 +99,10 @@ function OverviewController(
 
     function isUnknownMerge() {
         return self.pull_request.merge_status === "unknown-merge-status" && isOpen();
+    }
+
+    function isSameReferencesMerge() {
+        return self.pull_request.reference_src === self.pull_request.reference_dest && isOpen();
     }
 
     function hasMergeRight() {

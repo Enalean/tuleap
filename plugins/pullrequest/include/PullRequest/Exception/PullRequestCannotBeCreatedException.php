@@ -26,6 +26,6 @@ class PullRequestCannotBeCreatedException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("The source and destination references should not be the same.");
+        parent::__construct("The source and destination branches should not be the same.");
     }
 }

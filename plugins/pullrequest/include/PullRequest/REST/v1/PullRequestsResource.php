@@ -846,20 +846,16 @@ class PullRequestsResource extends AuthenticatedResource
             );
         } catch (UnknownBranchNameException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (PullRequestCannotBeCreatedException $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (PullRequestAlreadyExistsException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestAnonymousUserException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (PullRequestCannotBeCreatedException $exception) {
+            throw new RestException(400, $exception->getMessage());
         } catch (PullRequestTargetException $exception) {
             throw new RestException(400, $exception->getMessage());
-        }
-
-        if (! $generated_pull_request) {
-            throw new RestException(500);
         }
 
         $pull_request_reference = PullRequestReference::fromPullRequest($generated_pull_request);
