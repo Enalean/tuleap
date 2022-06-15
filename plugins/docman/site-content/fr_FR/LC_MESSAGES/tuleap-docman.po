@@ -895,9 +895,6 @@ msgstr ""
 msgid "Display news form"
 msgstr "Afficher le formulaire de news"
 
-msgid "Docman Viewer"
-msgstr "Visionneur du gestionnaire de document"
-
 msgid "Docman item"
 msgstr "Elément du docman"
 
@@ -969,6 +966,9 @@ msgstr "Version du document"
 
 msgid "Document version:"
 msgstr "Version du document :"
+
+msgid "Document viewer"
+msgstr "Visionneur de document"
 
 msgid "Documents"
 msgstr "Documents"
