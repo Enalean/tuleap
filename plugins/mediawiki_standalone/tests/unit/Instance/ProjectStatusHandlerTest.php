@@ -48,8 +48,12 @@ final class ProjectStatusHandlerTest extends TestCase
 
     public function getTestData(): iterable
     {
-        $project_with_mediawiki_service = ProjectTestBuilder::aProject()->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)->build();
-        $project_without_service        = ProjectTestBuilder::aProject()->withoutServices()->build();
+        $project_with_mediawiki_service           = ProjectTestBuilder::aProject()->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)->build();
+        $suspended_project_with_mediawiki_service = ProjectTestBuilder::aProject()
+            ->withUsedService(MediawikiStandaloneService::SERVICE_SHORTNAME)
+            ->withStatusSuspended()
+            ->build();
+        $project_without_service                  = ProjectTestBuilder::aProject()->withoutServices()->build();
         return [
             'when project is suspended, suspend task is emitted' => [
                 'expected_task' => new SuspendInstanceTask($project_with_mediawiki_service),
@@ -57,8 +61,8 @@ final class ProjectStatusHandlerTest extends TestCase
                 'status' => \Project::STATUS_SUSPENDED,
             ],
             'when project is activated, resume task is emitted' => [
-                'expected_task' => new ResumeInstanceTask($project_with_mediawiki_service),
-                'project' => $project_with_mediawiki_service,
+                'expected_task' => new ResumeInstanceTask($suspended_project_with_mediawiki_service),
+                'project' => $suspended_project_with_mediawiki_service,
                 'status' => \Project::STATUS_ACTIVE,
             ],
             'when project doesnt have mediawiki service, suspend does nothing' => [
@@ -66,7 +70,7 @@ final class ProjectStatusHandlerTest extends TestCase
                 'project' => $project_without_service,
                 'status' => \Project::STATUS_SUSPENDED,
             ],
-            'when project os deleted, delete task is emitted' => [
+            'when project is deleted, delete task is emitted' => [
                 'expected_task' => new DeleteInstanceTask($project_with_mediawiki_service),
                 'project' => $project_with_mediawiki_service,
                 'status' => \Project::STATUS_DELETED,

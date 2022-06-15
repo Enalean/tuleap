@@ -60,6 +60,10 @@ final class InstanceManagement
                 $this->sendRequest($delete);
                 return;
             }
+            if (($rename = RenameInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
+                $this->sendRequest($rename);
+                return;
+            }
             if (($log_users_out = LogUsersOutInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->sendRequest($log_users_out);
                 return;

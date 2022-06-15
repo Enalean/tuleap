@@ -50,6 +50,7 @@ use Tuleap\MediawikiStandalone\Configuration\ProjectMediaWikiServiceDAO;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
+use Tuleap\MediawikiStandalone\Instance\ProjectRenameHandler;
 use Tuleap\MediawikiStandalone\Instance\ProjectStatusHandler;
 use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
@@ -142,6 +143,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
+        $this->addHook(Event::PROJECT_RENAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -240,6 +242,19 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(MediawikiHTTPClientFactory::class);
+    }
+
+    /**
+     * @see         Event::PROJECT_RENAME
+     *
+     * @psalm-param array{group_id: string|int, new_name: string} $params
+     */
+    public function projectRename(array $params): void
+    {
+        (new ProjectRenameHandler(
+            new EnqueueTask(),
+            ProjectManager::instance(),
+        ))->handle((int) $params['group_id'], $params['new_name']);
     }
 
     /**
