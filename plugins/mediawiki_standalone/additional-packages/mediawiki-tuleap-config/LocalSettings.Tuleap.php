@@ -81,6 +81,9 @@ $GLOBALS['wgUrlProtocols'][]     = 'file://';
 $GLOBALS['wgUrlProtocols'][]     = 'redis://'; // From old MediaWiki 1.23
 
 $GLOBALS['wgEnableUploads'] = true;
+
+$GLOBALS['wgCookieSameSite'] = 'Lax';
+$GLOBALS['wgCookiePrefix']   = '__Host-tuleap-' . $GLOBALS['wgDBname'];
 // MediaWiki Core default settings - END ###
 
 // Tuleap Specific - START ###
