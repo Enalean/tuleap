@@ -41,7 +41,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor
 {
-    public const PREFIX_NAME_SQL_COLUMN = 'user_defined_';
+    private const PREFIX_NAME_SQL_COLUMN = 'user_defined_';
 
     protected $has_errors = false;
 
@@ -207,7 +207,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     final public function getQuerySelectName(): string
     {
-        return \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->escapeIdentifier(self::PREFIX_NAME_SQL_COLUMN . $this->name);
+        return \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->escapeIdentifier(
+            $this->getPrefixedName()
+        );
+    }
+
+    final public function getPrefixedName(): string
+    {
+        return self::PREFIX_NAME_SQL_COLUMN . $this->name;
     }
 
     /**
