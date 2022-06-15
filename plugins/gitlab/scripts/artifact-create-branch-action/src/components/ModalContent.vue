@@ -134,10 +134,10 @@
 import { postGitlabBranch, postGitlabMergeRequest } from "../api/rest-querier";
 import * as codendi from "codendi";
 import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
-import { computed, ref, onMounted, onBeforeUnmount } from "@vue/composition-api";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
+import { useGettext } from "vue3-gettext";
 
 const { interpolate, $gettext } = useGettext();
 
@@ -153,7 +153,7 @@ let is_creating_branch = ref(false);
 let must_create_gitlab_mr = ref(false);
 let error_message = ref("");
 let reference = ref("");
-let modal: Modal;
+let modal: Modal | null = null;
 
 const selected = ref(props.integrations[0]);
 let selected_integration = computed({
@@ -255,7 +255,7 @@ async function onClickCreateBranch(): Promise<void> {
                 );
             }
 
-            modal.hide();
+            modal?.hide();
         },
         async (error_promise) => {
             const error = await error_promise;
@@ -276,12 +276,6 @@ async function onClickCreateBranch(): Promise<void> {
         }
     );
 }
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>
 
 <style scoped lang="scss">

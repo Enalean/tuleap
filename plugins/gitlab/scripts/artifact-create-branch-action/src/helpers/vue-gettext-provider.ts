@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...jest_base_config,
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-    displayName: "gitlab",
-};
+export interface VueGettextProvider {
+    $gettext: (msgid: string) => string;
+    interpolate: (msgid: string, context: Record<string, unknown>) => string;
+}

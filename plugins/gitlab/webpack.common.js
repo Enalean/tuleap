@@ -19,18 +19,7 @@
 
 const path = require("path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
-
-const rule_vue_loader_with_css_extraction = {
-    ...webpack_configurator.rule_vue_loader,
-    use: [
-        {
-            loader: "vue-loader",
-            options: {
-                CSSExtract: true,
-            },
-        },
-    ],
-};
+const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = [
     {
@@ -45,29 +34,22 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_easygettext_loader,
-                rule_vue_loader_with_css_extraction,
+                {
+                    test: /\.vue$/,
+                    exclude: /node_modules/,
+                    loader: "vue-loader",
+                },
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets,
             ],
         },
         resolve: {
             extensions: [".ts", ".js", ".vue"],
-            alias: {
-                "@vue/composition-api": path.resolve(
-                    __dirname,
-                    "node_modules",
-                    "@vue",
-                    "composition-api"
-                ),
-            },
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getVueLoaderPlugin(),
-            webpack_configurator.getTypescriptCheckerPlugin(true),
-            require("unplugin-vue2-script-setup/webpack")(),
+            require("@tuleap/po-gettext-plugin").default.webpack(),
+            new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {

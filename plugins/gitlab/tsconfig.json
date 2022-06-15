@@ -4,9 +4,9 @@
         "module": "esnext",
         "types": [
             "jest",
-            "unplugin-vue2-script-setup/types"
         ],
-        "incremental": false
+        "incremental": false,
+        "skipLibCheck": true
     },
     "include": [
         "scripts/artifact-create-branch-action/**/*"
