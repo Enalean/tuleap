@@ -92,4 +92,8 @@ $GLOBALS['wgTuleapOAuth2Config']['redirectUri']
 wfLoadSkin('TuleapSkin');
 
 $GLOBALS['wgSkipSkins'] = ['timeless', 'monobook', 'vector'];
+
+$GLOBALS['wgHiddenPrefs'][] = 'language';
+$GLOBALS['wgHiddenPrefs'][] = 'variant';
+$GLOBALS['wgHiddenPrefs'][] = 'noconvertlink';
 // Tuleap Specific - END ###
