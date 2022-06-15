@@ -413,12 +413,11 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     {
         $project = $event->getProject();
         $service = $project->getService($this->getServiceShortname());
-        if ($service !== null) {
+        if ($service instanceof \Tuleap\Docman\ServiceDocman) {
             $event->addArea(
-                '<a href="/plugins/docman/?group_id=' . urlencode((string) $project->getId()) . '">' .
+                '<a href="' . $service->getUrl() . '">' .
                 '<i class="dashboard-widget-content-projectpublicareas ' . Codendi_HTMLPurifier::instance()->purify($service->getIcon()) . '"></i>' .
-                dgettext('tuleap-docman', 'Document Manager') . ': ' .
-                dgettext('tuleap-docman', 'Project Documentation') .
+                dgettext('tuleap-docman', 'Document Manager') .
                 '</a>'
             );
         }
