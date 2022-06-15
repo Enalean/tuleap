@@ -108,16 +108,33 @@ describe("NewItemModal", () => {
         });
     });
 
-    it("Does not load project properties, when they have already been loaded", async () => {
-        store.state.properties = {
-            has_loaded_properties: true,
+    it("Updates custom property", () => {
+        const item = {
+            id: 7,
+            title: "Color folder",
+            type: "folder",
+            description: "A custom description",
+            properties: [
+                {
+                    short_name: "field_9",
+                    name: "string 1",
+                    value: "",
+                    is_multiple_value_allowed: false,
+                    type: "string",
+                    is_required: true,
+                    description: "",
+                    is_used: false,
+                },
+            ],
         };
 
-        const wrapper = factory();
-
-        await wrapper.vm.$nextTick().then(() => {});
-
-        expect(store.dispatch).not.toHaveBeenCalledWith("properties/loadProjectProperties");
+        const wrapper = factory(item);
+        expect(wrapper.vm.item.properties[0].value).toBe("");
+        emitter.emit("update-custom-property", {
+            property_short_name: "field_9",
+            value: "wololo some words",
+        });
+        expect(wrapper.vm.item.properties[0].value).toBe("wololo some words");
     });
 
     it("inherit default values from parent properties", async () => {
