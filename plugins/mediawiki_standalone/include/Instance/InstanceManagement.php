@@ -56,6 +56,10 @@ final class InstanceManagement
                 $this->sendRequest($resume);
                 return;
             }
+            if (($delete = DeleteInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
+                $this->sendRequest($delete);
+                return;
+            }
             if (($log_users_out = LogUsersOutInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
                 $this->sendRequest($log_users_out);
                 return;

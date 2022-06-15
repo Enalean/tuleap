@@ -28,25 +28,43 @@ use Tuleap\Project\ProjectByIDFactory;
 
 final class ProjectByIDFactoryStub implements ProjectByIDFactory
 {
-    private function __construct(private ?\Project $project)
+    private array $projects;
+
+    private function __construct(\Project ...$projects)
     {
+        foreach ($projects as $project) {
+            $this->projects[(int) $project->getID()] = $project;
+        }
     }
 
     public static function buildWithoutProject(): self
     {
-        return new self(null);
+        return new self();
     }
 
-    public static function buildWith(\Project $project): self
+    public static function buildWith(\Project ...$projects): self
     {
-        return new self($project);
+        return new self(...$projects);
     }
 
     public function getValidProjectById(int $project_id): \Project
     {
-        if ($this->project && (int) $this->project->getID() === $project_id) {
-            return $this->project;
+        if (isset($this->projects[$project_id]) && $this->isValid($this->projects[$project_id])) {
+            return $this->projects[$project_id];
         }
         throw new Project_NotFoundException();
+    }
+
+    private function isValid(\Project $project): bool
+    {
+        return ! $project->isError() && ! $project->isDeleted();
+    }
+
+    public function getProjectById(int $project_id): \Project
+    {
+        if (isset($this->projects[$project_id])) {
+            return $this->projects[$project_id];
+        }
+        return new \Project(false);
     }
 }

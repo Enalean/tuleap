@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-use Project_NotFoundException;
-use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 final class LogUsersOutInstanceTaskTest extends TestCase
 {
@@ -40,9 +39,11 @@ final class LogUsersOutInstanceTaskTest extends TestCase
         $project = $this->createStub(\Project::class);
         $project->method('getID')->willReturn(200);
         $project->method('usesService')->willReturn(true);
+        $project->method('isError')->willReturn(false);
+        $project->method('isDeleted')->willReturn(false);
         $task = LogUsersOutInstanceTask::logsOutUserOfAProjectFromItsID(
             (int) $project->getID(),
-            self::buildProjectByIDFactory($project)
+            ProjectByIDFactoryStub::buildWith($project),
         );
 
         self::assertNotNull($task);
@@ -53,12 +54,7 @@ final class LogUsersOutInstanceTaskTest extends TestCase
     {
         $task = LogUsersOutInstanceTask::logsOutUserOfAProjectFromItsID(
             404,
-            new class implements ProjectByIDFactory {
-                public function getValidProjectById(int $project_id): \Project
-                {
-                    throw new Project_NotFoundException();
-                }
-            }
+            ProjectByIDFactoryStub::buildWithoutProject(),
         );
 
         self::assertNull($task);
@@ -69,25 +65,13 @@ final class LogUsersOutInstanceTaskTest extends TestCase
         $project = $this->createStub(\Project::class);
         $project->method('getID')->willReturn(400);
         $project->method('usesService')->willReturn(false);
+        $project->method('isError')->willReturn(false);
+        $project->method('isDeleted')->willReturn(false);
         $task = LogUsersOutInstanceTask::logsOutUserOfAProjectFromItsID(
             (int) $project->getID(),
-            self::buildProjectByIDFactory($project)
+            ProjectByIDFactoryStub::buildWith($project),
         );
 
         self::assertNull($task);
-    }
-
-    private static function buildProjectByIDFactory(\Project $expected_project): ProjectByIDFactory
-    {
-        return new class ($expected_project) implements ProjectByIDFactory {
-            public function __construct(private \Project $project)
-            {
-            }
-
-            public function getValidProjectById(int $project_id): \Project
-            {
-                return $this->project;
-            }
-        };
     }
 }

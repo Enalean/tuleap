@@ -176,6 +176,11 @@ class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.
         );
     }
 
+    public function getProjectById(int $project_id): \Project
+    {
+        return $this->getProject($project_id);
+    }
+
     /**
      * @throws Project_NotFoundException
      */
