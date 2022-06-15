@@ -45,19 +45,17 @@ class DocumentLinkProvider implements ILinkUrlProvider
 
     public function getPluginLinkUrl(): string
     {
-        return $this->base_url . "/plugins/docman/?group_id=" . urlencode((string) $this->project->getID());
+        return $this->base_url . '/plugins/document/' . urlencode($this->project->getUnixNameLowerCase()) . '/';
     }
 
     public function getShowLinkUrl(\Docman_Item $item): string
     {
-        return $this->base_url . "/plugins/document/" .
-            urlencode($this->project->getUnixNameLowerCase()) . "/preview/" . urlencode((string) $item->getId());
+        return $this->getPluginLinkUrl() . 'preview/' . urlencode((string) $item->getId());
     }
 
     public function getDetailsLinkUrl(\Docman_Item $item): string
     {
-        return $this->base_url . "/plugins/document/" .
-            urlencode($this->project->getUnixNameLowerCase()) . "/preview/" . urlencode((string) $item->getId());
+        return $this->getPluginLinkUrl() . 'preview/' . urlencode((string) $item->getId());
     }
 
     public function getNotificationLinkUrl(\Docman_Item $item): string
