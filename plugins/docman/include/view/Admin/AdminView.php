@@ -79,7 +79,7 @@ abstract class AdminView
             throw new NotFoundException();
         }
 
-        $documents_link = new BreadCrumbLink(dgettext('tuleap-docman', 'Documents'), $default_url);
+        $documents_link = new BreadCrumbLink(dgettext('tuleap-docman', 'Documents'), $service->getUrl());
         $documents_link->setDataAttribute('test', 'project-documentation');
 
         $documents_crumb = new BreadCrumb($documents_link);
