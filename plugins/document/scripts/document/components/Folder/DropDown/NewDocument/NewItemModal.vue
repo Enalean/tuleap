@@ -133,7 +133,6 @@ export default {
             "is_obsolescence_date_property_used",
         ]),
         ...mapState("error", ["has_modal_error"]),
-        ...mapState("properties", ["has_loaded_properties"]),
         ...mapState("permissions", ["project_ugroups"]),
         submit_button_label() {
             return this.$gettext("Create document");
@@ -153,6 +152,7 @@ export default {
         emitter.on("update-status-property", this.updateStatusValue);
         emitter.on("update-title-property", this.updateTitleValue);
         emitter.on("update-description-property", this.updateDescriptionValue);
+        emitter.on("update-custom-property", this.updateCustomProperty);
     },
     beforeDestroy() {
         emitter.off("createItem", this.show);
@@ -164,6 +164,7 @@ export default {
         emitter.off("update-status-property", this.updateStatusValue);
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);
+        emitter.off("update-custom-property", this.updateCustomProperty);
     },
     methods: {
         getDefaultItem() {
@@ -272,6 +273,15 @@ export default {
         },
         updateDescriptionValue(description) {
             this.item.description = description;
+        },
+        updateCustomProperty(event) {
+            if (!this.item.properties) {
+                return;
+            }
+            const item_properties = this.item.properties.find(
+                (property) => property.short_name === event.property_short_name
+            );
+            item_properties.value = event.value;
         },
     },
 };

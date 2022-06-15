@@ -35,7 +35,7 @@
             type="text"
             class="tlp-input tlp-form-element"
             data-test="document-string-input"
-            v-bind:id="`document-{{currentlyUpdatedItemProperty.short_name}}`"
+            v-bind:id="`document-${currentlyUpdatedItemProperty.short_name}`"
             v-bind:required="currentlyUpdatedItemProperty.is_required"
             v-model="value"
             v-on:input="oninput"
