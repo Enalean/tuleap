@@ -26,36 +26,27 @@ namespace Tuleap\Tracker\FormElement;
 use Feedback;
 use Tracker_FormElementFactory;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 
-class FormElementTypeUpdater
+class ListFormElementTypeUpdater
 {
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $db_transaction_executor;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
     public function __construct(
-        DBTransactionExecutor $db_transaction_executor,
-        Tracker_FormElementFactory $form_element_factory,
+        private DBTransactionExecutor $db_transaction_executor,
+        private Tracker_FormElementFactory $form_element_factory,
+        private FieldDao $field_dao,
+        private BindDefaultValueDao $bind_default_value_dao,
     ) {
-        $this->db_transaction_executor = $db_transaction_executor;
-        $this->form_element_factory    = $form_element_factory;
     }
 
     /**
      * @throws FormElementTypeUpdateErrorException
      */
-    public function updateFormElementType(\Tracker_FormElement $form_element, string $type): void
+    public function updateFormElementType(\Tracker_FormElement_Field_List $form_element, string $type): void
     {
         $this->db_transaction_executor->execute(
             function () use ($form_element, $type) {
-                $success = $this->form_element_factory->changeFormElementType($form_element, $type);
-                if ($success === false) {
+                if ($this->changeFormElementType($form_element, $type) === false) {
                     throw new FormElementTypeUpdateErrorException(
                         dgettext('tuleap-tracker', 'Field type could not be changed')
                     );
@@ -71,8 +62,9 @@ class FormElementTypeUpdater
                 }
 
                 foreach ($target_fields as $target_field) {
-                    $success = $this->form_element_factory->changeFormElementType($target_field, $type);
-                    if ($success === false) {
+                    assert($target_field instanceof \Tracker_FormElement_Field_List);
+
+                    if ($this->changeFormElementType($target_field, $type) === false) {
                         throw new FormElementTypeUpdateErrorException(
                             dgettext('tuleap-tracker', 'Field type could not be changed for a target field')
                         );
@@ -85,5 +77,32 @@ class FormElementTypeUpdater
                 );
             }
         );
+    }
+
+    private function changeFormElementType(\Tracker_FormElement_Field_List $form_element, string $type): bool
+    {
+        if (! $form_element->changeType($type) || ! $this->field_dao->setType($form_element, $type)) {
+            return false;
+        }
+
+        $this->form_element_factory->clearElementFromCache($form_element); //todo: clear other caches?
+
+        $new_form_element = $this->form_element_factory->getFormElementById($form_element->getId());
+        if (! $new_form_element instanceof \Tracker_FormElement_Field_List) {
+            return false;
+        }
+
+        $new_form_element->storeProperties($new_form_element->getFlattenPropertiesValues());
+        $this->clearDefaultValuesIfNeeded($form_element, $new_form_element);
+
+        return true;
+    }
+
+    private function clearDefaultValuesIfNeeded(\Tracker_FormElement_Field_List $old_form_element, \Tracker_FormElement_Field_List $new_form_element): void
+    {
+        // Clear default values when type changes from a multiple list to a simple list
+        if ($old_form_element->isMultiple() && ! $new_form_element->isMultiple()) {
+            $this->bind_default_value_dao->save($new_form_element->getId(), []);
+        }
     }
 }

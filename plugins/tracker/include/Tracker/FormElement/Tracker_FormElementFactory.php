@@ -191,6 +191,11 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::clearInstance();
     }
 
+    public function clearElementFromCache(Tracker_FormElement $form_element): void
+    {
+        unset($this->formElements[$form_element->getId()]);
+    }
+
     /**
      * Returns the short name of the type of the given field
      *
@@ -1369,25 +1374,6 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             }
         }
         return false;
-    }
-
-    /**
-     * Change formElement type
-     *
-     * @param mixed $type the new formElement type
-     */
-    public function changeFormElementType(Tracker_FormElement $form_element, $type): bool
-    {
-        $success = false;
-        if ($form_element->changeType($type)) {
-            if ($this->getDao()->setType($form_element, $type)) {
-                unset($this->formElements[$form_element->getId()]); //todo: clear other caches?
-                $new_formelement = $this->getFormElementById($form_element->getId());
-                $new_formelement->storeProperties($new_formelement->getFlattenPropertiesValues());
-                $success = true;
-            }
-        }
-        return $success;
     }
 
     /**
