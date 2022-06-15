@@ -30,7 +30,9 @@ import { HardcodedPropertyName } from "../type";
 import { isAdditionalFieldNumber } from "./additional-custom-properties";
 
 export function getRestBodyFromSearchParams(search: AdvancedSearchParams): SearchBodyRest {
-    const sort_params: SortParams | null = search.sort ? search.sort : null;
+    const sort_params: SortParams | null = search.sort
+        ? search.sort
+        : { name: "update_date", order: "desc" };
     return {
         ...(search.global_search && { global_search: search.global_search }),
         ...getProperties(search),

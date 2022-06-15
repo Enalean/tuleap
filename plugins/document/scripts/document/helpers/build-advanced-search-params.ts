@@ -34,7 +34,7 @@ export function buildAdvancedSearchParams(
         update_date: null,
         obsolescence_date: null,
         status: "",
-        sort: null,
+        sort: { name: "update_date", order: "desc" },
     };
 
     return {

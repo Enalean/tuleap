@@ -537,6 +537,7 @@ describe("rest-querier", () => {
                             },
                         },
                     ],
+                    sort: [{ name: "update_date", order: "desc" }],
                     offset: 170,
                     limit: 50,
                 }),
@@ -575,6 +576,7 @@ describe("rest-querier", () => {
                 },
                 body: JSON.stringify({
                     global_search: "Lorem ipsum",
+                    sort: [{ name: "update_date", order: "desc" }],
                     offset: 170,
                     limit: 50,
                 }),

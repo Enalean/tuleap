@@ -90,7 +90,7 @@ function getSort(route: Route): SortParams | null {
     const additional: SortParams | null = null;
 
     if (!route.query.sort) {
-        return additional;
+        return { name: "update_date", order: "desc" };
     }
 
     const sort_list = route.query.sort;
