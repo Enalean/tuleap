@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Service;
 
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 
 /**
  * @psalm-immutable
@@ -37,7 +38,7 @@ abstract class ServiceActivationEvent
     /**
      * @param array{shortname: string, is_used: bool, group_id: int|string} $params
      */
-    final public static function fromEvent(array $params, ProjectByIDFactory $factory): self
+    final public static function fromServiceIsUsedEvent(array $params, ProjectByIDFactory $factory): self
     {
         if ($params['shortname'] !== MediawikiStandaloneService::SERVICE_SHORTNAME) {
             return new InvalidServiceActivationEvent();
@@ -46,6 +47,15 @@ abstract class ServiceActivationEvent
             return new ValidServiceActivationEvent($params['is_used'], $factory->getValidProjectById((int) $params['group_id']));
         } catch (\Project_NotFoundException) {
         }
+        return new InvalidServiceActivationEvent();
+    }
+
+    final public static function fromRegisterProjectCreationEvent(RegisterProjectCreationEvent $event): self
+    {
+        if ($event->shouldProjectInheritFromTemplate() && $event->getTemplateProject()->usesService(MediawikiStandaloneService::SERVICE_SHORTNAME)) {
+            return new ValidServiceActivationEvent(true, $event->getJustCreatedProject());
+        }
+
         return new InvalidServiceActivationEvent();
     }
 

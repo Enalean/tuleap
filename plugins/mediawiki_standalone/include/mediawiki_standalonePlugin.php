@@ -81,6 +81,7 @@ use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2ServerCore\Scope\ScopeExtractor;
 use Tuleap\PluginsAdministration\LifecycleHookCommand\PluginExecuteUpdateHookEvent;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Service\PluginAddMissingServiceTrait;
 use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
@@ -140,6 +141,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(ProjectStatusUpdate::NAME);
+        $this->addHook(RegisterProjectCreationEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -170,7 +172,19 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
      */
     public function serviceIsUsed(array $params): void
     {
-        (new ServiceActivationHandler(new EnqueueTask()))->handle(ServiceActivationEvent::fromEvent($params, ProjectManager::instance()));
+        (new ServiceActivationHandler(new EnqueueTask()))->handle(
+            ServiceActivationEvent::fromServiceIsUsedEvent(
+                $params,
+                ProjectManager::instance()
+            )
+        );
+    }
+
+    public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
+    {
+        (new ServiceActivationHandler(new EnqueueTask()))->handle(
+            ServiceActivationEvent::fromRegisterProjectCreationEvent($event)
+        );
     }
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
