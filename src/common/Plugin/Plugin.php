@@ -59,13 +59,6 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public const SCOPE_PROJECT = 1;
 
     /**
-     * @var bool True if the plugin should be disabled for all projects on installation
-     *
-     * Usefull only for plugins with scope == SCOPE_PROJECT
-     */
-    public $isRestrictedByDefault = false;
-
-    /**
      * @var array List of allowed projects
      */
     protected $allowedForProject = [];
@@ -178,13 +171,6 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook($name);
     }
 
-    /**
-     * Call when the plugin is uninstalled
-     */
-    public function uninstall()
-    {
-    }
-
     public function addHook($hook, $callback = null, $recallHook = false)
     {
         if ($this->hooks->containsKey($hook)) {
@@ -263,7 +249,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         } else {
             $path = "";
         }
-        if ($pm->pluginIsCustom($this)) {
+        if ($pm->isACustomPlugin($this)) {
             $path = ForgeConfig::get('sys_custompluginspath');
         }
         return $path . '/' . $this->getName();
@@ -304,7 +290,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         if (! $this->filesystem_path) {
             $pm = $this->_getPluginManager();
-            if ($pm->pluginIsCustom($this)) {
+            if ($pm->isACustomPlugin($this)) {
                 $path = ForgeConfig::get('sys_custompluginsroot');
             } else {
                 $path = ForgeConfig::get('sys_pluginsroot');
@@ -337,27 +323,6 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $pm = PluginManager::instance();
         return $pm;
-    }
-
-    /**
-     * Function called before turning a plugin to available status
-     * Allow you to check required things (DB connection, etc...)
-     * and to forbid plugin to be made available if requirements are not met.
-     *
-     * @return bool true if the plugin can be made available, false if not
-     */
-    public function canBeMadeAvailable()
-    {
-        return true;
-    }
-
-    /**
-     * Function called when a plugin is set as available or unavailable
-     *
-     * @param bool $available true if the plugin is available, false if unavailable
-     */
-    public function setAvailable($available)
-    {
     }
 
     /**

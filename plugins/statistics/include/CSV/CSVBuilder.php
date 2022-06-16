@@ -139,7 +139,7 @@ class CSVBuilder
 
         //GIT
         $git_plugin = $this->plugin_manager->getPluginByName('git');
-        if ($git_plugin && $this->plugin_manager->isPluginAvailable($git_plugin)) {
+        if ($git_plugin && $this->plugin_manager->isPluginEnabled($git_plugin)) {
             $this->services_usage_formatter->buildDatas($this->services_usage_dao->getGitWrite(), "GIT write");
             $this->services_usage_formatter->buildDatas($this->services_usage_dao->getGitRead(), "GIT read");
         }
@@ -175,7 +175,7 @@ class CSVBuilder
 
         //CI
         $ci_plugin = $this->plugin_manager->getPluginByName('hudson');
-        if ($ci_plugin && $this->plugin_manager->isPluginAvailable($ci_plugin)) {
+        if ($ci_plugin && $this->plugin_manager->isPluginEnabled($ci_plugin)) {
             $this->services_usage_formatter->buildDatas($this->services_usage_dao->getProjectWithCIActivated(), "Continuous integration activated");
             $this->services_usage_formatter->buildDatas($this->services_usage_dao->getNumberOfCIJobs(), "Continuous integration jobs");
         }

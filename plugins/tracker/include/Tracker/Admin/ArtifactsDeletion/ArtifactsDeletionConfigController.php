@@ -71,7 +71,7 @@ class ArtifactsDeletionConfigController
         $artifacts_limit                  = $this->config->getArtifactsDeletionLimit();
         $archive_deleted_items_plugin     = $this->plugin_manager->getPluginByName('archivedeleteditems');
         $is_archive_deleted_items_enabled = ($archive_deleted_items_plugin)
-            ? $this->plugin_manager->isPluginAvailable($archive_deleted_items_plugin)
+            ? $this->plugin_manager->isPluginEnabled($archive_deleted_items_plugin)
             : false;
 
         $this->admin_page_renderer->renderANoFramedPresenter(

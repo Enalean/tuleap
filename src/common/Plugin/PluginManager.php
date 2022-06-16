@@ -92,36 +92,36 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         self::$instance = null;
     }
 
-    public function getAvailablePlugins()
+    /**
+     * @return Plugin[]
+     */
+    public function getEnabledPlugins(): array
     {
-        return $this->plugin_factory->getAvailablePlugins();
+        return $this->plugin_factory->getEnabledPlugins();
     }
 
-    public function getAllPlugins()
+    /**
+     * @return Plugin[]
+     */
+    public function getAllPlugins(): array
     {
         return $this->plugin_factory->getAllPlugins();
     }
 
-    public function isPluginAvailable($plugin)
+    public function isPluginEnabled(Plugin $plugin): bool
     {
-        return $this->plugin_factory->isPluginAvailable($plugin);
+        return $this->plugin_factory->isPluginEnabled($plugin);
     }
 
-    public function availablePlugin($plugin)
+    public function enablePlugin(Plugin $plugin): void
     {
-        if ($plugin->canBeMadeAvailable()) {
-            $this->plugin_factory->availablePlugin($plugin);
-
-            $plugin->setAvailable(true);
-            $this->site_cache->invalidatePluginBasedCaches();
-        }
+        $this->plugin_factory->enablePlugin($plugin);
+        $this->site_cache->invalidatePluginBasedCaches();
     }
 
-    public function unavailablePlugin($plugin)
+    public function disablePlugin(Plugin $plugin): void
     {
-        $this->plugin_factory->unavailablePlugin($plugin);
-
-        $plugin->setAvailable(false);
+        $this->plugin_factory->disablePlugin($plugin);
         $this->site_cache->invalidatePluginBasedCaches();
     }
 
@@ -129,12 +129,15 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @throws InvalidPluginNameException
      * @throws UnableToCreatePluginException
      */
-    public function installAndActivate(string $name): Plugin
+    public function installAndEnable(string $name): Plugin
     {
         $plugin = $this->plugin_factory->getPluginByName($name);
         if (! $plugin) {
             $this->getPluginDuringInstall($name); // ensures the plugin actually exists
             $plugin = $this->installPlugin($name);
+            if (! $plugin) {
+                throw new Exception("Unable to install plugin $name");
+            }
         }
         $this->enablePluginAndItsDependencies($plugin);
 
@@ -143,30 +146,30 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     public function enablePluginAndItsDependencies(Plugin $plugin): void
     {
-        $this->recursivelyActivatePlugin($plugin);
+        $this->recursivelyEnablePlugin($plugin);
         $this->site_cache->invalidatePluginBasedCaches();
     }
 
     /**
      * @throws InvalidPluginNameException
      */
-    private function recursivelyActivatePlugin(Plugin $plugin): void
+    private function recursivelyEnablePlugin(Plugin $plugin): void
     {
         foreach ($plugin->getDependencies() as $dependency_name) {
             $dependency = $this->getPluginByName($dependency_name);
             if (! $dependency) {
                 throw new InvalidPluginNameException($dependency_name);
             }
-            $this->recursivelyActivatePlugin($dependency);
+            $this->recursivelyEnablePlugin($dependency);
         }
-        $this->plugin_factory->availablePlugin($plugin);
+        $this->plugin_factory->enablePlugin($plugin);
     }
 
     /**
      * @throws InvalidPluginNameException
      * @throws UnableToCreatePluginException
      */
-    public function installPlugin(string $name): Plugin
+    public function installPlugin(string $name): ?Plugin
     {
         if (! $this->isNameValid($name)) {
             throw new InvalidPluginNameException($name);
@@ -187,6 +190,7 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->createEtc($name);
         $this->configureForgeUpgrade($name);
         $plugin->postInstall();
+
         return $plugin;
     }
 
@@ -208,7 +212,6 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $name = $this->plugin_factory->getNameForPlugin($plugin);
         $this->executeSqlStatements('uninstall', $name);
-        $plugin->uninstall();
         $this->site_cache->invalidatePluginBasedCaches();
         return $this->plugin_factory->removePlugin($plugin);
     }
@@ -333,25 +336,29 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $name;
     }
 
-    public function getPluginByName($name)
+    public function getPluginByName(string $name): ?Plugin
     {
         return $this->plugin_factory->getPluginByName($name);
     }
 
-    public function getAvailablePluginByName($name)
+    public function getEnabledPluginByName(string $name): ?Plugin
     {
         $plugin = $this->getPluginByName($name);
-        if ($plugin && $this->isPluginAvailable($plugin)) {
+        if ($plugin && $this->isPluginEnabled($plugin)) {
             return $plugin;
         }
+
+        return null;
     }
-    public function getPluginById($id)
+
+    public function getPluginById(int $id): ?Plugin
     {
         return $this->plugin_factory->getPluginById($id);
     }
-    public function pluginIsCustom($plugin)
+
+    public function isACustomPlugin(Plugin $plugin): bool
     {
-        return $this->plugin_factory->pluginIsCustom($plugin);
+        return $this->plugin_factory->isACustomPlugin($plugin);
     }
 
     public function getNameForPlugin(Plugin $plugin): string
@@ -359,12 +366,8 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if (! isset($this->plugins_name[$plugin->getId()])) {
             $this->plugins_name[$plugin->getId()] = $this->plugin_factory->getNameForPlugin($plugin);
         }
-        return $this->plugins_name[$plugin->getId()];
-    }
 
-    public function getAllowedProjects($plugin)
-    {
-        return $this->plugin_factory->getProjectsByPluginId($plugin);
+        return $this->plugins_name[$plugin->getId()];
     }
 
     /**

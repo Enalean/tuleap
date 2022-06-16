@@ -43,7 +43,7 @@ final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\
     protected function setUp(): void
     {
         $this->plugin_factory = Mockery::mock(PluginFactory::class);
-        $this->plugin_factory->shouldReceive('getAvailablePlugins');
+        $this->plugin_factory->shouldReceive('getEnabledPlugins');
         $this->retriever = new ServiceEnableForXmlImportRetriever($this->plugin_factory);
     }
 

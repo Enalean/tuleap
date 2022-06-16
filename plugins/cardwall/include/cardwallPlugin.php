@@ -295,7 +295,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
-            $agiledashboard_plugin = PluginManager::instance()->getAvailablePluginByName('agiledashboard');
+            $agiledashboard_plugin = PluginManager::instance()->getEnabledPluginByName('agiledashboard');
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
                 $assets = new IncludeAssets(__DIR__ . '/../../tracker/frontend-assets', '/assets/trackers');
                 $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker.js'));

@@ -51,8 +51,8 @@ function extract_params($argv)
 // First: check if LDAP plugin is active
 // Ensure LDAP plugin is active
 $pluginManager = PluginManager::instance();
-$ldapPlugin    = $pluginManager->getPluginByName('ldap');
-if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
+$ldapPlugin    = $pluginManager->getEnabledPluginByName('ldap');
+if ($ldapPlugin instanceof LdapPlugin) {
 // -h --help help
 // --ldapid="" ldap_id(required)
 // --realname="" realname (required)

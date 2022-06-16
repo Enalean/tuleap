@@ -141,7 +141,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * @return false|array Return the current element
      * @psalm-ignore-falsable-return
      */
-    public function current()
+    public function current(): mixed
     {
         if ($this->result_iterator === null) {
             return false;
@@ -163,10 +163,8 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * Move forward to next element.
      *
      * @deprecated
-     *
-     * @return void
      */
-    public function next()
+    public function next(): void
     {
         $this->result_iterator->next();
     }
@@ -175,10 +173,8 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * Check if there is a current element after calls to rewind() or next().
      *
      * @deprecated
-     *
-     * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         if ($this->result_iterator === null) {
             return false;
@@ -201,10 +197,8 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * Rewind the Iterator to the first element.
      *
      * @deprecated
-     *
-     * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->result_iterator->rewind();
     }
@@ -213,20 +207,16 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
      * Return the key of the current element.
      *
      * @deprecated
-     *
-     * @return mixed
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->result_iterator->key();
     }
 
     /**
      * @deprecated
-     *
-     * @return int the number the global function count() should show
      */
-    public function count()
+    public function count(): int
     {
         return $this->rowCount();
     }

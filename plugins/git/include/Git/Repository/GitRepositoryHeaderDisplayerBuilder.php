@@ -60,6 +60,7 @@ class GitRepositoryHeaderDisplayerBuilder
     public function build($selected_tab)
     {
         $git_plugin = \PluginManager::instance()->getPluginByName('git');
+        assert($git_plugin instanceof \GitPlugin);
         return new GitRepositoryHeaderDisplayer(
             $this->getHeaderRenderer($git_plugin),
             $this->getRepositoryHeaderPresenterBuilder($git_plugin, $selected_tab),

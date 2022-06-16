@@ -266,29 +266,6 @@ class WebDAVUtils
     }
 
     /**
-     * Returns the file system root of docman
-     *
-     * @return String
-     */
-    public function getDocmanRoot()
-    {
-        $pluginManager = PluginManager::instance();
-        $p             = $pluginManager->getPluginByName('docman');
-        $info          = $p->getPluginInfo();
-        return $info->getPropertyValueForName('docman_root');
-    }
-
-    /**
-     * Returns a new instance of FileStorage
-     *
-     * @return Docman_FileStorage
-     */
-    public function getFileStorage()
-    {
-        return new Docman_FileStorage($this->getDocmanRoot());
-    }
-
-    /**
      * Tells if write acces is enabled or not for the WebDAV plugin
      *
      * @return bool
@@ -297,7 +274,9 @@ class WebDAVUtils
     {
         $pluginManager = PluginManager::instance();
         $p             = $pluginManager->getPluginByName('webdav');
-        $info          = $p->getPluginInfo();
+        assert($p instanceof WebDAVPlugin);
+        $info = $p->getPluginInfo();
+
         return $info->getPropertyValueForName('write_access_enabled');
     }
 
@@ -308,9 +287,11 @@ class WebDAVUtils
     public function processDocmanRequest(WebDAV_Request $request, PFUser $current_user): void
     {
         if (! $this->docmanPlugin) {
-            $pluginMgr          = PluginManager::instance();
-            $this->docmanPlugin = $pluginMgr->getPluginByName('docman');
-            if (! $this->docmanPlugin || ($this->docmanPlugin && ! $pluginMgr->isPluginAvailable($this->docmanPlugin))) {
+            $plugin_manager = PluginManager::instance();
+            $plugin         = $plugin_manager->getEnabledPluginByName('docman');
+            if ($plugin instanceof DocmanPlugin) {
+                $this->docmanPlugin = $plugin;
+            } else {
                 throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available'));
             }
         }

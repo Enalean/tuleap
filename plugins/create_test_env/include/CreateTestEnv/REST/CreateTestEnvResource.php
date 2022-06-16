@@ -161,6 +161,9 @@ class CreateTestEnvResource
      */
     private function getPlugin()
     {
-        return \PluginManager::instance()->getPluginByName(\create_test_envPlugin::NAME);
+        $plugin = \PluginManager::instance()->getPluginByName(\create_test_envPlugin::NAME);
+        assert($plugin instanceof \create_test_envPlugin);
+
+        return $plugin;
     }
 }

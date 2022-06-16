@@ -70,7 +70,7 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
+        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
 
         $plugin_loader->loadPlugins();
 
@@ -82,7 +82,7 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
+        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
 
         touch($this->hooks_cache_file_path);
 
@@ -96,7 +96,7 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
+        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
 
         touch($this->hooks_cache_file_path);
         chmod($this->hooks_cache_file_path, 0400);
@@ -111,7 +111,7 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
-        $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
+        $this->plugin_factory->shouldReceive('getEnabledPlugins')->andReturn([]);
 
         file_put_contents($this->hooks_cache_file_path, 'InvalidData');
 

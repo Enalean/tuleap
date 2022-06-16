@@ -13,14 +13,12 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 
 #, php-format
-msgid "%1$s is now available."
-msgstr "%1$s est maintenant disponible."
+msgid "%1$s is now disabled."
+msgstr "%1$s est maintenant désactivé."
 
 #, php-format
-msgid "%1$s is now unavailable. Web space and CGI remain accessible!"
-msgstr ""
-"%1$s est maintenant indisponible. L'espace web et les scripts cgi sont "
-"toujours accessibles !"
+msgid "%1$s is now enabled."
+msgstr "%1$s est maintenant activé."
 
 #, php-format
 msgid "%1$s projects restriction"
@@ -38,9 +36,6 @@ msgstr "Autoriser"
 msgid "Allow all the projects to use this plugin"
 msgstr "Autoriser tous les projets à utiliser ce plugin"
 
-msgid "Avail this plugin"
-msgstr "Utiliser le plugin"
-
 msgid "Available plugins"
 msgstr "Plugins disponibles"
 
@@ -54,6 +49,18 @@ msgstr "Impossible de restreindre ce plugin car il a une portée système"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+#, php-format
+msgid "Cannot disable %1$s. Please disable the following plugins before: %2$s"
+msgstr ""
+"Impossible de désactiver %1$s. Veuillez désactiver les plugins suivants au "
+"préalable : %2$s"
+
+#, php-format
+msgid "Cannot enable %1$s. Please enable the following plugins before: %2$s"
+msgstr ""
+"Impossible d'activer  %1$s. Veuillez activer les plugins suivants au "
+"préalable : %2$s"
 
 msgid "Confirm disable of plugin"
 msgstr "Confirmez la désactivation du plugin"
@@ -70,11 +77,11 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
+msgid "Disable this plugin"
+msgstr "Désactiver ce plugin"
+
 msgid "Disabling a plugin"
 msgstr "Désactivation d'un plugin"
-
-msgid "Do not avail this plugin"
-msgstr "Ne pas utiliser le plugin"
 
 msgid ""
 "Editing plugin properties through the web UI present a security risk, it is "
@@ -87,6 +94,9 @@ msgstr ""
 
 msgid "Enable plugin and its dependencies"
 msgstr "Activer le plugin ainsi que ses dépendances"
+
+msgid "Enable this plugin"
+msgstr "Activer ce plugin"
 
 msgid "Enabled?"
 msgstr "Activé ?"
@@ -221,18 +231,6 @@ msgid "This section allows to define which projects will be able to use %1$s."
 msgstr ""
 "Cette section permet de définir les projets qui pourront utiliser ou non "
 "%1$s."
-
-#, php-format
-msgid "Unable to avail %1$s. Please avail the following plugins before: %2$s"
-msgstr ""
-"Impossible d'activer %1$s. Veuillez activer les plugins suivants : %2$s"
-
-#, php-format
-msgid ""
-"Unable to unavail %1$s. Please unavail the following plugins before:  %2$s"
-msgstr ""
-"Impossible de désactiver %1$s. Veuillez désactiver les plugins suivants : "
-"%2$s"
 
 msgid "Uninstall"
 msgstr "Désinstaller"

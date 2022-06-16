@@ -93,9 +93,10 @@ final class GitlabMergeRequestResource
     {
         $this->options();
 
-        $current_user          = UserManager::instance()->getCurrentUser();
-        $plugin_manager        = PluginManager::instance();
-        $gitlab_plugin         = $plugin_manager->getPluginByName(gitlabPlugin::SERVICE_NAME);
+        $current_user   = UserManager::instance()->getCurrentUser();
+        $plugin_manager = PluginManager::instance();
+        $gitlab_plugin  = $plugin_manager->getPluginByName(gitlabPlugin::SERVICE_NAME);
+        assert($gitlab_plugin instanceof gitlabPlugin);
         $request_factory       = HTTPFactoryBuilder::requestFactory();
         $stream_factory        = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());

@@ -42,13 +42,11 @@ class PluginDependencySolver // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     }
 
     /**
-     * Get plugin names that are still available and which depends on the given plugin
-     *
      * @return array of strings
      */
-    public function getAvailableDependencies(Plugin $plugin)
+    public function getEnabledDependencies(Plugin $plugin)
     {
-        return $this->getMissingDependencies($plugin, $this->plugin_manager->getAvailablePlugins());
+        return $this->getMissingDependencies($plugin, $this->plugin_manager->getEnabledPlugins());
     }
 
     /**
@@ -58,20 +56,20 @@ class PluginDependencySolver // phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
      *
      * @throws \Tuleap\Plugin\InvalidPluginNameException
      */
-    public function getUnmetInstalledDependencies($plugin_name)
+    public function getUninstalledDependencies($plugin_name)
     {
         $plugin = $this->plugin_manager->getPluginDuringInstall($plugin_name);
         return $this->getUnmetMissingDependencies($plugin, 'getPluginByName');
     }
 
     /**
-     * Get plugin names that should already be available for the given plugin name
+     * Get plugin names that should already be enabled for the given plugin name
      *
      * @return array of strings
      */
-    public function getUnmetAvailableDependencies(Plugin $plugin)
+    public function getDisabledDependencies(Plugin $plugin)
     {
-        return $this->getUnmetMissingDependencies($plugin, 'getAvailablePluginByName');
+        return $this->getUnmetMissingDependencies($plugin, 'getEnabledPluginByName');
     }
 
     private function getUnmetMissingDependencies(Plugin $plugin, $method)

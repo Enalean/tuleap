@@ -66,7 +66,10 @@ class RepositoryResource
         );
         $this->query_to_criterion_converter = new QueryToCriterionConverter();
 
-        $git_plugin                          = \PluginFactory::instance()->getPluginByName('git');
+        $git_plugin = \PluginFactory::instance()->getPluginByName('git');
+        if (! $git_plugin) {
+            throw new \Exception("Pullrequest plugin cannot find git plugin");
+        }
         $this->gitolite_access_URL_generator = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
 
         $this->logger = \pullrequestPlugin::getLogger();

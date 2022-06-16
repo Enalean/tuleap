@@ -92,6 +92,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $plugin = $this->plugin_factory->getPluginByName(
             AgileDashboardPlugin::PLUGIN_NAME
         );
+        assert($plugin instanceof AgileDashboardPlugin);
 
         $tracker_dao                  = new TrackerDao();
         $planning_dao                 = new PlanningDao($tracker_dao);

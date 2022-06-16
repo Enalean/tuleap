@@ -107,7 +107,8 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     {
         $project = HTTPRequest::instance()->getProject();
 
-        if (! PluginManager::instance()->getPluginByName('agiledashboard')->isAllowed($project->getID())) {
+        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
+        if (! $agiledashboard_plugin || ! $agiledashboard_plugin->isAllowed($project->getID())) {
             return;
         }
 

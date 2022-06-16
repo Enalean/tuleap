@@ -31,7 +31,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p             = $pluginManager->getPluginByName('statistics');
-if (! $p || ! $pluginManager->isPluginAvailable($p)) {
+if (! $p || ! $pluginManager->isPluginEnabled($p)) {
     $GLOBALS['Response']->redirect('/');
 }
 

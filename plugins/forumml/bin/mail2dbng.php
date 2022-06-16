@@ -35,7 +35,7 @@ if (db_numrows($res) > 0) {
 
 $plugin_manager = PluginManager::instance();
 $plugin         = $plugin_manager->getPluginByName('forumml');
-if ($plugin && $plugin_manager->isPluginAvailable($plugin) && $plugin_manager->isPluginAllowedForProject($plugin, $project_id)) {
+if ($plugin && $plugin_manager->isPluginEnabled($plugin) && $plugin_manager->isPluginAllowedForProject($plugin, $project_id)) {
     $info = $plugin->getPluginInfo();
 
     // Get ForumML storage

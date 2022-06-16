@@ -115,6 +115,7 @@ class ProjectMetadataResource extends AuthenticatedResource
         $this->checkAccess();
 
         $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+        assert($docman_plugin instanceof \DocmanPlugin);
         if (! $docman_plugin->isAllowed($id)) {
             throw new RestException(404, 'Docman plugin not activated');
         }

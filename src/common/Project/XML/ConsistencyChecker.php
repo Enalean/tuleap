@@ -63,7 +63,7 @@ class ConsistencyChecker
 
         foreach ($needed_extra_plugins as $plugin_name) {
             $plugin = $this->plugin_factory->getPluginByName($plugin_name);
-            if ($plugin === false || ! $this->plugin_factory->isPluginAvailable($plugin)) {
+            if (! $plugin || ! $this->plugin_factory->isPluginEnabled($plugin)) {
                 return false;
             }
         }

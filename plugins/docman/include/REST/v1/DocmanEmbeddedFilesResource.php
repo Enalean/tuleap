@@ -472,7 +472,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
 
     private function getEmbeddedFileVersionCreator(): EmbeddedFileVersionCreator
     {
-        $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
+        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+        assert($docman_plugin instanceof \DocmanPlugin);
         $docman_root          = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
         $item_updator_builder = new DocmanItemUpdatorBuilder();
         return new EmbeddedFileVersionCreator(

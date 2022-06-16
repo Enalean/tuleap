@@ -27,7 +27,7 @@ require_once __DIR__ . '/../include/ProjectQuotaHtml.class.php';
 
 $pluginManager = PluginManager::instance();
 $p             = $pluginManager->getPluginByName('statistics');
-if (! $p || ! $pluginManager->isPluginAvailable($p)) {
+if (! $p || ! $pluginManager->isPluginEnabled($p)) {
     $GLOBALS['Response']->redirect('/');
 }
 

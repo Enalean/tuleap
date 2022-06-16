@@ -53,7 +53,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $plugin_manager = PluginManager::instance();
     $mw_plugin      = $plugin_manager->getPluginByName('mediawiki');
     \assert($mw_plugin instanceof mediawikiPlugin);
-    if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
+    if (! $mw_plugin || ! $plugin_manager->isPluginEnabled($mw_plugin)) {
         die('Mediawiki plugin not available');
     }
 

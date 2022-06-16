@@ -26,8 +26,8 @@ if ($argc != 3) {
 
 // First: check if LDAP plugin is active
 $plugin_manager = PluginManager::instance();
-$ldap_plugin    = $plugin_manager->getPluginByName('ldap');
-if ($plugin_manager->isPluginAvailable($ldap_plugin)) {
+$ldap_plugin    = $plugin_manager->getEnabledPluginByName('ldap');
+if ($ldap_plugin instanceof LdapPlugin) {
     $user = UserManager::instance()->getUserByUserName($argv[1]);
     if ($user !== null) {
         $user->setPassword($argv[2]);

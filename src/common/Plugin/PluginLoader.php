@@ -123,7 +123,7 @@ class PluginLoader
     private function getHooksOfAvailablePlugins(): SerializedPluginProxy
     {
         $proxy = new SerializedPluginProxy(new EventPluginCache());
-        foreach ($this->plugin_factory->getAvailablePlugins() as $plugin) {
+        foreach ($this->plugin_factory->getEnabledPlugins() as $plugin) {
             foreach ($plugin->getHooksAndCallbacks()->iterator() as $hook) {
                 $proxy->addListener($this->plugin_factory, $hook['hook'], $plugin, $hook);
             }

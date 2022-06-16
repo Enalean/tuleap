@@ -20,11 +20,12 @@
 
 require_once __DIR__ . '/DatabaseInitialization.class.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PullRequestDataBuilder extends REST_TestDataBuilder
 {
     public function setUp()
     {
-        PluginManager::instance()->installAndActivate('pullrequest');
+        PluginManager::instance()->installAndEnable('pullrequest');
         $this->insertPullRequest();
     }
 

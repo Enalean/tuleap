@@ -254,7 +254,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->plugin_factory->method('getPluginByName')->willReturn(new \Plugin());
-        $this->plugin_factory->method('isPluginAvailable')->willReturn(true);
+        $this->plugin_factory->method('isPluginEnabled')->willReturn(true);
 
         $this->retriever->shouldReceive('addServiceByName');
         $this->retriever->shouldReceive('getAvailableServices')->andReturn(

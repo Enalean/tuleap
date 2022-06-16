@@ -35,7 +35,7 @@ function forge_get_config($key, $scope = 'core')
     } elseif ($scope !== 'core') {
         $plugin_manager = PluginManager::instance();
         $plugin         = $plugin_manager->getPluginByName($scope);
-        if (! $plugin || ! $plugin_manager->isPluginAvailable($plugin)) {
+        if (! $plugin || ! $plugin_manager->isPluginEnabled($plugin)) {
             return null;
         }
         return $plugin->getPluginInfo()->getPropertyValueForName($key);

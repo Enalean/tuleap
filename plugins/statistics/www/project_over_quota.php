@@ -27,7 +27,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-t
 
 $pluginManager    = PluginManager::instance();
 $statisticsPlugin = $pluginManager->getPluginByName('statistics');
-if (! $statisticsPlugin || ! $pluginManager->isPluginAvailable($statisticsPlugin)) {
+if (! $statisticsPlugin || ! $pluginManager->isPluginEnabled($statisticsPlugin)) {
     $GLOBALS['Response']->redirect('/');
 }
 

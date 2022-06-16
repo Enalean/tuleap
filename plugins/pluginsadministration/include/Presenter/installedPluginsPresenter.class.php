@@ -58,11 +58,6 @@ class PluginsAdministration_Presenter_InstalledPluginsPresenter
         return dgettext('tuleap-pluginsadministration', 'Description');
     }
 
-    public function available_table_head()
-    {
-        return dgettext('tuleap-pluginsadministration', 'Enabled?');
-    }
-
     public function scope_table_head()
     {
         return dgettext('tuleap-pluginsadministration', 'Scope');

@@ -66,7 +66,11 @@ EOT;
     exit(1);
 }
 
-$plugin  = PluginManager::instance()->getPluginByName('mediawiki');
+$plugin = PluginManager::instance()->getPluginByName('mediawiki');
+if (! ($plugin instanceof MediaWikiPlugin)) {
+    echo "Plugin mediawiki is not activated" . PHP_EOL;
+    exit(1);
+}
 $logger  = new Log_ConsoleLogger();
 $cleaner = $plugin->getCleanUnused($logger);
 
