@@ -22,7 +22,7 @@ import type {
     LinkSelectorItem,
     HTMLTemplateResult,
 } from "@tuleap/link-selector";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { getAlreadyLinkedTextTooltip, getAlreadyLinkedInfo } from "../../../../gettext-catalog";
 
 const isLinkableArtifact = (item: unknown): item is LinkableArtifact =>

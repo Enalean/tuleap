@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AddLinkedArtifactCollection } from "../../src/domain/fields/link-field-v2/AddLinkedArtifactCollection";
+import type { AddLinkedArtifactCollection } from "../../src/domain/fields/link-field/AddLinkedArtifactCollection";
 
 export interface AddLinkedArtifactCollectionStub extends AddLinkedArtifactCollection {
     getCallCount(): number;

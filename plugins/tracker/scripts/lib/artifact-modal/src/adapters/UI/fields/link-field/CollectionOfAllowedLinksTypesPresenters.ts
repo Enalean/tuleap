@@ -21,8 +21,8 @@ import type { AllowedLinkTypeRepresentation } from "@tuleap/plugin-tracker-rest-
 import {
     FORWARD_DIRECTION,
     REVERSE_DIRECTION,
-} from "../../../../domain/fields/link-field-v2/LinkType";
-import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
+} from "../../../../domain/fields/link-field/LinkType";
+import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
 
 export type CollectionOfAllowedLinksTypesPresenters = {
     readonly is_parent_type_disabled: boolean;

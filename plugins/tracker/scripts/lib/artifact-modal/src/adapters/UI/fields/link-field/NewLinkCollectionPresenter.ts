@@ -17,25 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
-import {
-    FORWARD_DIRECTION,
-    REVERSE_DIRECTION,
-} from "../../../../domain/fields/link-field-v2/LinkType";
+import type { NewLink } from "../../../../domain/fields/link-field/NewLink";
 
-export const LinkTypeProxy = {
-    fromChangeEvent: (event: Event): LinkType | null => {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return null;
-        }
-        const [shortname, direction] = event.target.value.split(" ");
-        if (direction !== FORWARD_DIRECTION && direction !== REVERSE_DIRECTION) {
-            return null;
-        }
-        return {
-            direction,
-            shortname,
-            label: event.target.selectedOptions[0].label,
-        };
-    },
+export type NewLinkCollectionPresenter = readonly NewLink[];
+
+export const NewLinkCollectionPresenter = {
+    buildEmpty: (): NewLinkCollectionPresenter => [],
+    fromLinks: (links: readonly NewLink[]): NewLinkCollectionPresenter => links,
 };

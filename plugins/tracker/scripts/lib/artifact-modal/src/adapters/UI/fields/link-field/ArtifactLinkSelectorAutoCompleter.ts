@@ -24,21 +24,21 @@ import type {
     GroupCollection,
 } from "@tuleap/link-selector";
 import type { Fault } from "@tuleap/fault";
-import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field-v2/RetrieveMatchingArtifact";
+import type { RetrieveMatchingArtifact } from "../../../../domain/fields/link-field/RetrieveMatchingArtifact";
 import { LinkableNumberProxy } from "./LinkableNumberProxy";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import { MatchingArtifactsGroup } from "./MatchingArtifactsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
-import { MatchingArtifactRetrievalFault } from "../../../../domain/fields/link-field-v2/MatchingArtifactRetrievalFault";
-import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
-import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
+import { MatchingArtifactRetrievalFault } from "../../../../domain/fields/link-field/MatchingArtifactRetrievalFault";
+import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field/RetrieveSelectedLinkType";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
-import type { LinkableNumber } from "../../../../domain/fields/link-field-v2/LinkableNumber";
-import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
+import type { LinkableNumber } from "../../../../domain/fields/link-field/LinkableNumber";
+import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
-import { LinkableArtifactFilter } from "../../../../domain/fields/link-field-v2/LinkableArtifactFilter";
-import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import { LinkableArtifactFilter } from "../../../../domain/fields/link-field/LinkableArtifactFilter";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 
 export type ArtifactLinkSelectorAutoCompleterType = {

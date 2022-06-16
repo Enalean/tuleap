@@ -18,7 +18,7 @@
  */
 
 import type { TrackerColorName } from "@tuleap/plugin-tracker-constants";
-import type { LinkableArtifact } from "../../src/domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
 import { ArtifactCrossReferenceStub } from "./ArtifactCrossReferenceStub";
 
 export const LinkableArtifactStub = {

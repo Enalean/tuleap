@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkableNumber } from "../../../../domain/fields/link-field-v2/LinkableNumber";
+import type { LinkableNumber } from "../../../../domain/fields/link-field/LinkableNumber";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 export const LinkableNumberProxy = {

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AddNewLink } from "../../src/domain/fields/link-field-v2/AddNewLink";
+import type { AddNewLink } from "../../src/domain/fields/link-field/AddNewLink";
 
 export interface AddNewLinkStub extends AddNewLink {
     getCallCount(): number;

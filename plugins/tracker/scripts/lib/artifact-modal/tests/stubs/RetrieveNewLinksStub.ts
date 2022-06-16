@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { NewLink } from "../../src/domain/fields/link-field-v2/NewLink";
-import type { RetrieveNewLinks } from "../../src/domain/fields/link-field-v2/RetrieveNewLinks";
+import type { NewLink } from "../../src/domain/fields/link-field/NewLink";
+import type { RetrieveNewLinks } from "../../src/domain/fields/link-field/RetrieveNewLinks";
 
 export const RetrieveNewLinksStub = {
     withNewLinks: (link: NewLink, ...other_links: NewLink[]): RetrieveNewLinks => ({

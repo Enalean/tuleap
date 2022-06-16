@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
-import { NewLink } from "../../src/domain/fields/link-field-v2/NewLink";
+import type { LinkType } from "../../src/domain/fields/link-field/LinkType";
+import { NewLink } from "../../src/domain/fields/link-field/NewLink";
 import { LinkableArtifactStub } from "./LinkableArtifactStub";
 import { LinkTypeStub } from "./LinkTypeStub";
 

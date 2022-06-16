@@ -20,8 +20,8 @@
 import type { ResultAsync } from "neverthrow";
 import { okAsync, errAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
-import type { RetrieveLinkedArtifactsByType } from "../../src/domain/fields/link-field-v2/RetrieveLinkedArtifactsByType";
+import type { LinkedArtifact } from "../../src/domain/fields/link-field/LinkedArtifact";
+import type { RetrieveLinkedArtifactsByType } from "../../src/domain/fields/link-field/RetrieveLinkedArtifactsByType";
 
 export const RetrieveLinkedArtifactsByTypeStub = {
     withSuccessiveLinkedArtifacts: (

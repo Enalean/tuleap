@@ -18,8 +18,8 @@
  */
 
 import { okAsync, errAsync } from "neverthrow";
-import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
-import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
+import type { LinkedArtifact } from "../../src/domain/fields/link-field/LinkedArtifact";
+import type { RetrieveAllLinkedArtifacts } from "../../src/domain/fields/link-field/RetrieveAllLinkedArtifacts";
 import type { Fault } from "@tuleap/fault";
 
 export const RetrieveAllLinkedArtifactsStub = {

@@ -20,8 +20,8 @@
 import { okAsync } from "neverthrow";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { RetrievePossibleParents } from "../../domain/fields/link-field-v2/RetrievePossibleParents";
-import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
+import type { RetrievePossibleParents } from "../../domain/fields/link-field/RetrievePossibleParents";
+import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
 
 export const PossibleParentsCache = (
     actual_retriever: RetrievePossibleParents

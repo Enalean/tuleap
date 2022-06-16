@@ -19,8 +19,8 @@
 
 import { okAsync, errAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { RetrieveLinkTypes } from "../../src/domain/fields/link-field-v2/RetrieveLinkTypes";
-import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
+import type { RetrieveLinkTypes } from "../../src/domain/fields/link-field/RetrieveLinkTypes";
+import type { LinkType } from "../../src/domain/fields/link-field/LinkType";
 
 export const RetrieveLinkTypesStub = {
     withTypes: (

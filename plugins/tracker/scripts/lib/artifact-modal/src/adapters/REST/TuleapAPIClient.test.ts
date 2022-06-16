@@ -17,22 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { Fault } from "@tuleap/fault";
-import { isFault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { LinkedArtifactCollection } from "./TuleapAPIClient";
 import { TuleapAPIClient } from "./TuleapAPIClient";
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import * as fetch_result from "@tuleap/fetch-result";
-import type { LinkedArtifact } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifact } from "../../domain/fields/link-field/LinkedArtifact";
 import type { ParentArtifact } from "../../domain/parent/ParentArtifact";
 import { CurrentArtifactIdentifierStub } from "../../../tests/stubs/CurrentArtifactIdentifierStub";
 import { ParentArtifactIdentifierStub } from "../../../tests/stubs/ParentArtifactIdentifierStub";
-import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
 import { LinkableNumberStub } from "../../../tests/stubs/LinkableNumberStub";
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { LinkType } from "../../domain/fields/link-field-v2/LinkType";
+import type { LinkType } from "../../domain/fields/link-field/LinkType";
 import { okAsync } from "neverthrow";
 import type { GetAllOptions } from "@tuleap/fetch-result";
 import { LinkTypeStub } from "../../../tests/stubs/LinkTypeStub";
@@ -62,10 +59,8 @@ describe(`TuleapAPIClient`, () => {
 
         it(`will return the parent artifact matching the given id`, async () => {
             const artifact: ParentArtifact = { title: ARTIFACT_TITLE };
-            const getSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchSuccess(getSpy, {
-                return_json: artifact,
-            });
+            const getSpy = jest.spyOn(fetch_result, "getJSON");
+            getSpy.mockReturnValue(okAsync(artifact));
 
             const result = await getParent();
 
@@ -73,18 +68,6 @@ describe(`TuleapAPIClient`, () => {
                 throw new Error("Expected an Ok");
             }
             expect(result.value).toBe(artifact);
-        });
-
-        it(`will return a Fault wrapping an Error if it fails`, async () => {
-            const getSpy = jest.spyOn(tlp_fetch, "get");
-            mockFetchError(getSpy, { status: 404, statusText: "Not found" });
-
-            const result = await getParent();
-
-            if (!result.isErr()) {
-                throw new Error("Expected an Err");
-            }
-            expect(isFault(result.error)).toBe(true);
         });
     });
 

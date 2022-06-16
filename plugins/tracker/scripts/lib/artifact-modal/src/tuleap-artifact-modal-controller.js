@@ -46,9 +46,9 @@ import {
 import { validateArtifactFieldsValues } from "./validate-artifact-field-value.js";
 import { TuleapAPIClient } from "./adapters/REST/TuleapAPIClient";
 import { ParentFeedbackController } from "./adapters/UI/feedback/ParentFeedbackController";
-import { LinkFieldController } from "./adapters/UI/fields/link-field-v2/LinkFieldController";
+import { LinkFieldController } from "./adapters/UI/fields/link-field/LinkFieldController";
 import { DatePickerInitializer } from "./adapters/UI/fields/date-field/DatePickerInitializer";
-import { LinksRetriever } from "./domain/fields/link-field-v2/LinksRetriever";
+import { LinksRetriever } from "./domain/fields/link-field/LinksRetriever";
 import { CurrentArtifactIdentifierProxy } from "./adapters/Caller/CurrentArtifactIdentifierProxy";
 import { ParentArtifactIdentifierProxy } from "./adapters/Caller/ParentArtifactIdentifierProxy";
 import { LinksMarkedForRemovalStore } from "./adapters/Memory/LinksMarkedForRemovalStore";
@@ -61,16 +61,16 @@ import { FileFieldController } from "./adapters/UI/fields/file-field/FileFieldCo
 import { TrackerShortnameProxy } from "./adapters/REST/TrackerShortnameProxy";
 import { FaultFeedbackController } from "./adapters/UI/feedback/FaultFeedbackController";
 import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
-import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field-v2/ArtifactLinkSelectorAutoCompleter";
+import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field/ArtifactLinkSelectorAutoCompleter";
 import { NewLinksStore } from "./adapters/Memory/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
-import { ParentLinkVerifier } from "./domain/fields/link-field-v2/ParentLinkVerifier";
+import { ParentLinkVerifier } from "./domain/fields/link-field/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
 import { SelectedLinkTypeStore } from "./adapters/Memory/SelectedLinkTypeStore";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/PossibleParentsCache";
-import { AlreadyLinkedVerifier } from "./domain/fields/link-field-v2/AlreadyLinkedVerifier";
-import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-field-v2/LinkedArtifactsPopoversController";
+import { AlreadyLinkedVerifier } from "./domain/fields/link-field/AlreadyLinkedVerifier";
+import { LinkedArtifactsPopoversController } from "./adapters/UI/fields/link-field/LinkedArtifactsPopoversController";
 
 export default ArtifactModalController;
 

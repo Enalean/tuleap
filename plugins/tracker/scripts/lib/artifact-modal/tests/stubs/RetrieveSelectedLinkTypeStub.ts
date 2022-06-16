@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveSelectedLinkType } from "../../src/domain/fields/link-field-v2/RetrieveSelectedLinkType";
-import type { LinkType } from "../../src/domain/fields/link-field-v2/LinkType";
+import type { RetrieveSelectedLinkType } from "../../src/domain/fields/link-field/RetrieveSelectedLinkType";
+import type { LinkType } from "../../src/domain/fields/link-field/LinkType";
 
 export const RetrieveSelectedLinkTypeStub = {
     withType: (type: LinkType): RetrieveSelectedLinkType => ({

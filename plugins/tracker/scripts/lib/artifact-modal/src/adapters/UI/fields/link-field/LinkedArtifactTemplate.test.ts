@@ -31,8 +31,8 @@ import { AddLinkMarkedForRemovalStub } from "../../../../../tests/stubs/AddLinkM
 import { DeleteLinkMarkedForRemovalStub } from "../../../../../tests/stubs/DeleteLinkMarkedForRemovalStub";
 import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/VerifyLinkIsMarkedForRemovalStub";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
-import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
-import type { LinkedArtifact } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
+import type { LinkedArtifact } from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkTypeStub } from "../../../../../tests/stubs/LinkTypeStub";
 import { NotifyFaultStub } from "../../../../../tests/stubs/NotifyFaultStub";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";

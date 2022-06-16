@@ -25,7 +25,7 @@ import type { AllowedLinkTypesPresenterContainer } from "./CollectionOfAllowedLi
 import { UNTYPED_LINK, IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { LinkTypeProxy } from "./LinkTypeProxy";
 import type { AllowedLinkTypePresenter } from "./CollectionOfAllowedLinksTypesPresenters";
-import { REVERSE_DIRECTION } from "../../../../domain/fields/link-field-v2/LinkType";
+import { REVERSE_DIRECTION } from "../../../../domain/fields/link-field/LinkType";
 
 const onChange = (host: LinkField, event: Event): void => {
     const new_link_type = LinkTypeProxy.fromChangeEvent(event);

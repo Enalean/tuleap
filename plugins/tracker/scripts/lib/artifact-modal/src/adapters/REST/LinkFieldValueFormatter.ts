@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
-import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
-import { FORWARD_DIRECTION, LinkType } from "../../domain/fields/link-field-v2/LinkType";
-import type { RetrieveNewLinks } from "../../domain/fields/link-field-v2/RetrieveNewLinks";
+import type { RetrieveLinkedArtifactsSync } from "../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
+import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
+import { FORWARD_DIRECTION, LinkType } from "../../domain/fields/link-field/LinkType";
+import type { RetrieveNewLinks } from "../../domain/fields/link-field/RetrieveNewLinks";
 import { NewChangesetLinkProxy } from "./NewChangesetLinkProxy";
 import type { ArtifactLinkNewChangesetValue } from "@tuleap/plugin-tracker-rest-api-types";
 

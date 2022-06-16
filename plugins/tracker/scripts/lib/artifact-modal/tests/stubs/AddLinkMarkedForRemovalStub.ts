@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AddLinkMarkedForRemoval } from "../../src/domain/fields/link-field-v2/AddLinkMarkedForRemoval";
+import type { AddLinkMarkedForRemoval } from "../../src/domain/fields/link-field/AddLinkMarkedForRemoval";
 
 export interface AddLinkMarkedForRemovalStub extends AddLinkMarkedForRemoval {
     getCallCount(): number;

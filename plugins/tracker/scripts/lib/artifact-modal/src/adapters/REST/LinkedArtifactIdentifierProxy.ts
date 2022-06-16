@@ -18,7 +18,7 @@
  */
 
 import type { ArtifactWithStatus } from "./ArtifactWithStatus";
-import type { LinkedArtifactIdentifier } from "../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifactIdentifier } from "../../domain/fields/link-field/LinkedArtifact";
 
 export const LinkedArtifactIdentifierProxy = {
     fromAPIArtifact: (artifact: ArtifactWithStatus): LinkedArtifactIdentifier => ({

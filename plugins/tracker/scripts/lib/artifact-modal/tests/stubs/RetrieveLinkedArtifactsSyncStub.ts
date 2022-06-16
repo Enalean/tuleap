@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LinkedArtifact } from "../../src/domain/fields/link-field-v2/LinkedArtifact";
-import type { RetrieveLinkedArtifactsSync } from "../../src/domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
+import type { LinkedArtifact } from "../../src/domain/fields/link-field/LinkedArtifact";
+import type { RetrieveLinkedArtifactsSync } from "../../src/domain/fields/link-field/RetrieveLinkedArtifactsSync";
 
 export const RetrieveLinkedArtifactsSyncStub = {
     withLinkedArtifacts: (

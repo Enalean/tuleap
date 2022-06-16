@@ -106,7 +106,7 @@ function formatExistingValue(field, artifact_value) {
             delete value_obj.value;
             break;
         case "art_link":
-            value_obj = formatForLinkField(field, artifact_value);
+            value_obj = formatForLinkField(field);
             break;
         case "string":
         case "int":
@@ -182,10 +182,6 @@ function getDefaultValue(field) {
             break;
         case "date":
             value_obj.value = field.default_value ? field.default_value : null;
-            break;
-        case "art_link":
-            value_obj.unformatted_links = "";
-            value_obj.links = [{ id: "" }];
             break;
         case "staticrichtext":
             value_obj.default_value = field.default_value;

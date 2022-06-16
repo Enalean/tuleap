@@ -19,8 +19,8 @@
 
 import type { GroupOfItems } from "@tuleap/link-selector";
 import { getPossibleParentsEmptyState, getPossibleParentsLabel } from "../../../../gettext-catalog";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
-import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkSelectorItemProxy } from "./LinkSelectorItemProxy";
 
 export const PossibleParentsGroup = {

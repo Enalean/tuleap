@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DeleteNewLink } from "../../src/domain/fields/link-field-v2/DeleteNewLink";
+import type { DeleteNewLink } from "../../src/domain/fields/link-field/DeleteNewLink";
 
 export interface DeleteNewLinkStub extends DeleteNewLink {
     getCallCount(): number;

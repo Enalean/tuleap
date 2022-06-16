@@ -20,8 +20,8 @@
 import type { ResultAsync } from "neverthrow";
 import { okAsync, errAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { LinkableArtifact } from "../../src/domain/fields/link-field-v2/LinkableArtifact";
-import type { RetrieveMatchingArtifact } from "../../src/domain/fields/link-field-v2/RetrieveMatchingArtifact";
+import type { LinkableArtifact } from "../../src/domain/fields/link-field/LinkableArtifact";
+import type { RetrieveMatchingArtifact } from "../../src/domain/fields/link-field/RetrieveMatchingArtifact";
 
 export const RetrieveMatchingArtifactStub = {
     withMatchingArtifact: (artifact: LinkableArtifact): RetrieveMatchingArtifact => ({

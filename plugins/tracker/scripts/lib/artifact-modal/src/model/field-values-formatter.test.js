@@ -24,7 +24,11 @@ import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttac
 describe("TuleapArtifactFieldValues", () => {
     describe("getSelectedValues() -", () => {
         describe("Given a map of artifact field values", () => {
-            it("and given a tracker containing those fields, when I get the fields' selected values, then a map containing all the fields provided and also containing default values for all the other fields of the tracker will be returned except non existing fields", () => {
+            it(`and given a tracker containing those fields,
+                when I get the fields' selected values,
+                then a map containing all the fields provided and also containing default values
+                and also containing default values for all the other fields of the tracker
+                except non existing fields will be returned`, () => {
                 const artifact_values = {
                     655: { field_id: 655, value: "alumna Aurora Arpin" },
                     378: { field_id: 378, bind_value_ids: [667, 967] },
@@ -79,7 +83,7 @@ describe("TuleapArtifactFieldValues", () => {
 
                 const output = getSelectedValues(artifact_values, tracker);
 
-                expect(output).toEqual({
+                expect(output).toStrictEqual({
                     655: {
                         field_id: 655,
                         type: "string",
@@ -100,8 +104,6 @@ describe("TuleapArtifactFieldValues", () => {
                     },
                     320: {
                         field_id: 320,
-                        links: [{}],
-                        unformatted_links: "158, 434",
                         type: "art_link",
                         permissions: ["read", "update", "create"],
                     },
@@ -763,7 +765,9 @@ describe("TuleapArtifactFieldValues", () => {
             });
         });
 
-        it("Given a tracker containing an artifact links field, when I get the fields' selected values, then a map of objects containing the fields' id, an empty string that will contain the list of ids to link to and an empty links array will be returned", function () {
+        it(`Given a tracker containing an artifact links field,
+                when I get the fields' selected values,
+                then only the field's id, type and permissions will be returned`, () => {
             const tracker = {
                 fields: [
                     {
@@ -776,13 +780,11 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 803: {
                     field_id: 803,
                     type: "art_link",
                     permissions: ["read", "update", "create"],
-                    unformatted_links: "",
-                    links: [{ id: "" }],
                 },
             });
         });

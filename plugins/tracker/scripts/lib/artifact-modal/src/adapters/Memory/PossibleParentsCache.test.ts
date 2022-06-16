@@ -18,11 +18,11 @@
  */
 
 import { PossibleParentsCache } from "./PossibleParentsCache";
-import type { LinkableArtifact } from "../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../domain/fields/link-field/LinkableArtifact";
 import { CurrentTrackerIdentifierStub } from "../../../tests/stubs/CurrentTrackerIdentifierStub";
 import { RetrievePossibleParentsStub } from "../../../tests/stubs/RetrievePossibleParentsStub";
 import { LinkableArtifactStub } from "../../../tests/stubs/LinkableArtifactStub";
-import type { RetrievePossibleParents } from "../../domain/fields/link-field-v2/RetrievePossibleParents";
+import type { RetrievePossibleParents } from "../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../domain/CurrentTrackerIdentifier";
 
 describe(`PossibleParentsCache`, () => {

@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AddLinkMarkedForRemoval } from "../../domain/fields/link-field-v2/AddLinkMarkedForRemoval";
-import type { DeleteLinkMarkedForRemoval } from "../../domain/fields/link-field-v2/DeleteLinkMarkedForRemoval";
+import type { AddLinkMarkedForRemoval } from "../../domain/fields/link-field/AddLinkMarkedForRemoval";
+import type { DeleteLinkMarkedForRemoval } from "../../domain/fields/link-field/DeleteLinkMarkedForRemoval";
 import type {
     LinkedArtifact,
     LinkedArtifactIdentifier,
-} from "../../domain/fields/link-field-v2/LinkedArtifact";
-import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
+} from "../../domain/fields/link-field/LinkedArtifact";
+import type { VerifyLinkIsMarkedForRemoval } from "../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
 
 type LinksStoreType = AddLinkMarkedForRemoval &
     VerifyLinkIsMarkedForRemoval &

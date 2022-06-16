@@ -18,8 +18,8 @@
  */
 
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
-import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import type { GroupCollection } from "@tuleap/link-selector/src";
 
 function buildPossibleParentsByProjectMap(

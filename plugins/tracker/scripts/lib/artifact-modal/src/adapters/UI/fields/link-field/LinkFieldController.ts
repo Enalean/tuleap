@@ -18,40 +18,40 @@
  */
 
 import { LinkedArtifactCollectionPresenter } from "./LinkedArtifactCollectionPresenter";
-import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field-v2/RetrieveAllLinkedArtifacts";
+import type { RetrieveAllLinkedArtifacts } from "../../../../domain/fields/link-field/RetrieveAllLinkedArtifacts";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 import type { Fault } from "@tuleap/fault";
-import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field-v2/LinkedArtifact";
+import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
-import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-field-v2/AddLinkMarkedForRemoval";
-import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field-v2/DeleteLinkMarkedForRemoval";
-import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field-v2/VerifyLinkIsMarkedForRemoval";
-import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field-v2/RetrieveLinkedArtifactsSync";
+import type { AddLinkMarkedForRemoval } from "../../../../domain/fields/link-field/AddLinkMarkedForRemoval";
+import type { DeleteLinkMarkedForRemoval } from "../../../../domain/fields/link-field/DeleteLinkMarkedForRemoval";
+import type { VerifyLinkIsMarkedForRemoval } from "../../../../domain/fields/link-field/VerifyLinkIsMarkedForRemoval";
+import type { RetrieveLinkedArtifactsSync } from "../../../../domain/fields/link-field/RetrieveLinkedArtifactsSync";
 import type { NotifyFault } from "../../../../domain/NotifyFault";
-import { LinkRetrievalFault } from "../../../../domain/fields/link-field-v2/LinkRetrievalFault";
+import { LinkRetrievalFault } from "../../../../domain/fields/link-field/LinkRetrievalFault";
 import { LinkFieldPresenter } from "./LinkFieldPresenter";
 import type { ArtifactLinkFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
 import type { ArtifactLinkSelectorAutoCompleterType } from "./ArtifactLinkSelectorAutoCompleter";
 import type { LinkSelector, LinkSelectorSearchFieldCallback } from "@tuleap/link-selector";
-import type { LinkableArtifact } from "../../../../domain/fields/link-field-v2/LinkableArtifact";
+import type { LinkableArtifact } from "../../../../domain/fields/link-field/LinkableArtifact";
 import { LinkAdditionPresenter } from "./LinkAdditionPresenter";
 import { NewLinkCollectionPresenter } from "./NewLinkCollectionPresenter";
-import type { AddNewLink } from "../../../../domain/fields/link-field-v2/AddNewLink";
-import type { RetrieveNewLinks } from "../../../../domain/fields/link-field-v2/RetrieveNewLinks";
-import { NewLink } from "../../../../domain/fields/link-field-v2/NewLink";
-import { LinkType } from "../../../../domain/fields/link-field-v2/LinkType";
-import type { DeleteNewLink } from "../../../../domain/fields/link-field-v2/DeleteNewLink";
+import type { AddNewLink } from "../../../../domain/fields/link-field/AddNewLink";
+import type { RetrieveNewLinks } from "../../../../domain/fields/link-field/RetrieveNewLinks";
+import { NewLink } from "../../../../domain/fields/link-field/NewLink";
+import { LinkType } from "../../../../domain/fields/link-field/LinkType";
+import type { DeleteNewLink } from "../../../../domain/fields/link-field/DeleteNewLink";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
-import type { VerifyHasParentLink } from "../../../../domain/fields/link-field-v2/VerifyHasParentLink";
-import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field-v2/RetrieveSelectedLinkType";
-import type { SetSelectedLinkType } from "../../../../domain/fields/link-field-v2/SetSelectedLinkType";
-import type { RetrievePossibleParents } from "../../../../domain/fields/link-field-v2/RetrievePossibleParents";
+import type { VerifyHasParentLink } from "../../../../domain/fields/link-field/VerifyHasParentLink";
+import type { RetrieveSelectedLinkType } from "../../../../domain/fields/link-field/RetrieveSelectedLinkType";
+import type { SetSelectedLinkType } from "../../../../domain/fields/link-field/SetSelectedLinkType";
+import type { RetrievePossibleParents } from "../../../../domain/fields/link-field/RetrievePossibleParents";
 import type { CurrentTrackerIdentifier } from "../../../../domain/CurrentTrackerIdentifier";
 import { PossibleParentsGroup } from "./PossibleParentsGroup";
 import type { ClearFaultNotification } from "../../../../domain/ClearFaultNotification";
-import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field-v2/VerifyIsAlreadyLinked";
+import type { VerifyIsAlreadyLinked } from "../../../../domain/fields/link-field/VerifyIsAlreadyLinked";
 import { LinkFieldPossibleParentsGroupsByProjectBuilder } from "./LinkFieldPossibleParentsGroupsByProjectBuilder";
 import type {
     ControlLinkedArtifactsPopovers,
