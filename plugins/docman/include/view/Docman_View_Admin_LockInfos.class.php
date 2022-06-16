@@ -107,6 +107,9 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
         }
 
         if ($lockInfos !== false) {
+            $project = ProjectManager::instance()->getProject((int) $params['group_id']);
+            $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
+            assert($service instanceof \Tuleap\Docman\ServiceDocman);
             foreach ($lockInfos as $row) {
                 $item = $dIF->getItemFromDb($row['item_id']);
                 if ($item === null) {
@@ -114,16 +117,18 @@ class Docman_View_Admin_LockInfos extends \Tuleap\Docman\View\Admin\AdminView
                 }
                 $parent   = $dIF->getItemFromDb($item->getParentId());
                 $content .= '<tr>';
-                $content .= '<td>' . '<a href="/plugins/docman/?group_id=' . urlencode((string) $params['group_id']) . '&action=details&id=' . urlencode((string) $item->getId()) . '">';
+                $item_url = $service->getUrl() . 'preview/' . urlencode((string) $item->getId());
+                $content .= '<td>' . '<a href="' . $item_url . '">';
                 $content .= $hp->purify($item->getTitle());
                 $content .= '</a></td>';
                 $content .= '<td>';
                 if ($parent === null || $dIF->isRoot($parent)) {
                     $content .= '</td>';
                 } else {
-                    $content .=  '<a href="' . $this->defaultUrl . '&action=show&id=' . urlencode((string) $parent->getId()) . '">';
-                    $content .= $hp->purify($parent->getTitle());
-                    $content .= '</a></td>';
+                    $parent_url = $service->getUrl() . 'folder/' . urlencode((string) $parent->getId());
+                    $content   .=  '<a href="' . $parent_url . '">';
+                    $content   .= $hp->purify($parent->getTitle());
+                    $content   .= '</a></td>';
                 }
                 $content .= '<td>' . $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) . '</td>';
                 $content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) . '</td>';
