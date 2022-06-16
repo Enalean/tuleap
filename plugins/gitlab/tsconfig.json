@@ -2,7 +2,11 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
-        "types": ["jest", "bootstrap"]
+        "types": [
+            "jest",
+            "unplugin-vue2-script-setup/types"
+        ],
+        "incremental": false
     },
     "include": [
         "scripts/artifact-create-branch-action/**/*"
