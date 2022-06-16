@@ -21,6 +21,9 @@ msgstr ""
 msgid "Create branch"
 msgstr ""
 
+msgid "Create branch and merge request"
+msgstr ""
+
 msgid "Create branch on a GitLab repository"
 msgstr ""
 

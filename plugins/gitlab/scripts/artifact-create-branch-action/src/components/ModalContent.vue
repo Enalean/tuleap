@@ -98,7 +98,11 @@
             </div>
             <div class="artifact-create-gitlab-merge-request">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" v-model="must_create_gitlab_mr" />
+                    <input
+                        type="checkbox"
+                        v-model="must_create_gitlab_mr"
+                        v-on:change="updateButtonLabel"
+                    />
                     <translate>
                         Create a merge request based on this new branch to the default branch
                     </translate>
@@ -124,7 +128,7 @@
                     v-if="is_creating_branch"
                     class="fas fa-spin fa-spinner tlp-button-icon"
                 ></i>
-                <translate>Create branch</translate>
+                {{ button_label }}
             </button>
         </div>
     </div>
@@ -149,6 +153,7 @@ const props = defineProps<{
     artifact_id: number;
 }>();
 
+let button_label = ref($gettext("Create branch"));
 let is_creating_branch = ref(false);
 let must_create_gitlab_mr = ref(false);
 let error_message = ref("");
@@ -192,6 +197,14 @@ const branch_name_placeholder = computed((): string => {
     }
     return placeholder;
 });
+
+function updateButtonLabel(): void {
+    if (must_create_gitlab_mr.value) {
+        button_label.value = $gettext("Create branch and merge request");
+    } else {
+        button_label.value = $gettext("Create branch");
+    }
+}
 
 async function onClickCreateBranch(): Promise<void> {
     const integration = selected.value;
