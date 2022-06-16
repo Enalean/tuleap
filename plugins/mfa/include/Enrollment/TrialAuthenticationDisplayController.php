@@ -46,7 +46,7 @@ class TrialAuthenticationDisplayController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
-        if (! $current_user->isLoggedIn()) {
+        if ($current_user->isAnonymous()) {
             throw new ForbiddenException();
         }
         if (! $this->enroller->isUserEnrolled($current_user)) {

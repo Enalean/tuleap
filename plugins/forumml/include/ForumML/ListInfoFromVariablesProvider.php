@@ -112,7 +112,7 @@ class ListInfoFromVariablesProvider
             return true;
         }
 
-        if (! $user->isLoggedIn()) {
+        if ($user->isAnonymous()) {
             return false;
         }
 

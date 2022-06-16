@@ -23,6 +23,7 @@ namespace Tuleap\Error;
 use ForgeConfig;
 use TemplateRendererFactory;
 use ThemeManager;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class PermissionDeniedRestrictedAccountController
 {
@@ -36,7 +37,7 @@ class PermissionDeniedRestrictedAccountController
         $this->theme_manager = $theme_manager;
     }
 
-    public function displayError(\PFUser $user)
+    public function displayError(CurrentUserWithLoggedInInformation $user)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {

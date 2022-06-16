@@ -260,7 +260,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     public function gitAdditionalAction(GitAdditionalActionEvent $event)
     {
         if ($event->getRequest()->get('action') === 'pull-requests') {
-            $layout = $this->getThemeManager()->getBurningParrot($event->getRequest()->getCurrentUser());
+            $layout = $this->getThemeManager()->getBurningParrot(UserManager::instance()->getCurrentUserWithLoggedInInformation());
             if ($layout === null) {
                 throw new \Exception("Could not load BurningParrot theme");
             }

@@ -123,7 +123,7 @@ class MailingListHomepageController implements DispatchableWithBurningParrot, Di
      */
     private function getMailingListPresenters(\Project $project, HTTPRequest $request, \PFUser $user): array
     {
-        if ($user->isLoggedIn() && $user->isMember((int) $project->getID())) {
+        if (! $user->isAnonymous() && $user->isMember((int) $project->getID())) {
             $data_access_result = $this->dao->searchActiveListsInProject((int) $project->getID());
         } else {
             $data_access_result = $this->dao->searchPublicListsInProject((int) $project->getID());

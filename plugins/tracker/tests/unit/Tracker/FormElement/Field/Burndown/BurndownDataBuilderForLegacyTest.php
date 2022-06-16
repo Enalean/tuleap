@@ -85,7 +85,7 @@ class BurndownDataBuilderForLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
         $this->user = Mockery::mock(\PFUser::class);
         $this->user->shouldReceive("toRow");
-        $this->user->shouldReceive("isLoggedIn")->andReturn(true);
+        $this->user->shouldReceive("isAnonymous")->andReturn(false);
 
         $language = Mockery::mock(\BaseLanguage::class);
         $language->shouldReceive('getLanguageFromAcceptLanguage');

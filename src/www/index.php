@@ -44,6 +44,7 @@ $router = new FrontRouter(
         )
     ),
     PluginManager::instance(),
-    new RequestInstrumentation(Prometheus::instance())
+    new RequestInstrumentation(Prometheus::instance()),
+    UserManager::instance()
 );
 $router->route($request);

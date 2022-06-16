@@ -54,13 +54,13 @@ if ($svn_preamble != '') {
     $event_manager       = EventManager::instance();
     $svn_intro_in_plugin = false;
     $svn_intro_info      = null;
-    $user                = $request->getCurrentUser();
+    $current_user        = UserManager::instance()->getCurrentUserWithLoggedInInformation();
 
     $svn_params = [
         'svn_intro_in_plugin' => &$svn_intro_in_plugin,
         'svn_intro_info'      => &$svn_intro_info,
         'group_id'            => $group_id,
-        'user_id'             => $user->getId(),
+        'user_id'             => $current_user->user->getId(),
     ];
 
     $event_manager->processEvent(Event::SVN_INTRO, $svn_params);
@@ -69,7 +69,7 @@ if ($svn_preamble != '') {
     $renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 
     $presenter = new SVN_IntroPresenter(
-        $user,
+        $current_user,
         $svn_intro_in_plugin,
         $svn_intro_info,
         $svn_url

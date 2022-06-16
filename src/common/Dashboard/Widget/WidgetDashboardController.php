@@ -154,7 +154,7 @@ class WidgetDashboardController
     {
         $user = $request->getCurrentUser();
         if ($dashboard_type === self::USER_DASHBOARD_TYPE) {
-            return $user->isLoggedIn();
+            return ! $user->isAnonymous();
         } elseif ($dashboard_type === self::PROJECT_DASHBOARD_TYPE) {
             $project = $request->getProject();
             return $user->isAdmin($project->getID());

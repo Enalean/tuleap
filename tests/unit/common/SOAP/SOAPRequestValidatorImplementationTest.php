@@ -30,6 +30,8 @@ use Project;
 use Project_AccessException;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 
 final class SOAPRequestValidatorImplementationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -82,9 +84,11 @@ final class SOAPRequestValidatorImplementationTest extends \Tuleap\Test\PHPUnit\
         );
 
         $expected_user = Mockery::mock(PFUser::class);
-        $expected_user->shouldReceive('isLoggedIn')->andReturn(true);
+        $expected_user->shouldReceive('isAnonymous')->andReturn(false);
         $session_key = 'my_session_key';
-        $user_manager->shouldReceive('getCurrentUser')->with($session_key)->andReturn($expected_user);
+        $user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($session_key)->andReturn(
+            CurrentUserWithLoggedInInformation::fromLoggedInUser($expected_user)
+        );
 
         $user = $validator->continueSession($session_key);
         $this->assertSame($expected_user, $user);
@@ -100,9 +104,9 @@ final class SOAPRequestValidatorImplementationTest extends \Tuleap\Test\PHPUnit\
             new EventManager()
         );
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isLoggedIn')->andReturn(false);
-        $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->andReturn(
+            CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider())
+        );
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Invalid session');

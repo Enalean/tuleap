@@ -193,7 +193,7 @@ class ListInfoFromVariablesProviderTest extends TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $user = Mockery::mock(\PFUser::class, ['isLoggedIn' => false]);
+        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
 
         $this->expectException(ForbiddenException::class);
 
@@ -234,7 +234,7 @@ class ListInfoFromVariablesProviderTest extends TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $user = Mockery::mock(\PFUser::class, ['isLoggedIn' => true]);
+        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
         $user
             ->shouldReceive('isMember')
             ->with(101)
@@ -282,7 +282,7 @@ class ListInfoFromVariablesProviderTest extends TestCase
         $user = Mockery::mock(
             \PFUser::class,
             [
-                'isLoggedIn' => true,
+                'isAnonymous' => false,
                 'getEmail'   => 'jdoe@example.com',
             ]
         );
@@ -337,7 +337,7 @@ class ListInfoFromVariablesProviderTest extends TestCase
         $user = Mockery::mock(
             \PFUser::class,
             [
-                'isLoggedIn' => true,
+                'isAnonymous' => false,
                 'getEmail'   => 'jdoe@example.com',
             ]
         );
@@ -396,7 +396,7 @@ class ListInfoFromVariablesProviderTest extends TestCase
         $user = Mockery::mock(
             \PFUser::class,
             [
-                'isLoggedIn' => true,
+                'isAnonymous' => false,
             ]
         );
 

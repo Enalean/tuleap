@@ -22,10 +22,10 @@
 namespace Tuleap\Error;
 
 use ForgeConfig;
-use PFUser;
 use Project;
 use TemplateRendererFactory;
 use ThemeManager;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class PermissionDeniedPrivateProjectController
 {
@@ -52,7 +52,7 @@ class PermissionDeniedPrivateProjectController
         $this->place_holder_builder  = $place_holder_builder;
     }
 
-    public function displayError(PFUser $user, ?Project $project = null)
+    public function displayError(CurrentUserWithLoggedInInformation $user, ?Project $project = null)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {

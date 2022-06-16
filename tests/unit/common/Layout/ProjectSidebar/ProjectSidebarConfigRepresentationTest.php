@@ -32,6 +32,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\VerifyUserCanAccessProjectAdministrationStub;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class ProjectSidebarConfigRepresentationTest extends TestCase
 {
@@ -41,8 +42,8 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
         $base_language = $this->createStub(\BaseLanguage::class);
         $base_language->method('hasText')->willReturn(false);
         $user = $this->createStub(\PFUser::class);
-        $user->method('isLoggedIn')->willReturn(false);
         $user->method('getLanguage')->willReturn($base_language);
+        $user->method('isAnonymous')->willReturn(false);
         $banner_retriever = $this->createStub(BannerRetriever::class);
         $banner_retriever->method('getBannerForProject')->willReturn(null);
         $project_flags_builder = $this->createStub(ProjectFlagsBuilder::class);
@@ -56,7 +57,7 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
 
         $representation = ProjectSidebarConfigRepresentation::build(
             $project,
-            $user,
+            CurrentUserWithLoggedInInformation::fromLoggedInUser($user),
             $banner_retriever,
             $project_flags_builder,
             new class implements EventDispatcherInterface

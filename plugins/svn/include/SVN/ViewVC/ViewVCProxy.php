@@ -30,6 +30,7 @@ use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\SVNCore\Event\GetSVNLoginNameEvent;
 use Tuleap\SVN\Repository\Repository;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class ViewVCProxy
 {
@@ -186,28 +187,28 @@ class ViewVCProxy
         return '/usr/bin/python';
     }
 
-    public function getContent(HTTPRequest $request, \PFUser $user, Repository $repository, string $path)
+    public function getContent(HTTPRequest $request, CurrentUserWithLoggedInInformation $current_user, Repository $repository, string $path)
     {
-        if ($user->isAnonymous()) {
+        if (! $current_user->is_logged_in) {
             return dgettext('tuleap-svn', 'You can not browse the repository without being logged.');
         }
 
         $project = $repository->getProject();
-        if ($project->isSuspended() && ! $user->isSuperUser()) {
-            $this->access_suspended_controller->displayError($user);
+        if ($project->isSuspended() && ! $current_user->user->isSuperUser()) {
+            $this->access_suspended_controller->displayError($current_user);
             exit();
         }
 
         try {
-            $this->check_project_access->checkUserCanAccessProject($user, $project);
+            $this->check_project_access->checkUserCanAccessProject($current_user->user, $project);
         } catch (\Project_AccessException $exception) {
             return $this->getPermissionDeniedError($project);
         }
 
-        $this->access_history_saver->saveAccess($user, $repository);
+        $this->access_history_saver->saveAccess($current_user->user, $repository);
 
-        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' ' .
-            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' ' .
+        $command = 'REMOTE_USER_ID=' . escapeshellarg((string) $current_user->user->getId()) . ' ' .
+            'REMOTE_USER=' . escapeshellarg($this->getUsername($current_user->user, $project)) . ' ' .
             'PATH_INFO=' . $this->setLocaleOnFileName($path) . ' ' .
             'QUERY_STRING=' . escapeshellarg($this->buildQueryString($request)) . ' ' .
             'SCRIPT_NAME=/plugins/svn ' .
@@ -217,7 +218,7 @@ class ViewVCProxy
             'TULEAP_REPO_NAME=' . escapeshellarg($repository->getName()) . ' ' .
             'TULEAP_REPO_PATH=' . escapeshellarg($repository->getSystemPath()) . ' ' .
             'TULEAP_FULL_REPO_NAME=' . escapeshellarg($repository->getFullName()) . ' ' .
-            'TULEAP_USER_IS_SUPER_USER=' . escapeshellarg($user->isSuperUser() ? '1' : '0') . ' ' .
+            'TULEAP_USER_IS_SUPER_USER=' . escapeshellarg($current_user->user->isSuperUser() ? '1' : '0') . ' ' .
             $this->getPythonLauncher() . ' ' . __DIR__ . '/../../../bin/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);

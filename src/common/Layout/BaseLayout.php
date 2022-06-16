@@ -51,6 +51,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\Project\REST\v1\ProjectSidebarDataRepresentation;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 use Valid_FTPURI;
 use Valid_LocalURI;
@@ -355,13 +356,13 @@ abstract class BaseLayout extends Response
         $this->is_rendered_through_service = $value;
     }
 
-    final protected function getProjectSidebarData(array $params, Project $project, PFUser $user): ProjectSidebarDataRepresentation
+    final protected function getProjectSidebarData(array $params, Project $project, CurrentUserWithLoggedInInformation $current_user): ProjectSidebarDataRepresentation
     {
         $event_manager = EventManager::instance();
         return ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser(
             ProjectSidebarConfigRepresentation::build(
                 $project,
-                $user,
+                $current_user,
                 new \Tuleap\Project\Banner\BannerRetriever(new \Tuleap\Project\Banner\BannerDao()),
                 new ProjectFlagsBuilder(new ProjectFlagsDao()),
                 EventManager::instance(),
@@ -375,7 +376,7 @@ abstract class BaseLayout extends Response
                 new ProjectSidebarToolsBuilder($event_manager, ProjectManager::instance(), $this->uri_sanitizer),
                 $params['toptab']
             ),
-            $user,
+            $current_user->user,
         );
     }
 

@@ -35,6 +35,7 @@ use Tuleap\Layout\SidebarServicePresenter;
 use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 /**
  * @psalm-immutable
@@ -55,7 +56,7 @@ final class ProjectSidebarConfigRepresentation
 
     public static function build(
         \Project $project,
-        \PFUser $user,
+        CurrentUserWithLoggedInInformation $current_user,
         BannerRetriever $banner_retriever,
         ProjectFlagsBuilder $project_flags_builder,
         EventDispatcherInterface $event_dispatcher,
@@ -70,23 +71,23 @@ final class ProjectSidebarConfigRepresentation
             ProjectSidebarInternationalization::build(),
             ProjectSidebarProject::build(
                 $project,
-                $user,
+                $current_user->user,
                 $banner_retriever,
                 $project_flags_builder,
                 $event_dispatcher,
             ),
             ProjectSidebarUser::fromProjectAndUser(
                 $project,
-                $user,
+                $current_user,
                 $project_admin_access_verifier,
             ),
             ProjectSidebarInstanceInformation::build(
-                $user->getLanguage(),
+                $current_user->user->getLanguage(),
                 $flavor_finder,
                 $customized_logo_detector,
                 $glyph_finder,
             ),
-            [...$project_sidebar_tools_builder->getSidebarTools($user, $currently_active_service, $project)]
+            [...$project_sidebar_tools_builder->getSidebarTools($current_user->user, $currently_active_service, $project)]
         );
     }
 }

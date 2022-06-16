@@ -231,10 +231,11 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     {
         global $fusionforgeproject, $wgGroupPermissions;
 
-        $user_manager = UserManager::instance();
-        $tuleap_user  = $user_manager->getCurrentUser();
+        $user_manager        = UserManager::instance();
+        $current_tuleap_user = $user_manager->getCurrentUserWithLoggedInInformation();
+        $tuleap_user         = $current_tuleap_user->user;
 
-        if ($tuleap_user->isLoggedIn()) {
+        if ($current_tuleap_user->is_logged_in) {
             $group          = group_get_object_by_name($fusionforgeproject);
             $madiawiki_name = ucfirst($tuleap_user->getUnixName());
             $mediawiki_user = User::newFromName($madiawiki_name);

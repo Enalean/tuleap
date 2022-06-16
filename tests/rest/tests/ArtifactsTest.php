@@ -185,9 +185,9 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals(200, $response->getStatusCode());
 
         $start_date = new DateTime();
-        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setTimezone(new DateTimeZone('UTC'));
         $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(23, 59, 59);
+        $start_date->setTime(22, 59, 59);
 
         $expected_burndown_chart_with_date = [
             [
@@ -225,8 +225,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             37,
         ];
 
-        $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
-        $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart_with_date);
+        $this->assertEquals($expected_burndown_chart, $burndown['values'][6]['value']['points']);
+        $this->assertEquals($expected_burndown_chart_with_date, $burndown['values'][6]['value']['points_with_date']);
     }
 
     public function testGETBurndownForAChildrenArtifact()
@@ -243,9 +243,9 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals(200, $response->getStatusCode());
 
         $start_date = new DateTime();
-        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setTimezone(new DateTimeZone('UTC'));
         $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(23, 59, 59);
+        $start_date->setTime(22, 59, 59);
 
         $expected_burndown_chart = [
             [
@@ -274,7 +274,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ],
         ];
 
-        $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
+        $this->assertEquals($expected_burndown_chart, $burndown['values'][6]['value']['points_with_date']);
     }
 
     public function testGETBurndownForAnotherChildrenArtifact()
@@ -291,9 +291,9 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->assertEquals(200, $response->getStatusCode());
 
         $start_date = new DateTime();
-        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setTimezone(new DateTimeZone('UTC'));
         $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(23, 59, 59);
+        $start_date->setTime(22, 59, 59);
 
         $expected_burndown_chart = [
             [
@@ -322,7 +322,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ],
         ];
 
-        $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
+        $this->assertEquals($expected_burndown_chart, $burndown['values'][6]['value']['points_with_date']);
     }
 
     /**

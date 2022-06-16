@@ -893,7 +893,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 break;
             case 'get-edit-in-place':
                 $renderer = $this->getTrackerArtifactRendererEditInPlaceRenderer();
-                $renderer->display($current_user, $request);
+                $renderer->display($this->getUserManager()->getCurrentUserWithLoggedInInformation(), $request);
                 break;
             case 'update-in-place':
                 $renderer = $this->getTrackerArtifactRendererEditInPlaceRenderer();

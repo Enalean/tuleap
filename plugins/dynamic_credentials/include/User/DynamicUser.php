@@ -40,7 +40,7 @@ class DynamicUser extends \PFUser
 
     public function getStatus()
     {
-        if ($this->isLoggedIn()) {
+        if ($this->is_logged_in) {
             return self::STATUS_ACTIVE;
         }
         return parent::getStatus();
@@ -49,11 +49,6 @@ class DynamicUser extends \PFUser
     public function isSuperUser(): bool
     {
         return true;
-    }
-
-    public function isLoggedIn()
-    {
-        return $this->is_logged_in;
     }
 
     public function setPassword(ConcealedString $password): void

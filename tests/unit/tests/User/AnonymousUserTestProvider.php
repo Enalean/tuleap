@@ -20,30 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\ProjectSidebar\User;
+namespace Tuleap\Test\User;
 
-use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
-use Tuleap\User\CurrentUserWithLoggedInInformation;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\ProvideAnonymousUser;
 
-/**
- * @psalm-immutable
- */
-final class ProjectSidebarUser
+final class AnonymousUserTestProvider implements ProvideAnonymousUser
 {
-    private function __construct(
-        public bool $is_project_administrator,
-        public bool $is_logged_in,
-    ) {
-    }
-
-    public static function fromProjectAndUser(
-        \Project $project,
-        CurrentUserWithLoggedInInformation $current_user,
-        VerifyUserCanAccessProjectAdministration $project_admin_access_verifier,
-    ): self {
-        return new self(
-            $project_admin_access_verifier->canUserAccessProjectAdministration($current_user, $project),
-            $current_user->is_logged_in
-        );
+    public function getUserAnonymous(): \PFUser
+    {
+        return UserTestBuilder::anAnonymousUser()->build();
     }
 }

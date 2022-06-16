@@ -50,8 +50,8 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->service_usage_manager,
         );
 
-        $this->user       = \Mockery::spy(\PFUser::class)->shouldReceive('isLoggedIn')->andReturns(true)->getMock();
-        $this->user_admin = \Mockery::spy(\PFUser::class)->shouldReceive('isLoggedIn')->andReturns(true)->getMock();
+        $this->user       = \Mockery::spy(\PFUser::class)->shouldReceive('isAnonymous')->andReturns(false)->getMock();
+        $this->user_admin = \Mockery::spy(\PFUser::class)->shouldReceive('isAnonymous')->andReturns(false)->getMock();
         $this->user_admin->shouldReceive('isMember')->with(101, 'A')->andReturns(true);
         $this->user->shouldReceive('isMember')->with(101)->andReturns(true);
         $this->user->shouldReceive('getUserName')->andReturns('User 01');
@@ -86,7 +86,7 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
         ];
 
         $this->description_factory->shouldReceive('getCustomDescriptions')->andReturns($project_desc_fields);
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user));
 
         $this->assertEquals($expected, $this->server->getPlateformProjectDescriptionFields($this->session_key));
     }
@@ -94,7 +94,7 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItThrowsASOAPFaultIfNoDescriptionField(): void
     {
         $this->description_factory->shouldReceive('getCustomDescriptions')->andReturns([]);
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user));
 
         $this->expectException(SoapFault::class);
         $this->server->getPlateformProjectDescriptionFields($this->session_key);
@@ -106,7 +106,7 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
         $field_value        = 'new_value_104';
         $group_id           = 101;
 
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user_admin));
         $this->description_factory->shouldReceive('getCustomDescription')->with(104)->andReturns(true);
 
         $this->description_manager->shouldReceive('setCustomDescription')->once();
@@ -115,7 +115,7 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItThrowsASOAPFaultIfUserIsNotAdmin(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user));
 
         $field_id_to_update = 104;
         $field_value        = 'new_value_104';
@@ -127,7 +127,7 @@ class SOAPServerProjectDescriptionFieldsTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItReturnsTheProjectDescriptionFieldsValue(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user));
         $this->user_manager->shouldReceive('getUserByUserName')->with('User 01')->andReturns($this->user);
 
         $group_id = 101;

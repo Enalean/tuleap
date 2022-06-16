@@ -99,43 +99,23 @@ class Toggler
      */
     public static function toggle($id)
     {
-        $current_user = UserManager::instance()->getCurrentUser();
-        if ($current_user->isLoggedIn()) {
+        $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation();
+        if ($current_user->is_logged_in) {
             $done = false;
-            EventManager::instance()->processEvent(Event::TOGGLE, ['id' => $id, 'user' => $current_user, 'done' => &$done]);
+            EventManager::instance()->processEvent(Event::TOGGLE, ['id' => $id, 'user' => $current_user->user, 'done' => &$done]);
             if (! $done) {
                 if (strpos($id, 'tracker_report_query_') === 0) {
                     $report_id      = (int) substr($id, strlen('tracker_report_query_'));
                     $report_factory = ArtifactReportFactory::instance();
-                    if (($report = $report_factory->getReportById($report_id, $current_user->getid())) && $report->userCanUpdate($current_user)) {
+                    if (($report = $report_factory->getReportById($report_id, $current_user->user->getId())) && $report->userCanUpdate($current_user->user)) {
                         $report->toggleQueryDisplay();
                         $report_factory->save($report);
                     }
                 } else {
-                    self::togglePreference($current_user, $id);
+                    self::togglePreference($current_user->user, $id);
                 }
             }
         }
-    }
-
-    /**
-     * Returns true if the toggler should be displayed
-     *
-     * @param PFUser   $user    The user
-     * @param string $id      the id of the toggler
-     * @param bool   $default if we don't know, return $default
-     *
-     * @return bool
-     */
-    public static function shouldBeDisplayed(PFUser $user, $id, $default)
-    {
-        if ($user->isLoggedIn()) {
-            $should_be_displayed = $user->getPreference('toggle_' . $id); //TODO: DRY 'toggle_'. $id
-            if ($should_be_displayed !== false) {
-                return $should_be_displayed;
-            }
-        }
-        return $default;
     }
 
     /**

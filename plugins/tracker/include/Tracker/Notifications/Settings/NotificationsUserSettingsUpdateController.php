@@ -64,7 +64,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
 
         $current_user = $request->getCurrentUser();
 
-        if ($current_user->isLoggedIn() && $tracker->userCanView($current_user)) {
+        if (! $current_user->isAnonymous() && $tracker->userCanView($current_user)) {
             $this->processUpdate($request, $layout, $tracker, $current_user);
         }
 

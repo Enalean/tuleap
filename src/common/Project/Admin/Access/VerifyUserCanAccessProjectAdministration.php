@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Access;
 
+use Tuleap\User\CurrentUserWithLoggedInInformation;
+
 interface VerifyUserCanAccessProjectAdministration
 {
-    public function canUserAccessProjectAdministration(\PFUser $user, \Project $project): bool;
+    public function canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation $current_user, \Project $project): bool;
 }

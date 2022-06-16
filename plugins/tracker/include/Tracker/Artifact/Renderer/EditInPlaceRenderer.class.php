@@ -26,6 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Renderer\FieldsDataFromRequestRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class Tracker_Artifact_Renderer_EditInPlaceRenderer
 {
@@ -37,13 +38,13 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     ) {
     }
 
-    public function display(PFUser $current_user, Codendi_Request $request)
+    public function display(CurrentUserWithLoggedInInformation $current_user, Codendi_Request $request)
     {
         $submitted_values = $this->getSubmittedValues($request);
 
         $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
-            $this->fetchFollowUps($current_user),
-            $this->fetchArtifactLinks($current_user),
+            $this->fetchFollowUps($current_user->user),
+            $this->fetchArtifactLinks($current_user->user),
             $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, $submitted_values),
             $this->artifact,
             $current_user,

@@ -430,11 +430,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->getId() == 0;
     }
 
-    public function isLoggedIn()
-    {
-        return $this->getSessionHash() !== false;
-    }
-
     /**
      * is this user admin of the tracker group_artifact_id
      * @return bool

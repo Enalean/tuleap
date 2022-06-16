@@ -41,7 +41,7 @@ class EnrollmentRegisterController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if (! $request->getCurrentUser()->isLoggedIn()) {
+        if ($request->getCurrentUser()->isAnonymous()) {
             throw new ForbiddenException();
         }
 

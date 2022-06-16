@@ -39,7 +39,9 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification = Mockery::mock(URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->url_verification->shouldReceive('verifyProtocol')->andReturn(false);
         $this->url_verification->shouldReceive('verifyRequest')->andReturn(false);
-        $this->url_verification->shouldReceive('getCurrentUser')->andReturn(Mockery::spy(PFUser::class));
+        $this->url_verification->shouldReceive('getCurrentUser')->andReturn(
+            \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser(\Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->build())
+        );
     }
 
     public function tearDown(): void

@@ -21,9 +21,9 @@
 namespace Tuleap\Error;
 
 use ForgeConfig;
-use PFUser;
 use TemplateRendererFactory;
 use ThemeManager;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class ProjectAccessSuspendedController
 {
@@ -37,7 +37,7 @@ class ProjectAccessSuspendedController
         $this->theme_manager = $theme_manager;
     }
 
-    public function displayError(PFUser $user)
+    public function displayError(CurrentUserWithLoggedInInformation $user)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {

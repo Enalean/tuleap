@@ -68,7 +68,7 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
         }
 
         $current_user = $request->getCurrentUser();
-        if (! $current_user->isLoggedIn()) {
+        if ($current_user->isAnonymous()) {
             $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
         }

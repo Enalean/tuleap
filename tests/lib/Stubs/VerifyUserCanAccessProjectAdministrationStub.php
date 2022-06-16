@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Test\Stubs;
 
 use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class VerifyUserCanAccessProjectAdministrationStub implements VerifyUserCanAccessProjectAdministration
 {
@@ -33,7 +34,7 @@ final class VerifyUserCanAccessProjectAdministrationStub implements VerifyUserCa
         $this->can_access = $can_access;
     }
 
-    public function canUserAccessProjectAdministration(\PFUser $user, \Project $project): bool
+    public function canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation $current_user, \Project $project): bool
     {
         return $this->can_access;
     }

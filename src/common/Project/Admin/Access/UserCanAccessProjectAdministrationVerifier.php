@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Admin\Access;
 
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class UserCanAccessProjectAdministrationVerifier implements VerifyUserCanAccessProjectAdministration
 {
@@ -33,12 +34,13 @@ final class UserCanAccessProjectAdministrationVerifier implements VerifyUserCanA
         $this->membership_delegation_dao = $membership_delegation_dao;
     }
 
-    public function canUserAccessProjectAdministration(\PFUser $user, \Project $project): bool
+    public function canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation $current_user, \Project $project): bool
     {
-        if (! $user->isLoggedIn()) {
+        if (! $current_user->is_logged_in) {
             return false;
         }
 
+        $user       = $current_user->user;
         $project_id = (int) $project->getID();
         return $user->isSuperUser()
             || $user->isAdmin($project_id)

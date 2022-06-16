@@ -40,9 +40,6 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public $last_changeset_id;
 
-    /** @var PFUser */
-    private $user;
-
     /** @var HiddenFieldsetsDetector */
     private $hidden_fieldsets_detector;
 
@@ -51,7 +48,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
         $artifact_links,
         $form_elements,
         Artifact $artifact,
-        PFUser $user,
+        private \Tuleap\User\CurrentUserWithLoggedInInformation $current_user,
         HiddenFieldsetsDetector $hidden_fieldsets_detector,
     ) {
         $this->follow_ups                = $follow_ups;
@@ -62,7 +59,6 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
         $this->artifact_uri              = $artifact->getUri();
         $this->last_changeset_id         = $artifact->getLastChangeset()->getId();
         $this->form_elements             = $form_elements;
-        $this->user                      = $user;
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
@@ -108,7 +104,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public function user_is_logged_in()
     {
-        return $this->user->isLoggedIn();
+        return $this->current_user->is_logged_in;
     }
 
     /**
@@ -125,7 +121,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
     public function parent_artifact_presenter()
     {
         $parent_artifact_presenter = [];
-        $parent_artifact           = $this->artifact->getParent($this->user);
+        $parent_artifact           = $this->artifact->getParent($this->current_user->user);
 
         if ($parent_artifact) {
             $parent_artifact_presenter['xref'] = $parent_artifact->getXRef();

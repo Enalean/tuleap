@@ -20,7 +20,6 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use PFUser;
 use Project;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Project\Admin\Access\ProjectAdministrationLinkPresenter;
@@ -28,6 +27,7 @@ use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\Project\Sidebar\LinkedProjectsCollectionPresenter;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class ProjectSidebarPresenter
 {
@@ -79,7 +79,7 @@ class ProjectSidebarPresenter
     public ?string $project_icon;
 
     public function __construct(
-        PFUser $current_user,
+        CurrentUserWithLoggedInInformation $current_user,
         Project $project,
         \Generator $sidebar,
         ProjectPrivacyPresenter $privacy,
@@ -90,7 +90,7 @@ class ProjectSidebarPresenter
         ?LinkedProjectsCollectionPresenter $linked_projects_presenter,
     ) {
         $this->sidebar                = $sidebar;
-        $this->is_sidebar_collapsable = $current_user->isLoggedIn();
+        $this->is_sidebar_collapsable = $current_user->is_logged_in;
         $this->project_link           = '/projects/' . $project->getUnixName() . '/';
         $this->project_name           = $project->getPublicName();
         $this->project_id             = $project->getID();

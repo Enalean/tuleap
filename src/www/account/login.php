@@ -65,18 +65,19 @@ $um         = UserManager::instance();
 $login_csrf = new CSRFSynchronizerToken('/account/login.php');
 
 // first check for valid login, if so, redirect
-$success = false;
-$status  = null;
-$user    = null;
+$success      = false;
+$status       = null;
+$current_user = null;
 if ($request->isPost()) {
     $login_csrf->check();
     if (! $_rVar['form_loginname'] || ! $_rVar['form_pw']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session', 'missing_pwd'));
     } else {
-        $user = $um->login($_rVar['form_loginname'], new \Tuleap\Cryptography\ConcealedString($_rVar['form_pw']));
+        $um->login($_rVar['form_loginname'], new \Tuleap\Cryptography\ConcealedString($_rVar['form_pw']));
         sodium_memzero($_rVar['form_pw']);
-        $status  = $user->getStatus();
-        $success = true;
+        $current_user = $um->getCurrentUserWithLoggedInInformation();
+        $status       = $current_user->user->getStatus();
+        $success      = true;
     }
 }
 
@@ -87,11 +88,11 @@ if ($request->isPost()) {
 // 2 login forms. You identicate in the first tab and you reload the second one.
 // The reload (a /account/login.php?return_to=... url) should redirect you to the
 // doc instead of displaying login page again.
-if ($user === null) {
-    $user = $um->getCurrentUser();
+if ($current_user === null) {
+    $current_user = $um->getCurrentUserWithLoggedInInformation();
 }
-if ($user->isLoggedIn() && ($success === true || $request->get('prompt') !== 'login')) {
-    account_redirect_after_login($user, $_rVar['return_to'] ?? '');
+if ($current_user->is_logged_in && ($success === true || $request->get('prompt') !== 'login')) {
+    account_redirect_after_login($current_user->user, $_rVar['return_to'] ?? '');
 }
 
 // Display login page

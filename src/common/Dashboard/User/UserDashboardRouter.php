@@ -48,7 +48,7 @@ class UserDashboardRouter
      */
     public function route(HTTPRequest $request)
     {
-        if (! $request->getCurrentUser()->isLoggedIn()) {
+        if ($request->getCurrentUser()->isAnonymous()) {
             return;
         }
 

@@ -29,6 +29,7 @@ use Psr\Log\LoggerInterface;
 use ThemeManager;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\ErrorRendering;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use URLVerificationFactory;
 
 class FrontRouter
@@ -71,6 +72,7 @@ class FrontRouter
         ThemeManager $theme_manager,
         PluginManager $plugin_manager,
         RequestInstrumentation $request_instrumentation,
+        private ProvideCurrentUserWithLoggedInInformation $current_user_provider,
     ) {
         $this->route_collector          = $route_collector;
         $this->url_verification_factory = $url_verification_factory;
@@ -126,7 +128,7 @@ class FrontRouter
             } else {
                 $this->request_instrumentation->increment(404, DetectedBrowser::detectFromTuleapHTTPRequest($request));
                 $this->error_rendering->rendersError(
-                    $this->getBurningParrotTheme($request),
+                    $this->getBurningParrotTheme(),
                     $request,
                     404,
                     _('Not found'),
@@ -136,7 +138,7 @@ class FrontRouter
         } catch (ForbiddenException $exception) {
             $this->request_instrumentation->increment(403, DetectedBrowser::detectFromTuleapHTTPRequest($request));
             $this->error_rendering->rendersError(
-                $this->getBurningParrotTheme($request),
+                $this->getBurningParrotTheme(),
                 $request,
                 403,
                 _('Forbidden'),
@@ -151,7 +153,7 @@ class FrontRouter
             $this->request_instrumentation->increment($code, DetectedBrowser::detectFromTuleapHTTPRequest($request));
             $this->logger->error('Caught exception', ['exception' => $exception]);
             $this->error_rendering->rendersErrorWithException(
-                $this->getBurningParrotTheme($request),
+                $this->getBurningParrotTheme(),
                 $request,
                 $code,
                 _('Internal server error'),
@@ -161,9 +163,9 @@ class FrontRouter
         }
     }
 
-    private function getBurningParrotTheme(HTTPRequest $request)
+    private function getBurningParrotTheme()
     {
-        return $this->theme_manager->getBurningParrot($request->getCurrentUser());
+        return $this->theme_manager->getBurningParrot($this->current_user_provider->getCurrentUserWithLoggedInInformation());
     }
 
     private function getRouteInfo()
@@ -228,11 +230,11 @@ class FrontRouter
     private function routeHandler(HTTPRequest $request, DispatchableWithRequest $handler, array $route_info)
     {
         if ($handler instanceof DispatchableWithBurningParrot) {
-            $layout = $this->getBurningParrotTheme($request);
+            $layout = $this->getBurningParrotTheme();
         } elseif ($handler instanceof DispatchableWithThemeSelection && $handler->isInABurningParrotPage($request, $route_info)) {
-            $layout = $this->getBurningParrotTheme($request);
+            $layout = $this->getBurningParrotTheme();
         } else {
-            $layout = $this->theme_manager->getTheme($request->getCurrentUser());
+            $layout = $this->theme_manager->getTheme($this->current_user_provider->getCurrentUserWithLoggedInInformation());
         }
         $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
@@ -266,8 +268,8 @@ class FrontRouter
             return false;
         }
 
-        $user = $request->getCurrentUser();
-        if (! $user->isAnonymous()) {
+        $current_user = $this->current_user_provider->getCurrentUserWithLoggedInInformation();
+        if ($current_user->is_logged_in) {
             return false;
         }
 

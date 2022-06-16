@@ -37,7 +37,7 @@ final class Tracker_Report_Renderer_TableTest extends \Tuleap\Test\PHPUnit\TestC
         $report     = $this->createMock(\Tracker_Report::class);
         $report->id = 1;
 
-        $this->renderer_table = new \Tracker_Report_Renderer_Table(1, $report, 'Name', 'Description', 1, 10, false);
+        $this->renderer_table = new \Tracker_Report_Renderer_Table(0, $report, 'Name', 'Description', 1, 10, false);
     }
 
     public function testShowsExportFeaturesWhenTheUserIsNotAnonymous(): void

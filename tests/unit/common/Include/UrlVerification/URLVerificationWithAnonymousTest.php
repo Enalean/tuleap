@@ -27,6 +27,9 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,10 +38,6 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
     use ForgeConfigSandbox;
 
     private $urlVerification;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\PFUser
-     */
-    private $user;
 
     protected function setUp(): void
     {
@@ -46,21 +45,33 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $em = \Mockery::spy(\EventManager::class);
 
-        $this->user = \Mockery::mock(\PFUser::class);
-
         $this->urlVerification = \Mockery::mock(\URLVerification::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $this->urlVerification->shouldReceive('getEventManager')->andReturns($em);
-        $this->urlVerification->shouldReceive('getCurrentUser')->andReturns($this->user);
     }
+
+    private function currentUserIsNotLoggedIn(): void
+    {
+        $this->urlVerification->shouldReceive('getCurrentUser')->andReturns(
+            CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider())
+        );
+    }
+
+    private function currentUserIsLoggedIn(): void
+    {
+        $this->urlVerification->shouldReceive('getCurrentUser')->andReturns(
+            CurrentUserWithLoggedInInformation::fromLoggedInUser(UserTestBuilder::anActiveUser()->build())
+        );
+    }
+
 
     public function testVerifyRequestAnonymousWhenScriptException(): void
     {
+        $this->currentUserIsNotLoggedIn();
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '/account/login.php',
         ];
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -70,14 +81,13 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testVerifyRequestAnonymousWhenAllowed(): void
     {
+        $this->currentUserIsNotLoggedIn();
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/',
         ];
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -87,11 +97,12 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testVerifyRequestAuthenticatedWhenAnonymousAllowed(): void
     {
+        $this->currentUserIsLoggedIn();
+
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
         ];
-        $this->user->shouldReceive('isAnonymous')->andReturns(false);
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -101,12 +112,12 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testVerifyRequestAnonymousWhenNotAllowedAtRoot(): void
     {
+        $this->currentUserIsNotLoggedIn();
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/',
         ];
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         ForgeConfig::set('sys_default_domain', 'example.com');
@@ -119,12 +130,12 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testVerifyRequestAnonymousWhenNotAllowedWithScript(): void
     {
+        $this->currentUserIsNotLoggedIn();
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/script/',
         ];
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         ForgeConfig::set('sys_default_domain', 'example.com');
@@ -137,12 +148,12 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testVerifyRequestAnonymousWhenNotAllowedWithLightView(): void
     {
+        $this->currentUserIsNotLoggedIn();
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/script?pv=2',
         ];
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         ForgeConfig::set('sys_default_domain', 'example.com');
@@ -155,11 +166,11 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testVerifyRequestAuthenticatedWhenAnonymousNotAllowed(): void
     {
+        $this->currentUserIsLoggedIn();
         $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
         ];
-        $this->user->shouldReceive('isAnonymous')->andReturns(false);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 

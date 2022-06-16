@@ -1291,7 +1291,7 @@ class ProjectResource extends AuthenticatedResource
         $this->checkAccess();
         $project = $this->getProjectForUser($id);
 
-        $current_user  = $this->user_manager->getCurrentUser();
+        $current_user  = $this->user_manager->getCurrentUserWithLoggedInInformation();
         $event_manager = EventManager::instance();
 
         $config = ProjectSidebarConfigRepresentation::build(
@@ -1318,8 +1318,8 @@ class ProjectResource extends AuthenticatedResource
         $reference_representation_builder = new ReferenceRepresentationBuilder(\ReferenceManager::instance(), $event_manager);
 
         return new ThirdPartyIntegrationDataRepresentation(
-            ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser($config, $current_user),
-            ThirdPartyIntegrationStylesRepresentation::fromUser($current_user),
+            ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser($config, $current_user->user),
+            ThirdPartyIntegrationStylesRepresentation::fromUser($current_user->user),
             $reference_representation_builder->getProjectReferences($project),
         );
     }

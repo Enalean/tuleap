@@ -546,9 +546,9 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     private function continueSession($sessionKey)
     {
-        $user = $this->userManager->getCurrentUser($sessionKey);
-        if ($user->isLoggedIn()) {
-            return $user;
+        $current_user = $this->userManager->getCurrentUserWithLoggedInInformation($sessionKey);
+        if ($current_user->is_logged_in) {
+            return $current_user->user;
         }
         throw new SoapFault('3001', 'Invalid session');
     }
