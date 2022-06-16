@@ -46,7 +46,7 @@ final class ServiceActivationHandlerTest extends TestCase
 
         $handler = new ServiceActivationHandler($enqueue_task);
         $handler->handle(
-            ServiceActivationEvent::fromEvent(
+            ServiceActivationEvent::fromServiceIsUsedEvent(
                 $payload,
                 $factory,
             )
