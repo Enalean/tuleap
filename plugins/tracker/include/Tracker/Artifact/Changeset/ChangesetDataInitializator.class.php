@@ -39,7 +39,10 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
         //only when a previous changeset exists
         if ($artifact->getLastChangeset() && ! $artifact->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
             foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
-                if ($field instanceof Tracker_Artifact_ChangesetValue_Date || $field instanceof Tracker_Artifact_ChangesetValue_List) {
+                if ($field instanceof Tracker_Artifact_ChangesetValue_Date) {
+                    $tracker_data[$key] = $field->getTimestamp();
+                }
+                if ($field instanceof Tracker_Artifact_ChangesetValue_List) {
                     $tracker_data[$key] = $field->getValue();
                 }
             }

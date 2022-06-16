@@ -62,7 +62,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $value->shouldReceive('getValue')->andReturn('2014-03-12');
+        $value->shouldReceive('getTimestamp')->andReturn('1655381802');
         $changeset->shouldReceive('getValues')->andReturn([14 => $value]);
 
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
@@ -70,7 +70,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         $fields_data = [];
 
         $this->assertEquals(
-            [14 => '2014-03-12'],
+            [14 => '1655381802'],
             $this->initializator->process($this->artifact, $fields_data)
         );
     }
@@ -104,7 +104,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $value->shouldReceive('getValue')->andReturn('2013-07-08');
+        $value->shouldReceive('getTimestamp')->andReturn('1655381802');
         $changeset->shouldReceive('getValues')->andReturn([14 => $value]);
 
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
