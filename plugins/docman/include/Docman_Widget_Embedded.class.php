@@ -76,7 +76,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     public function getTitle()
     {
         return $this->plugin_docman_widget_embedded_title ?:
-               dgettext('tuleap-docman', 'Docman Viewer');
+               dgettext('tuleap-docman', 'Document viewer');
     }
 
     /**
@@ -89,8 +89,15 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         $content = '';
         if ($this->plugin_docman_widget_embedded_item_id) {
             if ($item = $this->getItem($this->plugin_docman_widget_embedded_item_id)) {
+                $project = ProjectManager::instance()->getProject((int) $item->getGroupId());
+                $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
+                assert($service instanceof \Tuleap\Docman\ServiceDocman);
+                $item_url = $service->getUrl();
+                if ($item->getParentId()) {
+                    $item_url .= 'preview/' . urlencode((string) $item->getId());
+                }
                 $content .= $item->accept($this);
-                $content .= '<div style="text-align:center"><a href="' . $this->plugin_path . '/?group_id=' . (int) $item->getGroupId() . '&amp;action=details&amp;id=' .  (int) $item->getId() . '">[Go to document]</a></div>';
+                $content .= '<div style="text-align:center"><a href="' . $item_url . '">[Go to document]</a></div>';
             } else {
                 $content .= 'Document doesn\'t exist or you don\'t have permissions to see it';
             }
