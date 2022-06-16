@@ -85,7 +85,7 @@ class ReportCriteriaJsonBuilder
             }
         }
 
-        foreach ($report->getAdditionalCriteria() as $additional_criterion) {
+        foreach ($report->getAdditionalCriteria(false) as $additional_criterion) {
             $criteria_value = (string) $additional_criterion->getValue();
             if ($criteria_value !== '') {
                 $criteria_value_json[] = new ClassicCriterionValueJson(

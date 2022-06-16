@@ -791,6 +791,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $hp                      = Codendi_HTMLPurifier::instance();
         $current_user            = UserManager::instance()->getCurrentUser();
         $renderer_preference_key = 'tracker_' . $this->tracker_id . '_report_' . $this->id . '_last_renderer';
+        $use_data_from_db        = false;
 
         if ($link_artifact_id) {
             //Store in user preferences
@@ -836,7 +837,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             }
         }
         if ($request->get('only-renderer')) {
-            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
+            echo $current_renderer->fetch($this->getMatchingIds($request, $use_data_from_db), $request, $report_can_be_modified, $current_user);
         } else {
             $html = '';
 
@@ -854,7 +855,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     }
                 }
             }
-            $additional_criteria = $this->getAdditionalCriteria();
+            $additional_criteria = $this->getAdditionalCriteria($use_data_from_db);
 
             $html .= '<div class="tracker-report-query">';
             $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
@@ -1597,7 +1598,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     public function saveAdditionalCriteria()
     {
-        $additional_criteria = $this->getAdditionalCriteria();
+        $additional_criteria = $this->getAdditionalCriteria(false);
 
         $this->saveCommentCriterion($additional_criteria);
 
@@ -1760,10 +1761,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /**
      * @return Tracker_Report_AdditionalCriterion[]
      */
-    public function getAdditionalCriteria(): array
+    public function getAdditionalCriteria(bool $use_data_from_db): array
     {
         $session_additional_criteria = null;
-        if (isset($this->report_session)) {
+        if (! $use_data_from_db && isset($this->report_session)) {
             $session_additional_criteria = $this->report_session->getAdditionalCriteria();
         }
 
@@ -1920,7 +1921,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 $criteria = $this->getCriteria();
             }
 
-            $additional_criteria = $this->getAdditionalCriteria();
+            $additional_criteria = $this->getAdditionalCriteria($use_data_from_db);
             $this->matching_ids  = $this->getMatchingIdsFromCriteriaInDb($criteria, $additional_criteria);
 
             $event = new TrackerReportProcessAdditionalQuery(

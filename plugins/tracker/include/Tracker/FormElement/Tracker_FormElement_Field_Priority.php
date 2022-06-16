@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
 {
     /**
@@ -79,7 +80,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         EventManager::instance()->processEvent(
             TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT,
             [
-                'additional_criteria' => $report->getAdditionalCriteria(),
+                'additional_criteria' => $report->getAdditionalCriteria(false),
                 'result'              => &$result,
                 'artifact_id'         => $artifact_id,
                 'field'               => $this,
