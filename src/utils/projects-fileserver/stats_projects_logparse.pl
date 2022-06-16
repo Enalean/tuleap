@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+#
 #
 use DBI;
 use Time::Local;
@@ -23,7 +23,7 @@ my ( $filerel, $query, $rel, %groups, %filerelease, $bytes, $filepath, $group_na
 &db_connect;
 
 # get the host name
-($hostname) = split(/\./,$sys_fullname);
+($hostname) = split(/\./,$sys_default_domain);
 push @webservers, $hostname;
 
 if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
@@ -54,11 +54,11 @@ print " done.\n" if $verbose;
 
 foreach $server ( @webservers ) {
 
-# LJ Make the file naming and directory structure consistent with the 
+# LJ Make the file naming and directory structure consistent with the
 # LJ stats script in the utils/downloads/ subdir
-# LJ	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) . "/" . sprintf("%02d",$day) . "/access_log"; 
+# LJ	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) . "/" . sprintf("%02d",$day) . "/access_log";
 
-	$file = "$chronolog_basedir/$year/" . sprintf("%02d",$month) ."/vhosts-access_$year". sprintf("%02d%02d", $month, $day) .".log"; 
+	$file = "$chronolog_basedir/$year/" . sprintf("%02d",$month) ."/vhosts-access_$year". sprintf("%02d%02d", $month, $day) .".log";
 
 	if ( -f $file ) {
 		open(LOGFILE, "< $file" ) || die "Cannot open $file";
@@ -75,7 +75,7 @@ foreach $server ( @webservers ) {
 	while (<LOGFILE>) {
 		chomp($_);
 		$lines++;
-	
+
 		   ## 1=ip  2=date 3=file_uri 4=return_code 5=bytes 6=referer 7=browser 8=domain
 		$_ =~ m/^([\d\.]+).*\[(.+)\]\s\"GET (.+) HTTP.+\" (\d\d\d) (\d+|\-) \"([^\"]+)\" \"([^\"]+)\"\ *(.*)$/;
 
@@ -94,9 +94,9 @@ foreach $server ( @webservers ) {
 			if ( $filepath =~ m/\/$/ || $filepath !~ m/\.(gif|png|jpg|jpeg|css)$/ ) {
 				if ( $group{$host} && $host ) {
 					$page_views{$group{$host}}++;
-				} 
+				}
 				$valid_hits++;
-			} 
+			}
 		}
 	}
 	close(LOGFILE);

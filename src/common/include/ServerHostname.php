@@ -49,11 +49,6 @@ final class ServerHostname
     #[ConfigKeyString]
     public const LIST_HOST = 'sys_lists_host';
 
-    #[ConfigKey('Fully qualified name')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString]
-    public const FULL_NAME = 'sys_fullname';
-
     private function __construct()
     {
     }

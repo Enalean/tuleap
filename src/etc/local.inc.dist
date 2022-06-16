@@ -75,9 +75,6 @@ $sys_lists_host = 'lists.%sys_default_domain%';
 // but with lists like 'tuleap-devel@example.com' name.
 $sys_lists_domain = $sys_lists_host;
 
-// Fully qualified name
-$sys_fullname = '%sys_fullname%';
-
 //This is used for cookie authentication. If you have distributed servers,
 //please use same cookie prefix for a "cluster"
 $sys_cookie_prefix = 'TULEAP';
