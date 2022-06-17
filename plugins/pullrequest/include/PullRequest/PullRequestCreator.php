@@ -22,7 +22,6 @@ namespace Tuleap\PullRequest;
 
 use EventManager;
 use GitRepository;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
@@ -32,8 +31,8 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 class PullRequestCreator
 {
     public function __construct(
+        private PullRequestCreatorChecker $creator_checker,
         private Factory $pull_request_factory,
-        private Dao $pull_request_dao,
         private PullRequestMerger $pull_request_merger,
         private EventManager $event_manager,
         private GitPullRequestReferenceCreator $git_pull_request_reference_creator,
@@ -57,17 +56,13 @@ class PullRequestCreator
         string $branch_dest,
         \PFUser $creator,
     ): PullRequest {
-        if ($creator->isAnonymous()) {
-            throw new PullRequestAnonymousUserException();
-        }
-
-        if ($repository_src->getId() != $repository_dest->getId() && $repository_src->getParentId() != $repository_dest->getId()) {
-            throw new PullRequestTargetException();
-        }
-
-        if ($repository_dest->isMigratedToGerrit()) {
-            throw new PullRequestRepositoryMigratedOnGerritException();
-        }
+        $this->creator_checker->checkIfPullRequestCanBeCreated(
+            $creator,
+            $repository_src,
+            $branch_src,
+            $repository_dest,
+            $branch_dest
+        );
 
         $executor_repository_source      = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
         $executor_repository_destination = GitExec::buildFromRepository($repository_dest);
@@ -75,14 +70,6 @@ class PullRequestCreator
         $sha1_dest                       = $executor_repository_destination->getBranchSha1("refs/heads/$branch_dest");
         $repo_dest_id                    = $repository_dest->getId();
         $repo_src_id                     = $repository_src->getId();
-
-        if ($sha1_src === $sha1_dest && $branch_src === $branch_dest) {
-            throw new PullRequestCannotBeCreatedException();
-        }
-
-        if ($sha1_src !== $sha1_dest) {
-            $this->checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest);
-        }
 
         $commit_message = $executor_repository_source->getCommitMessage($sha1_src);
         $first_line     = array_shift($commit_message);
@@ -122,17 +109,5 @@ class PullRequestCreator
         $this->event_manager->processEvent($event);
 
         return $pull_request;
-    }
-
-    /**
-     * @throws PullRequestAlreadyExistsException
-     */
-    private function checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest): void
-    {
-        $row = $this->pull_request_dao->searchByReferences($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest);
-
-        if ($row) {
-            throw new PullRequestAlreadyExistsException();
-        }
     }
 }
