@@ -77,7 +77,12 @@ if ($ldapPlugin instanceof LdapPlugin) {
             $ldapUm = $ldapPlugin->getLdapUserManager();
             $user   = $ldapUm->createAccount($arg['ldapid'], $arg['uid'], $arg['realname'], $arg['email']);
             if ($user) {
-                echo "ID=" . $user->getId() . ":STATUS=" . $user->getStatus() . "\n";
+                /**
+                 * @psalm-taint-escape html
+                 * @psalm-taint-escape has_quotes
+                 */
+                $output = "ID=" . $user->getId() . ":STATUS=" . $user->getStatus() . "\n";
+                echo $output;
                 return 0;
             }
         }
