@@ -82,10 +82,15 @@ describe("NewFolderModal", () => {
             configuration: { is_status_property_used: true },
         });
 
-        factory = () => {
+        factory = (item = {}) => {
             return shallowMount(NewFolderModal, {
                 localVue,
                 mocks: { $store: store },
+                data() {
+                    return {
+                        item,
+                    };
+                },
             });
         };
 
@@ -94,6 +99,35 @@ describe("NewFolderModal", () => {
             show: () => {},
             hide: () => {},
         });
+    });
+
+    it("Updates custom property", () => {
+        const item = {
+            id: 7,
+            title: "Color folder",
+            type: "folder",
+            description: "A custom description",
+            properties: [
+                {
+                    short_name: "field_9",
+                    name: "string 1",
+                    value: "",
+                    is_multiple_value_allowed: false,
+                    type: "string",
+                    is_required: true,
+                    description: "",
+                    is_used: false,
+                },
+            ],
+        };
+
+        const wrapper = factory(item);
+        expect(wrapper.vm.item.properties[0].value).toBe("");
+        emitter.emit("update-custom-property", {
+            property_short_name: "field_9",
+            value: "wololo some words",
+        });
+        expect(wrapper.vm.item.properties[0].value).toBe("wololo some words");
     });
 
     it("Does not load project properties, when they have already been loaded", async () => {
@@ -137,45 +171,14 @@ describe("NewFolderModal", () => {
     });
 
     it("Updates status", () => {
-        const item = {
-            id: 7,
-            type: "folder",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
-
-        const wrapper = factory({ item });
+        const wrapper = factory();
 
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toBe("draft");
     });
 
     it("Updates title", () => {
-        const item = {
-            id: 7,
-            type: "folder",
-            title: "A folder",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
-
-        const wrapper = factory({ item });
+        const wrapper = factory();
 
         emitter.emit("update-title-property", "A folder");
         expect(wrapper.vm.item.title).toBe("A folder");

@@ -103,7 +103,6 @@ export default {
         },
     },
     mounted() {
-        this.item = this.getDefaultItem();
         this.modal = createModal(this.$el);
         emitter.on("show-new-folder-modal", this.show);
         emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
@@ -111,6 +110,7 @@ export default {
         emitter.on("update-status-property", this.updateStatusValue);
         emitter.on("update-title-property", this.updateTitleValue);
         emitter.on("update-description-property", this.updateDescriptionValue);
+        emitter.on("update-custom-property", this.updateCustomProperty);
     },
     beforeDestroy() {
         emitter.off("show-new-folder-modal", this.show);
@@ -122,6 +122,7 @@ export default {
         emitter.off("update-status-property", this.updateStatusValue);
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);
+        emitter.off("update-custom-property", this.updateCustomProperty);
     },
     methods: {
         getDefaultItem() {
@@ -134,6 +135,7 @@ export default {
                     can_write: [],
                     can_manage: [],
                 },
+                properties: [],
             };
         },
         async show(event) {
@@ -207,6 +209,19 @@ export default {
         },
         updateDescriptionValue(description) {
             this.item.description = description;
+        },
+        updateCustomProperty(event) {
+            if (!this.item.properties) {
+                return;
+            }
+            const item_properties = this.item.properties.find(
+                (property) => property.short_name === event.property_short_name
+            );
+
+            if (!item_properties) {
+                return;
+            }
+            item_properties.value = event.value;
         },
     },
 };
