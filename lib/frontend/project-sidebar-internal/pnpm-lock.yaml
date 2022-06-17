@@ -8,7 +8,7 @@ specifiers:
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-popovers': link:../tlp-popovers
   '@vue/test-utils': ^2.0.0-rc.17
-  '@vueuse/core': ^8.4.2
+  '@vueuse/core': ^8.7.3
   vue: ^3.2.26
   vue-dompurify-html: ^3.0.0-beta.3
 
@@ -18,7 +18,7 @@ dependencies:
   '@tuleap/project-privacy-helper': link:../project-privacy-helper
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-popovers': link:../tlp-popovers
-  '@vueuse/core': 8.4.2_vue@3.2.26
+  '@vueuse/core': 8.7.3_vue@3.2.26
   vue: 3.2.26
   vue-dompurify-html: 3.0.0-beta.3_vue@3.2.26
 
@@ -131,8 +131,8 @@ packages:
       vue: 3.2.26
     dev: true
 
-  /@vueuse/core/8.4.2_vue@3.2.26:
-    resolution: {integrity: sha512-dUVU96lii1ZdWoNJXauQNt+4QrHz1DKbuW+y6pDR2N10q7rGZJMDU7pQeMcC2XeosX7kMODfaBuqsF03NozzLg==}
+  /@vueuse/core/8.7.3_vue@3.2.26:
+    resolution: {integrity: sha512-jpBnyG9b4wXgk0Dz3I71lfhD0o53t1tZR+NoAQ+17zJy7MP/VDfGIkq8GcqpDwmptLCmGiGVipkPbWmDGMic8Q==}
     peerDependencies:
       '@vue/composition-api': ^1.1.0
       vue: ^2.6.0 || ^3.2.0
@@ -142,18 +142,18 @@ packages:
       vue:
         optional: true
     dependencies:
-      '@vueuse/metadata': 8.4.2
-      '@vueuse/shared': 8.4.2_vue@3.2.26
+      '@vueuse/metadata': 8.7.3
+      '@vueuse/shared': 8.7.3_vue@3.2.26
       vue: 3.2.26
       vue-demi: 0.12.5_vue@3.2.26
     dev: false
 
-  /@vueuse/metadata/8.4.2:
-    resolution: {integrity: sha512-2BIj++7P0/I5dfMsEe8q7Kw0HqVAjVcyNOd9+G22/ILUC9TVLTeYOuJ1kwa1Gpr+0LWKHc6GqHiLWNL33+exoQ==}
+  /@vueuse/metadata/8.7.3:
+    resolution: {integrity: sha512-spf9kgCsBEFbQb90I6SIqAWh1yP5T1JoJGj+/04+VTMIHXKzn3iecmHUalg8QEOCPNtnFQGNEw5OLg0L39eizg==}
     dev: false
 
-  /@vueuse/shared/8.4.2_vue@3.2.26:
-    resolution: {integrity: sha512-hILXMEjL8YQhj1LHN/HZ49UThyfk8irTjhele2nW+L3N55ElFUBGB/f4w0rg8EW+/suhqv7kJJPTZzvHCqxlIw==}
+  /@vueuse/shared/8.7.3_vue@3.2.26:
+    resolution: {integrity: sha512-PMc/h6cEakJ4+5VuNUGi7RnbA6CkLvtG2230x8w3zYJpW1P6Qphh9+dFFvHn7TX+RlaicF5ND0RX1NxWmAoW7w==}
     peerDependencies:
       '@vue/composition-api': ^1.1.0
       vue: ^2.6.0 || ^3.2.0
