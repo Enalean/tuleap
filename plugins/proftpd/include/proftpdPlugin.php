@@ -26,12 +26,15 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class proftpdPlugin extends Plugin implements \Tuleap\Project\Service\PluginWithService // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const SERVICE_SHORTNAME = 'plugin_proftpd';
 
@@ -41,13 +44,10 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
         bindtextdomain('tuleap-proftpd', __DIR__ . '/../site-content');
 
         $this->addHook('cssfile');
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('approve_pending_project');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::RENAME_PROJECT);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
@@ -116,9 +116,40 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
         );
     }
 
-    public function service_classnames(array &$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\ProFTPd\ServiceProFTPd::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        if ($params['shortname'] == self::SERVICE_SHORTNAME && $params['is_used']) {
+            $project = $this->getProject($params['group_id']);
+            $this->createDirectory($project);
+        }
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for proftpd
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for proftpd
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for proftpd
     }
 
     public function cssfile($params)
@@ -152,14 +183,6 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
                 'field' => dgettext('tuleap-proftpd', 'Filepath'),
                 'title' => dgettext('tuleap-proftpd', 'FTP access'),
             ];
-        }
-    }
-
-    public function service_is_used($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['shortname'] == self::SERVICE_SHORTNAME && $params['is_used']) {
-            $project = $this->getProject($params['group_id']);
-            $this->createDirectory($project);
         }
     }
 

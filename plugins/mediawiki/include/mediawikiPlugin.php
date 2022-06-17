@@ -52,14 +52,18 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\Project\DelegatedUserAccessForProject;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const SERVICE_SHORTNAME = 'plugin_mediawiki';
 
@@ -68,10 +72,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         parent::__construct($id);
         $this->setName("mediawiki");
         $this->addHook('cssfile');
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->addHook('permission_get_name');
-        $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(RegisterProjectCreationEvent::NAME);
 
         $this->addHook(Event::RENAME_PROJECT, 'rename_project');
@@ -98,7 +100,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $this->addHook('plugin_statistics_service_usage');
 
-        $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
 
         // Stats plugin
@@ -421,16 +422,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $params['allowed_services'][] = $this->getServiceShortname();
     }
 
-    public function service_is_used($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
-            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
-            if ($mediawiki_instantiater) {
-                $mediawiki_instantiater->instantiate();
-            }
-        }
-    }
-
     private function getInstantiater($group_id)
     {
         $project_manager = ProjectManager::instance();
@@ -571,9 +562,42 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return new MediawikiManager($this->getDao());
     }
 
-    public function service_classnames(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
+            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+            if ($mediawiki_instantiater) {
+                $mediawiki_instantiater->instantiate();
+            }
+        }
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for mediawiki
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for mediawiki
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for mediawiki
     }
 
     public function rename_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

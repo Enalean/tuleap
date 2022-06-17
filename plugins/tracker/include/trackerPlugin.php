@@ -50,6 +50,7 @@ use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\Event\GetUriFromCrossReference;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
@@ -58,6 +59,9 @@ use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\Registration\Template\DefineIssueTemplateEvent;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -231,7 +235,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../include/manual_autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class trackerPlugin extends Plugin implements PluginWithConfigKeys
+class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
     public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
@@ -252,7 +256,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
         $this->addHook(Event::BUILD_REFERENCE, 'build_reference', false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::JAVASCRIPT, 'javascript', false);
         $this->addHook(Event::TOGGLE, 'toggle', false);
         $this->addHook(GetPublicAreas::NAME);
@@ -546,14 +549,42 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function service_classnames(&$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getServiceShortname()
+    {
+        return self::SERVICE_SHORTNAME;
+    }
+
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = ServiceTracker::class;
     }
 
-    public function getServiceShortname()
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
     {
-        return self::SERVICE_SHORTNAME;
+        // nothing to do for trackers
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for trackers
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for trackers
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for trackers
     }
 
     public function javascript($params)

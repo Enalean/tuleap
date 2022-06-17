@@ -27,6 +27,9 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -35,7 +38,7 @@ use Tuleap\Hudson\Reference\HudsonCrossReferenceOrganizer;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Project\Service\PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const ICONS_PATH          = '/plugins/hudson/themes/default/images/ic/';
     public const HUDSON_JOB_NATURE   = 'hudson_job';
@@ -49,8 +52,6 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
 
         $this->addHook('javascript_file', 'jsFile', false);
         $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->addHook(ProjectStatusUpdate::NAME);
 
@@ -86,9 +87,37 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         return 'hudson';
     }
 
-    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Hudson\HudsonService::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        // nothing to do for hudson
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for hudson
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for hudson
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for hudson
     }
 
     public function cssFile($params)

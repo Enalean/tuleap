@@ -165,6 +165,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectUnixNameIsEditable;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
@@ -173,6 +174,9 @@ use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -193,10 +197,7 @@ use Tuleap\User\PasswordVerifier;
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-/**
- * GitPlugin
- */
-class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const LOG_IDENTIFIER = 'git_syslog';
 
@@ -241,8 +242,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir', false);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         // Stats plugin
         $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
@@ -348,9 +347,38 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return parent::getHooksAndCallbacks();
     }
 
-    public function serviceClassnames(array $params)
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Git\GitService::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        // nothing to do for git
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for git
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for git
+    }
+
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for git
     }
 
     public function exportXmlProject(ExportXmlProject $event): void

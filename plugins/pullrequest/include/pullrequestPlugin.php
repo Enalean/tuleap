@@ -115,7 +115,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
 
-        $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
@@ -165,11 +164,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     public function getDependencies()
     {
         return ['git'];
-    }
-
-    public function service_classnames($params) // phpcs:ignore
-    {
-        $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
 
     public function collectAssets(CollectAssets $retriever)
