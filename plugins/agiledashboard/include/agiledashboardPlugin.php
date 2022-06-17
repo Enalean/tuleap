@@ -102,8 +102,12 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
@@ -164,7 +168,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
+class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
     public const PLUGIN_NAME      = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
@@ -212,9 +216,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
             $this->addHook(TRACKER_USAGE);
-            $this->addHook(Event::SERVICE_CLASSNAMES);
-            $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-            $this->addHook(Event::SERVICE_IS_USED);
             $this->addHook(RegisterProjectCreationEvent::NAME);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
@@ -329,9 +330,56 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
         return self::PLUGIN_SHORTNAME;
     }
 
-    public function service_classnames(&$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\AgileDashboard\AgileDashboardService::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        if (! isset($params['shortname']) || ! isset($params['is_used'])) {
+            return;
+        }
+
+        $service_short_name = $params['shortname'];
+        $service_is_used    = $params['is_used'];
+
+        if ($service_short_name !== $this->getServiceShortname() || ! $service_is_used) {
+            return;
+        }
+
+        $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
+
+        $project = ProjectManager::instance()->getProject((int) $params['group_id']);
+        $user    = UserManager::instance()->getCurrentUser();
+
+        $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
+            $project,
+            $user
+        );
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for Agile Dashboard
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for Agile Dashboard
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for Agile Dashboard
     }
 
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
@@ -2042,31 +2090,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys
     private function addKanbanTemplates(DefaultTemplatesXMLFileCollection $collection): void
     {
         $collection->add(__DIR__ . '/../resources/templates/Tracker_activity.xml');
-    }
-
-    //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function service_is_used(array $params): void
-    {
-        if (! isset($params['shortname']) || ! isset($params['is_used'])) {
-            return;
-        }
-
-        $service_short_name = (string) $params['shortname'];
-        $service_is_used    = (bool) $params['is_used'];
-
-        if ($service_short_name !== $this->getServiceShortname() || ! $service_is_used) {
-            return;
-        }
-
-        $explicit_backlog_configuration_updater = $this->getExplicitBacklogConfigurationUpdater();
-
-        $project = ProjectManager::instance()->getProject((int) $params['group_id']);
-        $user    = UserManager::instance()->getCurrentUser();
-
-        $explicit_backlog_configuration_updater->activateExplicitBacklogManagement(
-            $project,
-            $user
-        );
     }
 
     private function getExplicitBacklogConfigurationUpdater(): ConfigurationUpdater

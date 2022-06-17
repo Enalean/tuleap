@@ -46,7 +46,11 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
@@ -145,7 +149,7 @@ use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\SVNCore\Cache\ParameterSaver;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class SvnPlugin extends Plugin implements PluginWithConfigKeys
+class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
     public const SERVICE_SHORTNAME  = 'plugin_svn';
     public const SYSTEM_NATURE_NAME = ReferenceManager::REFERENCE_NATURE_SVNREVISION;
@@ -177,8 +181,6 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys
         $this->setScope(Plugin::SCOPE_PROJECT);
         bindtextdomain('tuleap-svn', __DIR__ . '/../site-content');
 
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::UGROUP_RENAME);
@@ -540,9 +542,37 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function service_classnames(array &$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\SVN\ServiceSvn::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        // nothing to do for svn
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for svn
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for svn
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for svn
     }
 
     /**

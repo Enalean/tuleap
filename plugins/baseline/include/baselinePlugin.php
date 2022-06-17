@@ -23,13 +23,17 @@ declare(strict_types=1);
 
 use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
+class baselinePlugin extends Plugin implements PluginWithService // @codingStandardsIgnoreLine
 {
     public const NAME              = 'baseline';
     public const SERVICE_SHORTNAME = 'plugin_baseline';
@@ -57,9 +61,6 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-
         return parent::getHooksAndCallbacks();
     }
 
@@ -72,9 +73,37 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Baseline\BaselineTuleapService::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        // nothing to do for baseline
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        // nothing to do for baseline
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for baseline
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for baseline
     }
 
     public function routeGetSlash(): ServiceController

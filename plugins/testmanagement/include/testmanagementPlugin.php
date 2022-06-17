@@ -31,6 +31,9 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
+use Tuleap\Project\Service\AddMissingService;
+use Tuleap\Project\Service\PluginWithService;
+use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
@@ -103,7 +106,7 @@ use Tuleap\User\History\HistoryQuickLink;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const NAME              = 'testmanagement';
     public const SERVICE_SHORTNAME = 'plugin_testmanagement';
@@ -121,12 +124,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(TypePresenterFactory::EVENT_GET_ARTIFACTLINK_TYPES);
         $this->addHook(TypePresenterFactory::EVENT_GET_TYPE_PRESENTER);
-        $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(ImportValidateExternalFields::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(ImportExternalElement::NAME);
@@ -217,9 +217,72 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return $project->usesService($this->getServiceShortname());
     }
 
-    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    /**
+     * @see Event::SERVICE_CLASSNAMES
+     * @param array{classnames: array<string, class-string>, project: \Project} $params
+     */
+    public function serviceClassnames(array &$params): void
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\TestManagement\Service::class;
+    }
+
+    /**
+     * @see Event::SERVICE_IS_USED
+     * @param array{shortname: string, is_used: bool, group_id: int|string} $params
+     */
+    public function serviceIsUsed(array $params): void
+    {
+        // nothing to do for TTM
+    }
+
+    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
+    {
+        $service_short_name = $this->getServiceShortname();
+
+        if (! $event->isForService($this->getServiceShortname())) {
+            return;
+        }
+
+        $project = $event->getProject();
+        $event->pluginSetAValue();
+
+        $dao                          = new ArtifactLinksUsageDao();
+        $covered_by_type_is_activated = ! $dao->isTypeDisabledInProject(
+            (int) $project->getID(),
+            TypeCoveredByPresenter::TYPE_COVERED_BY
+        );
+
+        if ($project->usesService($service_short_name)) {
+            // Service is being deactivated
+            $event->serviceCanBeActivated();
+            return;
+        }
+
+        if ($covered_by_type_is_activated) {
+            $event->serviceCanBeActivated();
+            return;
+        }
+
+        $message = sprintf(
+            dgettext(
+                'tuleap-testmanagement',
+                'Service %s cannot be activated because the artifact link type "%s" is not activated'
+            ),
+            $service_short_name,
+            TypeCoveredByPresenter::TYPE_COVERED_BY
+        );
+
+        $event->setWarningMessage($message);
+    }
+
+    public function serviceDisabledCollector(ServiceDisabledCollector $event): void
+    {
+        // nothing to do for TTM
+    }
+
+    public function addMissingService(AddMissingService $event): void
+    {
+        // nothing to do for TTM
     }
 
     public function registerProjectCreationEvent(RegisterProjectCreationEvent $event): void
@@ -606,46 +669,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
                 $this->getTrackerXMLExporterChangesetValueStepDefinitionXMLExporter()
             );
         }
-    }
-
-    public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
-    {
-        $service_short_name = $this->getServiceShortname();
-
-        if (! $event->isForService($this->getServiceShortname())) {
-            return;
-        }
-
-        $project = $event->getProject();
-        $event->pluginSetAValue();
-
-        $dao                          = new ArtifactLinksUsageDao();
-        $covered_by_type_is_activated = ! $dao->isTypeDisabledInProject(
-            (int) $project->getID(),
-            TypeCoveredByPresenter::TYPE_COVERED_BY
-        );
-
-        if ($project->usesService($service_short_name)) {
-            // Service is being deactivated
-            $event->serviceCanBeActivated();
-            return;
-        }
-
-        if ($covered_by_type_is_activated) {
-            $event->serviceCanBeActivated();
-            return;
-        }
-
-        $message = sprintf(
-            dgettext(
-                'tuleap-testmanagement',
-                'Service %s cannot be activated because the artifact link type "%s" is not activated'
-            ),
-            $service_short_name,
-            TypeCoveredByPresenter::TYPE_COVERED_BY
-        );
-
-        $event->setWarningMessage($message);
     }
 
     public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
