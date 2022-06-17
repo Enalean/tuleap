@@ -107,7 +107,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
@@ -130,7 +130,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(null);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_SemanticTitleNotDefinedException::class);
@@ -153,7 +153,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
@@ -176,7 +176,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
@@ -199,7 +199,7 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
         $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
-        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnFalse()->getMock();
+        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class)->shouldReceive('userCanSubmit')->andReturnFalse()->getMock();
         $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(KanbanUserCantAddArtifactException::class);

@@ -99,7 +99,16 @@ class VelocityCalculator
             return 0;
         }
 
-        $status_value = $changeset->getValue($semantic_done->getSemanticStatus()->getField());
+        $semantic_status = $semantic_done->getSemanticStatus();
+        if (! $semantic_status) {
+            return 0;
+        }
+
+        $semantic_status_field = $semantic_status->getField();
+        if (! $semantic_status_field) {
+            return 0;
+        }
+        $status_value = $changeset->getValue($semantic_status_field);
         if (! $status_value) {
             return 0;
         }
