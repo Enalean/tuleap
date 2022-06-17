@@ -78,7 +78,8 @@ import type {
     ItemSearchResult,
     SearchResult,
     SearchResultColumnDefinition,
-    SortParams,
+    RootState,
+    AdvancedSearchParams,
 } from "../../../type";
 import { SEARCH_LIMIT } from "../../../type";
 import TableBodyResults from "./TableBodyResults.vue";
@@ -86,13 +87,19 @@ import SearchResultPagination from "./SearchResultPagination.vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
-import { useRouter, useRoute } from "../../../helpers/use-router";
+import { useRouter } from "../../../helpers/use-router";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { getRouterQueryFromSearchParams } from "../../../helpers/get-router-query-from-search-params";
 
 const { interpolate, $gettext } = useGettext();
 
-const props =
-    defineProps<{ is_loading: boolean; results: SearchResult | null; sort: SortParams }>();
+const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
+
+const props = defineProps<{
+    is_loading: boolean;
+    results: SearchResult | null;
+    query: AdvancedSearchParams;
+}>();
 
 const limit = ref(SEARCH_LIMIT);
 
@@ -109,14 +116,21 @@ const items = computed((): ReadonlyArray<ItemSearchResult> => {
 });
 
 const router = useRouter();
-const route = useRoute();
 
 function hasAscSort(column: SearchResultColumnDefinition): boolean {
-    return props.sort && props.sort.name === column.name && props.sort.order === "asc";
+    return (
+        props.query.sort !== null &&
+        props.query.sort.name === column.name &&
+        props.query.sort.order === "asc"
+    );
 }
 
 function hasDescSort(column: SearchResultColumnDefinition): boolean {
-    return props.sort && props.sort.name === column.name && props.sort.order === "desc";
+    return (
+        props.query.sort !== null &&
+        props.query.sort.name === column.name &&
+        props.query.sort.order === "desc"
+    );
 }
 
 function toggleSort(column: SearchResultColumnDefinition): void {
@@ -124,7 +138,7 @@ function toggleSort(column: SearchResultColumnDefinition): void {
         return;
     }
 
-    let parameters = props.sort;
+    let parameters = props.query.sort;
     let stringify_parameters: Array<string> = [];
 
     if (parameters && parameters.order === "asc") {
@@ -133,7 +147,8 @@ function toggleSort(column: SearchResultColumnDefinition): void {
         stringify_parameters.push(column.name);
     }
 
-    let route_query = route.query;
+    let route_query = getRouterQueryFromSearchParams(props.query);
+
     route_query.sort = stringify_parameters.join();
 
     // the two cal to router replace is a quick fix for following issue:
@@ -146,6 +161,9 @@ function toggleSort(column: SearchResultColumnDefinition): void {
     router.push({
         name: "search",
         query: route_query,
+        params: {
+            folder_id: String(current_folder.value.id),
+        },
     });
 }
 
