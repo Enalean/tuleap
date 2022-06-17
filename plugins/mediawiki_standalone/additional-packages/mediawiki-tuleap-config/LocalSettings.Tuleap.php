@@ -84,6 +84,9 @@ $GLOBALS['wgEnableUploads'] = true;
 
 $GLOBALS['wgCookieSameSite'] = 'Lax';
 $GLOBALS['wgCookiePrefix']   = '__Host-tuleap-' . $GLOBALS['wgDBname'];
+
+$GLOBALS['wgCSPHeader'] = true;
+
 // MediaWiki Core default settings - END ###
 
 // Tuleap Specific - START ###
