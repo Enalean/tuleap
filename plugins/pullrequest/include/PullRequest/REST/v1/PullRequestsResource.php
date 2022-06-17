@@ -96,6 +96,7 @@ use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
+use Tuleap\PullRequest\PullRequestCreatorChecker;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
@@ -244,8 +245,8 @@ class PullRequestsResource extends AuthenticatedResource
             new MergeSettingRetriever(new MergeSettingDAO())
         );
         $this->pull_request_creator = new PullRequestCreator(
+            new PullRequestCreatorChecker($pull_request_dao),
             $this->pull_request_factory,
-            $pull_request_dao,
             $this->pull_request_merger,
             $this->event_manager,
             new GitPullRequestReferenceCreator(

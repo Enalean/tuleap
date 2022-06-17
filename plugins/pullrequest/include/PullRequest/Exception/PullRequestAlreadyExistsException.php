@@ -26,6 +26,6 @@ class PullRequestAlreadyExistsException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("A pull request with the same source and destination references already exists.");
+        parent::__construct("A pull request with the same source and destination branches already exists.");
     }
 }
