@@ -10,7 +10,12 @@ Type=notify
 PIDFile=/var/run/tuleap/mediawiki-php-fpm.pid
 ExecStart=/opt/remi/php74/root/usr/sbin/php-fpm --nodaemonize --fpm-config /usr/share/tuleap/plugins/mediawiki_standalone/etc/php-fpm/mediawiki-tuleap.conf
 ExecReload=/bin/kill -USR2 $MAINPID
-PrivateTmp=True
+PrivateTmp=yes
+NoNewPrivileges=yes
+PrivateDevices=yes
+ProtectSystem=full
+ProtectHome=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 
 [Install]
 WantedBy=tuleap.service
