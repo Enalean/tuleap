@@ -26,7 +26,6 @@ use Cocur\Slugify\Slugify;
 use PFUser;
 use Project;
 use Tracker;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
@@ -38,8 +37,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class CreateBranchButtonFetcherTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&GitlabIntegrationAvailabilityChecker
      */
