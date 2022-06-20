@@ -119,7 +119,6 @@ final class oauth2_serverPlugin extends Plugin
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-oauth2_server', 'OAuth2 Server'),
-                    '',
                     dgettext('tuleap-oauth2_server', 'Delegate access to Tuleap resources')
                 )
             );

@@ -53,7 +53,6 @@ class RoadmapPlugin extends Plugin
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-roadmap', 'Roadmap'),
-                    '',
                     dgettext('tuleap-roadmap', 'Displays project roadmap as a widget')
                 )
             );

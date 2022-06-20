@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-gitlfs', 'Git LFS'),
-            false,
             dgettext('tuleap-gitlfs', 'Support of large file upload and download in Git')
         );
     }

@@ -351,7 +351,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $pluginInfo->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-program_management', 'Program Management'),
-                    '',
                     dgettext(
                         'tuleap-program_management',
                         'Enables managing several related projects, synchronizing teams and milestones'

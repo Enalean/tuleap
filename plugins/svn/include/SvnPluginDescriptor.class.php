@@ -24,7 +24,6 @@ class SvnPluginDescriptor extends PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-svn', 'SVN with multiple repositories'),
-            false,
             dgettext('tuleap-svn', 'SVN repository manager. Supports multiple repositories for the same project.')
         );
     }

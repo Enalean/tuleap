@@ -27,7 +27,6 @@ class ProjectLinksPluginDescriptor extends PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-projectlinks', 'Project Links'),
-            false,
             dgettext('tuleap-projectlinks', 'Create links between projects.')
         );
     }

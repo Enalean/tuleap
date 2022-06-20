@@ -42,7 +42,7 @@ final class securitytxtPlugin extends Plugin implements PluginWithConfigKeys
         if (! $this->pluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
             $this->pluginInfo->setPluginDescriptor(
-                new PluginDescriptor('security.txt', false, dgettext('tuleap-securitytxt', 'Add support of security.txt file (RFC 9116)'))
+                new PluginDescriptor('security.txt', dgettext('tuleap-securitytxt', 'Add support of security.txt file (RFC 9116)'))
             );
         }
         return $this->pluginInfo;

@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-pullrequest', 'Pull request'),
-            false,
             $GLOBALS['Language']->getText('plugin_pullrequest', 'descriptor_description')
         );
     }

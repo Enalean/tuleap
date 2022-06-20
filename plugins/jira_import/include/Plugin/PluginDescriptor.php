@@ -28,7 +28,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-jira_import', 'Jira Import'),
-            false,
             dgettext('tuleap-jira_import', 'Import Jira projects in Tuleap.')
         );
     }

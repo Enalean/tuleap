@@ -24,6 +24,6 @@ class GraphOnTrackersV5PluginDescriptor extends PluginDescriptor
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-graphontrackersv5', 'Graphs On Trackers v5'), false, dgettext('tuleap-graphontrackersv5', 'Plugin that allow drawing graphic on trackers v5'));
+        parent::__construct(dgettext('tuleap-graphontrackersv5', 'Graphs On Trackers v5'), dgettext('tuleap-graphontrackersv5', 'Plugin that allow drawing graphic on trackers v5'));
     }
 }

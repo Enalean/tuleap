@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_referencealias_tracker', 'descriptor_name'),
-            false,
             $GLOBALS['Language']->getText('plugin_referencealias_tracker', 'descriptor_description')
         );
     }

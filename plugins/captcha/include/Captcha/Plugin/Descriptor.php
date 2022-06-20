@@ -26,7 +26,6 @@ class Descriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-captcha', 'Captcha'),
-            false,
             dgettext('tuleap-captcha', 'Add a captcha protection to sensitive operations')
         );
     }

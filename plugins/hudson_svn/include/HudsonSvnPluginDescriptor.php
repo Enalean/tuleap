@@ -26,7 +26,6 @@ class HudsonSvnPluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-hudson_svn', 'Continuous Integration for Subversion plugin'),
-            false,
             dgettext('tuleap-hudson_svn', 'Continuous Integration with Hudson/Jenkins for Subversion plugin')
         );
     }

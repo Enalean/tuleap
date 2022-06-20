@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-crosstracker', 'Cross trackers search'),
-            false,
             dgettext('tuleap-crosstracker', 'Search artifacts that are in different trackers')
         );
     }

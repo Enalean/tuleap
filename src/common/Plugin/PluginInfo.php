@@ -35,7 +35,7 @@ class PluginInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function getPluginDescriptor(): PluginDescriptor
     {
         if (! $this->pluginDescriptor) {
-            $this->pluginDescriptor = new PluginDescriptor('', '', '');
+            $this->pluginDescriptor = new PluginDescriptor('', '');
         }
         return $this->pluginDescriptor;
     }

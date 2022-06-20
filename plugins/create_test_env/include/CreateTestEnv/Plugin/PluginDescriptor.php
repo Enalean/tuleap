@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-create_test_env', 'Create test environment'),
-            false,
             dgettext('tuleap-create_test_env', 'Automate creation of test users and environments')
         );
     }
