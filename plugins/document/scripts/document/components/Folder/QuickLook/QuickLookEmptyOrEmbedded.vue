@@ -20,11 +20,6 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <details-item-button
-            v-bind:item="item"
-            v-bind:button-class="'tlp-button-small document-quick-look-action-button-margin'"
-            v-if="is_details_button_shown"
-        />
         <drop-down-quick-look
             v-bind:item="item"
             v-bind:is-details-button-shown="!item.user_can_write"
@@ -37,11 +32,9 @@
 <script>
 import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
-import DetailsItemButton from "../ActionsButton/DetailsItemButton.vue";
 
 export default {
     components: {
-        DetailsItemButton,
         DropDownQuickLook,
         QuickLookDeleteButton,
     },

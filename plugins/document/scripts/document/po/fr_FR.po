@@ -221,9 +221,6 @@ msgstr "Tri décroissant sur {label}."
 msgid "Description"
 msgstr "Description"
 
-msgid "Details"
-msgstr "Détails"
-
 msgid "Document locked by %{username}."
 msgstr "Document verrouillé par %{username}."
 

@@ -34,7 +34,7 @@ describe("ActionsHeader", () => {
 
     it(`Given user can write
         When he displays item actions
-        Then the default action is Update`, () => {
+        Then user should be able to create a new version`, () => {
         const wrapper = getWrapper({
             id: 1,
             title: "my item title",
@@ -45,12 +45,11 @@ describe("ActionsHeader", () => {
         expect(
             wrapper.find("[data-test=item-action-create-new-version-button]").exists()
         ).toBeTruthy();
-        expect(wrapper.find("[data-test=item-action-details-button]").exists()).toBeFalsy();
     });
 
     it(`Given user can read item
         When he displays item actions
-        Then the default action is Details`, () => {
+        Then user should not be able to create a new version`, () => {
         const wrapper = getWrapper({
             id: 1,
             title: "my item title",
@@ -61,6 +60,5 @@ describe("ActionsHeader", () => {
         expect(
             wrapper.find("[data-test=item-action-create-new-version-button]").exists()
         ).toBeFalsy();
-        expect(wrapper.find("[data-test=item-action-details-button]").exists()).toBeTruthy();
     });
 });

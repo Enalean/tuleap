@@ -202,9 +202,6 @@ msgstr ""
 msgid "Description"
 msgstr "Descrição"
 
-msgid "Details"
-msgstr "Detalhes"
-
 msgid "Document locked by %{username}."
 msgstr ""
 
