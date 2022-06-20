@@ -73,7 +73,7 @@
     "mediawiki/pdf-book": "^2.0.5",
     "mediawiki/tuleap-integration": "dev-master#4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec",
     "mediawiki/tuleap-wiki-farm": "^1.0.0-beta",
-    "mediawiki/tuleap-skin": "^1.0.0-beta"
+    "mediawiki/tuleap-skin": "dev-master#d4e1933388093b464b72b523e038a233b8282307"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0"

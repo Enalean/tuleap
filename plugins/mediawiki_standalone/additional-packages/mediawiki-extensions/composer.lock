@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5e42bc46a82e57e8d3a24b615d38da8",
+    "content-hash": "73a300aaf58435706dfc0e2527e99a91",
     "packages": [
         {
             "name": "composer/installers",
@@ -381,16 +381,16 @@
         },
         {
             "name": "mediawiki/tuleap-skin",
-            "version": "1.0.0-beta",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "8cf08cb3f4e458a7f2344be477430d5a538f4713"
+                "reference": "d4e1933388093b464b72b523e038a233b8282307"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/8cf08cb3f4e458a7f2344be477430d5a538f4713",
-                "reference": "8cf08cb3f4e458a7f2344be477430d5a538f4713",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/d4e1933388093b464b72b523e038a233b8282307",
+                "reference": "d4e1933388093b464b72b523e038a233b8282307",
                 "shasum": ""
             },
             "require": {
@@ -403,6 +403,7 @@
                 "php-parallel-lint/php-console-highlighter": "0.5.0",
                 "php-parallel-lint/php-parallel-lint": "1.2.0"
             },
+            "default-branch": true,
             "type": "mediawiki-skin",
             "extra": {
                 "installer-name": "TuleapSkin"
@@ -422,9 +423,9 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/1.0.0-beta"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/master"
             },
-            "time": "2022-04-13T07:06:39+00:00"
+            "time": "2022-06-08T10:32:27+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
@@ -920,7 +921,7 @@
     "stability-flags": {
         "mediawiki/tuleap-integration": 20,
         "mediawiki/tuleap-wiki-farm": 10,
-        "mediawiki/tuleap-skin": 10
+        "mediawiki/tuleap-skin": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
