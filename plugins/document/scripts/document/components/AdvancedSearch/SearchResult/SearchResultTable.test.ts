@@ -29,7 +29,6 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../store/configuration";
 import VueRouter from "vue-router";
 import * as route from "../../../helpers/use-router";
-import type { Route } from "vue-router/types/router";
 
 describe("SearchResultTable", () => {
     it("should display skeleton while loading", () => {
@@ -38,7 +37,7 @@ describe("SearchResultTable", () => {
             propsData: {
                 is_loading: true,
                 results: null,
-                sort: null,
+                query: null,
             },
             mocks: {
                 $store: createStoreMock({
@@ -68,7 +67,7 @@ describe("SearchResultTable", () => {
                     total: 0,
                     items: [],
                 } as SearchResult,
-                sort: null,
+                query: null,
             },
             mocks: {
                 $store: createStoreMock({
@@ -98,7 +97,7 @@ describe("SearchResultTable", () => {
                     total: 172,
                     items: [{} as ItemSearchResult],
                 } as SearchResult,
-                sort: null,
+                query: null,
             },
             mocks: {
                 $store: createStoreMock({
@@ -118,15 +117,6 @@ describe("SearchResultTable", () => {
     });
 
     it("should sort title ascending", () => {
-        const mocked_route = jest.spyOn(route, "useRoute");
-
-        const query_route = {
-            params: {},
-            query: { q: "Lorem ipsum", sort: null },
-        } as unknown as Route;
-
-        mocked_route.mockReturnValue(query_route);
-
         const router = new VueRouter();
         jest.spyOn(router, "replace").mockImplementation();
         jest.spyOn(router, "push").mockImplementation();
@@ -143,11 +133,25 @@ describe("SearchResultTable", () => {
                     total: 172,
                     items: [{} as ItemSearchResult],
                 } as SearchResult,
-                sort: null,
+                query: {
+                    global_search: "Lorem ipsum",
+                    id: "",
+                    filename: "",
+                    type: "",
+                    title: "",
+                    description: "",
+                    owner: "",
+                    create_date: null,
+                    update_date: null,
+                    obsolescence_date: null,
+                    status: "",
+                    sort: null,
+                },
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        current_folder: { id: 10 },
                         configuration: {
                             columns: [
                                 { name: "title", label: "Label" } as SearchResultColumnDefinition,
@@ -168,19 +172,11 @@ describe("SearchResultTable", () => {
                 q: "Lorem ipsum",
                 sort: "title",
             },
+            params: { folder_id: "10" },
         });
     });
 
     it("should sort title descending", () => {
-        const mocked_route = jest.spyOn(route, "useRoute");
-
-        const query_route = {
-            params: {},
-            query: { q: "Lorem ipsum", sort: null },
-        } as unknown as Route;
-
-        mocked_route.mockReturnValue(query_route);
-
         const router = new VueRouter();
         jest.spyOn(router, "replace").mockImplementation();
         jest.spyOn(router, "push").mockImplementation();
@@ -197,11 +193,25 @@ describe("SearchResultTable", () => {
                     total: 172,
                     items: [{} as ItemSearchResult],
                 } as SearchResult,
-                sort: { name: "title", order: "asc" },
+                query: {
+                    global_search: "Lorem ipsum",
+                    id: "",
+                    filename: "",
+                    type: "",
+                    title: "",
+                    description: "",
+                    owner: "",
+                    create_date: null,
+                    update_date: null,
+                    obsolescence_date: null,
+                    status: "",
+                    sort: { name: "title", order: "asc" },
+                },
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        current_folder: { id: 10 },
                         configuration: {
                             columns: [
                                 { name: "title", label: "Label" } as SearchResultColumnDefinition,
@@ -224,6 +234,7 @@ describe("SearchResultTable", () => {
                 q: "Lorem ipsum",
                 sort: "title:desc",
             },
+            params: { folder_id: "10" },
         });
     });
 
@@ -247,15 +258,6 @@ describe("SearchResultTable", () => {
     ])(
         "should not sort the %s column",
         (column_name: string, column: SearchResultColumnDefinition) => {
-            const mocked_route = jest.spyOn(route, "useRoute");
-
-            const query_route = {
-                params: {},
-                query: { q: "Lorem ipsum", sort: null },
-            } as unknown as Route;
-
-            mocked_route.mockReturnValue(query_route);
-
             const router = new VueRouter();
             jest.spyOn(router, "replace").mockImplementation();
             jest.spyOn(router, "push").mockImplementation();
@@ -272,7 +274,20 @@ describe("SearchResultTable", () => {
                         total: 172,
                         items: [{} as ItemSearchResult],
                     } as SearchResult,
-                    sort: { name: "title", order: "asc" },
+                    query: {
+                        global_search: "Lorem ipsum",
+                        id: "",
+                        filename: "",
+                        type: "",
+                        title: "",
+                        description: "",
+                        owner: "",
+                        create_date: null,
+                        update_date: null,
+                        obsolescence_date: null,
+                        status: "",
+                        sort: { name: "title", order: "asc" },
+                    },
                 },
                 mocks: {
                     $store: createStoreMock({
@@ -296,16 +311,8 @@ describe("SearchResultTable", () => {
 
             column_element.trigger("click");
 
-            expect(router.replace).not.toHaveBeenCalledWith({
-                name: "search",
-            });
-            expect(router.push).not.toHaveBeenCalledWith({
-                name: "search",
-                query: {
-                    q: "Lorem ipsum",
-                    sort: "title:desc",
-                },
-            });
+            expect(router.replace).not.toHaveBeenCalled();
+            expect(router.push).not.toHaveBeenCalled();
         }
     );
 });
