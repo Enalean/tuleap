@@ -36,6 +36,7 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Account\AccountGerritController;
 use Tuleap\Git\Account\PushSSHKeysController;
 use Tuleap\Git\Account\ResynchronizeGroupsController;
+use Tuleap\Git\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
@@ -186,6 +187,7 @@ use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -340,6 +342,10 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
+        }
+
+        if (defined('TRACKER_BASE_URL')) {
+            $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
         }
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
@@ -2880,5 +2886,18 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         );
 
         $git_organizer->organizeGitReferences($organizer);
+    }
+
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
+    {
+        $button_fetcher = new CreateBranchButtonFetcher();
+
+        $button_action = $button_fetcher->getActionButton();
+
+        if ($button_action === null) {
+            return;
+        }
+
+        $event->addAction($button_action);
     }
 }
