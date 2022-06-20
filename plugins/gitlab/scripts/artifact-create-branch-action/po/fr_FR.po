@@ -30,6 +30,9 @@ msgstr ""
 msgid "Create branch"
 msgstr "Créer la branche"
 
+msgid "Create branch and merge request"
+msgstr "Créer la branche et la demande de fusion"
+
 msgid "Create branch on a GitLab repository"
 msgstr "Créer une branche dans un dépôt GitLab"
 
