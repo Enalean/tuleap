@@ -38,7 +38,7 @@ class UserAccessKeyRepresentation
     public $creation_date;
 
     /**
-     * @var string|null
+     * @var string | null
      */
     public $expiration_date;
 
@@ -48,12 +48,12 @@ class UserAccessKeyRepresentation
     public $description;
 
     /**
-     * @var string|null
+     * @var string | null
      */
     public $last_used_on;
 
     /**
-     * @var string|null
+     * @var string | null
      */
     public $last_used_by;
 

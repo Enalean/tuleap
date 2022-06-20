@@ -160,7 +160,6 @@ class TrackerFieldsResource extends AuthenticatedResource
      * @status 201
      * @throws RestException 403
      * @throws RestException 404
-     * @return CreatedFileRepresentation The representation gives you the upload URL to use with tus
      */
     protected function postFiles(int $id, FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
     {
