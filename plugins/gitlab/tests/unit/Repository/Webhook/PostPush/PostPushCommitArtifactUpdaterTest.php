@@ -30,6 +30,9 @@ use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -107,7 +110,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         );
     }
 
-    private function addComment(): void
+    private function addComment(): Ok|Err
     {
         $webhook_data = new PostPushCommitWebhookData(
             self::COMMIT_SHA1,
@@ -119,7 +122,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             self::COMMITTER_FULL_NAME
         );
 
-        $this->updater->addTuleapArtifactCommentNoSemanticDefined(
+        return $this->updater->addTuleapArtifactCommentNoSemanticDefined(
             $this->artifact,
             $this->workflow_user,
             $webhook_data
@@ -135,7 +138,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with([], $this->no_semantic_defined_message, $this->workflow_user)
             ->willThrowException(new Tracker_NoChangeException(1, 'xref'));
 
-        $this->addComment();
+        $result = $this->addComment();
+        self::assertTrue(Result::isErr($result));
     }
 
     public function testItDoesNotAddArtifactCommentWithoutStatusUpdatedIfTheCommentIsNotCreated(): void
@@ -147,7 +151,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with([], $this->no_semantic_defined_message, $this->workflow_user)
             ->willReturn(null);
 
-        $this->addComment();
+        $result = $this->addComment();
+        self::assertTrue(Result::isErr($result));
     }
 
     public function testItCreatesANewCommentWithoutStatusUpdatedWithTheTuleapUsernameIfTheTuleapUserExists(): void
@@ -159,7 +164,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with([], $this->no_semantic_defined_message, $this->workflow_user)
             ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
-        $this->addComment();
+        $result = $this->addComment();
+        self::assertTrue(Result::isOk($result));
     }
 
     public function testItCreatesANewCommentWithoutStatusUpdatedWithTheGitlabCommitterAuthorIfTheTuleapUserDoesNotExist(): void
@@ -176,7 +182,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with([], $message, $this->workflow_user)
             ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
-        $this->addComment();
+        $result = $this->addComment();
+        self::assertTrue(Result::isOk($result));
     }
 
     private function close(): void

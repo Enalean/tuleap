@@ -32,6 +32,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
@@ -148,11 +149,14 @@ class PostPushWebhookCloseArtifactHandler
             );
 
             if ($status_semantic->getField() === null) {
-                $this->artifact_updater->addTuleapArtifactCommentNoSemanticDefined(
+                $result = $this->artifact_updater->addTuleapArtifactCommentNoSemanticDefined(
                     $artifact,
                     $tracker_workflow_user,
                     $post_push_commit_webhook_data
                 );
+                if (Result::isErr($result)) {
+                    $this->logger->error((string) $result->error);
+                }
                 return;
             }
 

@@ -77,7 +77,7 @@ promise.catch((error: unknown) => {
 Example:
 ```typescript
 const fault = Fault.fromMessage("User does not have permission");
-console.log(String(fault));
+console.log(String(fault)); // logs "User does not have permission"
 ```
 
 ### `fault_object.getStackTraceAsString(): string`
@@ -262,6 +262,7 @@ function handleErrors(): void {
 * Dave Cheney's 2015 blog post on [Errors and Exceptions, redux][3]
 * Dave Cheney's 2016 blog post on [Don’t just check errors, handle them gracefully][4]
 * Dave Cheney's [Go errors package][5]
+* [ADR-0012: Favor Faults over Exceptions][8]
 
 [1]: https://dave.cheney.net/2012/01/18/why-go-gets-exceptions-right
 [2]: https://dave.cheney.net/2014/11/04/error-handling-vs-exceptions-redux
@@ -270,3 +271,4 @@ function handleErrors(): void {
 [5]: https://github.com/pkg/errors
 [6]: https://en.wikipedia.org/wiki/Structural_type_system
 [7]: <./src/Fault.test.ts>
+[8]: ../../../adr/0012-faults-over-exceptions.md
