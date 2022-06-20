@@ -29,9 +29,9 @@ use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -45,7 +45,7 @@ class JiraRunner
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private WorkerAvailability $worker_availability,
+        private IsAsyncTaskProcessingAvailable $worker_availability,
         private KeyFactory $key_factory,
         private FromJiraTrackerCreator $tracker_creator,
         private PendingJiraImportDao $dao,

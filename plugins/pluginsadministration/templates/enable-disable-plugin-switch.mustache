@@ -2,7 +2,10 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
-    <div class="tlp-switch tlp-switch-mini tlp-table-cell-actions-button">
+    <div
+            class="tlp-switch tlp-switch-mini tlp-table-cell-actions-button {{# missing_install_requirements }}tlp-tooltip tlp-tooltip-left{{/ missing_install_requirements }}"
+            data-tlp-tooltip="{{# missing_install_requirements }} {{.}} {{/ missing_install_requirements }}"
+    >
         <input type="checkbox"
                id="plugin-switch-toggler-{{ id }}"
                class="tlp-switch-checkbox enable-plugin-switch"
@@ -14,6 +17,7 @@
                     data-target-modal-id="enable-plugin-confirmation-modal-{{ id }}"
                {{/ are_there_disabled_dependencies }}
                {{# is_enabled }}checked{{/ is_enabled }}
+               {{^ is_enabled }}{{# missing_install_requirements }}disabled{{/ missing_install_requirements }}{{/ is_enabled }}
         >
         <label for="plugin-switch-toggler-{{ id }}" class="tlp-switch-button">
             {{# is_enabled }}

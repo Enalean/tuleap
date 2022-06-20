@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use Exception;
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -52,24 +52,19 @@ class AsynchronousArtifactsDeletionActionsRunner
      * @var ArchiveAndDeleteArtifactTaskBuilder
      */
     private $task_builder;
-    /**
-     * @var WorkerAvailability
-     */
-    private $worker_availability;
 
     public function __construct(
         PendingArtifactRemovalDao $pending_artifact_removal_dao,
         LoggerInterface $logger,
         \UserManager $user_manager,
         QueueFactory $queue_factory,
-        WorkerAvailability $worker_availability,
+        private IsAsyncTaskProcessingAvailable $worker_availability,
         ArchiveAndDeleteArtifactTaskBuilder $task_builder,
     ) {
         $this->pending_artifact_removal_dao = $pending_artifact_removal_dao;
         $this->logger                       = $logger;
         $this->user_manager                 = $user_manager;
         $this->queue_factory                = $queue_factory;
-        $this->worker_availability          = $worker_availability;
         $this->task_builder                 = $task_builder;
     }
 

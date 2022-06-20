@@ -201,7 +201,8 @@ class PluginsAdministrationViews extends Views
             $are_there_additional_options,
             $additional_options,
             $csrf_token,
-            $is_enabled
+            $is_enabled,
+            self::getMissingInstallRequirements($plugin)
         );
     }
 
@@ -325,6 +326,7 @@ class PluginsAdministrationViews extends Views
                 'unmet_dependencies'              => $unmet_dependencies,
                 'csrf_token'                      => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
                 'is_enabled'                      => $plugin_row['is_enabled'],
+                'missing_install_requirements'    => self::getMissingInstallRequirements($plugin),
             ];
         }
 
@@ -352,6 +354,7 @@ class PluginsAdministrationViews extends Views
                 'description'                 => $descriptor->getDescription(),
                 'is_there_readme'             => false,
                 'is_there_unmet_dependencies' => false,
+                'missing_install_requirements' => self::getMissingInstallRequirements($plugin),
             ];
 
             $readme = $this->getFormattedReadme($plugin->getName());
@@ -370,5 +373,21 @@ class PluginsAdministrationViews extends Views
         }
 
         return new AvailablePluginsPresenter($plugins, new CSRFSynchronizerToken('/plugins/pluginsadministration/'));
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function getMissingInstallRequirements(Plugin $plugin): array
+    {
+        $missing_install_requirements = [];
+        foreach ($plugin->getInstallRequirements() as $install_requirement) {
+            $install_requirement_description = $install_requirement->getDescriptionOfMissingInstallRequirement();
+            if ($install_requirement_description !== null) {
+                $missing_install_requirements[] = $install_requirement_description;
+            }
+        }
+
+        return $missing_install_requirements;
     }
 }

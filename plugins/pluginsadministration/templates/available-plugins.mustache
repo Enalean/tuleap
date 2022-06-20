@@ -47,10 +47,12 @@
                                     <td class="pluginsadministration-available-list-name-cell tlp-table-cell-filterable">{{ full_name }}</td>
                                     <td class="pluginsadministration-available-list-description-cell tlp-table-cell-filterable">{{ description }}</td>
                                     <td>
-                                        <button class="tlp-button-primary tlp-button-outline tlp-button-small install-plugin-button"
+                                        <button class="tlp-button-primary tlp-button-outline tlp-button-small install-plugin-button {{# missing_install_requirements }}tlp-tooltip tlp-tooltip-left{{/ missing_install_requirements }}"
                                             data-modal-id="install-plugin-{{ name }}"
+                                            {{# missing_install_requirements }}disabled{{/ missing_install_requirements }}
+                                            data-tlp-tooltip="{{# missing_install_requirements }} {{.}} {{/ missing_install_requirements }}"
                                         >
-                                            <i class="fa fa-download tlp-button-icon"></i> {{ install_label }}
+                                            <i class="fas fa-download tlp-button-icon" aria-hidden="true"></i> {{ install_label }}
                                         </button>
 
                                         {{> install-plugin-modal }}

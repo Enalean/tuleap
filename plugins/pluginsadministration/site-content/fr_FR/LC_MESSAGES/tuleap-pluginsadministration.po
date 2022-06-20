@@ -62,6 +62,12 @@ msgstr ""
 "Impossible d'activer  %1$s. Veuillez activer les plugins suivants au "
 "préalable : %2$s"
 
+#, php-format
+msgid "Cannot enable %s. Please deal with the missing requirement first (%s)"
+msgstr ""
+"Impossible d'activer %s. Veuillez au préalable traiter le pré-requis "
+"manquant (%s)"
+
 msgid "Confirm disable of plugin"
 msgstr "Confirmez la désactivation du plugin"
 

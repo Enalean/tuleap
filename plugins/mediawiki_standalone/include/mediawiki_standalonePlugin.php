@@ -130,6 +130,11 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         return ['mediawiki'];
     }
 
+    public function getInstallRequirements(): array
+    {
+        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
+    }
+
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(CollectRoutesEvent::NAME);

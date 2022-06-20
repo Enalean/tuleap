@@ -22,6 +22,7 @@
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\Plugin\PluginInstallRequirement;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\AddMissingService;
 use Tuleap\Project\Service\PluginWithService;
@@ -317,6 +318,14 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->name = $this->_getPluginManager()->getNameForPlugin($this);
         }
         return $this->name;
+    }
+
+    /**
+     * @return PluginInstallRequirement[]
+     */
+    public function getInstallRequirements(): array
+    {
+        return [];
     }
 
     protected function _getPluginManager(): PluginManager // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore

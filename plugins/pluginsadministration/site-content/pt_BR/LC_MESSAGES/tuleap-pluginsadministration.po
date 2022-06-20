@@ -50,6 +50,10 @@ msgstr ""
 msgid "Cannot enable %1$s. Please enable the following plugins before: %2$s"
 msgstr ""
 
+#, php-format
+msgid "Cannot enable %s. Please deal with the missing requirement first (%s)"
+msgstr ""
+
 msgid "Confirm disable of plugin"
 msgstr ""
 

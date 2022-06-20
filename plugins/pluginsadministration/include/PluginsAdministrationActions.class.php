@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Plugin\MissingInstallRequirementException;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 
 class PluginsAdministrationActions extends Actions
@@ -60,12 +61,17 @@ class PluginsAdministrationActions extends Actions
                 return;
             }
             if (! $plugin_manager->isPluginEnabled($plugin_data['plugin'])) {
-                if ($dependencies) {
-                    $plugin_manager->enablePluginAndItsDependencies($plugin_data['plugin']);
-                } else {
-                    $plugin_manager->enablePlugin($plugin_data['plugin']);
+                try {
+                    if ($dependencies) {
+                        $plugin_manager->enablePluginAndItsDependencies($plugin_data['plugin']);
+                    } else {
+                        $plugin_manager->enablePlugin($plugin_data['plugin']);
+                    }
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now enabled.'), $plugin_data['name']));
+                } catch (MissingInstallRequirementException $exception) {
+                    $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Cannot enable %s. Please deal with the missing requirement first (%s)'), $plugin_data['plugin']->getName(), $exception->getMissingRequirementDescription());
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error_msg);
                 }
-                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now enabled.'), $plugin_data['name']));
             }
         }
 
