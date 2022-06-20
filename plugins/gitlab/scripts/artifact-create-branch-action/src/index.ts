@@ -39,12 +39,17 @@ document.addEventListener("DOMContentLoaded", () => {
         loading_modal_element.classList.add("tuleap-modal-loading");
         document.body.appendChild(loading_modal_element);
 
+        const modal_mount_point = document.getElementById("tracker-modal-actions");
+        if (modal_mount_point === null) {
+            throw new Error("Cannot find the mount point for the tracker actions modal");
+        }
+
         try {
             const { init } = await import(
                 /* webpackChunkName: "create-gitlab-branch-modal" */ "./modal"
             );
 
-            await init(create_branch_link);
+            await init(create_branch_link, modal_mount_point);
         } catch (e) {
             codendi.feedback.log("error", "Error while loading the GitLab branch creation modal.");
             throw e;

@@ -17,26 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import App from "./components/App.vue";
+import { createApp } from "vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
+import type { App } from "vue";
+import Main from "./components/Main.vue";
 import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
-import VueCompositionAPI from "@vue/composition-api";
 
-export async function init(create_branch_link: HTMLElement): Promise<void> {
+let app: App<Element> | null = null;
+
+export async function init(create_branch_link: HTMLElement, mount_point: Element): Promise<void> {
     const user_locale = document.body.dataset.userLocale;
     if (!user_locale) {
         return;
     }
-
-    Vue.use(VueCompositionAPI);
-    Vue.config.language = user_locale;
-
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(/* webpackChunkName: "gitlab-po-" */ "../po/" + getPOFileFromLocale(locale))
-    );
 
     if (!create_branch_link.dataset.integrations) {
         throw new Error("Missing integrations representations dataset");
@@ -48,19 +42,23 @@ export async function init(create_branch_link: HTMLElement): Promise<void> {
         throw new Error("Missing branch name dataset");
     }
 
+    if (app !== null) {
+        app.unmount();
+    }
+
     const integrations_representations = JSON.parse(create_branch_link.dataset.integrations);
     const artifact_id = Number(create_branch_link.dataset.artifactId);
 
-    const AppComponent = Vue.extend(App);
-    const app = new AppComponent({
-        propsData: {
-            integrations: await getGitlabRepositoriesWithDefaultBranches(
-                integrations_representations
-            ),
-            branch_name: create_branch_link.dataset.branchName,
-            artifact_id,
-        },
-    }).$mount();
+    app = createApp(Main, {
+        integrations: await getGitlabRepositoriesWithDefaultBranches(integrations_representations),
+        branch_name: create_branch_link.dataset.branchName,
+        artifact_id,
+    });
 
-    document.body.appendChild(app.$el);
+    app.use(
+        await initVueGettext(createGettext, (locale: string) => {
+            return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+        })
+    );
+    app.mount(mount_point);
 }

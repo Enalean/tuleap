@@ -18,13 +18,15 @@
   -->
 
 <template>
-    <div class="gitlab-tracker-integration-modal">
-        <modal-content
-            v-bind:integrations="integrations"
-            v-bind:artifact_id="artifact_id"
-            v-bind:branch_name="branch_name"
-        />
-    </div>
+    <Teleport to="#main-content">
+        <div class="gitlab-tracker-integration-modal">
+            <modal-content
+                v-bind:integrations="integrations"
+                v-bind:artifact_id="artifact_id"
+                v-bind:branch_name="branch_name"
+            />
+        </div>
+    </Teleport>
 </template>
 <script setup lang="ts">
 import ModalContent from "./ModalContent.vue";
@@ -37,16 +39,10 @@ defineProps<{
 }>();
 </script>
 
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
-</script>
-
-<style lang="scss">
+<style lang="scss" scoped>
 @use "sass:meta";
 
-.gitlab-tracker-integration-modal {
+.gitlab-tracker-integration-modal :deep() {
     @include meta.load-css("@tuleap/tlp/src/scss/components/typography");
     @include meta.load-css("@tuleap/tlp/src/scss/components/buttons");
     @include meta.load-css(
