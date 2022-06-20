@@ -97,7 +97,7 @@ final class BinaryFileResponseBuilder
         $disposition  = 'attachment; ';
         $disposition .= 'filename="' . $this->quoteFilename($filename_fallback) . '"';
         if ($filename !== $filename_fallback) {
-            $disposition .= '; filename*="utf-8\'\'' . rawurlencode($filename) . '"';
+            $disposition .= '; filename*=UTF-8\'\'' . rawurlencode($filename);
         }
 
         return $disposition;
