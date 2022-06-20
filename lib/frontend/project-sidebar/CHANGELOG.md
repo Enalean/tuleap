@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Update bundled library `@vueuse/core` to 8.7.3 to avoid errors when using Chrome
+
 ## 2.1.0
 
 * Update to FontAwesome 6
