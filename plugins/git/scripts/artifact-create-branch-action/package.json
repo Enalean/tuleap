@@ -1,0 +1,17 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-git-artifact-create-branch-action",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/fp-feedback": "link:../../../../lib/frontend/fp-feedback",
+    "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
+    "@tuleap/tlp": "link:../../../../src/themes/tlp",
+    "vue": "3.2.31"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "vue-loader": "^17.0.0"
+  }
+}

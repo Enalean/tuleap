@@ -25,6 +25,7 @@ namespace Tuleap\Git\Artifact\Action;
 
 use ForgeConfig;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
@@ -32,6 +33,10 @@ final class CreateBranchButtonFetcher
 {
     #[FeatureFlagConfigKey("Feature flag to allow users to create Git branches from artifacts")]
     public const FEATURE_FLAG_KEY = 'artifact-create-git-branches';
+
+    public function __construct(private JavascriptAssetGeneric $javascript_asset)
+    {
+    }
 
     public function getActionButton(): ?AdditionalButtonAction
     {
@@ -48,12 +53,11 @@ final class CreateBranchButtonFetcher
             $icon,
             'artifact-create-git-branches',
             [],
-            [dgettext('tuleap-git', "Feature not yet available")]
         );
 
         return new AdditionalButtonAction(
             $link,
-            ''
+            $this->javascript_asset->getFileURL()
         );
     }
 }

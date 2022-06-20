@@ -25,6 +25,9 @@ namespace Tuleap\Git\Artifact\Action;
 
 use ForgeConfig;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Layout\IncludeAssetsGeneric;
+use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 
@@ -35,7 +38,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfFeatureFlagIsNotSet(): void
     {
         self::assertNull(
-            (new CreateBranchButtonFetcher())->getActionButton()
+            (new CreateBranchButtonFetcher($this->createMock(JavascriptAssetGeneric::class)))->getActionButton()
         );
     }
 
@@ -47,7 +50,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
         );
 
         self::assertNull(
-            (new CreateBranchButtonFetcher())->getActionButton()
+            (new CreateBranchButtonFetcher($this->createMock(JavascriptAssetGeneric::class)))->getActionButton()
         );
     }
 
@@ -58,9 +61,17 @@ final class CreateBranchButtonFetcherTest extends TestCase
             true
         );
 
+        $include_asset     = $this->createMock(IncludeAssetsGeneric::class);
+        $javascript_assert = new JavascriptAsset(
+            $include_asset,
+            ""
+        );
+
+        $include_asset->method("getFileURL")->willReturn("");
+
         self::assertInstanceOf(
             AdditionalButtonAction::class,
-            (new CreateBranchButtonFetcher())->getActionButton()
+            (new CreateBranchButtonFetcher($javascript_assert))->getActionButton()
         );
     }
 }
