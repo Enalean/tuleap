@@ -70,11 +70,9 @@ describe("User dashboards", function () {
         cy.get("[data-test=dashboard-add-widget-button]").click();
         cy.get("[data-test=plugin_docman_mydocman_search]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=document-search-id]").type("1");
+        cy.get("[data-test=document-search-id]").type("5");
 
         cy.get("[data-test=document-button-search]").click();
-        cy.get("[data-test=document-search-result]").contains(
-            "You do not have the permission to access the document"
-        );
+        cy.get("[data-test=document-search-error]").contains("Unable to find the document");
     });
 });

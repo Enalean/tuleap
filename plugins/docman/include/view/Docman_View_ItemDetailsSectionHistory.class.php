@@ -85,7 +85,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         ['default_url' => $this->url],
                         ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
                     );
-                    $delete_version = "delete-" . $this->item->getId() . "-" . $versions[$key]->getNumber();
+                    $delete_version = "delete-" . $versions[$key]->getNumber();
 
                     $user     = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';

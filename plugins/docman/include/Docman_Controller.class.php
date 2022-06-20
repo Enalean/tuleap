@@ -21,6 +21,7 @@
 
 use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Log\LogEventAdder;
+use Tuleap\Docman\Metadata\CreationMetadataValidator;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\ResponseFeedbackWrapper;
@@ -665,14 +666,15 @@ class Docman_Controller extends Controler
                 break;
             case 'admin_create_metadata':
                 \Docman_View_Admin_Metadata::getCSRFToken($this->getGroupId())->check();
-                $_name = trim($this->request->get('name'));
-                $valid = $this->validateNewMetadata($_name);
+                $_name     = trim($this->request->get('name'));
+                $validator = new CreationMetadataValidator(new Docman_MetadataFactory($this->groupId));
+                $valid     = $validator->validateNewMetadata($_name, $this->feedback);
 
                 if ($valid) {
                     $this->action = $view;
                 }
 
-                $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
+                $this->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_Metadata::IDENTIFIER];
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'admin_delete_metadata':
@@ -1681,31 +1683,6 @@ class Docman_Controller extends Controler
             ) {
                 $valid = true;
                 $md    = $_md;
-            }
-        }
-
-        return $valid;
-    }
-
-    /**
-    * Checks that the new property have a non-empty name,
-    * and also checks that the same name is not already taken by
-    * another property
-    */
-    private function validateNewMetadata($name)
-    {
-        $name = trim($name);
-        if ($name == '') {
-            $valid = false;
-            $this->feedback->log('error', dgettext('tuleap-docman', 'Property name is required, please fill this field.'));
-        } else {
-            $mdFactory = new Docman_MetadataFactory($this->groupId);
-
-            if ($mdFactory->findByName($name)->count() == 0) {
-                $valid = true;
-            } else {
-                $valid = false;
-                $this->feedback->log('error', sprintf(dgettext('tuleap-docman', 'There is already a property with the name \'%1$s\'.'), $name));
             }
         }
 

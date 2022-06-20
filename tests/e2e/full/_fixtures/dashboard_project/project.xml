@@ -23,6 +23,7 @@
         <service shortname="summary" enabled="1"/>
         <service shortname="admin" enabled="1"/>
         <service shortname="plugin_tracker" enabled="1"/>
+        <service shortname="docman" enabled="1"/>
         <service shortname="plugin_agiledashboard" enabled="1"/>
     </services>
     <ugroups>
@@ -48,9 +49,41 @@
                 <value name="content"><![CDATA[This is a note]]></value>
               </preference>
             </widget>
-            <widget name="projectheartbeat" />
+            <widget name="projectheartbeat"/>
           </column>
         </line>
       </dashboard>
     </dashboards>
+  <docman>
+    <item type="folder">
+      <properties>
+        <title><![CDATA[ Documentation du projet ]]></title>
+        <create_date format="ISO8601">
+          <![CDATA[2021-06-15T09:00:24+02:00]]>
+        </create_date>
+        <update_date format="ISO8601">
+          <![CDATA[2022-06-20T16:35:45+02:00]]>
+        </update_date>
+        <owner format="username">ProjectMember</owner>
+      </properties>
+      <permissions>
+        <permission ugroup="UGROUP_REGISTERED" type="PLUGIN_DOCMAN_READ"/>
+        <permission ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_DOCMAN_WRITE"/>
+        <permission ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_DOCMAN_MANAGE"/>
+      </permissions>
+      <item type="empty">
+        <properties>
+          <title>
+            <![CDATA[ empty ]]>
+          </title>
+          <create_date format="ISO8601">2022-06-20T16:38:47+02:00</create_date>
+          <update_date format="ISO8601">2022-06-20T16:38:47+02:00</update_date>
+          <owner format="username">ProjectAdministrator</owner>
+        </properties>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_DOCMAN_READ"/>
+        </permissions>
+      </item>
+    </item>
+  </docman>
 </project>

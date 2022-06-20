@@ -27,11 +27,11 @@
     <br>
     {{# matching_document }}
         <p>
-            <a href="{{ url }}">{{ title }}</a>
+            <a href="{{ url }}" data-test="document-search-link">{{ title }}</a>
         </p>
     {{/ matching_document }}
     {{^ matching_document }}
-        <p class="tlp-text-danger">
+        <p class="tlp-text-danger" data-test="document-search-error">
             {{# dgettext }}tuleap-docman | Unable to find the document.{{/ dgettext }}
         </p>
     {{/ matching_document }}
