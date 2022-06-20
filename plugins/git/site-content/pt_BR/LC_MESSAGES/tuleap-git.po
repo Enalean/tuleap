@@ -314,6 +314,9 @@ msgstr ""
 msgid "Could not remove mail %1$s"
 msgstr ""
 
+msgid "Create Git branch"
+msgstr ""
+
 msgid "Create new"
 msgstr ""
 
@@ -462,6 +465,9 @@ msgid "Failed to delete mirror"
 msgstr ""
 
 msgid "Failed to update mirror"
+msgstr ""
+
+msgid "Feature not yet available"
 msgstr ""
 
 msgid "Files"

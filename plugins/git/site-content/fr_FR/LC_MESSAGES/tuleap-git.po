@@ -361,6 +361,9 @@ msgstr "L'adresse mail %1$s n'a pas pu être ajouté"
 msgid "Could not remove mail %1$s"
 msgstr "L'adresse mail %1$s n'a pas pu être supprimé"
 
+msgid "Create Git branch"
+msgstr "Créer une branche Git"
+
 msgid "Create new"
 msgstr "Nouveau modèle"
 
@@ -524,6 +527,9 @@ msgstr "Impossible de supprimer le miroir"
 
 msgid "Failed to update mirror"
 msgstr "Impossible de mettre à jour le miroir"
+
+msgid "Feature not yet available"
+msgstr "La fonctionnalité n'est pas encore disponible"
 
 msgid "Files"
 msgstr "Fichiers"
