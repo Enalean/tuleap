@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-project_ownership', 'Project ownership'),
-            false,
             dgettext('tuleap-project_ownership', 'Adds project owner role')
         );
     }

@@ -27,7 +27,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-gitlab', 'GitLab'),
-            false,
             dgettext('tuleap-gitlab', 'Provides an integration GitLab to Tuleap.')
         );
     }

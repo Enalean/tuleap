@@ -31,7 +31,6 @@ class ArtifactsFoldersPluginDescriptor extends PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-artifactsfolders', 'Artifacts Folders'),
-            false,
             dgettext('tuleap-artifactsfolders', 'Add a "Folder" tab in an artifact')
         );
     }

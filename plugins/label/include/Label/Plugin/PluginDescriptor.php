@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-label', 'Label'),
-            false,
             dgettext('tuleap-label', 'Adds a project widget to search for labeled items')
         );
     }

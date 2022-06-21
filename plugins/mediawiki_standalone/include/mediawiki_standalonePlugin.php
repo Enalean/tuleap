@@ -115,7 +115,6 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-mediawiki_standalone', 'MediaWiki Standalone'),
-                    '',
                     dgettext('tuleap-mediawiki_standalone', 'Standalone MediaWiki instances integration with Tuleap')
                 )
             );

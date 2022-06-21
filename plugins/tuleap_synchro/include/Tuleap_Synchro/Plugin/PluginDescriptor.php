@@ -27,7 +27,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-tuleap_synchro', 'Tuleap to Tuleap'),
-            false,
             dgettext('tuleap-tuleap_synchro', 'Allows to replicate artifacts from one Tuleap instance to another')
         );
     }

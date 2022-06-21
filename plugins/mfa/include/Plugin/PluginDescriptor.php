@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-mfa', 'Multi-factor authentication'),
-            false,
             dgettext('tuleap-mfa', 'Add multi-factor authentication support')
         );
     }

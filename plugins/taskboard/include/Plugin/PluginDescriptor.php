@@ -28,7 +28,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-taskboard', 'Taskboard'),
-            false,
             dgettext('tuleap-taskboard', 'Visually keep track of things that need to get done in a task board, used in Agile Dashboard.')
         );
     }

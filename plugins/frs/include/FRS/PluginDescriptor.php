@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-frs', 'File release system'),
-            false,
             dgettext('tuleap-frs', 'Extends file release system included into the Tuleap core with new features')
         );
     }

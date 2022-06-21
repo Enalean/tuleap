@@ -32,6 +32,6 @@ class LdapPluginDescriptor extends PluginDescriptor
      */
     public function __construct()
     {
-        parent::__construct('Ldap', false, dgettext('tuleap-ldap', 'LDAP Plugin. Provides LDAP information as well as LDAP authentication.'));
+        parent::__construct('Ldap', dgettext('tuleap-ldap', 'LDAP Plugin. Provides LDAP information as well as LDAP authentication.'));
     }
 }

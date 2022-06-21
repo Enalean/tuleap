@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-velocity', 'Velocity'),
-            false,
             dgettext('tuleap-velocity', 'Adds velocity chart into Agiledashboard')
         );
     }

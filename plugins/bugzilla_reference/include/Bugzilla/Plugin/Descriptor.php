@@ -26,7 +26,6 @@ class Descriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-bugzilla_reference', 'Bugzilla reference'),
-            false,
             dgettext('tuleap-bugzilla_reference', 'References between Bugzilla and Tuleap')
         );
     }

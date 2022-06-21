@@ -82,7 +82,6 @@ final class testplanPlugin extends Plugin
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-testplan', 'TestPlan'),
-                    '',
                     dgettext('tuleap-testplan', 'Integration between the agiledashboard and the testmanagement plugins')
                 )
             );

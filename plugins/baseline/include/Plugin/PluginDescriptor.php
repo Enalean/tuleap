@@ -29,10 +29,7 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-baseline', 'Baseline'),
-            false,
             dgettext('tuleap-baseline', 'Set and compare baseline of items')
         );
-
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-projectmilestones', 'Project Milestones'),
-            false,
             dgettext('tuleap-projectmilestones', 'A widget for milestones monitoring.')
         );
     }

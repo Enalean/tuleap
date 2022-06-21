@@ -24,6 +24,6 @@ class trackerPluginDescriptor extends PluginDescriptor
 {
     public function __construct()
     {
-        parent::__construct(dgettext('tuleap-tracker', 'Tracker'), false, dgettext('tuleap-tracker', 'Trackers new generation'));
+        parent::__construct(dgettext('tuleap-tracker', 'Tracker'), dgettext('tuleap-tracker', 'Trackers new generation'));
     }
 }

@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-dynamic_credentials', 'Dynamic credentials generation'),
-            false,
             dgettext('tuleap-dynamic_credentials', 'Allow your support staff to access your instance when needed')
         );
     }

@@ -42,7 +42,6 @@ class tee_containerPlugin extends Plugin
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-tee_container', 'TEE Container'),
-                    '',
                     dgettext('tuleap-tee_container', 'Tuleap Enterprise Edition Docker containers management')
                 )
             );

@@ -28,7 +28,6 @@ class ProftpdPluginDescriptor extends PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-proftpd', 'Proftpd'),
-            false,
             dgettext('tuleap-proftpd', 'Control and interfact with Proftpd as FTP server')
         );
     }

@@ -28,7 +28,6 @@ class TimetrackingPluginDescriptor extends PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-timetracking', 'Time tracking'),
-            false,
             dgettext('tuleap-timetracking', 'Time tracking for Tuleap artifacts')
         );
     }

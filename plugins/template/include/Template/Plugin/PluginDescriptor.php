@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_template', 'descriptor_name'),
-            false,
             $GLOBALS['Language']->getText('plugin_template', 'descriptor_description')
         );
     }

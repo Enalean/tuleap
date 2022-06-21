@@ -22,17 +22,14 @@
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class PluginInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testPluginDescriptor(): void
     {
-        $p  = \Mockery::spy(\Plugin::class);
-        $pi = new PluginInfo($p);
+        $pi = new PluginInfo(new \Plugin(null));
         $pd = $pi->getPluginDescriptor();
         $this->assertInstanceOf(\PluginDescriptor::class, $pd);
         $this->assertEquals('', $pd->getFullName());
         $this->assertEquals('', $pd->getDescription());
-        $pi->setPluginDescriptor(new PluginDescriptor('TestPlugin', 'v1.0', 'A simple plugin, just for unit testing'));
+        $pi->setPluginDescriptor(new PluginDescriptor('TestPlugin', 'A simple plugin, just for unit testing'));
 
         $pd = $pi->getPluginDescriptor();
         $this->assertEquals('TestPlugin', $pd->getFullName());

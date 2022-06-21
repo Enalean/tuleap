@@ -27,7 +27,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-prometheus_metrics', 'Prometheus metrics end point'),
-            false,
             dgettext('tuleap-prometheus_metrics', 'Exposes tuleap instrumentation for prometheus consumption')
         );
     }

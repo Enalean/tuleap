@@ -25,7 +25,6 @@ class OpenIDConnectClientPluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-openidconnectclient', 'OpenID Connect Client'),
-            false,
             dgettext('tuleap-openidconnectclient', 'Authenticate users with OpenID Connect')
         );
     }

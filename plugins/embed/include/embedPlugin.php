@@ -49,7 +49,6 @@ final class embedPlugin extends Plugin
             $plugin_info->setPluginDescriptor(
                 new PluginDescriptor(
                     dgettext('tuleap-embed', 'Embed'),
-                    '',
                     dgettext('tuleap-embed', 'Embed various services in artifacts.')
                 )
             );

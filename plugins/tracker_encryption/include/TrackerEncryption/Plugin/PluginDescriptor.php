@@ -26,7 +26,6 @@ class PluginDescriptor extends \PluginDescriptor
     {
         parent::__construct(
             dgettext('tuleap-tracker_encryption', 'Tracker Encryption'),
-            false,
             dgettext('tuleap-tracker_encryption', 'Encrypt tracker datas.')
         );
     }
