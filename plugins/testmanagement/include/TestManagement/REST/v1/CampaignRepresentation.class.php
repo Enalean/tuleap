@@ -144,7 +144,10 @@ class CampaignRepresentation
         $id          = $artifact->getId();
         $tracker_id  = $artifact->getTrackerId();
         $label_field = self::getLabelField($form_element_factory, $tracker_id, $user);
-        $field_value = self::getFieldValue($artifact, $label_field);
+        $field_value = null;
+        if ($label_field !== null) {
+            $field_value = self::getFieldValue($artifact, $label_field);
+        }
 
         $executions_status = self::getExecutionsStatus(
             $artifact,
@@ -155,7 +158,10 @@ class CampaignRepresentation
             $test_execution_test_status_dao
         );
 
-        $user_can_update = self::isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
+        $user_can_update = false;
+        if ($label_field !== null) {
+            $user_can_update = self::isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
+        }
 
         $user_can_close = false;
         $user_can_open  = false;
@@ -241,7 +247,7 @@ class CampaignRepresentation
         Tracker_FormElementFactory $form_element_factory,
         int $tracker_id,
         PFUser $user,
-    ): Tracker_FormElement_Field {
+    ): ?Tracker_FormElement_Field {
         return $form_element_factory->getUsedFieldByNameForUser(
             $tracker_id,
             self::FIELD_NAME,
