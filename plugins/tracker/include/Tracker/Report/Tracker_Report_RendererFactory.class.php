@@ -65,10 +65,9 @@ class Tracker_Report_RendererFactory
 
     /**
      * @param int $id the id of the report renderer to retrieve
-     * @param Report $report the report of the renderer
      * @return Tracker_Report_Renderer | null
      */
-    public function getReportRendererById($id, $report, $store_in_session = true)
+    public function getReportRendererById($id, ?Tracker_Report $report, bool $store_in_session = true)
     {
         $row = $this->getDao()
                     ->searchById($id)
@@ -396,7 +395,7 @@ class Tracker_Report_RendererFactory
      *
      * @return Tracker_Report_Renderer null if type is unknown
      */
-    protected function getInstanceFromRow($row, $report, $store_in_session = true)
+    protected function getInstanceFromRow($row, $report, bool $store_in_session = true)
     {
         if ($store_in_session) {
             $this->report_session = new Tracker_Report_Session($report->id);

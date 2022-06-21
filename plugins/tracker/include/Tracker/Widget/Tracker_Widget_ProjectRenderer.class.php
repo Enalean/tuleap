@@ -32,14 +32,20 @@ use Tuleap\Tracker\Widget\WidgetRendererDao;
 class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
 {
     public const ID = 'plugin_tracker_projectrenderer';
+    private Tracker_Report_RendererFactory $renderer_factory;
 
-    public function __construct()
+    public function __construct(?Tracker_Report_RendererFactory $renderer_factory = null)
     {
         parent::__construct(
             self::ID,
             HTTPRequest::instance()->get('group_id'),
             \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
+        if ($renderer_factory === null) {
+            $this->renderer_factory = Tracker_Report_RendererFactory::instance();
+        } else {
+            $this->renderer_factory = $renderer_factory;
+        }
     }
 
     public function cloneContent(
@@ -100,8 +106,13 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
         return false;
     }
 
-    public function exportAsXML(): \SimpleXMLElement
+    public function exportAsXML(): ?\SimpleXMLElement
     {
+        $renderer = $this->renderer_factory->getReportRendererById($this->renderer_id, null, false);
+        if ($renderer === null) {
+            return null;
+        }
+
         $widget = new \SimpleXMLElement('<widget />');
         $widget->addAttribute('name', $this->id);
 
