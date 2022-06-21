@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,25 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Queue;
 
-use ForgeConfig;
-
-class WorkerAvailability implements IsAsyncTaskProcessingAvailable
+interface IsAsyncTaskProcessingAvailable
 {
-    public function canProcessAsyncTasks(): bool
-    {
-        return $this->getWorkerCount() > 0;
-    }
-
-    public function getWorkerCount(): int
-    {
-        if (! \Tuleap\Redis\ClientFactory::canClientBeBuiltFromForgeConfig()) {
-            return 0;
-        }
-
-        if (ForgeConfig::exists('sys_nb_backend_workers')) {
-            return abs(ForgeConfig::getInt('sys_nb_backend_workers'));
-        }
-
-        return 2;
-    }
+    public function canProcessAsyncTasks(): bool;
 }

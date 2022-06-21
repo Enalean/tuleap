@@ -115,6 +115,13 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     public function enablePlugin(Plugin $plugin): void
     {
+        foreach ($plugin->getInstallRequirements() as $install_requirement) {
+            $description_missing_requirement = $install_requirement->getDescriptionOfMissingInstallRequirement();
+            if ($description_missing_requirement !== null) {
+                throw new \Tuleap\Plugin\MissingInstallRequirementException($plugin, $description_missing_requirement);
+            }
+        }
+
         $this->plugin_factory->enablePlugin($plugin);
         $this->site_cache->invalidatePluginBasedCaches();
     }

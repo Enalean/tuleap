@@ -33,6 +33,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerAvailability;
@@ -71,10 +72,6 @@ class ActionsRunner
      */
     private $queue_factory;
     /**
-     * @var WorkerAvailability
-     */
-    private $worker_availability;
-    /**
      * @var PostCreationTask[]
      */
     private $post_creation_tasks;
@@ -82,12 +79,11 @@ class ActionsRunner
     public function __construct(
         LoggerInterface $logger,
         QueueFactory $queue_factory,
-        WorkerAvailability $worker_availability,
+        private IsAsyncTaskProcessingAvailable $worker_availability,
         PostCreationTask ...$post_creation_tasks,
     ) {
         $this->logger              = new WrapperLogger($logger, self::class);
         $this->queue_factory       = $queue_factory;
-        $this->worker_availability = $worker_availability;
         $this->post_creation_tasks = $post_creation_tasks;
     }
 

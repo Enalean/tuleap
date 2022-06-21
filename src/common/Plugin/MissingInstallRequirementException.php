@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,32 +15,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Queue;
+namespace Tuleap\Plugin;
 
-use ForgeConfig;
+use Plugin;
 
-class WorkerAvailability implements IsAsyncTaskProcessingAvailable
+final class MissingInstallRequirementException extends \RuntimeException
 {
-    public function canProcessAsyncTasks(): bool
+    public function __construct(Plugin $plugin, private string $missing_requirement_description)
     {
-        return $this->getWorkerCount() > 0;
+        parent::__construct(sprintf('Missing requirement for the %s plugin (%s)', $plugin->getName(), $missing_requirement_description));
     }
 
-    public function getWorkerCount(): int
+    public function getMissingRequirementDescription(): string
     {
-        if (! \Tuleap\Redis\ClientFactory::canClientBeBuiltFromForgeConfig()) {
-            return 0;
-        }
-
-        if (ForgeConfig::exists('sys_nb_backend_workers')) {
-            return abs(ForgeConfig::getInt('sys_nb_backend_workers'));
-        }
-
-        return 2;
+        return $this->missing_requirement_description;
     }
 }

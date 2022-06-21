@@ -49,6 +49,7 @@ class PluginPropertiesPresenter
 
     /**
      * @param string[] $disabled_dependencies
+     * @param string[] $missing_install_requirements
      */
     public function __construct(
         $id,
@@ -67,6 +68,7 @@ class PluginPropertiesPresenter
         $additional_options,
         \CSRFSynchronizerToken $csrf_token,
         bool $is_enabled,
+        public array $missing_install_requirements,
     ) {
         $this->id                           = $id;
         $this->name                         = $name;

@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
-use Tuleap\Queue\WorkerAvailability;
 
 final class EventSubjectToNotificationAsynchronousRedisDispatcher implements EventDispatcherInterface
 {
@@ -36,15 +36,10 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcher implements Eve
      * @var QueueFactory
      */
     private $queue_factory;
-    /**
-     * @var WorkerAvailability
-     */
-    private $worker_availability;
 
-    public function __construct(QueueFactory $queue_factory, WorkerAvailability $worker_availability)
+    public function __construct(QueueFactory $queue_factory, private IsAsyncTaskProcessingAvailable $worker_availability)
     {
-        $this->queue_factory       = $queue_factory;
-        $this->worker_availability = $worker_availability;
+        $this->queue_factory = $queue_factory;
     }
 
     /**

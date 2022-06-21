@@ -688,6 +688,11 @@ msgstr "Demander à rejoindre"
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
 
+msgid "Asynchronous workers must be available."
+msgstr ""
+"La possibilité de traiter des tâches de manière asynchronne n'est pas "
+"disponible."
+
 msgid "Authenticated users (Registered + Restricted) label"
 msgstr "Label pour les utilisateurs authentifiés (enregistrés + retreints)"
 

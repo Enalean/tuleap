@@ -303,6 +303,11 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return ['tracker', 'agiledashboard', 'cardwall'];
     }
 
+    public function getInstallRequirements(): array
+    {
+        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
+    }
+
     protected function getServiceClass(): string
     {
         return ProgramService::class;
