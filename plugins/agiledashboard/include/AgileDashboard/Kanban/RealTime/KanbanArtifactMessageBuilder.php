@@ -55,13 +55,16 @@ class KanbanArtifactMessageBuilder
     }
 
     /**
-     * @return KanbanArtifactMovedMessageRepresentation
      * @throws RealTimeArtifactMessageException
      */
-    public function buildArtifactMoved(Artifact $artifact)
+    public function buildArtifactMoved(Artifact $artifact): ?KanbanArtifactMovedMessageRepresentation
     {
         $tracker_semantic = Tracker_Semantic_Status::load($artifact->getTracker());
         $status_field     = $tracker_semantic->getField();
+
+        if ($status_field === null) {
+            return null;
+        }
 
         $last_changeset = $this->changeset_factory->getLastChangeset($artifact);
         if (! $last_changeset) {
@@ -106,14 +109,16 @@ class KanbanArtifactMessageBuilder
     }
 
     /**
-     * @param $artifact
-     * @return KanbanArtifactMovedMessageRepresentation
      * @throws RealTimeArtifactMessageException
      */
-    public function buildArtifactReordered(Artifact $artifact)
+    public function buildArtifactReordered(Artifact $artifact): ?KanbanArtifactMovedMessageRepresentation
     {
         $tracker_semantic = Tracker_Semantic_Status::load($artifact->getTracker());
         $status_field     = $tracker_semantic->getField();
+
+        if ($status_field === null) {
+            return null;
+        }
 
         $last_changeset = $this->changeset_factory->getLastChangeset($artifact);
         if (! $last_changeset) {
