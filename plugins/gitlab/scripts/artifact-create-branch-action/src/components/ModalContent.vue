@@ -155,7 +155,7 @@ const props = defineProps<{
 
 let button_label = ref($gettext("Create branch"));
 let is_creating_branch = ref(false);
-let must_create_gitlab_mr = ref(false);
+let must_create_gitlab_mr = ref(true);
 let error_message = ref("");
 let reference = ref("");
 let modal: Modal | null = null;

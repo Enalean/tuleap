@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact;
 
-use Cocur\Slugify\Slugify;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -36,9 +35,7 @@ final class MergeRequestTitleCreatorFromArtifactTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->merge_request_title_creator_from_artifact = new MergeRequestTitleCreatorFromArtifact(
-            new Slugify(),
-        );
+        $this->merge_request_title_creator_from_artifact = new MergeRequestTitleCreatorFromArtifact();
     }
 
     public function testMergeRequestTitleIsCreatedFromAnArtifactWithATitle(): void
@@ -46,7 +43,7 @@ final class MergeRequestTitleCreatorFromArtifactTest extends TestCase
         $artifact = $this->getArtifact('art title');
 
         $branch_name = $this->merge_request_title_creator_from_artifact->getMergeRequestTitle($artifact);
-        self::assertEquals("Draft: TULEAP-" . self::ARTIFACT_ID . ': art-title', $branch_name);
+        self::assertEquals("Draft: TULEAP-" . self::ARTIFACT_ID . ' art title', $branch_name);
     }
 
     public function testMergeRequestTitleIsCreatedFromAnArtifactWithoutTitle(): void
