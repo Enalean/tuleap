@@ -2513,6 +2513,9 @@ msgstr "Enlever le champ du tooltip"
 msgid "Removed: %s"
 msgstr "Suppression : %s"
 
+msgid "Renderer does not exist"
+msgstr "Le rendu n'existe pas"
+
 msgid "Renderer id"
 msgstr "Id du rendu"
 

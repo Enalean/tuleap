@@ -48,9 +48,9 @@ abstract class Tracker_Widget_Renderer extends Widget
         $renderer = $this->getRenderer();
         if ($renderer) {
             return $renderer->fetchWidget($this->getCurrentUser());
-        } else {
-            return '<em>Renderer does not exist</em>';
         }
+        $template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/widget');
+        return $template_renderer->renderToString('renderer-not-found', []);
     }
 
     private function getRenderer(): ?Tracker_Report_Renderer
