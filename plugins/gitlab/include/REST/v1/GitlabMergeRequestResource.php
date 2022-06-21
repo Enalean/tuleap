@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
-use Cocur\Slugify\Slugify;
 use gitlabPlugin;
 use Luracast\Restler\RestException;
 use PluginManager;
@@ -120,9 +119,7 @@ final class GitlabMergeRequestResource
             ),
             new GitlabProjectBuilder($gitlab_api_client),
             $gitlab_api_client,
-            new MergeRequestTitleCreatorFromArtifact(
-                new Slugify(),
-            )
+            new MergeRequestTitleCreatorFromArtifact()
         );
 
         $gitlab_merge_request_creator->createMergeRequestInGitlab(

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
-use Cocur\Slugify\Slugify;
 use DateTimeImmutable;
 use Exception;
 use Luracast\Restler\RestException;
@@ -93,7 +92,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             $this->credentials_retriever,
             $this->gitlab_project_builder,
             $this->gitlab_api_client,
-            new MergeRequestTitleCreatorFromArtifact(new Slugify()),
+            new MergeRequestTitleCreatorFromArtifact(),
         );
     }
 
@@ -142,7 +141,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123%3A+art-title",
+                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123+art+title",
                 []
             );
 
@@ -425,7 +424,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
             ->method('postUrl')
             ->with(
                 $credentials,
-                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123%3A+art-title",
+                "/projects/23/merge_requests?id=1&source_branch=TULEAP-123_main&target_branch=default_branch_name&title=Draft%3A+TULEAP-123+art+title",
                 []
             )
             ->willThrowException($exception);

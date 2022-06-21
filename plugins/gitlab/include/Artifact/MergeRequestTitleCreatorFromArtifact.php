@@ -23,29 +23,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Artifact;
 
-use Cocur\Slugify\SlugifyInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class MergeRequestTitleCreatorFromArtifact
 {
     private const DRAFT_PREFIX = "Draft:";
 
-    public function __construct(private SlugifyInterface $slugify)
-    {
-    }
-
     public function getMergeRequestTitle(Artifact $artifact): string
     {
-        return sprintf(self::DRAFT_PREFIX . ' TULEAP-%d%s', $artifact->getId(), $this->getSlugifiedArtifactTitle($artifact));
+        return sprintf(self::DRAFT_PREFIX . ' TULEAP-%d%s', $artifact->getId(), $this->getArtifactTitle($artifact));
     }
 
-    private function getSlugifiedArtifactTitle(Artifact $artifact): string
+    private function getArtifactTitle(Artifact $artifact): string
     {
         $artifact_title = $artifact->getTitle();
         if ($artifact_title === null || $artifact_title === '') {
             return '';
         }
 
-        return ': ' . $this->slugify->slugify($artifact_title, '-');
+        return ' ' . $artifact_title;
     }
 }
