@@ -38,14 +38,10 @@ describe("User dashboards", function () {
         cy.get("[data-test=dashboard-add-input-name]").type("My Dashboard");
         cy.get("[data-test=dashboard-add-button-submit]").click();
 
-        // widget document
         cy.get("[data-test=dashboard-configuration-button]").click();
         cy.get("[data-test=dashboard-add-widget-button]").click();
-        cy.get("[data-test=plugin_docman_mydocman_search]").click();
+        cy.get("[data-test=mysystemevent]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
-        cy.get("[data-test=document-search-id]").type("5");
-
-        cy.get("[data-test=document-button-search]").click();
-        cy.get("[data-test=document-search-link]").contains("empty");
+        cy.get("[data-test=dashboard-widgets-list]").contains("System events");
     });
 });
