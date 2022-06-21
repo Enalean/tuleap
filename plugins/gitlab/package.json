@@ -6,11 +6,13 @@
   "private": true,
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "link:../../lib/frontend/concurrency-limit-pool",
+    "@tuleap/fault": "link:../../lib/frontend/fault",
+    "@tuleap/fetch-result": "link:../../lib/frontend/fetch-result",
+    "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
-    "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/vue3-gettext-init": "link:../../lib/frontend/vue3-gettext-init",
-    "neverthrow": "^4.2.1",
+    "neverthrow": "^4.3.1",
     "vue": "^3.2.31",
     "vue3-gettext": "^2.2.1"
   },

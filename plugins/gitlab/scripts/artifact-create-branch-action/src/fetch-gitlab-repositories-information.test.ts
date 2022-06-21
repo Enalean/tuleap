@@ -20,6 +20,7 @@
 import * as rest_querier from "./api/rest-querier";
 import type { GitlabIntegration } from "./fetch-gitlab-repositories-information";
 import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
+import { Fault } from "@tuleap/fault";
 import { errAsync, okAsync } from "neverthrow";
 
 function buildFakeGitLabIntegration(id: number): GitlabIntegration {
@@ -43,7 +44,9 @@ describe("fetch-gitlab-repositories-information", () => {
             }
             if (integration_id === 2) {
                 return errAsync(
-                    new Error("Something bad happened while retrieving the branches information")
+                    Fault.fromMessage(
+                        "Something bad happened while retrieving the branches information"
+                    )
                 );
             }
 
