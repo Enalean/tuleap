@@ -677,7 +677,8 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                         EventManager::instance()
                     )
                 ),
-                EventManager::instance()
+                EventManager::instance(),
+                UserManager::instance()
             ),
             new ImmutableTagController(
                 $repository_manager,

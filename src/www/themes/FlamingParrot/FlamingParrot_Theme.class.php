@@ -211,25 +211,25 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function body($params)
     {
-        $current_user    = UserManager::instance()->getCurrentUser();
+        $current_user    = UserManager::instance()->getCurrentUserWithLoggedInInformation();
         $project_manager = ProjectManager::instance();
 
         $body_class    = isset($params['body_class']) ? $params['body_class'] : [];
         $has_sidebar   = isset($params['group']) ? 'has-sidebar' : '';
         $sidebar_state = 'sidebar-expanded';
 
-        $this->addBodyClassDependingThemeVariant($current_user, $body_class);
-        $this->addBodyClassDependingUserPreference($current_user, $body_class);
+        $this->addBodyClassDependingThemeVariant($current_user->user, $body_class);
+        $this->addBodyClassDependingUserPreference($current_user->user, $body_class);
 
-        if ($current_user->getPreference('sidebar_state')) {
-            $sidebar_state = $current_user->getPreference('sidebar_state');
+        if ($current_user->user->getPreference('sidebar_state')) {
+            $sidebar_state = $current_user->user->getPreference('sidebar_state');
         }
 
         $banner  = null;
         $project = null;
         if (! empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
-            $banner  = $this->getProjectBannerWithScript($project, $current_user, 'project/project-banner.js');
+            $banner  = $this->getProjectBannerWithScript($project, $current_user->user, 'project/project-banner.js');
 
             if ($banner && $banner->isVisible()) {
                 $body_class[] = 'has-visible-project-banner';
@@ -253,22 +253,22 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         );
 
         $help_dropdown_presenter = $dropdown_presenter_builder->build(
-            $current_user,
+            $current_user->user,
             $this->tuleap_version->version_number
         );
 
-        $platform_banner = $this->getPlatformBannerWithScript($current_user, 'platform/platform-banner.js');
+        $platform_banner = $this->getPlatformBannerWithScript($current_user->user, 'platform/platform-banner.js');
         if ($platform_banner !== null && $platform_banner->isVisible()) {
             $body_class[] = 'has-visible-platform-banner';
         }
 
         $this->render('body', new FlamingParrot_BodyPresenter(
-            $current_user,
+            $current_user->user,
             $this->getNotificationPlaceholder(),
             $help_dropdown_presenter,
             $body_class,
             $this->detected_browser->isACompletelyBrokenBrowser(),
-            InviteBuddiesPresenter::build($current_user),
+            InviteBuddiesPresenter::build($current_user->user),
             $platform_banner,
         ));
 
@@ -292,7 +292,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function navbar(
         $params,
-        PFUser $current_user,
+        \Tuleap\User\CurrentUserWithLoggedInInformation $current_user,
         ?Project $project,
         ?BannerDisplay $project_banner,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
@@ -343,13 +343,13 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->displayNewAccount(),
             $csrf_logout_token,
             $url_redirect,
-            $user_dashboard_retriever->getAllUserDashboards($current_user),
-            $new_dropdown_presenter_builder->getPresenter($current_user, $project, $current_context_section),
+            $user_dashboard_retriever->getAllUserDashboards($current_user->user),
+            $new_dropdown_presenter_builder->getPresenter($current_user->user, $project, $current_context_section),
             $this->shouldLogoBeDisplayed($params, $project),
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user),
+            InviteBuddiesPresenter::build($current_user->user),
             $platform_banner
         ));
 
@@ -382,7 +382,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function container(
         array $params,
-        PFUser $current_user,
+        \Tuleap\User\CurrentUserWithLoggedInInformation $current_user,
         ?BannerDisplay $banner,
         ?\Tuleap\User\SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
@@ -422,7 +422,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->_feedback,
             $this->_getFeedback(),
             $this->tuleap_version,
-            $current_user,
+            $current_user->user,
             $project_context,
             $switch_to,
             $is_legacy_logo_customized,

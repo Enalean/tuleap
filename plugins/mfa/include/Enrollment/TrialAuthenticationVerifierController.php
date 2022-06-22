@@ -49,7 +49,7 @@ class TrialAuthenticationVerifierController implements DispatchableWithRequest
     {
         $current_user     = $request->getCurrentUser();
         $code_to_validate = $request->get('code');
-        if ($code_to_validate === false || ! $current_user->isLoggedIn()) {
+        if ($code_to_validate === false || $current_user->isAnonymous()) {
             throw new ForbiddenException();
         }
 

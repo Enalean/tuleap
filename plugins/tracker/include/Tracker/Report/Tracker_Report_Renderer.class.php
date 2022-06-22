@@ -222,7 +222,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     {
         return $this->id > 0
             && (! isset($this->report_session) || ! $this->report_session->hasChanged())
-            && $user->isLoggedIn();
+            && ! $user->isAnonymous();
     }
 
     /**

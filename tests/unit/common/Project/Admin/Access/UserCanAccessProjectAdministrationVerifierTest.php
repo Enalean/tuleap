@@ -24,8 +24,9 @@ namespace Tuleap\Project\Admin\Access;
 
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class UserCanAccessProjectAdministrationVerifierTest extends TestCase
 {
@@ -43,25 +44,29 @@ final class UserCanAccessProjectAdministrationVerifierTest extends TestCase
 
     public function testItReturnsFalseWhenUserIsAnonymous(): void
     {
-        $user = UserTestBuilder::anAnonymousUser()->build();
-        self::assertFalse($this->getVerifier()->canUserAccessProjectAdministration($user, $this->project));
+        self::assertFalse(
+            $this->getVerifier()->canUserAccessProjectAdministration(
+                CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider()),
+                $this->project
+            )
+        );
     }
 
     public function testItReturnsTrueWhenUserIsSiteAdministrator(): void
     {
         $user = $this->createStub(\PFUser::class);
-        $user->method('isLoggedIn')->willReturn(true);
         $user->method('isSuperUser')->willReturn(true);
-        self::assertTrue($this->getVerifier()->canUserAccessProjectAdministration($user, $this->project));
+        $user->method('isAnonymous')->willReturn(false);
+        self::assertTrue($this->getVerifier()->canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation::fromLoggedInUser($user), $this->project));
     }
 
     public function testItReturnsTrueWhenUserIsProjectAdministrator(): void
     {
         $user = $this->createStub(\PFUser::class);
-        $user->method('isLoggedIn')->willReturn(true);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('isAdmin')->willReturn(true);
-        self::assertTrue($this->getVerifier()->canUserAccessProjectAdministration($user, $this->project));
+        $user->method('isAnonymous')->willReturn(false);
+        self::assertTrue($this->getVerifier()->canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation::fromLoggedInUser($user), $this->project));
     }
 
     public function testItReturnsTrueWhenUserHasDelegatedAdministrationPermission(): void
@@ -78,15 +83,15 @@ final class UserCanAccessProjectAdministrationVerifierTest extends TestCase
         self::assertFalse($this->getVerifier()->canUserAccessProjectAdministration($user, $this->project));
     }
 
-    private function buildUserNotAdministrator()
+    private function buildUserNotAdministrator(): CurrentUserWithLoggedInInformation
     {
         $user = $this->createStub(\PFUser::class);
-        $user->method('isLoggedIn')->willReturn(true);
         $user->method('isSuperUser')->willReturn(false);
         $user->method('isAdmin')->willReturn(false);
         $user->method('getId')->willReturn(201);
+        $user->method('isAnonymous')->willReturn(false);
 
-        return $user;
+        return CurrentUserWithLoggedInInformation::fromLoggedInUser($user);
     }
 
     private function getVerifier(): VerifyUserCanAccessProjectAdministration

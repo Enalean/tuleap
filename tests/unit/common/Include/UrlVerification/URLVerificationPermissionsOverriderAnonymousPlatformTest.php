@@ -26,6 +26,9 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,19 +38,16 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
 
     private $url_verification;
     private $server;
-    private $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = \Mockery::mock(\PFUser::class);
 
         $event_manager = \Mockery::spy(\EventManager::class);
 
         $this->url_verification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->url_verification->shouldReceive('getEventManager')->andReturns($event_manager);
-        $this->url_verification->shouldReceive('getCurrentUser')->andReturns($this->user);
         $fixtures = dirname(__FILE__) . '/_fixtures';
         $GLOBALS['Language']->method('getContent')->willReturn($fixtures . '/empty.txt');
 
@@ -66,7 +66,7 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
     public function testItLetAnonymousAccessLogin(): void
     {
         $this->server['SCRIPT_NAME'] = '/account/login.php';
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
+        $this->url_verification->shouldReceive('getCurrentUser')->andReturns(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider()));
 
         $this->assertEquals(null, $this->getScriptChunk());
     }
@@ -74,7 +74,7 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
     public function testItLetAuthenticatedAccessPages(): void
     {
         $this->server['SCRIPT_NAME'] = '';
-        $this->user->shouldReceive('isAnonymous')->andReturns(false);
+        $this->url_verification->shouldReceive('getCurrentUser')->andReturns(CurrentUserWithLoggedInInformation::fromLoggedInUser(UserTestBuilder::anActiveUser()->build()));
 
         $this->assertEquals(null, $this->getScriptChunk());
     }

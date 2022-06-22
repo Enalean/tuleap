@@ -22,7 +22,6 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use PFUser;
 use ThemeVariantColor;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\HelpDropdown\HelpDropdownPresenter;
@@ -38,6 +37,7 @@ use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\SwitchToPresenter;
 use URLRedirect;
 
@@ -45,9 +45,6 @@ class HeaderPresenterBuilder
 {
     /** @var NavbarPresenterBuilder */
     private $navbar_presenter_builder;
-
-    /** @var PFUser */
-    private $current_user;
 
     /** @var string */
     private $imgroot;
@@ -83,7 +80,7 @@ class HeaderPresenterBuilder
      */
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
-        PFUser $current_user,
+        CurrentUserWithLoggedInInformation $current_user,
         $imgroot,
         $title,
         $feedback_logs,
@@ -108,7 +105,6 @@ class HeaderPresenterBuilder
         array $javascript_assets,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
-        $this->current_user             = $current_user;
         $this->imgroot                  = $imgroot;
         $this->title                    = $title;
         $this->body_classes             = $body_classes;
@@ -123,11 +119,11 @@ class HeaderPresenterBuilder
         $is_svg_logo_customized    = $customized_logo_detector->isSvgOrganizationLogoCustomized();
 
         return new HeaderPresenter(
-            $this->current_user,
+            $current_user->user,
             $this->getPageTitle(),
             $this->imgroot,
             $this->navbar_presenter_builder->build(
-                $this->current_user,
+                $current_user,
                 $url_redirect,
                 $new_dropdown_presenter,
                 $this->shouldLogoBeDisplayed(),
@@ -149,7 +145,7 @@ class HeaderPresenterBuilder
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user),
+            InviteBuddiesPresenter::build($current_user->user),
             $platform_banner,
             $detected_browser->isACompletelyBrokenBrowser()
         );

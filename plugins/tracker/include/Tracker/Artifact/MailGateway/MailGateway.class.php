@@ -207,7 +207,9 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         ];
         $field_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $field_data, $user);
 
-        UserManager::instance()->setCurrentUser($user);
+        UserManager::instance()->setCurrentUser(
+            \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user)
+        );
         return $this->artifact_factory->createArtifact($tracker, $field_data, $user, '', true);
     }
 

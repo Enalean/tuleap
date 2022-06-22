@@ -124,7 +124,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</td>';
         $html .= '<td class="tracker_artifact_fieldset_alwayscollapsed ' . $always_collapsed . '">';
-        if ($current_user->isLoggedIn()) {
+        if (! $current_user->isAnonymous()) {
             $html .= '<i class="fas fa-thumbtack collapse-fieldset-button"></i>';
         }
         $html .= '</td></tr></table>';

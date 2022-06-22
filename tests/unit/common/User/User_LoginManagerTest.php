@@ -206,7 +206,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
 
-        $this->user_manager->shouldReceive('setCurrentUser')->with($user)->once();
+        $this->user_manager->shouldReceive('setCurrentUser')->once();
 
         $this->login_manager->validateAndSetCurrentUser($user);
     }
@@ -215,7 +215,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = $this->buildUser(PFUser::STATUS_DELETED);
 
-        $this->user_manager->shouldReceive('setCurrentUser')->with($user)->never();
+        $this->user_manager->shouldReceive('setCurrentUser')->never();
 
         $this->expectException(User_StatusDeletedException::class);
         $this->login_manager->validateAndSetCurrentUser($user);
@@ -290,7 +290,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildUser(string $status): PFUser
     {
-        return new PFUser(['status' => $status, 'password' => 'password']);
+        return new PFUser(['status' => $status, 'password' => 'password', 'user_id' => 852]);
     }
 
     private function getCatchEventsPlugin(): \Plugin

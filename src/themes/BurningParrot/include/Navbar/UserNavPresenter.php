@@ -21,17 +21,14 @@
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
 use CSRFSynchronizerToken;
-use PFUser;
 use Tuleap\Platform\Banner\Banner;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use URLRedirect;
 
 class UserNavPresenter
 {
-    /** @var PFUser */
-    private $current_user;
-
     /** @var bool */
     public $display_new_user_menu_item;
     /**
@@ -77,13 +74,12 @@ class UserNavPresenter
     public $platform_banner_is_critical;
 
     public function __construct(
-        PFUser $current_user,
+        private CurrentUserWithLoggedInInformation $current_user,
         $display_new_user_menu_item,
         URLRedirect $url_redirect,
         array $dashboards,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
-        $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
         $this->url_redirect               = $url_redirect;
         $this->has_platform_banner        = $platform_banner !== null;
@@ -100,27 +96,27 @@ class UserNavPresenter
 
     public function is_user_logged_in() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->current_user->isLoggedIn();
+        return $this->current_user->is_logged_in;
     }
 
     public function user_real_name() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->current_user->getRealName();
+        return $this->current_user->user->getRealName();
     }
 
     public function user_user_name() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->current_user->getUserName();
+        return $this->current_user->user->getUserName();
     }
 
     public function user_has_avatar() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->current_user->hasAvatar();
+        return $this->current_user->user->hasAvatar();
     }
 
     public function user_avatar_url() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->current_user->getAvatarUrl();
+        return $this->current_user->user->getAvatarUrl();
     }
 
     public function user_avatar_alt() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

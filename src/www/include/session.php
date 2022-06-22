@@ -76,6 +76,6 @@ function session_require($req)
  */
 function session_continue($sessionKey)
 {
-    $user = UserManager::instance()->getCurrentUser($sessionKey);
-    return $user->isLoggedIn();
+    $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation($sessionKey);
+    return $current_user->is_logged_in;
 }

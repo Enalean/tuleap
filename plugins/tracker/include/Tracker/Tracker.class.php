@@ -1222,7 +1222,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 )
             );
         }
-        if ($user->isLoggedIn()) {
+        if (! $user->isAnonymous()) {
             $links_collection->add(
                 new BreadCrumbLinkWithIcon(
                     dgettext('tuleap-tracker', 'My notifications'),

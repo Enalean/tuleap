@@ -56,8 +56,8 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->service_usage_manager,
         );
 
-        $this->user       = \Mockery::spy(\PFUser::class)->shouldReceive('isLoggedIn')->andReturns(true)->getMock();
-        $this->user_admin = \Mockery::spy(\PFUser::class)->shouldReceive('isLoggedIn')->andReturns(true)->getMock();
+        $this->user       = \Mockery::spy(\PFUser::class)->shouldReceive('isAnonymous')->andReturns(false)->getMock();
+        $this->user_admin = \Mockery::spy(\PFUser::class)->shouldReceive('isAnonymous')->andReturns(false)->getMock();
         $this->user_admin->shouldReceive('isMember')->with(101, 'A')->andReturns(true);
         $this->user->shouldReceive('isMember')->with(101)->andReturns(true);
         $this->user->shouldReceive('getUserName')->andReturns('User 01');
@@ -65,7 +65,7 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTheUserIsNotProjectAdmin(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user));
 
         $this->expectException(SoapFault::class);
         $this->server->getProjectServicesUsage($this->session_key, $this->group_id);
@@ -120,7 +120,7 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->service_usage_factory->shouldReceive('getAllServicesUsage')->with($this->project)->andReturns($services_usages);
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user_admin));
 
         $this->assertSame(
             $expected,
@@ -132,7 +132,7 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $service = \Mockery::spy(\Project_Service_ServiceUsage::class)->shouldReceive('getId')->andReturns(179)->getMock();
 
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user_admin));
         $this->service_usage_factory->shouldReceive('getServiceUsage')->with($this->project, 179)->andReturns($service);
         $this->service_usage_manager->shouldReceive('activateService')->with($this->project, $service)->andReturns(true);
 
@@ -141,7 +141,7 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTheServiceDoesNotExistDuringActivation(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user_admin));
         $this->service_usage_factory->shouldReceive('getServiceUsage')->with($this->project, 179)->andReturns(null);
 
         $this->expectException(SoapFault::class);
@@ -152,7 +152,7 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $service = \Mockery::spy(\Project_Service_ServiceUsage::class)->shouldReceive('getId')->andReturns(179)->getMock();
 
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user_admin));
         $this->service_usage_factory->shouldReceive('getServiceUsage')->with($this->project, 179)->andReturns($service);
         $this->service_usage_manager->shouldReceive('deactivateService')->with($this->project, $service)->andReturns(true);
 
@@ -161,7 +161,7 @@ class SOAPServerProjectServicesUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTheServiceDoesNotExistDuringDeactivation(): void
     {
-        $this->user_manager->shouldReceive('getCurrentUser')->with($this->session_key)->andReturns($this->user_admin);
+        $this->user_manager->shouldReceive('getCurrentUserWithLoggedInInformation')->with($this->session_key)->andReturns(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user_admin));
         $this->service_usage_factory->shouldReceive('getServiceUsage')->with($this->project, 179)->andReturns(null);
 
         $this->expectException(SoapFault::class);

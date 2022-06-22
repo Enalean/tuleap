@@ -21,7 +21,6 @@ namespace Tuleap\Theme\BurningParrot;
 use Event;
 use EventManager;
 use HTTPRequest;
-use PFUser;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
@@ -58,6 +57,7 @@ use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Sidebar\ProjectContextPresenter;
 use Tuleap\Sanitizer\URISanitizer;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\SwitchToPresenterBuilder;
 use URLRedirect;
 use Valid_HTTPURI;
@@ -84,9 +84,6 @@ class BurningParrotTheme extends BaseLayout
      */
     private $detected_browser;
 
-    /** @var PFUser */
-    private $user;
-
     /** @var HTTPRequest */
     private $request;
 
@@ -101,10 +98,9 @@ class BurningParrotTheme extends BaseLayout
     private ThemeVariation $theme_variation;
     private bool $header_has_been_written = false;
 
-    public function __construct($root, PFUser $user)
+    public function __construct($root, private CurrentUserWithLoggedInInformation $current_user)
     {
         parent::__construct($root);
-        $this->user             = $user;
         $this->project_manager  = ProjectManager::instance();
         $this->event_manager    = EventManager::instance();
         $this->request          = HTTPRequest::instance();
@@ -114,11 +110,11 @@ class BurningParrotTheme extends BaseLayout
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
-        $this->theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($user));
-        $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $user);
+        $this->theme_variant_color = ThemeVariantColor::buildFromVariant((new ThemeVariant())->getVariantForUser($this->current_user->user));
+        $this->theme_variation     = new ThemeVariation($this->theme_variant_color, $this->current_user->user);
 
         $this->includeFooterJavascriptFile(
-            $this->include_asset->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js')
+            $this->include_asset->getFileURLWithFallback('tlp-' . $this->current_user->user->getLocale() . '.js', 'tlp-en_US.js')
         );
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('switch-to-bp.js'));
@@ -148,8 +144,8 @@ class BurningParrotTheme extends BaseLayout
             $project_context = ProjectContextPresenter::build(
                 $project,
                 $this->project_flags_builder->buildProjectFlags($project),
-                $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner.js'),
-                $this->getProjectSidebarData($params, $project, $this->user),
+                $this->getProjectBannerWithScript($project, $this->current_user->user, 'project/project-banner.js'),
+                $this->getProjectSidebarData($params, $project, $this->current_user),
             );
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
@@ -193,7 +189,7 @@ class BurningParrotTheme extends BaseLayout
         );
 
         $help_dropdown_presenter = $dropdown_presenter_builder->build(
-            $this->user,
+            $this->current_user->user,
             $this->version->version_number
         );
 
@@ -215,7 +211,7 @@ class BurningParrotTheme extends BaseLayout
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
-            $this->user,
+            $this->current_user,
             $this->imgroot,
             $params['title'],
             $this->_feedback->logs,
@@ -228,15 +224,15 @@ class BurningParrotTheme extends BaseLayout
             $this->css_assets,
             $open_graph,
             $help_dropdown_presenter,
-            $new_dropdown_presenter_builder->getPresenter($this->user, $project, $current_context_section),
+            $new_dropdown_presenter_builder->getPresenter($this->current_user->user, $project, $current_context_section),
             $this->isInSiteAdmin($params),
             $project_context,
-            $switch_to_presenter_builder->build($this->user),
+            $switch_to_presenter_builder->build($this->current_user),
             new CachedCustomizedLogoDetector(
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
-            $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner.js'),
+            $this->getPlatformBannerWithScript($this->current_user->user, 'platform/platform-banner.js'),
             $this->detected_browser,
             $this->theme_variant_color,
             $this->theme_variation,
@@ -280,21 +276,21 @@ class BurningParrotTheme extends BaseLayout
             $body_classes = $params['body_class'];
         }
 
-        $color          = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->user));
+        $color          = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->current_user->user));
         $body_classes[] = 'theme-' . $color->getName();
-        $is_condensed   = $this->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
+        $is_condensed   = $this->current_user->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
         if ($is_condensed) {
             $body_classes[] = 'theme-condensed';
         }
 
         if ($project) {
-            $banner = $this->getProjectBanner($project, $this->user);
+            $banner = $this->getProjectBanner($project, $this->current_user->user);
             if ($banner && $banner->isVisible()) {
                 $body_classes[] = 'has-visible-project-banner';
             }
         }
 
-        $platform_banner = $this->getPlatformBanner($this->user);
+        $platform_banner = $this->getPlatformBanner($this->current_user->user);
         if ($platform_banner && $platform_banner->isVisible()) {
                 $body_classes[] = 'has-visible-platform-banner';
         }
@@ -306,7 +302,7 @@ class BurningParrotTheme extends BaseLayout
         $body_classes[] = 'has-sidebar';
 
         if ($this->shouldIncludeSitebarStatePreference($params)) {
-            $body_classes[] = $this->user->getPreference('sidebar_state');
+            $body_classes[] = $this->current_user->user->getPreference('sidebar_state');
         }
 
         return $body_classes;
@@ -328,7 +324,7 @@ class BurningParrotTheme extends BaseLayout
         $this->includeFooterJavascriptSnippet($this->getFooterSiteJs());
 
         $browser_deprecation_message = BrowserDeprecationMessage::fromDetectedBrowser(
-            $this->user,
+            $this->current_user->user,
             $this->detected_browser
         );
         if ($browser_deprecation_message !== null) {
@@ -395,7 +391,7 @@ class BurningParrotTheme extends BaseLayout
     private function shouldIncludeSitebarStatePreference(array $params)
     {
         $is_in_siteadmin     = $this->isInSiteAdmin($params);
-        $user_has_preference = $this->user->getPreference('sidebar_state');
+        $user_has_preference = $this->current_user->user->getPreference('sidebar_state');
 
         return ! $is_in_siteadmin && $user_has_preference;
     }

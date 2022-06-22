@@ -29,17 +29,15 @@ use PluginManager;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ErrorRendering;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use function PHPUnit\Framework\assertInstanceOf;
 
 final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
 
     /**
      * @var FrontRouter
@@ -74,8 +72,6 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->plugin_manager          = Mockery::mock(PluginManager::class);
         $this->request_instrumentation = Mockery::mock(RequestInstrumentation::class);
 
-        $this->user = Mockery::mock(\PFUser::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($this->user);
         $theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
         $theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
 
@@ -89,7 +85,15 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->error_rendering,
             $theme_manager,
             $this->plugin_manager,
-            $this->request_instrumentation
+            $this->request_instrumentation,
+            new class implements ProvideCurrentUserWithLoggedInInformation {
+                public function getCurrentUserWithLoggedInInformation(): \Tuleap\User\CurrentUserWithLoggedInInformation
+                {
+                    return CurrentUserWithLoggedInInformation::fromLoggedInUser(
+                        UserTestBuilder::anActiveUser()->build()
+                    );
+                }
+            }
         );
     }
 
@@ -113,7 +117,6 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 404, Mockery::any(), Mockery::any());
         $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
 
-        $this->user->shouldReceive('isAnonymous')->andReturnFalse();
         $this->request->shouldReceive('isAjax')->andReturnFalse();
 
         $this->router->route($this->request);
@@ -136,8 +139,6 @@ final class FrontRouterTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::any()
         );
         $this->request_instrumentation->shouldReceive('increment')->with(404, Mockery::type(DetectedBrowser::class))->once();
-
-        $this->user->shouldReceive('isAnonymous')->andReturnTrue();
 
         $this->router->route($this->request);
     }

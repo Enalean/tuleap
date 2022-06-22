@@ -44,11 +44,13 @@ class SwitchToPresenterBuilder
         $this->search_form_presenter_builder = $search_form_presenter_builder;
     }
 
-    public function build(\PFUser $user): ?SwitchToPresenter
+    public function build(CurrentUserWithLoggedInInformation $current_user): ?SwitchToPresenter
     {
-        if (! $user->isLoggedIn()) {
+        if (! $current_user->is_logged_in) {
             return null;
         }
+
+        $user = $current_user->user;
 
         return new SwitchToPresenter(
             $this->project_presenters_builder->build($user),

@@ -42,12 +42,12 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $this->page_detector = $page_detector;
     }
 
-    public function getTheme(PFUser $current_user)
+    public function getTheme(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user)
     {
-        if ($this->page_detector->isInCompatiblePage($current_user)) {
+        if ($this->page_detector->isInCompatiblePage($current_user->user)) {
             $theme = $this->getBurningParrot($current_user);
         } else {
-            $theme = $this->getFlamingParrot($current_user);
+            $theme = $this->getFlamingParrot($current_user->user);
         }
 
         if ($theme === null && ! IS_SCRIPT) {
@@ -61,7 +61,7 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * @return \Tuleap\Theme\BurningParrot\BurningParrotTheme|null
      */
-    public function getBurningParrot(PFUser $current_user)
+    public function getBurningParrot(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user)
     {
         $path = __DIR__ . '/../../themes/BurningParrot/include/BurningParrotTheme.php';
         if (! file_exists($path)) {

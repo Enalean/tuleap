@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\Account\UpdatePasswordController;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 
 final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -45,7 +46,7 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
     {
         $fiveteen_days_ago = new \DateTimeImmutable('15 days ago');
         $user              = UserTestBuilder::aUser()->withId(110)->withLastPwdUpdate((string) $fiveteen_days_ago->getTimestamp())->build();
-        $user_manager      = M::mock(UserManager::class, ['getCurrentUser' => $user]);
+        $user_manager      = M::mock(UserManager::class, ['getCurrentUserWithLoggedInInformation' => CurrentUserWithLoggedInInformation::fromLoggedInUser($user)]);
         UserManager::setInstance($user_manager);
 
         \ForgeConfig::set('sys_password_lifetime', '10');

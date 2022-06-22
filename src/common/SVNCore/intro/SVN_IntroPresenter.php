@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\CurrentUserWithLoggedInInformation;
+
 class SVN_IntroPresenter
 {
     /**
@@ -31,18 +33,12 @@ class SVN_IntroPresenter
     private $svn_url;
 
     /**
-     * @var PFUser
-     */
-    private $user;
-
-    /**
      * @param mixed
      */
     public $ldap_row;
 
-    public function __construct(PFUser $user, $uses_ldap_info, $ldap_row, $svn_url)
+    public function __construct(private CurrentUserWithLoggedInInformation $current_user, $uses_ldap_info, $ldap_row, $svn_url)
     {
-        $this->user           = $user;
         $this->ldap_row       = $ldap_row;
         $this->svn_url        = $svn_url;
         $this->uses_ldap_info = $uses_ldap_info;
@@ -55,9 +51,9 @@ class SVN_IntroPresenter
 
     public function svn_user_username()
     {
-        if ($this->user->isLoggedIn() && ! $this->uses_ldap_info) {
-            return $this->user->getName();
-        } elseif ($this->user->isLoggedIn() && $this->uses_ldap_info && $this->ldap_row) {
+        if ($this->current_user->is_logged_in && ! $this->uses_ldap_info) {
+            return $this->current_user->user->getName();
+        } elseif ($this->current_user->is_logged_in && $this->uses_ldap_info && $this->ldap_row) {
             return strtolower($this->ldap_row->getLogin());
         } else {
             return $GLOBALS['Language']->getText('svn_intro', 'default_username');
@@ -71,7 +67,7 @@ class SVN_IntroPresenter
 
     public function user_is_loggedin()
     {
-        return $this->user->isLoggedIn();
+        return $this->current_user->is_logged_in;
     }
 
     public function user_not_connected_username_helper()
@@ -91,7 +87,7 @@ class SVN_IntroPresenter
 
     public function username_is_in_lowercase()
     {
-        return strtolower($this->user->getName()) === $this->user->getName();
+        return strtolower($this->current_user->user->getName()) === $this->current_user->user->getName();
     }
 
     public function command_intro()

@@ -19,6 +19,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\SessionNotCreatedException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -53,10 +54,12 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function GivenAUserManagerWithValidAdmin($admin_session_hash)
     {
         $adminUser = \Mockery::spy(\PFUser::class);
-        $adminUser->shouldReceive('isLoggedIn')->andReturns(true);
+        $adminUser->shouldReceive('isAnonymous')->andReturns(false);
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getCurrentUser')->with($admin_session_hash)->andReturns($adminUser);
+        $um->shouldReceive('getCurrentUserWithLoggedInInformation')->with($admin_session_hash)->andReturns(
+            CurrentUserWithLoggedInInformation::fromLoggedInUser($adminUser)
+        );
 
         return $um;
     }
@@ -65,11 +68,10 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $admin_session_hash = 'admin_session_hash';
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('isLoggedIn')->andReturns(false);
-
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getCurrentUser')->andReturns($user);
+        $um->shouldReceive('getCurrentUserWithLoggedInInformation')->andReturns(
+            CurrentUserWithLoggedInInformation::fromAnonymous(new \Tuleap\Test\User\AnonymousUserTestProvider())
+        );
 
         $user_soap_server = new User_SOAPServer($um);
         $user_name        = 'toto';
@@ -83,10 +85,12 @@ final class User_SOAPServerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function GivenAUserManagerThatIsProgrammedToThrow($exception)
     {
         $adminUser = \Mockery::spy(\PFUser::class);
-        $adminUser->shouldReceive('isLoggedIn')->andReturns(true);
+        $adminUser->shouldReceive('isAnonymous')->andReturns(false);
 
         $um = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getCurrentUser')->andReturns($adminUser);
+        $um->shouldReceive('getCurrentUserWithLoggedInInformation')->andReturns(
+            \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($adminUser)
+        );
 
         $um->shouldReceive('loginAs')->andThrows($exception);
         $server = new User_SOAPServer($um);

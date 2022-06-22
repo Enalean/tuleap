@@ -28,13 +28,16 @@ use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\DisplaySecurityController;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
+use Tuleap\User\ProvideAnonymousUser;
+use Tuleap\User\ProvideCurrentUser;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -46,8 +49,8 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
     public $_userid_bynames  = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public $_userid_byldapid = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
-    private $_userdao     = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    private $_currentuser = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private $_userdao                                                          = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private \Tuleap\User\CurrentUserWithLoggedInInformation|null $current_user = null;
 
     /**
      * @var User_PendingUserNotifier
@@ -102,9 +105,11 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
         $this->_userdao = $dao;
     }
 
-    public function getUserAnonymous()
+    public function getUserAnonymous(): PFUser
     {
-        return $this->getUserbyId(0);
+        $anonymous_user = $this->getUserById(0);
+        assert($anonymous_user !== null);
+        return $anonymous_user;
     }
 
 
@@ -433,13 +438,12 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
         }
     }
 
-    public function setCurrentUser(PFUser $user)
+    public function setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user): void
     {
-        $this->_currentuser                          = $user;
+        $this->current_user                          = $current_user;
+        $user                                        = $current_user->user;
         $this->_users[$user->getId()]                = $user;
         $this->_userid_bynames[$user->getUserName()] = $user->getId();
-
-        return $user;
     }
 
     /**
@@ -450,7 +454,12 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
      */
     public function getCurrentUser($session_hash = false): PFUser
     {
-        if (! isset($this->_currentuser) || $session_hash !== false) {
+        return $this->getCurrentUserWithLoggedInInformation($session_hash)->user;
+    }
+
+    public function getCurrentUserWithLoggedInInformation(string|false $session_hash = false): \Tuleap\User\CurrentUserWithLoggedInInformation
+    {
+        if ($this->current_user === null || $session_hash !== false) {
             if ($session_hash === false) {
                 $session_hash = $this->getCookieManager()->getCookie('session_hash');
             }
@@ -459,33 +468,34 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
                 $now                = $_SERVER['REQUEST_TIME'];
                 $user_agent         = $_SERVER['HTTP_USER_AGENT'] ?? '';
                 $session_lifetime   = $this->getSessionLifetime();
-                $this->_currentuser = $session_manager->getUser($session_hash, $now, $session_lifetime, $user_agent);
-                if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
-                    $session_manager->destroyAllSessions($this->_currentuser);
-                    $this->_currentuser = null;
+                $user_from_session  = $session_manager->getUser($session_hash, $now, $session_lifetime, $user_agent);
+                $this->current_user = \Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user_from_session);
+                if ($this->current_user->user->isSuspended() || $this->current_user->user->isDeleted()) {
+                    $session_manager->destroyAllSessions($this->current_user->user);
+                    $this->current_user = null;
                 } else {
-                    $accessInfo = $this->getUserAccessInfo($this->_currentuser);
+                    $accessInfo = $this->getUserAccessInfo($this->current_user->user);
                     $now        = $_SERVER['REQUEST_TIME'];
                     $break_time = $now - ($accessInfo['last_access_date'] ?? 0);
                     //if the access is not later than 6 hours, it is not necessary to log it
                     if ($break_time > ForgeConfig::get('last_access_resolution')) {
-                        $this->_getEventManager()->processEvent(new UserConnectionUpdateEvent($this->_currentuser));
-                        $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
+                        $this->_getEventManager()->processEvent(new UserConnectionUpdateEvent($this->current_user->user));
+                        $this->getDao()->storeLastAccessDate($this->current_user->user->getId(), $now);
                     }
                 }
             } catch (InvalidSessionException $e) {
-                $this->_currentuser = null;
+                $this->current_user = null;
             }
 
-            if (! isset($this->_currentuser)) {
+            if ($this->current_user === null) {
                 //No valid session_hash/ip found. User is anonymous
-                $this->_currentuser = $this->getUserInstanceFromRow(['user_id' => 0]);
+                $this->current_user = \Tuleap\User\CurrentUserWithLoggedInInformation::fromAnonymous($this);
             }
             //cache the user
-            $this->_users[$this->_currentuser->getId()]                = $this->_currentuser;
-            $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
+            $this->_users[$this->current_user->user->getId()]                = $this->current_user->user;
+            $this->_userid_bynames[$this->current_user->user->getUserName()] = $this->current_user->user->getId();
         }
-        return $this->_currentuser;
+        return $this->current_user;
     }
 
     /**
@@ -581,7 +591,8 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
             $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
 
             \Tuleap\User\LoginInstrumentation::increment('success');
-            return $this->setCurrentUser($user);
+            $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
+            return $user;
         } catch (User_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
@@ -608,15 +619,9 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
         }
 
         \Tuleap\User\LoginInstrumentation::increment('failure');
-        return $this->setCurrentUser($this->createAnonymousUser());
-    }
-
-    /**
-     * @return PFUser
-     */
-    private function createAnonymousUser()
-    {
-        return $this->_getUserInstanceFromRow(['user_id' => 0]);
+        $current_user = \Tuleap\User\CurrentUserWithLoggedInInformation::fromAnonymous($this);
+        $this->setCurrentUser($current_user);
+        return $current_user->user;
     }
 
     private function openWebSession(PFUser $user): void
@@ -772,15 +777,12 @@ class UserManager implements \Tuleap\User\ProvideCurrentUser // phpcs:ignore PSR
 
         //If nobody answer success, look for the user into the db
         if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
-            $this->_currentuser = $this->getUserInstanceFromRow($row);
+            $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->getUserInstanceFromRow($row)));
         } else {
-            $this->_currentuser = $this->getUserInstanceFromRow(['user_id' => 0]);
+            $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromAnonymous($this));
         }
 
-        //cache the user
-        $this->_users[$this->_currentuser->getId()]                = $this->_currentuser;
-        $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
-        return $this->_currentuser;
+        return $this->getCurrentUser();
     }
 
     /**

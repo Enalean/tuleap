@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 use Luracast\Restler\iAuthenticate;
 use Luracast\Restler\InvalidAuthCredentials;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -69,7 +70,7 @@ class BasicAuthentication implements iAuthenticate
                 );
                 $this->login_manager->validateAndSetCurrentUser($current_user);
                 $current_user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($current_user);
-                $this->user_manager->setCurrentUser($current_user);
+                $this->user_manager->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($current_user));
                 return true;
             } catch (\User_LoginException $e) {
                 throw new InvalidAuthCredentials(401, 'Basic Authentication Required', [], $e);

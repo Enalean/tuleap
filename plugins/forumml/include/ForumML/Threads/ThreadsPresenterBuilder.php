@@ -86,7 +86,7 @@ class ThreadsPresenterBuilder
         }
 
         $post_thread_url = '';
-        if ($user->isLoggedIn()) {
+        if (! $user->isAnonymous()) {
             $post_thread_url = '/plugins/forumml/index.php?' .
                 http_build_query(
                     [

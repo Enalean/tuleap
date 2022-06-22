@@ -27,7 +27,7 @@ class ArtifactCopyButtonPresenterBuilder
 {
     public function getCopyArtifactButton(PFUser $user, Artifact $artifact)
     {
-        if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
+        if (! $user->isAnonymous() && ! $this->isAlreadyCopyingArtifact()) {
             return new ArtifactCopyButtonPresenter(
                 dgettext('tuleap-tracker', 'Duplicate this artifact'),
                 dgettext('tuleap-tracker', 'Duplicate this artifact'),

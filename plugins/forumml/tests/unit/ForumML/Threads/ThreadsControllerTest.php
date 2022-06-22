@@ -228,7 +228,7 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $user = Mockery::mock(\PFUser::class, ['isLoggedIn' => false]);
+        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
 
         $this->expectException(ForbiddenException::class);
 
@@ -270,7 +270,7 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(101)
             ->andReturnTrue();
 
-        $user = Mockery::mock(\PFUser::class, ['isLoggedIn' => true]);
+        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
         $user
             ->shouldReceive('isMember')
             ->with(101)
@@ -319,7 +319,7 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = Mockery::mock(
             \PFUser::class,
             [
-                'isLoggedIn' => true,
+                'isAnonymous' => false,
                 'getEmail'   => 'jdoe@example.com',
             ]
         );
@@ -376,7 +376,7 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = Mockery::mock(
             \PFUser::class,
             [
-                'isLoggedIn' => true,
+                'isAnonymous' => false,
                 'getEmail'   => 'jdoe@example.com',
             ]
         );
@@ -461,7 +461,7 @@ class ThreadsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = Mockery::mock(
             \PFUser::class,
             [
-                'isLoggedIn' => true,
+                'isAnonymous' => false,
             ]
         );
 

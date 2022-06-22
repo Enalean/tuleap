@@ -26,7 +26,7 @@ $USER_RES = [];
 //Deprecated. Use User->isLoggedIn() instead
 function user_isloggedin()
 {
-    return UserManager::instance()->getCurrentUser()->isLoggedIn();
+    return UserManager::instance()->getCurrentUserWithLoggedInInformation()->is_logged_in;
 }
 
 //Deprecated. Use User->isSuperUser() instead
@@ -137,12 +137,11 @@ function user_get_result_set_from_email($email)
 //Deprecated. Use user->getTimezone() instead
 function user_get_timezone()
 {
-    $current_user = UserManager::instance()->getCurrentUser();
-    if ($current_user->isLoggedIn()) {
-        return $current_user->getTimezone();
-    } else {
-        return '';
+    $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation();
+    if ($current_user->is_logged_in) {
+        return $current_user->user->getTimezone();
     }
+    return '';
 }
 
 /**

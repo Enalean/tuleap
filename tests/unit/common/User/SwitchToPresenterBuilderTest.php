@@ -28,6 +28,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\SearchFormPresenter;
 use Tuleap\Layout\SearchFormPresenterBuilder;
 use Tuleap\Project\ProjectPresentersBuilder;
+use Tuleap\Test\User\AnonymousUserTestProvider;
 
 class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,14 +37,12 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testNullIfUserIsNotLoggedIn(): void
     {
-        $user = Mockery::mock(\PFUser::class)->shouldReceive(['isLoggedIn' => false])->getMock();
-
         $builder = new SwitchToPresenterBuilder(
             Mockery::mock(ProjectPresentersBuilder::class),
             Mockery::mock(SearchFormPresenterBuilder::class)
         );
 
-        self::assertNull($builder->build($user));
+        self::assertNull($builder->build(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider())));
     }
 
     public function testBuildOfPresenter(): void
@@ -52,7 +51,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
         $user = Mockery::mock(\PFUser::class)->shouldReceive(
-            ['isLoggedIn' => true, 'isRestricted' => false, 'isAlive' => true]
+            ['isAnonymous' => false, 'isRestricted' => false, 'isAlive' => true]
         )->getMock();
 
         $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
@@ -70,7 +69,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
-        $presenter = $builder->build($user);
+        $presenter = $builder->build(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
         self::assertEquals("[]", $presenter->projects);
         self::assertEquals(true, $presenter->are_restricted_users_allowed);
@@ -85,7 +84,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
         $user = Mockery::mock(\PFUser::class)->shouldReceive(
-            ['isLoggedIn' => true, 'isRestricted' => false, 'isAlive' => false]
+            ['isAnonymous' => false, 'isRestricted' => false, 'isAlive' => false]
         )->getMock();
 
         $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
@@ -103,7 +102,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
-        $presenter = $builder->build($user);
+        $presenter = $builder->build(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
         self::assertEquals(false, $presenter->is_search_available);
     }
@@ -114,7 +113,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         \ForgeConfig::set("is_trove_cat_enabled", false);
 
         $user = Mockery::mock(\PFUser::class)->shouldReceive(
-            ['isLoggedIn' => true, 'isRestricted' => true, 'isAlive' => true]
+            ['isAnonymous' => false, 'isRestricted' => true, 'isAlive' => true]
         )->getMock();
 
         $project_presenters_builder = Mockery::mock(ProjectPresentersBuilder::class);
@@ -132,7 +131,7 @@ class SwitchToPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $builder = new SwitchToPresenterBuilder($project_presenters_builder, $search_form_presenter_builder);
 
-        $presenter = $builder->build($user);
+        $presenter = $builder->build(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
 
         self::assertEquals(false, $presenter->is_search_available);
     }

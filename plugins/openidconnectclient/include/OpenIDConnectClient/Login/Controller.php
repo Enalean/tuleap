@@ -121,9 +121,9 @@ class Controller
 
     private function checkIfUserAlreadyLogged($return_to)
     {
-        $user = $this->user_manager->getCurrentUser();
-        if ($user->isLoggedIn()) {
-            \account_redirect_after_login($user, $return_to);
+        $current_user = $this->user_manager->getCurrentUserWithLoggedInInformation();
+        if ($current_user->is_logged_in) {
+            \account_redirect_after_login($current_user->user, $return_to);
         }
     }
 

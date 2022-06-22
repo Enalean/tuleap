@@ -36,9 +36,9 @@ class SOAP_UserManager
      */
     public function continueSession($sessionKey)
     {
-        $user = $this->user_manager->getCurrentUser($sessionKey);
-        if ($user->isLoggedIn()) {
-            return $user;
+        $current_user = $this->user_manager->getCurrentUserWithLoggedInInformation($sessionKey);
+        if ($current_user->is_logged_in) {
+            return $current_user->user;
         }
         throw new SoapFault('3001', 'Invalid session');
     }

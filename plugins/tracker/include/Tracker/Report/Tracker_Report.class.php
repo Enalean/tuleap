@@ -582,8 +582,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $this->getCurrentUser()
         );
 
-        $is_normal_mode_button_displayed = ($report_can_be_modified && $current_user->isLoggedIn());
-        $is_query_modifiable             = $current_user->isLoggedIn();
+        $is_normal_mode_button_displayed = ($report_can_be_modified && ! $current_user->isAnonymous());
+        $is_query_modifiable             = ! $current_user->isAnonymous();
 
         $tracker_report_expert_query_presenter = new ExpertModePresenter(
             $this->id,
@@ -1512,7 +1512,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
                     $this->report_session->setHasChanged();
                 }
-                if ($request->exist('tracker_expert_query_submit') && $current_user->isLoggedIn()) {
+                if ($request->exist('tracker_expert_query_submit') && ! $current_user->isAnonymous()) {
                     $expert_query = $request->get('expert_query');
                     $this->report_session->storeExpertQuery($expert_query);
 

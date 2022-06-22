@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap;
+declare(strict_types=1);
 
-use PFUser;
+namespace Tuleap\User;
 
-class TimezoneRetriever
+interface ProvideAnonymousUser
 {
-    public static function getServerTimezone(): string
-    {
-        return ini_get('date.timezone') ? : 'Europe/Paris';
-    }
-
-    public static function getUserTimezone(PFUser $user): string
-    {
-        $timezone = '';
-        if (! $user->isAnonymous()) {
-            $timezone = $user->getTimezone() ?? '';
-        }
-        try {
-            new \DateTimeZone($timezone);
-        } catch (\Exception $ex) {
-            $timezone = self::getServerTimezone();
-        }
-        return $timezone;
-    }
+    public function getUserAnonymous(): \PFUser;
 }

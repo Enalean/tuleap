@@ -28,6 +28,7 @@ use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
+use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
 
 class RepositoryDisplayController
 {
@@ -48,6 +49,7 @@ class RepositoryDisplayController
         RepositoryManager $repository_manager,
         ViewVCProxy $viewvc_proxy,
         EventManager $event_manager,
+        private ProvideCurrentUserWithLoggedInInformation $current_user_provider,
     ) {
         $this->repository_manager = $repository_manager;
         $this->proxy              = $viewvc_proxy;
@@ -78,7 +80,7 @@ class RepositoryDisplayController
                 'explorer/repository_display',
                 new RepositoryDisplayPresenter(
                     $repository,
-                    $this->proxy->getContent($request, $request->getCurrentUser(), $repository, $this->fixPathInfo($url_variables)),
+                    $this->proxy->getContent($request, $this->current_user_provider->getCurrentUserWithLoggedInInformation(), $repository, $this->fixPathInfo($url_variables)),
                     $username
                 ),
                 $this->proxy->getBodyClass(),

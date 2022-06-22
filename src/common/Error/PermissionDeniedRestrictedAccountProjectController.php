@@ -24,6 +24,7 @@ use ForgeConfig;
 use Project;
 use TemplateRendererFactory;
 use ThemeManager;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 class PermissionDeniedRestrictedAccountProjectController
 {
@@ -50,7 +51,7 @@ class PermissionDeniedRestrictedAccountProjectController
         $this->place_holder_builder  = $place_holder_builder;
     }
 
-    public function displayError(\PFUser $user, Project $project)
+    public function displayError(CurrentUserWithLoggedInInformation $user, Project $project)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
         if ($layout === null) {

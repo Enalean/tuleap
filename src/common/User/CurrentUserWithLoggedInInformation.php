@@ -20,30 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Layout\ProjectSidebar\User;
-
-use Tuleap\Project\Admin\Access\VerifyUserCanAccessProjectAdministration;
-use Tuleap\User\CurrentUserWithLoggedInInformation;
+namespace Tuleap\User;
 
 /**
  * @psalm-immutable
  */
-final class ProjectSidebarUser
+final class CurrentUserWithLoggedInInformation
 {
-    private function __construct(
-        public bool $is_project_administrator,
-        public bool $is_logged_in,
-    ) {
+    private function __construct(public \PFUser $user, public bool $is_logged_in)
+    {
     }
 
-    public static function fromProjectAndUser(
-        \Project $project,
-        CurrentUserWithLoggedInInformation $current_user,
-        VerifyUserCanAccessProjectAdministration $project_admin_access_verifier,
-    ): self {
-        return new self(
-            $project_admin_access_verifier->canUserAccessProjectAdministration($current_user, $project),
-            $current_user->is_logged_in
-        );
+    public static function fromLoggedInUser(\PFUser $user): self
+    {
+        if ($user->isAnonymous()) {
+            throw new \LogicException('An anonymous user cannot be logged in');
+        }
+        return new self($user, true);
+    }
+
+    public static function fromAnonymous(ProvideAnonymousUser $anonymous_user_provider): self
+    {
+        return new self($anonymous_user_provider->getUserAnonymous(), false);
     }
 }

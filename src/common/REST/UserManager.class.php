@@ -35,6 +35,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
@@ -189,7 +190,7 @@ class UserManager
         $user = $this->getUserFromCookie();
         if (! $user->isAnonymous()) {
             $user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($user);
-            $this->user_manager->setCurrentUser($user);
+            $this->user_manager->setCurrentUser(CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
             return $user;
         }
         try {

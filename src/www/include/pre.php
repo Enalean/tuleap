@@ -191,7 +191,7 @@ if (! defined('FRONT_ROUTER')) {
             )
         )
     );
-    $HTML          = $theme_manager->getTheme($current_user);
+    $HTML          = $theme_manager->getTheme($user_manager->getCurrentUserWithLoggedInInformation());
 }
 
 // Check if anonymous user is allowed to browse the site

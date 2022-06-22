@@ -37,6 +37,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImport
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 use Tuleap\Tracker\TrackerIsInvalidException;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 use XML_ParseException;
 
@@ -151,7 +152,7 @@ class JiraRunner
         } catch (Tracker_Exception | TrackerCreationHasFailedException | TrackerIsInvalidException $exception) {
             $this->logError($pending_import, $exception->getMessage());
         } finally {
-            $this->user_manager->setCurrentUser($this->user_manager->getUserAnonymous());
+            $this->user_manager->setCurrentUser(CurrentUserWithLoggedInInformation::fromAnonymous($this->user_manager));
         }
     }
 

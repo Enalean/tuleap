@@ -68,7 +68,7 @@ class User_LoginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $status_manager = new User_UserStatusManager();
         $status_manager->checkStatus($user);
         $this->password_expiration_checker->checkPasswordLifetime($user);
-        $this->user_manager->setCurrentUser($user);
+        $this->user_manager->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($user));
     }
 
     /**

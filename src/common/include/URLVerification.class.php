@@ -55,14 +55,9 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return $this->urlChunks;
     }
 
-    /**
-     * Returns the current user
-     *
-     * @return PFUser
-     */
-    public function getCurrentUser()
+    public function getCurrentUser(): \Tuleap\User\CurrentUserWithLoggedInInformation
     {
-        return UserManager::instance()->getCurrentUser();
+        return UserManager::instance()->getCurrentUserWithLoggedInInformation();
     }
 
     /**
@@ -205,7 +200,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
         if (
             $this->getForgeAccess()->doesPlatformRequireLogin() &&
-            $user->isAnonymous() &&
+            ! $user->is_logged_in &&
             ! $this->isScriptAllowedForAnonymous($server)
         ) {
             $redirect                  = new URLRedirect($this->getEventManager());
@@ -222,11 +217,11 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function checkRestrictedAccess($server)
     {
-        $user = $this->getCurrentUser();
-        if ($user->isRestricted()) {
+        $current_user = $this->getCurrentUser();
+        if ($current_user->user->isRestricted()) {
             $url = $this->getUrl();
-            if (! $this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], null)) {
-                $this->displayRestrictedUserError($user);
+            if (! $this->restrictedUserCanAccessUrl($current_user->user, $url, $server['REQUEST_URI'], null)) {
+                $this->displayRestrictedUserError($current_user);
             }
         }
     }
@@ -254,7 +249,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @return void
      */
-    protected function displayRestrictedUserProjectError(PFUser $user, Project $project)
+    protected function displayRestrictedUserProjectError(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user, Project $project)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
         $controller = new PermissionDeniedRestrictedAccountProjectController(
@@ -262,7 +257,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             new ErrorDependenciesInjector(),
             new PlaceHolderBuilder(ProjectManager::instance())
         );
-        $controller->displayError($user, $project);
+        $controller->displayError($current_user, $project);
         exit;
     }
 
@@ -275,7 +270,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      *
      * @return void
      */
-    protected function displayRestrictedUserError(PFUser $user)
+    protected function displayRestrictedUserError(\Tuleap\User\CurrentUserWithLoggedInInformation $user)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
         $controller = new PermissionDeniedRestrictedAccountController(
@@ -287,32 +282,32 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         exit;
     }
 
-    public function displayPrivateProjectError(PFUser $user, ?Project $project = null)
+    public function displayPrivateProjectError(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user, ?Project $project = null)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
 
-        $this->checkUserIsLoggedIn($user);
+        $this->checkUserIsLoggedIn($current_user);
 
         $sendMail = new PermissionDeniedPrivateProjectController(
             $this->getThemeManager(),
             new PlaceHolderBuilder(ProjectManager::instance()),
             new ErrorDependenciesInjector()
         );
-        $sendMail->displayError($user, $project);
+        $sendMail->displayError($current_user, $project);
         exit;
     }
 
-    public function displaySuspendedProjectError(PFUser $user, Project $project)
+    public function displaySuspendedProjectError(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user, Project $project)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
 
-        $this->checkUserIsLoggedIn($user);
+        $this->checkUserIsLoggedIn($current_user);
 
         $suspended_project_controller = new ProjectAccessSuspendedController(
             $this->getThemeManager()
         );
 
-        $suspended_project_controller->displayError($user);
+        $suspended_project_controller->displayError($current_user);
         exit;
     }
 
@@ -339,12 +334,12 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                 $this->header($location);
             }
 
-            $user = $this->getCurrentUser();
-            $url  = $this->getUrl();
+            $current_user = $this->getCurrentUser();
+            $url          = $this->getUrl();
             try {
-                if (! $user->isAnonymous()) {
+                if (! $current_user->user->isAnonymous()) {
                     $password_expiration_checker = new User_PasswordExpirationChecker();
-                    $password_expiration_checker->checkPasswordLifetime($user);
+                    $password_expiration_checker->checkPasswordLifetime($current_user->user);
                 }
 
                 if (! $project) {
@@ -354,7 +349,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                     }
                 }
                 if ($project) {
-                    $this->userCanAccessProject($user, $project);
+                    $this->userCanAccessProject($current_user->user, $project);
                 } else {
                     $this->checkRestrictedAccess($server);
                 }
@@ -364,14 +359,14 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                 if (! isset($project)) {
                     $project = null;
                 }
-                $this->displayRestrictedUserProjectError($user, $project);
+                $this->displayRestrictedUserProjectError($current_user, $project);
             } catch (Project_AccessPrivateException $exception) {
                 if (! isset($project)) {
                     $project = null;
                 }
-                $this->displayPrivateProjectError($user, $project);
+                $this->displayPrivateProjectError($current_user, $project);
             } catch (Project_AccessProjectNotFoundException $exception) {
-                $layout = $this->getThemeManager()->getBurningParrot($request->getCurrentUser());
+                $layout = $this->getThemeManager()->getBurningParrot($current_user);
                 if ($layout === null) {
                     throw new \Exception("Could not load BurningParrot theme");
                 }
@@ -390,7 +385,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                     $exception->getMessage()
                 );
             } catch (ProjectAccessSuspendedException $exception) {
-                $this->displaySuspendedProjectError($user, $project);
+                $this->displaySuspendedProjectError($current_user, $project);
             } catch (User_PasswordExpiredException $exception) {
                 if ($server['REQUEST_URI'] === DisplaySecurityController::URL || $server['REQUEST_URI'] === UpdatePasswordController::URL) {
                     return;
@@ -503,9 +498,9 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         exit;
     }
 
-    private function checkUserIsLoggedIn(PFUser $user)
+    private function checkUserIsLoggedIn(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user)
     {
-        if ($user->isAnonymous()) {
+        if (! $current_user->is_logged_in) {
             $event_manager = EventManager::instance();
             $redirect      = new URLRedirect($event_manager);
             $redirect->redirectToLogin();

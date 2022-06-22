@@ -43,7 +43,7 @@ class DynamicUserCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testDynamicUserIsRetrievedLoggedInWhenSessionIsInitialized()
+    public function testDynamicUserIsRetrievedActiveWhenSessionIsInitialized(): void
     {
         $dynamic_credential_session = \Mockery::mock(DynamicCredentialSession::class);
         $credential                 = \Mockery::mock(Credential::class);
@@ -57,10 +57,10 @@ class DynamicUserCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname', $clean_up_function);
 
         $user = $dynamic_user_creator->getDynamicUser([]);
-        $this->assertTrue($user->isLoggedIn());
+        $this->assertTrue($user->isActive());
     }
 
-    public function testDynamicUserIsRetrievedLoggedOutWhenSessionIsNotInitialized()
+    public function testDynamicUserIsRetrievedNotActiveWhenSessionIsNotInitialized(): void
     {
         $dynamic_credential_session = \Mockery::mock(DynamicCredentialSession::class);
         $dynamic_credential_session->shouldReceive('getAssociatedCredential')->andThrow(DynamicCredentialSessionNotInitializedException::class);
@@ -72,7 +72,7 @@ class DynamicUserCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $dynamic_user_creator = new DynamicUserCreator($dynamic_credential_session, $user_manager, 'Realname', $clean_up_function);
 
         $user = $dynamic_user_creator->getDynamicUser([]);
-        $this->assertFalse($user->isLoggedIn());
+        $this->assertFalse($user->isActive());
     }
 
     /**

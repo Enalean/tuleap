@@ -119,12 +119,14 @@ if (defined('NUSOAP')) {
     {
         global $Language;
 
-        $user = UserManager::instance()->login($loginname, new \Tuleap\Cryptography\ConcealedString($passwd));
+        $user_manager = UserManager::instance();
+        $user_manager->login($loginname, new \Tuleap\Cryptography\ConcealedString($passwd));
+        $current_user = $user_manager->getCurrentUserWithLoggedInInformation();
         sodium_memzero($passwd);
-        if ($user->isLoggedIn()) {
+        if ($current_user->is_logged_in) {
             $return = [
-            'user_id'      => $user->getId(),
-            'session_hash' => $user->getSessionHash(),
+            'user_id'      => $current_user->user->getId(),
+            'session_hash' => $current_user->user->getSessionHash(),
             ];
             return $return;
         } else {

@@ -264,7 +264,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager
             ->shouldReceive('setCurrentUser')
-            ->with($this->anonymous_user)
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
@@ -300,7 +299,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager
             ->shouldReceive('setCurrentUser')
-            ->with($this->anonymous_user)
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
@@ -346,7 +344,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager
             ->shouldReceive('setCurrentUser')
-            ->with($this->anonymous_user)
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
@@ -405,7 +402,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager
             ->shouldReceive('setCurrentUser')
-            ->with($this->anonymous_user)
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
@@ -474,7 +470,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager
             ->shouldReceive('setCurrentUser')
-            ->with($this->anonymous_user)
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
@@ -543,7 +538,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_manager
             ->shouldReceive('setCurrentUser')
-            ->with($this->anonymous_user)
             ->once();
 
         $this->runner->processAsyncJiraImport($import);

@@ -2966,8 +2966,9 @@ class Artifact
             $this->hasFieldPermission($field_perm, 'multi_assigned_to') ||
             (! isset($field_perm['assigned_to']) && ! isset($field_perm['multi_assigned_to']))
         ) {
-            $user = UserManager::instance()->getCurrentUser();
-            if ($user->isLoggedIn()) {
+            $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation();
+            $user         = $current_user->user;
+            if ($current_user->is_logged_in) {
                    $out_hdr  = $Language->getText('tracker_include_artifact', 'changes_by') . ' ' . $user->getRealName() . ' <' . $user->getEmail() . ">" . ForgeConfig::get('sys_lf') . "";
                    $out_hdr .= $Language->getText('tracker_import_utils', 'date') . ': ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), time()) . ' (' . user_get_timezone() . ')';
             } else {
@@ -3060,14 +3061,15 @@ class Artifact
                 <div class="tracker_artifact_followup_title">
                     <span class="tracker_artifact_followup_title_user">';
 
-        $user = UserManager::instance()->getCurrentUser();
+        $current_user = UserManager::instance()->getCurrentUserWithLoggedInInformation();
+        $user         = $current_user->user;
 
         if (
             $this->hasFieldPermission($field_perm, 'assigned_to') ||
             $this->hasFieldPermission($field_perm, 'multi_assigned_to') ||
             (! isset($field_perm['assigned_to']) && ! isset($field_perm['multi_assigned_to']))
         ) {
-            if ($user->isLoggedIn()) {
+            if ($current_user->is_logged_in) {
                 $out .= '<a href="mailto:' . $hp->purify($user->getEmail()) . '">' . $hp->purify($user->getRealName()) . ' (' . $hp->purify($user->getUserName()) . ')</a>';
             } else {
                 $out = $Language->getText('tracker_include_artifact', 'anon_user');

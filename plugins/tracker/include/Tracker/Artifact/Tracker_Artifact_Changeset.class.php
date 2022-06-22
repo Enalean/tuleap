@@ -373,13 +373,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function getSubmitter()
     {
         if ($this->submitted_by) {
-            return UserManager::instance()->getUserById($this->submitted_by);
-        } else {
-            $submitter = UserManager::instance()->getUserAnonymous();
-            $submitter->setEmail($this->email);
-
-            return $submitter;
+            $user = UserManager::instance()->getUserById($this->submitted_by);
+            if ($user !== null) {
+                return $user;
+            }
         }
+        $submitter = UserManager::instance()->getUserAnonymous();
+        $submitter->setEmail($this->email);
+        return $submitter;
     }
 
     /**

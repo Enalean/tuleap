@@ -26,6 +26,8 @@ namespace Tuleap;
 use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\User\AnonymousUserTestProvider;
+use Tuleap\User\CurrentUserWithLoggedInInformation;
 
 final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -35,19 +37,16 @@ final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tule
 
     private $url_verification;
     private $server;
-    private $user;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = \Mockery::mock(\PFUser::class);
-
         $event_manager = \Mockery::spy(\EventManager::class);
 
         $this->url_verification = \Mockery::mock(\URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->url_verification->shouldReceive('getEventManager')->andReturns($event_manager);
-        $this->url_verification->shouldReceive('getCurrentUser')->andReturns($this->user);
+        $this->url_verification->shouldReceive('getCurrentUser')->andReturns(CurrentUserWithLoggedInInformation::fromAnonymous(new AnonymousUserTestProvider()));
         $fixtures = dirname(__FILE__) . '/_fixtures';
         $GLOBALS['Language']->method('getContent')->willReturn($fixtures . '/empty.txt');
 
@@ -68,8 +67,6 @@ final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tule
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/';
 
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
-
         $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $this->getScriptChunk());
     }
 
@@ -78,8 +75,6 @@ final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tule
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script/';
 
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
-
         $this->assertEquals('/account/login.php?return_to=%2Fscript%2F', $this->getScriptChunk());
     }
 
@@ -87,8 +82,6 @@ final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tule
     {
         $this->server['SCRIPT_NAME'] = '';
         $this->server['REQUEST_URI'] = '/script?pv=2';
-
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         $this->assertEquals('/account/login.php?return_to=%2Fscript%3Fpv%3D2&pv=2', $this->getScriptChunk());
     }

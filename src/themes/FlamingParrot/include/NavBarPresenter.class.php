@@ -28,9 +28,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private $imgroot;
 
-    /** @var PFUser */
-    private $user;
-
     private $display_new_account;
 
     /**
@@ -131,7 +128,7 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function __construct(
         $imgroot,
-        PFUser $user,
+        private \Tuleap\User\CurrentUserWithLoggedInInformation $current_user,
         $display_new_account,
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect,
@@ -145,7 +142,6 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $this->imgroot                   = $imgroot;
-        $this->user                      = $user;
         $this->display_new_account       = $display_new_account;
         $this->logout_csrf               = $logout_csrf;
         $this->url_redirect              = $url_redirect;
@@ -157,10 +153,10 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->should_logo_be_displayed  = $should_logo_be_displayed;
         $this->is_legacy_logo_customized = $is_legacy_logo_customized;
         $this->is_svg_logo_customized    = $is_svg_logo_customized;
-        $this->is_super_user             = $user->isSuperUser();
+        $this->is_super_user             = $this->current_user->user->isSuperUser();
         $this->invite_buddies_presenter  = $invite_buddies_presenter;
 
-        $this->user_id                    = $this->user->getId();
+        $this->user_id                    = $this->current_user->user->getId();
         $this->has_platform_banner        = $platform_banner !== null;
         $this->platform_banner_is_visible = $platform_banner && $platform_banner->isVisible();
 
@@ -171,12 +167,11 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->logout_label     = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
 
-        $this->current_user_id = $user->getId();
-        $this->history         = _('History');
-        $this->clear_history   = _('Clear history');
-        $this->empty_history   = _('Your history is empty');
-        $this->error_fetch     = _('An error occurred while fetching the content of your history');
-        $this->error_clear     = _('An error occurred while clearing the content of your history');
+        $this->history       = _('History');
+        $this->clear_history = _('Clear history');
+        $this->empty_history = _('Your history is empty');
+        $this->error_fetch   = _('An error occurred while fetching the content of your history');
+        $this->error_clear   = _('An error occurred while clearing the content of your history');
     }
 
     public function imgroot()
@@ -186,27 +181,27 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function user_is_logged_in() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->user->isLoggedIn();
+        return $this->current_user->is_logged_in;
     }
 
     public function user_real_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->user->getRealName();
+        return $this->current_user->user->getRealName();
     }
 
     public function user_login_name() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return "@" . $this->user->getUnixName();
+        return "@" . $this->current_user->user->getUnixName();
     }
 
     public function has_user_avatar() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->user->hasAvatar();
+        return $this->current_user->user->hasAvatar();
     }
 
     public function user_avatar() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        return $this->user->getAvatarUrl();
+        return $this->current_user->user->getAvatarUrl();
     }
 
     public function display_new_user() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

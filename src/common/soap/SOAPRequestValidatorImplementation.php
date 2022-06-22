@@ -66,9 +66,9 @@ class SOAPRequestValidatorImplementation implements SOAPRequestValidator
 
     public function continueSession(string $session_key): PFUser
     {
-        $user = $this->user_manager->getCurrentUser($session_key);
-        if ($user->isLoggedIn()) {
-            return $user;
+        $current_user = $this->user_manager->getCurrentUserWithLoggedInInformation($session_key);
+        if ($current_user->is_logged_in) {
+            return $current_user->user;
         }
         throw new Exception('Invalid session', 3001);
     }
