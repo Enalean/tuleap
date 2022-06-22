@@ -1,32 +1,77 @@
 { pkgs ? (import ../../tools/utils/nix/pinned-nixpkgs.nix) {}, nixpkgsPinEpoch ? (import ../../tools/utils/nix/nixpkgs-pin-epoch.nix) { inherit pkgs; } }:
 
-pkgs.stdenv.mkDerivation {
-  name = "sha1collisiondetector";
-  src = pkgs.fetchgit {
-    url = "https://tuleap.net/plugins/git/tuleap/deps/3rdparty/sha1collisiondetector.git";
-    rev = "66dc87cf8ad2bc60c1c5be383996b79f003eb218";
-    sha256 = "13l56m9xp5g8flwwbx8dm070mknm1522srzd16a2h6cwnbnr2pz6";
+let
+  shatteredDoc1 = pkgs.fetchurl {
+    url = "https://shattered.io/static/shattered-1.pdf";
+    hash = "sha256-K7eHpz43NS+SODq+fikCk20QWa2fG6baqpweWO5pcNA=";
   };
+  shatteredDoc2 = pkgs.fetchurl {
+    url = "https://shattered.io/static/shattered-2.pdf";
+    hash = "sha256-1EiHddKb3veZM2fVQQZNvdpQ04P4nwqhOm/y4IlLpf8=";
+  };
+  rustBinWithMuslTarget = pkgs.rust-bin.stable.latest.minimal.override {
+    targets = [ "x86_64-unknown-linux-musl" ];
+  };
+  sha1collisiondetectorBin = pkgs.stdenvNoCC.mkDerivation {
+    name = "sha1collisiondetector";
 
-  buildInputs = [ pkgs.glibc.static ];
-  nativeBuildInputs = [ pkgs.rpm pkgs.file ];
+    src = ./sha1collisiondetector;
+
+    nativeBuildInputs = [ pkgs.rustPlatform.cargoSetupHook rustBinWithMuslTarget ];
+
+    cargoDeps = pkgs.rustPlatform.importCargoLock {
+      lockFile = ./sha1collisiondetector/Cargo.lock;
+    };
+
+    buildPhase = ''
+      runHook preBuild
+
+      cargo build --frozen --release --target x86_64-unknown-linux-musl
+
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/bin/
+      cp target/x86_64-unknown-linux-musl/release/sha1collisiondetector $out/bin/
+
+      runHook postInstall
+    '';
+
+    doInstallCheck = true;
+    installCheckPhase = ''
+      runHook preCheck
+
+      echo "Testing not colliding file"
+      $out/bin/sha1collisiondetector < ${./sha1collisiondetector/Cargo.toml}
+      echo "Testing colliding files"
+      $out/bin/sha1collisiondetector < ${shatteredDoc1} && exit 1 || test $? -eq 3
+      $out/bin/sha1collisiondetector < ${shatteredDoc2} && exit 1 || test $? -eq 3
+
+      runHook postCheck
+    '';
+  };
+in pkgs.stdenvNoCC.mkDerivation {
+  name = "sha1collisiondetector-rpm-package";
+  src = sha1collisiondetectorBin;
+
+  nativeBuildInputs = [ pkgs.rpm ];
 
   dontConfigure = true;
 
   buildPhase = ''
-    CC="gcc -static"
     rpmbuild \
-        --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
-        --define "_binary_payload w9.xzdio" \
-        --define "_sourcedir $(pwd)" \
-        --define "_rpmdir $(pwd)" \
-        --dbpath="$(pwd)"/rpmdb \
-        --define "%_topdir $(pwd)" \
-        --define "%_tmppath %{_topdir}/TMP" \
-        --define "_rpmdir $(pwd)/RPMS" \
-        --define "%_datadir /usr/share" \
-        --define "%_bindir /usr/bin" \
-        -bb sha1collisiondetector.spec
+      --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
+      --define "_sourcedir $src/bin/" \
+      --define "_rpmdir $(pwd)" \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "_rpmdir $(pwd)/RPMS" \
+      --define "%_bindir /usr/bin" \
+      -bb ${./sha1collisiondetector/sha1collisiondetector.spec}
   '';
 
   installPhase = ''
