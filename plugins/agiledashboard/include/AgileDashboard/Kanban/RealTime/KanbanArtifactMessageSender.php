@@ -78,14 +78,17 @@ class KanbanArtifactMessageSender
         );
     }
 
-    public function sendMessageArtifactMoved(PFUser $user, Artifact $artifact, $kanban_id)
+    public function sendMessageArtifactMoved(PFUser $user, Artifact $artifact, $kanban_id): void
     {
         try {
-            $data = (array) $this->kanban_artifact_message_builder->buildArtifactMoved($artifact);
+            $data = $this->kanban_artifact_message_builder->buildArtifactMoved($artifact);
+            if ($data === null) {
+                return;
+            }
             $this->artifact_message_sender->sendMessage(
                 $user,
                 $artifact,
-                $data,
+                (array) $data,
                 self::EVENT_NAME_ARTIFACT_MOVED,
                 $kanban_id
             );
@@ -94,14 +97,17 @@ class KanbanArtifactMessageSender
         }
     }
 
-    public function sendMessageArtifactReordered(PFUser $user, $artifact, $kanban_id)
+    public function sendMessageArtifactReordered(PFUser $user, $artifact, $kanban_id): void
     {
         try {
-            $data = (array) $this->kanban_artifact_message_builder->buildArtifactReordered($artifact);
+            $data = $this->kanban_artifact_message_builder->buildArtifactReordered($artifact);
+            if ($data === null) {
+                return;
+            }
             $this->artifact_message_sender->sendMessage(
                 $user,
                 $artifact,
-                $data,
+                (array) $data,
                 self::EVENT_NAME_ARTIFACT_MOVED,
                 $kanban_id
             );
