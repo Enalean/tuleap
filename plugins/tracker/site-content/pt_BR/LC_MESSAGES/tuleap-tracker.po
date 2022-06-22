@@ -2237,6 +2237,9 @@ msgstr ""
 msgid "Removed: %s"
 msgstr ""
 
+msgid "Renderer does not exist"
+msgstr ""
+
 msgid "Renderer id"
 msgstr ""
 
