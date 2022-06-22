@@ -36,10 +36,6 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
      */
     private $plugin;
     /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
      * @var ExternalLinkParametersExtractor
      */
     private $link_parameters_extractor;
@@ -50,12 +46,10 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
 
     public function __construct(
         \DocmanPlugin $plugin,
-        \EventManager $event_manager,
         ExternalLinkParametersExtractor $link_parameters_extractor,
         \Docman_ItemDao $dao,
     ) {
         $this->plugin                    = $plugin;
-        $this->event_manager             = $event_manager;
         $this->link_parameters_extractor = $link_parameters_extractor;
         $this->dao                       = $dao;
     }
@@ -64,7 +58,6 @@ final class DocmanLegacyController implements DispatchableWithRequest, Dispatcha
     {
         (
             new DocmanHTTPControllerProxy(
-                $this->event_manager,
                 $this->link_parameters_extractor,
                 new \Docman_HTTPController(
                     $this->plugin,

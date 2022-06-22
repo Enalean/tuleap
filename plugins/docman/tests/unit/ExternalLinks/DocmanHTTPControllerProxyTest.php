@@ -36,7 +36,6 @@ final class DocmanHTTPControllerProxyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testThrowsNotFoundWhenProjectCannotBeIdentifierFromTheRequest(): void
     {
         $controller_proxy = new DocmanHTTPControllerProxy(
-            \Mockery::mock(\EventManager::instance()),
             \Mockery::mock(ExternalLinkParametersExtractor::class),
             \Mockery::mock(Docman_HTTPController::class),
             \Mockery::mock(Docman_ItemDao::class)
