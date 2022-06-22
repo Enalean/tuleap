@@ -57,6 +57,10 @@ final class ListOfSearchColumnDefinitionPresenterBuilder
         $columns = $this->column_collection_builder->getCollection($metadata_factory)->getColumns();
 
         $columns_to_display = $this->columns_dao->searchByProjectId((int) $project->getID());
+        if (empty($columns_to_display)) {
+            return $columns;
+        }
+
         array_push($columns_to_display, \Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL, \Docman_MetadataFactory::HARDCODED_METADATA_ID_LABEL);
 
         return array_values(

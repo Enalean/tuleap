@@ -131,6 +131,53 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         );
     }
 
+    public function testItReturnsAllCurrentPropertiesAsColumnsIfNoConfigurationHasBeenSetExplicitely(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory
+            ->method('getMetadataForGroup')
+            ->willReturn([
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
+            ]);
+
+        $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(
+            new SearchColumnCollectionBuilder(),
+            new class implements IRetrieveColumns {
+                public function searchByProjectId(int $project_id): array
+                {
+                    return [];
+                }
+            }
+        ))
+            ->getColumns($project, $metadata_factory);
+
+        self::assertEquals(
+            [
+                "id",
+                "title",
+                "description",
+                "owner",
+                "update_date",
+                "create_date",
+                "status",
+                "obsolescence_date",
+                "location",
+            ],
+            array_map(
+                static fn(SearchColumnDefinitionPresenter $column): string => $column->name,
+                $columns,
+            ),
+        );
+    }
+
     private function getHardcodedMetadata(string $label): \Docman_Metadata
     {
         $metadata = new \Docman_Metadata();
