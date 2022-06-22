@@ -62,7 +62,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return htmlentities($params['filter']->getTitle(), ENT_COMPAT, 'UTF-8');
     }
 
-    /* protected */ public function _mode($params)
+    protected function displayMode(array $params): void
     {
         $html = '';
         // No mode selector in printer version

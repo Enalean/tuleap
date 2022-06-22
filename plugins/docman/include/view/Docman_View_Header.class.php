@@ -48,7 +48,7 @@
                 $service = $project->getService($htmlParams['service_name']);
                 \assert($service instanceof Tuleap\Docman\ServiceDocman);
                 if ($service) {
-                    $service->displayHeader($htmlParams['title'], [], $this->getToolbar($params));
+                    $service->displayHeader($htmlParams['title'], $this->getBreadcrumbs($params, $project, $service), $this->getToolbar($params));
                 } else {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Service unavailable in project');
                     $GLOBALS['Response']->redirect('/');
@@ -59,6 +59,11 @@
                 site_header($htmlParams);
             }
         }
+    }
+
+    protected function getBreadcrumbs(array $params, Project $project, \Tuleap\Docman\ServiceDocman $service): array
+    {
+        return [];
     }
 
     protected function getToolbar(array $params)
