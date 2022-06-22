@@ -507,7 +507,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $request = HTTPRequest::instance();
         $user    = $request->getCurrentUser();
         $proxy   = new DocmanHTTPControllerProxy(
-            EventManager::instance(),
             new ExternalLinkParametersExtractor(),
             $this->getHTTPController(),
             $this->getItemDao()
@@ -1460,7 +1459,6 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     {
         return new DocmanLegacyController(
             $this,
-            EventManager::instance(),
             new ExternalLinkParametersExtractor(),
             $this->getItemDao()
         );

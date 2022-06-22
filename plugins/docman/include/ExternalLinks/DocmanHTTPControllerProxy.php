@@ -28,10 +28,6 @@ use Tuleap\Request\NotFoundException;
 class DocmanHTTPControllerProxy
 {
     /**
-     * @var \EventManager
-     */
-    private $event_manager;
-    /**
      * @var ExternalLinkParametersExtractor
      */
     private $parameters_extractor;
@@ -45,12 +41,10 @@ class DocmanHTTPControllerProxy
     private $docman_item_dao;
 
     public function __construct(
-        \EventManager $event_manager,
         ExternalLinkParametersExtractor $parameters_extractor,
         \Docman_HTTPController $docman_HTTP_controller,
         Docman_ItemDao $docman_item_dao,
     ) {
-        $this->event_manager          = $event_manager;
         $this->parameters_extractor   = $parameters_extractor;
         $this->docman_HTTP_controller = $docman_HTTP_controller;
         $this->docman_item_dao        = $docman_item_dao;
