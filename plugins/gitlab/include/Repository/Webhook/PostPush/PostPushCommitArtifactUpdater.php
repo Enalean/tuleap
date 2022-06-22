@@ -29,6 +29,10 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tracker_NoChangeException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
@@ -114,7 +118,10 @@ class PostPushCommitArtifactUpdater
         } catch (Tracker_NoChangeException | Tracker_Exception $e) {
             $this->logger->error("An error occurred during the creation of the comment");
         } catch (SemanticStatusClosedValueNotFoundException $e) {
-            $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
+            $result = $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
+            if (Result::isErr($result)) {
+                $this->logger->error((string) $result->error);
+            }
         }
     }
 
@@ -134,11 +141,14 @@ class PostPushCommitArtifactUpdater
         return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker_workflow_user, $artifact);
     }
 
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
     public function addTuleapArtifactCommentNoSemanticDefined(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
         PostPushCommitWebhookData $commit,
-    ): void {
+    ): Ok|Err {
         try {
             $committer           = $this->getUserClosingTheArtifactFromGitlabWebhook($commit);
             $no_semantic_comment = sprintf(
@@ -149,10 +159,16 @@ class PostPushCommitArtifactUpdater
             $new_followups = $artifact->createNewChangeset([], $no_semantic_comment, $tracker_workflow_user);
 
             if ($new_followups === null) {
-                $this->logger->error("No new comment was created");
+                return Result::err(Fault::fromMessage('No new comment was created'));
             }
+            return Result::ok(null);
         } catch (Tracker_NoChangeException | Tracker_Exception $e) {
-            $this->logger->error("An error occurred during the creation of the comment");
+            return Result::err(
+                Fault::fromThrowableWithMessage(
+                    $e,
+                    sprintf('An error occurred during the creation of the comment: %s', $e->getMessage())
+                )
+            );
         }
     }
 

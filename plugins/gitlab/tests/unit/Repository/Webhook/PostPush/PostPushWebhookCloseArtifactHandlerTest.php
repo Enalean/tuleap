@@ -38,6 +38,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -187,7 +188,8 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
                 $this->artifact,
                 $this->user,
                 $this->webhook_data
-            );
+            )
+            ->willReturn(Result::ok(null));
 
         $this->handler->handleArtifactClosure(
             $this->reference,

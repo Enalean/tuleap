@@ -20,6 +20,7 @@
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <directory name="tests/unit/common/Project/Registration/" />
         <directory name="tests/unit/Tuleap/" />
+        <directory name="tests/unit/common/NeverThrow/" />
         <directory name="tests/unit/common/xml/" />
         <directory name="tests/integration/tests/SVNCore/" />
         <ignoreFiles>
