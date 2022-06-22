@@ -98,11 +98,7 @@
             </div>
             <div class="artifact-create-gitlab-merge-request">
                 <label class="tlp-label tlp-checkbox">
-                    <input
-                        type="checkbox"
-                        v-model="must_create_gitlab_mr"
-                        v-on:change="updateButtonLabel"
-                    />
+                    <input type="checkbox" v-model="must_create_gitlab_mr" />
                     <translate>
                         Create a merge request based on this new branch to the default branch
                     </translate>
@@ -128,7 +124,7 @@
                     v-if="is_creating_branch"
                     class="fas fa-spin fa-spinner tlp-button-icon"
                 ></i>
-                {{ button_label }}
+                {{ update_button_label }}
             </button>
         </div>
     </div>
@@ -153,11 +149,10 @@ const props = defineProps<{
     artifact_id: number;
 }>();
 
-let button_label = ref($gettext("Create branch"));
-let is_creating_branch = ref(false);
-let must_create_gitlab_mr = ref(true);
-let error_message = ref("");
-let reference = ref("");
+const is_creating_branch = ref(false);
+const must_create_gitlab_mr = ref(true);
+const error_message = ref("");
+const reference = ref("");
 let modal: Modal | null = null;
 
 const selected = ref(props.integrations[0]);
@@ -198,13 +193,11 @@ const branch_name_placeholder = computed((): string => {
     return placeholder;
 });
 
-function updateButtonLabel(): void {
-    if (must_create_gitlab_mr.value) {
-        button_label.value = $gettext("Create branch and merge request");
-    } else {
-        button_label.value = $gettext("Create branch");
-    }
-}
+const update_button_label = computed((): string =>
+    must_create_gitlab_mr.value
+        ? $gettext("Create branch and merge request")
+        : $gettext("Create branch")
+);
 
 async function onClickCreateBranch(): Promise<void> {
     const integration = selected.value;
