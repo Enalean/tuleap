@@ -138,10 +138,12 @@
 import { postGitlabBranch, postGitlabMergeRequest } from "../api/rest-querier";
 import * as codendi from "codendi";
 import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
-import { computed, ref, onMounted, onBeforeUnmount } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { useGettext } from "vue3-gettext";
+import { okAsync } from "neverthrow";
+import { isFault } from "@tuleap/fault";
 
 const { interpolate, $gettext } = useGettext();
 
@@ -209,13 +211,8 @@ function updateButtonLabel(): void {
 async function onClickCreateBranch(): Promise<void> {
     const integration = selected.value;
     is_creating_branch.value = true;
-    const create_branch_result = postGitlabBranch(
-        integration.id,
-        props.artifact_id,
-        reference.value
-    );
-    await create_branch_result.match(
-        async (branch) => {
+    await postGitlabBranch(integration.id, props.artifact_id, reference.value)
+        .andThen((branch) => {
             let success_message = interpolate(
                 $gettext(
                     'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
@@ -230,64 +227,53 @@ async function onClickCreateBranch(): Promise<void> {
 
             codendi.feedback.log("info", success_message);
 
-            if (must_create_gitlab_mr.value) {
-                const create_merge_request_result = postGitlabMergeRequest(
-                    integration.id,
-                    props.artifact_id,
-                    branch.branch_name
-                );
-                await create_merge_request_result.match(
-                    () => {
-                        codendi.feedback.log(
-                            "info",
-                            $gettext("The associated merge request has been created.")
-                        );
-                    },
-                    async (error_promise) => {
-                        const merge_error = await error_promise;
-                        is_creating_branch.value = false;
-
-                        if (
-                            Object.prototype.hasOwnProperty.call(
-                                merge_error,
-                                "i18n_error_message"
-                            ) &&
-                            merge_error.i18n_error_message
-                        ) {
-                            codendi.feedback.log("error", merge_error.i18n_error_message);
-                        } else {
-                            codendi.feedback.log(
-                                "error",
-                                $gettext(
-                                    "An error occurred while creating the associated merge request."
-                                )
-                            );
-                            throw merge_error.error_message;
-                        }
-                    }
-                );
+            if (!must_create_gitlab_mr.value) {
+                return okAsync("irrelevant return");
             }
-
-            modal?.hide();
-        },
-        async (error_promise) => {
-            const error = await error_promise;
-            is_creating_branch.value = false;
-
-            if (
-                Object.prototype.hasOwnProperty.call(error, "i18n_error_message") &&
-                error.i18n_error_message
-            ) {
-                error_message.value = error.i18n_error_message;
-            } else {
-                error_message.value = interpolate(
-                    $gettext("An error occurred while creating %{ branch_name }, please try again"),
-                    { branch_name: props.branch_name }
+            return postGitlabMergeRequest(
+                integration.id,
+                props.artifact_id,
+                branch.branch_name
+            ).map(() => {
+                codendi.feedback.log(
+                    "info",
+                    $gettext("The associated merge request has been created.")
                 );
-                throw error.error_message;
+            });
+        })
+        .match(
+            () => {
+                is_creating_branch.value = false;
+                modal?.hide();
+            },
+            async (promise_or_fault) => {
+                is_creating_branch.value = false;
+                if (isFault(promise_or_fault)) {
+                    error_message.value = interpolate(
+                        $gettext(
+                            "An error occurred while creating the associated merge request: %{ error }"
+                        ),
+                        { error: String(promise_or_fault) }
+                    );
+                    return;
+                }
+                const error = await promise_or_fault;
+                if (
+                    Object.prototype.hasOwnProperty.call(error, "i18n_error_message") &&
+                    error.i18n_error_message
+                ) {
+                    error_message.value = error.i18n_error_message;
+                } else {
+                    error_message.value = interpolate(
+                        $gettext(
+                            "An error occurred while creating %{ branch_name }, please try again"
+                        ),
+                        { branch_name: props.branch_name }
+                    );
+                    throw error.error_message;
+                }
             }
-        }
-    );
+        );
 }
 </script>
 

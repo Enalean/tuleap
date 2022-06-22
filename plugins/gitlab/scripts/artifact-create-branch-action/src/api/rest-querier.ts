@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON } from "@tuleap/fetch-result";
+import { getJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import { FetchWrapperError, post } from "@tuleap/tlp-fetch";
 import { ResultAsync } from "neverthrow";
 
-interface GitLabRestError {
+export interface GitLabRestError {
     readonly error_message?: unknown;
     readonly i18n_error_message?: string;
 }
@@ -74,33 +74,18 @@ export function postGitlabBranch(
     );
 }
 
-export function postGitlabMergeRequest(
+export const postGitlabMergeRequest = (
     gitlab_integration_id: number,
     artifact_id: number,
     source_branch: string
-): ResultAsync<void, Promise<GitLabRestError>> {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const body = JSON.stringify({
-        gitlab_integration_id: gitlab_integration_id,
-        artifact_id: artifact_id,
-        source_branch: source_branch,
+): ResultAsync<void, Fault> =>
+    postJSON("/api/v1/gitlab_merge_request", {
+        gitlab_integration_id,
+        artifact_id,
+        source_branch,
+    }).map(() => {
+        // ignore response
     });
-
-    return ResultAsync.fromPromise(
-        post("/api/v1/gitlab_merge_request", {
-            headers,
-            body,
-        }).then(() => {
-            // ignore response
-        }),
-        (err: unknown): Promise<GitLabRestError> => {
-            return extractI18NErrorFromRestError(err);
-        }
-    );
-}
 
 export interface GitLabIntegrationBranchInformation {
     readonly default_branch: string;
