@@ -55,4 +55,9 @@ class SVN_TokenDao extends \Tuleap\DB\DataAccessObject
 
         $this->getDB()->safeQuery("DELETE FROM svn_token WHERE $sql_conditions", $sql_conditions->values());
     }
+
+    public function updateTokenLastUsage(int $token_id, string $ip_address, int $current_time): void
+    {
+        $this->getDB()->run('UPDATE svn_token SET last_usage=?, last_ip=? WHERE id=?', $current_time, $ip_address, $token_id);
+    }
 }
