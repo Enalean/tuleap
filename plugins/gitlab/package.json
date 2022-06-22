@@ -9,7 +9,6 @@
     "@tuleap/fault": "link:../../lib/frontend/fault",
     "@tuleap/fetch-result": "link:../../lib/frontend/fetch-result",
     "@tuleap/tlp": "link:../../src/themes/tlp",
-    "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-modal": "link:../../lib/frontend/tlp-modal",
     "@tuleap/vue3-gettext-init": "link:../../lib/frontend/vue3-gettext-init",
     "neverthrow": "^4.3.1",

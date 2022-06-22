@@ -35,6 +35,7 @@ const result_fetcher = ResultFetcher(response_retriever, all_getter);
 type _Unused = ResultAsync<never, Fault>;
 
 export { ResultFetcher };
+export { decodeJSON } from "./json-decoder";
 
 /**
  * `getJSON` returns a `ResultAsync<TypeOfJSONPayload, Fault>` with `TypeOfJSONPayload` supplied as a generic type.
