@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FetchWrapperError, get, post } from "@tuleap/tlp-fetch";
+import { getJSON } from "@tuleap/fetch-result";
+import type { Fault } from "@tuleap/fault";
+import { FetchWrapperError, post } from "@tuleap/tlp-fetch";
 import { ResultAsync } from "neverthrow";
 
 interface GitLabRestError {
@@ -108,16 +110,9 @@ export interface GitLabIntegrationCreatedBranchInformation {
     readonly branch_name: string;
 }
 
-export function getGitLabRepositoryBranchInformation(
+export const getGitLabRepositoryBranchInformation = (
     gitlab_integration_id: number
-): ResultAsync<GitLabIntegrationBranchInformation, unknown> {
-    return ResultAsync.fromPromise(
-        (async (): Promise<GitLabIntegrationBranchInformation> => {
-            const response = await get(
-                `/api/v1/gitlab_repositories/${encodeURIComponent(gitlab_integration_id)}/branches`
-            );
-            return response.json();
-        })(),
-        (err: unknown) => err
+): ResultAsync<GitLabIntegrationBranchInformation, Fault> =>
+    getJSON<GitLabIntegrationBranchInformation>(
+        `/api/v1/gitlab_repositories/${gitlab_integration_id}/branches`
     );
-}

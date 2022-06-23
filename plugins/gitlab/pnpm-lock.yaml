@@ -3,23 +3,27 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/fault': link:../../lib/frontend/fault
+  '@tuleap/fetch-result': link:../../lib/frontend/fetch-result
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
-  neverthrow: ^4.2.1
+  neverthrow: ^4.3.1
   vue: ^3.2.31
   vue-loader: ^17.0.0
   vue3-gettext: ^2.2.1
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
+  '@tuleap/fault': link:../../lib/frontend/fault
+  '@tuleap/fetch-result': link:../../lib/frontend/fetch-result
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
-  neverthrow: 4.2.1
+  neverthrow: 4.3.1
   vue: 3.2.31
   vue3-gettext: 2.2.1_vue@3.2.31
 
@@ -409,8 +413,8 @@ packages:
     hasBin: true
     dev: false
 
-  /neverthrow/4.2.1:
-    resolution: {integrity: sha512-faWQGNqVQrXOuG8K7E0PRzsfBHzfVqeDX9nwawKDseuH/qEGIH02Nrq03OJOs5eTFML03xeol3otzagPoHyEPA==}
+  /neverthrow/4.3.1:
+    resolution: {integrity: sha512-+vxjSaiDWjAj6kR6KKW0YDuV6O4UCNWGAO8m8ITjFKPWcTmU1GVnL+J5TAUTKpPnUAHCKDxXpOHVaERid223Ww==}
     dev: false
 
   /once/1.4.0:

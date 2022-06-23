@@ -16,13 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import * as tlp from "@tuleap/tlp-fetch";
+import * as fetch_result from "@tuleap/fetch-result";
+import { okAsync } from "neverthrow";
 import {
     getGitLabRepositoryBranchInformation,
     postGitlabBranch,
     postGitlabMergeRequest,
 } from "./rest-querier";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+
+const GITLAB_INTEGRATION_ID = 12;
 
 describe("postGitlabBranch", () => {
     it("asks to create the GitLab branch", async () => {
@@ -71,16 +76,6 @@ describe("postGitlabBranch", () => {
         expect(error_message).toStrictEqual({ message: "Oh snap" });
     });
 
-    it("retrieves branch information of a GitLab integration", async () => {
-        const getSpy = jest.spyOn(tlp, "get");
-
-        mockFetchSuccess(getSpy);
-
-        await getGitLabRepositoryBranchInformation(12);
-
-        expect(getSpy).toHaveBeenCalledWith("/api/v1/gitlab_repositories/12/branches");
-    });
-
     it("asks to create the GitLab merge request", async () => {
         const postSpy = jest.spyOn(tlp, "post");
         mockFetchSuccess(postSpy);
@@ -93,6 +88,20 @@ describe("postGitlabBranch", () => {
                 "content-type": "application/json",
             },
         });
+        expect(result.isOk()).toBe(true);
+    });
+});
+
+describe(`getGitLabRepositoryBranchInformation()`, () => {
+    it(`retrieves branch information of a GitLab integration`, async () => {
+        const getSpy = jest.spyOn(fetch_result, "getJSON");
+        getSpy.mockReturnValue(okAsync({ default_branch: "main" }));
+
+        const result = await getGitLabRepositoryBranchInformation(GITLAB_INTEGRATION_ID);
+
+        expect(getSpy).toHaveBeenCalledWith(
+            `/api/v1/gitlab_repositories/${GITLAB_INTEGRATION_ID}/branches`
+        );
         expect(result.isOk()).toBe(true);
     });
 });
