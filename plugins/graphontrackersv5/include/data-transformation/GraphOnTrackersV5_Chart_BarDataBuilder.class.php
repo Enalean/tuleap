@@ -140,16 +140,16 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         foreach ($result as $data) {
             $color = $this->getColor($data);
             if ($has_group_by_field && $group_by_field) {
-                $engine->data[$data[$source_field->name]][$data[$group_by_field->name]] = $data['nb'];
+                $engine->data[$data[$source_field->getPrefixedName()]][$data[$group_by_field->getPrefixedName()]] = $data['nb'];
                 $this->buildGroupChartProperties($color, $engine, $data, $source_field, $group_by_field);
             } else {
                 $engine->colors[] = $color;
                 $engine->data[]   = $data['nb'];
             }
-            $engine->legend[$data[$source_field->name]] = $GLOBALS['Language']->getText('global', 'none');
+            $engine->legend[$data[$source_field->getPrefixedName()]] = $GLOBALS['Language']->getText('global', 'none');
 
-            if ($data[$source_field->name] !== null) {
-                $engine->legend[$data[$source_field->name]] = $source_field->fetchRawValue($data[$source_field->name]);
+            if ($data[$source_field->getPrefixedName()] !== null) {
+                $engine->legend[$data[$source_field->getPrefixedName()]] = $source_field->fetchRawValue($data[$source_field->getPrefixedName()]);
             }
         }
     }
