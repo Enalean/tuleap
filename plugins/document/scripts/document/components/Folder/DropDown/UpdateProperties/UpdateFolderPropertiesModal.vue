@@ -33,6 +33,7 @@
                 v-bind:parent="current_folder"
                 v-bind:item-property="formatted_item_properties"
                 v-bind:status_value="item_to_update.status.value"
+                v-bind:recursion_option="recursion_option"
             />
         </div>
         <modal-footer
@@ -117,8 +118,8 @@ export default {
         emitter.on("update-custom-property", this.updateCustomProperty);
     },
     beforeDestroy() {
-        emitter.off("properties-recursion-list", this.show);
-        emitter.off("properties-recursion-option", this.show);
+        emitter.off("properties-recursion-list", this.setPropertiesListUpdate);
+        emitter.off("properties-recursion-option", this.setRecursionOption);
         emitter.off(
             "update-multiple-properties-list-value",
             this.updateMultiplePropertiesListValue
@@ -153,7 +154,8 @@ export default {
             this.properties_to_update = event.detail.property_list;
         },
         setRecursionOption(event) {
-            this.recursion_option = event.detail.recursion_option;
+            this.recursion_option = event.recursion_option;
+            this.item_to_update.status.recursion = event.recursion_option;
         },
         updateMultiplePropertiesListValue(event) {
             if (!this.formatted_item_properties) {

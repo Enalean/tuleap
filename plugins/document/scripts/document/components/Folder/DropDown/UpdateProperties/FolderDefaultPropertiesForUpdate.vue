@@ -17,9 +17,8 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
-    <div v-if="has_recursion_proerty" data-test="document-folder-default-properties-container">
+    <div v-if="has_recursion_property" data-test="document-folder-default-properties-container">
         <hr class="tlp-modal-separator" />
         <div class="document-modal-other-information-title-container">
             <div
@@ -75,7 +74,7 @@
                     />
                 </div>
                 <recursion-options
-                    v-model="recursion_option"
+                    v-bind:value="recursion_option"
                     v-on:input="updateRecursionOption"
                     data-test="document-custom-property-recursion-option"
                 />
@@ -84,7 +83,6 @@
     </div>
 </template>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <script>
 import { mapState } from "vuex";
 import StatusPropertyWithCustomBindingForFolderUpdate from "./StatusPropertyWithCustomBindingForFolderUpdate.vue";
@@ -103,26 +101,17 @@ export default {
         currentlyUpdatedItem: Object,
         itemProperty: Array,
         status_value: String,
+        recursion_option: String,
     },
     data() {
         return {
             properties_to_update: [],
-            recursion: "none",
         };
     },
     computed: {
         ...mapState("configuration", ["is_status_property_used"]),
         ...mapState("properties", ["has_loaded_properties"]),
-        recursion_option: {
-            get() {
-                return "";
-            },
-            set(value) {
-                this.currentlyUpdatedItem.status.recursion = value;
-                this.recursion = value;
-            },
-        },
-        has_recursion_proerty() {
+        has_recursion_property() {
             return this.is_status_property_used || this.itemProperty.length > 0;
         },
     },
@@ -137,9 +126,9 @@ export default {
                 detail: { property_list: this.properties_to_update },
             });
         },
-        updateRecursionOption() {
+        updateRecursionOption(event) {
             this.properties_to_update = [];
-            if (this.recursion !== "none") {
+            if (event !== "none") {
                 this.itemProperty.forEach((property) => {
                     this.properties_to_update.push(property.short_name);
                 });
@@ -152,7 +141,7 @@ export default {
             }
             this.updatePropertiesWithRecursion();
             emitter.emit("properties-recursion-option", {
-                detail: { recursion_option: this.recursion },
+                recursion_option: event,
             });
         },
     },
