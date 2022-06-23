@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickLookWiki renders quick look for wiki document 1`] = `
+<div
+  class="document-quick-look-document-action"
+>
+  <button
+    class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+    data-test="go-to-the-wiki-page"
+    type="button"
+  >
+    <i
+      class="fas fa-long-arrow-alt-right tlp-button-icon"
+    />
+     
+    <translate-stub
+      tag="span"
+    >
+      Go to the wiki page
+    </translate-stub>
+  </button>
+   
+  <drop-down-quick-look-stub
+    item="[object Object]"
+  />
+   
+  <div
+    class="document-header-spacer"
+  />
+   
+  <quick-look-delete-button-stub
+    item="[object Object]"
+  />
+</div>
+`;

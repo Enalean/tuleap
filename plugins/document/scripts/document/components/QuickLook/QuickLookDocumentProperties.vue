@@ -69,8 +69,8 @@
                 v-if="has_an_approval_table"
                 data-test="docman-item-approval-table-status-badge"
             >
-                <label for="document-approval-table-status" class="tlp-label" v-translate>
-                    Approval table status
+                <label for="document-approval-table-status" class="tlp-label">
+                    {{ approval_badge_title }}
                 </label>
                 <approval-badge
                     id="document-approval-table-status"
@@ -79,7 +79,7 @@
                 />
             </div>
             <div v-if="is_file" class="tlp-property">
-                <label for="document-file-size" class="tlp-label" v-translate>File size</label>
+                <label for="document-file-size" class="tlp-label">{{ file_size_title }}</label>
                 <p id="document-file-size" data-test="docman-file-size">
                     {{ file_size_in_mega_bytes }}
                 </p>
@@ -95,72 +95,78 @@
         </div>
     </section>
 </template>
-<script>
+
+<script setup lang="ts">
 import prettyBytes from "pretty-kibibytes";
-import { mapState } from "vuex";
-import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter";
-import UserBadge from "../../User/UserBadge.vue";
+import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter";
+import UserBadge from "../User/UserBadge.vue";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
-import ApprovalBadge from "../ApprovalTables/ApprovalBadge.vue";
+import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
-import { isFile, isFolder } from "../../../helpers/type-check-helper";
+import { isFile, isFolder } from "../../helpers/type-check-helper";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../store/configuration";
+import type { Item, Property } from "../../type";
+import { computed } from "vue";
+import { hasAnApprovalTable } from "../../helpers/approval-table-helper";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-export default {
-    components: { ApprovalBadge, QuickLookDocumentAdditionalProperties, UserBadge },
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["date_time_format", "relative_dates_display", "user_locale"]),
-        properties_right_column() {
-            const lenght = this.get_custom_properties.length;
+const { $gettext } = useGettext();
 
-            return this.get_custom_properties.slice(0, Math.ceil(lenght / 2));
-        },
-        properties_left_column() {
-            const length = this.get_custom_properties.length;
+const approval_badge_title = $gettext("Approval table status");
+const file_size_title = $gettext("File size");
 
-            return this.get_custom_properties.slice(Math.ceil(length / 2), length);
-        },
-        file_size_in_mega_bytes() {
-            if (!this.item.file_properties) {
-                return prettyBytes(0);
-            }
-            return prettyBytes(parseInt(this.item.file_properties.file_size, 10));
-        },
-        has_an_approval_table() {
-            return this.item.approval_table;
-        },
-        get_custom_properties() {
-            const hardcoded_properties = [
-                "title",
-                "description",
-                "owner",
-                "create_date",
-                "update_date",
-            ];
+const { date_time_format, relative_dates_display, user_locale } = useState<
+    Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
+>("configuration", ["date_time_format", "relative_dates_display", "user_locale"]);
 
-            return this.item.properties.filter(
-                ({ short_name }) => !hardcoded_properties.includes(short_name)
-            );
-        },
-        relative_date_preference() {
-            return relativeDatePreference(this.relative_dates_display);
-        },
-        relative_date_placement() {
-            return relativeDatePlacement(this.relative_dates_display, "right");
-        },
-    },
-    methods: {
-        getFormattedDate(date) {
-            return formatDateUsingPreferredUserFormat(date, this.date_time_format);
-        },
-        is_file() {
-            return isFile(this.item);
-        },
-        is_document() {
-            return !isFolder(this.item.type);
-        },
-    },
-};
+const props = defineProps<{ item: Item }>();
+
+const get_custom_properties = computed((): Array<Property> => {
+    const hardcoded_properties = ["title", "description", "owner", "create_date", "update_date"];
+
+    return props.item.properties.filter(
+        ({ short_name }) => !hardcoded_properties.includes(short_name)
+    );
+});
+
+const properties_right_column = computed((): Array<Property> => {
+    const length = get_custom_properties.value.length;
+
+    return get_custom_properties.value.slice(0, Math.ceil(length / 2));
+});
+const properties_left_column = computed((): Array<Property> => {
+    const length = get_custom_properties.value.length;
+
+    return get_custom_properties.value.slice(Math.ceil(length / 2), length);
+});
+const file_size_in_mega_bytes = computed((): string => {
+    const item = props.item;
+    if (!isFile(item) || !item.file_properties) {
+        return prettyBytes(0);
+    }
+    return prettyBytes(item.file_properties.file_size);
+});
+const has_an_approval_table = computed((): boolean => {
+    return hasAnApprovalTable(props.item);
+});
+
+const relative_date_preference = computed((): string => {
+    return relativeDatePreference(relative_dates_display.value);
+});
+const relative_date_placement = computed((): string => {
+    return relativeDatePlacement(relative_dates_display.value, "right");
+});
+
+const is_file = computed((): boolean => {
+    return isFile(props.item);
+});
+
+const is_document = computed((): boolean => {
+    return !isFolder(props.item);
+});
+
+function getFormattedDate(date: string): string {
+    return formatDateUsingPreferredUserFormat(date, date_time_format.value);
+}
 </script>

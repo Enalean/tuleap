@@ -22,12 +22,12 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 
-import localVue from "../../../helpers/local-vue";
+import localVue from "../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
-import * as date_formatter from "../../../helpers/date-formatter";
-import type { Property } from "../../../type";
-import type { ConfigurationState } from "../../../store/configuration";
+import * as date_formatter from "../../helpers/date-formatter";
+import type { Property } from "../../type";
+import type { ConfigurationState } from "../../store/configuration";
 
 describe("QuickLookPropertyDate", () => {
     function getWrapper(property: Property): Wrapper<QuickLookPropertyDate> {

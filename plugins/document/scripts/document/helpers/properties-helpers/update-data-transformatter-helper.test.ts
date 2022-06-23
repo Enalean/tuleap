@@ -30,7 +30,7 @@ describe("transformFolderPropertiesForRecursionAtUpdate", () => {
         const list_value: Array<ListValue> = [
             {
                 id: 103,
-                value: "Open",
+                name: "Open",
             } as ListValue,
         ];
         const property: Property = {
@@ -60,7 +60,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
         const list_value: Array<ListValue> = [
             {
                 id: 103,
-                value: "Open",
+                name: "Open",
             } as ListValue,
         ];
         const properties: Array<Property> = [
@@ -85,7 +85,7 @@ describe("transformDocumentPropertiesForUpdate", () => {
         const list_value: Array<ListValue> = [
             {
                 id: 103,
-                value: "Open",
+                name: "Open",
             } as ListValue,
         ];
         const properties: Array<Property> = [
@@ -160,7 +160,7 @@ describe("transformCustomPropertiesForItemUpdate", () => {
         const list_values: Array<ListValue> = [
             {
                 id: 110,
-                value: "My value to display",
+                name: "My value to display",
             } as ListValue,
         ];
         const parent_properties: Array<Property> = [
@@ -226,11 +226,11 @@ describe("transformCustomPropertiesForItemUpdate", () => {
         const list_values: Array<ListValue> = [
             {
                 id: 110,
-                value: "My value to display",
+                name: "My value to display",
             },
             {
                 id: 120,
-                value: "My other value to display",
+                name: "My other value to display",
             },
         ];
         const parent_properties: Array<Property> = [

@@ -18,44 +18,34 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentAdditionalProperties from "./QuickLookDocumentAdditionalProperties.vue";
-
-import localVue from "../../../helpers/local-vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import localVue from "../../helpers/local-vue";
+import type { ListValue, Property } from "../../type";
 
 describe("QuickLookDocumentAdditionalProperties", () => {
-    let properties_factory, state, store;
+    function createWrapper(property: Property): Wrapper<QuickLookDocumentAdditionalProperties> {
+        return shallowMount(QuickLookDocumentAdditionalProperties, {
+            localVue,
+            propsData: {
+                property,
+            },
+        });
+    }
 
-    beforeEach(() => {
-        state = { configuration: {} };
-
-        const store_options = { state };
-
-        store = createStoreMock(store_options);
-
-        properties_factory = (props = {}) => {
-            return shallowMount(QuickLookDocumentAdditionalProperties, {
-                localVue,
-                propsData: { property: props },
-                mocks: { $store: store },
-            });
-        };
-    });
     describe(`property name`, () => {
         it(`Given an Obsolescence Date property
              Then it displays "Validity" for the label`, () => {
             const property_date = {
-                id: 100,
                 short_name: "obsolescence_date",
                 name: "Obsolescence Date",
                 type: "date",
-                list_value: null,
                 value: "2019-08-02",
                 post_processed_value: "2019-08-02",
-            };
+            } as Property;
 
-            const wrapper = properties_factory(property_date);
+            const wrapper = createWrapper(property_date);
 
             const label_element = wrapper.get("[data-test=properties-list-label]");
             expect(label_element).toBeTruthy();
@@ -66,19 +56,20 @@ describe("QuickLookDocumentAdditionalProperties", () => {
     describe(`List type properties`, () => {
         it(`Given a list value with several value
              Then it displays the list value in a ul tag`, () => {
+            const list_value = [
+                { id: 1, name: "value 1" } as ListValue,
+                { id: 2, name: "fail" } as ListValue,
+                { id: 3, name: "Tea" } as ListValue,
+            ];
             const list_property = {
-                id: 100,
                 name: "original name",
+                short_name: "original_name",
                 type: "list",
-                list_value: [
-                    { id: 1, name: "value 1" },
-                    { id: 2, name: "fail" },
-                    { id: 3, name: "Tea" },
-                ],
+                list_value,
                 value: null,
                 post_processed_value: null,
-            };
-            const wrapper = properties_factory(list_property);
+            } as Property;
+            const wrapper = createWrapper(list_property);
 
             const value_list_element = wrapper.findAll("li");
 
@@ -89,15 +80,16 @@ describe("QuickLookDocumentAdditionalProperties", () => {
         });
         it(`Given a list value with one value
              Then it displays the value`, () => {
+            const list_value = [{ id: 1, name: "value 1" } as ListValue];
             const list_property = {
-                id: 100,
                 name: "original name",
+                short_name: "original_name",
                 type: "list",
-                list_value: [{ id: 1, name: "value 1" }],
+                list_value,
                 value: null,
                 post_processed_value: null,
-            };
-            const wrapper = properties_factory(list_property);
+            } as Property;
+            const wrapper = createWrapper(list_property);
 
             expect(wrapper.find("ul").exists()).toBeFalsy();
             expect(wrapper.get("p").text()).toBe("value 1");
@@ -108,7 +100,6 @@ describe("QuickLookDocumentAdditionalProperties", () => {
         it(`Given text type value
     Then it displays the value`, () => {
             const string_property = {
-                id: 100,
                 name: "Bad lyrics",
                 short_name: "bad-lyrics",
                 type: "text",
@@ -116,32 +107,31 @@ describe("QuickLookDocumentAdditionalProperties", () => {
                 value: "The mer-custo wants ref #1 that ... mmmmmh, mmmmh ...",
                 post_processed_value:
                     'The mer-custo wants <a href="https://example.com/goto">ref #1</a> that ... mmmmmh, mmmmh ...',
-            };
+            } as Property;
 
-            const wrapper = properties_factory(string_property);
+            const wrapper = createWrapper(string_property);
 
             const display_properties = wrapper.get("[id=document-bad-lyrics]");
 
             expect(wrapper.find("ul").exists()).toBeFalsy();
             expect(wrapper.find("[data-test=property-list-date]").exists()).toBeFalsy();
             expect(display_properties).toBeTruthy();
-            expect(display_properties.text()).toEqual(string_property.value);
+            expect(display_properties.text()).toStrictEqual(string_property.value);
             expect(display_properties.html()).toContain(string_property.post_processed_value);
         });
     });
     it(`Given text type empty value
     Then it displays the value`, () => {
         const empty_property = {
-            id: 100,
             name: "silence",
             short_name: "silence",
             type: "text",
             list_value: null,
             value: "",
             post_processed_value: "",
-        };
+        } as Property;
 
-        const wrapper = properties_factory(empty_property);
+        const wrapper = createWrapper(empty_property);
 
         const display_properties = wrapper.get("[id=document-silence]");
 
@@ -150,6 +140,6 @@ describe("QuickLookDocumentAdditionalProperties", () => {
         expect(display_properties.text()).toBeTruthy();
         expect(display_properties).not.toBe("Permanent");
         expect(display_properties.text()).toBe("Empty");
-        expect(display_properties.text()).not.toEqual(empty_property.value);
+        expect(display_properties.text()).not.toStrictEqual(empty_property.value);
     });
 });

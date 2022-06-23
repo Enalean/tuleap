@@ -23,10 +23,11 @@
         <button
             type="button"
             class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-            v-on:click="redirectUrl"
+            v-on:click="wikiPageRedirect"
+            data-test="go-to-the-wiki-page"
         >
-            <i class="fas fa-external-link-alt tlp-button-icon"></i>
-            <translate>Open link</translate>
+            <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i>
+            <translate>Go to the wiki page</translate>
         </button>
         <drop-down-quick-look v-bind:item="item" />
         <div class="document-header-spacer"></div>
@@ -34,28 +35,22 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
-import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+<script setup lang="ts">
+import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
+import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../store/configuration";
+import type { Item } from "../../type";
 
-export default {
-    name: "QuickLookLink",
-    components: { DropDownQuickLook, QuickLookDeleteButton },
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-    },
-    methods: {
-        redirectUrl() {
-            window.location.assign(
-                encodeURI(
-                    `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`
-                )
-            );
-        },
-    },
-};
+const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
+
+const props = defineProps<{ item: Item }>();
+
+function wikiPageRedirect(): void {
+    window.location.assign(
+        encodeURI(`/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`)
+    );
+}
 </script>

@@ -20,31 +20,33 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <drop-down-quick-look
-            v-bind:item="item"
-            v-bind:is-details-button-shown="!item.user_can_write"
-        />
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+            v-on:click="downloadFile"
+        >
+            <i class="fa fa-download tlp-button-icon"></i>
+            <translate>Download</translate>
+        </button>
+        <drop-down-quick-look v-bind:item="item" />
         <div class="document-header-spacer"></div>
         <quick-look-delete-button v-bind:item="item" />
     </div>
 </template>
 
-<script>
-import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
-import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+<script setup lang="ts">
+import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
+import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import type { Item } from "../../type";
+import { isFile } from "../../helpers/type-check-helper";
 
-export default {
-    components: {
-        DropDownQuickLook,
-        QuickLookDeleteButton,
-    },
-    props: {
-        item: Object,
-    },
-    computed: {
-        is_details_button_shown() {
-            return !this.item.user_can_write;
-        },
-    },
-};
+const props = defineProps<{ item: Item }>();
+
+function downloadFile(): void {
+    const item = props.item;
+    if (!item || !isFile(item) || !item.file_properties) {
+        return;
+    }
+    window.location.assign(encodeURI(item.file_properties.download_href));
+}
 </script>

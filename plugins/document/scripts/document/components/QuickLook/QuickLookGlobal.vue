@@ -53,8 +53,7 @@
     </section>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
@@ -67,69 +66,74 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
     TYPE_EMPTY,
-} from "../../../constants";
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
+} from "../../constants";
+import { iconForMimeType } from "../../helpers/icon-for-mime-type";
 import QuickLookDocumentProperties from "./QuickLookDocumentProperties.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../type";
+import { computed } from "vue";
+import { isFile } from "../../helpers/type-check-helper";
 
-export default {
-    name: "QuickLookGlobal",
-    components: {
-        QuickLookItemIsLockedMessage,
-        QuickLookDocumentPreview,
-        QuickLookDocumentProperties,
-    },
-    computed: {
-        ...mapState(["currently_previewed_item"]),
-        icon_class() {
-            switch (this.currently_previewed_item.type) {
-                case TYPE_FOLDER:
-                    return ICON_FOLDER_ICON;
-                case TYPE_LINK:
-                    return ICON_LINK;
-                case TYPE_WIKI:
-                    return ICON_WIKI;
-                case TYPE_EMBEDDED:
-                    return ICON_EMBEDDED;
-                case TYPE_FILE:
-                    if (!this.currently_previewed_item.file_properties) {
-                        return ICON_EMPTY;
-                    }
-                    return iconForMimeType(this.currently_previewed_item.file_properties.file_type);
-                default:
-                    return ICON_EMPTY;
+const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
+    "currently_previewed_item",
+]);
+
+const emit = defineEmits<{
+    (e: "close-quick-look-event"): void;
+}>();
+
+const icon_class = computed((): string => {
+    const item = currently_previewed_item.value;
+    if (!item) {
+        return ICON_EMPTY;
+    }
+    switch (item.type) {
+        case TYPE_FOLDER:
+            return ICON_FOLDER_ICON;
+        case TYPE_LINK:
+            return ICON_LINK;
+        case TYPE_WIKI:
+            return ICON_WIKI;
+        case TYPE_EMBEDDED:
+            return ICON_EMBEDDED;
+        case TYPE_FILE:
+            if (!isFile(item) || !item.file_properties) {
+                return ICON_EMPTY;
             }
-        },
-        quick_look_component_action() {
-            switch (this.currently_previewed_item.type) {
-                case TYPE_FILE:
-                    return () =>
-                        import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`);
-                case TYPE_WIKI:
-                    return () =>
-                        import(/* webpackChunkName: "quick-look-wiki" */ `./QuickLookWiki.vue`);
-                case TYPE_FOLDER:
-                    return () =>
-                        import(/* webpackChunkName: "quick-look-folder" */ `./QuickLookFolder.vue`);
-                case TYPE_LINK:
-                    return () =>
-                        import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`);
-                case TYPE_EMPTY:
-                case TYPE_EMBEDDED:
-                    return () =>
-                        import(
-                            /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmptyOrEmbedded.vue`
-                        );
-                default:
-                    return null;
-            }
-        },
-    },
-    methods: {
-        closeQuickLookEvent() {
-            this.$emit("close-quick-look-event");
-        },
-    },
-};
+            return iconForMimeType(item.file_properties.file_type);
+        default:
+            return ICON_EMPTY;
+    }
+});
+
+const quick_look_component_action = computed(() => {
+    if (!currently_previewed_item.value) {
+        return null;
+    }
+    switch (currently_previewed_item.value.type) {
+        case TYPE_FILE:
+            return () => import(/* webpackChunkName: "quick-look-file" */ `./QuickLookFile.vue`);
+        case TYPE_WIKI:
+            return () => import(/* webpackChunkName: "quick-look-wiki" */ `./QuickLookWiki.vue`);
+        case TYPE_FOLDER:
+            return () =>
+                import(/* webpackChunkName: "quick-look-folder" */ `./QuickLookFolder.vue`);
+        case TYPE_LINK:
+            return () => import(/* webpackChunkName: "quick-look-link" */ `./QuickLookLink.vue`);
+        case TYPE_EMPTY:
+        case TYPE_EMBEDDED:
+            return () =>
+                import(
+                    /* webpackChunkName: "quick-look-empty-embedded" */ `./QuickLookEmptyOrEmbedded.vue`
+                );
+        default:
+            return null;
+    }
+});
+
+function closeQuickLookEvent(): void {
+    emit("close-quick-look-event");
+}
 </script>
