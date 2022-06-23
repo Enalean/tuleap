@@ -42,5 +42,12 @@ module.exports = {
     resolve: {
         extensions: [".ts", ".js", ".vue"],
     },
-    plugins: [new VueLoaderPlugin(), ...webpack_configurator.getCSSExtractionPlugins()],
+    resolveLoader: {
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
+    plugins: [
+        new VueLoaderPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
+        require("@tuleap/po-gettext-plugin").default.webpack(),
+    ],
 };

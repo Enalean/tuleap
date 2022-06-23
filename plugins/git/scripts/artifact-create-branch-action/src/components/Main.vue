@@ -21,7 +21,9 @@
     <div class="git-tracker-create-branch-modal">
         <div ref="root_element" class="tlp-modal git-tracker-create-branch-modal" role="dialog">
             <div class="tlp-modal-header">
-                <h1 class="tlp-modal-title">Create branch on a Git repository</h1>
+                <h1 class="tlp-modal-title">
+                    {{ $gettext("Create branch on a Git repository") }}
+                </h1>
                 <button
                     class="tlp-modal-close"
                     type="button"
