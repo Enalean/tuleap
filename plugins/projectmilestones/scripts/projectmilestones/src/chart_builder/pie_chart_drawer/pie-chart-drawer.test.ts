@@ -17,17 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ChartPropsWhithRadius,
-    DataPieChart,
-} from "../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWithRadius, DataPieChart } from "@tuleap/pie-chart";
 import { getDataToDisplay, getSumOfValue, replaceValue, createPieChart } from "./pie-chart-drawer";
 import { select } from "d3-selection";
-import { StatisticsPieChart } from "../../../../../../../src/scripts/charts-builders/statistics-pie-chart";
+import { StatisticsPieChart } from "@tuleap/pie-chart";
 
 const mock_init = jest.fn();
 
-jest.mock("../../../../../../../src/scripts/charts-builders/statistics-pie-chart", () => {
+jest.mock("@tuleap/pie-chart", () => {
     return {
         StatisticsPieChart: jest.fn().mockImplementation(() => {
             return {
@@ -162,7 +159,7 @@ describe("PieChartDrawer", () => {
         return data;
     }
 
-    function getChartProps(): ChartPropsWhithRadius {
+    function getChartProps(): ChartPropsWithRadius {
         return {
             radius: 120,
             height: 120,

@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
+  '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
@@ -30,6 +31,7 @@ specifiers:
 dependencies:
   '@tuleap/autocomplete-for-select2': link:../../lib/frontend/autocomplete-for-select2
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
+  '@tuleap/pie-chart': link:../../lib/frontend/pie-chart
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init

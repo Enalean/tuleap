@@ -56,15 +56,3 @@ export interface DaysDisplayingBurndownData {
     points_with_date: Array<{ date: string }>;
     start_date: string;
 }
-
-export interface ChartPropsWhithRadius {
-    width: number;
-    height: number;
-    radius: number;
-}
-
-export interface DataPieChart {
-    key: string;
-    label: string;
-    count: number;
-}

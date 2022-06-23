@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { StatisticsPieChart } from "../charts-builders/statistics-pie-chart.js";
-import type { ChartPropsWhithRadius } from "../charts-builders/type";
+import { StatisticsPieChart } from "@tuleap/pie-chart";
+import type { ChartPropsWithRadius } from "@tuleap/pie-chart";
 
 document.addEventListener("DOMContentLoaded", () => {
     const PIE_CHART_MAX_HEIGHT = 250;
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function getSizes(element: HTMLElement): ChartPropsWhithRadius {
+    function getSizes(element: HTMLElement): ChartPropsWithRadius {
         const client_rect_width = element.getBoundingClientRect().width,
             width = client_rect_width / 2,
             height =

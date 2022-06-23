@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { StatisticsPieChart } from "charts-builders/statistics-pie-chart.js";
+import { StatisticsPieChart } from "@tuleap/pie-chart";
 
 document.addEventListener("DOMContentLoaded", () => {
     const PIE_CHART_MAX_HEIGHT = 250;
