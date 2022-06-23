@@ -528,9 +528,6 @@ msgstr "Impossible de supprimer le miroir"
 msgid "Failed to update mirror"
 msgstr "Impossible de mettre à jour le miroir"
 
-msgid "Feature not yet available"
-msgstr "La fonctionnalité n'est pas encore disponible"
-
 msgid "Files"
 msgstr "Fichiers"
 

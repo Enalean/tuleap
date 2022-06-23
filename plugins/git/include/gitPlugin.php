@@ -2890,7 +2890,12 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
 
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
-        $button_fetcher = new CreateBranchButtonFetcher();
+        $button_fetcher = new CreateBranchButtonFetcher(
+            new \Tuleap\Layout\JavascriptAsset(
+                $this->getAssets(),
+                'git-artifact-create-branch.js'
+            )
+        );
 
         $button_action = $button_fetcher->getActionButton();
 
@@ -2899,5 +2904,13 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         }
 
         $event->addAction($button_action);
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../frontend-assets',
+            '/assets/git'
+        );
     }
 }

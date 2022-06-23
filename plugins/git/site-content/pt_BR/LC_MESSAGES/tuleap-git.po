@@ -467,9 +467,6 @@ msgstr ""
 msgid "Failed to update mirror"
 msgstr ""
 
-msgid "Feature not yet available"
-msgstr ""
-
 msgid "Files"
 msgstr "Arquivos"
 
