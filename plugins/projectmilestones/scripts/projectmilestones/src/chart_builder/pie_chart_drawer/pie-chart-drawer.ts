@@ -17,18 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    ChartPropsWhithRadius,
-    DataPieChart,
-} from "../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWithRadius, DataPieChart } from "@tuleap/pie-chart";
 import { select } from "d3-selection";
-import { StatisticsPieChart } from "../../../../../../../src/scripts/charts-builders/statistics-pie-chart";
+import { StatisticsPieChart } from "@tuleap/pie-chart";
 
 const MIN_ARC_TO_DISPLAY = Math.PI / (10 * Math.PI) / 2;
 
 export function createPieChart(
     chart_container: HTMLElement,
-    pie_chart_element_sizes: ChartPropsWhithRadius,
+    pie_chart_element_sizes: ChartPropsWithRadius,
     data_stat_campaign: DataPieChart[]
 ): void {
     const data_to_display = getDataToDisplay(data_stat_campaign);

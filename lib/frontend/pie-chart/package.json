@@ -1,0 +1,28 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/pie-chart",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/pie-chart.es.js",
+  "main": "dist/pie-chart.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/pie-chart.es.js",
+      "require": "./dist/pie-chart.umd.js"
+    }
+  },
+  "dependencies": {
+    "d3-selection": "3.0.0",
+    "d3-shape": "3.0.1",
+    "d3-transition": "3.0.1"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

@@ -37,14 +37,6 @@ module.exports = [
             ckeditor4: "CKEDITOR",
             tuleap: "tuleap",
         },
-        resolve: {
-            alias: {
-                "d3-selection": path.resolve(__dirname, "./node_modules/d3-selection"),
-                "d3-shape": path.resolve(__dirname, "./node_modules/d3-shape"),
-                "d3-transition": path.resolve(__dirname, "./node_modules/d3-transition"),
-                "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
-            },
-        },
         module: {
             rules: [
                 webpack_configurator.rule_po_files,

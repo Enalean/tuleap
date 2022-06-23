@@ -13,6 +13,7 @@ specifiers:
   '@tuleap/keyboard-shortcuts': link:../lib/frontend/keyboard-shortcuts
   '@tuleap/list-picker': link:../lib/frontend/list-picker
   '@tuleap/mention': link:../lib/frontend/mention
+  '@tuleap/pie-chart': link:../lib/frontend/pie-chart
   '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
   '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
   '@tuleap/tlp-dropdown': link:../lib/frontend/tlp-dropdown
@@ -44,7 +45,6 @@ specifiers:
   d3-scale: ^4.0.0
   d3-selection: ^3.0.0
   d3-shape: ^3.0.1
-  d3-transition: ^3.0.1
   dompurify: ^2.3.6
   dragula: ^3.7.2
   jquery: ^3.6.0
@@ -79,6 +79,7 @@ dependencies:
   '@tuleap/keyboard-shortcuts': link:../lib/frontend/keyboard-shortcuts
   '@tuleap/list-picker': link:../lib/frontend/list-picker
   '@tuleap/mention': link:../lib/frontend/mention
+  '@tuleap/pie-chart': link:../lib/frontend/pie-chart
   '@tuleap/project-privacy-helper': link:../lib/frontend/project-privacy-helper
   '@tuleap/project-sidebar-internal': link:../lib/frontend/project-sidebar-internal
   '@tuleap/tlp-dropdown': link:../lib/frontend/tlp-dropdown
@@ -90,13 +91,12 @@ dependencies:
   '@tuleap/tooltip': link:../lib/frontend/tooltip
   '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   ckeditor4: 4.18.0
-  d3-array: 3.0.1
+  d3-array: 3.1.6
   d3-axis: 3.0.0
   d3-interpolate: 3.0.1
   d3-scale: 4.0.0
   d3-selection: 3.0.0
-  d3-shape: 3.0.1
-  d3-transition: 3.0.1_d3-selection@3.0.0
+  d3-shape: 3.1.0
   dompurify: 2.3.6
   dragula: 3.7.3
   marked: 4.0.10
@@ -119,9 +119,9 @@ devDependencies:
   '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
-  '@types/d3-scale': 3.3.0
-  '@types/d3-selection': 2.0.0
-  '@types/d3-shape': 2.1.0
+  '@types/d3-scale': 3.3.2
+  '@types/d3-selection': 2.0.1
+  '@types/d3-shape': 2.1.3
   '@types/dompurify': 2.3.2
   '@types/jquery': 3.5.5
   '@types/mermaid': 8.2.7
@@ -209,28 +209,28 @@ packages:
     resolution: {integrity: sha512-dcOPCXM0Cr5Z0i6eF/aW5LvECrS+cdl2Gi7lU+rEUNWby0w9Yl6mBubjrs29OVAducpuZjB4mfDayE+o4/gGdQ==}
     dev: true
 
-  /@types/d3-path/1.0.9:
-    resolution: {integrity: sha512-NaIeSIBiFgSC6IGUBjZWcscUJEq7vpVu7KthHN8eieTV9d9MqkSOZLH4chq1PmcKy06PNe3axLeKmRIyxJ+PZQ==}
+  /@types/d3-path/2.0.2:
+    resolution: {integrity: sha512-3YHpvDw9LzONaJzejXLOwZ3LqwwkoXb9LI2YN7Hbd6pkGo5nIlJ09ul4bQhBN4hQZJKmUpX8HkVqbzgUKY48cg==}
     dev: true
 
-  /@types/d3-scale/3.3.0:
-    resolution: {integrity: sha512-rJj4nh/71Rw5bZgTF5cA5rW60WT3x8RbivEsScgQ66sqFnYZRmuyKSayyo7JiP+c9KJJiQhY9JXBmY16FZa3+g==}
+  /@types/d3-scale/3.3.2:
+    resolution: {integrity: sha512-gGqr7x1ost9px3FvIfUMi5XA/F/yAf4UkUDtdQhpH92XCT0Oa7zkkRzY61gPVJq+DxpHn/btouw5ohWkbBsCzQ==}
     dependencies:
-      '@types/d3-time': 2.1.0
+      '@types/d3-time': 2.1.1
     dev: true
 
-  /@types/d3-selection/2.0.0:
-    resolution: {integrity: sha512-EF0lWZ4tg7oDFg4YQFlbOU3936e3a9UmoQ2IXlBy1+cv2c2Pv7knhKUzGlH5Hq2sF/KeDTH1amiRPey2rrLMQA==}
+  /@types/d3-selection/2.0.1:
+    resolution: {integrity: sha512-3mhtPnGE+c71rl/T5HMy+ykg7migAZ4T6gzU0HxpgBFKcasBrSnwRbYV1/UZR6o5fkpySxhWxAhd7yhjj8jL7g==}
     dev: true
 
-  /@types/d3-shape/2.1.0:
-    resolution: {integrity: sha512-xTMEs8eITRksXclcVxMHIONRdyjj2TjDIwO4XFOPTVBNK9/oC4ZOhUbvTz1IpcsEsS/mClwuulP+OoawSAbSGA==}
+  /@types/d3-shape/2.1.3:
+    resolution: {integrity: sha512-HAhCel3wP93kh4/rq+7atLdybcESZ5bRHDEZUojClyZWsRuEMo3A52NGYJSh48SxfxEU6RZIVbZL2YFZ2OAlzQ==}
     dependencies:
-      '@types/d3-path': 1.0.9
+      '@types/d3-path': 2.0.2
     dev: true
 
-  /@types/d3-time/2.1.0:
-    resolution: {integrity: sha512-qVCiT93utxN0cawScyQuNx8H82vBvZXSClZfgOu3l3dRRlRO6FjKEZlaPgXG9XUFjIAOsA4kAJY101vobHeJLQ==}
+  /@types/d3-time/2.1.1:
+    resolution: {integrity: sha512-9MVYlmIgmRR31C5b4FVSWtuMmBHh2mOWQYfl7XAYOa8dsnb7iEmUmRSWSFgXFtkjxO65d7hTUHQC+RhR/9IWFg==}
     dev: true
 
   /@types/dompurify/2.3.2:
@@ -461,13 +461,6 @@ packages:
     resolution: {integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==}
     dev: false
 
-  /d3-array/3.0.1:
-    resolution: {integrity: sha512-l3Bh5o8RSoC3SBm5ix6ogaFW+J6rOUm42yOtZ2sQPCEvCqUMepeX7zgrlLLGIemxgOyo9s2CsWEidnLv5PwwRw==}
-    engines: {node: '>=12'}
-    dependencies:
-      internmap: 2.0.1
-    dev: false
-
   /d3-array/3.1.6:
     resolution: {integrity: sha512-DCbBBNuKOeiR9h04ySRBMW52TFVc91O9wJziuyXw6Ztmy8D3oZbmCkOO3UHKC7ceNJsN2Mavo9+vwV8EAEUXzA==}
     engines: {node: '>=12'}
@@ -521,10 +514,6 @@ packages:
 
   /d3-collection/1.0.7:
     resolution: {integrity: sha512-ii0/r5f4sjKNTfh84Di+DpztYwqKhEyUlKoPrzUFfeSkWxjW49xU2QzO9qrPrNkpdI0XJkfzvmTu8V2Zylln6A==}
-    dev: false
-
-  /d3-color/1.0.3:
-    resolution: {integrity: sha1-vHZD/KjlOoNH4vva/6I2eWtYUJs=}
     dev: false
 
   /d3-color/1.4.1:
@@ -680,7 +669,7 @@ packages:
     resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
     engines: {node: '>=12'}
     dependencies:
-      d3-color: 1.0.3
+      d3-color: 3.1.0
     dev: false
 
   /d3-path/1.0.9:
@@ -749,11 +738,11 @@ packages:
     resolution: {integrity: sha512-foHQYKpWQcyndH1CGoHdUC4PECxTxonzwwBXGT8qu+Drb1FIc6ON6dG2P5f4hRRMkLiIKeWK7iFtdznDUrnuPQ==}
     engines: {node: '>=12'}
     dependencies:
-      d3-array: 3.0.1
-      d3-format: 1.4.5
+      d3-array: 3.1.6
+      d3-format: 3.1.0
       d3-interpolate: 3.0.1
       d3-time: 3.0.0
-      d3-time-format: 2.3.0
+      d3-time-format: 4.1.0
     dev: false
 
   /d3-selection/1.4.2:
@@ -767,13 +756,6 @@ packages:
 
   /d3-shape/1.3.7:
     resolution: {integrity: sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==}
-    dependencies:
-      d3-path: 1.0.9
-    dev: false
-
-  /d3-shape/3.0.1:
-    resolution: {integrity: sha512-HNZNEQoDhuCrDWEc/BMbF/hKtzMZVoe64TvisFLDp2Iyj0UShB/E6/lBsLlJTfBMbYgftHj90cXJ0SEitlE6Xw==}
-    engines: {node: '>=12'}
     dependencies:
       d3-path: 1.0.9
     dev: false
@@ -806,7 +788,7 @@ packages:
     resolution: {integrity: sha512-zmV3lRnlaLI08y9IMRXSDshQb5Nj77smnfpnd2LrBa/2K281Jijactokeak14QacHs/kKq0AQ121nidNYlarbQ==}
     engines: {node: '>=12'}
     dependencies:
-      d3-array: 3.0.1
+      d3-array: 3.1.6
     dev: false
 
   /d3-timer/1.0.10:
@@ -835,12 +817,12 @@ packages:
     peerDependencies:
       d3-selection: 2 - 3
     dependencies:
-      d3-color: 1.0.3
-      d3-dispatch: 1.0.6
-      d3-ease: 1.0.7
+      d3-color: 3.1.0
+      d3-dispatch: 3.0.1
+      d3-ease: 3.0.1
       d3-interpolate: 3.0.1
       d3-selection: 3.0.0
-      d3-timer: 1.0.10
+      d3-timer: 3.0.1
     dev: false
 
   /d3-voronoi/1.1.4:
@@ -1165,11 +1147,6 @@ packages:
   /ini/1.3.8:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
     dev: true
-
-  /internmap/2.0.1:
-    resolution: {integrity: sha512-Ujwccrj9FkGqjbY3iVoxD1VV+KdZZeENx0rphrtzmRXbFvkFO88L80BL/zeSIguX/7T+y8k04xqtgWgS5vxwxw==}
-    engines: {node: '>=12'}
-    dev: false
 
   /internmap/2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
