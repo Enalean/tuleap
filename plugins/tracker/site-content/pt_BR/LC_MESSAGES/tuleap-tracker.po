@@ -1423,9 +1423,6 @@ msgstr ""
 msgid "Global rules are not respected"
 msgstr ""
 
-msgid "Go back to semantic overview"
-msgstr ""
-
 msgid "Go see this tracker"
 msgstr ""
 
@@ -2318,6 +2315,9 @@ msgstr ""
 
 msgid "Save configuration"
 msgstr "Salvar configuração"
+
+msgid "Save done values"
+msgstr ""
 
 msgid "Save new report"
 msgstr ""
@@ -3495,9 +3495,6 @@ msgid "Tracker permissions"
 msgstr ""
 
 msgid "Tracker renderer"
-msgstr ""
-
-msgid "Tracker semantic done"
 msgstr ""
 
 msgid "Tracker service is disabled."

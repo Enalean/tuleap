@@ -39,6 +39,7 @@ use Tracker_Semantic;
 use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Layout\IncludeAssets;
 use XML_SimpleXMLCDATAFactory;
 
 class SemanticDone extends Tracker_Semantic
@@ -112,7 +113,7 @@ class SemanticDone extends Tracker_Semantic
 
     public function fetchForSemanticsHomepage(): string
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/done-semantic');
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');
 
         $semantic_status_field = $this->semantic_status->getField();
         $selected_values       = [];
@@ -134,19 +135,13 @@ class SemanticDone extends Tracker_Semantic
         return $renderer->renderToString('done-intro', $presenter);
     }
 
-    /**
-     * Display the form to let the admin change the semantic
-     *
-     * @param Tracker_SemanticManager $semantic_manager The semantic manager
-     * @param TrackerManager $tracker_manager The tracker manager
-     * @param Codendi_Request $request The request
-     * @param PFUser $current_user The user who made the request
-     *
-     * @return void
-     */
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
-        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $this->tracker->displayAdminItemHeaderBurningParrot(
+            $tracker_manager,
+            'editsemantic',
+            $this->getLabel()
+        );
 
         $semantic_status_field = $this->semantic_status->getField();
         $closed_values         = [];
@@ -157,17 +152,22 @@ class SemanticDone extends Tracker_Semantic
 
         $csrf = $this->getCSRFSynchronizerToken();
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/done-semantic');
+        $assets = new IncludeAssets(__DIR__ . '/../../../../../frontend-assets', '/assets/trackers');
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            $assets->getFileURL("tracker-semantic-done.js")
+        );
+        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');
         $presenter = new SemanticDoneAdminPresenter(
             $csrf,
             $this->tracker,
             $closed_values,
             $this->getUrl(),
             $this->getAdminSemanticUrl(),
-            $semantic_status_field
+            count($this->getDoneValuesIds()) > 0,
+            $semantic_status_field,
         );
 
-        $renderer->renderToPage('done-admin', $presenter);
+        $renderer->renderToPage('admin-done', $presenter);
 
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
@@ -258,22 +258,20 @@ class SemanticDone extends Tracker_Semantic
      */
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
+        $tracker_id = $this->tracker->getId();
         if ($request->exist('submit')) {
             $csrf = $this->getCSRFSynchronizerToken();
             $csrf->check();
 
             $semantic_status_field = $this->semantic_status->getField();
 
-            $tracker_id = $this->tracker->getId();
-            $values     = $request->get('done_values');
+            $values = $request->get('done_values');
 
             if (! $semantic_status_field) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     dgettext('tuleap-tracker', 'Semantic status is not defined.')
                 );
-            } elseif (! $values) {
-                $this->clearValuesForTracker($tracker_id);
             } elseif (isset($values[$tracker_id]) && is_array($values[$tracker_id])) {
                 $this->updateValuesForTracker($semantic_status_field, $tracker_id, $values[$tracker_id]);
             } else {
@@ -282,6 +280,8 @@ class SemanticDone extends Tracker_Semantic
                     dgettext('tuleap-tracker', 'The request is not valid.')
                 );
             }
+        } elseif ($request->exist('delete')) {
+            $this->clearValuesForTracker($tracker_id);
         }
 
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);

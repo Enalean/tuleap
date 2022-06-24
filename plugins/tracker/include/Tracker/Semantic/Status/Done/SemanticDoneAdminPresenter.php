@@ -26,59 +26,23 @@ use CSRFSynchronizerToken;
 use Tracker;
 use Tracker_FormElement_Field;
 
-class SemanticDoneAdminPresenter
+final class SemanticDoneAdminPresenter
 {
-    /**
-     * @var bool
-     */
-    public $semantic_status_is_defined;
-
-    /**
-     * @var int
-     */
-    public $tracker_id;
-
-    /**
-     * @var array
-     */
-    public $closed_values;
-
-    /**
-     * @var string
-     */
-    public $go_back_url;
-
-    /**
-     * @var bool
-     */
-    public $has_closed_values_selectable;
-
-    /**
-     * @var string
-     */
-    public $form_url;
-
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
+    public bool $semantic_status_is_defined;
+    public int $tracker_id;
+    public bool $has_closed_values_selectable;
 
     public function __construct(
-        CSRFSynchronizerToken $csrf,
-        Tracker $tracker,
-        array $closed_values,
-        string $form_url,
-        string $go_back_url,
+        public CSRFSynchronizerToken $csrf_token,
+        private Tracker $tracker,
+        public array $closed_values,
+        public string $form_url,
+        public string $tracker_admin_semantic_url,
+        public bool $has_done_values,
         ?Tracker_FormElement_Field $semantic_status_field = null,
     ) {
-        $this->semantic_status_is_defined = ($semantic_status_field !== null);
-        $this->tracker_id                 = $tracker->getId();
-        $this->closed_values              = $closed_values;
-
+        $this->semantic_status_is_defined   = ($semantic_status_field !== null);
+        $this->tracker_id                   = $tracker->getId();
         $this->has_closed_values_selectable = count($this->closed_values) > 0;
-
-        $this->go_back_url = $go_back_url;
-        $this->form_url    = $form_url;
-        $this->csrf_token  = $csrf;
     }
 }
