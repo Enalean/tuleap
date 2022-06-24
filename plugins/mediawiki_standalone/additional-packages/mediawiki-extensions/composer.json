@@ -71,12 +71,13 @@
     "mediawiki/math": "^1.35.6",
     "mediawiki/labeled-section-transclusion": "^1.35.6",
     "mediawiki/pdf-book": "^2.0.5",
-    "mediawiki/tuleap-integration": "dev-master#4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec",
-    "mediawiki/tuleap-wiki-farm": "^1.0.0-beta",
-    "mediawiki/tuleap-skin": "dev-master#d4e1933388093b464b72b523e038a233b8282307"
+    "mediawiki/tuleap-integration": "dev-master#e4acab5488f80969fea1375f92a18e108ab5214d",
+    "mediawiki/tuleap-wiki-farm": "dev-master#0c1261fef5678d173dbd52affadd94dc0d35caa2",
+    "mediawiki/tuleap-skin": "dev-master#bdb67177fcedca87c805cf225692fe36bd07b133"
   },
   "replace": {
-    "guzzlehttp/guzzle": "^6.0 || ^7.0"
+    "guzzlehttp/guzzle": "^6.0 || ^7.0",
+    "symfony/polyfill-php80": "^1.25.5"
   },
   "config": {
     "sort-packages": true,

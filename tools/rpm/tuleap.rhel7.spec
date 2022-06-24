@@ -818,9 +818,6 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 
 ## Plugin mediawiki_standalone
 %{__install} plugins/mediawiki_standalone/etc/systemd/mediawiki-tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/projects
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/images
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki_standalone/cache
 
 #
 ## Plugin proftpd
@@ -1322,9 +1319,6 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/mediawiki_standalone
 %{_unitdir}/mediawiki-tuleap-php-fpm.service
-%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/projects
-%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/images
-%dir %attr(0750,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki_standalone/cache
 
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)

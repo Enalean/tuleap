@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73a300aaf58435706dfc0e2527e99a91",
+    "content-hash": "0c6bba8a3eaa4b87b03cb09bec7c9162",
     "packages": [
         {
             "name": "composer/installers",
@@ -329,12 +329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec"
+                "reference": "e4acab5488f80969fea1375f92a18e108ab5214d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec",
-                "reference": "4ac78c8b06a5eba97ff0563d3d9c25f6d5f5cbec",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/e4acab5488f80969fea1375f92a18e108ab5214d",
+                "reference": "e4acab5488f80969fea1375f92a18e108ab5214d",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
             "support": {
                 "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/master"
             },
-            "time": "2022-06-01T08:34:43+00:00"
+            "time": "2022-06-22T14:04:43+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
@@ -385,12 +385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "d4e1933388093b464b72b523e038a233b8282307"
+                "reference": "bdb67177fcedca87c805cf225692fe36bd07b133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/d4e1933388093b464b72b523e038a233b8282307",
-                "reference": "d4e1933388093b464b72b523e038a233b8282307",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/bdb67177fcedca87c805cf225692fe36bd07b133",
+                "reference": "bdb67177fcedca87c805cf225692fe36bd07b133",
                 "shasum": ""
             },
             "require": {
@@ -398,7 +398,7 @@
                 "mwstake/mediawiki-component-thirdpartyresources": "~1.0"
             },
             "require-dev": {
-                "mediawiki/mediawiki-codesniffer": "31.0.0",
+                "mediawiki/mediawiki-codesniffer": "38.0.0",
                 "mediawiki/minus-x": "1.1.0",
                 "php-parallel-lint/php-console-highlighter": "0.5.0",
                 "php-parallel-lint/php-parallel-lint": "1.2.0"
@@ -425,20 +425,20 @@
             "support": {
                 "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/master"
             },
-            "time": "2022-06-08T10:32:27+00:00"
+            "time": "2022-06-21T06:11:50+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
-            "version": "1.0.0-beta",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "4169d923c6c2c08f03b6efa2d5feab491b228e9c"
+                "reference": "0c1261fef5678d173dbd52affadd94dc0d35caa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/4169d923c6c2c08f03b6efa2d5feab491b228e9c",
-                "reference": "4169d923c6c2c08f03b6efa2d5feab491b228e9c",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/0c1261fef5678d173dbd52affadd94dc0d35caa2",
+                "reference": "0c1261fef5678d173dbd52affadd94dc0d35caa2",
                 "shasum": ""
             },
             "require": {
@@ -447,11 +447,12 @@
                 "symfony/process": "~5"
             },
             "require-dev": {
-                "jakub-onderka/php-console-highlighter": "0.4.0",
-                "jakub-onderka/php-parallel-lint": "1.0.0",
-                "mediawiki/mediawiki-codesniffer": "29.0.0",
-                "mediawiki/minus-x": "1.0.0"
+                "mediawiki/mediawiki-codesniffer": "39.0.0",
+                "mediawiki/minus-x": "1.1.1",
+                "php-parallel-lint/php-console-highlighter": "1.0.0",
+                "php-parallel-lint/php-parallel-lint": "1.3.2"
             },
+            "default-branch": true,
             "type": "mediawiki-extension",
             "extra": {
                 "installer-name": "TuleapWikiFarm"
@@ -465,17 +466,20 @@
                 "test": [
                     "parallel-lint . --exclude vendor --exclude node_modules",
                     "minus-x check .",
-                    "phpcs -sp"
+                    "@phpcs"
                 ],
                 "fix": [
                     "minus-x fix .",
                     "phpcbf"
+                ],
+                "phpcs": [
+                    "phpcs -sp"
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/1.0.0-beta"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/master"
             },
-            "time": "2022-04-13T07:04:45+00:00"
+            "time": "2022-06-23T07:04:06+00:00"
         },
         {
             "name": "mwstake/mediawiki-component-thirdpartyresources",
@@ -689,16 +693,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.25.0",
+            "version": "v1.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "30885182c981ab175d4d034db0f6f469898070ab"
+                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/30885182c981ab175d4d034db0f6f469898070ab",
-                "reference": "30885182c981ab175d4d034db0f6f469898070ab",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
+                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
                 "shasum": ""
             },
             "require": {
@@ -713,7 +717,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -751,7 +755,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.25.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -767,90 +771,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-20T20:35:02+00:00"
-        },
-        {
-            "name": "symfony/polyfill-php80",
-            "version": "v1.25.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/4407588e0d3f1f52efb65fbe92babe41f37fe50c",
-                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.23-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php80\\": ""
-                },
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ion Bazan",
-                    "email": "ion.bazan@gmail.com"
-                },
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.25.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-03-04T08:16:47+00:00"
+            "time": "2022-05-24T11:49:31+00:00"
         },
         {
             "name": "symfony/process",
@@ -920,7 +841,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "mediawiki/tuleap-integration": 20,
-        "mediawiki/tuleap-wiki-farm": 10,
+        "mediawiki/tuleap-wiki-farm": 20,
         "mediawiki/tuleap-skin": 20
     },
     "prefer-stable": false,

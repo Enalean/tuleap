@@ -92,7 +92,6 @@ final class CreateInstance
                 HTTPFactoryBuilder::streamFactory()->createStream(
                     \json_encode(
                         [
-                            'adminpass' => 'welcome400',
                             'project_id' => (int) $this->project->getID(),
                         ],
                         JSON_THROW_ON_ERROR
