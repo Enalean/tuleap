@@ -36,10 +36,11 @@
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
-
-        <p v-if="error_message" class="feedback_error branch-creation-error">
-            {{ error_message }}
-        </p>
+        <div v-if="error_message" class="tlp-modal-feedback">
+            <div class="feedback_error">
+                {{ error_message }}
+            </div>
+        </div>
         <div class="tlp-modal-body">
             <div class="artifact-create-gitlab-branch-form-block">
                 <label for="artifact-create-gitlab-branch-select-integration" v-translate>
@@ -131,6 +132,7 @@
 </template>
 
 <script setup lang="ts">
+import type { GitLabIntegrationCreatedBranchInformation } from "../api/rest-querier";
 import { postGitlabBranch, postGitlabMergeRequest } from "../api/rest-querier";
 import * as codendi from "codendi";
 import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
@@ -139,7 +141,10 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { useGettext } from "vue3-gettext";
 import { okAsync } from "neverthrow";
-import { isFault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { BranchCreationFault } from "../BranchCreationFault";
+import { MergeRequestCreationFault } from "../MergeRequestCreationFault";
 
 const { interpolate, $gettext } = useGettext();
 
@@ -201,12 +206,31 @@ const update_button_label = computed((): string =>
         : $gettext("Create branch")
 );
 
-async function onClickCreateBranch(): Promise<void> {
+const createMergeRequest = (
+    integration: GitlabIntegrationWithDefaultBranch,
+    branch: GitLabIntegrationCreatedBranchInformation
+): ResultAsync<void, Fault> =>
+    postGitlabMergeRequest(integration.id, props.artifact_id, branch.branch_name)
+        .map(() => {
+            codendi.feedback.log(
+                "info",
+                $gettext("The associated merge request has been created.")
+            );
+        })
+        .mapErr(MergeRequestCreationFault.fromFault);
+
+const isBranchCreationFault = (fault: Fault): boolean =>
+    "isBranchCreationFault" in fault && fault.isBranchCreationFault() === true;
+const isMergeRequestCreationFault = (fault: Fault): boolean =>
+    "isMergeRequestCreationFault" in fault && fault.isMergeRequestCreationFault() === true;
+
+function onClickCreateBranch(): Promise<void> {
     const integration = selected.value;
     is_creating_branch.value = true;
-    await postGitlabBranch(integration.id, props.artifact_id, reference.value)
+    return postGitlabBranch(integration.id, props.artifact_id, reference.value)
+        .mapErr(BranchCreationFault.fromFault)
         .andThen((branch) => {
-            let success_message = interpolate(
+            const success_message = interpolate(
                 $gettext(
                     'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
                 ),
@@ -223,48 +247,32 @@ async function onClickCreateBranch(): Promise<void> {
             if (!must_create_gitlab_mr.value) {
                 return okAsync("irrelevant return");
             }
-            return postGitlabMergeRequest(
-                integration.id,
-                props.artifact_id,
-                branch.branch_name
-            ).map(() => {
-                codendi.feedback.log(
-                    "info",
-                    $gettext("The associated merge request has been created.")
-                );
-            });
+            return createMergeRequest(integration, branch);
         })
         .match(
             () => {
                 is_creating_branch.value = false;
                 modal?.hide();
             },
-            async (promise_or_fault) => {
+            (fault) => {
                 is_creating_branch.value = false;
-                if (isFault(promise_or_fault)) {
+                if (isBranchCreationFault(fault)) {
+                    error_message.value = interpolate(
+                        $gettext("An error occurred while creating %{ branch_name }: %{ error }"),
+                        { branch_name: props.branch_name, error: String(fault) }
+                    );
+                    return;
+                }
+                if (isMergeRequestCreationFault(fault)) {
                     error_message.value = interpolate(
                         $gettext(
                             "An error occurred while creating the associated merge request: %{ error }"
                         ),
-                        { error: String(promise_or_fault) }
+                        { error: String(fault) }
                     );
                     return;
                 }
-                const error = await promise_or_fault;
-                if (
-                    Object.prototype.hasOwnProperty.call(error, "i18n_error_message") &&
-                    error.i18n_error_message
-                ) {
-                    error_message.value = error.i18n_error_message;
-                } else {
-                    error_message.value = interpolate(
-                        $gettext(
-                            "An error occurred while creating %{ branch_name }, please try again"
-                        ),
-                        { branch_name: props.branch_name }
-                    );
-                    throw error.error_message;
-                }
+                error_message.value = String(fault);
             }
         );
 }
@@ -281,9 +289,5 @@ async function onClickCreateBranch(): Promise<void> {
 
 .artifact-create-gitlab-merge-request {
     margin: var(--tlp-medium-spacing) 0 0;
-}
-
-.branch-creation-error {
-    margin: var(--tlp-medium-spacing);
 }
 </style>

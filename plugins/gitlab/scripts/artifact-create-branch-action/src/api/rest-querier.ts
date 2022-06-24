@@ -17,62 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, postJSON } from "@tuleap/fetch-result";
+import { getJSON, postJSON, decodeJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
-import { FetchWrapperError, post } from "@tuleap/tlp-fetch";
-import { ResultAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
 
-export interface GitLabRestError {
-    readonly error_message?: unknown;
-    readonly i18n_error_message?: string;
-}
-
-function extractI18NErrorFromRestError(err: unknown): Promise<GitLabRestError> {
-    const default_error: GitLabRestError = {
-        error_message: err,
-    };
-
-    if (!(err instanceof FetchWrapperError)) {
-        return Promise.resolve(default_error);
-    }
-
-    return ResultAsync.fromPromise(err.response.json(), () => default_error).match(
-        (response_json) => {
-            if (Object.prototype.hasOwnProperty.call(response_json.error, "i18n_error_message")) {
-                return { i18n_error_message: response_json.error.i18n_error_message };
-            }
-
-            return { error_message: response_json.error };
-        },
-        () => default_error
-    );
-}
-
-export function postGitlabBranch(
+export const postGitlabBranch = (
     gitlab_integration_id: number,
     artifact_id: number,
     reference: string
-): ResultAsync<GitLabIntegrationCreatedBranchInformation, Promise<GitLabRestError>> {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const body = JSON.stringify({
+): ResultAsync<GitLabIntegrationCreatedBranchInformation, Fault> =>
+    postJSON("/api/v1/gitlab_branch", {
         gitlab_integration_id: gitlab_integration_id,
         artifact_id: artifact_id,
         reference: reference,
-    });
-
-    return ResultAsync.fromPromise(
-        post("/api/v1/gitlab_branch", {
-            headers,
-            body,
-        }).then((response) => response.json()),
-        (err: unknown): Promise<GitLabRestError> => {
-            return extractI18NErrorFromRestError(err);
-        }
-    );
-}
+    }).andThen((response) => decodeJSON<GitLabIntegrationCreatedBranchInformation>(response));
 
 export const postGitlabMergeRequest = (
     gitlab_integration_id: number,

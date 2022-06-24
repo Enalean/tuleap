@@ -12,10 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.1\n"
 
-msgid "An error occurred while creating %{ branch_name }, please try again"
+msgid "An error occurred while creating %{ branch_name }: %{ error }"
 msgstr ""
-"Une erreur est survenue pendant la création de %{ branch_name }, veuillez "
-"réessayer"
+"Une erreur est survenue pendant la création de %{ branch_name } : %{ error }"
 
 msgid ""
 "An error occurred while creating the associated merge request: %{ error }"

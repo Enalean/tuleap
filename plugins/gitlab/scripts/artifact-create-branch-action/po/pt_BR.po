@@ -6,7 +6,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "An error occurred while creating %{ branch_name }, please try again"
+msgid "An error occurred while creating %{ branch_name }: %{ error }"
 msgstr ""
 
 msgid ""
