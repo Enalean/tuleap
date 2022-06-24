@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-modal";
-
 .contact-support-modal > .tlp-modal-body {
     border-radius: 0 0 var(--tlp-x-large-radius) var(--tlp-x-large-radius);
     background: var(--tlp-background-color);
