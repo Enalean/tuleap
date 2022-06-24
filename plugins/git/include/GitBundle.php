@@ -25,6 +25,7 @@ use GitRepository;
 use Psr\Log\LoggerInterface;
 use System_Command;
 use System_Command_CommandException;
+use Tuleap\Git\PathJoinUtil;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 
 class GitBundle
@@ -93,8 +94,7 @@ class GitBundle
         $dump_path_on_filesystem,
         ArchiveInterface $archive,
     ) {
-        $command = "sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-create-bundle.sh " . escapeshellarg($repository_path) . " " . escapeshellarg($file_name) .
-            " && mv " . escapeshellarg($repository_path . "/" . $file_name) . " " . escapeshellarg($dump_path_on_filesystem);
+        $command = "umask 77 && " . \Git_Exec::getGitCommand() . " --git-dir=" . escapeshellarg($repository_path) . " bundle create " . escapeshellarg(PathJoinUtil::unixPathJoin([$dump_path_on_filesystem, $file_name])) . " --all";
 
         $this->system_command->exec($command);
 
