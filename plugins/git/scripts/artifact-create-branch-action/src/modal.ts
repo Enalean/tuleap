@@ -20,14 +20,26 @@
 import { createApp } from "vue";
 import type { App } from "vue";
 import Main from "./components/Main.vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 let app: App<Element> | null = null;
 
-export function init(mount_point: Element): void {
+export async function init(mount_point: Element): Promise<void> {
+    const user_locale = document.body.dataset.userLocale;
+    if (!user_locale) {
+        return;
+    }
+
     if (app !== null) {
         app.unmount();
     }
 
     app = createApp(Main, {});
+    app.use(
+        await initVueGettext(createGettext, (locale: string) => {
+            return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+        })
+    );
     app.mount(mount_point);
 }

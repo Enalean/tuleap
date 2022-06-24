@@ -14,6 +14,12 @@
             "po": "scripts/repository/branch-tag-selector/po"
         }
     },
+    "gettext-vue3": {
+        "artifact-create-branch-action": {
+            "src": "scripts/artifact-create-branch-action",
+            "po": "scripts/artifact-create-branch-action/po"
+        }
+    },
     "gettext-smarty": {
         "gitphp": {
             "smarty_to_gettext": "vendor/smarty-gettext/smarty-gettext/tsmarty2c.php",
