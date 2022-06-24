@@ -13,7 +13,7 @@
     "vue3-gettext": "^2.2.1"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "link:../../../../lib/frontend/po-gettext-plugin",
     "vue-loader": "^17.0.0"
   }
