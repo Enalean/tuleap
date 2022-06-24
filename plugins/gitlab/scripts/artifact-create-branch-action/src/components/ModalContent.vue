@@ -30,7 +30,7 @@
                 class="tlp-modal-title"
                 id="modal-artifact-create-gitlab-branch-choose-integrations"
             >
-                <translate>Create branch on a GitLab repository</translate>
+                {{ $gettext("Create branch on a GitLab repository") }}
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
@@ -42,8 +42,8 @@
         </p>
         <div class="tlp-modal-body">
             <div class="artifact-create-gitlab-branch-form-block">
-                <label for="artifact-create-gitlab-branch-select-integration" v-translate>
-                    GitLab repositories integrations
+                <label for="artifact-create-gitlab-branch-select-integration">
+                    {{ $gettext("GitLab repositories integrations") }}
                     <span
                         class="artifact-create-branch-action-mandatory-information"
                         aria-hidden="true"
@@ -67,8 +67,8 @@
                 </select>
             </div>
             <div class="artifact-create-gitlab-branch-form-block">
-                <label for="artifact-create-gitlab-branch-reference" v-translate>
-                    Git reference from where the branch should be created
+                <label for="artifact-create-gitlab-branch-reference">
+                    {{ $gettext("Git reference from where the branch should be created") }}
                     <span
                         class="artifact-create-branch-action-mandatory-information"
                         aria-hidden="true"
@@ -84,13 +84,13 @@
                     aria-required="true"
                     v-model="reference"
                 />
-                <p class="text-info" v-translate>
-                    Must be an existing git commit SHA-1 or a branch name
+                <p class="text-info">
+                    {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
                 </p>
             </div>
             <div>
-                <label for="artifact-create-gitlab-branch-name" v-translate>
-                    The following branch will be created
+                <label for="artifact-create-gitlab-branch-name">
+                    {{ $gettext("The following branch will be created") }}
                 </label>
                 <code id="artifact-create-gitlab-branch-name">
                     {{ branch_name_placeholder }}
@@ -99,9 +99,11 @@
             <div class="artifact-create-gitlab-merge-request">
                 <label class="tlp-label tlp-checkbox">
                     <input type="checkbox" v-model="must_create_gitlab_mr" />
-                    <translate>
-                        Create a merge request based on this new branch to the default branch
-                    </translate>
+                    {{
+                        $gettext(
+                            "Create a merge request based on this new branch to the default branch"
+                        )
+                    }}
                 </label>
             </div>
         </div>
@@ -111,7 +113,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="button"
