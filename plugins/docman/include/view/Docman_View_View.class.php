@@ -51,10 +51,10 @@
         $this->_header($params);
         $this->_scripts($params);
         $this->_feedback($params);
-        $this->_title($params);
+        $this->displayTitle($params);
         echo '<div class="docman-content">';
-        $this->_breadCrumbs($params);
-        $this->_mode($params);
+        $this->displayOldBreadcrumbs($params);
+        $this->displayMode($params);
         $this->_filter($params);
         $this->_content($params);
         $this->_javascript($params);
@@ -70,13 +70,13 @@
     /* protected */ public function _feedback($params)
     {
     }
-    /* protected */ public function _title($params)
+    protected function displayTitle(array $params): void
     {
     }
-    /* protected */ public function _breadCrumbs($params)
+    protected function displayOldBreadcrumbs(array $params): void
     {
     }
-    /* protected */ public function _mode($params)
+    protected function displayMode(array $params): void
     {
     }
     /* protected */ public function _filter($params)

@@ -27,20 +27,17 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
     {
         $tools = [];
 
-        $this->addDocmanTool($params, $tools);
-        $this->addNewDocumentEntry($params, $tools);
+        if (\Tuleap\Document\Tree\SwitchToOldUi::isAllowed($params['user'], ProjectManager::instance()->getProject($this->_controller->getGroupId()))) {
+            $this->addDocmanTool($params, $tools);
+            $this->addNewDocumentEntry($params, $tools);
 
-        if ($this->_controller->userCanAdmin()) {
-            $tools[] = [
-                'title' => dgettext('tuleap-docman', 'Admin'),
-                'url'   => $params['default_url'] . '&amp;action=admin',
-            ];
+            if ($this->_controller->userCanAdmin()) {
+                $tools[] = [
+                    'title' => dgettext('tuleap-docman', 'Admin'),
+                    'url'   => $params['default_url'] . '&amp;action=admin',
+                ];
+            }
         }
-
-        $tools[] = [
-            'title' => $GLOBALS['Language']->getText('global', 'help'),
-            'url'   => "/doc/" . urlencode($this->_controller->getUser()->getShortLocale()) . "/user-guide/documents-and-files/doc.html",
-        ];
 
         return $tools;
     }

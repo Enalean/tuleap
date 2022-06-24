@@ -24,7 +24,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
 {
-    public function _title($params)
+    protected function displayTitle(array $params): void
     {
         // No title in printer version
         if (isset($params['pv']) && $params['pv'] > 0) {
@@ -50,7 +50,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         parent::_footer($params);
     }
 
-    public function _breadCrumbs($params)
+    protected function displayOldBreadcrumbs(array $params): void
     {
         $hp                 = Codendi_HTMLPurifier::instance();
         $item               = $params['item'];
@@ -108,7 +108,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         parent::_javascript($params);
     }
 
-    public function _mode($params)
+    protected function displayMode(array $params): void
     {
         $html = '';
          // Close table opened in method 'breadCrumbs'.

@@ -29,6 +29,74 @@ class Docman_View_Details extends Docman_View_Display
         return sprintf(dgettext('tuleap-docman', 'Details of %1$s'), $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
     }
 
+    protected function displayTitle(array $params): void
+    {
+        if ($this->isOldUiAllowed($params['user'], $params['item'])) {
+            parent::displayTitle($params);
+        }
+    }
+
+    protected function displayOldBreadcrumbs(array $params): void
+    {
+        if ($this->isOldUiAllowed($params['user'], $params['item'])) {
+            parent::displayOldBreadcrumbs($params);
+        }
+    }
+
+    protected function displayMode(array $params): void
+    {
+        if ($this->isOldUiAllowed($params['user'], $params['item'])) {
+            parent::displayMode($params);
+        }
+    }
+
+    protected function getBreadcrumbs(array $params, Project $project, \Tuleap\Docman\ServiceDocman $service): array
+    {
+        if ($this->isOldUiAllowed($params['user'], $params['item'])) {
+            return parent::getBreadcrumbs($params, $project, $service);
+        }
+
+        $documents_item = [
+            'title' => dgettext('tuleap-docman', 'Documents'),
+            'url'   => $service->getUrl(),
+        ];
+        if ($this->_controller->userCanAdmin()) {
+            $documents_item['sub_items'] = [[
+                'title' => dgettext('tuleap-docman', 'Administration'),
+                'url' => '/plugins/docman/?' . http_build_query(['group_id' => $project->getGroupId(), 'action' => 'admin']),
+            ]];
+        }
+
+        $hierarchy = [];
+        if ($params['item']->getParentId()) {
+            $hierarchy[] = [
+                'title' => $params['item']->getTitle(),
+                'url'   => $service->getUrl() . 'preview/' . $params['item']->getId(),
+            ];
+
+            $parent = $this->_getItemFactory()->getItemFromDb($params['item']->getParentId());
+            while ($parent && $parent->getParentId() !== 0) {
+                $hierarchy[] = [
+                    'title' => $parent->getTitle(),
+                    'url'   => $service->getUrl() . 'folder/' . $parent->getId(),
+                ];
+                $parent      = $this->_getItemFactory()->getItemFromDb($parent->getParentId());
+            }
+        }
+
+        return [
+            $documents_item,
+            ...array_reverse($hierarchy),
+        ];
+    }
+
+    private function isOldUiAllowed(PFUser $user, Docman_Item $item): bool
+    {
+        $project = ProjectManager::instance()->getProject($item->getGroupId());
+
+        return \Tuleap\Document\Tree\SwitchToOldUi::isAllowed($user, $project);
+    }
+
     public function _content($params, $view = null, $section = null)
     {
         $url = $params['default_url'];
@@ -52,10 +120,12 @@ class Docman_View_Details extends Docman_View_Display
             }
         }
 
+        $is_old_ui_allowed = $this->isOldUiAllowed($params['user'], $params['item']);
+
         $item_factory = $this->_getItemFactory();
         $details      = new Docman_View_ItemDetails($params['item'], $url);
         $sections     = [];
-        if ($user_can_write) {
+        if ($user_can_write && $is_old_ui_allowed) {
             if ($view && $section == 'actions') {
                 $actions = $view;
             } else {
@@ -64,7 +134,7 @@ class Docman_View_Details extends Docman_View_Display
             $sections['actions'] = true;
             $details->addSection($actions);
         }
-        if ($user_can_manage) {
+        if ($user_can_manage && $is_old_ui_allowed) {
             $sections['permissions'] = true;
             $permissions             = new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']);
             $details->addSection($permissions);
