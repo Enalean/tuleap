@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
   '@tuleap/fp-feedback': link:../../../../lib/frontend/fp-feedback
   '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp': link:../../../../src/themes/tlp
@@ -20,7 +20,7 @@ dependencies:
   vue3-gettext: 2.3.0_vue@3.2.31
 
 devDependencies:
-  '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
   '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
   vue-loader: 17.0.0
 
