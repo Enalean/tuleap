@@ -106,8 +106,8 @@ export class Dropdown {
         const { x, y, placement } = await computePosition(this.trigger, this.dropdown_menu, {
             placement: wanted_placement,
             middleware: [
-                offset(({ reference, placement }) => {
-                    return (placement.indexOf("top") === 0 ? reference.height / 2 : 0) + 4;
+                offset(({ rects, placement }) => {
+                    return (placement.indexOf("top") === 0 ? rects.reference.height / 2 : 0) + 4;
                 }),
                 flip(),
                 shift({ padding: 16 }),

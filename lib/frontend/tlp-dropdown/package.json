@@ -9,7 +9,7 @@
   "main": "dist/tlp-dropdown.umd.js",
   "style": "dist/style.css",
   "dependencies": {
-    "@floating-ui/dom": "^0.4.2"
+    "@floating-ui/dom": "^0.5.4"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../build-system-configurator"
