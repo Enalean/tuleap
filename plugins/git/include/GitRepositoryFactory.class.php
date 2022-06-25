@@ -103,18 +103,6 @@ class GitRepositoryFactory
         return $repositories;
     }
 
-    public function getAllRepositoriesUserCanSee(Project $project, PFUser $user)
-    {
-        $repositories = $this->getAllRepositories($project);
-        foreach ($repositories as $key => $repository) {
-            if (! $repository->userCanRead($user)) {
-                unset($repositories[$key]);
-            }
-        }
-
-        return $repositories;
-    }
-
     /**
      * @param string $scope
      * @param int $owner_id

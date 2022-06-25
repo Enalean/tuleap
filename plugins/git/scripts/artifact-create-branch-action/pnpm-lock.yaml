@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/fp-feedback': link:../../../../lib/frontend/fp-feedback
   '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp': link:../../../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   vue: 3.2.31
@@ -14,6 +15,7 @@ specifiers:
 dependencies:
   '@tuleap/fp-feedback': link:../../../../lib/frontend/fp-feedback
   '@tuleap/tlp': link:../../../../src/themes/tlp
+  '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
   vue: 3.2.31

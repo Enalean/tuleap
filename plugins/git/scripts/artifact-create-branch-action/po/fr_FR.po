@@ -6,5 +6,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Create branch"
+msgstr "Créer la branche"
+
 msgid "Create branch on a Git repository"
 msgstr "Créer une branche dans un dépôt Git"
+
+msgid "Git repositories"
+msgstr "Dépôts Git"

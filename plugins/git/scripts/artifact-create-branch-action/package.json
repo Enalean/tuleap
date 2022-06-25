@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/fp-feedback": "link:../../../../lib/frontend/fp-feedback",
     "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
+    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
     "@tuleap/tlp": "link:../../../../src/themes/tlp",
     "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
     "vue": "3.2.31",

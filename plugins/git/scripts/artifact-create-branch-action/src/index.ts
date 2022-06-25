@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 /* webpackChunkName: "create-git-branch-modal" */ "./modal"
             );
 
-            await init(modal_mount_point);
+            await init(git_create_branch_link, modal_mount_point);
         } catch (e) {
             addFeedback("error", "Error while loading the GitLab branch creation modal.");
             throw e;

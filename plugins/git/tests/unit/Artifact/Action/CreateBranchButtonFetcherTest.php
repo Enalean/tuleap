@@ -24,10 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Git\Artifact\Action;
 
 use ForgeConfig;
+use GitRepository;
+use GitRepositoryFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\JavascriptAsset;
-use Tuleap\Layout\JavascriptAssetGeneric;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 
@@ -35,10 +38,37 @@ final class CreateBranchButtonFetcherTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    private CreateBranchButtonFetcher $create_button_fetcher;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject&GitRepositoryFactory
+     */
+    private $git_repository_factory;
+    /**
+     * @var IncludeAssetsGeneric&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $include_asset;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->git_repository_factory = $this->createMock(GitRepositoryFactory::class);
+        $this->include_asset          = $this->createMock(IncludeAssetsGeneric::class);
+        $this->create_button_fetcher  = new CreateBranchButtonFetcher(
+            $this->git_repository_factory,
+            new JavascriptAsset(
+                $this->include_asset,
+                ""
+            )
+        );
+
+        $this->include_asset->method("getFileURL")->willReturn("");
+    }
+
     public function testItReturnsNullIfFeatureFlagIsNotSet(): void
     {
         self::assertNull(
-            (new CreateBranchButtonFetcher($this->createMock(JavascriptAssetGeneric::class)))->getActionButton()
+            $this->getActionButton()
         );
     }
 
@@ -50,28 +80,62 @@ final class CreateBranchButtonFetcherTest extends TestCase
         );
 
         self::assertNull(
-            (new CreateBranchButtonFetcher($this->createMock(JavascriptAssetGeneric::class)))->getActionButton()
+            $this->getActionButton()
         );
     }
 
-    public function testItReturnsPresenterIfFeatureFlagIsSetToTrue(): void
+    public function testItReturnsNullIfThereIsNoRepositoryInProject(): void
     {
         ForgeConfig::setFeatureFlag(
             CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
             true
         );
 
-        $include_asset     = $this->createMock(IncludeAssetsGeneric::class);
-        $javascript_assert = new JavascriptAsset(
-            $include_asset,
-            ""
+        $this->git_repository_factory->method("getAllRepositories")->willReturn([]);
+
+        self::assertNull(
+            $this->getActionButton()
+        );
+    }
+
+    public function testItReturnsNullIfThereIsNoReadableRepositoryForUser(): void
+    {
+        ForgeConfig::setFeatureFlag(
+            CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
+            true
         );
 
-        $include_asset->method("getFileURL")->willReturn("");
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method("userCanRead")->willReturn(false);
+        $this->git_repository_factory->method("getAllRepositories")->willReturn([$git_repository]);
+
+        self::assertNull(
+            $this->getActionButton()
+        );
+    }
+
+    public function testItReturnsPresenterWhenAllPreconditionsAreMet(): void
+    {
+        ForgeConfig::setFeatureFlag(
+            CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
+            true
+        );
+
+        $git_repository = $this->createMock(GitRepository::class);
+        $git_repository->method("userCanRead")->willReturn(true);
+        $this->git_repository_factory->method("getAllRepositories")->willReturn([$git_repository]);
 
         self::assertInstanceOf(
             AdditionalButtonAction::class,
-            (new CreateBranchButtonFetcher($javascript_assert))->getActionButton()
+            $this->getActionButton()
+        );
+    }
+
+    private function getActionButton(): ?AdditionalButtonAction
+    {
+        return $this->create_button_fetcher->getActionButton(
+            ProjectTestBuilder::aProject()->build(),
+            UserTestBuilder::anActiveUser()->build(),
         );
     }
 }
