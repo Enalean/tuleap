@@ -129,20 +129,20 @@ class TrackerFieldsTest extends TrackerBase
         ];
 
         $response1 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEquals(200, $response1->getStatusCode());
         $response1_json = json_decode($response1->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotEmpty($response1_json['upload_href']);
         $this->assertNotEmpty($response1_json['download_href']);
 
         $response2 = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEquals(200, $response2->getStatusCode());
         $response2_json = json_decode($response2->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame($response1_json['upload_href'], $response2_json['upload_href']);
         $this->assertSame($response1_json['download_href'], $response2_json['download_href']);
 
         $query['file_size'] = 456;
         $response3          = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response3->getStatusCode());
+        $this->assertEquals(200, $response3->getStatusCode());
 
         $tus_response_upload = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $response1_json['upload_href'])
@@ -212,7 +212,7 @@ class TrackerFieldsTest extends TrackerBase
         ];
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response_creation_file->getStatusCode());
+        $this->assertEquals(200, $response_creation_file->getStatusCode());
 
         $tus_response_upload = $this->getResponse(
             $this->request_factory->createRequest(
@@ -223,7 +223,7 @@ class TrackerFieldsTest extends TrackerBase
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response_creation_file->getStatusCode());
+        $this->assertEquals(200, $response_creation_file->getStatusCode());
     }
 
     /**
@@ -239,7 +239,7 @@ class TrackerFieldsTest extends TrackerBase
         ];
 
         $response_creation_file = $this->getResponse($this->request_factory->createRequest('POST', "tracker_fields/$field_id/files")->withBody($this->stream_factory->createStream(json_encode($query))));
-        $this->assertEquals(201, $response_creation_file->getStatusCode());
+        $this->assertEquals(200, $response_creation_file->getStatusCode());
         $this->assertEmpty(json_decode($response_creation_file->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['upload_href']);
     }
 

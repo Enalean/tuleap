@@ -109,7 +109,7 @@ final class ExecutionsTest extends BaseTest
                 ->withBody($this->stream_factory->createStream($file_resource))
         );
 
-        $this->assertEquals(201, $new_file_response->getStatusCode());
+        $this->assertEquals(200, $new_file_response->getStatusCode());
         $new_file_response_json = json_decode($new_file_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertNotNull($new_file_response_json['upload_href']);
 
