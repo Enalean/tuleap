@@ -63,7 +63,7 @@ final class MediaWikiUpdateScriptCaller
                 '--confpath',
                 $this->path_setting_directory,
                 '--dbserver',
-                \ForgeConfig::get(DBConfig::CONF_HOST),
+                \ForgeConfig::get(DBConfig::CONF_HOST) . ':' . \ForgeConfig::getInt(DBConfig::CONF_PORT),
                 '--dbname',
                 'plugin_mediawiki_standalone_farm',
                 '--dbuser',
