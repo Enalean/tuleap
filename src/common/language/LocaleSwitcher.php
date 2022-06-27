@@ -30,15 +30,17 @@ final class LocaleSwitcher
     }
 
     /**
-     * @psalm-param callable(): void $execution_context
+     * @template T
+     * @psalm-param callable(): T $execution_context
+     * @psalm-return T
      */
-    public function setLocaleForSpecificExecutionContext(string $locale, callable $execution_context): void
+    public function setLocaleForSpecificExecutionContext(string $locale, callable $execution_context): mixed
     {
         $current_locale = $this->currentLocale();
 
         try {
             $this->setLocale($locale);
-            $execution_context();
+            return $execution_context();
         } finally {
             $this->setLocaleFromFullLocale($current_locale);
         }

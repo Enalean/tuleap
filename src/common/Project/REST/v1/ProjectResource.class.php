@@ -40,6 +40,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
@@ -1294,33 +1295,38 @@ class ProjectResource extends AuthenticatedResource
         $current_user  = $this->user_manager->getCurrentUserWithLoggedInInformation();
         $event_manager = EventManager::instance();
 
-        $config = ProjectSidebarConfigRepresentation::build(
-            $project,
-            $current_user,
-            new BannerRetriever(new BannerDao()),
-            new ProjectFlagsBuilder(new ProjectFlagsDao()),
-            $event_manager,
-            new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
-            new FlavorFinderFromFilePresence(),
-            new CachedCustomizedLogoDetector(
-                new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
-                \BackendLogger::getDefaultLogger(),
-            ),
-            new GlyphFinder($event_manager),
-            new ProjectSidebarToolsBuilder(
-                $event_manager,
-                ProjectManager::instance(),
-                new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
-            ),
-            $currently_active_service
-        );
+        return (new LocaleSwitcher())->setLocaleForSpecificExecutionContext(
+            $current_user->user->getLocale(),
+            function () use ($project, $current_user, $event_manager, $currently_active_service): ThirdPartyIntegrationDataRepresentation {
+                $config = ProjectSidebarConfigRepresentation::build(
+                    $project,
+                    $current_user,
+                    new BannerRetriever(new BannerDao()),
+                    new ProjectFlagsBuilder(new ProjectFlagsDao()),
+                    $event_manager,
+                    new UserCanAccessProjectAdministrationVerifier(new MembershipDelegationDao()),
+                    new FlavorFinderFromFilePresence(),
+                    new CachedCustomizedLogoDetector(
+                        new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
+                        \BackendLogger::getDefaultLogger(),
+                    ),
+                    new GlyphFinder($event_manager),
+                    new ProjectSidebarToolsBuilder(
+                        $event_manager,
+                        ProjectManager::instance(),
+                        new URISanitizer(new Valid_HTTPURI(), new Valid_LocalURI())
+                    ),
+                    $currently_active_service
+                );
 
-        $reference_representation_builder = new ReferenceRepresentationBuilder(\ReferenceManager::instance(), $event_manager);
+                $reference_representation_builder = new ReferenceRepresentationBuilder(\ReferenceManager::instance(), $event_manager);
 
-        return new ThirdPartyIntegrationDataRepresentation(
-            ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser($config, $current_user->user),
-            ThirdPartyIntegrationStylesRepresentation::fromUser($current_user->user),
-            $reference_representation_builder->getProjectReferences($project),
+                return new ThirdPartyIntegrationDataRepresentation(
+                    ProjectSidebarDataRepresentation::fromConfigRepresentationAndUser($config, $current_user->user),
+                    ThirdPartyIntegrationStylesRepresentation::fromUser($current_user->user),
+                    $reference_representation_builder->getProjectReferences($project),
+                );
+            }
         );
     }
 

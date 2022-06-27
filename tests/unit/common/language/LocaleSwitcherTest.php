@@ -31,12 +31,10 @@ final class LocaleSwitcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $current_locale_before_context_switch = setlocale(LC_MESSAGES, '0');
 
-        $locale_execution_context = '';
-
-        $locale_switcher->setLocaleForSpecificExecutionContext(
+        $locale_execution_context = $locale_switcher->setLocaleForSpecificExecutionContext(
             'en_GB',
-            static function () use (&$locale_execution_context) {
-                $locale_execution_context = setlocale(LC_MESSAGES, '0');
+            static function (): string {
+                return setlocale(LC_MESSAGES, '0');
             }
         );
 
