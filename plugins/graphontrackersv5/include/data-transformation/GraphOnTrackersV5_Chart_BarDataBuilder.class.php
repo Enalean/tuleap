@@ -169,14 +169,14 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         Tracker_FormElement_Field_List $source_field,
         Tracker_FormElement_Field_List $group_by_field,
     ): void {
-        $none                                         = $GLOBALS['Language']->getText('global', 'none');
-        $engine->colors[$data[$source_field->name]]   = $color;
-        $engine->xaxis[$data[$group_by_field->name]]  = $none;
-        $engine->labels[$data[$group_by_field->name]] = $none;
+        $none                                                      = $GLOBALS['Language']->getText('global', 'none');
+        $engine->colors[$data[$source_field->getPrefixedName()]]   = $color;
+        $engine->xaxis[$data[$group_by_field->getPrefixedName()]]  = $none;
+        $engine->labels[$data[$group_by_field->getPrefixedName()]] = $none;
 
-        if ($data[$group_by_field->name] !== null) {
-            $engine->xaxis[$data[$group_by_field->name]]  = $group_by_field->fetchRawValue($data[$group_by_field->name]);
-            $engine->labels[$data[$group_by_field->name]] = $group_by_field->fetchRawValue($data[$group_by_field->name]);
+        if ($data[$group_by_field->getPrefixedName()] !== null) {
+            $engine->xaxis[$data[$group_by_field->getPrefixedName()]]  = $group_by_field->fetchRawValue($data[$group_by_field->getPrefixedName()]);
+            $engine->labels[$data[$group_by_field->getPrefixedName()]] = $group_by_field->fetchRawValue($data[$group_by_field->getPrefixedName()]);
         }
     }
 
