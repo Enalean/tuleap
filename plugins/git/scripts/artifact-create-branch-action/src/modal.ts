@@ -22,20 +22,34 @@ import type { App } from "vue";
 import Main from "./components/Main.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { getProjectRepositories } from "../api/rest_querier";
+import { formatProjectRepositoriesResponseAsArray } from "../api/repositories-reponses-formatter";
 
 let app: App<Element> | null = null;
 
-export async function init(mount_point: Element): Promise<void> {
+export async function init(
+    git_create_branch_link: HTMLElement,
+    mount_point: Element
+): Promise<void> {
     const user_locale = document.body.dataset.userLocale;
     if (!user_locale) {
         return;
     }
+    if (!git_create_branch_link.dataset.projectId) {
+        throw new Error("Missing project id in dataset");
+    }
+
+    const project_id = Number(git_create_branch_link.dataset.projectId);
 
     if (app !== null) {
         app.unmount();
     }
 
-    app = createApp(Main, {});
+    app = createApp(Main, {
+        repositories: formatProjectRepositoriesResponseAsArray(
+            await getProjectRepositories(project_id)
+        ),
+    });
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
             return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);

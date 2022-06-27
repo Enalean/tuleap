@@ -1899,7 +1899,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         );
     }
 
-    public function getRepositoryFactory()
+    public function getRepositoryFactory(): GitRepositoryFactory
     {
         return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
     }
@@ -2891,13 +2891,17 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
     public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
         $button_fetcher = new CreateBranchButtonFetcher(
+            $this->getRepositoryFactory(),
             new \Tuleap\Layout\JavascriptAsset(
                 $this->getAssets(),
                 'git-artifact-create-branch.js'
             )
         );
 
-        $button_action = $button_fetcher->getActionButton();
+        $button_action = $button_fetcher->getActionButton(
+            $event->getArtifact()->getTracker()->getProject(),
+            $event->getUser()
+        );
 
         if ($button_action === null) {
             return;

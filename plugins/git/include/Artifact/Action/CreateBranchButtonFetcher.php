@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Git\Artifact\Action;
 
 use ForgeConfig;
+use GitRepositoryFactory;
+use PFUser;
+use Project;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
@@ -34,13 +37,19 @@ final class CreateBranchButtonFetcher
     #[FeatureFlagConfigKey("Feature flag to allow users to create Git branches from artifacts")]
     public const FEATURE_FLAG_KEY = 'artifact-create-git-branches';
 
-    public function __construct(private JavascriptAssetGeneric $javascript_asset)
-    {
+    public function __construct(
+        private GitRepositoryFactory $git_repository_factory,
+        private JavascriptAssetGeneric $javascript_asset,
+    ) {
     }
 
-    public function getActionButton(): ?AdditionalButtonAction
+    public function getActionButton(Project $project, PFUser $user): ?AdditionalButtonAction
     {
         if (! ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
+            return null;
+        }
+
+        if (! $this->doesProjectHaveRepositoriesUserCanRead($project, $user)) {
             return null;
         }
 
@@ -52,12 +61,28 @@ final class CreateBranchButtonFetcher
             "",
             $icon,
             'artifact-create-git-branches',
-            [],
+            [
+                [
+                    'name'  => "project-id",
+                    'value' => (string) $project->getID(),
+                ],
+            ],
         );
 
         return new AdditionalButtonAction(
             $link,
             $this->javascript_asset->getFileURL()
         );
+    }
+
+    private function doesProjectHaveRepositoriesUserCanRead(Project $project, PFUser $user): bool
+    {
+        foreach ($this->git_repository_factory->getAllRepositories($project) as $repository) {
+            if ($repository->userCanRead($user)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -18,34 +18,77 @@
   -->
 
 <template>
-    <div class="git-tracker-create-branch-modal">
-        <div ref="root_element" class="tlp-modal git-tracker-create-branch-modal" role="dialog">
-            <div class="tlp-modal-header">
-                <h1 class="tlp-modal-title">
-                    {{ $gettext("Create branch on a Git repository") }}
-                </h1>
-                <button
-                    class="tlp-modal-close"
-                    type="button"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                >
-                    <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
-                </button>
+    <Teleport to="#main-content">
+        <div class="git-tracker-create-branch-modal">
+            <div ref="root_element" class="tlp-modal" role="dialog">
+                <div class="tlp-modal-header">
+                    <h1 class="tlp-modal-title">
+                        {{ $gettext("Create branch on a Git repository") }}
+                    </h1>
+                    <button
+                        class="tlp-modal-close"
+                        type="button"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="tlp-modal-body">
+                    <div class="artifact-create-git-branch-form-block">
+                        <label for="artifact-create-git-branch-select-repository">
+                            {{ $gettext("Git repositories") }}
+                            <span
+                                class="artifact-create-branch-action-mandatory-information"
+                                aria-hidden="true"
+                            >
+                                *
+                            </span>
+                        </label>
+                        <select
+                            id="artifact-create-git-branch-select-repository"
+                            required="required"
+                            aria-required="true"
+                        >
+                            <option
+                                v-for="repository in repositories"
+                                v-bind:value="repository"
+                                v-bind:key="repository.id"
+                            >
+                                {{ repository.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tlp-modal-footer">
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                        data-dismiss="modal"
+                    >
+                        {{ $gettext("Cancel") }}
+                    </button>
+                    <button type="button" class="tlp-button-primary tlp-modal-action" disabled>
+                        {{ $gettext("Create branch") }}
+                    </button>
+                </div>
             </div>
-            <div class="tlp-modal-body"></div>
-            <div class="tlp-modal-footer"></div>
         </div>
-    </div>
+    </Teleport>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
+import type { GitRepository } from "../types";
 
 let modal: Modal | null = null;
 const root_element = ref<InstanceType<typeof Element>>();
+
+defineProps<{
+    repositories: ReadonlyArray<GitRepository>;
+}>();
 
 onMounted((): void => {
     if (root_element.value === undefined) {
@@ -78,5 +121,13 @@ onBeforeUnmount(() => {
         )
     );
     @include meta.load-css("@tuleap/tlp-modal");
+
+    .artifact-create-branch-action-mandatory-information {
+        color: var(--tlp-danger-color);
+    }
+
+    .artifact-create-git-branch-form-block {
+        margin: 0 0 var(--tlp-medium-spacing);
+    }
 }
 </style>
