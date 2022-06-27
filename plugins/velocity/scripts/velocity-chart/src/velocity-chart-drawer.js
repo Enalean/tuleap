@@ -24,10 +24,12 @@
 import moment from "moment";
 import { select } from "d3-selection";
 import { sprintf } from "sprintf-js";
-import { buildBarChartScales } from "charts-builders/bar-chart-scales-factory.js";
-import { buildChartLayout } from "charts-builders/chart-layout-builder.js";
-import { TooltipFactory } from "charts-builders/chart-tooltip-factory.js";
-import { truncate } from "charts-builders/chart-truncation-service.js";
+import {
+    buildBarChartScales,
+    buildChartLayout,
+    TooltipFactory,
+    truncate,
+} from "@tuleap/chart-builder";
 import { gettext_provider } from "./gettext-provider.js";
 
 export class VelocityChartDrawer {

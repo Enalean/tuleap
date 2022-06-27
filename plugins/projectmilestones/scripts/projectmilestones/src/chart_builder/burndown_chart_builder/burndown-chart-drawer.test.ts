@@ -20,10 +20,20 @@
 import { createBurndownChart, getMaxRemainingEffort } from "./burndown-chart-drawer";
 
 import type { BurndownData, PointsWithDateForBurndown } from "../../type";
-import type { ChartPropsWhithoutTooltip } from "../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 import * as chart_badge_generator from "../chart-badge-generator";
 
-jest.mock("../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter");
+jest.mock("@tuleap/chart-builder", () => {
+    const actual_module = jest.requireActual("@tuleap/chart-builder");
+    return {
+        ...actual_module,
+        TimeScaleLabelsFormatter: class {
+            formatTicks(): void {
+                // Do nothing;
+            }
+        },
+    };
+});
 jest.mock("../time-scale-label-formatter");
 jest.mock("../chart-badge-generator", () => ({
     addBadgeCaption: jest.fn(),
@@ -131,7 +141,7 @@ describe("BurndownChartDrawer -", () => {
         }
     });
 
-    function getChartProps(): ChartPropsWhithoutTooltip {
+    function getChartProps(): ChartPropsWithoutTooltip {
         return {
             graph_width: 100,
             graph_height: 100,

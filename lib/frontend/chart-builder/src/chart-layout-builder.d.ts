@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
-import french_translations from "./po/fr_FR.po";
+import type { ChartPropsWithoutTooltip, XYScale } from "./type";
+import type { Selection } from "d3-selection";
 
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations("fr_FR", "charts-builders", french_translations);
-gettext_provider.setTextDomain("charts-builders");
-
-export { gettext_provider };
+export function buildChartLayout(
+    chart_container: HTMLElement | null,
+    { graph_width, graph_height, margins }: ChartPropsWithoutTooltip,
+    scales: XYScale,
+    ticks?: number,
+    tick_padding?: number
+): Selection<SVGSVGElement, unknown, null, undefined>;

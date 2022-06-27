@@ -79,10 +79,8 @@ const webpack_config_for_charts = {
     },
     resolve: {
         alias: {
-            "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
-            "d3-array$": path.resolve(__dirname, "node_modules/d3-array"),
-            "d3-scale$": path.resolve(__dirname, "node_modules/d3-scale"),
-            "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis"),
+            // deduplicate moment that is also used by chart-builder
+            moment$: path.resolve(__dirname, "node_modules/moment"),
         },
     },
     module: {

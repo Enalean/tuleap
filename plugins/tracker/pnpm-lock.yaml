@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/gettext': link:../../lib/frontend/gettext
@@ -28,8 +29,6 @@ specifiers:
   '@types/sprintf-js': ^1.1.2
   '@vue/test-utils': ^1.3.0
   d3-array: ^3.0.1
-  d3-axis: ^3.0.0
-  d3-scale: ^4.0.0
   d3-selection: ^3.0.0
   d3-shape: ^3.0.1
   dompurify: ^2.3.6
@@ -49,6 +48,7 @@ specifiers:
   vuex-class: ^0.3.2
 
 dependencies:
+  '@tuleap/chart-builder': link:../../lib/frontend/chart-builder
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
   '@tuleap/gettext': link:../../lib/frontend/gettext
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
@@ -65,8 +65,6 @@ dependencies:
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
   d3-array: 3.0.1
-  d3-axis: 3.0.0
-  d3-scale: 4.0.0
   d3-selection: 3.0.0
   d3-shape: 3.0.1
   dompurify: 2.3.6
@@ -197,42 +195,9 @@ packages:
       internmap: 2.0.1
     dev: false
 
-  /d3-axis/3.0.0:
-    resolution: {integrity: sha512-IH5tgjV4jE/GhHkRV0HiVYPDtvfjHQlQfJHs0usq7M30XcSBvOotpmH1IgkcXsO/5gEQZD43B//fc7SRT5S+xw==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-color/3.0.1:
-    resolution: {integrity: sha512-6/SlHkDOBLyQSJ1j1Ghs82OIUXpKWlR0hCsw0XrLSQhuUPuCSmLQ1QPH98vpnQxMUQM2/gfAkUEWsupVpd9JGw==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-format/3.0.1:
-    resolution: {integrity: sha512-hdL7+HBIohpgfolhBxr1KX47VMD6+vVD/oEFrxk5yhmzV2prk99EkFKYpXuhVkFpTgHdJ6/4bYcjdLPPXV4tIA==}
-    engines: {node: '>=12'}
-    dev: false
-
-  /d3-interpolate/3.0.1:
-    resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-color: 3.0.1
-    dev: false
-
   /d3-path/3.0.1:
     resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
     engines: {node: '>=12'}
-    dev: false
-
-  /d3-scale/4.0.0:
-    resolution: {integrity: sha512-foHQYKpWQcyndH1CGoHdUC4PECxTxonzwwBXGT8qu+Drb1FIc6ON6dG2P5f4hRRMkLiIKeWK7iFtdznDUrnuPQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-array: 3.0.1
-      d3-format: 3.0.1
-      d3-interpolate: 3.0.1
-      d3-time: 3.0.0
-      d3-time-format: 4.0.0
     dev: false
 
   /d3-selection/3.0.0:
@@ -245,20 +210,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       d3-path: 3.0.1
-    dev: false
-
-  /d3-time-format/4.0.0:
-    resolution: {integrity: sha512-nzaCwlj+ZVBIlFuVOT1RmU+6xb/7D5IcnhHzHQcBgS/aTa5K9fWZNN5LCXA27LgF5WxoSNJqKBbLcGMtM6Ca6A==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-time: 3.0.0
-    dev: false
-
-  /d3-time/3.0.0:
-    resolution: {integrity: sha512-zmV3lRnlaLI08y9IMRXSDshQb5Nj77smnfpnd2LrBa/2K281Jijactokeak14QacHs/kKq0AQ121nidNYlarbQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      d3-array: 3.0.1
     dev: false
 
   /dom-event-types/1.0.0:

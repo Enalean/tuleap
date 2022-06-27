@@ -43,16 +43,7 @@ module.exports = [
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
-                {
-                    test: /\.po$/,
-                    include: /scripts\/charts-builders\/po/,
-                    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }],
-                },
-                {
-                    test: /\.po$/,
-                    include: /projectmilestones\/po\//,
-                    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
-                },
+                webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_css_assets,
                 webpack_configurator.rule_scss_loader,

@@ -22,17 +22,19 @@ import { max } from "d3-array";
 import { select } from "d3-selection";
 import { curveLinear } from "d3-shape";
 import { gettext_provider } from "./gettext-provider.js";
-import { buildGraphScales } from "charts-builders/line-chart-scales-factory.js";
-import { buildChartLayout } from "charts-builders/chart-layout-builder.js";
-import { TooltipFactory } from "charts-builders/chart-tooltip-factory.js";
-import { ColumnFactory } from "charts-builders/chart-column-factory.js";
-import { TimeScaleLabelsFormatter } from "charts-builders/time-scale-labels-formatter.js";
-import { getDaysToDisplay } from "charts-builders/chart-dates-service.js";
-import { addTextCaption } from "charts-builders/chart-text-legend-generator.js";
-import { addBadgeCaption } from "charts-builders/chart-badge-legend-generator.js";
-import { addContentCaption } from "charts-builders/chart-content-legend-generator.js";
-
-import { drawIdealLine, drawCurve } from "charts-builders/chart-lines-service.js";
+import {
+    buildGraphScales,
+    buildChartLayout,
+    TooltipFactory,
+    ColumnFactory,
+    TimeScaleLabelsFormatter,
+    getDaysToDisplay,
+    addTextCaption,
+    addBadgeCaption,
+    addContentCaption,
+    drawIdealLine,
+    drawCurve,
+} from "@tuleap/chart-builder";
 
 import { getLastDayData, getDisplayableData } from "./chart-data-service.js";
 

@@ -18,12 +18,23 @@
  */
 
 import { createBurnupChart, getTotal } from "./burnup-chart-drawer";
-import type { ChartPropsWhithoutTooltip } from "../../../../../../../src/scripts/charts-builders/type";
+import type { ChartPropsWithoutTooltip } from "@tuleap/chart-builder";
 import type {
     GenericBurnupData,
     PointsWithDateForGenericBurnup,
 } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
-jest.mock("../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter");
+
+jest.mock("@tuleap/chart-builder", () => {
+    const actual_module = jest.requireActual("@tuleap/chart-builder");
+    return {
+        ...actual_module,
+        TimeScaleLabelsFormatter: class {
+            formatTicks(): void {
+                // Do nothing;
+            }
+        },
+    };
+});
 jest.mock("../time-scale-label-formatter");
 
 describe("BurnupChartDrawer", () => {
@@ -84,7 +95,7 @@ describe("BurnupChartDrawer", () => {
             return chart_div;
         }
 
-        function getChartProps(): ChartPropsWhithoutTooltip {
+        function getChartProps(): ChartPropsWithoutTooltip {
             return {
                 graph_width: 100,
                 graph_height: 100,

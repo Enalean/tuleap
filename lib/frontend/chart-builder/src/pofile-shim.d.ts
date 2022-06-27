@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
-import french_translations from "../po/fr_FR.po";
-
-const gettext_provider = new Gettext();
-gettext_provider.addTranslations("fr_FR", "burndown-chart", french_translations);
-gettext_provider.setTextDomain("burndown-chart");
-
-export { gettext_provider };
+declare module "*.po" {
+    import type { GettextParserPoFile } from "@tuleap/gettext";
+    const content: GettextParserPoFile;
+    export default content;
+}

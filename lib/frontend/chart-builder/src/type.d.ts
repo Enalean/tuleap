@@ -32,7 +32,7 @@ export interface XYScale {
     y_scale: d3Scale.ScaleLinear<number, number>;
 }
 
-export interface ChartPropsWhithoutTooltip {
+export interface ChartPropsWithoutTooltip {
     graph_width: number;
     graph_height: number;
     margins: MarginsGraph;

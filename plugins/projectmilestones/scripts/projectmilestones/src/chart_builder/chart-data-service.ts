@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFormattedDates } from "../../../../../../src/scripts/charts-builders/chart-dates-service";
-import type { PointsWithDate } from "../../../../../../src/scripts/charts-builders/type";
+import { getFormattedDates } from "@tuleap/chart-builder";
+import type { PointsWithDate } from "@tuleap/chart-builder";
 import type { PointsNotNullWithDate } from "../type";
 import type {
     PointsNotNullWithDateForGenericBurnup,

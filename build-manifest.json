@@ -1,9 +1,9 @@
 {
     "name": "core",
     "gettext-js": {
-        "chart-builders": {
-            "src": "src/scripts/charts-builders",
-            "po": "src/scripts/charts-builders/po"
+        "chart-builder": {
+            "src": "lib/frontend/chart-builder/src",
+            "po": "lib/frontend/chart-builder/po"
         }
     },
     "gettext-ts": {
