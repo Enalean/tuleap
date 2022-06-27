@@ -23,13 +23,13 @@
 import { shallowMount } from "@vue/test-utils";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
-import Tools from "./Tools.vue";
-import Tool from "./Tool.vue";
+import ToolList from "./ToolList.vue";
+import ToolPresenter from "./ToolPresenter.vue";
 import { ref } from "vue";
 
-describe("Tools", () => {
+describe("ToolList", () => {
     it("displays all the tools", () => {
-        const wrapper = shallowMount(Tools, {
+        const wrapper = shallowMount(ToolList, {
             global: {
                 provide: {
                     [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
@@ -37,7 +37,7 @@ describe("Tools", () => {
             },
         });
 
-        const tools = wrapper.findAllComponents(Tool);
+        const tools = wrapper.findAllComponents(ToolPresenter);
         expect(tools).toHaveLength(example_config.tools.length);
     });
 });

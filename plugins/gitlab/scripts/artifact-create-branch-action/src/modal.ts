@@ -21,7 +21,7 @@ import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import type { App } from "vue";
-import Main from "./components/Main.vue";
+import MainComponent from "./components/MainComponent.vue";
 import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-repositories-information";
 
 let app: App<Element> | null = null;
@@ -49,7 +49,7 @@ export async function init(create_branch_link: HTMLElement, mount_point: Element
     const integrations_representations = JSON.parse(create_branch_link.dataset.integrations);
     const artifact_id = Number(create_branch_link.dataset.artifactId);
 
-    app = createApp(Main, {
+    app = createApp(MainComponent, {
         integrations: await getGitlabRepositoriesWithDefaultBranches(integrations_representations),
         branch_name: create_branch_link.dataset.branchName,
         artifact_id,

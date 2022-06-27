@@ -9,7 +9,7 @@ exports[`ProjectSidebar displays sidebar 1`] = `
     class="sidebar-content-vertical-scroll"
   >
     <sidebar-header-stub />
-    <tools-stub />
+    <tool-list-stub />
     <sidebar-collapse-button-stub
       can_sidebar_be_collapsed="true"
       is_sidebar_collapsed="false"

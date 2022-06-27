@@ -25,7 +25,7 @@
         {{ config.internationalization.tools }}
     </h2>
     <nav ref="tools_element" class="project-sidebar-nav">
-        <tool
+        <tool-presenter
             v-for="tool in config.tools"
             v-bind="tool"
             v-bind:key="tool.href + tool.label + tool.description"
@@ -34,7 +34,7 @@
 </template>
 <script setup lang="ts">
 import { useActiveElement, useMagicKeys } from "@vueuse/core";
-import Tool from "./Tool.vue";
+import ToolPresenter from "./ToolPresenter.vue";
 import { strictInject } from "../strict-inject";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { nextTick, onMounted, onUpdated, ref, watch } from "vue";

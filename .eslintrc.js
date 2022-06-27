@@ -257,13 +257,15 @@ module.exports = {
             },
         },
         // Specify Vue 3 app and library
-        // At some point in the future this should the default and the Vue 2 rules should be explitcly enabled on the
+        // At some point in the future this should the default and the Vue 2 rules should be explicitly enabled on the
         // remaining apps
         {
             files: [
                 "lib/frontend/project-sidebar-internal/**/*.vue",
                 "plugins/document_generation/scripts/**/*.vue",
                 "plugins/testplan/scripts/**/*.vue",
+                "plugins/gitlab/scripts/**/*.vue",
+                "plugins/git/scripts/artifact-create-branch-action/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {
@@ -271,7 +273,28 @@ module.exports = {
                 "vue/max-attributes-per-line": "off", // Conflict with Prettier
                 "vue/no-multiple-template-root": "off", // Specific to Vue 2
                 "vue/no-v-model-argument": "off", // Specific to Vue 2
+                // Priority B: Strongly Recommended (Improving Readability)
+                "vue/html-self-closing": [
+                    "error",
+                    {
+                        html: {
+                            void: "any",
+                            normal: "any",
+                            component: "always",
+                        },
+                        svg: "any",
+                        math: "any",
+                    },
+                ],
+                "vue/v-bind-style": ["error", "longform"],
+                "vue/v-on-style": ["error", "longform"],
+                "vue/attributes-order": "off",
                 "vue/prop-name-casing": ["error", "snake_case"],
+                // Uncategorized
+                "vue/component-name-in-template-casing": ["error", "kebab-case"],
+                "vue/match-component-file-name": "error",
+                // Typescript
+                "@typescript-eslint/explicit-function-return-type": "error",
             },
         },
         {

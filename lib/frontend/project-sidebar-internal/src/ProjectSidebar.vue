@@ -29,7 +29,7 @@
         <sidebar-logo />
         <div class="sidebar-content-vertical-scroll">
             <sidebar-header />
-            <tools />
+            <tool-list />
             <sidebar-collapse-button
                 v-model:is_sidebar_collapsed="is_sidebar_collapsed"
                 v-bind:can_sidebar_be_collapsed="can_sidebar_be_collapsed"
@@ -45,7 +45,7 @@ import { provide, readonly, computed, ref, watch } from "vue";
 import SidebarHeader from "./Header/SidebarHeader.vue";
 import SidebarFooter from "./SidebarFooter.vue";
 import { SIDEBAR_CONFIGURATION, TRIGGER_SHOW_PROJECT_ANNOUNCEMENT } from "./injection-symbols";
-import Tools from "./Tools/Tools.vue";
+import ToolList from "./Tools/ToolList.vue";
 import SidebarLogo from "./SidebarLogo.vue";
 import SidebarCollapseButton from "./SidebarCollapseButton.vue";
 
