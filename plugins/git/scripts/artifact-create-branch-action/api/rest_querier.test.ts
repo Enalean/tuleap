@@ -19,7 +19,6 @@
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { GitRepository } from "../src/types";
-import type { RecursiveGetProjectRepositories } from "./rest_querier";
 import { getProjectRepositories } from "./rest_querier";
 
 describe("API querier", () => {
@@ -27,12 +26,7 @@ describe("API querier", () => {
         it("Given a project id then it will recursively get all project repositories", () => {
             const repositories = [{ id: 37 } as GitRepository, { id: 91 } as GitRepository];
             const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
-            const response: RecursiveGetProjectRepositories[] = [
-                {
-                    repositories: repositories,
-                },
-            ];
-            tlpRecursiveGet.mockResolvedValue(response);
+            tlpRecursiveGet.mockResolvedValue(repositories);
 
             const project_id = 27;
             getProjectRepositories(project_id);
