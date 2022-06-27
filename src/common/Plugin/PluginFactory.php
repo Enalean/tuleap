@@ -318,15 +318,24 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * enabled plugin
+     * @throws \Tuleap\Plugin\MissingInstallRequirementException
      */
     public function enablePlugin(Plugin $plugin): void
     {
-        if (! $this->isPluginEnabled($plugin)) {
-            $this->plugin_dao->enablePlugin($plugin->getId());
-            $this->retrieved_plugins['enabled'][$plugin->getId()] = $plugin;
-            unset($this->retrieved_plugins['disabled'][$plugin->getId()]);
+        if ($this->isPluginEnabled($plugin)) {
+            return;
         }
+
+        foreach ($plugin->getInstallRequirements() as $install_requirement) {
+            $description_missing_requirement = $install_requirement->getDescriptionOfMissingInstallRequirement();
+            if ($description_missing_requirement !== null) {
+                throw new \Tuleap\Plugin\MissingInstallRequirementException($plugin, $description_missing_requirement);
+            }
+        }
+
+        $this->plugin_dao->enablePlugin($plugin->getId());
+        $this->retrieved_plugins['enabled'][$plugin->getId()] = $plugin;
+        unset($this->retrieved_plugins['disabled'][$plugin->getId()]);
     }
     /**
      * disabled plugin

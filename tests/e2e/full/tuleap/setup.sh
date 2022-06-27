@@ -36,6 +36,10 @@ setup_tuleap() {
     cp /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
 }
 
+setup_redis() {
+    install -m 00640 -o codendiadm -g codendiadm /usr/share/tuleap/src/etc/redis.inc.dist /etc/tuleap/conf/redis.inc
+}
+
 setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
@@ -124,7 +128,9 @@ setup_system_configuration() {
 
 setup_lhs
 setup_tuleap
+setup_redis
 setup_database
+sudo -u codendiadm PHP="$PHP_CLI" /usr/bin/tuleap worker:supervisor --quiet start &
 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 seed_data
 setup_system_configuration

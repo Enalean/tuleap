@@ -20,6 +20,10 @@ setup_tuleap() {
 	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap/conf
 }
 
+setup_redis() {
+    install -m 00640 -o codendiadm -g codendiadm /usr/share/tuleap/src/etc/redis.inc.dist /etc/tuleap/conf/redis.inc
+}
+
 setup_database() {
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
@@ -66,5 +70,6 @@ seed_data() {
 }
 
 setup_tuleap
+setup_redis
 setup_database
 seed_data

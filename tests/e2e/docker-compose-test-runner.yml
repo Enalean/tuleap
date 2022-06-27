@@ -17,3 +17,7 @@ services:
     networks:
       - tuleap
       - external-connectivity
+  redis:
+    image: ${DOCKER_REGISTRY:-docker.io}/redis:7.0.2-alpine
+    networks:
+      - tuleap

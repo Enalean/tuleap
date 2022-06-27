@@ -11,6 +11,8 @@ services:
       default:
         aliases:
           - mail
+  redis:
+    image: ${DOCKER_REGISTRY:-docker.io}/redis:7.0.2-alpine
 
 networks:
   default:
