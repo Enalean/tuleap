@@ -20,17 +20,16 @@
 import type { GitRepository } from "../src/types";
 import { recursiveGet } from "@tuleap/tlp-fetch";
 
-export interface RecursiveGetProjectRepositories {
-    repositories: ReadonlyArray<GitRepository>;
+interface RecursiveGetProjectRepositories {
+    repositories: Array<GitRepository>;
 }
 
-export function getProjectRepositories(
-    project_id: number
-): Promise<RecursiveGetProjectRepositories[]> {
+export function getProjectRepositories(project_id: number): Promise<ReadonlyArray<GitRepository>> {
     return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/git`, {
         params: {
             fields: "basic",
             limit: 50,
         },
+        getCollectionCallback: (payload: RecursiveGetProjectRepositories) => payload.repositories,
     });
 }

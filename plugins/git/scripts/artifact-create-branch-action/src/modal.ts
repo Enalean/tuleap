@@ -23,7 +23,6 @@ import Main from "./components/Main.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getProjectRepositories } from "../api/rest_querier";
-import { formatProjectRepositoriesResponseAsArray } from "../api/repositories-reponses-formatter";
 
 let app: App<Element> | null = null;
 
@@ -46,9 +45,7 @@ export async function init(
     }
 
     app = createApp(Main, {
-        repositories: formatProjectRepositoriesResponseAsArray(
-            await getProjectRepositories(project_id)
-        ),
+        repositories: await getProjectRepositories(project_id),
     });
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
