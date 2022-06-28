@@ -1,23 +1,23 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@floating-ui/dom': ^0.4.2
+  '@floating-ui/dom': ^0.5.4
   '@tuleap/build-system-configurator': link:../build-system-configurator
 
 dependencies:
-  '@floating-ui/dom': 0.4.4
+  '@floating-ui/dom': 0.5.4
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
 
 packages:
 
-  /@floating-ui/core/0.6.1:
-    resolution: {integrity: sha512-Y30eVMcZva8o84c0HcXAtDO4BEzPJMvF6+B7x7urL2xbAqVsGJhojOyHLaoQHQYjb6OkqRq5kO+zeySycQwKqg==}
+  /@floating-ui/core/0.7.3:
+    resolution: {integrity: sha512-buc8BXHmG9l82+OQXOFU3Kr2XQx9ys01U/Q9HMIrZ300iLc8HLMgh7dcCqgYzAzf4BkoQvDcXf5Y+CuEZ5JBYg==}
     dev: false
 
-  /@floating-ui/dom/0.4.4:
-    resolution: {integrity: sha512-0Ulu3B/dqQplUUSqnTx0foSrlYuMN+GTtlJWvNJwt6Fr7/PqmlR/Y08o6/+bxDWr6p3roBJRaQ51MDZsNmEhhw==}
+  /@floating-ui/dom/0.5.4:
+    resolution: {integrity: sha512-419BMceRLq0RrmTSDxn8hf9R3VCJv2K9PUfugh5JyEFmdjzDo+e8U5EdR8nzKq8Yj1htzLm3b6eQEEam3/rrtg==}
     dependencies:
-      '@floating-ui/core': 0.6.1
+      '@floating-ui/core': 0.7.3
     dev: false
