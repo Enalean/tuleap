@@ -175,6 +175,39 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory->enablePlugin($plugin);
     }
 
+    public function testCannotEnablePluginWithAMissingInstallRequirement(): void
+    {
+        $plugin = new class extends Plugin
+        {
+            public function getName(): string
+            {
+                return 'test_plugin';
+            }
+
+            public function getInstallRequirements(): array
+            {
+                return [
+                    new class implements PluginInstallRequirement {
+                        public function getDescriptionOfMissingInstallRequirement(): ?string
+                        {
+                            return null;
+                        }
+                    },
+                    new class implements PluginInstallRequirement {
+                        public function getDescriptionOfMissingInstallRequirement(): ?string
+                        {
+                            return 'missing_requirement';
+                        }
+                    },
+                ];
+            }
+        };
+
+        $this->expectException(MissingInstallRequirementException::class);
+        $this->expectExceptionMessageMatches('/test_plugin.+missing_requirement/');
+        $this->factory->enablePlugin($plugin);
+    }
+
     public function testDisablePlugin(): void
     {
         $this->dao->shouldReceive('searchById')

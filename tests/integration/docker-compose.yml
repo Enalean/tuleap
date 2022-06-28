@@ -9,6 +9,9 @@ services:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
     command: /usr/share/tuleap/tests/integration/bin/run.sh
 
+  redis:
+    image: ${DOCKER_REGISTRY:-docker.io}/redis:7.0.2-alpine
+
   mysql57:
     image: ${DOCKER_REGISTRY:-docker.io}/mysql:5.7
     environment:

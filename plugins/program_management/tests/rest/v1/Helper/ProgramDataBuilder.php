@@ -51,8 +51,9 @@ use UserManager;
 
 final class ProgramDataBuilder extends REST_TestDataBuilder
 {
-    public const PROJECT_TEAM_NAME    = 'team';
-    public const PROJECT_PROGRAM_NAME = 'program';
+    public const PROJECT_TEAM_NAME        = 'team';
+    public const PROJECT_PROGRAM_NAME     = 'program';
+    private const MAX_ATTEMPTS_ASYNC_WAIT = 10;
 
     private ProgramIncrementCreationDispatcher $creation_dispatcher;
     private ?\PFUser $user;
@@ -120,7 +121,21 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
         $this->linkFeatureAndUserStories();
         $this->linkProgramIncrementToMirroredRelease();
         $this->linkProgramIncrementToIteration();
-        $this->linkUserStoryToIteration();
+        $is_success  = false;
+        $nb_attempts = 0;
+        while (! $is_success) {
+            try {
+                $this->linkUserStoryToIteration();
+            } catch (\LogicException $exception) {
+                if ($nb_attempts >= self::MAX_ATTEMPTS_ASYNC_WAIT) {
+                    throw $exception;
+                }
+                $nb_attempts++;
+                sleep(1);
+                continue;
+            }
+            $is_success = true;
+        }
     }
 
     private function linkFeatureAndUserStories(): void
