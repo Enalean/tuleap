@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -85,7 +86,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItBuildsProgramIncrementErrorPresenter(): void
     {
-        $error_collector = new ConfigurationErrorsCollector(false);
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $error_collector->addWorkflowDependencyError(
             $this->program_tracker,
             ProjectReferenceStub::buildGeneric()
@@ -102,7 +103,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItReturnsFalseWhenNoProgram(): void
     {
-        $error_collector = new ConfigurationErrorsCollector(false);
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $this->getErrorBuilder()->buildProgramIncrementErrorPresenter(
             $this->program_tracker,
             null,
@@ -115,7 +116,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItBuildsIterationErrorPresenter(): void
     {
-        $error_collector = new ConfigurationErrorsCollector(true);
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $error_collector->addWorkflowDependencyError(
             $this->program_tracker,
             ProjectReferenceStub::buildGeneric()
@@ -131,7 +132,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItReturnsFalseWhenNoTrackerFound(): void
     {
-        $error_collector = new ConfigurationErrorsCollector(true);
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $this->getErrorBuilder()->buildIterationErrorPresenter(
             null,
             $this->user_identifier,
@@ -144,7 +145,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     public function testItCollectTitleSemanticErrorForPlannableTrackers(): void
     {
         $program_identifier             = ProgramIdentifierBuilder::build();
-        $error_collector                = new ConfigurationErrorsCollector(true);
+        $error_collector                = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutTitleSemantic();
 
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
@@ -156,7 +157,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     public function testItCollectStatusSemanticErrorForPlannableTrackers(): void
     {
         $program_identifier             = ProgramIdentifierBuilder::build();
-        $error_collector                = new ConfigurationErrorsCollector(true);
+        $error_collector                = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutStatusSemantic();
         $this->tracker_factory->method('getTrackerById')->willReturn($this->tracker);
 
@@ -167,7 +168,7 @@ final class ConfigurationErrorPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
     public function testPlannableTrackersDoesNotHaveError(): void
     {
         $program_identifier             = ProgramIdentifierBuilder::build();
-        $error_collector                = new ConfigurationErrorsCollector(true);
+        $error_collector                = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $this->verify_tracker_semantics = VerifyTrackerSemanticsStub::withAllSemantics();
 
         $this->getErrorBuilder()->buildPlannableErrorPresenter($program_identifier, $error_collector);

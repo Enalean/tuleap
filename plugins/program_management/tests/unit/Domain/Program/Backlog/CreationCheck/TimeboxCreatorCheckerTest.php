@@ -35,6 +35,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyUserCanSubmit;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyRequiredFieldsLimitedToSynchronizedFieldsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifySemanticsAreConfiguredStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifySynchronizedFieldsAreNotUsedInWorkflowStub;
@@ -87,7 +88,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $teams,
             $this->user,
-            new ConfigurationErrorsCollector(false)
+            new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
         );
 
         $this->program_and_team_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
@@ -136,7 +137,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true)
             )
         );
     }
@@ -154,7 +155,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -174,7 +175,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -194,7 +195,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -212,7 +213,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -230,7 +231,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -248,14 +249,14 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_and_team_trackers,
                 $this->team_trackers,
                 $this->user,
-                new ConfigurationErrorsCollector(true)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true)
             )
         );
     }
 
     public function testItRunAllTestsEvenIfErrorsAreFound(): void
     {
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->getChecker(
                 VerifyFieldPermissionsStub::userCantSubmit(),

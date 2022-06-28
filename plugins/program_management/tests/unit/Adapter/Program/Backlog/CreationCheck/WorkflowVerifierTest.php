@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveTrackerFromFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -101,7 +102,7 @@ final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectReferenceStub::withId(785)
         );
 
-        $this->errors_collector = new ConfigurationErrorsCollector(true);
+        $this->errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
 
         $this->mirrored_program_increment_trackers = TrackerCollection::buildRootPlanningMilestoneTrackers(
             RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
@@ -151,7 +152,7 @@ final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -173,7 +174,7 @@ final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,
                 $this->collection,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -223,7 +224,7 @@ final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->verifier->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
                 $this->mirrored_program_increment_trackers,

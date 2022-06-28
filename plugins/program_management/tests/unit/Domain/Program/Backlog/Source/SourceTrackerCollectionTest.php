@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -68,7 +69,7 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
             $this->teams,
             $this->user,
-            new ConfigurationErrorsCollector(false)
+            new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
         );
     }
 

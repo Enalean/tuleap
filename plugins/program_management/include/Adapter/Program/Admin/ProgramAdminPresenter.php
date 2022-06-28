@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
+use Tuleap\ProgramManagement\Adapter\FeatureFlagEnableTeamJoinTrain;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerErrorPresenter;
@@ -67,11 +68,12 @@ final class ProgramAdminPresenter
     public ?TrackerErrorPresenter $program_increment_error_presenter;
     public ?TrackerErrorPresenter $iteration_error_presenter;
     public ?TrackerErrorPresenter $plannable_error_presenter;
-
+    public bool $can_synchronize_program_increments;
+    public bool $can_force_team_synchronization;
 
     /**
-     * @param PotentialTeamPresenter[]                    $potential_teams
-     * @param TeamPresenter[]                             $aggregated_teams
+     * @param PotentialTeamPresenter[] $potential_teams
+     * @param TeamPresenter[] $aggregated_teams
      * @param ProgramSelectOptionConfigurationPresenter[] $potential_program_increments
      * @param ProgramSelectOptionConfigurationPresenter[] $potential_plannable_trackers
      * @param ProgramSelectOptionConfigurationPresenter[] $ugroups_can_prioritize
@@ -106,11 +108,14 @@ final class ProgramAdminPresenter
         $this->iteration_label              = $iteration_label;
         $this->iteration_sub_label          = $iteration_sub_label;
 
-        $this->has_errors                        =  ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors)
+        $this->has_errors                        = ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors)
             || ($iteration_error_presenter && $iteration_error_presenter->has_presenter_errors)
             || ($plannable_error_presenter && $plannable_error_presenter->has_presenter_errors);
         $this->program_increment_error_presenter = $program_increment_error_presenter;
         $this->iteration_error_presenter         = $iteration_error_presenter;
         $this->plannable_error_presenter         = $plannable_error_presenter;
+
+        $this->can_synchronize_program_increments = FeatureFlagEnableTeamJoinTrain::isEnabled();
+        $this->can_force_team_synchronization     = $this->can_synchronize_program_increments;
     }
 }

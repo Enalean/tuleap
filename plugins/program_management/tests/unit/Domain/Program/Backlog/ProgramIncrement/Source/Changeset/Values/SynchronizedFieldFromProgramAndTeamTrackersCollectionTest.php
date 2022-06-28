@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -75,7 +76,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
         $this->assertTrue(
             $collection->canUserSubmitAndUpdateAllFields(
                 $this->user_identifier,
-                new ConfigurationErrorsCollector(false)
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
             )
         );
     }
@@ -84,7 +85,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantSubmit());
         $collection->add($this->synchronized_fields);
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $this->assertFalse(
             $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
@@ -98,7 +99,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantUpdate());
         $collection->add($this->synchronized_fields);
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $this->assertFalse(
             $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
@@ -111,7 +112,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantSubmit());
         $collection->add($this->synchronized_fields);
-        $errors_collector = new ConfigurationErrorsCollector(false);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $this->assertFalse(
             $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );
@@ -123,7 +124,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     {
         $collection = $this->getCollection(VerifyFieldPermissionsStub::userCantUpdate());
         $collection->add($this->synchronized_fields);
-        $errors_collector = new ConfigurationErrorsCollector(false);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $this->assertFalse(
             $collection->canUserSubmitAndUpdateAllFields($this->user_identifier, $errors_collector)
         );

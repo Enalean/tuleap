@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Sour
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Fields\RetrieveFullArtifactLinkField;
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\ArtifactLinkFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
@@ -62,7 +63,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         if (! $title_field instanceof \Tracker_FormElement_Field_String) {
             $errors_collector?->addTitleHasIncorrectType(
                 "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-semantic&semantic=title",
-                $full_tracker->getName(),
+                TrackerReferenceProxy::fromTracker($full_tracker),
                 $full_tracker->getProject()->getPublicName(),
                 $title_field->getLabel()
             );
@@ -124,7 +125,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
         if (! $artifact_link_field) {
             $errors_collector?->addMissingFieldArtifactLink(
                 "/plugins/tracker/?tracker=" . urlencode((string) $full_tracker->getId()) . "&func=admin-formElements",
-                $full_tracker->getName(),
+                TrackerReferenceProxy::fromTracker($full_tracker),
                 $full_tracker->getProject()->getPublicName(),
             );
             throw new NoArtifactLinkFieldException($tracker_identifier);

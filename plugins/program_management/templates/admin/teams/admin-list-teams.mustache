@@ -13,15 +13,29 @@
                         <i class="program-management-card-teams-icon fas fa-fw fa-archive" aria-hidden="true"></i>
                     {{/ project_icon}}
                     {{ public_name }}
-                    <button
-                        type="button"
-                        class="tlp-button-danger tlp-button-small tlp-button-outline program-management-admin-remove-teams-open-modal-button"
-                        data-target-modal-id="program-management-delete-team-{{ id }}"
-                        data-team-id="{{ id }}"
-                    >
-                        <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
-                        {{# dgettext }}tuleap-program_management | Remove team from program {{/ dgettext }}
-                    </button>
+                    <div class="program-management-admin-action-button">
+                        {{# can_force_team_synchronization }}
+                            {{^ has_configuration_error }}
+                                <button
+                                    type="button"
+                                    class="tlp-button-primary tlp-button-small tlp-button-outline program-management-admin-action-synchronize-button disabled"
+
+                                >
+                                    <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
+                                    {{# dgettext }}tuleap-program_management | Sync open Program Increments {{/ dgettext }}
+                                </button>
+                            {{/ has_configuration_error }}
+                        {{/ can_force_team_synchronization }}
+                        <button
+                            type="button"
+                            class="tlp-button-danger tlp-button-small tlp-button-outline program-management-admin-remove-teams-open-modal-button"
+                            data-target-modal-id="program-management-delete-team-{{ id }}"
+                            data-team-id="{{ id }}"
+                        >
+                            <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                            {{# dgettext }}tuleap-program_management | Remove team from program {{/ dgettext }}
+                        </button>
+                    </div>
                 </a>
             {{/ aggregated_teams }}
         </section>

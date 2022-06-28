@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerS
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -98,7 +99,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -113,7 +114,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -126,7 +127,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -139,7 +140,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollectionBuilder::withEmptyTeams(),
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -155,7 +156,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -169,7 +170,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
             $this->tracker,
             $this->program,
             $this->teams,
-            new ConfigurationErrorsCollector(true),
+            new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
             $this->user_identifier
         ));
     }

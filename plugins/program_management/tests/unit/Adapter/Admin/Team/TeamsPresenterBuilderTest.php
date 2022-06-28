@@ -29,14 +29,18 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testBuildPresenterWithAllTeam(): void
     {
+        $team_A     = ProjectReferenceStub::withId(150);
+        $team_B     = ProjectReferenceStub::withId(666);
         $collection = TeamProjectsCollectionBuilder::withProjects(
-            ProjectReferenceStub::withId(150),
-            ProjectReferenceStub::withId(666),
+            $team_A,
+            $team_B,
         );
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection);
+        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection, [$team_A->getId()]);
         self::assertCount(2, $teams_presenter);
-        self::assertSame(150, $teams_presenter[0]->id);
-        self::assertSame(666, $teams_presenter[1]->id);
+        self::assertSame($team_A->getId(), $teams_presenter[0]->id);
+        self::assertTrue($teams_presenter[0]->has_configuration_error);
+        self::assertSame($team_B->getId(), $teams_presenter[1]->id);
+        self::assertFalse($teams_presenter[1]->has_configuration_error);
     }
 }

@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -73,7 +74,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
     public function testItDisableArtifactSubmissionWhenCollectorFoundErrors(): void
     {
-        $error_collector = new ConfigurationErrorsCollector(true);
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $error_collector->addWorkflowDependencyError(TrackerReferenceStub::withDefaults(), ProjectReferenceStub::buildGeneric());
 
         $this->handler->handle($this->proxy, $error_collector);
@@ -82,7 +83,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
 
     public function testKeepsSubmissionEnabled(): void
     {
-        $error_collector = new ConfigurationErrorsCollector(true);
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
 
         $this->handler->handle($this->proxy, $error_collector);
         self::assertTrue($this->event->canSubmitNewArtifact());

@@ -57,7 +57,7 @@ final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker($full_tracker);
 
         if ($program_tracker_status_semantic->getField() === null) {
-            $configuration_errors->addSemanticNoStatusFieldError($tracker->getId());
+            $configuration_errors->addSemanticNoStatusFieldError($tracker);
             return false;
         }
 

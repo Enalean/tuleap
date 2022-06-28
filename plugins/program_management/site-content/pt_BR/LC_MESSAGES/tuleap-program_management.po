@@ -366,6 +366,9 @@ msgid ""
 "%s</a>:"
 msgstr ""
 
+msgid "Sync open Program Increments"
+msgstr ""
+
 msgid ""
 "Team project <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>%s</"
 "a> has no root planning or you can't access it"

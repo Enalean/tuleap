@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerS
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -79,7 +80,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $retriever,
             $teams,
             $user_identifier,
-            new ConfigurationErrorsCollector(false)
+            new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
         );
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->program_increment_tracker),
@@ -122,7 +123,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with([1, self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID, self::SECOND_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID])
             ->willReturn(true);
 
-        $configuration_errors = new ConfigurationErrorsCollector(false);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         self::assertTrue(
             $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
@@ -150,7 +151,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
             ->willReturn(true);
 
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
@@ -183,7 +184,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
             ->willReturn(true);
 
-        $configuration_errors = new ConfigurationErrorsCollector(false);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         self::assertFalse(
             $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
@@ -210,7 +211,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_dao->method('areTimeFrameSemanticsUsingSameTypeOfField')
             ->willReturn(false);
 
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->verifier->areTrackerSemanticsWellConfigured(
                 $this->program_increment_tracker,
