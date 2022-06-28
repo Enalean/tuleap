@@ -125,14 +125,17 @@ class Docman_View_Details extends Docman_View_Display
         $item_factory = $this->_getItemFactory();
         $details      = new Docman_View_ItemDetails($params['item'], $url);
         $sections     = [];
-        if ($user_can_write && $is_old_ui_allowed) {
+        if ($user_can_write) {
+            $actions = null;
             if ($view && $section == 'actions') {
                 $actions = $view;
-            } else {
+            } elseif ($is_old_ui_allowed) {
                 $actions = new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), ! $item_factory->isRoot($params['item']), $this->_controller);
             }
-            $sections['actions'] = true;
-            $details->addSection($actions);
+            if ($actions) {
+                $sections['actions'] = true;
+                $details->addSection($actions);
+            }
         }
         if ($user_can_manage && $is_old_ui_allowed) {
             $sections['permissions'] = true;
