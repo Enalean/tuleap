@@ -23,11 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
-use Project;
 use Psr\Log\Test\TestLogger;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Semantic_Status;
-use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
@@ -38,10 +36,13 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
@@ -49,11 +50,15 @@ use UserNotExistException;
 
 final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 {
-    private const POST_PUSH_LOG_PREFIX = '|  |  |_ ';
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&PostPushCommitArtifactUpdater
-     */
-    private $artifact_updater;
+    private const POST_PUSH_LOG_PREFIX  = '|  |  |_ ';
+    private const COMMITTER_EMAIL       = 'john-snow@example.com';
+    private const COMMITTER_USERNAME    = 'jsnow';
+    private const DONE_BIND_VALUE_ID    = 506;
+    private const GITLAB_INTEGRATION_ID = 1;
+    private const PROJECT_ID            = 101;
+    private const GITLAB_REPOSITORY_ID  = 12;
+    private const MASTER_BRANCH_NAME    = 'master';
+
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactRetriever
      */
@@ -62,10 +67,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
      */
     private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_StatusFactory
-     */
-    private $semantic_status_factory;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryProjectDao
      */
@@ -78,7 +79,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&GitlabProjectBuilder
      */
     private $gitlab_project_builder;
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_Status
      */
@@ -87,419 +87,141 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&Artifact
      */
     private $artifact;
-    private \Tracker $tracker;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Credentials
      */
     private $credentials;
-    private PostPushWebhookCloseArtifactHandler $handler;
-    private \PFUser $user;
+    private \PFUser $workflow_user;
     private WebhookTuleapReference $reference;
-    private GitlabRepositoryIntegration $integration;
-    private PostPushCommitWebhookData $webhook_data;
     private TestLogger $logger;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&DoneValueRetriever
+     */
+    private $done_value_retriever;
+    private \Project $project;
 
     protected function setUp(): void
     {
-        $this->artifact_updater        = $this->createMock(PostPushCommitArtifactUpdater::class);
-        $this->artifact_retriever      = $this->createMock(ArtifactRetriever::class);
-        $this->user_manager            = $this->createMock(UserManager::class);
-        $this->semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
-        $this->repository_project_dao  = $this->createMock(GitlabRepositoryProjectDao::class);
-        $this->credentials_retriever   = $this->createMock(CredentialsRetriever::class);
-        $this->gitlab_project_builder  = $this->createMock(GitlabProjectBuilder::class);
-        $this->logger                  = new TestLogger();
-        $this->status_semantic         = $this->createMock(Tracker_Semantic_Status::class);
-        $this->credentials             = $this->createMock(Credentials::class);
-        $this->reference               = new WebhookTuleapReference(123, "resolve");
+        $this->artifact_retriever     = $this->createMock(ArtifactRetriever::class);
+        $this->user_manager           = $this->createMock(UserManager::class);
+        $this->repository_project_dao = $this->createMock(GitlabRepositoryProjectDao::class);
+        $this->credentials_retriever  = $this->createMock(CredentialsRetriever::class);
+        $this->gitlab_project_builder = $this->createMock(GitlabProjectBuilder::class);
+        $this->logger                 = new TestLogger();
+        $this->status_semantic        = $this->createMock(Tracker_Semantic_Status::class);
+        $this->credentials            = $this->createMock(Credentials::class);
+        $this->reference              = new WebhookTuleapReference(123, 'resolve');
+        $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
 
-        $this->integration = new GitlabRepositoryIntegration(
-            1,
-            12,
+        $this->user_manager->method('getUserByEmail')->willReturn(
+            UserTestBuilder::aUser()->withUserName(self::COMMITTER_USERNAME)->build()
+        );
+
+        $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $this->workflow_user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
+        $tracker             = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
+        $this->artifact      = $this->createMock(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($tracker);
+        $this->artifact->method('isOpen')->willReturn(true);
+    }
+
+    private function handle(): void
+    {
+        $status_semantic_factory = $this->createStub(\Tracker_Semantic_StatusFactory::class);
+        $status_semantic_factory->method('getByTracker')->willReturn($this->status_semantic);
+
+        $webhook_data = new PostPushCommitWebhookData(
+            'feff4ced04b237abb8b4a50b4160099313152c3c',
+            'A commit with references containing close artifact keyword',
+            'A commit with reference: resolve TULEAP-123',
+            self::MASTER_BRANCH_NAME,
+            1608110510,
+            self::COMMITTER_EMAIL,
+            "John Snow"
+        );
+
+        $gitlab_integration = new GitlabRepositoryIntegration(
+            self::GITLAB_INTEGRATION_ID,
+            self::GITLAB_REPOSITORY_ID,
             "MyRepo",
             "",
             "https://example",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            $this->project,
             false
         );
 
-        $this->webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            'A commit with references containing close artifact keyword',
-            'A commit with reference: resolve TULEAP-123',
-            "master",
-            1608110510,
-            "john-snow@example.com",
-            "John Snow"
-        );
-
-        $this->user     = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
-        $this->tracker  = TrackerTestBuilder::aTracker()->withProject(\Project::buildForTest())->build();
-        $this->artifact = $this->createMock(Artifact::class);
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->handler = new PostPushWebhookCloseArtifactHandler(
-            $this->artifact_updater,
+        $handler = new PostPushWebhookCloseArtifactHandler(
+            new PostPushCommitArtifactUpdater(
+                $this->createStub(StatusValueRetriever::class),
+                $this->done_value_retriever,
+                $this->user_manager,
+                $this->logger
+            ),
             $this->artifact_retriever,
             $this->user_manager,
-            $this->semantic_status_factory,
+            $status_semantic_factory,
             $this->repository_project_dao,
             $this->credentials_retriever,
             $this->gitlab_project_builder,
             new PrefixedLogger($this->logger, self::POST_PUSH_LOG_PREFIX)
         );
-    }
 
-    public function testItAsksToAddACommentWhenNoSemanticDefined(): void
-    {
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
-            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
-            ->willReturn(true);
-
-        $this->user_manager
-            ->expects(self::once())
-            ->method('getUserById')
-            ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->willReturn($this->user);
-
-        $this->status_semantic->method('getField')->willReturn(null);
-
-        $this->semantic_status_factory
-            ->expects(self::once())
-            ->method('getByTracker')
-            ->with($this->tracker)
-            ->willReturn($this->status_semantic);
-
-        $this->mockGitlabProjectDefaultBranch();
-
-        $this->artifact_updater
-            ->expects(self::once())
-            ->method('addTuleapArtifactCommentNoSemanticDefined')
-            ->with(
-                $this->artifact,
-                $this->user,
-                $this->webhook_data
-            )
-            ->willReturn(Result::ok(null));
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
-    }
-
-    public function testItDoesNothingIfArtifactIsNotFound(): void
-    {
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willThrowException(new ArtifactNotFoundException());
-
-        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
-
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
-
-        $this->assertTrue($this->logger->hasError("|  |  |_ Artifact #123 not found"));
-    }
-
-    public function testItLogErrorIfNoValidValue(): void
-    {
-        $this->user_manager
-            ->expects(self::once())
-            ->method('getUserById')
-            ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->willReturn($this->user);
-
-
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
-            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
-            ->willReturn(true);
-
-        $this->credentials_retriever
-            ->expects(self::once())
-            ->method('getCredentials')
-            ->willReturn($this->credentials);
-
-        $this->artifact_updater->method('closeTuleapArtifact')->willThrowException(new NoPossibleValueException());
-
-        $this->gitlab_project_builder
-            ->expects(self::once())
-            ->method('getProjectFromGitlabAPI')
-            ->with(
-                $this->credentials,
-                12
-            )
-            ->willReturn(
-                new GitlabProject(
-                    12,
-                    "",
-                    "https://example/MyRepo",
-                    "MyRepo",
-                    new DateTimeImmutable(),
-                    "master"
-                )
-            );
-
-        $this->semantic_status_factory
-            ->expects(self::once())
-            ->method('getByTracker')
-            ->with($this->tracker)
-            ->willReturn($this->status_semantic);
-
-        $this->status_semantic->method('getField')->willReturn(
-            $this->createMock(Tracker_FormElement_Field_Selectbox::class)
-        );
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
-
-        $this->assertTrue(
-            $this->logger->hasError(
-                "|  |  |_ Artifact #123 cannot be closed. No possible value found regarding your configuration. Please check your transition and field dependencies."
-            )
-        );
-    }
-
-    public function testItDoesNothingIfWorkflowUserIsNotFound(): void
-    {
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
-            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
-            ->willReturn(true);
-
-        $this->user_manager
-            ->expects(self::once())
-            ->method('getUserById')
-            ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->willReturn(null);
-
-        $this->expectException(UserNotExistException::class);
-
-        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
-    }
-
-    public function testItDoesNothingIfRepositoryDoesNotHaveCredential(): void
-    {
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
-            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
-            ->willReturn(true);
-
-        $this->user_manager
-            ->expects(self::once())
-            ->method('getUserById')
-            ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->willReturn($this->user);
-
-        $this->credentials_retriever
-            ->expects(self::once())
-            ->method('getCredentials')
-            ->willReturn(null);
-
-        $this->gitlab_project_builder->expects(self::never())->method('getProjectFromGitlabAPI');
-
-        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
-
-        $this->assertTrue(
-            $this->logger->hasWarning(
-                "|  |  |_ Artifact #123 cannot be closed because no token found for integration. Skipping."
-            )
-        );
-    }
-
-    public function testItDoesNothingIfBranchIsNotDefault(): void
-    {
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
-            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
-            ->willReturn(true);
-
-        $this->user_manager
-            ->expects(self::once())
-            ->method('getUserById')
-            ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->willReturn($this->user);
-
-        $this->mockGitlabProjectAnotherDefaultBranch();
-
-        $this->artifact_updater->expects(self::never())->method('addTuleapArtifactCommentNoSemanticDefined');
-        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
+        $handler->handleArtifactClosure($this->reference, $webhook_data, $gitlab_integration);
     }
 
     public function testItAskToCommentArtifactAndChangeStatusIfStatusSemanticIsDefined(): void
     {
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
-            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
-            ->willReturn(true);
-
-        $this->user_manager
-            ->expects(self::once())
-            ->method('getUserById')
-            ->with(Tracker_Workflow_WorkflowUser::ID)
-            ->willReturn($this->user);
-
-        $this->status_semantic->method('getField')->willReturn(
-            $this->createMock(Tracker_FormElement_Field_Selectbox::class)
-        );
-
-        $this->semantic_status_factory
-            ->expects(self::once())
-            ->method('getByTracker')
-            ->with($this->tracker)
-            ->willReturn($this->status_semantic);
-
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
-
-        $this->artifact_updater
-            ->expects(self::once())
-            ->method('closeTuleapArtifact')
-            ->with(
-                $this->artifact,
-                $this->user,
-                $this->webhook_data,
-                $this->reference,
-                $this->status_semantic->getField(),
-                $this->integration
-            );
-
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
+        $this->mockThereIsAStatusField();
+        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn(
+            $this->getBindValue()
         );
+
+        $this->artifact->method('createNewChangeset')
+            ->with(self::anything(), self::anything(), $this->workflow_user)
+            ->willReturn(ChangesetTestBuilder::aChangeset('515')->build());
+
+        $this->handle();
     }
 
     public function testItDoesNothingIfNoCloseKeywordDefined(): void
     {
-        $reference = new WebhookTuleapReference(123);
-        $this->artifact_retriever->expects(self::never())->method('retrieveArtifactById');
-        $this->repository_project_dao->expects(self::never())->method(
-            'isArtifactClosureActionEnabledForRepositoryInProject'
-        );
+        $this->reference = new WebhookTuleapReference(123);
 
-        $this->user_manager->expects(self::never())->method('getUserById');
-        $this->semantic_status_factory->expects(self::never())->method('getByTracker');
-        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
+        $this->artifact->expects(self::never())->method('createNewChangeset');
 
-        $this->handler->handleArtifactClosure(
-            $reference,
-            $this->webhook_data,
-            $this->integration
-        );
+        $this->handle();
+    }
+
+    public function testItDoesNothingIfReferencedArtifactIsNotFound(): void
+    {
+        $this->artifact_retriever->method('retrieveArtifactById')
+            ->with($this->reference)
+            ->willThrowException(new ArtifactNotFoundException());
+
+        $this->artifact->expects(self::never())->method('createNewChangeset');
+
+        $this->handle();
+
+        $this->assertTrue($this->logger->hasError("|  |  |_ Artifact #123 not found"));
     }
 
     public function testItDoesNothingIfRepositoryIsNotIntegratedInProjectOfArtifact(): void
     {
-        $this->artifact->method('getTracker')->willReturn($this->tracker);
-
-        $this->artifact_retriever
-            ->expects(self::once())
-            ->method('retrieveArtifactById')
-            ->with($this->reference)
-            ->willReturn($this->artifact);
-
-        $this->repository_project_dao
-            ->expects(self::once())
+        $this->mockReferencedArtifactIsFound();
+        $this->repository_project_dao->expects(self::once())
             ->method('isArtifactClosureActionEnabledForRepositoryInProject')
-            ->with(1, 101)
+            ->with(self::GITLAB_INTEGRATION_ID, self::PROJECT_ID)
             ->willReturn(false);
 
-        $this->user_manager->expects(self::never())->method('getUserById');
-        $this->semantic_status_factory->expects(self::never())->method('getByTracker');
-        $this->artifact_updater->expects(self::never())->method('closeTuleapArtifact');
+        $this->artifact->expects(self::never())->method('createNewChangeset');
 
-        $this->handler->handleArtifactClosure(
-            $this->reference,
-            $this->webhook_data,
-            $this->integration
-        );
+        $this->handle();
 
         $this->assertTrue(
             $this->logger->hasWarning(
@@ -511,49 +233,54 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         );
     }
 
-    private function mockGitlabProjectDefaultBranch(): void
+    public function testItThrowsIfWorkflowUserIsNotFound(): void
     {
-        $this->credentials_retriever
-            ->expects(self::once())
-            ->method('getCredentials')
-            ->willReturn($this->credentials);
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->user_manager->method('getUserById')->willReturn(null);
 
-        $this->gitlab_project_builder
-            ->expects(self::once())
-            ->method('getProjectFromGitlabAPI')
-            ->with(
-                $this->credentials,
-                12
-            )
-            ->willReturn(
-                new GitlabProject(
-                    12,
-                    "",
-                    "https://example/MyRepo",
-                    "MyRepo",
-                    new DateTimeImmutable(),
-                    "master"
-                )
-            );
+        $this->expectException(UserNotExistException::class);
+
+        $this->artifact->expects(self::never())->method('createNewChangeset');
+
+        $this->handle();
     }
 
-    private function mockGitlabProjectAnotherDefaultBranch(): void
+    public function testItDoesNothingIfRepositoryDoesNotHaveCredentials(): void
     {
-        $this->credentials_retriever
-            ->expects(self::once())
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->credentials_retriever->expects(self::once())
             ->method('getCredentials')
-            ->willReturn($this->credentials);
+            ->willReturn(null);
 
-        $this->gitlab_project_builder
-            ->expects(self::once())
+        $this->artifact->expects(self::never())->method('createNewChangeset');
+
+        $this->handle();
+
+        $this->assertTrue(
+            $this->logger->hasWarning(
+                "|  |  |_ Artifact #123 cannot be closed because no token found for integration. Skipping."
+            )
+        );
+    }
+
+    public function testItDoesNothingIfBranchIsNotDefault(): void
+    {
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->mockGitLabRepositoryHasCredentials();
+        $this->gitlab_project_builder->expects(self::once())
             ->method('getProjectFromGitlabAPI')
             ->with(
                 $this->credentials,
-                12
+                self::GITLAB_REPOSITORY_ID
             )
             ->willReturn(
                 new GitlabProject(
-                    12,
+                    self::GITLAB_REPOSITORY_ID,
                     "",
                     "https://example/MyRepo",
                     "MyRepo",
@@ -561,5 +288,113 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
                     "main"
                 )
             );
+
+        $this->artifact->expects(self::never())->method('createNewChangeset');
+
+        $this->handle();
+    }
+
+    public function testItAsksToAddACommentWhenNoSemanticDefined(): void
+    {
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->mockGitLabRepositoryHasCredentials();
+        $this->mockGitlabProjectDefaultBranch();
+        $this->status_semantic->method('getField')->willReturn(null);
+
+        $this->artifact->method('createNewChangeset')
+            ->with([], self::anything(), $this->workflow_user)
+            ->willReturn(ChangesetTestBuilder::aChangeset('9123')->build());
+
+        $this->handle();
+    }
+
+    public function testItLogsErrorIfNoValidValue(): void
+    {
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->mockGitLabRepositoryHasCredentials();
+        $this->mockGitlabProjectDefaultBranch();
+        $this->mockThereIsAStatusField();
+        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willThrowException(
+            new NoPossibleValueException()
+        );
+
+        $this->handle();
+
+        $this->assertTrue(
+            $this->logger->hasError(
+                "|  |  |_ Artifact #123 cannot be closed. No possible value found regarding your configuration. Please check your transition and field dependencies."
+            )
+        );
+    }
+
+    private function getBindValue(): \Tracker_FormElement_Field_List_Bind_StaticValue
+    {
+        return new \Tracker_FormElement_Field_List_Bind_StaticValue(
+            self::DONE_BIND_VALUE_ID,
+            'Done',
+            'irrelevant',
+            3,
+            false
+        );
+    }
+
+    private function mockWorkflowUserIsFound(): void
+    {
+        $this->user_manager->method('getUserById')
+            ->with(\Tracker_Workflow_WorkflowUser::ID)
+            ->willReturn($this->workflow_user);
+    }
+
+    private function mockReferencedArtifactIsFound(): void
+    {
+        $this->artifact_retriever->method('retrieveArtifactById')
+            ->with($this->reference)
+            ->willReturn($this->artifact);
+    }
+
+    private function mockArtifactClosureIsEnabled(): void
+    {
+        $this->repository_project_dao->expects(self::once())
+            ->method('isArtifactClosureActionEnabledForRepositoryInProject')
+            ->with(self::GITLAB_INTEGRATION_ID, self::PROJECT_ID)
+            ->willReturn(true);
+    }
+
+    private function mockGitLabRepositoryHasCredentials(): void
+    {
+        $this->credentials_retriever->method('getCredentials')->willReturn($this->credentials);
+    }
+
+    private function mockGitlabProjectDefaultBranch(): void
+    {
+        $this->gitlab_project_builder->expects(self::once())
+            ->method('getProjectFromGitlabAPI')
+            ->with(
+                $this->credentials,
+                self::GITLAB_REPOSITORY_ID
+            )
+            ->willReturn(
+                new GitlabProject(
+                    self::GITLAB_REPOSITORY_ID,
+                    "",
+                    "https://example/MyRepo",
+                    "MyRepo",
+                    new DateTimeImmutable(),
+                    self::MASTER_BRANCH_NAME
+                )
+            );
+    }
+
+    private function mockThereIsAStatusField(): void
+    {
+        $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $field->method('getId')->willReturn(945);
+        $field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
+
+        $this->status_semantic->method('getField')->willReturn($field);
     }
 }
