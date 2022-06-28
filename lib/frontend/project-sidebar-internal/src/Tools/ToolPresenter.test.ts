@@ -21,10 +21,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { default as ToolComponent } from "./Tool.vue";
+import { default as ToolComponent } from "./ToolPresenter.vue";
 import type { Tool } from "../configuration";
 
-describe("Tool", () => {
+describe("ToolPresenter", () => {
     it("displays an active link that do not force to open itself in a new tab", () => {
         const tool_data: Tool = {
             href: "/foo",

@@ -19,7 +19,7 @@
 
 import { createApp } from "vue";
 import type { App } from "vue";
-import Main from "./components/Main.vue";
+import MainComponent from "./components/MainComponent.vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getProjectRepositories } from "../api/rest_querier";
@@ -44,7 +44,7 @@ export async function init(
         app.unmount();
     }
 
-    app = createApp(Main, {
+    app = createApp(MainComponent, {
         repositories: await getProjectRepositories(project_id),
     });
     app.use(

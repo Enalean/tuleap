@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { GlobalExportProperties } from "../type";
-import Main from "./Main.vue";
+import MainComponent from "./MainComponent.vue";
 import { mount } from "@vue/test-utils";
 
-describe("Main", () => {
+describe("MainComponent", () => {
     it("mounts modal content", () => {
         const main_content = document.createElement("div");
         main_content.id = "main-content";
         document.body.append(main_content);
 
-        mount(Main, {
+        mount(MainComponent, {
             global: {
                 stubs: {
                     ModalContent: true,

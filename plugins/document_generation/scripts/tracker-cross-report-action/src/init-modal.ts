@@ -19,7 +19,7 @@
 
 import type { App } from "vue";
 import { createApp } from "vue";
-import Main from "./Components/Main.vue";
+import Main from "./Components/MainComponent.vue";
 import type { GlobalExportProperties } from "./type";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
