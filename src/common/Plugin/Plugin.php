@@ -75,15 +75,6 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->scope = self::SCOPE_SYSTEM;
     }
 
-    /**
-     * Callback called when the plugin is loaded
-     *
-     * @return void
-     */
-    public function loaded()
-    {
-    }
-
     public function isAllowed($group_id)
     {
         if (! isset($this->allowedForProject[$group_id])) {
@@ -334,10 +325,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return $pm;
     }
 
-    /**
-     * Function executed after plugin installation
-     */
-    public function postInstall(): void
+    public function postEnable(): void
     {
     }
 

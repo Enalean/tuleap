@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 use Tuleap\DB\DBConfig;
 
-final class MediaWikiUpdateScriptCaller
+final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAndUpdateHandler
 {
     private const LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI = 'LocalSettings.php';
 
@@ -39,7 +39,7 @@ final class MediaWikiUpdateScriptCaller
     ) {
     }
 
-    public function runUpdate(): void
+    public function runInstallAndUpdate(): void
     {
         $this->installFarmInstance();
         $this->logger->debug('Update MediaWiki standalone Tuleap managed LocalSettings file');

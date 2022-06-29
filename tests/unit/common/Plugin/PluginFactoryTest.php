@@ -163,16 +163,21 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEnablePlugin(): void
     {
-        $this->dao->shouldReceive('searchById')
-            ->with(123)
-            ->andReturns(\TestHelper::arrayToDar(['id' => '123', 'name' => 'plugin 123', 'available' => '0']));
         $this->dao->shouldReceive('enablePlugin')->with(123)->once();
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[getClassNameForPluginName]', [$this->dao, $this->restrictor])->shouldAllowMockingProtectedMethods();
-        $factory->shouldReceive('getClassNameForPluginName')->andReturns(['class' => 'Plugin', 'custom' => false]);
+        $plugin = new class (123) extends Plugin
+        {
+            public bool $post_enable_called = false;
 
-        $plugin = $factory->getPluginById(123);
-        $factory->enablePlugin($plugin);
+            public function postEnable(): void
+            {
+                $this->post_enable_called = true;
+            }
+        };
+
+        $this->factory->enablePlugin($plugin);
+
+        self::assertTrue($plugin->post_enable_called);
     }
 
     public function testCannotEnablePluginWithAMissingInstallRequirement(): void

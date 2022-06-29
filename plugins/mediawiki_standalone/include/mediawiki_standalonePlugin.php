@@ -41,12 +41,14 @@ use Tuleap\MediawikiStandalone\Configuration\GenerateLocalSettingsCommand;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiAsyncUpdateProcessor;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiSharedSecretGeneratorForgeConfigStore;
-use Tuleap\MediawikiStandalone\Configuration\MediaWikiUpdateScriptCaller;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiInstallAndUpdateScriptCaller;
 use Tuleap\MediawikiStandalone\Configuration\MustachePHPString\PHPStringMustacheRenderer;
 use Tuleap\MediawikiStandalone\Configuration\ProjectMediaWikiServiceDAO;
+use Tuleap\MediawikiStandalone\Configuration\UpdateMediaWikiTask;
 use Tuleap\MediawikiStandalone\Instance\InstanceManagement;
 use Tuleap\MediawikiStandalone\Instance\LogUsersOutInstanceTask;
 use Tuleap\MediawikiStandalone\Instance\MediawikiHTTPClientFactory;
@@ -160,10 +162,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         return MediawikiStandaloneService::class;
     }
 
-    public function postInstall(): void
+    public function postEnable(): void
     {
-        parent::postInstall();
-        $this->buildLocalSettingsInstantiator()->instantiateLocalSettings();
+        parent::postEnable();
+        (new EnqueueTask())->enqueue(new UpdateMediaWikiTask());
     }
 
     public function serviceClassnames(array &$params): void
@@ -232,13 +234,15 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function workerEvent(WorkerEvent $event): void
     {
+        $logger = $this->getBackendLogger();
         (new InstanceManagement(
-            $this->getBackendLogger(),
+            $logger,
             new MediawikiHTTPClientFactory(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             ProjectManager::instance(),
         ))->process($event);
+        (new MediaWikiAsyncUpdateProcessor($this->buildUpdateScriptCaller($logger)))->process($event);
     }
 
     public function getConfigKeys(ConfigClassProvider $event): void
@@ -365,12 +369,17 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             ]
         );
         $logger->info('Execute MediaWiki update script');
-        (new MediaWikiUpdateScriptCaller(
+        $this->buildUpdateScriptCaller($logger)->runInstallAndUpdate();
+    }
+
+    private function buildUpdateScriptCaller(\Psr\Log\LoggerInterface $logger): MediaWikiInstallAndUpdateScriptCaller
+    {
+        return new MediaWikiInstallAndUpdateScriptCaller(
             $this->buildSettingDirectoryPath(),
             $this->buildLocalSettingsInstantiator(),
             new ProjectMediaWikiServiceDAO(),
             $logger
-        ))->runUpdate();
+        );
     }
 
     private function buildLocalSettingsInstantiator(): LocalSettingsInstantiator
