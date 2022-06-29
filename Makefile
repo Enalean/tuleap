@@ -61,10 +61,12 @@ preload:
 
 ## RNG generation
 
-rnc2rng-docker: clean-rng ## Compile rnc file into rng
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -w /tuleap -u "`id -u`":"`id -g`" ghcr.io/enalean/rnc2rng make rnc2rng
+.PHONY: rnc2rng
+rnc2rng: clean-rng ## Compile rnc file into rng
+	nix-shell ./tools/utils/nix/rnc2rng.nix --pure --command 'make rnc2rng-exec'
 
-rnc2rng: src/common/xml/resources/project/project.rng \
+.PHONY: rnc2rng-exec
+rnc2rng-exec: src/common/xml/resources/project/project.rng \
 	 src/common/xml/resources/users.rng  \
 	 plugins/svn/resources/svn.rng \
 	 plugins/docman/resources/docman.rng \
@@ -296,7 +298,6 @@ bash-web: ## Give a bash on web container
 pull-docker-images: ## Pull all docker images used for development
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:c7-php80 KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
-	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=ghcr.io/enalean/rnc2rng:latest KEY_PATH=tools/utils/signing-keys/tuleap-additional-tools.pub
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
 	cosign verify -key=tools/utils/signing-keys/tuleap-additional-tools.pub ghcr.io/enalean/tuleap-aio-dev:c7-php80-nginx
