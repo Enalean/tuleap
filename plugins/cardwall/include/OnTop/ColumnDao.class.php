@@ -31,7 +31,7 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchByColumnId(int $column_id)
     {

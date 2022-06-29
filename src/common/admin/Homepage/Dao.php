@@ -20,7 +20,7 @@
 
 class Admin_Homepage_Dao extends DataAccessObject
 {
-    /** @return DataAccessResult */
+    /** @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface */
     public function searchHeadlines()
     {
         $sql = "SELECT * FROM homepage_headline";

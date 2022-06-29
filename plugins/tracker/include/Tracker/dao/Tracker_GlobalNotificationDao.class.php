@@ -33,7 +33,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -43,7 +43,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches Tracker_GlobalNotification by Id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchById($id)
     {
@@ -56,7 +56,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches Tracker_GlobalNotification by TrackerId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByTrackerId($trackerId)
     {
@@ -69,7 +69,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches Tracker_GlobalNotification by Addresses
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByAddresses($addresses)
     {
@@ -82,7 +82,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches Tracker_GlobalNotification by AllUpdates
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByAllUpdates($allUpdates)
     {
@@ -95,7 +95,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches Tracker_GlobalNotification by CheckPermissions
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByCheckPermissions($checkPermissions)
     {

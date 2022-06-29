@@ -27,7 +27,7 @@ class FeedbackDao extends DataAccessObject
 {
     /**
     * Searches Feedback
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function search($session_id)
     {

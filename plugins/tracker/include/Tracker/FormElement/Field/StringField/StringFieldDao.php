@@ -35,7 +35,7 @@ class StringFieldDao extends SpecificPropertiesDao
     /**
      * @param int $field_id
      * @param array $row
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @throws \DataAccessQueryException
      */
     public function save($field_id, $row)

@@ -129,7 +129,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     private function getAuthorizedUGroups()
     {

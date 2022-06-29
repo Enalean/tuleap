@@ -24,7 +24,7 @@ class Project_Service_ServiceUsageDao extends DataAccessObject
     /**
      * @param int $group_id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getAllServicesUsage($group_id)
     {
@@ -80,7 +80,7 @@ class Project_Service_ServiceUsageDao extends DataAccessObject
      * @param int $group_id
      * @param int $service_id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getServiceUsage($group_id, $service_id)
     {

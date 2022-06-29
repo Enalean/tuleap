@@ -66,7 +66,7 @@ class ProjectDashboardDao extends DataAccessObject
 
     /**
      * @param $dashboard_id
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchById($dashboard_id)
     {
@@ -82,7 +82,7 @@ class ProjectDashboardDao extends DataAccessObject
     /**
      * @param $project_id
      * @param $name
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchByProjectIdAndName($project_id, $name)
     {

@@ -34,7 +34,7 @@ class FRSReleaseDao extends DataAccessObject
     /**
      * Return the array that match given id.
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchById($id, $extraFlags = 0)
     {
@@ -91,7 +91,7 @@ class FRSReleaseDao extends DataAccessObject
     /**
      * Return the list of releases for a given package according to filters
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByPackageId($id)
     {

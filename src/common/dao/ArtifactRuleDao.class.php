@@ -26,7 +26,7 @@ class ArtifactRuleDao extends DataAccessObject
 {
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -36,7 +36,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by Id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchById($id)
     {
@@ -49,7 +49,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by GroupArtifactId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByGroupArtifactId($groupArtifactId)
     {
@@ -62,7 +62,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by SourceFieldId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchBySourceFieldId($sourceFieldId)
     {
@@ -75,7 +75,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by SourceValueId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchBySourceValueId($sourceValueId)
     {
@@ -88,7 +88,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by TargetFieldId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByTargetFieldId($targetFieldId)
     {
@@ -101,7 +101,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by RuleType
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByRuleType($ruleType)
     {
@@ -114,7 +114,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by TargetValueId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByTargetValueId($targetValueId)
     {
@@ -156,7 +156,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * Searches ArtifactRule by GroupArtifactId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByGroupArtifactIdWithOrder($groupArtifactId)
     {

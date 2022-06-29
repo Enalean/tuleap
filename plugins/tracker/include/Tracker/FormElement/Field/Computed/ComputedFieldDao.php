@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Computed;
 
-use DataAccessResult;
 use DateTime;
 use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
@@ -83,7 +82,7 @@ class ComputedFieldDao extends SpecificPropertiesDao
      *
      * @param int[]  $source_ids
      * @param String $target_name
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getFieldValues(array $source_ids, $target_name)
     {
@@ -128,7 +127,7 @@ class ComputedFieldDao extends SpecificPropertiesDao
      *
      * @param int[]  $source_ids
      * @param String $target_name
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getComputedFieldValues(array $source_ids, $target_name, $field_id, $stop_on_manual_value)
     {

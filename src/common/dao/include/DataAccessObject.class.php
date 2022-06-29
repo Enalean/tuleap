@@ -109,7 +109,7 @@ class DataAccessObject
      * @throws DataAccessQueryException
      *
      * @deprecated
-     * @return DataAccessResult|false
+     * @return LegacyDataAccessResultInterface|false
      *
      * @psalm-taint-sink sql $sql
      */
@@ -172,8 +172,6 @@ class DataAccessObject
 
     /**
      * Extracts ids from a DataAccessResult.
-     *
-     * @param DataAccessResult $dar
      *
      * @deprecated
      *

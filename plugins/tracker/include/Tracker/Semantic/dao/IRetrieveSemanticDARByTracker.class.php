@@ -21,6 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 interface Tracker_Semantic_IRetrieveSemanticDARByTracker
 {
     /**
@@ -28,7 +30,7 @@ interface Tracker_Semantic_IRetrieveSemanticDARByTracker
      *
      * @param int $tracker_id The tracker id
      *
-     * @return false|DataAccessResult — collection of array('field_id' => …)
+     * @return false|LegacyDataAccessResultInterface — collection of array('field_id' => …)
      * @psalm-ignore-falsable-return
      */
     public function searchByTrackerId($tracker_id);

@@ -32,7 +32,7 @@ class UGroupDao extends DataAccessObject
      *
      * @param int $group_id Id of the project
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByGroupId($group_id)
     {
@@ -48,7 +48,7 @@ class UGroupDao extends DataAccessObject
      *
      * @param int $ugroup_id Id of the ugroup
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByUGroupId($ugroup_id)
     {
@@ -127,7 +127,7 @@ class UGroupDao extends DataAccessObject
      *
      * @param int $userId Id of the user
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchGroupByUserId($userId)
     {
@@ -147,7 +147,7 @@ class UGroupDao extends DataAccessObject
      *
      * @param Integrer $user_id Id of user
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByUserId($user_id)
     {
@@ -255,7 +255,7 @@ class UGroupDao extends DataAccessObject
      *
      * @param int $sourceId The source ugroup id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchUGroupByBindingSource($sourceId)
     {
@@ -265,7 +265,7 @@ class UGroupDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchBindedUgroupsInProject($project_id)
     {
@@ -284,7 +284,7 @@ class UGroupDao extends DataAccessObject
      *
      * @param int $ugroupId The source ugroup id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getUgroupBindingSource($ugroupId)
     {

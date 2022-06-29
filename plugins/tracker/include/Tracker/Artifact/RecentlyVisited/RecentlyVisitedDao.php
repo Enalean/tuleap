@@ -62,7 +62,7 @@ class RecentlyVisitedDao extends DataAccessObject
     }
 
     /**
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchVisitByUserId($user_id, $maximum_visits)
     {

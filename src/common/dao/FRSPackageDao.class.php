@@ -35,7 +35,7 @@ class FRSPackageDao extends DataAccessObject
     /**
      * Return the array that match given id.
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchById($id, $extraFlags = 0)
     {
@@ -84,7 +84,7 @@ class FRSPackageDao extends DataAccessObject
     /**
      * Return the list of packages for a given projet according to filters
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByGroupId($id)
     {

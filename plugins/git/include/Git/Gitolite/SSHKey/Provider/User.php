@@ -27,7 +27,7 @@ use UserManager;
 class User implements IProvideKey
 {
     /**
-     * @var \DataAccessResult
+     * @var \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     private $user_with_ssh_keys;
     /**

@@ -50,7 +50,7 @@ class Docman_LockFactory
     *
     * @param int $groupId project id.
     *
-    * @return DataAccessResult|false of lockinfos or false if there isn't any document locked inside the project.
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false of lockinfos or false if there isn't any document locked inside the project.
     */
     public function getProjectLockInfos($groupId)
     {
@@ -164,7 +164,7 @@ class Docman_LockFactory
      *
      * @param Array $itemIds
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function retreiveLocksForItems(array $itemIds)
     {

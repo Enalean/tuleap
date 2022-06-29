@@ -24,7 +24,7 @@ class ReferenceDao extends DataAccessObject
 {
     /**
     * Gets all references for the given project ID, sorted for presentation
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByGroupID($group_id)
     {
@@ -37,7 +37,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Gets a reference from the reference id and the group ID, so that we also have "is_active" row
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByIdAndGroupID($ref_id, $group_id)
     {
@@ -51,7 +51,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Gets all active references for the given project ID
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchActiveByGroupID($group_id)
     {
@@ -64,7 +64,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -74,7 +74,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Searches Reference by reference Id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchById($id)
     {
@@ -103,7 +103,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Searches Reference by scope
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByScope($scope)
     {
@@ -115,7 +115,7 @@ class ReferenceDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchSystemReferenceByNatureAndKeyword($keyword, $nature)
     {
@@ -166,7 +166,7 @@ class ReferenceDao extends DataAccessObject
     /**
      * Searches Reference by service short name
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchByServiceShortName(int $project_id, string $service)
     {
@@ -185,7 +185,7 @@ class ReferenceDao extends DataAccessObject
     /**
     * Searches Reference by scope and service short name
     * Don't return reference 100 (empty reference)
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByScopeAndServiceShortName($scope, $service)
     {
@@ -201,7 +201,7 @@ class ReferenceDao extends DataAccessObject
     /**
     * Searches Reference by scope and service short name
     * Don't return reference 100 (empty reference)
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByScopeAndServiceShortNameAndGroupId($scope, $service, $group_id)
     {
@@ -217,7 +217,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Searches Reference by keyword and group_id
-    * @return DataAccessResult with one field ('reference_id')
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface with one field ('reference_id')
     */
     public function searchByKeywordAndGroupId($keyword, $group_id)
     {
@@ -235,7 +235,7 @@ class ReferenceDao extends DataAccessObject
 
     /**
     * Searches Reference by keyword and group_id
-    * @return DataAccessResult with one field ('reference_id')
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface with one field ('reference_id')
     */
     public function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword, $group_id, $description, $link, $scope)
     {

@@ -21,7 +21,7 @@
 class Docman_LinkVersionDao extends DataAccessObject
 {
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByItemId($item_id)
     {
@@ -35,7 +35,7 @@ class Docman_LinkVersionDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByNumber($item_id, $number)
     {

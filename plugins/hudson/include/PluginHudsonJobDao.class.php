@@ -26,7 +26,7 @@ class PluginHudsonJobDao extends DataAccessObject
 {
     /**
     * Gets all jobs in the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -36,7 +36,7 @@ class PluginHudsonJobDao extends DataAccessObject
 
     /**
     * Searches PluginHudsonJob by Codendi group ID
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByGroupID($group_id)
     {
@@ -51,7 +51,7 @@ class PluginHudsonJobDao extends DataAccessObject
 
     /**
     * Searches PluginHudsonJob by job ID
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByJobID($job_id)
     {
@@ -66,7 +66,7 @@ class PluginHudsonJobDao extends DataAccessObject
 
     /**
     * Searches PluginHudsonJob by job name
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByJobName($job_name, $group_id)
     {
@@ -83,7 +83,7 @@ class PluginHudsonJobDao extends DataAccessObject
     /**
     * Searches PluginHudsonJob by user ID
     * means "all the jobs of all projects the user is member of"
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByUserID($user_id)
     {
@@ -179,7 +179,7 @@ class PluginHudsonJobDao extends DataAccessObject
     *
     * @param int $groupId Id of the project
     *
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function countJobs($groupId = null)
     {

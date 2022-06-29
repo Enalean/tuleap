@@ -73,7 +73,7 @@ class SvnNotification
      *
      * @param int $projectId Project id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getSvnEventNotificationDetails($projectId)
     {

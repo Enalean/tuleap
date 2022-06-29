@@ -25,7 +25,7 @@ class Tracker_DateReminderDao extends DataAccessObject
      * @param Integer trackerId      Id of the tracker
      * @param Boolean checkReminders Retrieve only enabled reminders (optional)
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getDateReminders($trackerId, $checkReminders = true)
     {
@@ -46,7 +46,7 @@ class Tracker_DateReminderDao extends DataAccessObject
     /**
      * Get trackers having at least one active reminder
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getTrackersHavingDateReminders()
     {
@@ -174,7 +174,7 @@ class Tracker_DateReminderDao extends DataAccessObject
      *
      * @param int $reminderId Id of the reminder
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchById($reminderId)
     {
@@ -195,7 +195,7 @@ class Tracker_DateReminderDao extends DataAccessObject
      * @param int $distance Distance from the value of the date fiels
      * @param int $reminderId Id of the reminder if it is an updated one
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function findReminders($trackerId, $fieldId, $notificationType, $distance, $reminderId)
     {
@@ -246,7 +246,7 @@ class Tracker_DateReminderDao extends DataAccessObject
      *
      * @param int $reminderId Id of the reminder
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getRolesByReminderId($reminderId)
     {

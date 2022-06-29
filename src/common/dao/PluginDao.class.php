@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 /**
  *  Data Access Object for Plugin
  */
@@ -27,7 +29,7 @@ class PluginDao extends DataAccessObject
 
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -37,7 +39,7 @@ class PluginDao extends DataAccessObject
 
     /**
     * Searches Plugin by Id
-    * @return DataAccessResult
+    * @return LegacyDataAccessResultInterface
     */
     public function searchById($id)
     {
@@ -50,7 +52,7 @@ class PluginDao extends DataAccessObject
 
     /**
     * Searches Plugin by Name
-    * @return DataAccessResult
+    * @return LegacyDataAccessResultInterface
     */
     public function searchByName($name)
     {
@@ -62,7 +64,7 @@ class PluginDao extends DataAccessObject
     }
 
     /**
-    * @return DataAccessResult|false
+    * @return LegacyDataAccessResultInterface|false
     */
     public function searchEnabledPlugins(): mixed
     {

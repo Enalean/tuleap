@@ -28,7 +28,7 @@ class Git_Ci_Dao extends DataAccessObject
      *
      * @param int $jobId Id of the CI job
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function retrieveTrigger($jobId)
     {
@@ -43,7 +43,7 @@ class Git_Ci_Dao extends DataAccessObject
      *
      * @param int $projectId Id of the project
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function retrieveTriggers($projectId)
     {
@@ -59,7 +59,7 @@ class Git_Ci_Dao extends DataAccessObject
      *
      * @param int $repositoryId Id of the repository
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function retrieveTriggersPathByRepository($repositoryId)
     {
@@ -76,7 +76,7 @@ class Git_Ci_Dao extends DataAccessObject
      * @param int $jobId Id of the CI job
      * @param int $repositoryId Id of the repository
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function checkRepository($jobId, $repositoryId)
     {

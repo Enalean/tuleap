@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use DataAccessResult;
 use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
 class BurndownFieldDao extends SpecificPropertiesDao
@@ -69,7 +68,7 @@ class BurndownFieldDao extends SpecificPropertiesDao
      * The request returns values for 2 fields, start_date and duration
      * SUM of null + value give us the value for field in one single line
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function getArtifactsWithBurndown()
     {

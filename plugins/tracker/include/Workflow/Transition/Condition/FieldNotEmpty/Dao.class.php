@@ -61,7 +61,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
      *
      * @param int $transition_id The id of the transition
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByTransitionId($transition_id)
     {

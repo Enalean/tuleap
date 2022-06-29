@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
@@ -1563,7 +1564,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @see Tracker_Report_Renderer_Table::fetchAddAggregatesUsedFunctionsValue()
      *
      * @param string                  $function AVG, SUM, …
-     * @param DataAccessResult|string $result
+     * @param LegacyDataAccessResultInterface|string $result
      *
      * @return string
      */

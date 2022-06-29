@@ -31,7 +31,7 @@ class ProjectLinksDao extends DataAccessObject
      * Search all links of a given type
      *
      * @param int $linkTypeId
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchLinksByType($linkTypeId)
     {
@@ -47,7 +47,7 @@ class ProjectLinksDao extends DataAccessObject
      * Search all the links from $groupId project to other prjs.
 
      * @param int $groupId Group id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchForwardLinks($groupId)
     {
@@ -69,7 +69,7 @@ class ProjectLinksDao extends DataAccessObject
      * Search all the links that point to $groupId project
      *
      * @param int $groupId Group id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchBackLinks($groupId)
     {

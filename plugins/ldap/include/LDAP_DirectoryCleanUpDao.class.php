@@ -61,7 +61,7 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @param Integer deletionDate
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getAllSuspendedUsers($deletionDate)
     {
@@ -75,7 +75,7 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
     /**
      * Return all ldap suspended users to be deleted tomorrow
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getUsersDeletedTomorrow()
     {

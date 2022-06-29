@@ -56,7 +56,7 @@ class FileModuleMonitorFactory
      *
      * @param int $packageId Id of the package
      *
-     * @return DataAccessResult|array
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|array
      */
     public function whoIsPubliclyMonitoringPackage($packageId)
     {
@@ -126,7 +126,7 @@ class FileModuleMonitorFactory
      * @param PFUser    $user          The user
      * @param bool $anonymous True if the user want to monitor the package anonymously
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function setMonitor($filemodule_id, PFUser $user, $anonymous = true)
     {

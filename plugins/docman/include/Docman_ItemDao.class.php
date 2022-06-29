@@ -64,7 +64,7 @@ class Docman_ItemDao extends DataAccessObject
     /**
      * Return the row that match given id.
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchById($id, $params = [])
     {
@@ -158,7 +158,7 @@ class Docman_ItemDao extends DataAccessObject
      *
      * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByGroupId($id, ?Docman_Report $report, $params)
     {
@@ -354,7 +354,7 @@ class Docman_ItemDao extends DataAccessObject
      * Return the list of user preferences regarding collapsed folders for
      * given group_id and user_id.
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchExpandedUserPrefs($group_id, $user_id)
     {
@@ -773,7 +773,7 @@ class Docman_ItemDao extends DataAccessObject
      * Search for subfolders in the given item array.
      *
      * @param array $parentIds List of parent ids
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchSubFolders($parentIds = [])
     {
@@ -798,7 +798,7 @@ class Docman_ItemDao extends DataAccessObject
      *
      * @param array $parentIds List of parents.
      * @param array $params
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchChildren($parentIds, $params)
     {
@@ -1007,7 +1007,7 @@ class Docman_ItemDao extends DataAccessObject
      *
      * @param int $time
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function listItemsToPurge($time)
     {

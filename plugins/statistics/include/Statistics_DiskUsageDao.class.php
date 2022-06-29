@@ -192,7 +192,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      * @param Date    $startDate
      * @param Date    $endDate
      * @param int $groupId
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchSizePerServiceForPeriod($service, $dateMethod, $startDate, $endDate, $groupId = null)
     {
@@ -299,7 +299,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      *
      * @param int $userId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchSizePerUserForPeriod($userId, $dateMethod, $startDate, $endDate)
     {
@@ -338,7 +338,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
     /**
      * Compute average size of user_id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchSizePerProjectForPeriod($groupId, $dateMethod, $startDate, $endDate)
     {
@@ -361,7 +361,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      *
      * @param date $endDate , date $startDate
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
     {

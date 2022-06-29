@@ -38,7 +38,7 @@ class UGroupUserDao extends DataAccessObject
     *
     * @param int $ugroup_id Id of the ugroup
     *
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchUserByStaticUGroupId($ugroup_id)
     {
@@ -77,7 +77,7 @@ class UGroupUserDao extends DataAccessObject
      * @param int $limit
      * @param int $offset
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchUsersByStaticUGroupIdPaginated($ugroup_id, $limit, $offset)
     {
@@ -100,7 +100,7 @@ class UGroupUserDao extends DataAccessObject
      *
      * @param int $ugroup_id Id of the ugroup
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function countUserByStaticUGroupId($ugroup_id)
     {
@@ -121,7 +121,7 @@ class UGroupUserDao extends DataAccessObject
      * @param int $groupId Id of the project
      * @param array   $ugroups List of ugroups
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups)
     {
@@ -144,7 +144,7 @@ class UGroupUserDao extends DataAccessObject
      * @param int $ugroupId Id of the uGroup
      * @param int $groupId Id of the project
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchUserByDynamicUGroupId($ugroupId, $groupId)
     {
@@ -188,7 +188,7 @@ class UGroupUserDao extends DataAccessObject
      * @param int $limit
      * @param int $offset
      *
-     * @return DataAccessResult | false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface | false
      */
     public function searchUsersByDynamicUGroupIdPaginated($ugroupId, $groupId, $limit, $offset)
     {

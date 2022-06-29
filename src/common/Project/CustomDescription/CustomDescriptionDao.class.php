@@ -23,7 +23,7 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject //
 {
     /**
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getCustomDescriptions()
     {
@@ -37,7 +37,7 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject //
     /**
      * @param int $id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getCustomDescription($id)
     {
@@ -52,7 +52,7 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject //
 
     /**
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getRequiredCustomDescriptions()
     {

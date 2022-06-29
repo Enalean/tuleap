@@ -175,7 +175,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
     /**
      * Get all approval tables that may send reminder notification
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getTablesForReminder()
     {

@@ -854,7 +854,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * Return all selectbox and multiselectbox fields that bind to static values
      *
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getUsedStaticSbFields(Tracker $tracker)
     {
@@ -990,7 +990,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     }
 
     /**
-     * @param DataAccessResult $dar the db collection of FormElements to instantiate
+     * @param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar the db collection of FormElements to instantiate
      *
      * @return array All text formElements used by the tracker
      */

@@ -28,7 +28,7 @@ class MailingListDao extends DataAccessObject
     /**
      * Search active (=not deteted) mailing lists
      * return all active lists
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchAllActiveML()
     {
@@ -41,7 +41,7 @@ class MailingListDao extends DataAccessObject
 
     /**
      * Searches by group_list_id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByGroupListId($group_list_id)
     {
@@ -57,7 +57,7 @@ class MailingListDao extends DataAccessObject
      *
      * @param int $projectId id of the project
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByProject($projectId)
     {
@@ -101,7 +101,7 @@ class MailingListDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchActiveListsInProject(int $project_id)
     {
@@ -115,7 +115,7 @@ class MailingListDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchPublicListsInProject(int $project_id)
     {

@@ -121,7 +121,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
      * @param int $trackerId Tracker id
      * @param int $date Last update date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date)
     {
@@ -144,7 +144,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
      * @param int $artifact_id
      * @param int $changeset_id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchChangesetNewerThan($artifact_id, $changeset_id)
     {

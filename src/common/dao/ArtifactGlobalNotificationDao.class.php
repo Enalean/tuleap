@@ -26,7 +26,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 {
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -36,7 +36,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches ArtifactGlobalNotification by Id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchById($id)
     {
@@ -49,7 +49,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches ArtifactGlobalNotification by TrackerId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByTrackerId($trackerId)
     {
@@ -62,7 +62,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches ArtifactGlobalNotification by Addresses
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByAddresses($addresses)
     {
@@ -75,7 +75,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches ArtifactGlobalNotification by AllUpdates
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByAllUpdates($allUpdates)
     {
@@ -88,7 +88,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 
     /**
     * Searches ArtifactGlobalNotification by CheckPermissions
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByCheckPermissions($checkPermissions)
     {

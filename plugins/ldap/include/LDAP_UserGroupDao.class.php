@@ -140,7 +140,7 @@ class LDAP_UserGroupDao extends DataAccessObject
     /**
      * Retieve Tuleap ugroup having the synchronize option enabled
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getSynchronizedUgroups()
     {

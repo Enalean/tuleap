@@ -146,7 +146,7 @@ class PermissionsManager implements IPermissionsManagerNG
       *
       * @param String $permissionType
       *
-      * @return DataAccessResult
+      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
       */
     public function getDefaults($permissionType, $withName = true)
     {
@@ -161,7 +161,7 @@ class PermissionsManager implements IPermissionsManagerNG
       * @param int $objectId
       * @param String  $permissionType
       *
-      * @return DataAccessResult
+      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
       */
     public function getAuthorizedUgroups($objectId, $permissionType, $withName = true)
     {

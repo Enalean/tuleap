@@ -26,7 +26,7 @@ class Docman_VersionDao extends DataAccessObject
 {
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -36,7 +36,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchById($id, $table = 'plugin_docman_version')
     {
@@ -50,7 +50,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by ItemId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByItemId($itemId)
     {
@@ -63,7 +63,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Number
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByNumber($item_id, $number)
     {
@@ -77,7 +77,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by UserId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByUserId($userId)
     {
@@ -90,7 +90,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Label
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByLabel($label)
     {
@@ -103,7 +103,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Changelog
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByChangelog($changelog)
     {
@@ -116,7 +116,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Date
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByDate($date)
     {
@@ -129,7 +129,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Filename
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByFilename($filename)
     {
@@ -142,7 +142,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Filesize
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByFilesize($filesize)
     {
@@ -155,7 +155,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Filetype
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByFiletype($filetype)
     {
@@ -168,7 +168,7 @@ class Docman_VersionDao extends DataAccessObject
 
     /**
     * Searches Docman_VersionDao by Path
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByPath($path)
     {
@@ -376,7 +376,7 @@ class Docman_VersionDao extends DataAccessObject
      *
      * @param int $itemId
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function listVersionsToPurgeByItemId($itemId)
     {
@@ -393,7 +393,7 @@ class Docman_VersionDao extends DataAccessObject
      *
      * @param int $time
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function listVersionsToPurge($time)
     {
@@ -412,7 +412,7 @@ class Docman_VersionDao extends DataAccessObject
      * @param $itemId
      * @param $number
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchDeletedVersion($itemId, $number)
     {

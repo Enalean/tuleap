@@ -500,7 +500,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
-    <InvalidReturnType occurrences="16">
+    <InvalidReturnType occurrences="15">
       <code>fetchArtifactValue</code>
       <code>fetchCSVChangesetValue</code>
       <code>fetchChangesetValue</code>
@@ -515,7 +515,6 @@
       <code>getCriteriaWhere</code>
       <code>getDao</code>
       <code>getQueryFrom</code>
-      <code>getQuerySelect</code>
       <code>keepValue</code>
     </InvalidReturnType>
     <MissingParamType occurrences="5">
@@ -792,11 +791,9 @@
       <code>$kanban_id</code>
       <code>$kanban_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="3">
       <code>sendMessageArtifact</code>
       <code>sendMessageArtifactCreated</code>
-      <code>sendMessageArtifactMoved</code>
-      <code>sendMessageArtifactReordered</code>
       <code>sendMessageArtifactUpdated</code>
     </MissingReturnType>
   </file>
@@ -3768,7 +3765,7 @@
     <InvalidNullableReturnType occurrences="1">
       <code>\Tuleap\AgileDashboard\JavascriptDependenciesProvider</code>
     </InvalidNullableReturnType>
-    <MissingParamType occurrences="31">
+    <MissingParamType occurrences="29">
       <code>$id</code>
       <code>$parameters</code>
       <code>$parameters</code>
@@ -3798,10 +3795,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="76">
+    <MissingReturnType occurrences="74">
       <code>burning_parrot_get_javascript_files</code>
       <code>burning_parrot_get_stylesheets</code>
       <code>cardwall_event_get_swimline_tracker</code>
@@ -3845,11 +3840,9 @@
       <code>permissionPerGroupPaneCollector</code>
       <code>plugin_statistics_service_usage</code>
       <code>postActionVisitExternalActionsEvent</code>
-      <code>project_is_deleted</code>
       <code>rest_project_additional_informations</code>
       <code>rest_project_resources</code>
       <code>rest_resources</code>
-      <code>service_classnames</code>
       <code>system_event_get_types_for_default_queue</code>
       <code>testmanagementGetItemsFromMilestone</code>
       <code>testmanagementGetMilestone</code>
@@ -7753,7 +7746,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="28">
       <code>$date</code>
@@ -8631,7 +8624,7 @@
       <code>newMetadataValue</code>
       <code>validateInput</code>
     </DeprecatedMethod>
-    <MissingParamType occurrences="53">
+    <MissingParamType occurrences="52">
       <code>$addresses</code>
       <code>$array1</code>
       <code>$array2</code>
@@ -8669,7 +8662,6 @@
       <code>$mode</code>
       <code>$name</code>
       <code>$name</code>
-      <code>$name</code>
       <code>$params</code>
       <code>$plugin</code>
       <code>$pluginPath</code>
@@ -8698,7 +8690,7 @@
       <code>$this-&gt;groupId</code>
       <code>$user_can_admin</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="40">
+    <MissingReturnType occurrences="39">
       <code>_count</code>
       <code>_dispatch</code>
       <code>_getMetadataFactory</code>
@@ -8736,7 +8728,6 @@
       <code>userCannotDelete</code>
       <code>validateLove</code>
       <code>validateMetadata</code>
-      <code>validateNewMetadata</code>
       <code>validateUpdateMetadata</code>
       <code>viewsManagement</code>
     </MissingReturnType>
@@ -9390,146 +9381,6 @@
       <code>updateHardCodedMetadata</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Docman_ItemAction.php">
-    <MissingParamType occurrences="3">
-      <code>$item</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="6">
-      <code>$action</code>
-      <code>$class</code>
-      <code>$extraUrlParams</code>
-      <code>$item</code>
-      <code>$other_icons</code>
-      <code>$title</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>fetch</code>
-      <code>fetchAction</code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionApproval.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionCopy.php">
-    <MissingParamType occurrences="2">
-      <code>$item</code>
-      <code>$params</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionCut.php">
-    <MissingParamType occurrences="2">
-      <code>$item</code>
-      <code>$params</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionDelete.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionDetails.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionHistory.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionMove.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionNewDocument.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionNewFolder.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionNewVersion.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionNotifications.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionPaste.php">
-    <MissingParamType occurrences="2">
-      <code>$item</code>
-      <code>$params</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionPermissions.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/docman/include/Docman_ItemActionUpdate.php">
-    <MissingParamType occurrences="1">
-      <code>$item</code>
-    </MissingParamType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;classes</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/docman/include/Docman_ItemDao.class.php">
     <DeprecatedFunction occurrences="6">
       <code>'db_es'</code>
@@ -9657,10 +9508,10 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidNullableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidNullableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$deleted</code>
@@ -10044,8 +9895,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="10">
       <code>$changelog</code>
@@ -10115,7 +9966,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="5">
       <code>$date</code>
@@ -10209,7 +10060,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$inserted</code>
@@ -11317,7 +11168,7 @@
       <code>false</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="10">
       <code>$da</code>
@@ -11987,7 +11838,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$inserted</code>
@@ -12228,19 +12079,19 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="13">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="26">
       <code>$changelog</code>
@@ -12463,11 +12314,6 @@
       <code>wikiPageUpdated</code>
       <code>wiki_before_content</code>
       <code>wiki_display_remove_button</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/ExternalLinks/ExternalLinksManager.php">
-    <MissingReturnType occurrences="1">
-      <code>addExternalLink</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/FolderNotCreatedException.php">
@@ -13800,10 +13646,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Browse.class.php">
-    <MissingParamType occurrences="11">
+    <MissingParamType occurrences="10">
       <code>$extraParams</code>
       <code>$group_id</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -13817,12 +13662,11 @@
       <code>$dfltParams</code>
       <code>$this-&gt;_controller-&gt;plugin</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="13">
+    <MissingReturnType occurrences="12">
       <code>_buildSearchUrl</code>
       <code>_filter</code>
       <code>_getDefaultUrlParams</code>
       <code>_getTitle</code>
-      <code>_mode</code>
       <code>getActionOnIconForFolder</code>
       <code>getClassForFolderLink</code>
       <code>getDefaultViews</code>
@@ -13861,19 +13705,13 @@
     </TooManyArguments>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Display.class.php">
-    <MissingParamType occurrences="5">
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
+    <MissingParamType occurrences="2">
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
-      <code>_breadCrumbs</code>
+    <MissingReturnType occurrences="2">
       <code>_footer</code>
       <code>_javascript</code>
-      <code>_mode</code>
-      <code>_title</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Docman.class.php">
@@ -13892,18 +13730,6 @@
     </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>_content</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Edit.class.php">
-    <MissingParamType occurrences="4">
-      <code>$params</code>
-      <code>$params</code>
-      <code>$section</code>
-      <code>$view</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>_content</code>
-      <code>_getTitle</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Embedded.class.php">
@@ -14091,55 +13917,6 @@
       <code>$htmlParams</code>
       <code>$htmlParams</code>
     </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Icons.class.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$a</code>
-      <code>$b</code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="1">
-      <code>function ($a, $b) {</code>
-    </MissingClosureReturnType>
-    <MissingParamType occurrences="17">
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$item</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="9">
-      <code>_content</code>
-      <code>_displayItem</code>
-      <code>visitDocument</code>
-      <code>visitEmbeddedFile</code>
-      <code>visitEmpty</code>
-      <code>visitFile</code>
-      <code>visitFolder</code>
-      <code>visitLink</code>
-      <code>visitWiki</code>
-    </MissingReturnType>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$this-&gt;is_folder</code>
-    </TypeDoesNotContainType>
-    <UndefinedMethod occurrences="1">
-      <code>getAllItems</code>
-    </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;is_folder</code>
-      <code>$this-&gt;is_folder</code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Install.class.php">
     <MissingParamType occurrences="1">
@@ -14357,42 +14134,6 @@
       <code>getWikiDocumentPath</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionEditProperties.class.php">
-    <MissingParamType occurrences="12">
-      <code>$field</code>
-      <code>$field</code>
-      <code>$field</code>
-      <code>$force</code>
-      <code>$item</code>
-      <code>$params</code>
-      <code>$recurse</code>
-      <code>$recurseOnDocs</code>
-      <code>$theme_path</code>
-      <code>$token</code>
-      <code>$updateConfirmed</code>
-      <code>$url</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="7">
-      <code>$nbDocsImpacted</code>
-      <code>$nbFoldersImpacted</code>
-      <code>$recurse</code>
-      <code>$recurseOnDocs</code>
-      <code>$subItemsWritable</code>
-      <code>$token</code>
-      <code>$updateConfirmed</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="9">
-      <code>_getAdditionalRows</code>
-      <code>_getDefaultValuePropertyField</code>
-      <code>_getDefaultValues</code>
-      <code>_getDefaultValuesTableHeader</code>
-      <code>_getDirectLinkField</code>
-      <code>_getFieldLabel</code>
-      <code>_showField</code>
-      <code>_subItemsAreWritable</code>
-      <code>getContent</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionHistory.class.php">
     <MissingParamType occurrences="5">
       <code>$display_access_logs</code>
@@ -14590,8 +14331,7 @@
       <code>$theme_path</code>
       <code>$user_can_write</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="15">
-      <code>_getAdditionalRows</code>
+    <MissingReturnType occurrences="14">
       <code>_getDefaultValuePropertyField</code>
       <code>_getDefaultValues</code>
       <code>_getDefaultValuesFields</code>
@@ -15124,13 +14864,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/view/Docman_View_View.class.php">
-    <MissingParamType occurrences="20">
+    <MissingParamType occurrences="17">
       <code>$bc</code>
       <code>$controller</code>
       <code>$item</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -15150,8 +14887,7 @@
       <code>$dfltSearchParams</code>
       <code>$dfltSortParams</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="19">
-      <code>_breadCrumbs</code>
+    <MissingReturnType occurrences="16">
       <code>_content</code>
       <code>_feedback</code>
       <code>_filter</code>
@@ -15162,9 +14898,7 @@
       <code>_header</code>
       <code>_initSearchAndSortParams</code>
       <code>_javascript</code>
-      <code>_mode</code>
       <code>_scripts</code>
-      <code>_title</code>
       <code>display</code>
       <code>getActionForItem</code>
       <code>getItemMenu</code>
@@ -15228,17 +14962,6 @@
     <InvalidClass occurrences="1">
       <code>\docmanPlugin</code>
     </InvalidClass>
-  </file>
-  <file src="plugins/document/include/documentPlugin.php">
-    <MissingParamType occurrences="1">
-      <code>$id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>docmanLinkProvider</code>
-      <code>externalLinkRedirector</code>
-      <code>externalLinksManager</code>
-      <code>getHooksAndCallbacks</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/dynamic_credentials/include/Credential/Credential.php">
     <MissingParamType occurrences="1">
@@ -15325,8 +15048,7 @@
       <code>$status</code>
       <code>$unixStatus</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
-      <code>isLoggedIn</code>
+    <MissingReturnType occurrences="4">
       <code>setExpiryDate</code>
       <code>setStatus</code>
       <code>setUnixStatus</code>
@@ -16558,10 +16280,10 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="4">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
   </file>
   <file src="plugins/git/include/Git/Ci/Launcher.class.php">
@@ -20911,9 +20633,8 @@
       <code>$retention_period</code>
       <code>$row</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>getAllGerritRepositoriesFromProject</code>
-      <code>getAllRepositoriesUserCanSee</code>
       <code>hasGitShellRepositories</code>
       <code>instanciateFromRow</code>
     </MissingReturnType>
@@ -21738,16 +21459,13 @@
       <code>$repository_id</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="18">
+    <MissingReturnType occurrences="15">
       <code>checkPullRequestEndpointsAvailable</code>
       <code>disconnect</code>
       <code>getCurrentUser</code>
       <code>getPaginatedPullRequests</code>
-      <code>getRepository</code>
-      <code>migrate</code>
       <code>options</code>
       <code>optionsCommitStatus</code>
-      <code>optionsGetBranches</code>
       <code>optionsGetFileContent</code>
       <code>optionsGetTags</code>
       <code>optionsId</code>
@@ -22072,7 +21790,7 @@
       <code>$FREQUENCIES_GIT_READ</code>
       <code>$_cached_permission_user_allowed_to_change</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="123">
+    <MissingReturnType occurrences="119">
       <code>changeProjectRepositoriesAccess</code>
       <code>codendi_daily_start</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
@@ -22130,7 +21848,6 @@
       <code>getRegexpPermissionFilter</code>
       <code>getRegexpRepositoryDao</code>
       <code>getRegexpTemplateDao</code>
-      <code>getRepositoryFactory</code>
       <code>getSystemEventClass</code>
       <code>getTemplateFactory</code>
       <code>getTemplateFineGrainedPermissionSaver</code>
@@ -22171,8 +21888,6 @@
       <code>project_admin_ugroup_creation</code>
       <code>project_admin_ugroup_deletion</code>
       <code>project_admin_ugroup_remove_user</code>
-      <code>project_is_active</code>
-      <code>project_is_suspended</code>
       <code>rest_project_resources</code>
       <code>rest_resources</code>
       <code>restrictedUsersAreHandledByPluginEvent</code>
@@ -22181,7 +21896,6 @@
       <code>routeGetPostLegacyController</code>
       <code>routeGetPostRepositoryView</code>
       <code>routeGetPostSmartHTTP</code>
-      <code>serviceClassnames</code>
       <code>services_truncated_emails</code>
       <code>setLogger</code>
       <code>setUserAccountManager</code>
@@ -22669,14 +22383,13 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/gitlfsPlugin.php">
-    <MissingParamType occurrences="5">
+    <MissingParamType occurrences="4">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="18">
+    <MissingReturnType occurrences="17">
       <code>cleanUnusedResources</code>
       <code>collectGitRoutesEvent</code>
       <code>collectRoutesEvent</code>
@@ -22693,7 +22406,6 @@
       <code>plugin_statistics_disk_usage_collect_project</code>
       <code>plugin_statistics_disk_usage_service_label</code>
       <code>postInitGitRepositoryWithDataEvent</code>
-      <code>project_is_deleted</code>
       <code>pullRequestDiffRepresentationBuild</code>
     </MissingReturnType>
   </file>
@@ -23168,10 +22880,6 @@
       <code>sortArrayByRank</code>
       <code>updateDb</code>
     </MissingReturnType>
-    <NullArgument occurrences="2">
-      <code>$report</code>
-      <code>$report</code>
-    </NullArgument>
     <PossiblyNullReference occurrences="1">
       <code>duplicate</code>
     </PossiblyNullReference>
@@ -24242,12 +23950,12 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="6">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;updateAndGetLastId($sql)</code>
@@ -24383,7 +24091,7 @@
     <MissingPropertyType occurrences="1">
       <code>$hudsonJobFactory</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="12">
+    <MissingReturnType occurrences="11">
       <code>ajax_reference_sparkline</code>
       <code>canIncludeStylesheets</code>
       <code>cssFile</code>
@@ -24392,7 +24100,6 @@
       <code>getProjectWidgetList</code>
       <code>getUserWidgetList</code>
       <code>jsFile</code>
-      <code>projectIsDeleted</code>
       <code>referenceGetTooltipContentEvent</code>
       <code>uninstall</code>
       <code>widgetInstance</code>
@@ -25326,8 +25033,8 @@
       <code>false</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="4">
       <code>$deletionDate</code>
@@ -25620,7 +25327,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="1">
       <code>$ldap_uid</code>
@@ -25679,7 +25386,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="2">
       <code>ugroup_add_user_to_ugroup($row['group_id'], $ugroupId, $userId)</code>
@@ -26964,7 +26671,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>'MediaWikiPluginInfo'</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="32">
+    <MissingParamType occurrences="31">
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$id</code>
@@ -26994,11 +26701,10 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$type_of_search</code>
       <code>$words</code>
     </MissingParamType>
-    <MissingReturnType occurrences="52">
+    <MissingReturnType occurrences="49">
       <code>burningParrotCompatiblePage</code>
       <code>clearMediawikiCache</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
@@ -27037,13 +26743,10 @@
       <code>project_admin_remove_user_from_project_ugroups</code>
       <code>project_admin_ugroup_deletion</code>
       <code>project_admin_ugroup_remove_user</code>
-      <code>project_is_deleted</code>
       <code>rename_project</code>
       <code>restrictedUsersAreHandledByPluginEvent</code>
       <code>search_type</code>
       <code>search_types_presenters</code>
-      <code>service_classnames</code>
-      <code>service_is_used</code>
       <code>showImage</code>
       <code>site_access_change</code>
       <code>system_event_get_types_for_default_queue</code>
@@ -27650,7 +27353,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
     <MissingReturnType occurrences="7">
       <code>after_user_registration</code>
@@ -27663,7 +27365,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pluginsadministration/include/AvailablePluginsPresenter.php">
-    <MissingPropertyType occurrences="13">
+    <MissingPropertyType occurrences="12">
       <code>$description_table_head</code>
       <code>$filter_empty_state</code>
       <code>$filter_label</code>
@@ -27676,13 +27378,11 @@
       <code>$plugins</code>
       <code>$this-&gt;plugins</code>
       <code>$title</code>
-      <code>$version_table_head</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="1">
       <code>sortPlugins</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="5">
-      <code>$this-&gt;error_install_dependency</code>
+    <UndefinedThisPropertyAssignment occurrences="4">
       <code>$this-&gt;install_modal_cancel</code>
       <code>$this-&gt;install_modal_content</code>
       <code>$this-&gt;install_modal_submit</code>
@@ -27730,7 +27430,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pluginsadministration/include/PluginPropertiesPresenter.php">
-    <MissingParamType occurrences="13">
+    <MissingParamType occurrences="12">
       <code>$additional_options</code>
       <code>$are_there_additional_options</code>
       <code>$are_there_dependencies</code>
@@ -27743,9 +27443,8 @@
       <code>$name</code>
       <code>$readme</code>
       <code>$scope</code>
-      <code>$version</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="14">
+    <MissingPropertyType occurrences="13">
       <code>$additional_options</code>
       <code>$are_there_additional_options</code>
       <code>$are_there_dependencies</code>
@@ -27759,9 +27458,8 @@
       <code>$properties_edit_web_ui_security</code>
       <code>$readme</code>
       <code>$scope</code>
-      <code>$version</code>
     </MissingPropertyType>
-    <UndefinedThisPropertyAssignment occurrences="11">
+    <UndefinedThisPropertyAssignment occurrences="10">
       <code>$this-&gt;can_submit</code>
       <code>$this-&gt;properties_pane_dependencies</code>
       <code>$this-&gt;properties_pane_description</code>
@@ -27772,7 +27470,6 @@
       <code>$this-&gt;properties_pane_scope</code>
       <code>$this-&gt;properties_pane_title</code>
       <code>$this-&gt;properties_pane_update_label</code>
-      <code>$this-&gt;properties_pane_version</code>
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/pluginsadministration/include/PluginsAdministration.class.php">
@@ -27792,25 +27489,21 @@
       <code>$url</code>
       <code>$usList</code>
     </MissingParamType>
-    <MissingReturnType occurrences="20">
+    <MissingReturnType occurrences="16">
       <code>_addAllowedProjects</code>
       <code>_changePluginGenericProperties</code>
       <code>_delAllowedProjects</code>
       <code>_getPluginFromRequest</code>
       <code>_validateProjectList</code>
       <code>allowProjectOnPlugin</code>
-      <code>available</code>
       <code>checkSynchronizerToken</code>
       <code>getPluginResourceRestrictor</code>
-      <code>install</code>
       <code>redirectToPluginAdministration</code>
       <code>revokeProjectsFromPlugin</code>
       <code>sendProjectRestrictedError</code>
       <code>sendUpdateProjectListError</code>
       <code>setPluginRestricted</code>
       <code>setPluginRestriction</code>
-      <code>unavailable</code>
-      <code>uninstall</code>
       <code>unsetPluginRestricted</code>
       <code>updateAllowedProjectList</code>
     </MissingReturnType>
@@ -27846,8 +27539,7 @@
     <MissingParamType occurrences="1">
       <code>$plugins</code>
     </MissingParamType>
-    <MissingReturnType occurrences="23">
-      <code>available_table_head</code>
+    <MissingReturnType occurrences="21">
       <code>cant_restrict</code>
       <code>description_table_head</code>
       <code>error_uninstall_dependency</code>
@@ -27869,7 +27561,6 @@
       <code>uninstall_modal_list_web_space</code>
       <code>uninstall_modal_submit</code>
       <code>uninstall_modal_title</code>
-      <code>version_table_head</code>
     </MissingReturnType>
   </file>
   <file src="plugins/pluginsadministration/include/pluginsadministrationPlugin.php">
@@ -28373,7 +28064,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>'ProftpdPluginInfo'</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="10">
+    <MissingParamType occurrences="9">
       <code>$group_id</code>
       <code>$id</code>
       <code>$params</code>
@@ -28383,9 +28074,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="21">
+    <MissingReturnType occurrences="19">
       <code>approve_pending_project</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
       <code>createDirectory</code>
@@ -28404,8 +28094,6 @@
       <code>permissionPerGroupPaneCollector</code>
       <code>process</code>
       <code>rename_project</code>
-      <code>service_classnames</code>
-      <code>service_is_used</code>
       <code>system_event_get_types_for_default_queue</code>
     </MissingReturnType>
     <UndefinedClass occurrences="1">
@@ -28497,7 +28185,7 @@
       <code>$id</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="14">
+    <MissingReturnType occurrences="11">
       <code>approveProjectAdministratorRemoval</code>
       <code>collectProjectAdminNavigationItems</code>
       <code>collectRoutesEvent</code>
@@ -28506,9 +28194,6 @@
       <code>getSystemEventManager</code>
       <code>get_system_event_class</code>
       <code>projectUGroupMemberUpdatable</code>
-      <code>project_is_active</code>
-      <code>project_is_deleted</code>
-      <code>project_is_suspended</code>
       <code>restResources</code>
       <code>system_event_get_types_for_default_queue</code>
       <code>userWithStarBadgeCollector</code>
@@ -28538,9 +28223,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
   </file>
   <file src="plugins/projectlinks/include/ProjectLinksPluginInfo.class.php">
@@ -28884,16 +28569,14 @@
     </RedundantCast>
   </file>
   <file src="plugins/projectmilestones/include/projectmilestonesPlugin.php">
-    <MissingParamType occurrences="2">
+    <MissingParamType occurrences="1">
       <code>$id</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>burning_parrot_get_javascript_files</code>
       <code>getHooksAndCallbacks</code>
       <code>getProjectWidgetList</code>
       <code>getUserWidgetList</code>
-      <code>project_is_deleted</code>
       <code>widgetInstance</code>
     </MissingReturnType>
   </file>
@@ -29002,7 +28685,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Dao.php">
-    <MissingParamType occurrences="37">
+    <MissingParamType occurrences="33">
       <code>$branch_dest</code>
       <code>$branch_name</code>
       <code>$branch_name</code>
@@ -29023,8 +28706,6 @@
       <code>$pull_request_id</code>
       <code>$pull_request_id</code>
       <code>$repo_dest_id</code>
-      <code>$repo_dest_id</code>
-      <code>$repo_src_id</code>
       <code>$repository_id</code>
       <code>$repository_id</code>
       <code>$repository_id</code>
@@ -29034,21 +28715,18 @@
       <code>$repository_id</code>
       <code>$sha1_dest</code>
       <code>$sha1_dest</code>
-      <code>$sha1_dest</code>
-      <code>$sha1_src</code>
       <code>$sha1_src</code>
       <code>$sha1_src</code>
       <code>$title</code>
       <code>$user_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="16">
+    <MissingReturnType occurrences="15">
       <code>create</code>
       <code>deleteAllPullRequestsOfRepository</code>
       <code>getPaginatedPullRequests</code>
       <code>markAsAbandoned</code>
       <code>markAsMerged</code>
       <code>searchByPullRequestId</code>
-      <code>searchByReferences</code>
       <code>searchNbOfOpenedPullRequestsForRepositoryId</code>
       <code>searchNbOfPullRequestsByStatusForRepositoryId</code>
       <code>searchOpenedByDestinationBranch</code>
@@ -29183,7 +28861,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/GitExec.php">
-    <MissingParamType occurrences="30">
+    <MissingParamType occurrences="29">
       <code>$base_ref</code>
       <code>$branch_name</code>
       <code>$branch_name</code>
@@ -29200,7 +28878,6 @@
       <code>$output</code>
       <code>$output</code>
       <code>$pattern</code>
-      <code>$ref</code>
       <code>$ref1</code>
       <code>$ref2</code>
       <code>$ref_base</code>
@@ -29215,11 +28892,10 @@
       <code>$src_reference</code>
       <code>$user</code>
     </MissingParamType>
-    <MissingReturnType occurrences="14">
+    <MissingReturnType occurrences="13">
       <code>execAsGitoliteGroup</code>
       <code>fastForwardMergeOnly</code>
       <code>getBranchSha1</code>
-      <code>getCommitMessage</code>
       <code>getCommonAncestor</code>
       <code>getModifiedFilesLineStat</code>
       <code>getModifiedFilesNameStatus</code>
@@ -29563,26 +29239,6 @@
     <MissingReturnType occurrences="1">
       <code>isThereAtLeastOnePullRequest</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/PullRequestCreator.php">
-    <MissingParamType occurrences="6">
-      <code>$branch_dest</code>
-      <code>$branch_src</code>
-      <code>$repo_dest_id</code>
-      <code>$repo_src_id</code>
-      <code>$sha1_dest</code>
-      <code>$sha1_src</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>checkIfPullRequestAlreadyExists</code>
-      <code>generatePullRequest</code>
-    </MissingReturnType>
-    <TypeDoesNotContainType occurrences="4">
-      <code>! $repository_dest</code>
-      <code>! $repository_dest</code>
-      <code>! $repository_src</code>
-      <code>! $repository_src</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequestMerger.php">
     <MissingParamType occurrences="7">
@@ -30070,7 +29726,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/pullrequestPlugin.php">
-    <MissingParamType occurrences="12">
+    <MissingParamType occurrences="11">
       <code>$branch_name</code>
       <code>$dest_branch_name</code>
       <code>$id</code>
@@ -30081,13 +29737,12 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$refname</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$git_rest_route_additional_informations</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="38">
+    <MissingReturnType occurrences="37">
       <code>abandonFromSourceBranch</code>
       <code>additionalInformationRepresentationCache</code>
       <code>additionalInformationRepresentationRetriever</code>
@@ -30125,13 +29780,9 @@
       <code>rest_git_pull_request_endpoints</code>
       <code>rest_git_pull_request_get_for_repository</code>
       <code>rest_resources</code>
-      <code>service_classnames</code>
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_core/include/ReferenceAliasCore/ReferencesBuilder.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>ReferenceInstance</code>
-    </InvalidNullableReturnType>
     <MissingParamType occurrences="6">
       <code>$keyword</code>
       <code>$keyword</code>
@@ -30140,9 +29791,6 @@
       <code>$reference</code>
       <code>$value</code>
     </MissingParamType>
-    <NullableReturnStatement occurrences="1">
-      <code>null</code>
-    </NullableReturnStatement>
   </file>
   <file src="plugins/referencealias_core/include/ReferenceAliasCore/ReferencesImporter.php">
     <MissingParamType occurrences="1">
@@ -31252,8 +30900,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="49">
       <code>$date</code>
@@ -31374,12 +31022,10 @@
     <DeprecatedMethod occurrences="1">
       <code>userIsAdmin</code>
     </DeprecatedMethod>
-    <MissingParamType occurrences="2">
+    <MissingParamType occurrences="1">
       <code>$color</code>
-      <code>$row</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>_displayEvolutionData</code>
+    <MissingReturnType occurrences="3">
       <code>applyColorModifier</code>
       <code>getServiceEvolutionForPeriod</code>
       <code>getTotalProjectSize</code>
@@ -31589,8 +31235,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="1">
       <code>$project_id</code>
@@ -31661,13 +31307,13 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="7">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingPropertyType occurrences="1">
       <code>$groupFilter</code>
@@ -31709,13 +31355,13 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="7">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingPropertyType occurrences="1">
       <code>$groupFilter</code>
@@ -33836,9 +33482,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/ViewVC/ViewVCProxy.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$user-&gt;getId()</code>
-    </InvalidScalarArgument>
     <MissingParamType occurrences="5">
       <code>$command</code>
       <code>$key</code>
@@ -33917,7 +33560,7 @@
       <code>EVENT</code>
       <code>EVENT</code>
     </InvalidClass>
-    <MissingParamType occurrences="13">
+    <MissingParamType occurrences="12">
       <code>$id</code>
       <code>$keyword</code>
       <code>$new_ugroup_name</code>
@@ -33930,9 +33573,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="39">
+    <MissingReturnType occurrences="37">
       <code>burningParrotGetStylesheets</code>
       <code>changeProjectRepositoriesAccess</code>
       <code>codendi_daily_start</code>
@@ -33957,13 +33599,11 @@
       <code>project_admin_remove_user</code>
       <code>project_admin_ugroup_deletion</code>
       <code>project_creation_remove_legacy_services</code>
-      <code>project_is_deleted</code>
       <code>project_registration_activate_service</code>
       <code>rest_project_get_svn</code>
       <code>rest_project_options_svn</code>
       <code>rest_project_resources</code>
       <code>rest_resources</code>
-      <code>service_classnames</code>
       <code>site_access_change</code>
       <code>statisticsCollectorSVN</code>
       <code>statistics_collector</code>
@@ -37169,6 +36809,9 @@
       <code>foundRows</code>
       <code>instanciateWith</code>
     </DeprecatedMethod>
+    <InvalidArgument occurrences="1">
+      <code>[$this, 'getInstanceFromRow']</code>
+    </InvalidArgument>
     <InvalidReturnStatement occurrences="1">
       <code>$sorted_artifacts</code>
     </InvalidReturnStatement>
@@ -37291,9 +36934,6 @@
       <code>setNoFieldValue</code>
       <code>shouldBeDisplayedAsChange</code>
     </MissingReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>UserManager::instance()-&gt;getUserById($this-&gt;submitted_by)</code>
-    </NullableReturnStatement>
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$comment</code>
     </PossiblyInvalidPropertyAssignmentValue>
@@ -38258,10 +37898,10 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="4">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingClosureReturnType occurrences="1">
       <code>function () use ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {</code>
@@ -38415,8 +38055,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="16">
       <code>$artifact_id</code>
@@ -39014,11 +38654,11 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="5">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="2">
       <code>$checkReminders</code>
@@ -39346,6 +38986,9 @@
       <code>update</code>
       <code>update</code>
     </DeprecatedMethod>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;retrieve($sql)</code>
+    </LessSpecificReturnStatement>
     <MissingParamType occurrences="15">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -39373,6 +39016,9 @@
       <code>searchReverseLinksById</code>
       <code>updateItemName</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>\DataAccessResult|false</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinkUpdater.php">
     <DeprecatedMethod occurrences="4">
@@ -39960,8 +39606,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="21">
       <code>$artifact_id</code>
@@ -40190,9 +39836,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="60">
       <code>$TrackerId</code>
@@ -41689,7 +41335,7 @@
       <code>$criteria_value</code>
       <code>$has_errors</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="31">
+    <MissingReturnType occurrences="29">
       <code>addRequiredError</code>
       <code>buildReportCriteria</code>
       <code>canBeUsedAsReportColumn</code>
@@ -41710,8 +41356,6 @@
       <code>getNoValueLabel</code>
       <code>getPreviousChangesetValue</code>
       <code>getQueryFromAggregate</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getRestFieldData</code>
       <code>getValueDao</code>
       <code>isEmpty</code>
@@ -41771,10 +41415,9 @@
       <code>$field_name</code>
       <code>$string</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>buildMatchExpression</code>
       <code>fetchAdvancedCriteriaValue</code>
-      <code>getQueryGroupby</code>
       <code>quote</code>
     </MissingReturnType>
   </file>
@@ -41789,10 +41432,9 @@
       <code>$artifact-&gt;id</code>
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>accept</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
-      <code>getQueryGroupby</code>
     </MissingReturnType>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $changeset-&gt;getArtifact()-&gt;getId()</code>
@@ -41903,7 +41545,7 @@
     </UndefinedVariable>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
-    <InvalidReturnType occurrences="12">
+    <InvalidReturnType occurrences="11">
       <code>fetchCSVChangesetValue</code>
       <code>fetchChangesetValue</code>
       <code>fetchCriteriaValue</code>
@@ -41914,7 +41556,6 @@
       <code>getCriteriaFrom</code>
       <code>getCriteriaWhere</code>
       <code>getQueryFrom</code>
-      <code>getQuerySelect</code>
       <code>keepValue</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
@@ -42145,7 +41786,7 @@
       <code>$criteria-&gt;report</code>
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="24">
+    <MissingReturnType occurrences="23">
       <code>_nbDigits</code>
       <code>accept</code>
       <code>areBetweenDatesValid</code>
@@ -42165,7 +41806,6 @@
       <code>getCSVDateComponantsWithoutHours</code>
       <code>getCSVDefaultDateComponants</code>
       <code>getNoValueLabel</code>
-      <code>getQueryGroupby</code>
       <code>getSQLCompareDay</code>
       <code>getValueDao</code>
       <code>isTimeDisplayed</code>
@@ -42360,12 +42000,10 @@
     <MissingPropertyType occurrences="1">
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="7">
+    <MissingReturnType occurrences="5">
       <code>accept</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
       <code>getQueryFromAggregate</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getUserManager</code>
       <code>isNone</code>
     </MissingReturnType>
@@ -42390,10 +42028,9 @@
     <MissingPropertyType occurrences="1">
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>accept</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
-      <code>getQueryGroupby</code>
       <code>getValueDao</code>
       <code>isTimeDisplayed</code>
     </MissingReturnType>
@@ -42462,7 +42099,7 @@
       <code>$workflow-&gt;field_id</code>
       <code>$workflow-&gt;is_used</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="23">
+    <MissingReturnType occurrences="21">
       <code>_fetchFieldMasschange</code>
       <code>exportCriteriaValueToXML</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
@@ -42472,8 +42109,6 @@
       <code>formatCriteriaValue</code>
       <code>getDefaultRESTValue</code>
       <code>getMaxSize</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getRESTAvailableValues</code>
       <code>getSelectedValue</code>
       <code>getSubmitDefaultValues</code>
@@ -42556,7 +42191,7 @@
     <MissingPropertyType occurrences="1">
       <code>$default_values</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="17">
+    <MissingReturnType occurrences="15">
       <code>addValue</code>
       <code>exportToXml</code>
       <code>getBindValues</code>
@@ -42565,8 +42200,6 @@
       <code>getFieldDataFromRESTObject</code>
       <code>getFullRESTValue</code>
       <code>getIdsToSearch</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getRESTAvailableValues</code>
       <code>getRESTBindValue</code>
       <code>getRESTBindingProperties</code>
@@ -42691,7 +42324,7 @@
       <code>$value_id</code>
       <code>$xmlMapping</code>
     </MissingParamType>
-    <MissingReturnType occurrences="10">
+    <MissingReturnType occurrences="8">
       <code>accept</code>
       <code>exportToXml</code>
       <code>fixOriginalValueIds</code>
@@ -42699,8 +42332,6 @@
       <code>getDao</code>
       <code>getFieldDataFromRESTObject</code>
       <code>getFullRESTValue</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getValueDao</code>
     </MissingReturnType>
     <NullableReturnStatement occurrences="1">
@@ -42746,7 +42377,7 @@
     <MissingPropertyType occurrences="1">
       <code>$is_rank_alpha</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="20">
+    <MissingReturnType occurrences="18">
       <code>accept</code>
       <code>exportToXml</code>
       <code>extractNumericValues</code>
@@ -42761,8 +42392,6 @@
       <code>getIdsToSearch</code>
       <code>getIsRankAlpha</code>
       <code>getOpenValueDao</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getRESTAvailableValues</code>
       <code>getRESTBindValue</code>
       <code>isValid</code>
@@ -42856,7 +42485,7 @@
       <code>$values</code>
       <code>$xmlMapping</code>
     </MissingParamType>
-    <MissingReturnType occurrences="17">
+    <MissingReturnType occurrences="15">
       <code>accept</code>
       <code>exportToXml</code>
       <code>fetchSelectUgroups</code>
@@ -42867,8 +42496,6 @@
       <code>getFieldDataFromRESTObject</code>
       <code>getFullRESTValue</code>
       <code>getOpenValueDao</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getRESTBindValue</code>
       <code>getSelectedUgroupIds</code>
       <code>getValueDao</code>
@@ -42953,7 +42580,7 @@
       <code>$value_function</code>
       <code>$values</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="14">
+    <MissingReturnType occurrences="12">
       <code>accept</code>
       <code>exportToXml</code>
       <code>fetchSelectUsers</code>
@@ -42963,8 +42590,6 @@
       <code>getDefaultRESTValues</code>
       <code>getFieldDataFromRESTObject</code>
       <code>getFullRESTValue</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getRESTBindValue</code>
       <code>getValueDao</code>
       <code>isValid</code>
@@ -43194,9 +42819,8 @@
       <code>$artifact-&gt;id</code>
       <code>$artifact-&gt;id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="2">
+    <MissingReturnType occurrences="1">
       <code>accept</code>
-      <code>getQueryGroupby</code>
     </MissingReturnType>
     <RedundantCastGivenDocblockType occurrences="3">
       <code>(int) $artifact-&gt;getPerTrackerArtifactId()</code>
@@ -43393,12 +43017,10 @@
     <MissingPropertyType occurrences="1">
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="7">
+    <MissingReturnType occurrences="5">
       <code>accept</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
       <code>getQueryFromAggregate</code>
-      <code>getQueryGroupby</code>
-      <code>getQueryOrderby</code>
       <code>getUserManager</code>
       <code>isNone</code>
     </MissingReturnType>
@@ -43417,10 +43039,9 @@
     <MissingPropertyType occurrences="1">
       <code>$default_properties</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>accept</code>
       <code>fetchArtifactValueWithEditionFormIfEditable</code>
-      <code>getQueryGroupby</code>
       <code>getValueDao</code>
       <code>isTimeDisplayed</code>
     </MissingReturnType>
@@ -45354,6 +44975,9 @@
       <code>instanciateWith</code>
       <code>retrieve</code>
     </DeprecatedMethod>
+    <InvalidArgument occurrences="1">
+      <code>[$this, 'extractUgroupID']</code>
+    </InvalidArgument>
     <MissingParamType occurrences="1">
       <code>$tracker_id</code>
     </MissingParamType>
@@ -48083,9 +47707,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_ReportFactory.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$reportDB</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Report</code>
     </InvalidNullableReturnType>
@@ -48293,14 +47914,13 @@
     <InvalidReturnType occurrences="1">
       <code>bool</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="10">
+    <MissingParamType occurrences="9">
       <code>$description</code>
       <code>$field_mapping</code>
       <code>$from_report</code>
       <code>$name</code>
       <code>$renderer_id</code>
       <code>$report</code>
-      <code>$store_in_session</code>
       <code>$store_in_session</code>
       <code>$to_report</code>
       <code>$type</code>
@@ -48332,10 +47952,9 @@
     <PossiblyNullReference occurrences="1">
       <code>duplicate</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="7">
+    <UndefinedDocblockClass occurrences="6">
       <code>$this-&gt;getTableDao()</code>
       <code>$this-&gt;getTableDao()</code>
-      <code>Report</code>
       <code>Report</code>
       <code>Report</code>
       <code>Report</code>
@@ -48700,7 +48319,7 @@
       <code>new DataAccessResultEmpty()</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidReturnType>
     <MissingParamType occurrences="88">
       <code>$allowed_groups</code>
@@ -49671,9 +49290,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnType occurrences="1">
       <code>true</code>
@@ -50826,9 +50445,6 @@
       <code>loadContent</code>
       <code>updatePreferences</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/WidgetWithAssetDependencies.php">
     <MissingReturnType occurrences="1">
@@ -51500,8 +51116,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="28">
       <code>$allow_copy</code>
@@ -51583,7 +51199,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="10">
       <code>$description</code>
@@ -51649,12 +51265,12 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="6">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;updateAndGetLastId($sql)</code>
@@ -52071,11 +51687,17 @@
     <InvalidArgument occurrences="1">
       <code>$postaction_attributes</code>
     </InvalidArgument>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$dao-&gt;searchByTransitionId($transition-&gt;getId())</code>
+    </LessSpecificReturnStatement>
     <MissingReturnType occurrences="3">
       <code>buildPostActionsForShortname</code>
       <code>duplicate</code>
       <code>getValue</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1">
+      <code>DataAccessResult|list&lt;mixed&gt;|array</code>
+    </MoreSpecificReturnType>
     <UndefinedMethod occurrences="3">
       <code>getFieldId</code>
       <code>getValue</code>
@@ -52150,9 +51772,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;updateAndGetLastId($sql)</code>
@@ -52630,7 +52252,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="9">
       <code>$field_id</code>
@@ -53153,13 +52775,12 @@
     <InvalidArgument occurrences="1">
       <code>$project_with_tracker_administration</code>
     </InvalidArgument>
-    <MissingParamType occurrences="38">
+    <MissingParamType occurrences="37">
       <code>$can_bypass_threshold</code>
       <code>$can_bypass_threshold</code>
       <code>$id</code>
       <code>$keyword</code>
       <code>$legacy</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -53198,7 +52819,7 @@
       <code>$t-&gt;id</code>
       <code>$t-&gt;name</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="79">
+    <MissingReturnType occurrences="77">
       <code>agiledashboard_event_rest_get_burndown</code>
       <code>agiledashboard_event_rest_get_milestone</code>
       <code>agiledashboard_event_rest_options_burndown</code>
@@ -53206,7 +52827,6 @@
       <code>backend_alias_get_aliases</code>
       <code>buildRightVersionOfMilestonesBurndownResource</code>
       <code>build_reference</code>
-      <code>burningParrotCompatiblePage</code>
       <code>burning_parrot_get_stylesheets</code>
       <code>can_user_access_ugroup_info</code>
       <code>checkTypesExistsOnPlateform</code>
@@ -53264,7 +52884,6 @@
       <code>referenceGetTooltipContentEvent</code>
       <code>rest_project_resources</code>
       <code>rest_resources</code>
-      <code>service_classnames</code>
       <code>service_public_areas</code>
       <code>services_truncated_emails</code>
       <code>set_artifact_reference_group_id</code>
@@ -57821,8 +57440,6 @@
     </InvalidReturnType>
     <MissingParamType occurrences="29">
       <code>$bgcolor</code>
-      <code>$bgcolor</code>
-      <code>$cols</code>
       <code>$cols</code>
       <code>$css</code>
       <code>$echoout</code>
@@ -57831,7 +57448,6 @@
       <code>$group_id</code>
       <code>$html_options</code>
       <code>$html_options</code>
-      <code>$id</code>
       <code>$id</code>
       <code>$id</code>
       <code>$index</code>
@@ -57844,11 +57460,9 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$prefix</code>
       <code>$rank</code>
       <code>$service_top_tab</code>
-      <code>$title</code>
       <code>$title</code>
       <code>$url</code>
       <code>$value</code>
@@ -58451,7 +58065,7 @@
       <code>$id</code>
       <code>$pluginInfo</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="18">
+    <MissingReturnType occurrences="16">
       <code>currentRequestIsForPlugin</code>
       <code>deduceCallbackFromHook</code>
       <code>getAdministrationOptions</code>
@@ -58465,11 +58079,9 @@
       <code>isCustom</code>
       <code>removeOrphanWidgets</code>
       <code>services_allowed_for_project</code>
-      <code>setAvailable</code>
       <code>setIsCustom</code>
       <code>setIsRestricted</code>
       <code>setName</code>
-      <code>uninstall</code>
     </MissingReturnType>
     <RedundantPropertyInitializationCheck occurrences="1">
       <code>isset($this-&gt;name)</code>
@@ -58518,19 +58130,13 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Plugin/PluginDescriptor.php">
-    <MissingParamType occurrences="1">
-      <code>$path</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
+    <MissingPropertyType occurrences="2">
       <code>$description</code>
       <code>$name</code>
-      <code>$version</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="2">
       <code>getDescription</code>
       <code>getFullName</code>
-      <code>getVersion</code>
-      <code>setVersionFromFile</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Plugin/PluginFactory.php">
@@ -58546,15 +58152,11 @@
     <InvalidArgument occurrences="1">
       <code>$this-&gt;getProject($project_id)</code>
     </InvalidArgument>
-    <MissingParamType occurrences="30">
+    <MissingParamType occurrences="23">
       <code>$class_path</code>
-      <code>$criteria</code>
       <code>$file_name</code>
       <code>$file_name</code>
       <code>$file_path</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$map</code>
       <code>$name</code>
       <code>$name</code>
       <code>$name</code>
@@ -58562,8 +58164,6 @@
       <code>$name</code>
       <code>$name</code>
       <code>$name</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
       <code>$plugin</code>
       <code>$plugin</code>
       <code>$plugin</code>
@@ -58575,28 +58175,23 @@
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$row</code>
       <code>$usage</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$instance</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="15">
       <code>addProjectForPlugin</code>
       <code>clearInstance</code>
       <code>delProjectForPlugin</code>
       <code>getAllPossiblePluginsDir</code>
-      <code>getAvailablePluginsWithoutOrder</code>
       <code>getClassName</code>
       <code>getClassPath</code>
-      <code>getPluginById</code>
-      <code>getProjectsByPluginId</code>
       <code>includeIfExists</code>
       <code>isPluginAllowedForProject</code>
       <code>isPluginInstalled</code>
       <code>isProjectPluginRestricted</code>
       <code>loadClass</code>
-      <code>pluginIsCustom</code>
       <code>removePlugin</code>
       <code>restrictProjectPluginUse</code>
       <code>truncateProjectPlugin</code>
@@ -58632,21 +58227,12 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Plugin/PluginManager.php">
-    <MissingParamType occurrences="20">
+    <MissingParamType occurrences="11">
       <code>$content</code>
       <code>$destination</code>
       <code>$file</code>
-      <code>$id</code>
       <code>$name</code>
       <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
-      <code>$plugin</code>
       <code>$plugin</code>
       <code>$plugin</code>
       <code>$plugin</code>
@@ -58657,27 +58243,16 @@
     <MissingPropertyType occurrences="1">
       <code>$pluginHookPriorityManager</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="22">
-      <code>availablePlugin</code>
+    <MissingReturnType occurrences="11">
       <code>clearInstance</code>
       <code>copyDirectory</code>
       <code>delProjectForPlugin</code>
-      <code>getAllPlugins</code>
-      <code>getAllowedProjects</code>
-      <code>getAvailablePluginByName</code>
-      <code>getAvailablePlugins</code>
       <code>getEscapedReadme</code>
       <code>getInstallReadme</code>
-      <code>getPluginById</code>
-      <code>getPluginByName</code>
-      <code>getPostInstall</code>
       <code>isNameValid</code>
       <code>isPluginAllowedForProject</code>
-      <code>isPluginAvailable</code>
       <code>isProjectPluginRestricted</code>
-      <code>pluginIsCustom</code>
       <code>setInstance</code>
-      <code>unavailablePlugin</code>
       <code>uninstallPlugin</code>
       <code>updateProjectPluginRestriction</code>
     </MissingReturnType>
@@ -60095,9 +59670,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
   </file>
   <file src="src/common/Project/CustomDescription/CustomDescriptionFactory.class.php">
@@ -61375,8 +60950,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
   </file>
   <file src="src/common/Project/Service/ServiceUsageFactory.class.php">
@@ -61480,9 +61055,9 @@
       <code>getRecursiveRefresher</code>
       <code>reloadUgroupBindingInProject</code>
     </MissingReturnType>
-    <UndefinedMethod occurrences="1">
+    <UndefinedInterfaceMethod occurrences="1">
       <code>getId</code>
-    </UndefinedMethod>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="src/common/Project/UGroupManager.class.php">
     <DeprecatedMethod occurrences="13">
@@ -61514,7 +61089,7 @@
       <code>new ProjectUGroup($dar-&gt;getRow())</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$user-&gt;getId()</code>
@@ -62494,28 +62069,6 @@
       <code>$this-&gt;referenceDao</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/common/Reference/ReferenceInstance.php">
-    <MissingParamType occurrences="6">
-      <code>$group_id</code>
-      <code>$keyword</code>
-      <code>$match</code>
-      <code>$ref</code>
-      <code>$value</code>
-      <code>$value</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$gotoLink</code>
-      <code>$match</code>
-      <code>$reference</code>
-      <code>$value</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>computeGotoLink</code>
-      <code>getGotoLink</code>
-      <code>getMatch</code>
-      <code>getValue</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Reference/ReferenceManager.php">
     <DeprecatedFunction occurrences="6">
       <code>db_ei($artifact_id)</code>
@@ -62629,10 +62182,9 @@
       <code>$referenceDao</code>
       <code>$tmpGroupIdForCallbackFunction</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="43">
+    <MissingReturnType occurrences="42">
       <code>_extractMatches</code>
       <code>_getCrossReferenceDao</code>
-      <code>_getReferenceInstanceFromMatch</code>
       <code>_initProjectReferences</code>
       <code>_isKeywordExists</code>
       <code>_keywordAndNumArgsExists</code>
@@ -62756,6 +62308,671 @@
       <code>postProjectCreationModeration</code>
       <code>postProjectCreationVisibility</code>
       <code>postProjectCreationWebhooks</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/ApacheConfGenerator.php">
+    <MissingReturnType occurrences="2">
+      <code>build</code>
+      <code>generate</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/Cache/ParameterDao.php">
+    <DeprecatedMethod occurrences="7">
+      <code>DataAccessObject</code>
+      <code>getDa</code>
+      <code>getDa</code>
+      <code>quoteSmart</code>
+      <code>quoteSmart</code>
+      <code>retrieve</code>
+      <code>update</code>
+    </DeprecatedMethod>
+    <MissingParamType occurrences="2">
+      <code>$lifetime</code>
+      <code>$maximum_credentials</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>save</code>
+      <code>search</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/Cache/ParameterSaver.php">
+    <MissingParamType occurrences="4">
+      <code>$lifetime</code>
+      <code>$lifetime</code>
+      <code>$maximum_credentials</code>
+      <code>$maximum_credentials</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>save</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/CommitMessageValidator.class.php">
+    <MissingParamType occurrences="1">
+      <code>$commit_message</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>assertCommitMessageIsValid</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/Event/GetSVNLoginNameEvent.php">
+    <MissingParamType occurrences="1">
+      <code>$username</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>setUsername</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SHA1CollisionDetector.php">
+    <MissingParamType occurrences="1">
+      <code>$handle_resource</code>
+    </MissingParamType>
+  </file>
+  <file src="src/common/SVNCore/SVNAccessFile.class.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$currentSection</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>String</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$currentSection</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="6">
+      <code>$contents</code>
+      <code>$contents</code>
+      <code>$svn_dir</code>
+      <code>$svn_dir</code>
+      <code>$verbose</code>
+      <code>$verbose</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$platformBlock</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="3">
+      <code>parseGroup</code>
+      <code>parseGroupLinesByRepositories</code>
+      <code>setPlatformBlock</code>
+    </MissingReturnType>
+    <PossiblyNullArgument occurrences="1">
+      <code>$verbose</code>
+    </PossiblyNullArgument>
+    <PossiblyNullPropertyAssignmentValue occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="src/common/SVNCore/SVNAuthenticationCacheInvalidator.php">
+    <MissingReturnType occurrences="1">
+      <code>invalidateProjectCache</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_AccessFile_DAO.class.php">
+    <DeprecatedMethod occurrences="22">
+      <code>DataAccessObject</code>
+      <code>commit</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>getRow</code>
+      <code>getRow</code>
+      <code>getRow</code>
+      <code>quoteSmart</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>rollBack</code>
+      <code>startTransaction</code>
+      <code>update</code>
+      <code>updateAndGetLastId</code>
+    </DeprecatedMethod>
+    <MissingParamType occurrences="7">
+      <code>$content</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$version_id</code>
+      <code>$version_id</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="8">
+      <code>addNewVersion</code>
+      <code>getAllVersions</code>
+      <code>getCurrentVersionNumber</code>
+      <code>getLastVersionNumber</code>
+      <code>getVersionContent</code>
+      <code>linkNewVersionIdToProject</code>
+      <code>saveNewAccessFileVersionInProject</code>
+      <code>updateAccessFileVersionInProject</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_AccessFile_NoFilePresenter.php">
+    <MissingReturnType occurrences="2">
+      <code>access_form_title</code>
+      <code>repo_not_created_label</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_AccessFile_Presenter.php">
+    <MissingParamType occurrences="4">
+      <code>$content</code>
+      <code>$current_version_title</code>
+      <code>$default_content</code>
+      <code>$version_number</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="12">
+      <code>access_ctrl_file</code>
+      <code>access_form_title</code>
+      <code>button_new_version_label</code>
+      <code>button_other_version_label</code>
+      <code>default_formatted_content</code>
+      <code>other_version_title</code>
+      <code>permissions_warning</code>
+      <code>policy</code>
+      <code>project_id</code>
+      <code>saved_on</code>
+      <code>select_version</code>
+      <code>version_number</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_AccessFile_Writer.class.php">
+    <MissingParamType occurrences="4">
+      <code>$contents</code>
+      <code>$contents</code>
+      <code>$display</code>
+      <code>$svnroot</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$accessfile</code>
+      <code>$err</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="7">
+      <code>filename</code>
+      <code>hasError</code>
+      <code>isErrorFile</code>
+      <code>isErrorWrite</code>
+      <code>read_defaults</code>
+      <code>write</code>
+      <code>write_with_defaults</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_Apache_SvnrootConf.class.php">
+    <MissingPropertyType occurrences="1">
+      <code>$apacheConfHeaders</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="2">
+      <code>collectApacheConfHeaders</code>
+      <code>getApacheConfHeaders</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_DAO.class.php">
+    <MissingReturnType occurrences="1">
+      <code>searchSvnRepositories</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_Hooks.class.php">
+    <MissingParamType occurrences="1">
+      <code>$parameters</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getMessageFromSvnLook</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_LogDao.class.php">
+    <DeprecatedMethod occurrences="17">
+      <code>DataAccessObject</code>
+      <code>count</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>getRow</code>
+      <code>getRow</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+    </DeprecatedMethod>
+    <MissingParamType occurrences="6">
+      <code>$date</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$limit</code>
+      <code>$project_id</code>
+      <code>$where_forbidden</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="6">
+      <code>countSVNCommits</code>
+      <code>countSVNCommitsBefore</code>
+      <code>hasRepositoriesUpdatedAfterGivenDate</code>
+      <code>inIntervalStatement</code>
+      <code>searchCommiters</code>
+      <code>searchTopModifiedFiles</code>
+    </MissingReturnType>
+    <PossiblyFalseReference occurrences="3">
+      <code>count</code>
+      <code>getRow</code>
+      <code>getRow</code>
+    </PossiblyFalseReference>
+  </file>
+  <file src="src/common/SVNCore/SVN_LogFactory.class.php">
+    <DeprecatedFunction occurrences="2">
+      <code>db_es(substr($no_access, 1))</code>
+      <code>db_fetch_array($raw_revisions)</code>
+    </DeprecatedFunction>
+    <MissingParamType occurrences="3">
+      <code>$limit</code>
+      <code>$limit</code>
+      <code>$limit</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="4">
+      <code>getDao</code>
+      <code>getRawRevisions</code>
+      <code>getRawRevisionsAndCount</code>
+      <code>getTopModifiedFiles</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_PermissionsManager.class.php">
+    <MissingParamType occurrences="1">
+      <code>$svnpath</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>userCanRead</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_RepositoryListing.class.php">
+    <MissingParamType occurrences="9">
+      <code>$date_based_path</code>
+      <code>$line</code>
+      <code>$revision</code>
+      <code>$sort</code>
+      <code>$svn_path</code>
+      <code>$svn_path</code>
+      <code>$svn_path</code>
+      <code>$svn_path</code>
+      <code>$user_name</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="8">
+      <code>extractDirectoryContent</code>
+      <code>flattenTimestampBasedArrayOfPathInfo</code>
+      <code>getRevisionInfo</code>
+      <code>getSvnPaths</code>
+      <code>getSvnSinglePathWithLogDetails</code>
+      <code>getUserId</code>
+      <code>sortSvnPathByTimestamp</code>
+      <code>splitHistory</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_RevisionPathInfo.class.php">
+    <MissingParamType occurrences="4">
+      <code>$author_id</code>
+      <code>$commit_message</code>
+      <code>$path</code>
+      <code>$timestamp</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$author_id</code>
+      <code>$commit_message</code>
+      <code>$path</code>
+      <code>$timestamp</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="2">
+      <code>exportToSoap</code>
+      <code>getTimestamp</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_SOAPServer.class.php">
+    <InvalidArgument occurrences="2">
+      <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
+      <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
+    </InvalidArgument>
+    <InvalidReturnStatement occurrences="8">
+      <code>$data</code>
+      <code>$revisions</code>
+      <code>$revisions</code>
+      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
+      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
+      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
+      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
+      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="3">
+      <code>ArrayOfCommiter</code>
+      <code>ArrayOfRevision</code>
+      <code>ArrayOfSvnPathDetails</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="2">
+      <code>$limit</code>
+      <code>'3005'</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="1">
+      <code>$author_id</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getUser</code>
+    </MissingReturnType>
+    <UndefinedDocblockClass occurrences="5">
+      <code>ArrayOfCommiter</code>
+      <code>ArrayOfRevision</code>
+      <code>ArrayOfString</code>
+      <code>ArrayOfSvnPathDetails</code>
+      <code>ArrayOfSvnPathInfo</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/SVNCore/SVN_Svnlook.class.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$revision</code>
+      <code>$transaction</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="5">
+      <code>$command</code>
+      <code>$filename</code>
+      <code>$svn_path</code>
+      <code>$svn_path</code>
+      <code>$transaction</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$svnlook</code>
+      <code>$timeout</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="3">
+      <code>execute</code>
+      <code>getDirectoryListing</code>
+      <code>getTree</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/SVN_SvnlookException.class.php">
+    <MissingParamType occurrences="3">
+      <code>$command</code>
+      <code>$output</code>
+      <code>$return_value</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="3">
+      <code>$command</code>
+      <code>$output</code>
+      <code>$returnValue</code>
+    </MissingPropertyType>
+  </file>
+  <file src="src/common/SVNCore/SvnNotification.class.php">
+    <DeprecatedMethod occurrences="5">
+      <code>current</code>
+      <code>isError</code>
+      <code>isError</code>
+      <code>rowCount</code>
+      <code>rowCount</code>
+    </DeprecatedMethod>
+    <InvalidNullableReturnType occurrences="1">
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>null</code>
+    </NullableReturnStatement>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;_dao</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/SVNCore/SvnrootUpdater.php">
+    <MissingReturnType occurrences="2">
+      <code>listen</code>
+      <code>push</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/Tokens/SVN_Token.class.php">
+    <MissingParamType occurrences="6">
+      <code>$comment</code>
+      <code>$generated_date</code>
+      <code>$id</code>
+      <code>$last_ip</code>
+      <code>$last_usage</code>
+      <code>$token</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="6">
+      <code>$comment</code>
+      <code>$generated_date</code>
+      <code>$id</code>
+      <code>$last_ip</code>
+      <code>$last_usage</code>
+      <code>$token</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="7">
+      <code>getComment</code>
+      <code>getGeneratedDate</code>
+      <code>getId</code>
+      <code>getLastIp</code>
+      <code>getLastUsage</code>
+      <code>getToken</code>
+      <code>getUser</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/Tokens/SVN_TokenHandler.class.php">
+    <MissingParamType occurrences="2">
+      <code>$comment</code>
+      <code>$svn_token_data</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>instantiateFromRow</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/Tokens/SVN_TokenPresenter.class.php">
+    <MissingPropertyType occurrences="6">
+      <code>$comment</code>
+      <code>$generated_date</code>
+      <code>$id</code>
+      <code>$last_used_by</code>
+      <code>$last_used_on</code>
+      <code>$this-&gt;generated_date</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>getDefaultComment</code>
+      <code>getDefaultLastUsedOn</code>
+      <code>getDefaultUsedBy</code>
+      <code>setDateForUser</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/ViewVC/ViewVCProxy.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="7">
+      <code>$body</code>
+      <code>$command</code>
+      <code>$key</code>
+      <code>$location_line</code>
+      <code>$path</code>
+      <code>$path</code>
+      <code>$return_var</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="9">
+      <code>buildQueryString</code>
+      <code>display</code>
+      <code>displayContent</code>
+      <code>displayViewVcHeader</code>
+      <code>escapeStringFromServer</code>
+      <code>getPermissionDeniedError</code>
+      <code>getViewVcLocationHeader</code>
+      <code>setLocaleOnCommand</code>
+      <code>setLocaleOnFileName</code>
+    </MissingReturnType>
+    <PossiblyFalseArgument occurrences="1">
+      <code>strpos($content, $content_type_line)</code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="src/common/SVNCore/general-settings/SVN_GeneralSettingsPresenter.php">
+    <MissingReturnType occurrences="16">
+      <code>btn_submit</code>
+      <code>mandatory_ref_comment</code>
+      <code>mandatory_ref_title</code>
+      <code>off</code>
+      <code>on</code>
+      <code>preamble_title</code>
+      <code>project_id</code>
+      <code>svn_can_change_log</code>
+      <code>svn_can_change_log_comment</code>
+      <code>svn_can_change_log_title</code>
+      <code>svn_mandatory_ref</code>
+      <code>svn_preamble</code>
+      <code>svn_tracked</code>
+      <code>title</code>
+      <code>tracking_comment</code>
+      <code>tracking_title</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/hook/PostRevPropset.class.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$project-&gt;getID()</code>
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="2">
+      <code>$old_commit_message</code>
+      <code>$revision</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>removePreviousCrossReferences</code>
+      <code>update</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/hook/PreCommit.class.php">
+    <MissingParamType occurrences="7">
+      <code>$immutable_path</code>
+      <code>$immutable_path</code>
+      <code>$path</code>
+      <code>$path</code>
+      <code>$path</code>
+      <code>$repository</code>
+      <code>$transaction</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="7">
+      <code>assertCommitDoesNotContainSHA1Collision</code>
+      <code>assertCommitMessageIsValid</code>
+      <code>assertCommitToTagIsAllowed</code>
+      <code>getWellFormedRegexImmutablePath</code>
+      <code>isCommitDoneOnWhitelistElement</code>
+      <code>isCommitForbidden</code>
+      <code>optionDoesNotAllowEmptyCommitMessage</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;logger</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="1">
+      <code>$this-&gt;logger</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="src/common/SVNCore/hook/PreRevPropset.class.php">
+    <MissingParamType occurrences="2">
+      <code>$action</code>
+      <code>$propname</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>assertCanBeModified</code>
+      <code>assertCommitMessageCanBeModified</code>
+      <code>assertPropsetIsOnLog</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_DAO.php">
+    <DeprecatedMethod occurrences="9">
+      <code>DataAccessObject</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>escapeInt</code>
+      <code>quoteSmart</code>
+      <code>quoteSmart</code>
+      <code>retrieve</code>
+      <code>retrieve</code>
+      <code>update</code>
+    </DeprecatedMethod>
+    <MissingParamType occurrences="5">
+      <code>$path</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$whitelist</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>getImmutableTagsPathForProject</code>
+      <code>getImmutableTagsWhitelistForProject</code>
+      <code>saveImmutableTagsForProject</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Handler.php">
+    <MissingParamType occurrences="5">
+      <code>$path</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$whitelist</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="3">
+      <code>doesProjectUsesImmutableTags</code>
+      <code>getAllowedTagsFromWhiteList</code>
+      <code>saveImmutableTagsForProject</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Presenter.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>json_encode($existing_tree)</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingClosureParamType occurrences="1">
+      <code>$path</code>
+    </MissingClosureParamType>
+    <MissingParamType occurrences="2">
+      <code>$immutable_tags_path</code>
+      <code>$immutable_tags_whitelist</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$SO_MUCH_FOLDERS</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="19">
+      <code>immutable_tag_configuration</code>
+      <code>impacted_svn</code>
+      <code>impacted_svn_empty_state</code>
+      <code>loading</code>
+      <code>my_tag</code>
+      <code>path</code>
+      <code>preview</code>
+      <code>preview_description</code>
+      <code>project_id</code>
+      <code>save</code>
+      <code>select_tag</code>
+      <code>some_path</code>
+      <code>sooo_fat</code>
+      <code>svn_allow_tag_immutable_comment</code>
+      <code>svn_allow_tag_immutable_title</code>
+      <code>svn_status_style</code>
+      <code>tree</code>
+      <code>tree_empty_state</code>
+      <code>whitelist</code>
+    </MissingReturnType>
+  </file>
+  <file src="src/common/SVNCore/intro/SVN_IntroPresenter.php">
+    <MissingParamType occurrences="3">
+      <code>$ldap_row</code>
+      <code>$svn_url</code>
+      <code>$uses_ldap_info</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$ldap_row</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="11">
+      <code>command_intro</code>
+      <code>more_info</code>
+      <code>password</code>
+      <code>svn_command</code>
+      <code>svn_intro_title</code>
+      <code>svn_user_username</code>
+      <code>user_is_loggedin</code>
+      <code>user_not_connected_username_helper</code>
+      <code>username_helper_lowercase</code>
+      <code>username_is_in_lowercase</code>
+      <code>warning_ldap</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Service/ServiceCreator.php">
@@ -64116,7 +64333,7 @@
       <code>$user_pw</code>
       <code>$usergroupdao</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="55">
+    <MissingReturnType occurrences="54">
       <code>arePreferencesTheSame</code>
       <code>clearConfirmHash</code>
       <code>clearGroupData</code>
@@ -64138,7 +64355,6 @@
       <code>hasUnixAccount</code>
       <code>hasUserSetAPreference</code>
       <code>isAnonymous</code>
-      <code>isLoggedIn</code>
       <code>isMember</code>
       <code>isNone</code>
       <code>setAddDate</code>
@@ -64325,15 +64541,14 @@
       <code>$user_name</code>
       <code>$words</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="6">
-      <code>$_currentuser</code>
+    <MissingPropertyType occurrences="5">
       <code>$_instance</code>
       <code>$_userdao</code>
       <code>$_userid_byldapid</code>
       <code>$_userid_bynames</code>
       <code>$_users</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="24">
+    <MissingReturnType occurrences="22">
       <code>_getPasswordLifetime</code>
       <code>_getUserInstanceFromRow</code>
       <code>addSSHKeys</code>
@@ -64347,12 +64562,10 @@
       <code>getExpireTimestamp</code>
       <code>getSSHKeyValidator</code>
       <code>getSessionLifetime</code>
-      <code>getUserAnonymous</code>
       <code>getUserByIdWithoutCache</code>
       <code>getUserInstanceFromRow</code>
       <code>logout</code>
       <code>removeConfirmHash</code>
-      <code>setCurrentUser</code>
       <code>setDao</code>
       <code>setInstance</code>
       <code>updateDb</code>
@@ -65710,7 +65923,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="1">
       <code>$language_id</code>
@@ -66056,8 +66269,7 @@
       <code>$project-&gt;getID()</code>
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
-    <MissingParamType occurrences="5">
-      <code>$form_status</code>
+    <MissingParamType occurrences="4">
       <code>$form_status</code>
       <code>$new_name</code>
       <code>$project_type</code>
@@ -66066,19 +66278,15 @@
     <MissingPropertyType occurrences="1">
       <code>$project-&gt;group_id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>getProjectStatus</code>
       <code>getStatusLabel</code>
       <code>hasStatusChanged</code>
       <code>hasTypeChanged</code>
       <code>index</code>
-      <code>propagateStatusChange</code>
       <code>renameProject</code>
       <code>updateProject</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$form_status</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/common/admin/ProjectEdit/ProjectEditDao.php">
     <MissingParamType occurrences="3">
@@ -66723,8 +66931,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="1">
       <code>$artifactTypeId</code>
@@ -66768,12 +66976,12 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="6">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="13">
       <code>$addresses</code>
@@ -66959,15 +67167,15 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="9">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="38">
       <code>$artifact_type</code>
@@ -67227,9 +67435,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="2">
       <code>$deleted</code>
@@ -67651,7 +67859,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;update($sql)</code>
@@ -67692,7 +67900,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="2">
       <code>$deleted</code>
@@ -67857,9 +68065,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="1">
       <code>$group_list_id</code>
@@ -67945,11 +68153,11 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="5">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="20">
       <code>$object_id</code>
@@ -67986,7 +68194,7 @@
     </MissingReturnType>
   </file>
   <file src="src/common/dao/PluginDao.class.php">
-    <DeprecatedMethod occurrences="19">
+    <DeprecatedMethod occurrences="16">
       <code>DataAccessObject</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
@@ -67994,9 +68202,6 @@
       <code>quoteSmart</code>
       <code>quoteSmart</code>
       <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
       <code>retrieve</code>
@@ -68007,43 +68212,28 @@
       <code>update</code>
       <code>updateAndGetLastId</code>
     </DeprecatedMethod>
-    <FalsableReturnStatement occurrences="4">
-      <code>$this-&gt;retrieve($sql)</code>
+    <FalsableReturnStatement occurrences="3">
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="4">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+    <InvalidFalsableReturnType occurrences="3">
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;updateAndGetLastId($sql)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>true</code>
-    </InvalidReturnType>
-    <MissingParamType occurrences="11">
-      <code>$available</code>
-      <code>$available</code>
-      <code>$available</code>
+    <MissingParamType occurrences="6">
       <code>$id</code>
       <code>$id</code>
-      <code>$id</code>
-      <code>$name</code>
       <code>$name</code>
       <code>$pluginId</code>
       <code>$pluginId</code>
       <code>$restrict</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
-      <code>getAvailablePluginsWithoutOrder</code>
+    <MissingReturnType occurrences="3">
       <code>removeById</code>
       <code>restrictProjectPluginUse</code>
       <code>searchProjectPluginRestrictionStatus</code>
-      <code>updateAvailableByPluginId</code>
     </MissingReturnType>
   </file>
   <file src="src/common/dao/ProjectDao.class.php">
@@ -68209,9 +68399,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="63">
       <code>$exact</code>
@@ -68341,8 +68531,8 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="2">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
   </file>
   <file src="src/common/dao/ProjectHistoryDao.class.php">
@@ -68363,9 +68553,6 @@
     <InvalidParamDefault occurrences="1">
       <code>int</code>
     </InvalidParamDefault>
-    <InvalidReturnType occurrences="1">
-      <code>DataAccessResult</code>
-    </InvalidReturnType>
   </file>
   <file src="src/common/dao/ReferenceDao.class.php">
     <DeprecatedMethod occurrences="81">
@@ -68465,17 +68652,17 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="11">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="2">
       <code>$this-&gt;update($sql)</code>
@@ -68646,7 +68833,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="37">
       <code>$allowed_shortnames</code>
@@ -68763,7 +68950,7 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
   </file>
   <file src="src/common/dao/SystemEventDao.class.php">
@@ -68831,17 +69018,17 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidNullableReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidNullableReturnType>
     <InvalidReturnStatement occurrences="2">
       <code>$this-&gt;update($sql)</code>
       <code>$this-&gt;updateAndGetLastId($sql)</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="2">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
       <code>true</code>
     </InvalidReturnType>
     <MissingParamType occurrences="20">
@@ -68993,12 +69180,12 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="6">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="19">
       <code>$group_id</code>
@@ -69078,15 +69265,15 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>new DataAccessResultEmpty()</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidReturnType>
     <MissingParamType occurrences="4">
       <code>$groupId</code>
@@ -69226,19 +69413,20 @@
       <code>false</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="9">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
+      <code>\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <InvalidOperand occurrences="1">
       <code>$this-&gt;update($sqlArtgn)</code>
     </InvalidOperand>
+    <LessSpecificReturnStatement occurrences="1"/>
     <MissingParamType occurrences="45">
       <code>$add_date</code>
       <code>$authorized_keys</code>
@@ -69301,6 +69489,7 @@
       <code>storeLoginSuccess</code>
       <code>updateByRow</code>
     </MissingReturnType>
+    <MoreSpecificReturnType occurrences="1"/>
     <PossiblyFalseReference occurrences="4">
       <code>getRow</code>
       <code>getRow</code>
@@ -69372,9 +69561,9 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="17">
       <code>$description</code>
@@ -69620,7 +69809,7 @@
       <code>startTransaction</code>
     </MissingReturnType>
     <MoreSpecificReturnType occurrences="1">
-      <code>DataAccessResult|false</code>
+      <code>LegacyDataAccessResultInterface|false</code>
     </MoreSpecificReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
@@ -70755,12 +70944,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/include/Toggler.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$should_be_displayed</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>1 - (int) $current_user-&gt;getPreference('toggle_' . $id)</code>
     </InvalidScalarArgument>
@@ -72258,671 +72441,6 @@
       <code>$wsdl_url</code>
     </MissingParamType>
   </file>
-  <file src="src/common/SVNCore/ApacheConfGenerator.php">
-    <MissingReturnType occurrences="2">
-      <code>build</code>
-      <code>generate</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/CommitMessageValidator.class.php">
-    <MissingParamType occurrences="1">
-      <code>$commit_message</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>assertCommitMessageIsValid</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/Event/GetSVNLoginNameEvent.php">
-    <MissingParamType occurrences="1">
-      <code>$username</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>setUsername</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SHA1CollisionDetector.php">
-    <MissingParamType occurrences="1">
-      <code>$handle_resource</code>
-    </MissingParamType>
-  </file>
-  <file src="src/common/SVNCore/SVNAccessFile.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$currentSection</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>String</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$currentSection</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="6">
-      <code>$contents</code>
-      <code>$contents</code>
-      <code>$svn_dir</code>
-      <code>$svn_dir</code>
-      <code>$verbose</code>
-      <code>$verbose</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$platformBlock</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>parseGroup</code>
-      <code>parseGroupLinesByRepositories</code>
-      <code>setPlatformBlock</code>
-    </MissingReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$verbose</code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="src/common/SVNCore/SVNAuthenticationCacheInvalidator.php">
-    <MissingReturnType occurrences="1">
-      <code>invalidateProjectCache</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_DAO.class.php">
-    <DeprecatedMethod occurrences="22">
-      <code>DataAccessObject</code>
-      <code>commit</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>rollBack</code>
-      <code>startTransaction</code>
-      <code>update</code>
-      <code>updateAndGetLastId</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="7">
-      <code>$content</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$version_id</code>
-      <code>$version_id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="8">
-      <code>addNewVersion</code>
-      <code>getAllVersions</code>
-      <code>getCurrentVersionNumber</code>
-      <code>getLastVersionNumber</code>
-      <code>getVersionContent</code>
-      <code>linkNewVersionIdToProject</code>
-      <code>saveNewAccessFileVersionInProject</code>
-      <code>updateAccessFileVersionInProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_NoFilePresenter.php">
-    <MissingReturnType occurrences="2">
-      <code>access_form_title</code>
-      <code>repo_not_created_label</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_Presenter.php">
-    <MissingParamType occurrences="4">
-      <code>$content</code>
-      <code>$current_version_title</code>
-      <code>$default_content</code>
-      <code>$version_number</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="12">
-      <code>access_ctrl_file</code>
-      <code>access_form_title</code>
-      <code>button_new_version_label</code>
-      <code>button_other_version_label</code>
-      <code>default_formatted_content</code>
-      <code>other_version_title</code>
-      <code>permissions_warning</code>
-      <code>policy</code>
-      <code>project_id</code>
-      <code>saved_on</code>
-      <code>select_version</code>
-      <code>version_number</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_AccessFile_Writer.class.php">
-    <MissingParamType occurrences="4">
-      <code>$contents</code>
-      <code>$contents</code>
-      <code>$display</code>
-      <code>$svnroot</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$accessfile</code>
-      <code>$err</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="7">
-      <code>filename</code>
-      <code>hasError</code>
-      <code>isErrorFile</code>
-      <code>isErrorWrite</code>
-      <code>read_defaults</code>
-      <code>write</code>
-      <code>write_with_defaults</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_Apache_SvnrootConf.class.php">
-    <MissingPropertyType occurrences="1">
-      <code>$apacheConfHeaders</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>collectApacheConfHeaders</code>
-      <code>getApacheConfHeaders</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_DAO.class.php">
-    <MissingReturnType occurrences="1">
-      <code>searchSvnRepositories</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_Hooks.class.php">
-    <MissingParamType occurrences="1">
-      <code>$parameters</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>getMessageFromSvnLook</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_LogDao.class.php">
-    <DeprecatedMethod occurrences="17">
-      <code>DataAccessObject</code>
-      <code>count</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>getRow</code>
-      <code>getRow</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="6">
-      <code>$date</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$limit</code>
-      <code>$project_id</code>
-      <code>$where_forbidden</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="6">
-      <code>countSVNCommits</code>
-      <code>countSVNCommitsBefore</code>
-      <code>hasRepositoriesUpdatedAfterGivenDate</code>
-      <code>inIntervalStatement</code>
-      <code>searchCommiters</code>
-      <code>searchTopModifiedFiles</code>
-    </MissingReturnType>
-    <PossiblyFalseReference occurrences="3">
-      <code>count</code>
-      <code>getRow</code>
-      <code>getRow</code>
-    </PossiblyFalseReference>
-  </file>
-  <file src="src/common/SVNCore/SVN_LogFactory.class.php">
-    <DeprecatedFunction occurrences="2">
-      <code>db_es(substr($no_access, 1))</code>
-      <code>db_fetch_array($raw_revisions)</code>
-    </DeprecatedFunction>
-    <MissingParamType occurrences="3">
-      <code>$limit</code>
-      <code>$limit</code>
-      <code>$limit</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>getDao</code>
-      <code>getRawRevisions</code>
-      <code>getRawRevisionsAndCount</code>
-      <code>getTopModifiedFiles</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_PermissionsManager.class.php">
-    <MissingParamType occurrences="1">
-      <code>$svnpath</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>userCanRead</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_RepositoryListing.class.php">
-    <MissingParamType occurrences="9">
-      <code>$date_based_path</code>
-      <code>$line</code>
-      <code>$revision</code>
-      <code>$sort</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$user_name</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="8">
-      <code>extractDirectoryContent</code>
-      <code>flattenTimestampBasedArrayOfPathInfo</code>
-      <code>getRevisionInfo</code>
-      <code>getSvnPaths</code>
-      <code>getSvnSinglePathWithLogDetails</code>
-      <code>getUserId</code>
-      <code>sortSvnPathByTimestamp</code>
-      <code>splitHistory</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_RevisionPathInfo.class.php">
-    <MissingParamType occurrences="4">
-      <code>$author_id</code>
-      <code>$commit_message</code>
-      <code>$path</code>
-      <code>$timestamp</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="4">
-      <code>$author_id</code>
-      <code>$commit_message</code>
-      <code>$path</code>
-      <code>$timestamp</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="2">
-      <code>exportToSoap</code>
-      <code>getTimestamp</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_SOAPServer.class.php">
-    <InvalidArgument occurrences="2">
-      <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
-      <code>TimeInterval::fromUnixTimestamps($start_date, $end_date)</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="8">
-      <code>$data</code>
-      <code>$revisions</code>
-      <code>$revisions</code>
-      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
-      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
-      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
-      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
-      <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="3">
-      <code>ArrayOfCommiter</code>
-      <code>ArrayOfRevision</code>
-      <code>ArrayOfSvnPathDetails</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
-      <code>$limit</code>
-      <code>'3005'</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="1">
-      <code>$author_id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>getUser</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass occurrences="5">
-      <code>ArrayOfCommiter</code>
-      <code>ArrayOfRevision</code>
-      <code>ArrayOfString</code>
-      <code>ArrayOfSvnPathDetails</code>
-      <code>ArrayOfSvnPathInfo</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/SVNCore/SVN_Svnlook.class.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$revision</code>
-      <code>$transaction</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="5">
-      <code>$command</code>
-      <code>$filename</code>
-      <code>$svn_path</code>
-      <code>$svn_path</code>
-      <code>$transaction</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$svnlook</code>
-      <code>$timeout</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>execute</code>
-      <code>getDirectoryListing</code>
-      <code>getTree</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/SVN_SvnlookException.class.php">
-    <MissingParamType occurrences="3">
-      <code>$command</code>
-      <code>$output</code>
-      <code>$return_value</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$command</code>
-      <code>$output</code>
-      <code>$returnValue</code>
-    </MissingPropertyType>
-  </file>
-  <file src="src/common/SVNCore/SvnNotification.class.php">
-    <DeprecatedMethod occurrences="5">
-      <code>current</code>
-      <code>isError</code>
-      <code>isError</code>
-      <code>rowCount</code>
-      <code>rowCount</code>
-    </DeprecatedMethod>
-    <InvalidNullableReturnType occurrences="1">
-      <code>DataAccessResult</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>null</code>
-    </NullableReturnStatement>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;_dao</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/SVNCore/SvnrootUpdater.php">
-    <MissingReturnType occurrences="2">
-      <code>listen</code>
-      <code>push</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/Cache/ParameterDao.php">
-    <DeprecatedMethod occurrences="7">
-      <code>DataAccessObject</code>
-      <code>getDa</code>
-      <code>getDa</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="2">
-      <code>$lifetime</code>
-      <code>$maximum_credentials</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>save</code>
-      <code>search</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/Cache/ParameterSaver.php">
-    <MissingParamType occurrences="4">
-      <code>$lifetime</code>
-      <code>$lifetime</code>
-      <code>$maximum_credentials</code>
-      <code>$maximum_credentials</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>save</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/general-settings/SVN_GeneralSettingsPresenter.php">
-    <MissingReturnType occurrences="16">
-      <code>btn_submit</code>
-      <code>mandatory_ref_comment</code>
-      <code>mandatory_ref_title</code>
-      <code>off</code>
-      <code>on</code>
-      <code>preamble_title</code>
-      <code>project_id</code>
-      <code>svn_can_change_log</code>
-      <code>svn_can_change_log_comment</code>
-      <code>svn_can_change_log_title</code>
-      <code>svn_mandatory_ref</code>
-      <code>svn_preamble</code>
-      <code>svn_tracked</code>
-      <code>title</code>
-      <code>tracking_comment</code>
-      <code>tracking_title</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/hook/PostRevPropset.class.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$project-&gt;getID()</code>
-      <code>$user-&gt;getId()</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="2">
-      <code>$old_commit_message</code>
-      <code>$revision</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>removePreviousCrossReferences</code>
-      <code>update</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/hook/PreCommit.class.php">
-    <MissingParamType occurrences="7">
-      <code>$immutable_path</code>
-      <code>$immutable_path</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$repository</code>
-      <code>$transaction</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="7">
-      <code>assertCommitDoesNotContainSHA1Collision</code>
-      <code>assertCommitMessageIsValid</code>
-      <code>assertCommitToTagIsAllowed</code>
-      <code>getWellFormedRegexImmutablePath</code>
-      <code>isCommitDoneOnWhitelistElement</code>
-      <code>isCommitForbidden</code>
-      <code>optionDoesNotAllowEmptyCommitMessage</code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;logger</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;logger</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/SVNCore/hook/PreRevPropset.class.php">
-    <MissingParamType occurrences="2">
-      <code>$action</code>
-      <code>$propname</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>assertCanBeModified</code>
-      <code>assertCommitMessageCanBeModified</code>
-      <code>assertPropsetIsOnLog</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_DAO.php">
-    <DeprecatedMethod occurrences="9">
-      <code>DataAccessObject</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>escapeInt</code>
-      <code>quoteSmart</code>
-      <code>quoteSmart</code>
-      <code>retrieve</code>
-      <code>retrieve</code>
-      <code>update</code>
-    </DeprecatedMethod>
-    <MissingParamType occurrences="5">
-      <code>$path</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$whitelist</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getImmutableTagsPathForProject</code>
-      <code>getImmutableTagsWhitelistForProject</code>
-      <code>saveImmutableTagsForProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Handler.php">
-    <MissingParamType occurrences="5">
-      <code>$path</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$whitelist</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>doesProjectUsesImmutableTags</code>
-      <code>getAllowedTagsFromWhiteList</code>
-      <code>saveImmutableTagsForProject</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/immutable_tags/SVN_Immutable_Tags_Presenter.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>json_encode($existing_tree)</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingClosureParamType occurrences="1">
-      <code>$path</code>
-    </MissingClosureParamType>
-    <MissingParamType occurrences="2">
-      <code>$immutable_tags_path</code>
-      <code>$immutable_tags_whitelist</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$SO_MUCH_FOLDERS</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="19">
-      <code>immutable_tag_configuration</code>
-      <code>impacted_svn</code>
-      <code>impacted_svn_empty_state</code>
-      <code>loading</code>
-      <code>my_tag</code>
-      <code>path</code>
-      <code>preview</code>
-      <code>preview_description</code>
-      <code>project_id</code>
-      <code>save</code>
-      <code>select_tag</code>
-      <code>some_path</code>
-      <code>sooo_fat</code>
-      <code>svn_allow_tag_immutable_comment</code>
-      <code>svn_allow_tag_immutable_title</code>
-      <code>svn_status_style</code>
-      <code>tree</code>
-      <code>tree_empty_state</code>
-      <code>whitelist</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/intro/SVN_IntroPresenter.php">
-    <MissingParamType occurrences="3">
-      <code>$ldap_row</code>
-      <code>$svn_url</code>
-      <code>$uses_ldap_info</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$ldap_row</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="11">
-      <code>command_intro</code>
-      <code>more_info</code>
-      <code>password</code>
-      <code>svn_command</code>
-      <code>svn_intro_title</code>
-      <code>svn_user_username</code>
-      <code>user_is_loggedin</code>
-      <code>user_not_connected_username_helper</code>
-      <code>username_helper_lowercase</code>
-      <code>username_is_in_lowercase</code>
-      <code>warning_ldap</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/Tokens/SVN_Token.class.php">
-    <MissingParamType occurrences="6">
-      <code>$comment</code>
-      <code>$generated_date</code>
-      <code>$id</code>
-      <code>$last_ip</code>
-      <code>$last_usage</code>
-      <code>$token</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="6">
-      <code>$comment</code>
-      <code>$generated_date</code>
-      <code>$id</code>
-      <code>$last_ip</code>
-      <code>$last_usage</code>
-      <code>$token</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="7">
-      <code>getComment</code>
-      <code>getGeneratedDate</code>
-      <code>getId</code>
-      <code>getLastIp</code>
-      <code>getLastUsage</code>
-      <code>getToken</code>
-      <code>getUser</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/Tokens/SVN_TokenHandler.class.php">
-    <MissingParamType occurrences="2">
-      <code>$comment</code>
-      <code>$svn_token_data</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>instantiateFromRow</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/Tokens/SVN_TokenPresenter.class.php">
-    <MissingPropertyType occurrences="6">
-      <code>$comment</code>
-      <code>$generated_date</code>
-      <code>$id</code>
-      <code>$last_used_by</code>
-      <code>$last_used_on</code>
-      <code>$this-&gt;generated_date</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="4">
-      <code>getDefaultComment</code>
-      <code>getDefaultLastUsedOn</code>
-      <code>getDefaultUsedBy</code>
-      <code>setDateForUser</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/ViewVC/ViewVCProxy.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$user-&gt;getId()</code>
-    </InvalidScalarArgument>
-    <MissingParamType occurrences="7">
-      <code>$body</code>
-      <code>$command</code>
-      <code>$key</code>
-      <code>$location_line</code>
-      <code>$path</code>
-      <code>$path</code>
-      <code>$return_var</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="9">
-      <code>buildQueryString</code>
-      <code>display</code>
-      <code>displayContent</code>
-      <code>displayViewVcHeader</code>
-      <code>escapeStringFromServer</code>
-      <code>getPermissionDeniedError</code>
-      <code>getViewVcLocationHeader</code>
-      <code>setLocaleOnCommand</code>
-      <code>setLocaleOnFileName</code>
-    </MissingReturnType>
-    <PossiblyFalseArgument occurrences="1">
-      <code>strpos($content, $content_type_line)</code>
-    </PossiblyFalseArgument>
-  </file>
   <file src="src/common/system_event/IRunInAMutex.php">
     <MissingParamType occurrences="1">
       <code>$queue</code>
@@ -73520,8 +73038,9 @@
       <code>$users</code>
       <code>instanciateWith</code>
     </DeprecatedMethod>
-    <InvalidArgument occurrences="1">
+    <InvalidArgument occurrences="2">
       <code>$user</code>
+      <code>[UserManager::instance(), 'getUserInstanceFromRow']</code>
     </InvalidArgument>
     <MissingReturnType occurrences="5">
       <code>process</code>
@@ -78668,11 +78187,11 @@
       <code>$this-&gt;retrieve($sql)</code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType occurrences="5">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
+      <code>LegacyDataAccessResultInterface</code>
     </InvalidFalsableReturnType>
     <MissingParamType occurrences="1">
       <code>$filesystemName</code>
@@ -82550,7 +82069,6 @@
     </DeprecatedMethod>
     <MissingParamType occurrences="18">
       <code>$at</code>
-      <code>$at</code>
       <code>$col_list</code>
       <code>$col_list</code>
       <code>$col_list</code>
@@ -82562,8 +82080,6 @@
       <code>$lbl_list</code>
       <code>$mand_list</code>
       <code>$numrows</code>
-      <code>$record</code>
-      <code>$record</code>
       <code>$record</code>
       <code>$record</code>
       <code>$result</code>
@@ -84054,7 +83570,7 @@
     </MissingReturnType>
   </file>
   <file src="src/www/svn/svn_intro.php">
-    <UndefinedGlobalVariable occurrences="12">
+    <UndefinedGlobalVariable occurrences="11">
       <code>$HTML</code>
       <code>$HTML</code>
       <code>$Language</code>
@@ -84062,7 +83578,6 @@
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
-      <code>$request</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>

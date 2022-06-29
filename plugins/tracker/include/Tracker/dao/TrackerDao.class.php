@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class TrackerDao extends DataAccessObject
@@ -95,7 +96,7 @@ class TrackerDao extends DataAccessObject
     * Retrieve the Tracker with the specified item_name from the Project with the given ID
     * @param string $item_name the shortname of the tracker we are looking for
     * @param int $project_id the ID of the project
-    * @return DataAccessResult
+    * @return LegacyDataAccessResultInterface
     */
     public function searchByItemNameAndProjectId($item_name, $project_id)
     {
@@ -356,7 +357,7 @@ class TrackerDao extends DataAccessObject
     /**
     * Searches deleted trackers
     *
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function retrieveTrackersMarkAsDeleted()
     {

@@ -20,6 +20,7 @@
  */
 
 use Symfony\Component\Process\Process;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\FRS\FRSPermissionManager;
@@ -814,7 +815,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      * @param int $offset
      * @param int $limit
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function listPendingFiles($groupId, $offset, $limit)
     {
@@ -827,7 +828,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function listToBeRestoredFiles($groupId)
     {
@@ -840,7 +841,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function listStagingCandidates($groupId)
     {

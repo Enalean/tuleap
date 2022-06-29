@@ -72,7 +72,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
      * @param String $sort      Order result set according to this parameter
      * @param String $sortOrder Specifiy if the result set sort order is ascending or descending
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getAllCustomQuota($list, $offset, $count, $sort, $sortOrder)
     {
@@ -117,7 +117,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
      *
      * @param int $groupId Id of the project
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getProjectCustomQuota($groupId)
     {
