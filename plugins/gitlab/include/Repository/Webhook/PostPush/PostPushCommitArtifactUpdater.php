@@ -34,6 +34,9 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
+use Tuleap\Tracker\Artifact\Changeset\CreateCommentOnlyChangeset;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
@@ -43,33 +46,13 @@ use UserManager;
 
 class PostPushCommitArtifactUpdater
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var StatusValueRetriever
-     */
-    private $status_value_retriever;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var DoneValueRetriever
-     */
-    private $done_value_retriever;
-
     public function __construct(
-        StatusValueRetriever $status_value_retriever,
-        DoneValueRetriever $done_value_retriever,
-        UserManager $user_manager,
-        LoggerInterface $logger,
+        private StatusValueRetriever $status_value_retriever,
+        private DoneValueRetriever $done_value_retriever,
+        private UserManager $user_manager,
+        private LoggerInterface $logger,
+        private CreateCommentOnlyChangeset $comment_creator,
     ) {
-        $this->status_value_retriever = $status_value_retriever;
-        $this->done_value_retriever   = $done_value_retriever;
-        $this->user_manager           = $user_manager;
-        $this->logger                 = $logger;
     }
 
     /**
@@ -142,34 +125,27 @@ class PostPushCommitArtifactUpdater
     }
 
     /**
-     * @return Ok<null>|Err<Fault>
+     * @return Ok<null> | Err<Fault>
      */
     public function addTuleapArtifactCommentNoSemanticDefined(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
         PostPushCommitWebhookData $commit,
     ): Ok|Err {
-        try {
-            $committer           = $this->getUserClosingTheArtifactFromGitlabWebhook($commit);
-            $no_semantic_comment = sprintf(
-                '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-                $committer->getName()
-            );
+        $committer           = $this->getUserClosingTheArtifactFromGitlabWebhook($commit);
+        $no_semantic_comment = sprintf(
+            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+            $committer->getName()
+        );
 
-            $new_followups = $artifact->createNewChangeset([], $no_semantic_comment, $tracker_workflow_user);
-
-            if ($new_followups === null) {
-                return Result::err(Fault::fromMessage('No new comment was created'));
-            }
-            return Result::ok(null);
-        } catch (Tracker_NoChangeException | Tracker_Exception $e) {
-            return Result::err(
-                Fault::fromThrowableWithMessage(
-                    $e,
-                    sprintf('An error occurred during the creation of the comment: %s', $e->getMessage())
-                )
-            );
-        }
+        $comment = NewComment::fromParts(
+            $no_semantic_comment,
+            CommentFormatIdentifier::buildCommonMark(),
+            $tracker_workflow_user,
+            (new \DateTimeImmutable())->getTimestamp(),
+            []
+        );
+        return $this->comment_creator->createCommentOnlyChangeset($comment, $artifact)->map(static fn() => null);
     }
 
     private function getUserClosingTheArtifactFromGitlabWebhook(PostPushCommitWebhookData $commit): UserClosingTheArtifact
