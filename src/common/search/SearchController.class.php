@@ -208,7 +208,7 @@ class Search_SearchController
             $query->getProject()->getId()
         );
         if (count($references) === 1 && $references[0]->getMatch() === trim($query->getWords())) {
-            $GLOBALS['HTML']->redirect($references[0]->getGotoLink());
+            $GLOBALS['HTML']->redirect($references[0]->getFullGotoLink());
         }
 
         $results = new Search_SearchResults();
