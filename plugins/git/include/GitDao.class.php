@@ -144,6 +144,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
                     'repository_backend_type'     => $backendType,
                     'repository_scope'            => $scope,
                     'repository_namespace'        => $namespace,
+                    'allow_artifact_closure'      => empty($parentId),
                 ]
             );
         } catch (PDOException $ex) {
