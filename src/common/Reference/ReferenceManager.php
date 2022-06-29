@@ -829,6 +829,9 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         return count($this->extractReferences($string, $project->getId())) > 0;
     }
 
+    /**
+     * @return list<ReferenceInstance>
+     */
     public function extractReferences($html, $group_id): array
     {
         $this->tmpGroupIdForCallbackFunction = $group_id;
