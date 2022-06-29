@@ -30,10 +30,7 @@ use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -76,6 +73,10 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
     private string $success_message;
     private string $no_semantic_defined_message;
     private CreateCommentOnlyChangesetStub $comment_creator;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_Status
+     */
+    private $status_semantic;
 
     protected function setUp(): void
     {
@@ -93,7 +94,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact        = $this->createMock(Artifact::class);
+        $this->status_semantic = $this->createStub(\Tracker_Semantic_Status::class);
 
         $this->success_message             = sprintf(
             'solved by @%s with gitlab_commit #%s/%s',
@@ -107,88 +109,6 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         );
     }
 
-    private function addComment(): Ok|Err
-    {
-        $webhook_data = new PostPushCommitWebhookData(
-            self::COMMIT_SHA1,
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            1361860767,
-            self::COMMITTER_EMAIL,
-            self::COMMITTER_FULL_NAME
-        );
-
-        $updater = new PostPushCommitArtifactUpdater(
-            $this->status_value_retriever,
-            $this->done_value_retriever,
-            $this->user_manager,
-            new NullLogger(),
-            $this->comment_creator
-        );
-        return $updater->addTuleapArtifactCommentNoSemanticDefined(
-            $this->artifact,
-            $this->workflow_user,
-            $webhook_data
-        );
-    }
-
-    public function testItDoesNotAddArtifactCommentWithoutStatusUpdatedIfAnErrorOccursDuringTheCommentCreation(): void
-    {
-        $this->mockCommitterMatchingTuleapUser();
-        $this->comment_creator = CreateCommentOnlyChangesetStub::withFault(
-            Fault::fromMessage('Error during comment creation')
-        );
-
-        $result = $this->addComment();
-
-        self::assertTrue(Result::isErr($result));
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
-    }
-
-    public function testItCreatesANewCommentWithoutStatusUpdatedWithTheTuleapUsernameIfTheTuleapUserExists(): void
-    {
-        $this->mockCommitterMatchingTuleapUser();
-
-        $result = $this->addComment();
-
-        self::assertTrue(Result::isOk($result));
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
-    }
-
-    public function testItCreatesANewCommentWithoutStatusUpdatedWithTheGitlabCommitterAuthorIfTheTuleapUserDoesNotExist(): void
-    {
-        $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
-
-        $message = sprintf(
-            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-            self::COMMITTER_FULL_NAME
-        );
-
-        $result = $this->addComment();
-
-        self::assertTrue(Result::isOk($result));
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
-    }
-
     private function closeTuleapArtifact(): void
     {
         $webhook_data = new PostPushCommitWebhookData(
@@ -198,19 +118,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             'irrelevant',
             1361860767,
             self::COMMITTER_EMAIL,
-            self::COMMITTER_USERNAME
+            self::COMMITTER_FULL_NAME
         );
 
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $status_field
-            ->method('getId')
-            ->willReturn(self::STATUS_FIELD_ID);
-        $status_field
-            ->method('getFieldData')
-            ->with(self::DONE_LABEL)
-            ->willReturn(self::DONE_BIND_VALUE_ID);
-
-        $this->mockCommitterMatchingTuleapUser();
         $reference   = new WebhookTuleapReference(12, 'resolves');
         $integration = new GitlabRepositoryIntegration(
             1,
@@ -235,76 +145,36 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->workflow_user,
             $webhook_data,
             $reference,
-            $status_field,
+            $this->status_semantic,
             $integration
         );
     }
 
-    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfAnErrorOccursDuringTheCommentCreation(): void
+    public function testItClosesArtifactWithDoneValue(): void
     {
-        $this->artifact->method('isOpen')->willReturn(true);
-
-        $this->done_value_retriever
-            ->expects(self::once())
-            ->method("getFirstDoneValueUserCanRead")
-            ->with($this->artifact, $this->workflow_user)
-            ->willReturn($this->getDoneValue());
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsFound();
+        $this->mockDoneValueIsFound();
+        $this->mockCommitterMatchingTuleapUser();
 
         $this->artifact->method("createNewChangeset")
             ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willThrowException(new Tracker_NoChangeException(1, 'xref'));
+            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
         $this->closeTuleapArtifact();
     }
 
-    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfNoPossibleValueAreFound(): void
+    public function testItClosesArtifactWithFirstClosedStatusValue(): void
     {
-        $this->artifact->method('isOpen')->willReturn(true);
-
-        $this->done_value_retriever
-            ->expects(self::once())
-            ->method("getFirstDoneValueUserCanRead")
-            ->with($this->artifact, $this->workflow_user)
-            ->willThrowException(new NoPossibleValueException());
-
-        $this->artifact->expects(self::never())->method("createNewChangeset");
-
-        $this->expectException(NoPossibleValueException::class);
-        $this->closeTuleapArtifact();
-    }
-
-    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfCommentIsNotCreated(): void
-    {
-        $this->artifact->method('isOpen')->willReturn(true);
-
-        $this->done_value_retriever
-            ->expects(self::once())
-            ->method("getFirstDoneValueUserCanRead")
-            ->with($this->artifact, $this->workflow_user)
-            ->willReturn(new Tracker_FormElement_Field_List_Bind_StaticValue(14, self::DONE_LABEL, "", 1, false));
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsFound();
+        $this->mockNoDoneValue();
+        $this->mockClosedValueIsFound();
+        $this->mockCommitterMatchingTuleapUser();
 
         $this->artifact->method("createNewChangeset")
             ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willReturn(null);
-
-        $this->closeTuleapArtifact();
-    }
-
-    public function testItAddArtifactCommentWithoutStatusUpdatedIfNotCloseStatusSemanticDefined(): void
-    {
-        $this->artifact->method('isOpen')->willReturn(true);
-
-        $this->done_value_retriever
-            ->expects(self::once())
-            ->method("getFirstDoneValueUserCanRead")
-            ->with($this->artifact, $this->workflow_user)
-            ->willThrowException(new SemanticDoneValueNotFoundException());
-
-        $this->status_value_retriever
-            ->expects(self::once())
-            ->method("getFirstClosedValueUserCanRead")
-            ->with($this->workflow_user, $this->artifact)
-            ->willThrowException(new SemanticStatusClosedValueNotFoundException());
+            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
 
         $this->closeTuleapArtifact();
     }
@@ -318,44 +188,122 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->closeTuleapArtifact();
     }
 
-    public function testItClosesArtifactWithDoneValue(): void
+    public function testItThrowsIfNoPossibleValueAreFound(): void
     {
-        $this->artifact->method('isOpen')->willReturn(true);
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsFound();
 
-        $this->done_value_retriever
-            ->expects(self::once())
-            ->method("getFirstDoneValueUserCanRead")
+        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')
             ->with($this->artifact, $this->workflow_user)
-            ->willReturn($this->getDoneValue());
+            ->willThrowException(new NoPossibleValueException());
+
+        $this->artifact->expects(self::never())->method("createNewChangeset");
+
+        $this->expectException(NoPossibleValueException::class);
+        $this->closeTuleapArtifact();
+    }
+
+    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfCommentIsNotCreated(): void
+    {
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsFound();
+        $this->mockDoneValueIsFound();
+        $this->mockCommitterMatchingTuleapUser();
 
         $this->artifact->method("createNewChangeset")
             ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
+            ->willReturn(null);
 
         $this->closeTuleapArtifact();
     }
 
-    public function testItClosesArtifactWithFirstClosedStatusValue(): void
+    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfAnErrorOccursDuringTheCommentCreation(): void
     {
-        $this->done_value_retriever
-            ->expects(self::once())
-            ->method("getFirstDoneValueUserCanRead")
-            ->with($this->artifact, $this->workflow_user)
-            ->willThrowException(new SemanticDoneValueNotFoundException());
-
-        $this->status_value_retriever
-            ->expects(self::once())
-            ->method("getFirstClosedValueUserCanRead")
-            ->with($this->workflow_user, $this->artifact)
-            ->willReturn($this->getDoneValue());
-
-        $this->artifact->method('isOpen')->willReturn(true);
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsFound();
+        $this->mockDoneValueIsFound();
+        $this->mockCommitterMatchingTuleapUser();
 
         $this->artifact->method("createNewChangeset")
             ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
+            ->willThrowException(new Tracker_NoChangeException(1, 'xref'));
 
         $this->closeTuleapArtifact();
+    }
+
+    public function testItAddsOnlyACommentIfStatusSemanticIsNotDefined(): void
+    {
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsNotDefined();
+        $this->mockCommitterMatchingTuleapUser();
+
+        $this->closeTuleapArtifact();
+
+        $new_comment = $this->comment_creator->getNewComment();
+        if (! $new_comment) {
+            throw new \Exception('Expected to receive a new comment');
+        }
+        self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
+        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+    }
+
+    public function testItAddsOnlyACommentIfClosedValueNotFound(): void
+    {
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsFound();
+        $this->mockNoDoneValue();
+        $this->status_value_retriever->expects(self::once())
+            ->method("getFirstClosedValueUserCanRead")
+            ->with($this->workflow_user, $this->artifact)
+            ->willThrowException(new SemanticStatusClosedValueNotFoundException());
+        $this->mockCommitterMatchingTuleapUser();
+
+        $this->closeTuleapArtifact();
+
+        $new_comment = $this->comment_creator->getNewComment();
+        if (! $new_comment) {
+            throw new \Exception('Expected to receive a new comment');
+        }
+        self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
+        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+    }
+
+    public function testItDoesNotAddCommentIfAnErrorOccursDuringTheCommentCreation(): void
+    {
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsNotDefined();
+        $this->mockCommitterMatchingTuleapUser();
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withFault(
+            Fault::fromMessage('Error during comment creation')
+        );
+
+        $this->closeTuleapArtifact();
+
+        self::assertNotNull($this->comment_creator->getNewComment());
+    }
+
+    public function testItFallsBackOnGitLabCommitterIfItCannotMatchTuleapUser(): void
+    {
+        $this->mockArtifactIsOpen();
+        $this->mockStatusFieldIsNotDefined();
+        $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
+
+        $message = sprintf(
+            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+            self::COMMITTER_FULL_NAME
+        );
+
+        $this->closeTuleapArtifact();
+
+        $new_comment = $this->comment_creator->getNewComment();
+        if (! $new_comment) {
+            throw new \Exception('Expected to receive a new comment');
+        }
+        self::assertSame($message, $new_comment->getBody());
+        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
     }
 
     private function mockCommitterMatchingTuleapUser(): void
@@ -365,6 +313,54 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->withUserName(self::COMMITTER_USERNAME)
             ->build();
         $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn($committer);
+    }
+
+    private function mockArtifactIsOpen(): void
+    {
+        $this->artifact->method('isOpen')->willReturn(true);
+    }
+
+    private function mockStatusFieldIsFound(): void
+    {
+        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $status_field
+            ->method('getId')
+            ->willReturn(self::STATUS_FIELD_ID);
+        $status_field
+            ->method('getFieldData')
+            ->with(self::DONE_LABEL)
+            ->willReturn(self::DONE_BIND_VALUE_ID);
+
+        $this->status_semantic->method('getField')->willReturn($status_field);
+    }
+
+    private function mockStatusFieldIsNotDefined(): void
+    {
+        $this->status_semantic->method('getField')->willReturn(null);
+    }
+
+    private function mockDoneValueIsFound(): void
+    {
+        $this->done_value_retriever->expects(self::once())
+            ->method("getFirstDoneValueUserCanRead")
+            ->with($this->artifact, $this->workflow_user)
+            ->willReturn($this->getDoneValue());
+    }
+
+    private function mockNoDoneValue(): void
+    {
+        $this->done_value_retriever->expects(self::once())
+            ->method("getFirstDoneValueUserCanRead")
+            ->with($this->artifact, $this->workflow_user)
+            ->willThrowException(new SemanticDoneValueNotFoundException());
+    }
+
+    private function mockClosedValueIsFound(): void
+    {
+        $this->status_value_retriever->expects(self::once())
+            ->method("getFirstClosedValueUserCanRead")
+            ->with($this->workflow_user, $this->artifact)
+            ->willReturn($this->getDoneValue());
     }
 
     private function getDoneValue(): Tracker_FormElement_Field_List_Bind_StaticValue

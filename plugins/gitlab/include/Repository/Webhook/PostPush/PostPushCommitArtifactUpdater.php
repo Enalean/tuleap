@@ -44,7 +44,7 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use UserManager;
 
-class PostPushCommitArtifactUpdater
+final class PostPushCommitArtifactUpdater
 {
     public function __construct(
         private StatusValueRetriever $status_value_retriever,
@@ -63,7 +63,7 @@ class PostPushCommitArtifactUpdater
         PFUser $tracker_workflow_user,
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
-        \Tracker_FormElement_Field_List $status_field,
+        \Tracker_Semantic_Status $status_semantic,
         GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
         try {
@@ -74,10 +74,24 @@ class PostPushCommitArtifactUpdater
                 return;
             }
 
-            $closed_value = $this->getClosedValue(
-                $artifact,
-                $tracker_workflow_user
-            );
+            $status_field = $status_semantic->getField();
+            if ($status_field === null) {
+                $result = $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
+                if (Result::isErr($result)) {
+                    $this->logger->error((string) $result->error);
+                }
+                return;
+            }
+
+            try {
+                $closed_value = $this->getClosedValue($artifact, $tracker_workflow_user);
+            } catch (SemanticStatusClosedValueNotFoundException $e) {
+                $result = $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
+                if (Result::isErr($result)) {
+                    $this->logger->error((string) $result->error);
+                }
+                return;
+            }
 
             $fields_data = [
                 $status_field->getId() => $status_field->getFieldData($closed_value->getLabel()),
@@ -100,16 +114,12 @@ class PostPushCommitArtifactUpdater
             }
         } catch (Tracker_NoChangeException | Tracker_Exception $e) {
             $this->logger->error("An error occurred during the creation of the comment");
-        } catch (SemanticStatusClosedValueNotFoundException $e) {
-            $result = $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
-            if (Result::isErr($result)) {
-                $this->logger->error((string) $result->error);
-            }
         }
     }
 
     /**
      * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
+     * @throws SemanticStatusClosedValueNotFoundException
      */
     private function getClosedValue(Artifact $artifact, PFUser $tracker_workflow_user): Tracker_FormElement_Field_List_BindValue
     {
@@ -127,7 +137,7 @@ class PostPushCommitArtifactUpdater
     /**
      * @return Ok<null> | Err<Fault>
      */
-    public function addTuleapArtifactCommentNoSemanticDefined(
+    private function addTuleapArtifactCommentNoSemanticDefined(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
         PostPushCommitWebhookData $commit,
