@@ -105,7 +105,22 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\CommentOnlyChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
@@ -115,7 +130,14 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -219,10 +241,9 @@ class gitlabPlugin extends Plugin
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
 
-        $tuleap_reference_retriever = new TuleapReferenceRetriever(
-            EventManager::instance(),
-            $reference_manager
-        );
+        $event_manager              = EventManager::instance();
+        $user_manager               = UserManager::instance();
+        $tuleap_reference_retriever = new TuleapReferenceRetriever($event_manager, $reference_manager);
 
         $merge_request_reference_dao = new MergeRequestTuleapReferenceDao();
 
@@ -237,10 +258,10 @@ class gitlabPlugin extends Plugin
                 new MailBuilder(
                     TemplateRendererFactory::build(),
                     new MailFilter(
-                        UserManager::instance(),
+                        $user_manager,
                         new ProjectAccessChecker(
                             new RestrictedUserCanAccessProjectVerifier(),
-                            EventManager::instance()
+                            $event_manager
                         ),
                         new MailLogger()
                     ),
@@ -250,15 +271,74 @@ class gitlabPlugin extends Plugin
             ),
         );
 
-        $commenter = new PostPushCommitBotCommenter(
+        $credentials_retriever          = new CredentialsRetriever(
+            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())
+        );
+        $commenter                      = new PostPushCommitBotCommenter(
             $comment_sender,
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+            $credentials_retriever,
             $logger,
             new BotCommentReferencePresenterBuilder(),
             TemplateRendererFactory::build(),
         );
+        $form_element_factory           = \Tracker_FormElementFactory::instance();
+        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever($form_element_factory),
+            new ValidValuesAccordingToTransitionsRetriever(
+                Workflow_Transition_ConditionFactory::build()
+            )
+        );
+        $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
+        $db_transaction_executor        = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $semantic_status_factory        = Tracker_Semantic_StatusFactory::instance();
+        $tag_info_dao                   = new TagInfoDao();
+        $cross_reference_manager        = new CrossReferenceManager();
 
-        $first_possible_value_retriever = $this->getFirstPossibleValueInListRetriever();
+        $comment_creator = new CommentOnlyChangesetCreator(
+            new NewChangesetCreator(
+                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $form_element_factory,
+                    new ArtifactLinkValidator(
+                        $artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                        $artifact_links_usage_dao
+                    ),
+                    new WorkflowUpdateChecker(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(
+                                    TransitionFactory::instance(),
+                                    new SimpleWorkflowDao()
+                                ),
+                                new TransitionExtractor()
+                            ),
+                            FrozenFieldsRetriever::instance()
+                        )
+                    )
+                ),
+                $fields_retriever,
+                $event_manager,
+                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                $db_transaction_executor,
+                ArtifactChangesetSaver::build(),
+                new ParentLinkAction($artifact_factory),
+                new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+                ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetValueSaver(),
+                \WorkflowFactory::instance(),
+                new CommentCreator(
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                    $reference_manager,
+                    new TrackerPrivateCommentUGroupPermissionInserter(
+                        new TrackerPrivateCommentUGroupPermissionDao()
+                    )
+                )
+            )
+        );
 
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
@@ -289,7 +369,7 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new PostPushCommitArtifactUpdater(
-                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory(), $first_possible_value_retriever),
+                            new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
                                     new SemanticDoneDao(),
@@ -297,14 +377,15 @@ class gitlabPlugin extends Plugin
                                 ),
                                 $first_possible_value_retriever
                             ),
-                            UserManager::instance(),
-                            $logger
+                            $user_manager,
+                            $logger,
+                            $comment_creator
                         ),
-                        new ArtifactRetriever(Tracker_ArtifactFactory::instance()),
-                        UserManager::instance(),
-                        Tracker_Semantic_StatusFactory::instance(),
+                        new ArtifactRetriever($artifact_factory),
+                        $user_manager,
+                        $semantic_status_factory,
                         new GitlabRepositoryProjectDao(),
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        $credentials_retriever,
                         new GitlabProjectBuilder($gitlab_api_client),
                         $logger
                     ),
@@ -314,7 +395,7 @@ class gitlabPlugin extends Plugin
                         $tuleap_reference_retriever,
                         new BranchInfoDao(),
                         new CrossReferenceDao(),
-                        new CrossReferenceManager(),
+                        $cross_reference_manager,
                         $logger
                     )
                 ),
@@ -323,7 +404,7 @@ class gitlabPlugin extends Plugin
                     $logger,
                     new PostMergeRequestBotCommenter(
                         $comment_sender,
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        $credentials_retriever,
                         $logger,
                         new BotCommentReferencePresenterBuilder(),
                         TemplateRendererFactory::build()
@@ -336,35 +417,33 @@ class gitlabPlugin extends Plugin
                     new CrossReferenceFromMergeRequestCreator(
                         $references_from_merge_request_data_extractor,
                         $tuleap_reference_retriever,
-                        ReferenceManager::instance(),
+                        $reference_manager,
                         $logger,
                     ),
                     new PostMergeRequestWebhookAuthorDataRetriever(
                         $gitlab_api_client,
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
+                        $credentials_retriever
                     ),
                     new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
                 new TagPushWebhookActionProcessor(
                     new TagPushWebhookCreateAction(
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        $credentials_retriever,
                         new GitlabTagRetriever(
                             $gitlab_api_client
                         ),
                         new WebhookTuleapReferencesParser(),
                         $tuleap_reference_retriever,
-                        ReferenceManager::instance(),
-                        new TagInfoDao(),
+                        $reference_manager,
+                        $tag_info_dao,
                         $logger
                     ),
                     new TagPushWebhookDeleteAction(
-                        new TagInfoDao(),
-                        new CrossReferenceManager(),
+                        $tag_info_dao,
+                        $cross_reference_manager,
                         $logger
                     ),
-                    new DBTransactionExecutorWithConnection(
-                        DBFactory::getMainTuleapDBConnection()
-                    )
+                    $db_transaction_executor
                 ),
                 $logger,
             ),
@@ -385,12 +464,10 @@ class gitlabPlugin extends Plugin
         $stream_factory        = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+        $event_manager         = EventManager::instance();
+        $user_manager          = UserManager::instance();
 
-        $tuleap_reference_retriever = new TuleapReferenceRetriever(
-            EventManager::instance(),
-            $reference_manager
-        );
-
+        $tuleap_reference_retriever  = new TuleapReferenceRetriever($event_manager, $reference_manager);
         $merge_request_reference_dao = new MergeRequestTuleapReferenceDao();
 
         $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
@@ -404,10 +481,10 @@ class gitlabPlugin extends Plugin
                 new MailBuilder(
                     TemplateRendererFactory::build(),
                     new MailFilter(
-                        UserManager::instance(),
+                        $user_manager,
                         new ProjectAccessChecker(
                             new RestrictedUserCanAccessProjectVerifier(),
-                            EventManager::instance()
+                            $event_manager
                         ),
                         new MailLogger()
                     ),
@@ -417,15 +494,76 @@ class gitlabPlugin extends Plugin
             ),
         );
 
-        $commenter = new PostPushCommitBotCommenter(
+        $credentials_retriever = new CredentialsRetriever(
+            new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())
+        );
+        $commenter             = new PostPushCommitBotCommenter(
             $comment_sender,
-            new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+            $credentials_retriever,
             $logger,
             new BotCommentReferencePresenterBuilder(),
             TemplateRendererFactory::build(),
         );
 
-        $first_possible_value_retriever = $this->getFirstPossibleValueInListRetriever();
+        $form_element_factory           = Tracker_FormElementFactory::instance();
+        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever($form_element_factory),
+            new ValidValuesAccordingToTransitionsRetriever(
+                \Workflow_Transition_ConditionFactory::build()
+            )
+        );
+        $semantic_status_factory        = \Tracker_Semantic_StatusFactory::instance();
+        $artifact_factory               = Tracker_ArtifactFactory::instance();
+        $tag_info_dao                   = new TagInfoDao();
+        $cross_reference_manager        = new CrossReferenceManager();
+        $db_transaction_executor        = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+        $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
+
+        $comment_creator = new CommentOnlyChangesetCreator(
+            new NewChangesetCreator(
+                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                    $form_element_factory,
+                    new ArtifactLinkValidator(
+                        $artifact_factory,
+                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                        $artifact_links_usage_dao
+                    ),
+                    new WorkflowUpdateChecker(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(
+                                    TransitionFactory::instance(),
+                                    new SimpleWorkflowDao()
+                                ),
+                                new TransitionExtractor()
+                            ),
+                            FrozenFieldsRetriever::instance()
+                        )
+                    )
+                ),
+                $fields_retriever,
+                $event_manager,
+                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+                $db_transaction_executor,
+                ArtifactChangesetSaver::build(),
+                new ParentLinkAction($artifact_factory),
+                new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+                ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+                new ChangesetValueSaver(),
+                \WorkflowFactory::instance(),
+                new CommentCreator(
+                    new \Tracker_Artifact_Changeset_CommentDao(),
+                    $reference_manager,
+                    new TrackerPrivateCommentUGroupPermissionInserter(
+                        new TrackerPrivateCommentUGroupPermissionDao()
+                    )
+                )
+            )
+        );
+
         return new IntegrationWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -455,7 +593,7 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new PostPushCommitArtifactUpdater(
-                            new StatusValueRetriever(new Tracker_Semantic_StatusFactory(), $first_possible_value_retriever),
+                            new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
                                     new SemanticDoneDao(),
@@ -463,14 +601,15 @@ class gitlabPlugin extends Plugin
                                 ),
                                 $first_possible_value_retriever
                             ),
-                            UserManager::instance(),
-                            $prefixed_logger
+                            $user_manager,
+                            $prefixed_logger,
+                            $comment_creator
                         ),
-                        new ArtifactRetriever(Tracker_ArtifactFactory::instance()),
-                        UserManager::instance(),
-                        Tracker_Semantic_StatusFactory::instance(),
+                        new ArtifactRetriever($artifact_factory),
+                        $user_manager,
+                        $semantic_status_factory,
                         new GitlabRepositoryProjectDao(),
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        $credentials_retriever,
                         new GitlabProjectBuilder($gitlab_api_client),
                         $prefixed_logger
                     ),
@@ -480,7 +619,7 @@ class gitlabPlugin extends Plugin
                         $tuleap_reference_retriever,
                         new BranchInfoDao(),
                         new CrossReferenceDao(),
-                        new CrossReferenceManager(),
+                        $cross_reference_manager,
                         $logger
                     )
                 ),
@@ -489,7 +628,7 @@ class gitlabPlugin extends Plugin
                     $logger,
                     new PostMergeRequestBotCommenter(
                         $comment_sender,
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
+                        $credentials_retriever,
                         $logger,
                         new BotCommentReferencePresenterBuilder(),
                         TemplateRendererFactory::build()
@@ -502,35 +641,31 @@ class gitlabPlugin extends Plugin
                     new CrossReferenceFromMergeRequestCreator(
                         $references_from_merge_request_data_extractor,
                         $tuleap_reference_retriever,
-                        ReferenceManager::instance(),
+                        $reference_manager,
                         $logger,
                     ),
                     new PostMergeRequestWebhookAuthorDataRetriever(
                         $gitlab_api_client,
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory()))
+                        $credentials_retriever
                     ),
                     new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao())
                 ),
                 new TagPushWebhookActionProcessor(
                     new TagPushWebhookCreateAction(
-                        new CredentialsRetriever(new IntegrationApiTokenRetriever(new IntegrationApiTokenDao(), new KeyFactory())),
-                        new GitlabTagRetriever(
-                            $gitlab_api_client
-                        ),
+                        $credentials_retriever,
+                        new GitlabTagRetriever($gitlab_api_client),
                         new WebhookTuleapReferencesParser(),
                         $tuleap_reference_retriever,
-                        ReferenceManager::instance(),
-                        new TagInfoDao(),
+                        $reference_manager,
+                        $tag_info_dao,
                         $logger
                     ),
                     new TagPushWebhookDeleteAction(
-                        new TagInfoDao(),
-                        new CrossReferenceManager(),
+                        $tag_info_dao,
+                        $cross_reference_manager,
                         $logger
                     ),
-                    new DBTransactionExecutorWithConnection(
-                        DBFactory::getMainTuleapDBConnection()
-                    )
+                    $db_transaction_executor
                 ),
                 $logger,
             ),
@@ -767,18 +902,6 @@ class gitlabPlugin extends Plugin
         return new IncludeAssets(
             __DIR__ . '/../frontend-assets',
             '/assets/gitlab'
-        );
-    }
-
-    private function getFirstPossibleValueInListRetriever(): FirstPossibleValueInListRetriever
-    {
-        return new FirstPossibleValueInListRetriever(
-            new FirstValidValueAccordingToDependenciesRetriever(
-                Tracker_FormElementFactory::instance()
-            ),
-            new ValidValuesAccordingToTransitionsRetriever(
-                Workflow_Transition_ConditionFactory::build()
-            )
         );
     }
 }

@@ -39,7 +39,7 @@ use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 /**
  * I create a new changeset (update of an artifact)
  */
-class NewChangesetCreator
+class NewChangesetCreator implements CreateNewChangeset
 {
     public function __construct(
         private \Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -57,12 +57,6 @@ class NewChangesetCreator
     ) {
     }
 
-    /**
-     * Update an artifact (means create a new changeset)
-     * @throws \Tracker_NoChangeException In the validation
-     * @throws FieldValidationException
-     * @throws \Tracker_Exception In the validation
-     */
     public function create(NewChangeset $changeset, PostCreationContext $context): ?\Tracker_Artifact_Changeset
     {
         $submitter = $changeset->getSubmitter();
