@@ -71,7 +71,7 @@ class ProjectHierarchyDao extends DataAccessObject
 
     /**
      * @param int $group_id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getParentProject($group_id)
     {
@@ -87,7 +87,7 @@ class ProjectHierarchyDao extends DataAccessObject
 
     /**
      * @param int $group_id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getChildProjects($group_id)
     {

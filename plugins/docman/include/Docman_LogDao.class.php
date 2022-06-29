@@ -27,7 +27,7 @@ class Docman_LogDao extends DataAccessObject
 {
     /**
     * Searches Docman_LogDao by ItemId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByItemId($itemId, $order = '')
     {
@@ -39,7 +39,7 @@ class Docman_LogDao extends DataAccessObject
     }
     /**
     * Searches Docman_LogDao by ItemId order by time
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByItemIdOrderByTimestamp($itemId)
     {

@@ -176,7 +176,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
     }
 
     /**
-     * @psalm-param DataAccessResult|list<array{tracker_id: int, id: int}> $artifacts_for_planning
+     * @psalm-param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|list<array{tracker_id: int, id: int}> $artifacts_for_planning
      * @param int[] $filtrable_planning_tracker_ids
      * @psalm-return array{planning?: list<int>, not_planning?: list<int>}
      */

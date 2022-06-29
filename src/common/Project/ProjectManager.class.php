@@ -621,7 +621,7 @@ class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getMembershipRequestNotificationUGroup($groupId)
     {
@@ -651,7 +651,7 @@ class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getMessageToRequesterForAccessProject($groupId)
     {
@@ -677,7 +677,7 @@ class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function returnProjectAdminsByGroupId($groupId)
     {

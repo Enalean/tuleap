@@ -40,7 +40,7 @@ class UserDao extends DataAccessObject
 
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -50,7 +50,7 @@ class UserDao extends DataAccessObject
 
     /**
     * Searches User by Status (either one value or array)
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByStatus($status)
     {
@@ -65,7 +65,7 @@ class UserDao extends DataAccessObject
 
     /**
     * Searches User by UserId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByUserId($userId)
     {
@@ -78,7 +78,7 @@ class UserDao extends DataAccessObject
 
     /**
     * Searches User by UserName
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByUserName($userName)
     {
@@ -91,7 +91,7 @@ class UserDao extends DataAccessObject
 
     /**
     * Searches User by Email
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByEmail($email)
     {
@@ -124,7 +124,7 @@ class UserDao extends DataAccessObject
 
     /**
      * Searches User by ldapid
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByLdapId($ldap_id)
     {
@@ -165,7 +165,7 @@ class UserDao extends DataAccessObject
      *
      * @param String $hash
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByConfirmHash($hash)
     {
@@ -371,7 +371,7 @@ class UserDao extends DataAccessObject
 
     /**
     * Searches User status by Email
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchStatusByEmail($email)
     {
@@ -647,7 +647,7 @@ class UserDao extends DataAccessObject
     /**
      * Get the list of letters with which user names begin (silly isn't it?)
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function firstUsernamesLetters()
     {
@@ -726,7 +726,7 @@ class UserDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchUsersWithDefaultAvatar()
     {

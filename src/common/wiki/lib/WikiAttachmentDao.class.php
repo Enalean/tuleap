@@ -19,6 +19,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 class WikiAttachmentDao extends DataAccessObject
 {
     /**
@@ -46,7 +48,7 @@ class WikiAttachmentDao extends DataAccessObject
      * Retrun one DB entry corresponding to the given id.
      *
      * @param int $id Attachement id
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function read($id)
     {
@@ -85,7 +87,7 @@ class WikiAttachmentDao extends DataAccessObject
      * Get the list of attachment for a project
      *
      * @param int $gid Group id
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function getList($gid)
     {
@@ -106,7 +108,7 @@ class WikiAttachmentDao extends DataAccessObject
      * the number of revisions for each attachement.
      *
      * @param int $gid Group id
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function getListWithCounterOrderedByRevDate($gid)
     {
@@ -130,7 +132,7 @@ class WikiAttachmentDao extends DataAccessObject
      *
      * @param int $gid group id
      * @param string  $filename attachement name
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function getIdFromFilename($gid, $filename)
     {
@@ -154,7 +156,7 @@ class WikiAttachmentDao extends DataAccessObject
      * @param int $offset
      * @param int $limit
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function searchAttachmentToPurge($time, $groupId = 0, $offset = 0, $limit = 0)
     {

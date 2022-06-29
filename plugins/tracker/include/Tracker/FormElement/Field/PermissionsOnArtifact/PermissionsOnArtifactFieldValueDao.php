@@ -33,7 +33,7 @@ class PermissionsOnArtifactFieldValueDao extends FieldValueDao
     }
 
     /**
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchById($changeset_value_id)
     {

@@ -36,7 +36,7 @@ class Docman_LockDao extends DataAccessObject
      * item id
      *
      * @param int $itemId
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchLocksForProjectByItemId($itemId)
     {
@@ -53,7 +53,7 @@ class Docman_LockDao extends DataAccessObject
     * Search all locks set on items that belong to the same given project.
     *
     * @param int $groupId
-    * @return DataAccessResult|false
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
     */
     public function searchLocksForProjectByGroupId($groupId)
     {
@@ -70,7 +70,7 @@ class Docman_LockDao extends DataAccessObject
      *
      * @param Array $itemIds
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchLocksForItemIds(array $itemIds)
     {

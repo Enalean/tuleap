@@ -30,7 +30,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -45,7 +45,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      * @param String  $permission_type Permission type
      * @param bool $with_name Whether to include the group name or not
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, $with_name = true)
     {
@@ -84,7 +84,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
      * @param String  $permission_type Permission type
      * @param bool $with_name Whether to include the group name or not
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchDefaults($permission_type, $with_name = true)
     {
@@ -104,7 +104,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
     /**
     * Searches Permissions by ObjectId and Ugroups
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchPermissionsByObjectId($object_id, $ptype = null)
     {
@@ -127,7 +127,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
     /**
     * Searches Permissions by TrackerId and Ugroups
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchPermissionsByArtifactFieldId($object_id)
     {

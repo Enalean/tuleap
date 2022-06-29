@@ -32,7 +32,7 @@ class Tracker_FileInfoDao extends DataAccessObject
 
     /**
     * Searches Tracker_FileInfo by Id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchById($id)
     {

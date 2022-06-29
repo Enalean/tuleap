@@ -24,7 +24,7 @@ class FRSFileDao extends DataAccessObject
     /**
      * Return the array that match given id.
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchById($id)
     {
@@ -58,7 +58,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @param int $id the ID of the release the files belong to
      * @param int $only_active_files 1 means that only files with an active status will be retrieved. 0 means all files
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByReleaseId($id, $only_active_files = 1)
     {
@@ -389,7 +389,7 @@ class FRSFileDao extends DataAccessObject
      *
      * @param $groupId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchStagingCandidates($groupId = 0)
     {
@@ -422,7 +422,7 @@ class FRSFileDao extends DataAccessObject
      * @param int $offset
      * @param int $limit
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchFilesToPurge($time, $groupId = 0, $offset = 0, $limit = 0)
     {
@@ -501,7 +501,7 @@ class FRSFileDao extends DataAccessObject
     /**
      * Retrieves all the documents marked to be restored
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchFilesToRestore($groupId = null)
     {

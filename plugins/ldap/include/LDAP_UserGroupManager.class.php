@@ -120,7 +120,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Retrieve usergroups having synchro_policy option as 'auto'
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getSynchronizedUgroups()
     {

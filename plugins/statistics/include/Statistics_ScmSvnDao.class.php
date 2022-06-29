@@ -46,7 +46,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function totalRead($startDate, $endDate)
     {
@@ -70,7 +70,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function totalCommits($startDate, $endDate)
     {
@@ -94,7 +94,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function readByProject($startDate, $endDate)
     {
@@ -115,7 +115,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function commitsByProject($startDate, $endDate)
     {
@@ -136,7 +136,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function readByUser($startDate, $endDate)
     {
@@ -158,7 +158,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function commitsByUser($startDate, $endDate)
     {
@@ -180,7 +180,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function repositoriesWithCommit($startDate, $endDate)
     {

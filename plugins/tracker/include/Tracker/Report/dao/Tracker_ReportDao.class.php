@@ -193,7 +193,7 @@ class Tracker_ReportDao extends DataAccessObject
      * @param array $static_ugroups
      * @param array $dynamic_ugroups
      * @param int $contributor_field_id The field id corresponding to the contributor semantic
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchMatchingIds($group_id, $tracker_id, $additional_from, $additional_where, PFUser $user, $permissions, $contributor_field_id)
     {

@@ -45,7 +45,7 @@ class GitRepositoryPermissionsManager
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     private function getUGroupsForPermission($repository_id, $permission_type)
     {

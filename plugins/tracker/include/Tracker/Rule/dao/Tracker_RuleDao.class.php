@@ -30,7 +30,7 @@ class Tracker_RuleDao extends DataAccessObject
     }
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchAll()
     {
@@ -42,7 +42,7 @@ class Tracker_RuleDao extends DataAccessObject
 
     /**
     * Searches Tracker_Rule by TrackerId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByTrackerId($tracker_id)
     {
@@ -85,7 +85,7 @@ class Tracker_RuleDao extends DataAccessObject
 
     /**
     * Searches Tracker_Rule by tracker_id
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchByTrackerIdWithOrder($tracker_id)
     {

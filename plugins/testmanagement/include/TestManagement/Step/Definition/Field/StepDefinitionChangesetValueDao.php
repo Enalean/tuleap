@@ -33,7 +33,7 @@ class StepDefinitionChangesetValueDao extends FieldValueDao
 
     /**
      * @param int $changeset_value_id
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function searchById($changeset_value_id)

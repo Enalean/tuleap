@@ -80,7 +80,7 @@ class SystemEventDao extends DataAccessObject
      * Return next system event
      * criteria: higer priority first, then most recent first
      * And set the event status to 'RUNNING'
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function checkOutNextEvent($owner, $types)
     {
@@ -164,7 +164,7 @@ class SystemEventDao extends DataAccessObject
      * @param String $val
      * @param Array $type
      * @param Array $status
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchWithParam($position, $val, $type, $status, $separator = SystemEvent::PARAMETER_SEPARATOR)
     {
@@ -190,7 +190,7 @@ class SystemEventDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchWithTypeAndStatus(array $type, array $status)
     {
@@ -205,7 +205,7 @@ class SystemEventDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function resetStatus($id, $status)
     {
@@ -218,7 +218,7 @@ class SystemEventDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false array of event id and parameters
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false array of event id and parameters
      */
     public function searchNewGitRepoUpdateEvents()
     {

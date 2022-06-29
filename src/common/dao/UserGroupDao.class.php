@@ -18,13 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 require_once('include/DataAccessObject.class.php');
 
 class UserGroupDao extends DataAccessObject
 {
     /**
     * Searches User-Group by UserId
-    * @return DataAccessResult
+    * @return LegacyDataAccessResultInterface
     */
     public function searchByUserId($user_id)
     {
@@ -37,7 +39,7 @@ class UserGroupDao extends DataAccessObject
 
     /**
     * Searches User-Group by UserId
-    * @return DataAccessResult
+    * @return LegacyDataAccessResultInterface
     */
     public function searchActiveGroupsByUserId($user_id)
     {
@@ -50,7 +52,7 @@ class UserGroupDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return LegacyDataAccessResultInterface|false
      */
     public function searchActiveProjectsByUserIdAndAccessType(int $user_id, string $access_type)
     {
@@ -87,7 +89,7 @@ class UserGroupDao extends DataAccessObject
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function returnProjectAdminsByGroupId($groupId)
     {
@@ -152,7 +154,7 @@ class UserGroupDao extends DataAccessObject
      * @param int $groupId Id of the project
      * @param Array   $predefined List of predefined ugroup id
      *
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function getExistingUgroups($groupId, $predefined = null)
     {

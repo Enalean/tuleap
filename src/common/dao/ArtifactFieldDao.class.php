@@ -27,7 +27,7 @@ class ArtifactFieldDao extends DataAccessObject
 {
     /**
     * Gets all tables of the db
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function & searchAll()
     {
@@ -37,7 +37,7 @@ class ArtifactFieldDao extends DataAccessObject
 
     /**
     * Searches field_id for (multi_)assigned_to By artifactTypeId
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function & searchAssignedToFieldIdByArtifactTypeId($artifactTypeId)
     {

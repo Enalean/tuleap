@@ -45,7 +45,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @throws DataAccessQueryException
      */
     public function searchByWorkflow(Workflow $workflow)

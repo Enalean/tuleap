@@ -20,6 +20,8 @@
 
 namespace Tuleap\Label;
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 interface LabelableDao
 {
     /**
@@ -37,7 +39,7 @@ interface LabelableDao
 
     /**
      * @param int $project_id
-     * @return \DataAccessResult|false
+     * @return LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function searchLabelsUsedInProject($project_id);

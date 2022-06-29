@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 require_once __DIR__ . '/WikiAttachmentRevision.class.php';
 require_once __DIR__ . '/WikiAttachmentDao.class.php';
 
@@ -611,7 +613,7 @@ class WikiAttachment /* implements UGroupPermission */
      * @param int $offset
      * @param int $limit
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function listPendingAttachments($groupId, $offset, $limit)
     {

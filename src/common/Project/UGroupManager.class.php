@@ -432,7 +432,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @param int $ugroupId Id of the user goup
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchUGroupByBindingSource($ugroupId)
     {
@@ -440,7 +440,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchBindedUgroupsInProject(Project $project)
     {
@@ -483,7 +483,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @param int $ugroupId The source ugroup id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getUgroupBindingSource($ugroupId)
     {
@@ -511,7 +511,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @param int $groupId Id of the project
      * @param Array   $predefined List of predefined ugroup id
      *
-     * @return DataAccessResult|array
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|array
      */
     public function getExistingUgroups($groupId, $predefined = null)
     {

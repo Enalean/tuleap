@@ -21,7 +21,6 @@
 namespace Tuleap\Docman\Notifications;
 
 use DataAccessObject;
-use DataAccessResult;
 
 class UsersToNotifyDao extends DataAccessObject
 {
@@ -40,7 +39,7 @@ class UsersToNotifyDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function search($user_id, $item_id, $type)
     {
@@ -54,7 +53,7 @@ class UsersToNotifyDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchUserIdByObjectIdAndType($item_id, $type)
     {

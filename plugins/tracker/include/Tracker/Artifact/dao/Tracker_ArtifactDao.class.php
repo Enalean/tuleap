@@ -88,7 +88,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      */
     public function searchPaginatedByListOfTrackerIds(array $tracker_ids, int $limit, int $offset)
     {
@@ -211,7 +211,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Search open artifact (see tracker semantic for a definition of open)
      * submitted by user $user_id in all projects and trackers.
      *
-     * @return DataAccessResult|false The result of the query
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false The result of the query
      */
     public function searchOpenSubmittedByUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
@@ -248,7 +248,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Search open artifact (see tracker semantic for a definition of open)
      * assigned to user $user_id in all projects and trackers (see tracker semantic for a definition of assigned to).
      *
-     * @return DataAccessResult|false The result of the query
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false The result of the query
      */
     public function searchOpenAssignedToUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
@@ -290,7 +290,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Search open artifact (see tracker semantic for a definition of open)
      * submitted by or assigned to user $user_id in all projects and trackers (see tracker semantic for a definition of assigned to).
      *
-     * @return DataAccessResult|false The result of the query
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false The result of the query
      */
     public function searchOpenSubmittedByOrAssignedToUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
@@ -516,7 +516,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * @param int $trackerId Tracker id
      * @param int $date Submitted on date
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getArtifactsBySubmittedOnDate($trackerId, $date)
     {
@@ -717,7 +717,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      *
      * @param array $artifact_ids
      * @param array $tracker_ids
-     * @return DataAccessResult | false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface | false
      */
     public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids)
     {
@@ -747,7 +747,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Retrieve all artifacts linked by the given one
      *
      * @param int $artifact_id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getLinkedArtifacts($artifact_id)
     {
@@ -949,7 +949,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Retrieve all artifacts linked by the given one
      *
      * @param int $artifact_id
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getLinkedArtifactsOfTrackers($artifact_id, array $tracker_ids)
     {
@@ -1233,7 +1233,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      *
      * @param array $artifact_ids Artifact ids to inspect
      * @param array $excluded_ids Exclude those ids from the results
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = [])
     {
@@ -1259,7 +1259,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Return artifact status (open/closed)
      *
      * @param int[] $artifact_ids
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getArtifactsStatusByIds(array $artifact_ids)
     {

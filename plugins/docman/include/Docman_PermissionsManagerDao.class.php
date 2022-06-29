@@ -101,7 +101,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
      * Returns docman admin ugroups
      *
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getDocmanAdminUgroups(Project $project)
     {

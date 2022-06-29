@@ -117,7 +117,7 @@ class ProjectDao extends DataAccessObject
      * @param bool $isAdmin
      * @param bool $isPrivate Display private projects if true
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchProjectsNameLike($name, $limit, $userId = null, $isMember = false, $isAdmin = false, $isPrivate = false, $offset = 0)
     {
@@ -505,7 +505,7 @@ class ProjectDao extends DataAccessObject
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getMembershipRequestNotificationUGroup($groupId)
     {
@@ -547,7 +547,7 @@ class ProjectDao extends DataAccessObject
      *
      * @param int $groupId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getMessageToRequesterForAccessProject($groupId)
     {

@@ -27,7 +27,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
     /**
     * Return active projects that use a specific service
     * WARNING: this returns all fields of all projects (might be big)
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchActiveUnixGroupByUsedService($service_short_name)
     {

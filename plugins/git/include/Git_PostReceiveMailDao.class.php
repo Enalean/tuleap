@@ -28,7 +28,7 @@ class Git_PostReceiveMailDao extends \Tuleap\DB\DataAccessObject
      * Searches Git_PostReceiveMailDao by repository_id
      * @param int $repositoryId
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchByRepositoryId($repositoryId)
     {

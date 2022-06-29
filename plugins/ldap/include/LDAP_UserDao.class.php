@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 /**
  * Interact with plugin_ldap_user table in database
  *
@@ -32,7 +34,7 @@ class LDAP_UserDao extends DataAccessObject
      *
      * @param int[] $user_ids
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      * @throws DataAccessQueryException
      */
     public function searchLdapLoginFromUserIds(array $user_ids)

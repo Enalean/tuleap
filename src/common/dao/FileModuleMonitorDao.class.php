@@ -46,7 +46,7 @@ class FileModuleMonitorDao extends DataAccessObject
      *
      * @param int $packageId Id of the package
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function whoIsPubliclyMonitoringPackage($packageId)
     {
@@ -75,7 +75,7 @@ class FileModuleMonitorDao extends DataAccessObject
      * @param PFUser    $user       The user
      * @param bool $publicly If true check if the user is monitoring publicly
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchMonitoringFileByUserAndPackageId($package_id, PFUser $user, $publicly = false)
     {

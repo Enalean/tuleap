@@ -23,7 +23,6 @@
 namespace Tuleap\Tracker\FormElement\Field;
 
 use DataAccessObject;
-use DataAccessResult;
 
 class FieldDao extends DataAccessObject
 {
@@ -223,7 +222,7 @@ class FieldDao extends DataAccessObject
 
     /**
      * Searches field_id for (multi_)assigned_to By TrackerId
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchAssignedToFieldIdByArtifactTrackerId($TrackerId)
     {
@@ -404,7 +403,7 @@ class FieldDao extends DataAccessObject
      *
      * @param int $project_id
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchProjectSharedFieldsOriginals($project_id)
     {
@@ -458,7 +457,7 @@ class FieldDao extends DataAccessObject
      * Warning: the 2 parts of the union are deeply integrated, the second union
      * query is an extension of the first one
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function searchAllSharedFieldsOfProject($project_id)
     {

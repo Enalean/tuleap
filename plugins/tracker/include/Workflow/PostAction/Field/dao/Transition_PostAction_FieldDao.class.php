@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 /**
  * Base class for field post action DAOs.
  */
@@ -91,7 +93,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult|false
+     * @return LegacyDataAccessResultInterface|false
      * @throws DataAccessQueryException
      */
     public function searchByWorkflow(Workflow $workflow)
@@ -109,7 +111,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
      *
      * @param int $transition_id The id of the transition
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function searchByTransitionId($transition_id)
     {
@@ -131,7 +133,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
      * @param int $transition_id The id of the transition
      * @param int $field_id      The id of the field
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function searchByTransitionIdAndFieldId($transition_id, $field_id)
     {
@@ -154,7 +156,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
      *
      * @param int $field_id The id of the field
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function searchByFieldId($field_id)
     {

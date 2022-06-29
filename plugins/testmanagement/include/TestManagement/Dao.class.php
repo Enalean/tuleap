@@ -25,7 +25,7 @@ use DataAccessObject;
 class Dao extends DataAccessObject
 {
     /**
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function searchByProjectId(int $project_id)

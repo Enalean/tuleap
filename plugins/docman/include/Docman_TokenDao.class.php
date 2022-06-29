@@ -26,7 +26,7 @@ class Docman_TokenDao extends DataAccessObject
 {
     /**
     * Searches Docman_Token by Url
-    * @return DataAccessResult
+    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
     public function searchUrl($user_id, $token)
     {

@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 class ArtifactNodeDao extends DataAccessObject
 {
     /**
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function getTitlesStatusAndTypes(array $artifact_ids)
@@ -66,7 +66,7 @@ class ArtifactNodeDao extends DataAccessObject
      *
      * @param int $artifact_id
      *
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function getReverseLinkedArtifacts($artifact_id)
@@ -84,7 +84,7 @@ class ArtifactNodeDao extends DataAccessObject
     }
 
     /**
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function getCrossReferencesFromArtifact(int $artifact_id)
@@ -101,7 +101,7 @@ class ArtifactNodeDao extends DataAccessObject
     }
 
     /**
-     * @return \DataAccessResult|false
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
      * @psalm-ignore-falsable-return
      */
     public function getReverseCrossReferencesFromArtifact(int $artifact_id)

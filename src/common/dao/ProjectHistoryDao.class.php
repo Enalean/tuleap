@@ -75,10 +75,8 @@ class ProjectHistoryDao extends DataAccessObject
      * @param String  $oldValue  Event value
      * @param int $groupId Project ID
      * @param Array|false   $args      list of parameters used for message display
-     *
-     * @return DataAccessResult
      */
-    public function groupAddHistory($fieldName, $oldValue, $groupId, $args = false)
+    public function groupAddHistory($fieldName, $oldValue, $groupId, $args = false): void
     {
         if ($args) {
             $fieldName .= " %% " . implode("||", $args);

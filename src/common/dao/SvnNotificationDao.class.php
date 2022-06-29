@@ -50,7 +50,7 @@ class SvnNotificationDao extends DataAccessObject
      * @param int $groupId Project id
      * @param String  $path    svn path
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getSvnMailingList($groupId, $path = null)
     {

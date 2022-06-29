@@ -113,7 +113,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
      * @param int $userId Id of the user
      * @param int $date Date from which we start collecting repostories with pushes
      *
-     * @return DataAccessResult
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getLastPushesRepositories($userId, $date)
     {

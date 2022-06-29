@@ -199,7 +199,7 @@ class LDAP_UserManager
      * Return LDAP logins stored in DB corresponding to given userIds.
      *
      * @param array $userIds Array of user ids
-     * @return DataAccessResult ldap logins
+     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface ldap logins
      */
     public function getLdapLoginFromUserIds(array $userIds)
     {

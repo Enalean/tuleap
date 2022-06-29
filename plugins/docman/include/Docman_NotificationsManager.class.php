@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -324,7 +325,7 @@ class Docman_NotificationsManager
      * @param $groupId
      * @param $userId
      *
-     * @return DataAccessResult|false
+     * @return LegacyDataAccessResultInterface|false
      */
     public function listAllMonitoredItems($groupId, $userId = null)
     {
