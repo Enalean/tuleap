@@ -25,6 +25,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
@@ -42,112 +43,24 @@ class GitXmlImporter
 
     public const SERVICE_NAME = 'git';
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var PermissionsManager
-     */
-    private $permission_manager;
-
-    /**
-     * @var GitRepositoryManager
-     */
-    private $repository_manager;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-
-    /**
-     * @var Git_Backend_Gitolite
-     */
-    private $gitolite_backend;
-
-    /**
-     * @var Git_SystemEventManager
-     */
-    private $system_event_manager;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var FineGrainedUpdater
-     */
-    private $fine_grained_updater;
-
-    /**
-     * @var RegexpFineGrainedRetriever
-     */
-    private $regexp_fine_grained_retriever;
-
-    /**
-     * @var RegexpFineGrainedEnabler
-     */
-    private $regexp_fine_grained_enabler;
-
-    /**
-     * @var FineGrainedPermissionFactory
-     */
-
-    private $fine_grained_factory;
-    /**
-     * @var FineGrainedPermissionSaver
-     */
-    private $fine_grained_saver;
-
-    /**
-     * @var XmlUgroupRetriever
-     */
-    private $xml_ugroup_retriever;
-
-    /**
-     * @var GitDao
-     */
-    private $git_dao;
-    /**
-     * @var \User\XML\Import\IFindUserFromXMLReference
-     */
-    private $user_finder;
-
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
-        GitRepositoryManager $repository_manager,
-        GitRepositoryFactory $repository_factory,
-        Git_Backend_Gitolite $gitolite_backend,
-        Git_SystemEventManager $system_event_manager,
-        PermissionsManager $permissions_manager,
-        EventManager $event_manager,
-        FineGrainedUpdater $fine_grained_updater,
-        RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
-        RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
-        FineGrainedPermissionFactory $fine_grained_factory,
-        FineGrainedPermissionSaver $fine_grained_saver,
-        XmlUgroupRetriever $xml_ugroup_retriever,
-        GitDao $git_dao,
-        IFindUserFromXMLReference $user_finder,
+        private \Psr\Log\LoggerInterface $logger,
+        private GitRepositoryManager $repository_manager,
+        private GitRepositoryFactory $repository_factory,
+        private Git_Backend_Gitolite $gitolite_backend,
+        private Git_SystemEventManager $system_event_manager,
+        private PermissionsManager $permission_manager,
+        private EventManager $event_manager,
+        private FineGrainedUpdater $fine_grained_updater,
+        private RegexpFineGrainedRetriever $regexp_fine_grained_retriever,
+        private RegexpFineGrainedEnabler $regexp_fine_grained_enabler,
+        private FineGrainedPermissionFactory $fine_grained_factory,
+        private FineGrainedPermissionSaver $fine_grained_saver,
+        private XmlUgroupRetriever $xml_ugroup_retriever,
+        private GitDao $git_dao,
+        private IFindUserFromXMLReference $user_finder,
+        private ConfigureAllowArtifactClosure $configure_artifact_closure,
     ) {
-        $this->logger                        = $logger;
-        $this->permission_manager            = $permissions_manager;
-        $this->repository_manager            = $repository_manager;
-        $this->repository_factory            = $repository_factory;
-        $this->gitolite_backend              = $gitolite_backend;
-        $this->system_event_manager          = $system_event_manager;
-        $this->event_manager                 = $event_manager;
-        $this->fine_grained_updater          = $fine_grained_updater;
-        $this->regexp_fine_grained_retriever = $regexp_fine_grained_retriever;
-        $this->regexp_fine_grained_enabler   = $regexp_fine_grained_enabler;
-        $this->fine_grained_factory          = $fine_grained_factory;
-        $this->fine_grained_saver            = $fine_grained_saver;
-        $this->xml_ugroup_retriever          = $xml_ugroup_retriever;
-        $this->git_dao                       = $git_dao;
-        $this->user_finder                   = $user_finder;
     }
 
     /**
@@ -227,6 +140,7 @@ class GitXmlImporter
         } else {
             $this->repository_manager->create($repository, $this->gitolite_backend, [], BranchName::defaultBranchName());
         }
+        $this->importAllowArtifactClosure($repository, $repository_xmlnode);
         if ($this->hasLegacyPermissions($repository_xmlnode)) {
             $this->importPermissions($project, $repository_xmlnode, $repository);
         } else {
@@ -236,6 +150,24 @@ class GitXmlImporter
 
         $this->importLastPushDate($repository_xmlnode, $repository);
         $this->system_event_manager->queueProjectsConfigurationUpdate([$project->getGroupId()]);
+    }
+
+    private function importAllowArtifactClosure(GitRepository $repository, SimpleXMLElement $repository_xmlnode): void
+    {
+        $repository_info = $repository_xmlnode->attributes();
+        if (! $repository_info) {
+            return;
+        }
+
+        if (! isset($repository_info['allow_artifact_closure'])) {
+            return;
+        }
+
+        if ((string) $repository_info['allow_artifact_closure'] === '1') {
+            $this->configure_artifact_closure->allowArtifactClosureForRepository((int) $repository->getId());
+        } else {
+            $this->configure_artifact_closure->forbidArtifactClosureForRepository((int) $repository->getId());
+        }
     }
 
     private function hasLegacyPermissions(SimpleXMLElement $repository_xmlnode)

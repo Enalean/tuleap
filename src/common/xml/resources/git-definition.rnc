@@ -3,6 +3,7 @@ git = element repository {
     attribute bundle-path { xsd:string } &
     attribute name { xsd:string } &
     attribute description { xsd:string }? &
+    attribute allow_artifact_closure { xsd:boolean }? &
     (
         (
             element read  { element ugroup { xsd:string }* }? &

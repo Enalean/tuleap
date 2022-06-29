@@ -16,6 +16,11 @@
                 <data type="string"/>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="allow_artifact_closure">
+                <data type="boolean"/>
+              </attribute>
+            </optional>
             <choice>
               <interleave>
                 <optional>

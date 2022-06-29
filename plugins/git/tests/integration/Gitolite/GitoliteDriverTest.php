@@ -111,14 +111,14 @@ final class GitoliteDriverTest extends GitoliteTestCase
             \Mockery::mock(GitDao::class),
             \Mockery::mock(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
+            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
+            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             $this->git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
             $this->gitolite_conf_writer,
             $this->project_manager,
             $this->mirror_data_mapper,
-            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
 
         $this->another_git_exec = \Mockery::spy(\Git_Exec::class);
@@ -130,14 +130,14 @@ final class GitoliteDriverTest extends GitoliteTestCase
             \Mockery::mock(GitDao::class),
             \Mockery::mock(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
+            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
+            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             $this->another_git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
             $this->gitolite_conf_writer,
             $this->project_manager,
             $this->mirror_data_mapper,
-            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
     }
 

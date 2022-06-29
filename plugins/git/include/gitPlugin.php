@@ -416,7 +416,8 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 $user_manager,
                 new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
             ),
-            EventManager::instance()
+            EventManager::instance(),
+            $this->getGitDao(),
         );
     }
 
@@ -1229,14 +1230,14 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             $this->getGitDao(),
             new Git_Mirror_MirrorDao(),
             $this,
+            $this->getBigObjectAuthorizationManager(),
+            new VersionDetector(),
             null,
             null,
             null,
             null,
             $this->getProjectManager(),
             $this->getMirrorDataMapper(),
-            $this->getBigObjectAuthorizationManager(),
-            new VersionDetector()
         );
     }
 
@@ -2336,7 +2337,8 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
      */
     public function importXmlProject($params)
     {
-        $logger = new WrapperLogger($params['logger'], "GitXmlImporter");
+        $logger  = new WrapperLogger($params['logger'], "GitXmlImporter");
+        $git_dao = new GitDao();
 
         $importer = new GitXmlImporter(
             $logger,
@@ -2355,8 +2357,9 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 $logger,
                 $this->getUGroupManager()
             ),
-            new GitDao(),
-            new XMLImportHelper(UserManager::instance())
+            $git_dao,
+            new XMLImportHelper(UserManager::instance()),
+            $git_dao,
         );
 
         $importer->import(

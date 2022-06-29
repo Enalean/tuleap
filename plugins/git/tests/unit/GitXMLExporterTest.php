@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\XML\ArchiveException;
 use Tuleap\Project\XML\Export\ZipArchive;
@@ -38,6 +39,10 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
+
+    public const REPOSITORY_ID        = 101;
+    public const EMPTY_REPOSITORY_ID  = 102;
+    public const FORKED_REPOSITORY_IP = 103;
 
     /**
      * @var \UserManager
@@ -100,7 +105,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
         $repository         = \Mockery::mock(\GitRepository::class);
-        $repository->shouldReceive('getId')->andReturns(101);
+        $repository->shouldReceive('getId')->andReturns(self::REPOSITORY_ID);
         $repository->shouldReceive('getName')->andReturns('MyRepo');
         $repository->shouldReceive('getDescription')->andReturns('Repository description');
         $repository->shouldReceive('getFullPath')->andReturns($this->export_folder);
@@ -108,11 +113,13 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository->shouldReceive('isInitialized')->andReturns(true);
 
         $forked_repository = \Mockery::spy(\GitRepository::class);
+        $forked_repository->shouldReceive('getId')->andReturns(self::FORKED_REPOSITORY_IP);
         $forked_repository->shouldReceive('getName')->andReturns('MyForkedRepo');
         $forked_repository->shouldReceive('getDescription')->andReturns('Forked repository');
         $forked_repository->shouldReceive('getParent')->andReturns(true);
 
         $empty_repository = \Mockery::spy(\GitRepository::class);
+        $empty_repository->shouldReceive('getId')->andReturns(self::EMPTY_REPOSITORY_ID);
         $empty_repository->shouldReceive('getName')->andReturns('Empty');
         $empty_repository->shouldReceive('getDescription')->andReturns('Empty repository');
         $empty_repository->shouldReceive('getFullPath')->andReturns($this->export_folder);
@@ -125,7 +132,23 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager = \Mockery::spy(\EventManager::class);
         $this->git_log_dao   = \Mockery::spy(Git_LogDao::class);
 
-        $this->xml_exporter = new GitXmlExporter(
+        $this->closure_verifier = new class implements VerifyArtifactClosureIsAllowed {
+            public function isArtifactClosureAllowed(int $repository_id): bool
+            {
+                $map = [
+                    GitXMLExporterTest::REPOSITORY_ID        => true,
+                    GitXMLExporterTest::EMPTY_REPOSITORY_ID  => false,
+                    GitXMLExporterTest::FORKED_REPOSITORY_IP => false,
+                ];
+
+                if (! isset($map[$repository_id])) {
+                    throw new \Exception("Unable to find the repository " . $repository_id);
+                }
+
+                return $map[$repository_id];
+            }
+        };
+        $this->xml_exporter     = new GitXmlExporter(
             \Mockery::spy(\Project::class),
             $this->permission_manager,
             $ugroup_manager,
@@ -138,7 +161,8 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->user_manager,
                 new \UserXMLExportedCollection(new \XML_RNGValidator(), new \XML_SimpleXMLCDATAFactory())
             ),
-            $this->event_manager
+            $this->event_manager,
+            $this->closure_verifier
         );
 
         $this->event_manager->shouldReceive('processEvent')->once();
@@ -175,6 +199,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $attrs                 = $repository->attributes();
 
         $this->assertEquals('MyRepo', $attrs['name']);
+        $this->assertEquals('1', $attrs['allow_artifact_closure']);
         $this->assertEquals('Repository description', $attrs['description']);
         $this->assertEquals('export/repository-101.bundle', $attrs['bundle-path']);
 
@@ -182,6 +207,7 @@ class GitXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $attrs_02      = $repository_02->attributes();
 
         $this->assertEquals('Empty', $attrs_02['name']);
+        $this->assertEquals('0', $attrs_02['allow_artifact_closure']);
         $this->assertEquals('Empty repository', $attrs_02['description']);
         $this->assertEquals('', $attrs_02['bundle-path']);
     }

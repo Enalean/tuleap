@@ -20,9 +20,10 @@
   */
 
 use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 
-class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosureIsAllowed
+class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosureIsAllowed, ConfigureAllowArtifactClosure
 {
     public const REPOSITORY_ID               = 'repository_id'; //PK
     public const REPOSITORY_NAME             = 'repository_name';
@@ -833,5 +834,23 @@ class GitDao extends \Tuleap\DB\DataAccessObject implements VerifyArtifactClosur
 
         $result = $this->getDB()->cell($sql, $repository_id);
         return $result === 1;
+    }
+
+    public function allowArtifactClosureForRepository(int $repository_id): void
+    {
+        $this->getDB()->update(
+            'plugin_git',
+            ['allow_artifact_closure' => true],
+            ['repository_id' => $repository_id]
+        );
+    }
+
+    public function forbidArtifactClosureForRepository(int $repository_id): void
+    {
+        $this->getDB()->update(
+            'plugin_git',
+            ['allow_artifact_closure' => false],
+            ['repository_id' => $repository_id]
+        );
     }
 }
