@@ -130,7 +130,7 @@ setup_lhs
 setup_tuleap
 setup_redis
 setup_database
-sudo -u codendiadm PHP="$PHP_CLI" /usr/bin/tuleap worker:supervisor --quiet start &
+sudo -u codendiadm /usr/bin/tuleap worker:supervisor --quiet start &
 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 seed_data
 setup_system_configuration

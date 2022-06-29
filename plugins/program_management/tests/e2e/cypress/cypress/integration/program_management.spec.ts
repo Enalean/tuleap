@@ -236,15 +236,45 @@ function checkThatProgramAndTeamsAreCorrect(
         program_project_name
     );
 
-    cy.log("Check that mirror program increment has been created");
-    cy.get("[data-test=home-releases]").contains("My first PI");
-    cy.log("Check that mirror iteration has been created");
-    cy.get("[data-test=home-sprint-title]").contains("Iteration One");
+    checkPIExistsInReleases("My first PI");
+    checkMirrorIterationExistsInSprint("Iteration One");
 
     cy.log("Check that user story linked to feature has been planned in mirror program increment");
     cy.get("[data-test=go-to-top-backlog]").click();
     cy.get("[data-test=expand-collapse-milestone]").click();
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
+}
+
+function checkPIExistsInReleases(expected_text: string, nb_attempts = 0): void {
+    const max_attempts = 10;
+    if (nb_attempts > max_attempts) {
+        throw new Error("Timed out while checking if mirror program increment has been created");
+    }
+    cy.log(
+        `Check that mirror program increment has been created (attempt ${nb_attempts}/${max_attempts})`
+    );
+    cy.get("[data-test=home-releases]").then((subject) => {
+        if (!subject.text().includes(expected_text)) {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(100);
+            checkPIExistsInReleases(expected_text, nb_attempts + 1);
+        }
+    });
+}
+
+function checkMirrorIterationExistsInSprint(expected_text: string, nb_attempts = 0): void {
+    const max_attempts = 10;
+    if (nb_attempts > max_attempts) {
+        throw new Error("Timed out while checking if mirror iteration has been created");
+    }
+    cy.log(`Check that mirror iteration has been created (attempt ${nb_attempts}/${max_attempts})`);
+    cy.get("[data-test=home-sprint-title]").then((subject) => {
+        if (!subject.text().includes(expected_text)) {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(100);
+            checkMirrorIterationExistsInSprint(expected_text, nb_attempts + 1);
+        }
+    });
 }
 
 function updateProgramIncrementAndIteration(program_project_name: string): void {
@@ -268,9 +298,8 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     cy.log("Check that mirror program increment is synchronized");
     cy.visitProjectService(team_project_name, "Agile Dashboard");
 
-    cy.get("[data-test=home-releases]").contains("My first PI updated");
-    cy.log("Check that mirror iteration is synchronized");
-    cy.get("[data-test=home-sprint-title]").contains("Iteration One updated");
+    checkPIExistsInReleases("My first PI updated");
+    checkMirrorIterationExistsInSprint("Iteration One updated");
 }
 
 function selectLabelInListPickerDropdown(
