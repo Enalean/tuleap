@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;

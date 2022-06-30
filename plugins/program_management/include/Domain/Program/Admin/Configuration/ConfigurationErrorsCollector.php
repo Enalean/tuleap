@@ -48,11 +48,11 @@ final class ConfigurationErrorsCollector
      */
     private array $required_fields_errors = [];
     /**
-     * @var FieldsPermissionErrorPresenter[]
+     * @var FieldsPermissionError[]
      */
     private array $non_submittable_fields = [];
     /**
-     * @var FieldsPermissionErrorPresenter[]
+     * @var FieldsPermissionError[]
      */
     private array $non_updatable_fields = [];
     /**
@@ -157,13 +157,13 @@ final class ConfigurationErrorsCollector
 
     public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project);
+        $this->non_submittable_fields[] = new FieldsPermissionError($field_id, $label, $tracker, $project);
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
     public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project);
+        $this->non_updatable_fields[] = new FieldsPermissionError($field_id, $label, $tracker, $project);
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
@@ -282,7 +282,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return FieldsPermissionErrorPresenter[]
+     * @return FieldsPermissionError[]
      */
     public function getNonSubmittableFields(): array
     {
@@ -290,7 +290,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return FieldsPermissionErrorPresenter[]
+     * @return FieldsPermissionError[]
      */
     public function getNonUpdatableFields(): array
     {

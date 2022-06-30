@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\FieldsPermissionError;
 
 /**
  * @psalm-immutable
@@ -34,13 +33,17 @@ final class FieldsPermissionErrorPresenter
     public string $field_url;
     public string $tracker_name;
     public string $project_name;
+    public int $field_id;
+    public string $label;
 
-    public function __construct(public int $field_id, public string $label, TrackerReference $tracker, ProjectReference $project_reference)
+    public function __construct(FieldsPermissionError $permission_error)
     {
         $this->field_url    = '/plugins/tracker/permissions/fields-by-field/' .
-            urlencode((string) $tracker->getId()) . '?' .
-            http_build_query(['selected_id' => $this->field_id]);
-        $this->tracker_name = $tracker->getLabel();
-        $this->project_name = $project_reference->getProjectLabel();
+            urlencode((string) $permission_error->tracker->getId()) . '?' .
+            http_build_query(['selected_id' => $permission_error->field_id]);
+        $this->tracker_name = $permission_error->tracker->getLabel();
+        $this->project_name = $permission_error->project_reference->getProjectLabel();
+        $this->field_id     = $permission_error->field_id;
+        $this->label        = $permission_error->label;
     }
 }
