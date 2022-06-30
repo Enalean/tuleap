@@ -154,14 +154,14 @@ abstract class GitoliteTestCase extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(GitDao::class),
             \Mockery::spy(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
+            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
+            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             $this->git_exec,
             $this->repository_factory,
             $this->gitolite_permissions_serializer,
             null,
             null,
             $this->mirror_data_mapper,
-            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
     }
 

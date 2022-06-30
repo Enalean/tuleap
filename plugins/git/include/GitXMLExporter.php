@@ -31,6 +31,7 @@ use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
 use Tuleap\Git\Events\XMLExportExternalContentEvent;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\GitBundle;
 use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -43,74 +44,19 @@ class GitXmlExporter
 {
     public const EXPORT_FOLDER = "export";
 
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var GitPermissionsManager
-     */
-    private $permission_manager;
-
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var GitBundle
-     */
-    private $git_bundle;
-    /**
-     * @var Git_LogDao
-     */
-    private $git_log_dao;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UserXMLExporter
-     */
-    private $user_exporter;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
-        Project $project,
-        GitPermissionsManager $permission_manager,
-        UGroupManager $ugroup_manager,
-        GitRepositoryFactory $repository_factory,
-        LoggerInterface $logger,
-        GitBundle $git_bundle,
-        Git_LogDao $git_log_dao,
-        UserManager $user_manager,
-        UserXMLExporter $user_exporter,
-        EventManager $event_manager,
+        private Project $project,
+        private GitPermissionsManager $permission_manager,
+        private UGroupManager $ugroup_manager,
+        private GitRepositoryFactory $repository_factory,
+        private LoggerInterface $logger,
+        private GitBundle $git_bundle,
+        private Git_LogDao $git_log_dao,
+        private UserManager $user_manager,
+        private UserXMLExporter $user_exporter,
+        private EventManager $event_manager,
+        private VerifyArtifactClosureIsAllowed $closure_verifier,
     ) {
-        $this->project            = $project;
-        $this->permission_manager = $permission_manager;
-        $this->ugroup_manager     = $ugroup_manager;
-        $this->repository_factory = $repository_factory;
-        $this->logger             = $logger;
-        $this->git_bundle         = $git_bundle;
-        $this->git_log_dao        = $git_log_dao;
-        $this->user_manager       = $user_manager;
-        $this->user_exporter      = $user_exporter;
-        $this->event_manager      = $event_manager;
     }
 
     public function exportToXml(SimpleXMLElement $xml_content, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
@@ -180,6 +126,10 @@ class GitXmlExporter
             $root_node = $xml_content->addChild("repository");
             $root_node->addAttribute("name", $repository->getName());
             $root_node->addAttribute("description", $repository->getDescription());
+            $root_node->addAttribute(
+                'allow_artifact_closure',
+                $this->closure_verifier->isArtifactClosureAllowed((int) $repository->getId()) ? "1" : "0",
+            );
 
             $row = $this->git_log_dao->getLastPushForRepository($repository->getId());
             if (! empty($row) && $row['user_id'] !== 0) {

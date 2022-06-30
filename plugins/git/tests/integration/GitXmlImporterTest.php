@@ -53,6 +53,7 @@ use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdateTestExecutor;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\FineGrainedPermission;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
 use Tuleap\TemporaryTestDirectory;
 use UGroupManager;
 use UserManager;
@@ -130,6 +131,7 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $backup_tmp_dir;
     private $backup_access_config;
     private $backup_sys_data_dir;
+    private \PHPUnit\Framework\MockObject\MockObject|ConfigureAllowArtifactClosure $configure_artifact_closure;
 
     protected function setUp(): void
     {
@@ -218,16 +220,18 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->git_dao,
             $git_mirror_dao,
             $this->git_plugin,
+            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
+            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class),
             null,
             null,
             \Mockery::spy(\Git_Gitolite_ConfigPermissionsSerializer::class),
             null,
             null,
             \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
-            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
-            \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
         $this->user_finder    = \Mockery::spy(XMLImportHelper::class);
+
+        $this->configure_artifact_closure = $this->createMock(ConfigureAllowArtifactClosure::class);
 
         $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), new DefaultBranchUpdateTestExecutor(), $this->logger);
         $this->importer = new GitXmlImporter(
@@ -245,7 +249,8 @@ final class GitXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->fine_grained_saver,
             $this->xml_ugroup_retriever,
             $this->git_dao,
-            $this->user_finder
+            $this->user_finder,
+            $this->configure_artifact_closure,
         );
 
         $userManager = \Mockery::spy(\UserManager::class);
@@ -305,6 +310,87 @@ XML;
             }
         }
         $this->assertFalse($empty_is_here);
+    }
+
+    public function testItShouldNotChangeAllowArtifactClosureOptionIfAttributeIsNotPresent(): void
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="" name="empty"/>
+                </git>
+            </project>
+            XML;
+
+        $this->configure_artifact_closure
+            ->expects(self::never())
+            ->method('forbidArtifactClosureForRepository');
+
+        $this->configure_artifact_closure
+            ->expects(self::never())
+            ->method('allowArtifactClosureForRepository');
+
+        $this->importer->import(
+            new \Tuleap\Project\XML\Import\ImportConfig(),
+            $this->project,
+            \Mockery::spy(\PFUser::class),
+            new SimpleXMLElement($xml),
+            $this->getTmpDir()
+        );
+    }
+
+    public function testItShouldAllowArtifactClosure(): void
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="" name="empty" allow_artifact_closure="1"/>
+                </git>
+            </project>
+            XML;
+
+        $this->configure_artifact_closure
+            ->expects(self::never())
+            ->method('forbidArtifactClosureForRepository');
+
+        $this->configure_artifact_closure
+            ->expects(self::once())
+            ->method('allowArtifactClosureForRepository');
+
+        $this->importer->import(
+            new \Tuleap\Project\XML\Import\ImportConfig(),
+            $this->project,
+            \Mockery::spy(\PFUser::class),
+            new SimpleXMLElement($xml),
+            $this->getTmpDir()
+        );
+    }
+
+    public function testItShouldForbidArtifactClosure(): void
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="" name="empty" allow_artifact_closure="0"/>
+                </git>
+            </project>
+            XML;
+
+        $this->configure_artifact_closure
+            ->expects(self::once())
+            ->method('forbidArtifactClosureForRepository');
+
+        $this->configure_artifact_closure
+            ->expects(self::never())
+            ->method('allowArtifactClosureForRepository');
+
+        $this->importer->import(
+            new \Tuleap\Project\XML\Import\ImportConfig(),
+            $this->project,
+            \Mockery::spy(\PFUser::class),
+            new SimpleXMLElement($xml),
+            $this->getTmpDir()
+        );
     }
 
     public function testItShouldImportOneRepositoryWithOneCommit(): void

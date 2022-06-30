@@ -40,17 +40,17 @@ $driver      = new Git_GitoliteDriver(
     new GitDao(),
     new Git_Mirror_MirrorDao(),
     $git_plugin,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
     new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
         new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
         ProjectManager::instance()
     ),
-    new \Tuleap\Git\Gitolite\VersionDetector()
+    new \Tuleap\Git\Gitolite\VersionDetector(),
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
 );
 if ($driver->renameProject($argv[1], $argv[2])) {
     echo "Rename done!\n";
