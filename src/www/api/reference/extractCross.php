@@ -33,9 +33,22 @@ http://codendi.example.com/goto?key=art&val=6841&group_id=109
 
 */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+
 require_once __DIR__ . '/../../include/pre.php';
 
-header('Content-type: text/plain');
+/**
+ * @psalm-return never-return
+ */
+function sendResponse(int $status_code, string $body_content): void
+{
+    $response = \Tuleap\Http\HTTPFactoryBuilder::responseFactory()
+        ->createResponse($status_code)
+        ->withHeader('Content-type', 'text/plain')
+        ->withBody(\Tuleap\Http\HTTPFactoryBuilder::streamFactory()->createStream($body_content));
+    (new SapiEmitter())->emit($response);
+    exit();
+}
 
 $request = HTTPRequest::instance();
 
@@ -53,9 +66,8 @@ if ($request->existAndNonEmpty('group_id')) {
 }
 
 if (! $request->get('text') || ! $request->get('login') || ! $request->get('type') || ! $request->get('rev_id')) {
-    echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err') . "\n";
-    echo $GLOBALS['Language']->getText('project_reference', 'extract_syntax');
-    exit;
+    $error_msg = $GLOBALS['Language']->getText('include_exit', 'missing_param_err') . "\n" . $GLOBALS['Language']->getText('project_reference', 'extract_syntax');
+    sendResponse(400, $error_msg);
 }
 
 $user_id = 100;
@@ -72,13 +84,13 @@ $source_type = trim($request->get('type'));
 $reference_manager = ReferenceManager::instance();
 $reference_manager->extractCrossRef($text, $source_id, $source_type, $group_id, $user_id);
 
-$refs = $reference_manager->extractReferences($text, $group_id);
-if (isset($refs)) {
-    foreach ($refs as $ref_instance) {
-        $ref = $ref_instance->getReference();
-        print $ref->getDescription() . "\n";
-        print $ref_instance->getMatch() . "\n";
-        print $ref_instance->getFullGotoLink() . "\n\n";
-    }
+$refs          = $reference_manager->extractReferences($text, $group_id);
+$response_body = '';
+foreach ($refs as $ref_instance) {
+    $ref            = $ref_instance->getReference();
+    $response_body .= $ref->getDescription() . "\n";
+    $response_body .= $ref_instance->getMatch() . "\n";
+    $response_body .= $ref_instance->getFullGotoLink() . "\n\n";
 }
-exit;
+
+sendResponse(200, $response_body);
