@@ -27,16 +27,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectSigningKeyFactory;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class JWKSDocumentEndpointController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    /**
-     * @var OpenIDConnectSigningKeyFactory
-     */
-    private $signing_key_factory;
     /**
      * @var \DateInterval
      */
@@ -47,14 +43,13 @@ final class JWKSDocumentEndpointController extends DispatchablePSR15Compatible i
     private $json_response_builder;
 
     public function __construct(
-        OpenIDConnectSigningKeyFactory $signing_key_factory,
+        private OpenIDConnectSigningKeyFactory $signing_key_factory,
         \DateInterval $max_cache_age,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->signing_key_factory   = $signing_key_factory;
         $this->max_cache_age         = $max_cache_age;
         $this->json_response_builder = $json_response_builder;
     }

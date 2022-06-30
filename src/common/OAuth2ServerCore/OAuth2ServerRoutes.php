@@ -40,37 +40,38 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
-use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenVerifier;
-use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantController;
-use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenCreator;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
+use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2ServerCore\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\OAuth2ServerCore\App\AppDao;
+use Tuleap\OAuth2ServerCore\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
+use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2ServerCore\Grant\AccessTokenGrantRepresentationBuilder;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
+use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
+use Tuleap\OAuth2ServerCore\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2ServerCore\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\JWTBuilderFactory;
+use Tuleap\OAuth2ServerCore\Grant\TokenRevocationController;
 use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\JWK\JWKSDocumentEndpointController;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\JWTBuilderFactory;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectSigningKeyDAO;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectSigningKeyFactoryDBPersistent;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectTokenBuilder;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenCreator;
+use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenVerifier;
 use Tuleap\OAuth2ServerCore\RefreshToken\PrefixOAuth2RefreshToken;
-use Tuleap\OAuth2ServerCore\AccessToken\OAuth2AccessTokenDAO;
-use Tuleap\OAuth2ServerCore\App\AppDao;
-use Tuleap\OAuth2ServerCore\App\OAuth2AppCredentialVerifier;
-use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
-use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
-use Tuleap\OAuth2ServerCore\Grant\OAuth2ClientAuthenticationMiddleware;
-use Tuleap\OAuth2ServerCore\Grant\TokenRevocationController;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\JWK\JWKSDocumentEndpointController;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
-use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2ServerCore\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
@@ -139,7 +140,7 @@ final class OAuth2ServerRoutes
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         return new JWKSDocumentEndpointController(
-            new OpenIDConnectSigningKeyFactory(
+            new OpenIDConnectSigningKeyFactoryDBPersistent(
                 new KeyFactory(),
                 new OpenIDConnectSigningKeyDAO(),
                 new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
@@ -190,15 +191,17 @@ final class OAuth2ServerRoutes
             ),
             new OpenIDConnectIDTokenCreator(
                 OAuth2SignInScope::fromItself(),
-                new JWTBuilderFactory(),
-                new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
-                new OpenIDConnectSigningKeyFactory(
-                    new KeyFactory(),
-                    new OpenIDConnectSigningKeyDAO(),
-                    new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
+                new OpenIDConnectTokenBuilder(
+                    new JWTBuilderFactory(),
+                    new OpenIDConnectSigningKeyFactoryDBPersistent(
+                        new KeyFactory(),
+                        new OpenIDConnectSigningKeyDAO(),
+                        new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
+                        new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+                    ),
                     new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+                    new Sha256(),
                 ),
-                new Sha256(),
                 UserManager::instance()
             )
         );

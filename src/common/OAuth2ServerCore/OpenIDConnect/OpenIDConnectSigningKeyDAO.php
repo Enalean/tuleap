@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\DB\DataAccessObject;
 

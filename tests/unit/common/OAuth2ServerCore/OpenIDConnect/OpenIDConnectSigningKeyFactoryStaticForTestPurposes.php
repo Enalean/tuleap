@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\Cryptography\ConcealedString;
 
-final class SigningPrivateKeyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OpenIDConnectSigningKeyFactoryStaticForTestPurposes implements OpenIDConnectSigningKeyFactory
 {
-    private const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';
-    private const SIGNING_PUBLIC_KEY             = <<<EOT
+    public const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';
+    public const SIGNING_PUBLIC_KEY             = <<<EOT
         -----BEGIN PUBLIC KEY-----
         MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApVp45DC1lniS5l9yiR81
         OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo/ARJnu1W/KVNNqxBNGno1oNLg
@@ -38,8 +38,7 @@ final class SigningPrivateKeyTest extends \Tuleap\Test\PHPUnit\TestCase
         2QIDAQAB
         -----END PUBLIC KEY-----
         EOT;
-
-    private const SIGNING_PRIVATE_KEY = <<<EOT
+    public const SIGNING_PRIVATE_KEY            = <<<EOT
         -----BEGIN PRIVATE KEY-----
         MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQClWnjkMLWWeJLm
         X3KJHzU4zcEIRIMvJlhfeldLfagnPR44iqADiaeoY2+6mj8BEme7Vb8pU02rEE0a
@@ -70,14 +69,22 @@ final class SigningPrivateKeyTest extends \Tuleap\Test\PHPUnit\TestCase
         -----END PRIVATE KEY-----
         EOT;
 
-    public function testHoldsValues(): void
-    {
-        $private_key = new SigningPrivateKey(
-            SigningPublicKey::fromPEMFormat(self::SIGNING_PUBLIC_KEY),
-            new ConcealedString(self::SIGNING_PRIVATE_KEY)
-        );
+    private SigningPublicKey $public_key;
+    private SigningPrivateKey $private_key;
 
-        $this->assertEquals(self::SIGNING_PUBLIC_KEY_FINGERPRINT, $private_key->getFingerprintPublicKey());
-        $this->assertEquals(self::SIGNING_PRIVATE_KEY, $private_key->getPrivateKey()->contents());
+    public function __construct()
+    {
+        $this->public_key  = SigningPublicKey::fromPEMFormat(self::SIGNING_PUBLIC_KEY);
+        $this->private_key = new SigningPrivateKey($this->public_key, new ConcealedString(self::SIGNING_PRIVATE_KEY));
+    }
+
+    public function getPublicKeys(\DateTimeImmutable $current_time): array
+    {
+        return [$this->public_key];
+    }
+
+    public function getKey(\DateTimeImmutable $current_time): SigningPrivateKey
+    {
+        return $this->private_key;
     }
 }
