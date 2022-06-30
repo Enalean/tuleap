@@ -28,7 +28,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class PostPushTuleapArtifactCommentBuilder
+final class PostPushTuleapArtifactCommentBuilder
 {
     public static function buildComment(
         string $user_name,

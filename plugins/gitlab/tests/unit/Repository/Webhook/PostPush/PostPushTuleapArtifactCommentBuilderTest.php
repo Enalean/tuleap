@@ -23,239 +23,121 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use DateTimeImmutable;
-use Tracker;
 use Project;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 {
-    public function testReturnEmptyStringWhenKeywordIsNull(): void
+    private const ARTIFACT_ID                   = 12;
+    private const COMMIT_SHA1                   = '614b83';
+    private const USERNAME_CLOSING_THE_ARTIFACT = 'lgilhooly';
+    private const GITLAB_REPOSITORY_NAME        = 'MyGitlabRepo';
+
+    private Artifact $artifact;
+
+    protected function setUp(): void
     {
-        $commit = new PostPushCommitWebhookData(
-            "123aze",
-            "commit",
-            "",
-            "branch_name",
-            1620725174,
-            "user@example.com",
-            "user"
-        );
-
-        $reference   = new WebhookTuleapReference(12, null);
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $submitted_by = 101;
-        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
-
-        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
-            "user",
-            $commit,
-            $reference,
-            $integration,
-            $artifact
-        );
-
-        self::assertEquals("", $comment);
+        $this->artifact = new Artifact(self::ARTIFACT_ID, 1, 101, 10050, false);
     }
 
-    public function testReturnEmptyStringWhenKeywordIsNotHandled(): void
+    private function buildComment(WebhookTuleapReference $reference): string
     {
         $commit = new PostPushCommitWebhookData(
-            "123aze",
-            "commit",
-            "",
-            "branch_name",
+            self::COMMIT_SHA1,
+            'commit',
+            '',
+            'branch_name',
             1620725174,
-            "user@example.com",
-            "user"
+            'user@example.com',
+            self::USERNAME_CLOSING_THE_ARTIFACT
         );
 
-        $reference   = new WebhookTuleapReference(12, "solved");
         $integration = new GitlabRepositoryIntegration(
             1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
+            47,
+            self::GITLAB_REPOSITORY_NAME,
+            '',
+            'https://example',
             new DateTimeImmutable(),
             Project::buildForTest(),
             false
         );
 
-        $submitted_by = 101;
-        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
-
-        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
-            "user",
+        return PostPushTuleapArtifactCommentBuilder::buildComment(
+            self::USERNAME_CLOSING_THE_ARTIFACT,
             $commit,
             $reference,
             $integration,
-            $artifact
+            $this->artifact
         );
-        self::assertEquals("", $comment);
     }
 
-    public function testReturnCommentWhenKeywordIsResolves(): void
+    public function dataProviderReference(): iterable
     {
-        $commit = new PostPushCommitWebhookData(
-            "123aze",
-            "commit",
-            "",
-            "branch_name",
-            1620725174,
-            "user@example.com",
-            "user"
-        );
-
-        $reference   = new WebhookTuleapReference(12, "resolves");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $submitted_by = 101;
-        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
-
-        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
-            "user",
-            $commit,
-            $reference,
-            $integration,
-            $artifact
-        );
-        self::assertEquals("solved by user with gitlab_commit #MyRepo/123aze", $comment);
+        return [
+            'empty comment when keyword is null'        => [null, ''],
+            'empty comment when keyword is not handled' => ['solved', ''],
+            'comment with resolves'                     => ['resolves', sprintf(
+                'solved by %1$s with %2$s #%3$s/%4$s',
+                self::USERNAME_CLOSING_THE_ARTIFACT,
+                GitlabCommitReference::REFERENCE_NAME,
+                self::GITLAB_REPOSITORY_NAME,
+                self::COMMIT_SHA1,
+            )],
+            'comment with closes'                       => ['closes', sprintf(
+                'closed by %1$s with %2$s #%3$s/%4$s',
+                self::USERNAME_CLOSING_THE_ARTIFACT,
+                GitlabCommitReference::REFERENCE_NAME,
+                self::GITLAB_REPOSITORY_NAME,
+                self::COMMIT_SHA1,
+            )],
+            'comment with implements'                   => ['implements', sprintf(
+                'implemented by %1$s with %2$s #%3$s/%4$s',
+                self::USERNAME_CLOSING_THE_ARTIFACT,
+                GitlabCommitReference::REFERENCE_NAME,
+                self::GITLAB_REPOSITORY_NAME,
+                self::COMMIT_SHA1,
+            )],
+        ];
     }
 
-    public function testReturnCommentWhenKeywordIsCloses(): void
+    /**
+     * @dataProvider dataProviderReference
+     */
+    public function testWithoutTrackerShortname(?string $keyword, string $expected_comment): void
     {
-        $commit = new PostPushCommitWebhookData(
-            "123aze",
-            "commit",
-            "",
-            "branch_name",
-            1620725174,
-            "user@example.com",
-            "user"
-        );
+        $reference = new WebhookTuleapReference(self::ARTIFACT_ID, $keyword);
 
-        $reference   = new WebhookTuleapReference(12, "closes");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
+        $comment = $this->buildComment($reference);
 
-        $submitted_by = 101;
-        $artifact     = new Artifact(10, 1, $submitted_by, 10050, false);
-
-        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
-            "user",
-            $commit,
-            $reference,
-            $integration,
-            $artifact
-        );
-        self::assertEquals("closed by user with gitlab_commit #MyRepo/123aze", $comment);
+        self::assertSame($expected_comment, $comment);
     }
 
     public function testReturnCommentWhenKeywordIsFixes(): void
     {
-        $commit = new PostPushCommitWebhookData(
-            "123aze",
-            "commit",
-            "",
-            "branch_name",
-            1620725174,
-            "user@example.com",
-            "user"
+        $reference = new WebhookTuleapReference(self::ARTIFACT_ID, 'fixes');
+
+        $tracker_shortname = 'tracker_isetta';
+        $tracker           = TrackerTestBuilder::aTracker()->withShortName($tracker_shortname)->build();
+        $this->artifact    = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->inTracker($tracker)->build();
+
+        $comment = $this->buildComment($reference);
+        self::assertSame(
+            sprintf(
+                '%1$s fixed by %2$s with %3$s #%4$s/%5$s',
+                $tracker_shortname,
+                self::USERNAME_CLOSING_THE_ARTIFACT,
+                GitlabCommitReference::REFERENCE_NAME,
+                self::GITLAB_REPOSITORY_NAME,
+                self::COMMIT_SHA1,
+            ),
+            $comment
         );
-
-        $reference   = new WebhookTuleapReference(12, "fixes");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getItemName')->willReturn("tracker_isetta");
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->method("getTracker")->willReturn($tracker);
-
-        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
-            "user",
-            $commit,
-            $reference,
-            $integration,
-            $artifact
-        );
-        self::assertEquals("tracker_isetta fixed by user with gitlab_commit #MyRepo/123aze", $comment);
-    }
-
-    public function testReturnCommentWhenKeywordIsImplements(): void
-    {
-        $commit = new PostPushCommitWebhookData(
-            "123aze",
-            "commit",
-            "",
-            "branch_name",
-            1620725174,
-            "user@example.com",
-            "user"
-        );
-
-        $reference   = new WebhookTuleapReference(12, "implements");
-        $integration = new GitlabRepositoryIntegration(
-            1,
-            12,
-            "MyRepo",
-            "",
-            "https://example",
-            new DateTimeImmutable(),
-            Project::buildForTest(),
-            false
-        );
-
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getItemName')->willReturn("tracker_isetta");
-        $artifact = $this->createMock(Artifact::class);
-        $artifact->method("getTracker")->willReturn($tracker);
-
-        $comment = PostPushTuleapArtifactCommentBuilder::buildComment(
-            "user",
-            $commit,
-            $reference,
-            $integration,
-            $artifact
-        );
-        self::assertEquals("implemented by user with gitlab_commit #MyRepo/123aze", $comment);
     }
 }

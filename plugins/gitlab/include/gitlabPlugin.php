@@ -377,7 +377,6 @@ class gitlabPlugin extends Plugin
                                 ),
                                 $first_possible_value_retriever
                             ),
-                            $user_manager,
                             $logger,
                             $comment_creator
                         ),
@@ -601,7 +600,6 @@ class gitlabPlugin extends Plugin
                                 ),
                                 $first_possible_value_retriever
                             ),
-                            $user_manager,
                             $prefixed_logger,
                             $comment_creator
                         ),
