@@ -41,7 +41,8 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
             $this->shared_secret_generator->generateSharedSecret(),
             ServerHostname::HTTPSUrl(),
             ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),
-            $oauth2_secret->getSecret()
+            $oauth2_secret->getSecret(),
+            \ForgeConfig::get(\ForgeAccess::CONFIG, \ForgeAccess::RESTRICTED)
         );
     }
 }

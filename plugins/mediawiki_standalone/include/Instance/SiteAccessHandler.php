@@ -20,20 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Configuration;
+namespace Tuleap\MediawikiStandalone\Instance;
 
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
+use Tuleap\Queue\EnqueueTaskInterface;
 
-final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
+final class SiteAccessHandler
 {
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    public function __construct(
+        private LocalSettingsInstantiator $local_settings_instantiator,
+        private EnqueueTaskInterface $enqueue_task,
+    ) {
+    }
+
+    public function process(): void
     {
-        return new LocalSettingsRepresentation(
-            new ConcealedString('random_value'),
-            'https://example.com',
-            'tlp-client-id-test',
-            new ConcealedString('tlp-client-secret'),
-            \ForgeAccess::ANONYMOUS
-        );
+        $this->local_settings_instantiator->instantiateLocalSettings();
+        $this->enqueue_task->enqueue(LogUsersOutInstanceTask::logsOutUserOnAllInstances());
     }
 }
