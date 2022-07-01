@@ -84,6 +84,12 @@ final class ProjectTestBuilder
         return $this;
     }
 
+    public function withStatusSuspended(): self
+    {
+        $this->data['status'] = Project::STATUS_SUSPENDED;
+        return $this;
+    }
+
     public function withAccess(string $access): self
     {
         $this->data['access'] = $access;

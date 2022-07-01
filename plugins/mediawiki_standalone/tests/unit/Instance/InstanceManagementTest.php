@@ -286,4 +286,36 @@ final class InstanceManagementTest extends TestCase
 
         self::assertTrue($this->logger->hasErrorThatContains(DeleteInstance::class . ' error'));
     }
+
+    public function testRenameIsSuccessful(): void
+    {
+        $rename_has_been_called = false;
+
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/rename/gpig/baz$', null, 'POST'),
+            function () use (&$rename_has_been_called) {
+                $rename_has_been_called = true;
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => RenameInstance::TOPIC, 'payload' => ['project_id' => 120, 'new_name' => 'baz']]));
+
+        self::assertTrue($rename_has_been_called);
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testRenameIsError(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/rename/gpig/baz$', null, 'POST'),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(422);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => RenameInstance::TOPIC, 'payload' => ['project_id' => 120, 'new_name' => 'baz']]));
+
+        self::assertTrue($this->logger->hasErrorThatContains(RenameInstance::class . ' error'));
+    }
 }
