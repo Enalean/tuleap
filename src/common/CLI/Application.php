@@ -75,7 +75,7 @@ class Application extends \Symfony\Component\Console\Application
         return parent::doRun($input, $output);
     }
 
-    protected function getDefaultInputDefinition()
+    protected function getDefaultInputDefinition(): InputDefinition
     {
         return new InputDefinition([
             new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
@@ -89,7 +89,7 @@ class Application extends \Symfony\Component\Console\Application
         ]);
     }
 
-    protected function getDefaultCommands()
+    protected function getDefaultCommands(): array
     {
         return array_merge(
             parent::getDefaultCommands(),
