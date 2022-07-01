@@ -57,6 +57,7 @@ ENTERPRISE_BUILD
 .deptrac.cache
 tsconfig.tsbuildinfo
 .turbo/
+js-test-results/
 
 #legacy
 coverage/
