@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ConfigurationErrorsGathererTest extends TestCase
@@ -67,7 +68,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
 
     public function testItDoesNothingWhenProjectIsNotAProgram(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(false);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $build_program    = BuildProgramStub::stubInvalidProgram();
 
         $gatherer = new ConfigurationErrorsGatherer(
@@ -89,7 +90,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
 
     public function testItCollectProgramIncrementErrors(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(false);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $errors_collector->addWorkflowDependencyError(
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
@@ -106,7 +107,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
 
     public function testItCollectProgramIncrementAndIterationErrors(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addWorkflowDependencyError(
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
@@ -123,7 +124,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
 
     public function testItCollectIterationErrors(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
 
         $this->gatherer->gatherConfigurationErrors(
             $this->tracker,

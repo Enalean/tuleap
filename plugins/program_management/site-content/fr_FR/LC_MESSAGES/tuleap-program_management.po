@@ -456,6 +456,9 @@ msgstr ""
 "La sémantique statut est liée à aucun champ dans l'outil de suivi du "
 "programme <a href='%s'>#%s</a>:"
 
+msgid "Sync open Program Increments"
+msgstr "Sync Incréments de Programme ouverts"
+
 msgid ""
 "Team project <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>%s</"
 "a> has no root planning or you can't access it"

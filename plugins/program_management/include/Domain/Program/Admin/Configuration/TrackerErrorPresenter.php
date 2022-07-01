@@ -96,23 +96,27 @@ final class TrackerErrorPresenter
      * @var TeamHasNoPlanningPresenter[]
      */
     public array $team_no_sprint_planning;
+    /**
+     * @var int[]
+     */
+    public array $teams_with_error = [];
 
     /**
-     * @param SemanticErrorPresenter[]               $semantic_errors
-     * @param RequiredErrorPresenter[]               $required_field_errors
-     * @param WorkFlowErrorPresenter[]               $transition_rule_error
-     * @param WorkFlowErrorPresenter[]               $transition_rule_date_error
-     * @param WorkFlowErrorPresenter[]               $field_dependency_error
-     * @param FieldsPermissionErrorPresenter[]       $non_submittable_field_errors
-     * @param FieldsPermissionErrorPresenter[]       $non_updatable_field_errors
-     * @param TrackerReference[]                     $team_tracker_id_errors
-     * @param TrackerReference[]                     $status_missing_in_teams
-     * @param SemanticStatusNoFieldPresenter[]       $semantic_status_no_field
+     * @param SemanticErrorPresenter[] $semantic_errors
+     * @param RequiredErrorPresenter[] $required_field_errors
+     * @param WorkFlowErrorPresenter[] $transition_rule_error
+     * @param WorkFlowErrorPresenter[] $transition_rule_date_error
+     * @param WorkFlowErrorPresenter[] $field_dependency_error
+     * @param FieldsPermissionErrorPresenter[] $non_submittable_field_errors
+     * @param FieldsPermissionErrorPresenter[] $non_updatable_field_errors
+     * @param TrackerReference[] $team_tracker_id_errors
+     * @param TrackerReference[] $status_missing_in_teams
+     * @param SemanticStatusNoFieldPresenter[] $semantic_status_no_field
      * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
-     * @param TitleHasIncorrectTypePresenter[]       $title_has_incorrect_type_error
-     * @param MissingArtifactLinkFieldPresenter[]    $missing_artifact_link_fields_errors
-     * @param TeamHasNoPlanningPresenter[]           $team_no_milestone_planning
-     * @param TeamHasNoPlanningPresenter[]           $team_no_sprint_planning
+     * @param TitleHasIncorrectTypePresenter[] $title_has_incorrect_type_error
+     * @param MissingArtifactLinkFieldPresenter[] $missing_artifact_link_fields_errors
+     * @param TeamHasNoPlanningPresenter[] $team_no_milestone_planning
+     * @param TeamHasNoPlanningPresenter[] $team_no_sprint_planning
      */
     private function __construct(
         array $semantic_errors,
@@ -130,6 +134,7 @@ final class TrackerErrorPresenter
         array $missing_artifact_link_fields_errors,
         array $team_no_milestone_planning,
         array $team_no_sprint_planning,
+        array $teams_with_error,
     ) {
         $has_semantic_errors   = count($semantic_errors) > 0;
         $this->semantic_errors = $semantic_errors;
@@ -181,6 +186,9 @@ final class TrackerErrorPresenter
             || $has_semantic_status_errors
             || $has_synchronization_errors
             || $has_planning_error;
+
+
+        $this->teams_with_error = $teams_with_error;
     }
 
     public static function fromTracker(
@@ -219,7 +227,8 @@ final class TrackerErrorPresenter
             $errors_collector->getTitleHasIncorrectTypeError(),
             $errors_collector->getMissingArtifactLinkErrors(),
             $errors_collector->getNoMilestonePlanning(),
-            $errors_collector->getNoSprintPlanning()
+            $errors_collector->getNoSprintPlanning(),
+            $errors_collector->getTeamsWithError()
         );
     }
 }

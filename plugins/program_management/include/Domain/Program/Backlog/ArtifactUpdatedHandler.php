@@ -58,8 +58,8 @@ final class ArtifactUpdatedHandler
             $event
         );
         if ($program_increment_update) {
-            $this->planArtifactIfNeeded($program_increment_update);
             $this->dispatchUpdate($program_increment_update);
+            $this->planArtifactIfNeeded($program_increment_update);
         }
         $this->cleanUpFromTopBacklogFeatureAddedToAProgramIncrement($event);
 

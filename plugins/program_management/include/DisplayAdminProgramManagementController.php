@@ -140,9 +140,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                 null
             );
 
-            $program_increment_error_collector = new ConfigurationErrorsCollector(true);
-            $iteration_error_collector         = new ConfigurationErrorsCollector(true);
-            $plannable_error_collector         = new ConfigurationErrorsCollector(true);
+            $program_increment_error_collector = new ConfigurationErrorsCollector($this->verify_is_team, true);
+            $iteration_error_collector         = new ConfigurationErrorsCollector($this->verify_is_team, true);
+            $plannable_error_collector         = new ConfigurationErrorsCollector($this->verify_is_team, true);
 
             $program_increment_tracker = $this->program_increment_tracker_retriever->retrieveVisibleProgramIncrementTracker(
                 $program,
@@ -216,6 +216,17 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $admin_program
         );
 
+        $teams_in_error = [];
+        if ($plannable_error_presenter) {
+            $teams_in_error = array_unique(array_merge($teams_in_error, $plannable_error_presenter->teams_with_error));
+        }
+        if ($increment_error_presenter) {
+            $teams_in_error = array_unique(array_merge($teams_in_error, $increment_error_presenter->teams_with_error));
+        }
+        if ($iteration_error_presenter) {
+            $teams_in_error = array_unique(array_merge($teams_in_error, $iteration_error_presenter->teams_with_error));
+        }
+
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
@@ -234,7 +245,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                         $this->teams_searcher,
                         $this->project_reference_retriever,
                         $admin_program
-                    )
+                    ),
+                    $teams_in_error
                 ),
                 PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
                     $all_potential_trackers,

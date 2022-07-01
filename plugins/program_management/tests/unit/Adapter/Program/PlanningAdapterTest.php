@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\PlanningHasNoMilestoneT
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -47,7 +48,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->planning_factory = $this->createStub(\PlanningFactory::class);
         $this->adapter          = new PlanningAdapter($this->planning_factory, RetrieveUserStub::withGenericUser());
         $this->user_identifier  = UserIdentifierStub::buildGenericUser();
-        $this->error_collector  = new ConfigurationErrorsCollector(false);
+        $this->error_collector  = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
     }
 
     public function testThrowExceptionIfRootPlanningDoesNotExist(): void

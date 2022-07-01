@@ -34,6 +34,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerErrorPresenterTest extends TestCase
@@ -62,7 +63,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasSemanticErrors(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addSemanticError(
             'Title',
             'title',
@@ -83,7 +84,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasRequiredErrors(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addRequiredFieldError(
             $this->tracker,
             ProjectReferenceStub::buildGeneric(),
@@ -105,7 +106,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasWorkflowErrorsForTransition(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addWorkflowTransitionRulesError(
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
@@ -126,7 +127,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasWorkflowErrorsForGlobalRules(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addWorkflowTransitionDateRulesError(
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
@@ -146,7 +147,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasWorkflowErrorsForFieldDependency(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addWorkflowDependencyError(
             $this->tracker,
             ProjectReferenceStub::buildGeneric()
@@ -166,7 +167,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasPermissionErrorsWhenNotSubmittable(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addSubmitFieldPermissionError(
             100,
             "My custom field",
@@ -188,7 +189,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasPermissionErrorsWhenNotEditable(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addUpdateFieldPermissionError(
             100,
             "My custom field",
@@ -210,7 +211,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasErrorWhenUserCanNotSubmitInTeam(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->userCanNotSubmitInTeam($this->tracker);
 
         $presenter = TrackerErrorPresenter::fromTracker(
@@ -227,7 +228,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasErrorSemanticStatusErrorWhenStatusMissingInTeam(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addMissingSemanticInTeamErrors(
             [TrackerReferenceStub::withId(1), TrackerReferenceStub::withId(2), TrackerReferenceStub::withId(3)]
         );
@@ -246,8 +247,8 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasErrorSemanticStatusErrorWhenStatusFieldNotFound(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
-        $errors_collector->addSemanticNoStatusFieldError(1);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
+        $errors_collector->addSemanticNoStatusFieldError(TrackerReferenceStub::withId(1));
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,
@@ -263,7 +264,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItHasErrorSemanticStatusErrorWhenStatusMissingValues(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $errors_collector->addMissingValueInSemantic(['On going'], [TrackerReferenceStub::withId(1)]);
 
         $presenter = TrackerErrorPresenter::fromTracker(
@@ -280,7 +281,7 @@ final class TrackerErrorPresenterTest extends TestCase
 
     public function testItDoesNotHaveAnyError(): void
     {
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
 
         $presenter = TrackerErrorPresenter::fromTracker(
             $this->gatherer,

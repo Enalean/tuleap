@@ -31,6 +31,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyUserCanSubmitStub;
 
 final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -58,7 +59,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->user_identifier = UserIdentifierStub::buildGenericUser();
-        $this->error_collector = new ConfigurationErrorsCollector(false);
+        $this->error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
 
         $this->teams = TeamProjectsCollectionBuilder::withProjects(
             ProjectReferenceStub::withId(103),
@@ -223,7 +224,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->user_identifier,
             $this->error_collector
         );
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $collection->canUserSubmitAnArtifactInAllTrackers(
                 $this->user_identifier,

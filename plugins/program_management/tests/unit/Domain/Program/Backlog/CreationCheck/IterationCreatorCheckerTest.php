@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class IterationCreatorCheckerTest extends TestCase
@@ -95,7 +96,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -109,7 +110,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 $this->tracker,
                 $this->program,
                 TeamProjectsCollectionBuilder::withEmptyTeams(),
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -124,7 +125,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -141,7 +142,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -154,7 +155,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );
@@ -169,7 +170,7 @@ final class IterationCreatorCheckerTest extends TestCase
                 $this->tracker,
                 $this->program,
                 $this->teams,
-                new ConfigurationErrorsCollector(true),
+                new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true),
                 $this->user_identifier
             )
         );

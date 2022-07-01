@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerS
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -105,7 +106,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $retriever,
             $teams,
             $user_identifier,
-            new ConfigurationErrorsCollector(false)
+            new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false)
         );
         $this->source_trackers = SourceTrackerCollection::fromProgramAndTeamTrackers(
             RetrieveVisibleProgramIncrementTrackerStub::withValidTracker($this->timebox_program_tracker),
@@ -163,7 +164,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->tracker_team_02
             );
 
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertTrue(
             $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
@@ -189,7 +190,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_factory->method('getTrackerById')->willReturn($this->program_increment);
 
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
@@ -217,7 +218,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_factory->method('getTrackerById')->willReturn($this->program_increment);
 
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,
@@ -263,7 +264,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_team_01
         );
 
-        $configuration_errors = new ConfigurationErrorsCollector(true);
+        $configuration_errors = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         self::assertFalse(
             $this->verifier->isStatusWellConfigured(
                 $this->program_increment_tracker,

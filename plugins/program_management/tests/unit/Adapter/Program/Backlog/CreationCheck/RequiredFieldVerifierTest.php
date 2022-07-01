@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyFieldPermissionsStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 
 final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -130,7 +131,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             TrackerReferenceStub::fromTracker($tracker),
             TrackerReferenceStub::fromTracker($other_tracker_with_no_required_field)
         );
-        $errors_collector = new ConfigurationErrorsCollector(false);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $trackers         = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $this->teams, $this->user, $errors_collector);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls(
             $tracker,
@@ -180,7 +181,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $retriever        = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(
             TrackerReferenceStub::fromTracker($tracker)
         );
-        $errors_collector = new ConfigurationErrorsCollector(true);
+        $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);
         $trackers         = TrackerCollection::buildRootPlanningMilestoneTrackers($retriever, $teams, $this->user, $errors_collector);
         $this->tracker_factory->method('getTrackerById')->willReturnOnConsecutiveCalls($tracker);
 

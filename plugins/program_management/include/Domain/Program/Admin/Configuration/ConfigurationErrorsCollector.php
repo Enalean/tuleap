@@ -21,12 +21,12 @@
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
 final class ConfigurationErrorsCollector
 {
-    private bool $should_collect_all_issues;
     /**
      * @var WorkFlowErrorPresenter[]
      */
@@ -88,10 +88,14 @@ final class ConfigurationErrorsCollector
      */
     private array $no_sprint_planning = [];
 
+    /**
+     * @var int[]
+     */
+    private array $teams_with_error = [];
 
-    public function __construct(bool $should_collect_all_issues)
+
+    public function __construct(private VerifyIsTeam $verify_is_team, private bool $should_collect_all_issues)
     {
-        $this->should_collect_all_issues = $should_collect_all_issues;
     }
 
     public function shouldCollectAllIssues(): bool
@@ -112,58 +116,67 @@ final class ConfigurationErrorsCollector
             $semantic_short_name,
             $potential_trackers_in_error
         );
+        $this->addTeamsInErrorIfNeeded($potential_trackers_in_error);
     }
 
-    public function addRequiredFieldError(TrackerReference $tracker_reference, ProjectReference $project_reference, int $field_id, string $field_label): void
+    public function addRequiredFieldError(TrackerReference $tracker, ProjectReference $project, int $field_id, string $field_label): void
     {
-        $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker_reference, $project_reference);
+        $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker, $project);
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function addWorkflowTransitionRulesError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
+    public function addWorkflowTransitionRulesError(TrackerReference $tracker, ProjectReference $project): void
     {
         $this->transition_rule_error[] = new WorkFlowErrorPresenter(
-            $tracker_reference,
-            $project_reference,
-            '/plugins/tracker/workflow/' . urlencode((string) $tracker_reference->getId()) . '/transitions'
+            $tracker,
+            $project,
+            '/plugins/tracker/workflow/' . urlencode((string) $tracker->getId()) . '/transitions'
         );
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function addWorkflowTransitionDateRulesError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
+    public function addWorkflowTransitionDateRulesError(TrackerReference $tracker, ProjectReference $project): void
     {
         $this->transition_rule_date_error[] = new WorkFlowErrorPresenter(
-            $tracker_reference,
-            $project_reference,
-            '/plugins/tracker/?tracker=' . urlencode((string) $tracker_reference->getId()) . '&func=admin-workflow'
+            $tracker,
+            $project,
+            '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-workflow'
         );
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function addWorkflowDependencyError(TrackerReference $tracker_reference, ProjectReference $project_reference): void
+    public function addWorkflowDependencyError(TrackerReference $tracker, ProjectReference $project): void
     {
         $this->field_dependency_error[] = new WorkFlowErrorPresenter(
-            $tracker_reference,
-            $project_reference,
-            '/plugins/tracker/?tracker=' . urlencode((string) $tracker_reference->getId()) . '&func=admin-dependencies'
+            $tracker,
+            $project,
+            '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-dependencies'
         );
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project_reference): void
+    public function addSubmitFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project_reference);
+        $this->non_submittable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project);
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project_reference): void
+    public function addUpdateFieldPermissionError(int $field_id, string $label, TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project_reference);
+        $this->non_updatable_fields[] = new FieldsPermissionErrorPresenter($field_id, $label, $tracker, $project);
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function userCanNotSubmitInTeam(TrackerReference $team_tracker_id): void
+    public function userCanNotSubmitInTeam(TrackerReference $team_tracker): void
     {
-        $this->team_tracker_id_errors[] = $team_tracker_id;
+        $this->team_tracker_id_errors[] = $team_tracker;
+        $this->addTeamInErrorIfNeeded($team_tracker);
     }
 
-    public function addSemanticNoStatusFieldError(int $tracker_id): void
+    public function addSemanticNoStatusFieldError(TrackerReference $tracker): void
     {
-        $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($tracker_id);
+        $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($tracker->getId());
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
     /**
@@ -172,6 +185,7 @@ final class ConfigurationErrorsCollector
     public function addMissingSemanticInTeamErrors(array $trackers): void
     {
         $this->status_missing_in_teams = $trackers;
+        $this->addTeamsInErrorIfNeeded($trackers);
     }
 
     /**
@@ -180,27 +194,32 @@ final class ConfigurationErrorsCollector
     public function addMissingValueInSemantic(array $missing_values, array $trackers): void
     {
         $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $trackers);
+        $this->addTeamsInErrorIfNeeded($trackers);
     }
 
-    public function addTitleHasIncorrectType(string $semantic_title_url, string $tracker_name, string $project_name, string $field_name): void
+    public function addTitleHasIncorrectType(string $semantic_title_url, TrackerReference $tracker, string $project_name, string $field_name): void
     {
-        $this->title_has_incorrect_type_error[] =  new TitleHasIncorrectTypePresenter($semantic_title_url, $tracker_name, $project_name, $field_name);
+        $this->title_has_incorrect_type_error[] = new TitleHasIncorrectTypePresenter($semantic_title_url, $tracker->getLabel(), $project_name, $field_name);
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
 
-    public function addMissingFieldArtifactLink(string $field_administration_url, string $tracker_name, string $project_name): void
+    public function addMissingFieldArtifactLink(string $field_administration_url, TrackerReference $tracker, string $project_name): void
     {
-        $this->missing_artifact_link[] =  new MissingArtifactLinkFieldPresenter($field_administration_url, $tracker_name, $project_name);
+        $this->missing_artifact_link[] = new MissingArtifactLinkFieldPresenter($field_administration_url, $tracker->getLabel(), $project_name);
+        $this->addTeamInErrorIfNeeded($tracker);
     }
 
-    public function addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReference $project_reference): void
+    public function addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReference $project): void
     {
-        $this->no_milestone_planning[] = new TeamHasNoPlanningPresenter($project_reference);
+        $this->no_milestone_planning[]             = new TeamHasNoPlanningPresenter($project);
+        $this->teams_with_error[$project->getId()] = $project->getId();
     }
 
     public function addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReference $project): void
     {
-        $this->no_sprint_planning[] = new TeamHasNoPlanningPresenter($project);
+        $this->no_sprint_planning[]                = new TeamHasNoPlanningPresenter($project);
+        $this->teams_with_error[$project->getId()] = $project->getId();
     }
 
     public function hasError(): bool
@@ -340,5 +359,32 @@ final class ConfigurationErrorsCollector
     public function getNoSprintPlanning(): array
     {
         return $this->no_sprint_planning;
+    }
+
+    private function addTeamInErrorIfNeeded(TrackerReference $tracker): void
+    {
+        if ($this->verify_is_team->isATeam($tracker->getProjectId())) {
+            $this->teams_with_error[$tracker->getProjectId()] = $tracker->getProjectId();
+        }
+    }
+
+    /**
+     * @param TrackerReference[] $trackers
+     */
+    private function addTeamsInErrorIfNeeded(array $trackers): void
+    {
+        foreach ($trackers as $tracker) {
+            if ($this->verify_is_team->isATeam($tracker->getProjectId())) {
+                $this->teams_with_error[$tracker->getProjectId()] = $tracker->getProjectId();
+            }
+        }
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getTeamsWithError(): array
+    {
+        return $this->teams_with_error;
     }
 }

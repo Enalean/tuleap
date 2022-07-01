@@ -30,14 +30,15 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamPr
 final class TeamsPresenterBuilder
 {
     /**
+     * @params int[] $teams_in_error
      * @return TeamPresenter[]
      */
-    public static function buildTeamsPresenter(TeamProjectsCollection $team_collection): array
+    public static function buildTeamsPresenter(TeamProjectsCollection $team_collection, array $teams_in_error): array
     {
         $teams_presenter = [];
 
         foreach ($team_collection->getTeamProjects() as $team) {
-            $teams_presenter[] = new TeamPresenter($team);
+            $teams_presenter[] = new TeamPresenter($team, in_array($team->getId(), $teams_in_error, true));
         }
 
         return $teams_presenter;

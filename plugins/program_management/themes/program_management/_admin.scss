@@ -66,8 +66,12 @@
     text-align: center;
 }
 
-.program-management-admin-remove-teams-open-modal-button {
+.program-management-admin-action-button {
     margin: 0 0 0 auto;
+}
+
+.program-management-admin-action-synchronize-button {
+    margin: 0 var(--tlp-small-spacing) 0 0;
 }
 
 .program-management-error-rest-not-show {

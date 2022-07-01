@@ -34,7 +34,7 @@ final class TeamPresenter
     public string $url;
     public string $project_icon;
 
-    public function __construct(ProjectReference $team)
+    public function __construct(ProjectReference $team, public bool $has_configuration_error)
     {
         $this->id           = $team->getId();
         $this->public_name  = $team->getProjectLabel();

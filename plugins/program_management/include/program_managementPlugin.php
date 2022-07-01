@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Dashboard\Project\DisplayCreatedProjectModalPresenter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -238,7 +239,7 @@ require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class program_managementPlugin extends Plugin implements PluginWithService
+final class program_managementPlugin extends Plugin implements PluginWithService, \Tuleap\Config\PluginWithConfigKeys
 {
     use PluginAddMissingServiceTrait;
 
@@ -651,7 +652,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     public function canSubmitNewArtifact(CanSubmitNewArtifact $can_submit_new_artifact): void
     {
         $handler          = $this->getCanSubmitNewArtifactHandler();
-        $errors_collector = new ConfigurationErrorsCollector(false);
+        $errors_collector = new ConfigurationErrorsCollector(new TeamDao(), false);
         $handler->handle(CanSubmitNewArtifactEventProxy::buildFromEvent($can_submit_new_artifact), $errors_collector);
     }
 
@@ -1412,5 +1413,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 Tracker_ArtifactFactory::instance(),
             )
         );
+    }
+
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(\Tuleap\ProgramManagement\Adapter\FeatureFlagEnableTeamJoinTrain::class);
     }
 }
