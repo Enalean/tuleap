@@ -18,16 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201910151454_create_modal_new_layout_table extends ForgeUpgrade_Bucket //phpcs:ignore
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b201910151454_create_modal_new_layout_table extends \Tuleap\ForgeUpgrade\Bucket
 {
     public function description(): string
     {
         return 'Create plugin_tracker_new_layout_modal_user table.';
-    }
-
-    public function preUp(): void
-    {
-        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
     public function up(): void
@@ -38,14 +34,12 @@ class b201910151454_create_modal_new_layout_table extends ForgeUpgrade_Bucket //
 
     private function createTable(): void
     {
-        $sql = 'CREATE TABLE IF NOT EXISTS plugin_tracker_new_layout_modal_user (
+        $this->api->createTable(
+            'plugin_tracker_new_layout_modal_user',
+            'CREATE TABLE IF NOT EXISTS plugin_tracker_new_layout_modal_user (
                     user_id INT(11) PRIMARY KEY
-                ) ENGINE=InnoDB';
-
-        $res = $this->db->dbh->exec($sql);
-        if ($res === false) {
-            $this->rollBackOnError('An error occured while adding plugin_tracker_new_layout_modal_user table.');
-        }
+                ) ENGINE=InnoDB'
+        );
     }
 
     private function addAllExistingUserIds(): void
@@ -53,17 +47,8 @@ class b201910151454_create_modal_new_layout_table extends ForgeUpgrade_Bucket //
         $sql = "INSERT INTO plugin_tracker_new_layout_modal_user (user_id)
                 SELECT DISTINCT user_id
                 FROM user
-                WHERE user_id >= 100";
+                WHERE user_id >= 100 AND user_id NOT IN (SELECT user_id FROM plugin_tracker_new_layout_modal_user)";
 
-        $res = $this->db->dbh->exec($sql);
-        if ($res === false) {
-            $this->rollBackOnError('An error occured while adding user ids.');
-        }
-    }
-
-    private function rollBackOnError($message): void
-    {
-        $this->db->dbh->rollBack();
-        throw new \Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException($message);
+        $this->api->dbh->exec($sql);
     }
 }
