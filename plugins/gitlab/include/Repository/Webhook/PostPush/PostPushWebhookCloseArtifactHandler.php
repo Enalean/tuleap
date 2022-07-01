@@ -32,6 +32,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
@@ -143,20 +145,51 @@ class PostPushWebhookCloseArtifactHandler
                 return;
             }
 
+            $committer_username   = $this->getUserClosingTheArtifactFromGitlabWebhook($post_push_commit_webhook_data);
+            $closing_comment_body = PostPushTuleapArtifactCommentBuilder::buildComment(
+                $committer_username->getName(),
+                $post_push_commit_webhook_data,
+                $tuleap_reference,
+                $gitlab_repository_integration,
+                $artifact
+            );
+
+            $no_semantic_comment = NewComment::fromParts(
+                sprintf(
+                    '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+                    $committer_username->getName()
+                ),
+                CommentFormatIdentifier::buildCommonMark(),
+                $tracker_workflow_user,
+                (new \DateTimeImmutable())->getTimestamp(),
+                []
+            );
+
             $status_semantic = $this->semantic_status_factory->getByTracker($artifact->getTracker());
 
             $this->artifact_updater->closeTuleapArtifact(
                 $artifact,
                 $tracker_workflow_user,
                 $post_push_commit_webhook_data,
-                $tuleap_reference,
                 $status_semantic,
-                $gitlab_repository_integration
+                $closing_comment_body,
+                $no_semantic_comment,
             );
         } catch (ArtifactNotFoundException $e) {
             $this->logger->error("Artifact #{$tuleap_reference->getId()} not found");
         } catch (NoPossibleValueException $e) {
             $this->logger->error("Artifact #{$tuleap_reference->getId()} cannot be closed. " . $e->getMessage());
         }
+    }
+
+    private function getUserClosingTheArtifactFromGitlabWebhook(
+        PostPushCommitWebhookData $commit,
+    ): UserClosingTheArtifact {
+        $tuleap_user = $this->user_manager->getUserByEmail($commit->getAuthorEmail());
+
+        if (! $tuleap_user) {
+            return UserClosingTheArtifact::fromUsername($commit->getAuthorName());
+        }
+        return UserClosingTheArtifact::fromUser($tuleap_user);
     }
 }

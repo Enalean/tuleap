@@ -54,6 +54,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private const POST_PUSH_LOG_PREFIX  = '|  |  |_ ';
     private const COMMITTER_EMAIL       = 'john-snow@example.com';
     private const COMMITTER_USERNAME    = 'jsnow';
+    private const COMMITTER_FULL_NAME   = 'John Snow';
     private const DONE_BIND_VALUE_ID    = 506;
     private const GITLAB_INTEGRATION_ID = 1;
     private const PROJECT_ID            = 101;
@@ -118,10 +119,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ChangesetTestBuilder::aChangeset('7290')->build()
         );
 
-        $this->user_manager->method('getUserByEmail')->willReturn(
-            UserTestBuilder::aUser()->withUserName(self::COMMITTER_USERNAME)->build()
-        );
-
         $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->workflow_user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
         $tracker             = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
@@ -142,7 +139,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             self::MASTER_BRANCH_NAME,
             1608110510,
             self::COMMITTER_EMAIL,
-            "John Snow"
+            self::COMMITTER_FULL_NAME
         );
 
         $gitlab_integration = new GitlabRepositoryIntegration(
@@ -160,7 +157,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             new PostPushCommitArtifactUpdater(
                 $this->createStub(StatusValueRetriever::class),
                 $this->done_value_retriever,
-                $this->user_manager,
                 $this->logger,
                 $this->comment_creator,
             ),
@@ -183,6 +179,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
+        $this->mockCommitterMatchingTuleapUser();
         $this->mockThereIsAStatusField();
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn(
             $this->getBindValue()
@@ -307,9 +304,49 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
+        $this->mockCommitterMatchingTuleapUser();
         $this->status_semantic->method('getField')->willReturn(null);
 
         $this->handleArtifactClosure();
+
+        $message = sprintf(
+            '@%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+            self::COMMITTER_USERNAME
+        );
+
+        $new_comment = $this->comment_creator->getNewComment();
+        if (! $new_comment) {
+            throw new \Exception('Expected to receive a new comment');
+        }
+        self::assertSame($message, $new_comment->getBody());
+        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+    }
+
+    public function testItFallsBackOnGitLabCommitterIfItCannotMatchTuleapUser(): void
+    {
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->mockGitLabRepositoryHasCredentials();
+        $this->mockGitlabProjectDefaultBranch();
+        $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
+        $this->status_semantic->method('getField')->willReturn(null);
+
+        $this->handleArtifactClosure();
+
+        $message = sprintf(
+            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+            self::COMMITTER_FULL_NAME
+        );
+
+        $new_comment = $this->comment_creator->getNewComment();
+        if (! $new_comment) {
+            throw new \Exception('Expected to receive a new comment');
+        }
+        self::assertSame($message, $new_comment->getBody());
+        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
     }
 
     public function testItLogsErrorIfNoValidValue(): void
@@ -319,6 +356,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
+        $this->mockCommitterMatchingTuleapUser();
         $this->mockThereIsAStatusField();
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willThrowException(
             new NoPossibleValueException()
@@ -389,6 +427,13 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
                     self::MASTER_BRANCH_NAME
                 )
             );
+    }
+
+    private function mockCommitterMatchingTuleapUser(): void
+    {
+        $this->user_manager->method('getUserByEmail')->willReturn(
+            UserTestBuilder::aUser()->withUserName(self::COMMITTER_USERNAME)->build()
+        );
     }
 
     private function mockThereIsAStatusField(): void

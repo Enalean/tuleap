@@ -27,14 +27,8 @@ use Psr\Log\LoggerInterface;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_NoChangeException;
-use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\CreateCommentOnlyChangeset;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
@@ -42,14 +36,12 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
-use UserManager;
 
 final class PostPushCommitArtifactUpdater
 {
     public function __construct(
         private StatusValueRetriever $status_value_retriever,
         private DoneValueRetriever $done_value_retriever,
-        private UserManager $user_manager,
         private LoggerInterface $logger,
         private CreateCommentOnlyChangeset $comment_creator,
     ) {
@@ -62,9 +54,9 @@ final class PostPushCommitArtifactUpdater
         Artifact $artifact,
         PFUser $tracker_workflow_user,
         PostPushCommitWebhookData $commit,
-        WebhookTuleapReference $tuleap_reference,
         \Tracker_Semantic_Status $status_semantic,
-        GitlabRepositoryIntegration $gitlab_repository_integration,
+        string $closing_comment_body,
+        NewComment $no_semantic_comment,
     ): void {
         try {
             if (! $artifact->isOpen()) {
@@ -76,7 +68,7 @@ final class PostPushCommitArtifactUpdater
 
             $status_field = $status_semantic->getField();
             if ($status_field === null) {
-                $result = $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
+                $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
                 if (Result::isErr($result)) {
                     $this->logger->error((string) $result->error);
                 }
@@ -86,7 +78,7 @@ final class PostPushCommitArtifactUpdater
             try {
                 $closed_value = $this->getClosedValue($artifact, $tracker_workflow_user);
             } catch (SemanticStatusClosedValueNotFoundException $e) {
-                $result = $this->addTuleapArtifactCommentNoSemanticDefined($artifact, $tracker_workflow_user, $commit);
+                $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
                 if (Result::isErr($result)) {
                     $this->logger->error((string) $result->error);
                 }
@@ -97,17 +89,7 @@ final class PostPushCommitArtifactUpdater
                 $status_field->getId() => $status_field->getFieldData($closed_value->getLabel()),
             ];
 
-            $new_followups = $artifact->createNewChangeset(
-                $fields_data,
-                PostPushTuleapArtifactCommentBuilder::buildComment(
-                    $this->getUserClosingTheArtifactFromGitlabWebhook($commit)->getName(),
-                    $commit,
-                    $tuleap_reference,
-                    $gitlab_repository_integration,
-                    $artifact
-                ),
-                $tracker_workflow_user
-            );
+            $new_followups = $artifact->createNewChangeset($fields_data, $closing_comment_body, $tracker_workflow_user);
 
             if ($new_followups === null) {
                 $this->logger->error("No new comment was created");
@@ -132,39 +114,5 @@ final class PostPushCommitArtifactUpdater
         }
 
         return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker_workflow_user, $artifact);
-    }
-
-    /**
-     * @return Ok<null> | Err<Fault>
-     */
-    private function addTuleapArtifactCommentNoSemanticDefined(
-        Artifact $artifact,
-        PFUser $tracker_workflow_user,
-        PostPushCommitWebhookData $commit,
-    ): Ok|Err {
-        $committer           = $this->getUserClosingTheArtifactFromGitlabWebhook($commit);
-        $no_semantic_comment = sprintf(
-            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-            $committer->getName()
-        );
-
-        $comment = NewComment::fromParts(
-            $no_semantic_comment,
-            CommentFormatIdentifier::buildCommonMark(),
-            $tracker_workflow_user,
-            (new \DateTimeImmutable())->getTimestamp(),
-            []
-        );
-        return $this->comment_creator->createCommentOnlyChangeset($comment, $artifact)->map(static fn() => null);
-    }
-
-    private function getUserClosingTheArtifactFromGitlabWebhook(PostPushCommitWebhookData $commit): UserClosingTheArtifact
-    {
-        $tuleap_user = $this->user_manager->getUserByEmail($commit->getAuthorEmail());
-
-        if (! $tuleap_user) {
-            return UserClosingTheArtifact::fromUsername($commit->getAuthorName());
-        }
-        return UserClosingTheArtifact::fromUser($tuleap_user);
     }
 }
