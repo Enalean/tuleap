@@ -13,7 +13,7 @@ specifiers:
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
   '@types/sprintf-js': ^1.1.2
-  '@vue/test-utils': ^2.0.0-rc.17
+  '@vue/test-utils': ^2.0.2
   '@vueform/multiselect': ^2.3.3
   docx: ^7.3.0
   sprintf-js: ^1.1.2
@@ -42,7 +42,7 @@ devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
   '@types/sprintf-js': 1.1.2
-  '@vue/test-utils': 2.0.0-rc.17_vue@3.2.31
+  '@vue/test-utils': 2.0.2_vue@3.2.31
 
 packages:
 
@@ -183,8 +183,8 @@ packages:
     resolution: {integrity: sha512-ymN2pj6zEjiKJZbrf98UM2pfDd6F2H7ksKw7NDt/ZZ1fh5Ei39X5tABugtT03ZRlWd9imccoK0hE8hpjpU7irQ==}
     dev: false
 
-  /@vue/test-utils/2.0.0-rc.17_vue@3.2.31:
-    resolution: {integrity: sha512-7LHZKsFRV/HqDoMVY+cJamFzgHgsrmQFalROHC5FMWrzPzd+utG5e11krj1tVsnxYufGA2ABShX4nlcHXED+zQ==}
+  /@vue/test-utils/2.0.2_vue@3.2.31:
+    resolution: {integrity: sha512-E2P4oXSaWDqTZNbmKZFVLrNN/siVN78YkEqs7pHryWerrlZR9bBFLWdJwRoguX45Ru6HxIflzKl4vQvwRMwm5g==}
     peerDependencies:
       vue: ^3.0.1
     dependencies:

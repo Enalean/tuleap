@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../build-system-configurator",
-    "@vue/test-utils": "^2.0.0-rc.17"
+    "@vue/test-utils": "^2.0.0"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",

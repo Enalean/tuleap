@@ -25,7 +25,7 @@
     "@tuleap/plugin-tracker-rest-api-types": "link:../tracker/scripts/lib/rest-api-types",
     "@tuleap/po-gettext-plugin": "link:../../lib/frontend/po-gettext-plugin",
     "@tuleap/vuex-store-wrapper-jest": "link:../../lib/frontend/vuex-store-wrapper-jest",
-    "@vue/test-utils": "^2.0.0-rc.17",
+    "@vue/test-utils": "^2.0.2",
     "vue-loader": "^17.0.0"
   },
   "scripts": {

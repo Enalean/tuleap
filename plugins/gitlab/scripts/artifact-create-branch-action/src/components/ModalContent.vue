@@ -54,7 +54,7 @@
                 </label>
                 <select
                     id="artifact-create-gitlab-branch-select-integration"
-                    required="required"
+                    required
                     aria-required="true"
                     v-model="selected_integration"
                 >
@@ -81,7 +81,7 @@
                     type="text"
                     id="artifact-create-gitlab-branch-reference"
                     placeholder="main"
-                    required="required"
+                    required
                     aria-required="true"
                     v-model="reference"
                 />

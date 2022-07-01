@@ -7,7 +7,7 @@ specifiers:
   '@tuleap/project-privacy-helper': link:../project-privacy-helper
   '@tuleap/tlp': link:../../../src/themes/tlp
   '@tuleap/tlp-popovers': link:../tlp-popovers
-  '@vue/test-utils': ^2.0.0-rc.17
+  '@vue/test-utils': ^2.0.0
   '@vueuse/core': ^8.7.3
   vue: ^3.2.26
   vue-dompurify-html: ^3.0.0-beta.3
@@ -24,7 +24,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
-  '@vue/test-utils': 2.0.0-rc.17_vue@3.2.26
+  '@vue/test-utils': 2.0.0_vue@3.2.26
 
 packages:
 
@@ -123,8 +123,8 @@ packages:
     resolution: {integrity: sha512-vPV6Cq+NIWbH5pZu+V+2QHE9y1qfuTq49uNWw4f7FDEeZaDU2H2cx5jcUZOAKW7qTrUS4k6qZPbMy1x4N96nbA==}
     dev: false
 
-  /@vue/test-utils/2.0.0-rc.17_vue@3.2.26:
-    resolution: {integrity: sha512-7LHZKsFRV/HqDoMVY+cJamFzgHgsrmQFalROHC5FMWrzPzd+utG5e11krj1tVsnxYufGA2ABShX4nlcHXED+zQ==}
+  /@vue/test-utils/2.0.0_vue@3.2.26:
+    resolution: {integrity: sha512-zL5kygNq7hONrO1CzaUGprEAklAX+pH8J1MPMCU3Rd2xtSYkZ+PmKU3oEDRg8VAGdL5lNJHzDgrud5amFPtirw==}
     peerDependencies:
       vue: ^3.0.1
     dependencies:

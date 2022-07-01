@@ -13,6 +13,7 @@
         "moduleResolution": "Node",
         "skipLibCheck": true,
         "types": [],
-        "incremental": true
+        "incremental": true,
+        "jsx": "preserve"
     }
 }
