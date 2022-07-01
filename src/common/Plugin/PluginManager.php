@@ -189,7 +189,6 @@ class PluginManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->createEtc($name);
         $this->configureForgeUpgrade($name);
-        $plugin->postInstall();
 
         return $plugin;
     }

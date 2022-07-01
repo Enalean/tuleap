@@ -336,6 +336,7 @@ class PluginFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->plugin_dao->enablePlugin($plugin->getId());
         $this->retrieved_plugins['enabled'][$plugin->getId()] = $plugin;
         unset($this->retrieved_plugins['disabled'][$plugin->getId()]);
+        $plugin->postEnable();
     }
     /**
      * disabled plugin

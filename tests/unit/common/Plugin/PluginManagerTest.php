@@ -163,9 +163,6 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(\Tuleap\Markdown\ContentInterpretor::class)
         );
 
-        // plugin manager must call postInstall 1 time on plugin after its creation
-        $plugin->shouldReceive('postInstall')->once();
-
         $this->assertEquals($plugin, $pm->installPlugin('New_Plugin'));
 
         // Plugin dir was created in "/etc"
