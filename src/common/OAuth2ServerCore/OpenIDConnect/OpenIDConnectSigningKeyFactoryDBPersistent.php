@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
-class OpenIDConnectSigningKeyFactory
+final class OpenIDConnectSigningKeyFactoryDBPersistent implements OpenIDConnectSigningKeyFactory
 {
     /**
      * @var KeyFactory

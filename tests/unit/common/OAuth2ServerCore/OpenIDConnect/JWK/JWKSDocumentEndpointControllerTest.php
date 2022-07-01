@@ -26,45 +26,24 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\SigningPublicKey;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\OpenIDConnectSigningKeyFactoryStaticForTestPurposes;
 
 final class JWKSDocumentEndpointControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PUBLIC_KEY = <<<EOT
-        -----BEGIN PUBLIC KEY-----
-        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA6ffRDU/iebFRDNAQKi4h
-        ogWK4QGoPN7vOoUgrEbNX86yY4lI5cscvB74PYmmkEDLMqe2CpmcBPc1ZDbVkrFf
-        qc66FxNgjn5VOL2mbD/pSEGAqcvyujc36efrRdA8lhFxqABhfHvV4GXIOuYZYADn
-        KJVENNivLLnt4ozD4JFT1VVAwZkVRLMnRE5lPgISyhPYq5xqjiUztybi57t2kqxE
-        TleL9Qyc/moTKdyxxB7f4ujhS3yYcSzVycaz6PptOYBV3Dx9RAZwlU6/lY+HCB4q
-        PYGBVqtW4/yDPx/E6KYEkmrNcyhEBkxx6grBLupYH12a4My5EnsMeneX+qUG4Y62
-        SQGpI7fvlizeyvhd9LQQgjwTGnioDasD2CR0AfFdNcYM1V1GHJac5VaZ4So7rcat
-        zKz1tUSpNb9N8pRDFXiAL3AlVn+jk3VBSrLci3KqIXeu/bzfD3c6j4aLUtuTd2Vj
-        E29Ul3qsqGkGJZt25QsObC+tgq5JGwEbZ13p1r4ooaqBCIQJLiSjVanbtgT/eLCG
-        ybcmEtGTPrssB+tRmxSrG+CACGwAaj1ieBth9RlLG2Y/dALA0DSQpAM3erG6jNgr
-        d3Yeur7pFE6Pwf/BFMIQYFvYWdH6TpUZwUF+eP5QG3yxytmj1txf2f0J7wgNeUrv
-        8mMqxl+Rt966abyv28Dn7NcCAwEAAQ==
-        -----END PUBLIC KEY-----
-        EOT;
-
     public function testBuildsResponse(): void
     {
-        $signing_key_factory = $this->createMock(OpenIDConnectSigningKeyFactory::class);
-        $controller          = new JWKSDocumentEndpointController(
-            $signing_key_factory,
+        $controller = new JWKSDocumentEndpointController(
+            new OpenIDConnectSigningKeyFactoryStaticForTestPurposes(),
             new \DateInterval('PT30S'),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             $this->createMock(EmitterInterface::class)
         );
 
-        $signing_key_factory->method('getPublicKeys')->willReturn([SigningPublicKey::fromPEMFormat(self::PUBLIC_KEY)]);
-
         $response = $controller->handle(new NullServerRequest());
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('application/json', $response->getHeaderLine('Content-Type'));
         $this->assertEquals('max-age=30,public', $response->getHeaderLine('Cache-Control'));
-        $expected_json = '{"keys":[{"kty":"RSA","alg":"RS256","use":"sig","kid":"8dd7edd5ac158cf526babc4dd44fd569ab482081e0124739c5520b74cf36f0c9","n":"6ffRDU_iebFRDNAQKi4hogWK4QGoPN7vOoUgrEbNX86yY4lI5cscvB74PYmmkEDLMqe2CpmcBPc1ZDbVkrFfqc66FxNgjn5VOL2mbD_pSEGAqcvyujc36efrRdA8lhFxqABhfHvV4GXIOuYZYADnKJVENNivLLnt4ozD4JFT1VVAwZkVRLMnRE5lPgISyhPYq5xqjiUztybi57t2kqxETleL9Qyc_moTKdyxxB7f4ujhS3yYcSzVycaz6PptOYBV3Dx9RAZwlU6_lY-HCB4qPYGBVqtW4_yDPx_E6KYEkmrNcyhEBkxx6grBLupYH12a4My5EnsMeneX-qUG4Y62SQGpI7fvlizeyvhd9LQQgjwTGnioDasD2CR0AfFdNcYM1V1GHJac5VaZ4So7rcatzKz1tUSpNb9N8pRDFXiAL3AlVn-jk3VBSrLci3KqIXeu_bzfD3c6j4aLUtuTd2VjE29Ul3qsqGkGJZt25QsObC-tgq5JGwEbZ13p1r4ooaqBCIQJLiSjVanbtgT_eLCGybcmEtGTPrssB-tRmxSrG-CACGwAaj1ieBth9RlLG2Y_dALA0DSQpAM3erG6jNgrd3Yeur7pFE6Pwf_BFMIQYFvYWdH6TpUZwUF-eP5QG3yxytmj1txf2f0J7wgNeUrv8mMqxl-Rt966abyv28Dn7Nc","e":"AQAB"}]}';
+        $expected_json = '{"keys":[{"kty":"RSA","alg":"RS256","use":"sig","kid":"' . OpenIDConnectSigningKeyFactoryStaticForTestPurposes::SIGNING_PUBLIC_KEY_FINGERPRINT . '","n":"pVp45DC1lniS5l9yiR81OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo_ARJnu1W_KVNNqxBNGno1oNLgV3GkHULBV-D4NDaX4064I0k1dk0HZBd8OG8QB0dwFoNFZ19SNrsEyq4xFn3CIysllfFE6GVQVht84_etmvO5-p4Dj6kUM4FO46jBXQBxSQs7ErE22m67CViu9ApDjZ1W9e7mHItPZfw0ldH6Y6-ZXfz8SBs_lblm_1BST1C7l_5vQtjStgHmiGlVL6CRIzyxDCJKYKP1r0FrwUEnMJEU1h-MyMSKPP9gzln8-icbhSvQF_eX6oZCfl-ibrC_nRZf2Q","e":"AQAB"}]}';
         $this->assertJsonStringEqualsJsonString($expected_json, $response->getBody()->getContents());
     }
 }

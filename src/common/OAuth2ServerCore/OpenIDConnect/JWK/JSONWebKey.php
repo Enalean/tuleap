@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2ServerCore\OpenIDConnect\JWK;
 
-use Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken\SigningPublicKey;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\SigningPublicKey;
 
 /**
  * @psalm-immutable

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2ServerCore\OpenIDConnect\IDToken;
+namespace Tuleap\OAuth2ServerCore\OpenIDConnect;
 
 use Lcobucci\JWT\Builder as BuilderInterface;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -29,6 +29,9 @@ use Lcobucci\JWT\Token\Builder;
 
 final class JWTBuilderFactory
 {
+    // See https://tools.ietf.org/html/rfc7515#section-4.1.4
+    public const HEADER_KEY_ID = 'kid';
+
     public function getBuilder(): BuilderInterface
     {
         return new Builder(new JoseEncoder(), ChainedFormatter::default());
