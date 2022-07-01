@@ -82,6 +82,20 @@ class SVN_TokenHandler
         $this->token_dao->deleteSVNTokensForUser((int) $user->getId(), $svn_token_ids);
     }
 
+    public function isTokenValid(PFUser $user, ConcealedString $token, string $ip_address): bool
+    {
+        $existing_svn_tokens = $this->getSVNTokensForUser($user);
+
+        foreach ($existing_svn_tokens as $existing_svn_token) {
+            if ($this->password_handler->verifyHashPassword($token, $existing_svn_token->getToken())) {
+                $this->token_dao->updateTokenLastUsage($existing_svn_token->getId(), $ip_address, (new DateTimeImmutable())->getTimestamp());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function generateRandomToken(): ConcealedString
     {
         return new ConcealedString($this->random_number_generator->getNumber());

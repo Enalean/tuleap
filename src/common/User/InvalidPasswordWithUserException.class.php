@@ -27,7 +27,7 @@ class User_InvalidPasswordWithUserException extends User_LoginException
     {
         $this->user = $user;
         if ($message === '') {
-            $message = $GLOBALS['Language']->getText('include_session', 'invalid_pwd');
+            $message = _('Invalid Password Or User Name');
         }
         parent::__construct($message);
     }

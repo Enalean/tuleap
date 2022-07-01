@@ -113,12 +113,10 @@ if (defined('NUSOAP')) {
  *
  * @param string $loginname the user name (login)
  * @param string $passwd the password associated with the loginname $loginname
- * @return array the SOAPSession if the loginname and the password are matching and if the version of the API is matching, a soap fault otherwise
+ * @return array|SoapFault the SOAPSession if the loginname and the password are matching and if the version of the API is matching, a soap fault otherwise
  */
     function login($loginname, $passwd)
     {
-        global $Language;
-
         $user_manager = UserManager::instance();
         $user_manager->login($loginname, new \Tuleap\Cryptography\ConcealedString($passwd));
         $current_user = $user_manager->getCurrentUserWithLoggedInInformation();
@@ -130,7 +128,7 @@ if (defined('NUSOAP')) {
             ];
             return $return;
         } else {
-            return new SoapFault(LOGIN_FAULT, $loginname . ' : ' . $Language->getText('include_session', 'invalid_pwd'), 'login');
+            return new SoapFault(LOGIN_FAULT, $loginname . ' : ' . _('Invalid Password Or User Name'), 'login');
         }
     }
 

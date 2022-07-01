@@ -83,6 +83,7 @@ use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
@@ -147,6 +148,9 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager;
+use Tuleap\SVNCore\AccessControl\SVNPasswordBasedAuthenticationMethod;
+use Tuleap\SVNCore\AccessControl\SVNProjectAccessController;
+use Tuleap\SVNCore\AccessControl\SVNTokenBasedAuthenticationMethod;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
@@ -173,6 +177,7 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Account\UserWellKnownChangePasswordController;
+use Tuleap\User\PasswordVerifier;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\AvatarGenerator;
 use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
@@ -187,6 +192,7 @@ use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
+use User_PasswordExpirationChecker;
 
 class RouteCollector
 {
@@ -942,6 +948,39 @@ class RouteCollector
         );
     }
 
+    public static function postSVNUserProjectAuthorization(): SVNProjectAccessController
+    {
+        $logger           = \BackendLogger::getDefaultLogger();
+        $event_manager    = EventManager::instance();
+        $user_manager     = \UserManager::instance();
+        $password_handler = new \StandardPasswordHandler();
+        return new SVNProjectAccessController(
+            HTTPFactoryBuilder::responseFactory(),
+            $logger,
+            $user_manager,
+            ProjectManager::instance(),
+            new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager),
+            [
+                new SVNTokenBasedAuthenticationMethod(
+                    new SVN_TokenHandler(new \SVN_TokenDao(), new \RandomNumberGenerator(), $password_handler),
+                    $logger
+                ),
+                new SVNPasswordBasedAuthenticationMethod(
+                    new \User_LoginManager(
+                        $event_manager,
+                        $user_manager,
+                        new PasswordVerifier($password_handler),
+                        new User_PasswordExpirationChecker(),
+                        $password_handler
+                    ),
+                    $logger
+                ),
+            ],
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware('svn_auth_operation')
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [self::class, 'getSlash']);
@@ -1108,6 +1147,8 @@ class RouteCollector
         );
 
         $r->post('/collect-frontend-errors', [self::class, 'postFrontendErrorCollectorController']);
+
+        $r->post('/svn-project-auth', [self::class, 'postSVNUserProjectAuthorization']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

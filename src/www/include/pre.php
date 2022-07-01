@@ -156,7 +156,6 @@ if (! IS_SCRIPT) {
 $feedback = ''; // Initialize global var
 
 $request = HTTPRequest::instance();
-$request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
 
 //Language
 if (! ForgeConfig::get('sys_lang')) {

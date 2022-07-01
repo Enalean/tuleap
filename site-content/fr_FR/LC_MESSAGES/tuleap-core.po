@@ -1792,6 +1792,9 @@ msgstr "Adresse e-mail invalide"
 msgid "Invalid List Name"
 msgstr "Nom de liste invalide"
 
+msgid "Invalid Password Or User Name"
+msgstr "Mot de passe ou nom d'utilisateur invalide"
+
 msgid "Invalid Short Name"
 msgstr "Nom court du projet invalide"
 

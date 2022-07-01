@@ -1747,6 +1747,9 @@ msgstr "Endereço de email inválido"
 msgid "Invalid List Name"
 msgstr "Nome de Lista Inválido"
 
+msgid "Invalid Password Or User Name"
+msgstr ""
+
 msgid "Invalid Short Name"
 msgstr "Nome reduzido inválido"
 

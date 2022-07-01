@@ -21,14 +21,6 @@
 
 class HTTPRequest extends Codendi_Request
 {
-    public const HEADER_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
-    public const HEADER_REMOTE_ADDR     = 'REMOTE_ADDR';
-
-    /**
-     * @var array
-     */
-    private $trusted_proxied = [];
-
     /**
      * Constructor
      */
@@ -129,62 +121,6 @@ class HTTPRequest extends Codendi_Request
     }
 
     /**
-     * What are the IP adresses trusted to be a proxy
-     *
-     * @param array $proxies
-     */
-    public function setTrustedProxies(array $proxies)
-    {
-        foreach ($proxies as $proxy) {
-            $this->trusted_proxied[$proxy] = true;
-        }
-    }
-
-    private function isFromTrustedProxy(): bool
-    {
-        if (isset($_SERVER[self::HEADER_REMOTE_ADDR])) {
-            foreach ($this->trusted_proxied as $proxy => $nop) {
-                if (self::checkIp4($_SERVER[self::HEADER_REMOTE_ADDR], $proxy)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Compares two IPv4 addresses.
-     * In case a subnet is given, it checks if it contains the request IP.
-     *
-     * @see Symfony\Component\HttpFoundation\IpUtils @ 3.2-dev (MIT license)
-     *
-     * @param string $request_ip IPv4 address to check
-     * @param string $ip        IPv4 address or subnet in CIDR notation
-     *
-     * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet.
-     */
-    public static function checkIp4($request_ip, $ip)
-    {
-        if (false !== strpos($ip, '/')) {
-            list($address, $netmask) = explode('/', $ip, 2);
-
-            if ($netmask === '0') {
-                // Ensure IP is valid - using ip2long below implicitly validates, but we need to do it manually here
-                return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-            }
-
-            if ($netmask < 0 || $netmask > 32) {
-                return false;
-            }
-        } else {
-            $address = $ip;
-            $netmask = 32;
-        }
-
-        return 0 === substr_compare(sprintf('%032b', ip2long($request_ip)), sprintf('%032b', ip2long($address)), 0, $netmask);
-    }
-
-    /**
      * @deprecated
      */
     public function getServerUrl(): string
@@ -198,15 +134,9 @@ class HTTPRequest extends Codendi_Request
      * When run behind a reverse proxy, REMOTE_ADDR will be the IP address of the
      * reverse proxy, use this method if you want to get the actual ip address
      * of the request without having to deal with reverse-proxy or not.
-     *
-     * @return String
      */
-    public function getIPAddress()
+    public function getIPAddress(): string
     {
-        if ($this->isFromTrustedProxy() && isset($_SERVER[self::HEADER_X_FORWARDED_FOR])) {
-            return $_SERVER[self::HEADER_X_FORWARDED_FOR];
-        } else {
-            return $_SERVER[self::HEADER_REMOTE_ADDR];
-        }
+        return \Tuleap\Http\Server\IPAddressExtractor::getIPAddressFromServerParams($_SERVER);
     }
 }
