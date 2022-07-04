@@ -23,10 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+
+final class MediaWikiManagementCommandAlwaysFail implements MediaWikiManagementCommand
 {
-    /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
-     */
-    public function runInstallAndUpdate(): void;
+    public function wait(): Ok|Err
+    {
+        return Result::err(new MediaWikiManagementCommandFailure(1, 'something', 'Failed'));
+    }
 }

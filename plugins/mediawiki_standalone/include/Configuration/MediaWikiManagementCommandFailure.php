@@ -23,10 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+/**
+ * @psalm-immutable
+ */
+final class MediaWikiManagementCommandFailure
 {
     /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
+     * @psalm-param positive-int $exit_code
      */
-    public function runInstallAndUpdate(): void;
+    public function __construct(public int $exit_code, public string $process_command_line, public string $process_output)
+    {
+    }
 }

@@ -42,6 +42,7 @@ use Tuleap\MediawikiStandalone\Configuration\LocalSettingsFactory;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistToPHPFile;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiAsyncUpdateProcessor;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiManagementCommandProcessFactory;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiNewOAuth2AppBuilder;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiOAuth2AppSecretGeneratorDBStore;
 use Tuleap\MediawikiStandalone\Configuration\MediaWikiSharedSecretGeneratorForgeConfigStore;
@@ -393,7 +394,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     private function buildUpdateScriptCaller(\Psr\Log\LoggerInterface $logger): MediaWikiInstallAndUpdateScriptCaller
     {
         return new MediaWikiInstallAndUpdateScriptCaller(
-            $this->buildSettingDirectoryPath(),
+            new MediaWikiManagementCommandProcessFactory($logger, $this->buildSettingDirectoryPath()),
             $this->buildLocalSettingsInstantiator(),
             new ProjectMediaWikiServiceDAO(),
             $logger

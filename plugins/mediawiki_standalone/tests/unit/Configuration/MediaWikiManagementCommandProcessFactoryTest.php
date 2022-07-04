@@ -23,10 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+use org\bovigo\vfs\vfsStream;
+use Psr\Log\NullLogger;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class MediaWikiManagementCommandProcessFactoryTest extends TestCase
 {
-    /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
-     */
-    public function runInstallAndUpdate(): void;
+    public function testDoesNotTryToInstallIfLocalSettingsFileAlreadyExists(): void
+    {
+        $settings_directory = vfsStream::setup()->url();
+        touch($settings_directory . '/LocalSettings.php');
+        $factory = new MediaWikiManagementCommandProcessFactory(new NullLogger(), $settings_directory);
+
+        $install_command = $factory->buildInstallCommand();
+
+        self::assertTrue(Result::isOk($install_command->wait()));
+    }
 }
