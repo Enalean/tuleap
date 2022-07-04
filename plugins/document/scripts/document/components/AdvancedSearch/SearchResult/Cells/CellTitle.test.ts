@@ -52,6 +52,7 @@ describe("CellTitle", () => {
 
         const link = wrapper.find("[data-test=link]");
         expect(link.attributes().href).toBe("/path/to/file");
+        expect(link.attributes().title).toBe("Lorem");
     });
 
     it("should output a link for Wiki", () => {
@@ -77,6 +78,7 @@ describe("CellTitle", () => {
 
         const link = wrapper.find("[data-test=link]");
         expect(link.attributes().href).toBe("/plugins/docman/?group_id=101&action=show&id=123");
+        expect(link.attributes().title).toBe("Lorem");
     });
 
     it("should output a route link for Embedded", () => {
@@ -122,5 +124,6 @@ describe("CellTitle", () => {
                 item_id: "123",
             },
         });
+        expect(link.attributes().title).toBe("Lorem");
     });
 });

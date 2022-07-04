@@ -34,18 +34,25 @@
                 v-bind:class="icon_classes"
                 aria-hidden="true"
             ></i>
-            <a v-if="href" v-bind:href="href" class="document-folder-subitem-link" data-test="link">
+            <a
+                v-if="href"
+                v-bind:href="href"
+                v-bind:title="item.title"
+                class="document-folder-subitem-link"
+                data-test="link"
+            >
                 {{ item.title }}
             </a>
             <router-link
                 v-else-if="in_app_link"
                 v-bind:to="in_app_link"
+                v-bind:title="item.title"
                 class="document-folder-subitem-link"
                 data-test="router-link"
             >
                 {{ item.title }}
             </router-link>
-            <template v-else>{{ item.title }}</template>
+            <span v-else v-bind:title="item.title">{{ item.title }}</span>
         </div>
     </th>
 </template>
