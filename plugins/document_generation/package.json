@@ -25,7 +25,7 @@
     "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "link:../../lib/frontend/po-gettext-plugin",
     "@types/sprintf-js": "^1.1.2",
-    "@vue/test-utils": "^2.0.0-rc.17"
+    "@vue/test-utils": "^2.0.2"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",

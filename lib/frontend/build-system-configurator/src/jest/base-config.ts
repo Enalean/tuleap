@@ -39,6 +39,9 @@ const is_typechecking_enabled = process.env.DISABLE_TS_TYPECHECK !== "true";
 
 export const base_config = {
     testEnvironment: "jsdom",
+    testEnvironmentOptions: {
+        customExportConditions: ["node", "node-addons"],
+    },
     transform: {
         "^.+\\.vue$": "@vue/vue2-jest",
         "^.+\\.ts$": "ts-jest",
