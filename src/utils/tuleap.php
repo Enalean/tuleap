@@ -122,7 +122,7 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     ImportProjectXMLCommand::NAME,
     static function (): ImportProjectXMLCommand {
-        return new ImportProjectXMLCommand();
+        return new ImportProjectXMLCommand(\Tuleap\DB\DBFactory::getMainTuleapDBConnection());
     }
 );
 $CLI_command_collector->addCommand(

@@ -29,6 +29,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use SystemEventProcessor_Factory;
 use Tuleap\CLI\ConsoleLogger;
+use Tuleap\DB\DBConnection;
 use Tuleap\Project\Registration\RegistrationErrorException;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -41,7 +42,7 @@ class ImportProjectXMLCommand extends Command
     private const AUTHORIZED_CONFIGURATION_AUTOMAP = ['no-email'];
 
 
-    public function __construct()
+    public function __construct(private DBConnection $db_connection)
     {
         parent::__construct(self::NAME);
     }
@@ -176,6 +177,7 @@ class ImportProjectXMLCommand extends Command
             }
 
             $archive->extractFiles();
+            $this->db_connection->reconnectAfterALongRunningProcess();
 
             if ($automap) {
                 $collection_from_archive = $builder->buildWithoutEmail($archive);

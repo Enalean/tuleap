@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
 
 $application                = new Application();
-$import_project_xml_command = new ImportProjectXMLCommand();
+$import_project_xml_command = new ImportProjectXMLCommand(\Tuleap\DB\DBFactory::getMainTuleapDBConnection());
 $application->add($import_project_xml_command);
 $application->setDefaultCommand($import_project_xml_command->getName(), $is_single_command = true);
 
