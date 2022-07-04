@@ -37,6 +37,7 @@
                     id="artifact-create-git-branch-select-repository"
                     required="required"
                     aria-required="true"
+                    v-model="selected_repository"
                 >
                     <option
                         v-for="repository in repositories"
@@ -46,6 +47,23 @@
                         {{ repository.name }}
                     </option>
                 </select>
+            </div>
+            <div class="form-block">
+                <label for="artifact-create-git-branch-reference">
+                    {{ $gettext("Git reference from where the branch should be created") }}
+                    <span class="action-mandatory-information" aria-hidden="true">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="artifact-create-git-branch-reference"
+                    placeholder="main"
+                    required="required"
+                    aria-required="true"
+                    v-model="reference"
+                />
+                <p class="text-info">
+                    {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
+                </p>
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -64,17 +82,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import type { GitRepository } from "../types";
 
 let modal: Modal | null = null;
 const root_element = ref<InstanceType<typeof Element>>();
+const reference = ref("");
 
-defineProps<{
+const props = defineProps<{
     repositories: ReadonlyArray<GitRepository>;
 }>();
+
+const selected = ref(props.repositories[0]);
+let selected_repository = computed({
+    get(): GitRepository {
+        return selected.value;
+    },
+    set(value: GitRepository) {
+        reference.value = value.default_branch ?? "";
+        selected.value = value;
+    },
+});
 
 onMounted((): void => {
     if (root_element.value === undefined) {
@@ -85,6 +115,8 @@ onMounted((): void => {
         dismiss_on_backdrop_click: false,
         destroy_on_hide: true,
     });
+
+    reference.value = props.repositories[0]?.default_branch;
 
     modal.show();
 });

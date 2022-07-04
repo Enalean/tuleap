@@ -15,5 +15,11 @@ msgstr "Créer la branche"
 msgid "Create branch on a Git repository"
 msgstr "Créer une branche dans un dépôt Git"
 
+msgid "Git reference from where the branch should be created"
+msgstr "La référence Git à partir de laquelle la branche va être créée"
+
 msgid "Git repositories"
 msgstr "Dépôts Git"
+
+msgid "Must be an existing git commit SHA-1 or a branch name"
+msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
