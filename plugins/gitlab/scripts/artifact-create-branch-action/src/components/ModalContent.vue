@@ -167,7 +167,7 @@ let modal: Modal | null = null;
 const selected = ref(props.integrations[0]);
 let selected_integration = computed({
     get(): GitlabIntegrationWithDefaultBranch {
-        return props.integrations[0];
+        return selected.value;
     },
     set(value: GitlabIntegrationWithDefaultBranch) {
         reference.value = value.default_branch ?? "";
