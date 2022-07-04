@@ -24,10 +24,12 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Project\CheckProjectAccess;
+use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -35,6 +37,8 @@ use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class SVNProjectAccessControllerTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     /**
      * @var \UserManager&\PHPUnit\Framework\MockObject\Stub
      */
@@ -49,6 +53,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         \ProjectManager $project_factory,
         CheckProjectAccess $check_project_access,
         bool $is_user_authentication_successful,
+        int $cache_lifetime_minutes = ParameterRetriever::LIFETIME_DEFAULT,
     ): SVNProjectAccessController {
         $auth_method = new class ($is_user_authentication_successful) implements SVNAuthenticationMethod
         {
@@ -62,6 +67,9 @@ final class SVNProjectAccessControllerTest extends TestCase
             }
         };
 
+        $cache_parameters = $this->createStub(ParameterRetriever::class);
+        $cache_parameters->method('getParameters')->willReturn(new \Tuleap\SVNCore\Cache\Parameters(10, $cache_lifetime_minutes));
+
         return new SVNProjectAccessController(
             HTTPFactoryBuilder::responseFactory(),
             new NullLogger(),
@@ -70,6 +78,7 @@ final class SVNProjectAccessControllerTest extends TestCase
             $project_factory,
             $check_project_access,
             [$auth_method],
+            $cache_parameters,
             $this->createStub(EmitterInterface::class),
         );
     }
@@ -81,7 +90,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $project_factory->method('getValidProjectByShortNameOrId')->willReturn($project);
         $check_project_access = CheckProjectAccessStub::withValidAccess();
 
-        $controller = $this->buildController($project_factory, $check_project_access, true);
+        $controller = $this->buildController($project_factory, $check_project_access, true, 10);
 
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
         $this->user_manager->method('getUserByLoginName')->willReturn($user);
@@ -90,6 +99,20 @@ final class SVNProjectAccessControllerTest extends TestCase
         $response = $controller->handle($request);
 
         self::assertEquals(204, $response->getStatusCode());
+        self::assertEquals('max-age=600', $response->getHeaderLine('Cache-Control'));
+    }
+
+    public function testBypassAuthWhenFeatureFlagIsDisabled(): void
+    {
+        \ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
+
+        $controller = $this->buildController($this->createStub(\ProjectManager::class), CheckProjectAccessStub::withValidAccess(), false);
+
+        $request  = self::buildServerRequest('project_name', 'valid_login_name', 'password');
+        $response = $controller->handle($request);
+
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertEquals('max-age=10', $response->getHeaderLine('Cache-Control'));
     }
 
     public function testRequestIsRejectedWhenAuthorizationHeaderIsMissing(): void
@@ -99,7 +122,8 @@ final class SVNProjectAccessControllerTest extends TestCase
         $request  = self::buildServerRequest('project', '', '')->withoutHeader('Authorization');
         $response = $controller->handle($request);
 
-        self::assertEquals(400, $response->getStatusCode());
+        self::assertEquals(401, $response->getStatusCode());
+        self::assertEquals('Basic realm="Authentication is required to access the repository."', $response->getHeaderLine('WWW-Authenticate'));
     }
 
     public function testRequestIsRejectedWhenTuleapProjectNameHeaderIsMissing(): void
@@ -121,7 +145,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $request  = self::buildServerRequest('name', 'invalid_login_name', 'password');
         $response = $controller->handle($request);
 
-        self::assertEquals(403, $response->getStatusCode());
+        self::assertEquals(401, $response->getStatusCode());
     }
 
     public function testRequestIsRejectedWhenNoValidProjectCanBeFound(): void
@@ -168,13 +192,13 @@ final class SVNProjectAccessControllerTest extends TestCase
         $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'wrong_password');
         $response = $controller->handle($request);
 
-        self::assertEquals(403, $response->getStatusCode());
+        self::assertEquals(401, $response->getStatusCode());
     }
 
     private static function buildServerRequest(string $project_name, string $username, string $user_secret): ServerRequestInterface
     {
         return (new NullServerRequest())
             ->withHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $user_secret))
-            ->withHeader('Tuleap-Project-Name', $project_name);
+            ->withAttribute('project_name', $project_name);
     }
 }

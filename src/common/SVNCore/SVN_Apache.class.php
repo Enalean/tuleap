@@ -44,7 +44,17 @@ abstract class SVN_Apache
         $conf .= "    DAV svn\n";
         $conf .= "    SVNPath " . $repository->getFilesystemPath() . "\n";
         $conf .= $this->getRepositoryAuthorization($repository);
-        $conf .= $this->getProjectAuthentication($repository->getProject());
+        if (ForgeConfig::getFeatureFlag(\Tuleap\SVNCore\AccessControl\SVNProjectAccessController::FEATURE_FLAG_DISABLE) === '1') {
+            $conf .= $this->getProjectAuthentication($repository->getProject());
+        } else {
+            // The authentication is managed by nginx but we need to "register" the current user so it can be validated
+            // against the SVNAccessFile
+            $conf .= "    Require valid-user\n";
+            $conf .= "    AuthType Basic\n";
+            $conf .= "    AuthBasicProvider anon\n";
+            $conf .= "    AuthName SVN\n";
+            $conf .= "    Anonymous '*'\n";
+        }
         $conf .= "</Location>\n\n";
 
         return $conf;

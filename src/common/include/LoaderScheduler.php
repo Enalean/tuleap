@@ -23,6 +23,8 @@ use Tuleap\Plugin\PluginLoader;
 
 class LoaderScheduler
 {
+    private const FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION = 'TULEAP_DISABLE_AUTO_SESSION_START';
+
     private $cookie_manager;
     /**
      * @var PluginLoader
@@ -35,18 +37,24 @@ class LoaderScheduler
         $this->plugin_loader  = $plugin_loader;
     }
 
-    public function loadPluginsThenStartSession($is_script): void
+    public function loadPluginsThenStartSession($is_script, array $server): void
     {
         $this->plugin_loader->loadPlugins();
-        $this->startSession($is_script);
+        $this->startSession($is_script, $server);
     }
 
-    private function startSession($is_script): void
+    private function startSession($is_script, array $server): void
     {
-        if (! $is_script) {
-            PHP_Session::start();
-            $GLOBALS['session_hash'] = $this->cookie_manager->isCookie('session_hash') ?
-                $this->cookie_manager->getCookie('session_hash') : false;
+        if ($is_script) {
+            return;
         }
+
+        if (($server[self::FASTCGI_DISABLE_SESSION_AUTOSTART_INSTRUCTION] ?? '') === 'true') {
+            return;
+        }
+
+        PHP_Session::start();
+        $GLOBALS['session_hash'] = $this->cookie_manager->isCookie('session_hash') ?
+            $this->cookie_manager->getCookie('session_hash') : false;
     }
 }

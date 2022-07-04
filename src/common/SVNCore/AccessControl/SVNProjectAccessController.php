@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\SVNCore\AccessControl;
 
+use ForgeConfig;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -30,11 +31,43 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
+use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\SVNCore\Cache\ParameterRetriever as CacheParameterRetriever;
 
+/**
+ * This controller when a user tries to access a SVN repository. It is called indirectly using the ngx_http_auth_request_module
+ * nginx module via the internal nginx location `/svn-project-auth`.
+ *
+ *                  ┌───────────┐          ┌──────────────────────────────┐                    ┌──────────────┐        ┌──────────────────┐
+ *                  │           │          │                              │                    │              │        │                  │
+ * SVN Request ────►│   nginx   ├─────────►│ ngx_http_auth_request_module ├───────────────────►│    Apache    ├───────►│  SVN repository  │
+ *                  │           │          │                              │                    │              │        │                  │
+ *                  └───────────┘          └────────┬─────────────────────┘                    └──┬───────────┘        └──────────────────┘
+ *                                                  │           ▲                                 │       ▲
+ *                                /svn-project-auth ▼           │                                 │       │
+ *                                         ┌────────────────────┴─────────┐                       ▼       │
+ *                                         │                              │                 ┌─────────────┴──────┐
+ *                                         │                              │                 │                    │
+ *                                         │   nginx internal location    │                 │ AuthzSVNAccessFile │
+ *                                         │                              │                 │                    │
+ *                                         │                              │                 └─────┬──────────────┘
+ *                                         └────────┬─────────────────────┘                       │       ▲
+ *                                                  │           ▲                                 │       │
+ *       POST /svnroot/<project_name>               │           │                                 ▼       │
+ *       POST /svnplugin/<project_name>/<repo_name> ▼           │                             ┌───────────┴────┐
+ *                                          ┌───────────────────┴────────┐                    │ .SVNAccessFile │
+ *                                          │                            │                    └────────────────┘
+ *                                          │ SVNProjectAccessController │
+ *                                          │                            │
+ *                                          └────────────────────────────┘
+ */
 final class SVNProjectAccessController extends DispatchablePSR15Compatible
 {
+    #[FeatureFlagConfigKey("Feature flag to disable the PHP based Subversion authentication/authorization and fallback to mod_perl based one.")]
+    public const FEATURE_FLAG_DISABLE = 'disable_php_based_svn_auth';
+
     /**
      * @param SVNAuthenticationMethod[] $svn_authentication_methods
      */
@@ -46,6 +79,7 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
         private \ProjectManager $project_factory,
         private CheckProjectAccess $check_project_access,
         private array $svn_authentication_methods,
+        private CacheParameterRetriever $cache_parameter_retriever,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -54,17 +88,24 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $credentials_set = $this->basic_auth_login_extractor->extract($request);
-        if ($credentials_set === null) {
-            $this->logger->warning('Received SVN access request is incorrectly formatted, no credentials found');
-            return $this->response_factory->createResponse(400);
+        if (ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_DISABLE) === '1') {
+            // Build an access allowed response with a small cache max-age value when the feature is disabled
+            // This will limit issues if administrators do not purge the cache when they switch back to it
+            return $this->buildAccessAllowedResponse()->withHeader('Cache-Control', 'max-age=10');
         }
 
-        $project_name = $request->getHeaderLine('Tuleap-Project-Name');
+        $credentials_set = $this->basic_auth_login_extractor->extract($request);
+        if ($credentials_set === null) {
+            $this->logger->debug('Received SVN access request is incorrectly formatted, no credentials found');
+            return $this->buildAuthenticationRequiredResponse();
+        }
+
+        $project_name = $request->getAttribute('project_name', '');
         if ($project_name === '') {
-            $this->logger->warning('Received SVN access request is incorrectly formatted, missing project name header');
+            $this->logger->warning('Received SVN access request is incorrectly formatted, missing project name');
             return $this->response_factory->createResponse(400);
         }
+        $project_name = $request->getAttribute('project_name');
 
         $user_secret = $credentials_set->getPassword();
 
@@ -72,7 +113,7 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
         $user       = $this->user_manager->getUserByLoginName($login_name);
         if ($user === null) {
             $this->logger->debug(sprintf('Rejected SVN access request: no user with the login name %s', $login_name));
-            return $this->buildAccessDeniedResponse();
+            return $this->buildAuthenticationRequiredResponse();
         }
 
         try {
@@ -95,7 +136,13 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
         }
 
         $this->logger->debug(sprintf('Rejected SVN access request: no authentication methods was successful for user #%d (%s)', $user->getId(), $user->getUserName()));
-        return $this->buildAccessDeniedResponse();
+        return $this->buildAuthenticationRequiredResponse();
+    }
+
+    private function buildAuthenticationRequiredResponse(): ResponseInterface
+    {
+        return $this->response_factory->createResponse(401)
+            ->withHeader('WWW-Authenticate', 'Basic realm="Authentication is required to access the repository."');
     }
 
     private function buildAccessDeniedResponse(): ResponseInterface
@@ -105,6 +152,10 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
 
     private function buildAccessAllowedResponse(): ResponseInterface
     {
-        return $this->response_factory->createResponse(204);
+        $cache_parameters       = $this->cache_parameter_retriever->getParameters();
+        $cache_lifetime_seconds = $cache_parameters->getLifetime() * 60;
+
+        return $this->response_factory->createResponse(204)
+            ->withHeader('Cache-Control', 'max-age=' . $cache_lifetime_seconds);
     }
 }

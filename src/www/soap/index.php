@@ -64,7 +64,7 @@ try {
 
 // if POST was used to send this request, we handle it
 // else, we display a list of available methods
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     XML_Security::enableExternalLoadOfEntities(function () use ($server) {
         $server->handle();
     });

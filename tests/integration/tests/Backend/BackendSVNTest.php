@@ -64,6 +64,7 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        \ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
         $this->tmp_dir      = $this->getTmpDir();
         $this->bin_dir      = __DIR__ . '/_fixtures';
         $this->fake_revprop = $this->bin_dir . '/post-revprop-change.php';
@@ -95,7 +96,7 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set(DBAuthUserConfig::PASSWORD, ForgeConfig::encryptValue(new ConcealedString('welcome0')));
 
         $this->project_manager  = \Mockery::spy(\ProjectManager::class);
-        $this->cache_parameters = \Mockery::spy(\Tuleap\SvnCore\Cache\Parameters::class);
+        $this->cache_parameters = \Mockery::spy(\Tuleap\SVNCore\Cache\Parameters::class);
 
         $this->backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }

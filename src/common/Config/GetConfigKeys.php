@@ -39,6 +39,7 @@ use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\ServerHostname;
+use Tuleap\SVNCore\AccessControl\SVNProjectAccessController;
 use Tuleap\System\ServiceControl;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Widget\MyProjects;
@@ -71,6 +72,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         ConfigurationVariables::class,
         ServerHostname::class,
         ProjectExportController::class,
+        SVNProjectAccessController::class,
     ];
 
     /**
