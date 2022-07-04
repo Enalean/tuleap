@@ -20,6 +20,13 @@
 
 <template>
     <div class="explanations-export">
+        <p class="tlp-alert-info">
+            {{
+                $gettext(
+                    "Please be aware this configuration screen will be reworked in the future. The development team has knowledge of the visual and usability issues."
+                )
+            }}
+        </p>
         {{ $gettext("For each levels: ") }}
         <ul>
             <li>
@@ -40,7 +47,11 @@
     </div>
 </template>
 <style lang="scss" scoped>
+@use "sass:meta";
+
 .explanations-export {
     padding: var(--tlp-medium-spacing);
 }
+
+@include meta.load-css("@tuleap/tlp/src/scss/components/alerts");
 </style>
