@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Request\DispatchablePSR15Compatible;
 
@@ -41,6 +41,7 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
     public function __construct(
         private ResponseFactoryInterface $response_factory,
         private LoggerInterface $logger,
+        private BasicAuthLoginExtractor $basic_auth_login_extractor,
         private \UserManager $user_manager,
         private \ProjectManager $project_factory,
         private CheckProjectAccess $check_project_access,
@@ -53,27 +54,27 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $parsed_body = $request->getParsedBody();
-
-        if (
-            ! is_array($parsed_body)
-            || ! isset($parsed_body['login_name'], $parsed_body['user_secret'], $parsed_body['project_name'])
-        ) {
-            $this->logger->warning('Received SVN access request is incorrectly formatted');
+        $credentials_set = $this->basic_auth_login_extractor->extract($request);
+        if ($credentials_set === null) {
+            $this->logger->warning('Received SVN access request is incorrectly formatted, no credentials found');
             return $this->response_factory->createResponse(400);
         }
 
-        $user_secret = new ConcealedString((string) $parsed_body['user_secret']);
-        sodium_memzero($parsed_body['user_secret']);
+        $project_name = $request->getHeaderLine('Tuleap-Project-Name');
+        if ($project_name === '') {
+            $this->logger->warning('Received SVN access request is incorrectly formatted, missing project name header');
+            return $this->response_factory->createResponse(400);
+        }
 
-        $login_name = (string) $parsed_body['login_name'];
+        $user_secret = $credentials_set->getPassword();
+
+        $login_name = $credentials_set->getUsername();
         $user       = $this->user_manager->getUserByLoginName($login_name);
         if ($user === null) {
             $this->logger->debug(sprintf('Rejected SVN access request: no user with the login name %s', $login_name));
             return $this->buildAccessDeniedResponse();
         }
 
-        $project_name = (string) $parsed_body['project_name'];
         try {
             $project = $this->project_factory->getValidProjectByShortNameOrId($project_name);
         } catch (\Project_NotFoundException $e) {

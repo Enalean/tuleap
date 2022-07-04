@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -64,6 +65,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         return new SVNProjectAccessController(
             HTTPFactoryBuilder::responseFactory(),
             new NullLogger(),
+            new BasicAuthLoginExtractor(),
             $this->user_manager,
             $project_factory,
             $check_project_access,
@@ -84,17 +86,28 @@ final class SVNProjectAccessControllerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
         $this->user_manager->method('getUserByLoginName')->willReturn($user);
 
-        $request  = (new NullServerRequest())->withParsedBody(['login_name' => 'valid_login_name', 'user_secret' => 'password', 'project_name' => $project->getUnixName()]);
+        $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'password');
         $response = $controller->handle($request);
 
         self::assertEquals(204, $response->getStatusCode());
     }
 
-    public function testRequestIsRejectedWhenParametersAreMissing(): void
+    public function testRequestIsRejectedWhenAuthorizationHeaderIsMissing(): void
     {
         $controller = $this->buildController($this->createStub(\ProjectManager::class), CheckProjectAccessStub::withNotValidProject(), false);
 
-        $response = $controller->handle(new NullServerRequest());
+        $request  = self::buildServerRequest('project', '', '')->withoutHeader('Authorization');
+        $response = $controller->handle($request);
+
+        self::assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testRequestIsRejectedWhenTuleapProjectNameHeaderIsMissing(): void
+    {
+        $controller = $this->buildController($this->createStub(\ProjectManager::class), CheckProjectAccessStub::withNotValidProject(), false);
+
+        $request  = self::buildServerRequest('', 'username', 'pass')->withoutHeader('Tuleap-Project-Name');
+        $response = $controller->handle($request);
 
         self::assertEquals(400, $response->getStatusCode());
     }
@@ -105,7 +118,7 @@ final class SVNProjectAccessControllerTest extends TestCase
 
         $this->user_manager->method('getUserByLoginName')->willReturn(null);
 
-        $request  = (new NullServerRequest())->withParsedBody(['login_name' => 'invalid_login_name', 'user_secret' => 'password', 'project_name' => 'name']);
+        $request  = self::buildServerRequest('name', 'invalid_login_name', 'password');
         $response = $controller->handle($request);
 
         self::assertEquals(403, $response->getStatusCode());
@@ -120,7 +133,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
         $this->user_manager->method('getUserByLoginName')->willReturn($user);
 
-        $request  = (new NullServerRequest())->withParsedBody(['login_name' => 'valid_login_name', 'user_secret' => 'password', 'project_name' => 'not_found']);
+        $request  = self::buildServerRequest('not_found', 'valid_login_name', 'password');
         $response = $controller->handle($request);
 
         self::assertEquals(403, $response->getStatusCode());
@@ -136,7 +149,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
         $this->user_manager->method('getUserByLoginName')->willReturn($user);
 
-        $request  = (new NullServerRequest())->withParsedBody(['login_name' => 'valid_login_name', 'user_secret' => 'password', 'project_name' => $project->getUnixName()]);
+        $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'password');
         $response = $controller->handle($request);
 
         self::assertEquals(403, $response->getStatusCode());
@@ -152,9 +165,16 @@ final class SVNProjectAccessControllerTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
         $this->user_manager->method('getUserByLoginName')->willReturn($user);
 
-        $request  = (new NullServerRequest())->withParsedBody(['login_name' => 'valid_login_name', 'user_secret' => 'wrong_password', 'project_name' => $project->getUnixName()]);
+        $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'wrong_password');
         $response = $controller->handle($request);
 
         self::assertEquals(403, $response->getStatusCode());
+    }
+
+    private static function buildServerRequest(string $project_name, string $username, string $user_secret): ServerRequestInterface
+    {
+        return (new NullServerRequest())
+            ->withHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $user_secret))
+            ->withHeader('Tuleap-Project-Name', $project_name);
     }
 }
