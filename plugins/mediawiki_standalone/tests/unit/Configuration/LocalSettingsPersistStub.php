@@ -22,18 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
-
-final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
+final class LocalSettingsPersistStub implements LocalSettingsPersist
 {
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    public bool $has_persisted = false;
+
+    public function persist(LocalSettingsRepresentation $representation): void
     {
-        return new LocalSettingsRepresentation(
-            new ConcealedString('random_value'),
-            'https://example.com',
-            'tlp-client-id-test',
-            new ConcealedString('tlp-client-secret'),
-            \ForgeAccess::ANONYMOUS
-        );
+        $this->has_persisted = true;
     }
 }

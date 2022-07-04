@@ -1,5 +1,5 @@
 <?php
-/**
+/**ù
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,25 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Configuration;
+namespace Tuleap\MediawikiStandalone\Instance;
 
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistStub;
+use Tuleap\MediawikiStandalone\Configuration\LocalSettingsRepresentationForTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
-final class LocalSettingsInstantiatorTest extends TestCase
+final class SiteAccessHandlerTest extends TestCase
 {
-    public function testInstantiatesLocalSettings(): void
+    public function testHandleSiteAccessChange(): void
     {
+        $enqueue_task             = new EnqueueTaskStub();
         $local_settings_persistor = new LocalSettingsPersistStub();
 
-        $instantiator = new LocalSettingsInstantiator(
-            new LocalSettingsRepresentationForTestBuilder(),
-            $local_settings_persistor,
-            new DBTransactionExecutorPassthrough()
+        $handler = new SiteAccessHandler(
+            new LocalSettingsInstantiator(
+                new LocalSettingsRepresentationForTestBuilder(),
+                $local_settings_persistor,
+                new DBTransactionExecutorPassthrough()
+            ),
+            $enqueue_task
         );
 
-        $instantiator->instantiateLocalSettings();
+        $handler->process();
 
+        self::assertEquals(LogUsersOutInstanceTask::logsOutUserOnAllInstances(), $enqueue_task->queue_task);
         self::assertTrue($local_settings_persistor->has_persisted);
     }
 }

@@ -38,6 +38,7 @@ final class LocalSettingsRepresentation
         public string $https_url,
         public string $oauth2_client_id,
         public ConcealedString $oauth2_client_secret,
+        public string $forge_access_mode,
     ) {
     }
 }

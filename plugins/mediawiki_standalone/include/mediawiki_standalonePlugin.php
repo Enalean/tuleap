@@ -226,7 +226,10 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
      */
     public function siteAccessChange(): void
     {
-        (new EnqueueTask())->enqueue(LogUsersOutInstanceTask::logsOutUserOnAllInstances());
+        (new \Tuleap\MediawikiStandalone\Instance\SiteAccessHandler(
+            $this->buildLocalSettingsInstantiator(),
+            new EnqueueTask()
+        ))->process();
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void

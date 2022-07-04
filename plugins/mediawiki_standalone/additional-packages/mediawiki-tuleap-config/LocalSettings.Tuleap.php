@@ -102,4 +102,27 @@ $GLOBALS['wgSkipSkins'] = ['timeless', 'monobook', 'vector'];
 $GLOBALS['wgHiddenPrefs'][] = 'language';
 $GLOBALS['wgHiddenPrefs'][] = 'variant';
 $GLOBALS['wgHiddenPrefs'][] = 'noconvertlink';
+
+$GLOBALS['wgTuleapEnableAnonAccess'] = false;
+// Add explicit "reader" group (maps to 'is_reader' key in permission data coming from Tuleap)
+$GLOBALS['wgAdditionalGroups']['reader'] = ['read' => true];
+
+// Platform access type (https://tuleap.net/plugins/tracker/?aid=25738)
+switch ($GLOBALS['wgTuleapAccessPreset']) {
+    case 'anonymous':
+        // Accessible by anonymous
+        $GLOBALS['wgGroupPermissions']['*']['read'] = true;
+        $GLOBALS['wgTuleapEnableAnonAccess']        = true;
+        break;
+    case 'regular':
+        // Login is required
+        $GLOBALS['wgGroupPermissions']['user']['read'] = true;
+        break;
+    case 'restricted':
+    default:
+        // Login is required + explicit `is_reader` assignments
+        $GLOBALS['wgGroupPermissions']['user']['read'] = false;
+        break;
+}
+
 // Tuleap Specific - END ###
