@@ -43,6 +43,8 @@ use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -114,6 +116,8 @@ class Git extends PluginController
      * @var Git_Driver_Gerrit_Template_TemplateFactory
      */
     private $template_factory;
+    private VerifyArtifactClosureIsAllowed $closure_verifier;
+    private ConfigureAllowArtifactClosure $configure_artifact_closure;
 
     /**
      * Lists all git-related permission types.
@@ -313,6 +317,8 @@ class Git extends PluginController
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UGroupManager $ugroup_manager,
         HeaderRenderer $header_renderer,
+        VerifyArtifactClosureIsAllowed $closure_verifier,
+        ConfigureAllowArtifactClosure $configure_artifact_closure,
     ) {
         parent::__construct($user_manager, $request);
 
@@ -375,6 +381,8 @@ class Git extends PluginController
         $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
         $this->ugroup_manager                          = $ugroup_manager;
         $this->header_renderer                         = $header_renderer;
+        $this->closure_verifier                        = $closure_verifier;
+        $this->configure_artifact_closure              = $configure_artifact_closure;
     }
 
     protected function instantiateView()
@@ -391,7 +399,8 @@ class Git extends PluginController
             $this->regexp_retriever,
             $this->gerrit_server_factory,
             $this->header_renderer,
-            $this->projectManager
+            $this->projectManager,
+            $this->closure_verifier,
         );
     }
 
@@ -592,6 +601,21 @@ class Git extends PluginController
                         $this->addError(dgettext('tuleap-git', 'The update of the default branch did not succeed'));
                     }
                 }
+
+                if ($this->request->exist('allow-artifact-closure')) {
+                    $repository_id                         = (int) $repository->getId();
+                    $is_artifact_closure_currently_allowed = $this->closure_verifier->isArtifactClosureAllowed($repository_id);
+                    if ($this->request->get('allow-artifact-closure') === '1') {
+                        if (! $is_artifact_closure_currently_allowed) {
+                            $this->configure_artifact_closure->allowArtifactClosureForRepository($repository_id);
+                            $this->addInfo(dgettext('tuleap-git', 'Artifact closure is now allowed for repository'));
+                        }
+                    } elseif ($is_artifact_closure_currently_allowed) {
+                        $this->configure_artifact_closure->forbidArtifactClosureForRepository($repository_id);
+                        $this->addInfo(dgettext('tuleap-git', 'Artifact closure is not allowed anymore for repository'));
+                    }
+                }
+
                 if ($this->request->exist('repo_desc')) {
                     $description       = GitRepository::DEFAULT_DESCRIPTION;
                     $valid_descrpition = new Valid_Text('repo_desc');

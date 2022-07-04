@@ -28,6 +28,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 
 include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
 
@@ -36,91 +37,32 @@ include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
  */
 class GitViews extends PluginViews
 {
-    /** @var Project */
-    private $project;
-
-    /** @var GitPermissionsManager */
-    private $git_permissions_manager;
-
-    /** @var UGroupManager */
-    private $ugroup_manager;
-
-    /** @var Git_Mirror_MirrorDataMapper */
-    private $mirror_data_mapper;
-
-    /**
-     * @var FineGrainedRetriever
-     */
-    private $fine_grained_retriever;
-
-    /**
-     * @var FineGrainedPermissionFactory
-     */
-    private $fine_grained_permission_factory;
-
-    /**
-     * @var DefaultFineGrainedPermissionFactory
-     */
-    private $default_fine_grained_permission_factory;
-
-    /**
-     * @var FineGrainedRepresentationBuilder
-     */
-    private $fine_grained_builder;
-    /**
-     * @var RegexpFineGrainedRetriever
-     */
-    private $regexp_retriever;
-
-    /**
-     * @var Git_RemoteServer_GerritServerFactory
-     */
-    private $gerrit_server_factory;
-    /**
-     * @var HeaderRenderer
-     */
-    private $header_renderer;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
+    private Project $project;
+    private UGroupManager $ugroup_manager;
+    private EventManager $event_manager;
 
     public function __construct(
         $controller,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GitPermissionsManager $permissions_manager,
-        FineGrainedPermissionFactory $fine_grained_permission_factory,
-        FineGrainedRetriever $fine_grained_retriever,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
-        FineGrainedRepresentationBuilder $fine_grained_builder,
-        GitPhpAccessLogger $access_loger,
-        RegexpFineGrainedRetriever $regexp_retriever,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        HeaderRenderer $header_renderer,
-        ProjectManager $project_manager,
+        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        private GitPermissionsManager $git_permissions_manager,
+        private FineGrainedPermissionFactory $fine_grained_permission_factory,
+        private FineGrainedRetriever $fine_grained_retriever,
+        private DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
+        private FineGrainedRepresentationBuilder $fine_grained_builder,
+        private GitPhpAccessLogger $access_loger,
+        private RegexpFineGrainedRetriever $regexp_retriever,
+        private Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        private HeaderRenderer $header_renderer,
+        private ProjectManager $project_manager,
+        private VerifyArtifactClosureIsAllowed $closure_verifier,
     ) {
         parent::__construct($controller);
-        $this->groupId                                 = (int) $this->request->get('group_id');
-        $this->project                                 = ProjectManager::instance()->getProject($this->groupId);
-        $this->projectName                             = $this->project->getUnixName();
-        $this->userName                                = $this->user->getName();
-        $this->git_permissions_manager                 = $permissions_manager;
-        $this->ugroup_manager                          = new UGroupManager();
-        $this->mirror_data_mapper                      = $mirror_data_mapper;
-        $this->fine_grained_permission_factory         = $fine_grained_permission_factory;
-        $this->fine_grained_retriever                  = $fine_grained_retriever;
-        $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
-        $this->fine_grained_builder                    = $fine_grained_builder;
-        $this->access_loger                            = $access_loger;
-        $this->regexp_retriever                        = $regexp_retriever;
-        $this->gerrit_server_factory                   = $gerrit_server_factory;
-        $this->event_manager                           = EventManager::instance();
-        $this->header_renderer                         = $header_renderer;
-        $this->project_manager                         = $project_manager;
+        $this->groupId        = (int) $this->request->get('group_id');
+        $this->project        = ProjectManager::instance()->getProject($this->groupId);
+        $this->projectName    = $this->project->getUnixName();
+        $this->userName       = $this->user->getName();
+        $this->ugroup_manager = new UGroupManager();
+        $this->event_manager  = EventManager::instance();
     }
 
     public function header()
@@ -164,7 +106,8 @@ class GitViews extends PluginViews
             $this->git_permissions_manager,
             $this->regexp_retriever,
             $this->event_manager,
-            $this->project_manager
+            $this->project_manager,
+            $this->closure_verifier,
         );
         $repo_management_view->display();
 

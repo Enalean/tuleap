@@ -24,5 +24,19 @@
   </p>
   {{/ have_branches }}
 
+  <p>
+      <label class="checkbox">
+          <input type="hidden" name="allow-artifact-closure" value="0" />
+          <input type="checkbox" name="allow-artifact-closure" value="1" {{# allow_artifact_closure }}checked{{/ allow_artifact_closure }}>
+          {{# dgettext }} tuleap-git | Allow artifact closure{{/ dgettext }}
+      </label>
+      <span class="text-info">
+          {{# dgettext }}
+              tuleap-git |
+              If selected, artifacts of this project can be closed with commit messages from the repository.
+          {{/ dgettext }}
+      </span>
+  </p>
+
   <p><input type="submit" name="save" class="btn" value="{{ save_label }}" /></p>
 </form>

@@ -24,6 +24,7 @@ use Codendi_Request;
 use GitRepository;
 use TemplateRendererFactory;
 use Tuleap\Git\DefaultBranch\RepositoryBranchSelectorOptionPresenter;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 
 class GeneralSettings extends Pane
 {
@@ -36,13 +37,18 @@ class GeneralSettings extends Pane
      * @psalm-readonly
      */
     public bool $have_branches;
+    /**
+     * @psalm-readonly
+     */
+    public bool $allow_artifact_closure;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request)
+    public function __construct(GitRepository $repository, Codendi_Request $request, VerifyArtifactClosureIsAllowed $closure_verifier)
     {
         parent::__construct($repository, $request);
 
-        $this->available_branches = self::getAvailableBranchPresenters($repository);
-        $this->have_branches      = count($this->available_branches) > 0;
+        $this->available_branches     = self::getAvailableBranchPresenters($repository);
+        $this->have_branches          = count($this->available_branches) > 0;
+        $this->allow_artifact_closure = $closure_verifier->isArtifactClosureAllowed((int) $repository->getId());
     }
 
     /**

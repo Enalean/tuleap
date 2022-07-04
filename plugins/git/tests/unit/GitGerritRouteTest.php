@@ -143,7 +143,8 @@ final class GitGerritRouteTest extends \Tuleap\Test\PHPUnit\TestCase
                 Mockery::mock(UgroupsToNotifyDao::class),
                 \Mockery::spy(\UGroupManager::class),
                 \Mockery::spy(\Tuleap\Git\GitViews\Header\HeaderRenderer::class),
-                \Mockery::spy(\ThemeManager::class),
+                \Mockery::spy(\Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed::class),
+                \Mockery::spy(\Tuleap\Git\Repository\Settings\ArtifactClosure\ConfigureAllowArtifactClosure::class),
             ]
         )
             ->makePartial()

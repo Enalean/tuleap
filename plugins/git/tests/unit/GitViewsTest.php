@@ -91,12 +91,20 @@ class GitViewsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function givenAProject($id, $name, $unixName = null, $useGit = true): Project
     {
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getId')->andReturns($id);
-        $project->shouldReceive('getPublicName')->andReturns($name); //see create_project()
-        $project->shouldReceive('getUnixName')->andReturns($unixName);
-        $project->shouldReceive('usesService')->with(GitPlugin::SERVICE_SHORTNAME)->andReturns($useGit);
-        return $project;
+        $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()
+            ->withId($id)
+            ->withPublicName($name)
+            ->withoutServices();
+
+        if ($unixName) {
+            $project = $project->withUnixName($unixName);
+        }
+
+        if ($useGit) {
+            $project = $project->withUsedService(GitPlugin::SERVICE_SHORTNAME);
+        }
+
+        return $project->build();
     }
 
     private function givenAProjectWithoutGitService($id, $name): Project

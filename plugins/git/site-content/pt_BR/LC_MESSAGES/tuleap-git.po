@@ -152,6 +152,9 @@ msgstr ""
 msgid "Allow all the projects to use this mirror."
 msgstr ""
 
+msgid "Allow artifact closure"
+msgstr ""
+
 msgid ""
 "Allow usage of regular expressions in branches and tags during repository "
 "permission definition"
@@ -198,6 +201,12 @@ msgstr ""
 msgid ""
 "An error occurred while activating regular expressions option for Git fine "
 "grained permission."
+msgstr ""
+
+msgid "Artifact closure is not allowed anymore for repository"
+msgstr ""
+
+msgid "Artifact closure is now allowed for repository"
 msgstr ""
 
 #, php-format
@@ -608,6 +617,11 @@ msgid "Identifier"
 msgstr ""
 
 msgid "Identity file"
+msgstr ""
+
+msgid ""
+"If selected, artifacts of this project can be closed with commit messages "
+"from the repository."
 msgstr ""
 
 msgid ""

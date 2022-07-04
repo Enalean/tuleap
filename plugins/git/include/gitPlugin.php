@@ -1613,6 +1613,8 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
     private function getGitController()
     {
         $gerrit_server_factory = $this->getGerritServerFactory();
+        $git_dao               = $this->getGitDao();
+
         return new Git(
             $this,
             $this->getGerritServerFactory(),
@@ -1653,7 +1655,9 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             new UsersToNotifyDao(),
             $this->getUgroupsToNotifyDao(),
             new UGroupManager(),
-            $this->getHeaderRenderer()
+            $this->getHeaderRenderer(),
+            $git_dao,
+            $git_dao,
         );
     }
 
