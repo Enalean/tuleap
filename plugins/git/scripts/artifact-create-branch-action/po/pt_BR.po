@@ -15,5 +15,11 @@ msgstr ""
 msgid "Create branch on a Git repository"
 msgstr ""
 
+msgid "Git reference from where the branch should be created"
+msgstr ""
+
 msgid "Git repositories"
+msgstr ""
+
+msgid "Must be an existing git commit SHA-1 or a branch name"
 msgstr ""
