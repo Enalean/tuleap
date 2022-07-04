@@ -31,7 +31,7 @@ export function setUpFieldDependenciesActions(tracker, callback) {
             (field) => field.field_id === rule.target_field_id
         );
 
-        if (typeof callback === "function") {
+        if (typeof callback === "function" && target_field !== undefined) {
             callback(rule.source_field_id, target_field, field_dependencies_rules);
         }
     });

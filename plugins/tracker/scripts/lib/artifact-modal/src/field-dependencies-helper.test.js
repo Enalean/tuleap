@@ -289,7 +289,7 @@ describe("TuleapArtifactModalFieldDependenciesService", () => {
 
         it("Given field dependencies were defined in the tracker and given there were two rules for the same source field and given a callback, when I set up field dependencies actions, then the callback will be called twice", () => {
             var tracker = {
-                fields: [{ field_id: 10 }],
+                fields: [{ field_id: 10 }, { field_id: 59 }, { field_id: 22 }],
                 workflow: {
                     rules: {
                         lists: [
@@ -314,6 +314,28 @@ describe("TuleapArtifactModalFieldDependenciesService", () => {
 
             expect(callback).toHaveBeenCalled();
             expect(callback.mock.calls).toHaveLength(2);
+        });
+
+        it("Given field dependencies defined in the tracker with one non submittable field, when I set up field dependencies actions, then the callback should not be called", () => {
+            var tracker = {
+                fields: [{ field_id: 10 }],
+                workflow: {
+                    rules: {
+                        lists: [
+                            {
+                                source_field_id: 43,
+                                source_value_id: 752,
+                                target_field_id: 22,
+                                target_value_id: 519,
+                            },
+                        ],
+                    },
+                },
+            };
+
+            setUpFieldDependenciesActions(tracker, callback);
+
+            expect(callback).not.toHaveBeenCalled();
         });
 
         it("Given no field dependencies were defined in the tracker, when I set up field dependencies actions, then the callback will never be called", () => {
