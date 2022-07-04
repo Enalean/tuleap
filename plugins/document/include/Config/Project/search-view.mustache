@@ -28,7 +28,7 @@
                         {{# dgettext }}tuleap-document | Criteria{{/ dgettext }}
                         <i class="fas fa-asterisk" aria-hidden="true"></i>
                     </label>
-                    <select id="list-picker-criteria" name="criteria[]" multiple required>
+                    <select id="list-picker-criteria" data-test="list-picker-criteria" name="criteria[]" multiple required>
                         {{# criteria }}
                             <option value="{{ name }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
                         {{/ criteria }}
@@ -55,7 +55,7 @@
                         {{# dgettext }}tuleap-document | Columns{{/ dgettext }}
                         <i class="fas fa-asterisk" aria-hidden="true"></i>
                     </label>
-                    <select id="list-picker-columns" name="columns[]" multiple required>
+                    <select id="list-picker-columns" data-test="list-picker-columns" name="columns[]" multiple required>
                         {{# columns }}
                             <option value="{{ name }}" {{# is_selected }}selected{{/ is_selected }}>
                                 {{ label }}
@@ -65,7 +65,7 @@
                 </div>
             </section>
             <section class="tlp-pane-section tlp-pane-section-submit">
-                <button type="submit" class="tlp-button-primary">
+                <button type="submit" class="tlp-button-primary" data-test="save-configuration">
                     <i class="far fa-save tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }}tuleap-document | Save configuration{{/ dgettext }}
                 </button>
