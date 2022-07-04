@@ -29,6 +29,7 @@ class LanguageDetectorForPrismJS
         'Dockerfile'      => 'dockerfile',
         '.eslintignore'   => 'ignore',
         '.prettierignore' => 'ignore',
+        'Cargo.lock'      => 'toml',
     ];
 
     private const EXTENSIONS = [
@@ -49,6 +50,7 @@ class LanguageDetectorForPrismJS
         'tfvars'         => 'hcl',
         'tfstate'        => 'json',
         'tfstate.backup' => 'json',
+        'rs'             => 'rust',
     ];
 
     public function getLanguage(string $filename): string

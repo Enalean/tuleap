@@ -141,6 +141,7 @@ import "prismjs/components/prism-stylus";
 import "prismjs/components/prism-swift";
 import "prismjs/components/prism-tcl";
 import "prismjs/components/prism-textile";
+import "prismjs/components/prism-toml";
 import "prismjs/components/prism-twig";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-tsx";
