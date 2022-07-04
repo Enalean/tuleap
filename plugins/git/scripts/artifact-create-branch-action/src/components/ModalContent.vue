@@ -65,6 +65,14 @@
                     {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
                 </p>
             </div>
+            <div>
+                <label for="artifact-create-git-branch-name">
+                    {{ $gettext("The following branch will be created") }}
+                </label>
+                <code id="artifact-create-git-branch-name">
+                    {{ branch_name_preview }}
+                </code>
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -93,6 +101,7 @@ const reference = ref("");
 
 const props = defineProps<{
     repositories: ReadonlyArray<GitRepository>;
+    branch_name_preview: string;
 }>();
 
 const selected = ref(props.repositories[0]);

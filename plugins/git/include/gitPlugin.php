@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Cocur\Slugify\Slugify;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\admin\PendingElements\PendingDocumentsRetriever;
 use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
@@ -144,6 +145,7 @@ use Tuleap\Git\Repository\View\FilesHeaderPresenterBuilder;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RepositoryList\ListPresenterBuilder;
+use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 use Tuleap\Git\SystemEvents\ProjectIsSuspended;
@@ -2895,6 +2897,9 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
     {
         $button_fetcher = new CreateBranchButtonFetcher(
             $this->getRepositoryFactory(),
+            new BranchNameCreatorFromArtifact(
+                new Slugify()
+            ),
             new \Tuleap\Layout\JavascriptAsset(
                 $this->getAssets(),
                 'git-artifact-create-branch.js'
@@ -2902,7 +2907,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         );
 
         $button_action = $button_fetcher->getActionButton(
-            $event->getArtifact()->getTracker()->getProject(),
+            $event->getArtifact(),
             $event->getUser()
         );
 

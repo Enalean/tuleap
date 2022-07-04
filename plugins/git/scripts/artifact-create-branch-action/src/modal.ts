@@ -37,8 +37,12 @@ export async function init(
     if (!git_create_branch_link.dataset.projectId) {
         throw new Error("Missing project id in dataset");
     }
+    if (!git_create_branch_link.dataset.gitBranchNamePreview) {
+        throw new Error("Missing branch name preview in dataset");
+    }
 
     const project_id = Number(git_create_branch_link.dataset.projectId);
+    const branch_name_preview = git_create_branch_link.dataset.gitBranchNamePreview;
 
     if (app !== null) {
         app.unmount();
@@ -46,6 +50,7 @@ export async function init(
 
     app = createApp(MainComponent, {
         repositories: await getProjectRepositories(project_id),
+        branch_name_preview: branch_name_preview,
     });
     app.use(
         await initVueGettext(createGettext, (locale: string) => {

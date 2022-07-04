@@ -23,16 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Artifact\Action;
 
+use Cocur\Slugify\Slugify;
 use ForgeConfig;
 use GitRepository;
 use GitRepositoryFactory;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class CreateBranchButtonFetcherTest extends TestCase
 {
@@ -56,6 +59,9 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $this->include_asset          = $this->createMock(IncludeAssetsGeneric::class);
         $this->create_button_fetcher  = new CreateBranchButtonFetcher(
             $this->git_repository_factory,
+            new BranchNameCreatorFromArtifact(
+                new Slugify()
+            ),
             new JavascriptAsset(
                 $this->include_asset,
                 ""
@@ -133,8 +139,10 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     private function getActionButton(): ?AdditionalButtonAction
     {
+        $artifact = ArtifactTestBuilder::anArtifact(101)->inProject(ProjectTestBuilder::aProject()->build())->build();
+
         return $this->create_button_fetcher->getActionButton(
-            ProjectTestBuilder::aProject()->build(),
+            $artifact,
             UserTestBuilder::anActiveUser()->build(),
         );
     }
