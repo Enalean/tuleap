@@ -26,12 +26,14 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveTimeboxFromMirroredTimebox;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
-final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox, RetrieveMirroredProgramIncrementFromTeam
+final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirroredTimeboxes, RetrieveTimeboxFromMirroredTimebox, RetrieveMirroredProgramIncrementFromTeam, SearchMirrorTimeboxesFromProgram
 {
     public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
@@ -48,6 +50,33 @@ final class MirroredTimeboxesDao extends DataAccessObject implements SearchMirro
                   AND IFNULL(artlink.nature, '') = ?";
 
         return $this->getDB()->first($sql, $timebox->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME);
+    }
+
+    public function hashMirroredTimeboxesFromProgram(ProjectReference $team, string $title): bool
+    {
+        $sql = "SELECT title_value.value
+                FROM tracker_artifact parent_art
+                         INNER JOIN tracker                                 AS parent_tracker ON (parent_tracker.id = parent_art.tracker_id AND parent_tracker.deletion_date IS NULL)
+                         INNER JOIN tracker_field                           AS f              ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
+                         INNER JOIN tracker_changeset_value                 AS cv             ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                         INNER JOIN tracker_changeset_value_artifactlink    AS artlink        ON (artlink.changeset_value_id = cv.id)
+                         INNER JOIN tracker_artifact                        AS linked_art     ON (linked_art.id = artlink.artifact_id)
+                         INNER JOIN tracker                                 AS linked_tracker ON (linked_art.tracker_id = linked_tracker.id AND linked_tracker.deletion_date IS NULL)
+                         INNER JOIN tracker_field                           AS linked_f       ON (linked_f.tracker_id = linked_art.tracker_id AND linked_f.formElement_type = 'art_link' AND linked_f.use_it = 1)
+                         INNER JOIN tracker_changeset_value                 AS linked_cv      ON (linked_cv.changeset_id = linked_art.last_changeset_id AND linked_cv.field_id = linked_f.id)
+                         INNER JOIN plugin_program_management_team_projects AS team           ON (parent_tracker.group_id = team.team_project_id AND linked_tracker.group_id = team.program_project_id)
+                         -- get title value
+                         INNER JOIN (
+                            tracker_semantic_title AS title
+                                INNER JOIN tracker_changeset_value AS title_changeset ON (title.field_id = title_changeset.field_id)
+                                INNER JOIN tracker_changeset_value_text AS title_value on title_changeset.id = title_value.changeset_value_id
+                         ) ON (linked_tracker.id = title.tracker_id AND linked_cv.changeset_id = title_changeset.changeset_id)
+
+                WHERE team.team_project_id  = ?
+                  AND IFNULL(artlink.nature, '') = ?
+                  AND title_value.value = ?";
+
+        return $this->getDB()->exists($sql, $team->getId(), TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, $title);
     }
 
     public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id): ?int

@@ -22,25 +22,82 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
 
+use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchMirrorTimeboxesFromProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testBuildPresenterWithAllTeam(): void
+    private SearchOpenProgramIncrementsStub $open_program_increment_searcher;
+    private \Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier $program_for_admin;
+    private UserIdentifierStub $user_identifier;
+
+    protected function setUp(): void
     {
-        $team_A     = ProjectReferenceStub::withId(150);
-        $team_B     = ProjectReferenceStub::withId(666);
+        $program_increment                     = ProgramIncrementBuilder::buildWithId(222);
+        $this->open_program_increment_searcher = SearchOpenProgramIncrementsStub::withProgramIncrements($program_increment);
+        $this->program_for_admin               = ProgramForAdministrationIdentifierBuilder::buildWithId($program_increment->id);
+        $this->user_identifier                 = UserIdentifierStub::buildGenericUser();
+    }
+
+    public function testBuildAPresenterForTeamWithConfigurationError(): void
+    {
+        $team       = ProjectReferenceStub::withId(150);
         $collection = TeamProjectsCollectionBuilder::withProjects(
-            $team_A,
-            $team_B,
+            $team,
         );
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter($collection, [$team_A->getId()]);
-        self::assertCount(2, $teams_presenter);
-        self::assertSame($team_A->getId(), $teams_presenter[0]->id);
-        self::assertTrue($teams_presenter[0]->has_configuration_error);
-        self::assertSame($team_B->getId(), $teams_presenter[1]->id);
-        self::assertFalse($teams_presenter[1]->has_configuration_error);
+        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter(
+            $this->open_program_increment_searcher,
+            SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror(),
+            $this->program_for_admin,
+            $this->user_identifier,
+            $collection,
+            [$team->getId()]
+        );
+        self::assertSame($team->getId(), $teams_presenter[0]->id);
+        self::assertFalse($teams_presenter[0]->should_synchronize_team);
+    }
+
+    public function testBuildPresenterWithTeamWithMissingMirror(): void
+    {
+        $team       = ProjectReferenceStub::withId(150);
+        $collection = TeamProjectsCollectionBuilder::withProjects(
+            $team,
+        );
+
+        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter(
+            $this->open_program_increment_searcher,
+            SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror(),
+            $this->program_for_admin,
+            $this->user_identifier,
+            $collection,
+            []
+        );
+        self::assertSame($team->getId(), $teams_presenter[0]->id);
+        self::assertFalse($teams_presenter[0]->should_synchronize_team);
+    }
+
+    public function testBuildPresenterWithTeamWithoutMissingMirror(): void
+    {
+        $team       = ProjectReferenceStub::withId(150);
+        $collection = TeamProjectsCollectionBuilder::withProjects(
+            $team,
+        );
+
+        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter(
+            $this->open_program_increment_searcher,
+            SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror(),
+            $this->program_for_admin,
+            $this->user_identifier,
+            $collection,
+            []
+        );
+        self::assertSame($team->getId(), $teams_presenter[0]->id);
+        self::assertTrue($teams_presenter[0]->should_synchronize_team);
     }
 }

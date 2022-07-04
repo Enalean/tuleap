@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 
-/**
- * @psalm-immutable
- */
-final class TeamPresenter
+final class SearchMirrorTimeboxesFromProgramStub implements SearchMirrorTimeboxesFromProgram
 {
-    public int $id;
-    public string $public_name;
-    public string $url;
-    public string $project_icon;
-
-    public function __construct(ProjectReference $team, public bool $should_synchronize_team)
+    private function __construct(private bool $has_mirror)
     {
-        $this->id           = $team->getId();
-        $this->public_name  = $team->getProjectLabel();
-        $this->url          = $team->getUrl();
-        $this->project_icon = $team->getProjectIcon();
+    }
+
+    public static function buildWithMissingMirror(): self
+    {
+        return new self(true);
+    }
+
+    public static function buildWithoutMissingMirror(): self
+    {
+        return new self(false);
+    }
+
+    public function hashMirroredTimeboxesFromProgram(ProjectReference $team, string $title): bool
+    {
+        return $this->has_mirror;
     }
 }
