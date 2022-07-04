@@ -83,6 +83,7 @@ use Tuleap\HelpDropdown\HelpMenuOpenedController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -957,6 +958,7 @@ class RouteCollector
         return new SVNProjectAccessController(
             HTTPFactoryBuilder::responseFactory(),
             $logger,
+            new BasicAuthLoginExtractor(),
             $user_manager,
             ProjectManager::instance(),
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager),
