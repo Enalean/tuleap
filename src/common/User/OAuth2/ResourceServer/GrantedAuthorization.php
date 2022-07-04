@@ -33,19 +33,15 @@ final class GrantedAuthorization
     private $user;
 
     /**
-     * @psalm-readonly
-     * @var AuthenticationScope[]
-     */
-    private $scopes;
-
-    /**
      * @param AuthenticationScope[] $scopes
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public function __construct(\PFUser $user, array $scopes)
-    {
-        $this->user   = $user;
-        $this->scopes = $scopes;
+    public function __construct(
+        \PFUser $user,
+        /** @psalm-readonly */
+        private array $scopes,
+    ) {
+        $this->user = $user;
     }
 
     /**
