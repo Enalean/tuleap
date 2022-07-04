@@ -67,6 +67,7 @@ export const base_config = {
     },
     snapshotSerializers: ["jest-serializer-vue"],
     testMatch: ["**/?(*.)+(test).{js,ts}"],
+    testPathIgnorePatterns: ["/node_modules/", "<rootDir>/scripts/lib/"],
     collectCoverageFrom: [
         "**/*.{js,ts,vue}",
         "!**/node_modules/**",
