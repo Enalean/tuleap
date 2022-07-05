@@ -29,6 +29,7 @@ export function getProjectRepositories(project_id: number): Promise<ReadonlyArra
         params: {
             fields: "basic",
             limit: 50,
+            query: '{ "scope": "project" }',
         },
         getCollectionCallback: (payload: RecursiveGetProjectRepositories) => payload.repositories,
     });

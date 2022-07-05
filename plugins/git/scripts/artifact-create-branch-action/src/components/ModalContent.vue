@@ -30,7 +30,7 @@
         <div class="tlp-modal-body">
             <div class="form-block">
                 <label for="artifact-create-git-branch-select-repository">
-                    {{ $gettext("Git repositories") }}
+                    {{ $gettext("Project Git repositories") }}
                     <span class="action-mandatory-information" aria-hidden="true">*</span>
                 </label>
                 <select
