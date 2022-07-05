@@ -125,4 +125,10 @@ switch ($GLOBALS['wgTuleapAccessPreset']) {
         break;
 }
 
+$GLOBALS['wgDebugLogGroups'] = [
+    'exception' => '/var/log/tuleap/mediawiki_log',
+    'error' => '/var/log/tuleap/mediawiki_log',
+    'fatal' => '/var/log/tuleap/mediawiki_log',
+];
+
 // Tuleap Specific - END ###
