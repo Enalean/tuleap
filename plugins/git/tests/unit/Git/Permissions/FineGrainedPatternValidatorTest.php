@@ -25,52 +25,47 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class FineGrainedPatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItValidatesPattern(): void
+    /**
+     * @testWith ["*"]
+     *           ["master"]
+     *           ["master/*"]
+     *           ["master/dev"]
+     */
+    public function testValidPatterns(string $pattern): void
     {
-        $pattern_01 = '*';
-        $pattern_02 = '/*';
-        $pattern_03 = 'master';
-        $pattern_04 = 'master*';
-        $pattern_05 = 'master/*';
-        $pattern_06 = 'master/*/*';
-        $pattern_07 = 'master/dev';
-        $pattern_08 = 'master/dev*';
-        $pattern_09 = 'master*/dev';
-        $pattern_10 = '';
-        $pattern_11 = 'master*[dev';
-        $pattern_12 = 'master dev';
-        $pattern_13 = 'master?dev';
-
-        $pattern_14 = "master\n";
-        $pattern_15 = "master\r";
-        $pattern_16 = "master\n\r";
-        $pattern_17 = "master\ndev";
-        $pattern_18 = "\n";
-        $pattern_19 = "\v";
-        $pattern_20 = "\f";
-
         $validator = new FineGrainedPatternValidator();
 
-        $this->assertTrue($validator->isPatternValid($pattern_01));
-        $this->assertFalse($validator->isPatternValid($pattern_02));
-        $this->assertTrue($validator->isPatternValid($pattern_03));
-        $this->assertFalse($validator->isPatternValid($pattern_04));
-        $this->assertTrue($validator->isPatternValid($pattern_05));
-        $this->assertFalse($validator->isPatternValid($pattern_06));
-        $this->assertTrue($validator->isPatternValid($pattern_07));
-        $this->assertFalse($validator->isPatternValid($pattern_08));
-        $this->assertFalse($validator->isPatternValid($pattern_09));
-        $this->assertFalse($validator->isPatternValid($pattern_10));
-        $this->assertFalse($validator->isPatternValid($pattern_11));
-        $this->assertFalse($validator->isPatternValid($pattern_12));
-        $this->assertFalse($validator->isPatternValid($pattern_13));
+        self::assertTrue($validator->isPatternValid($pattern));
+    }
 
-        $this->assertFalse($validator->isPatternValid($pattern_14));
-        $this->assertFalse($validator->isPatternValid($pattern_15));
-        $this->assertFalse($validator->isPatternValid($pattern_16));
-        $this->assertFalse($validator->isPatternValid($pattern_17));
-        $this->assertFalse($validator->isPatternValid($pattern_18));
-        $this->assertFalse($validator->isPatternValid($pattern_19));
-        $this->assertFalse($validator->isPatternValid($pattern_20));
+    /**
+     * @testWith ["/*"]
+     *           ["master*"]
+     *           ["master/*\/*"]
+     *           ["master/dev*"]
+     *           ["master*\/dev"]
+     *           [""]
+     *           ["master*[dev"]
+     *           ["master dev"]
+     *           ["master?dev"]
+     *           ["master\n"]
+     *           ["master\r"]
+     *           ["master\n\r"]
+     *           ["master\ndev"]
+     *           ["\n"]
+     *           ["\f"]
+     */
+    public function testInvalidPatterns(string $pattern): void
+    {
+        $validator = new FineGrainedPatternValidator();
+
+        self::assertFalse($validator->isPatternValid($pattern));
+    }
+
+    public function testVerticalTab(): void
+    {
+        $validator = new FineGrainedPatternValidator();
+
+        $this->assertFalse($validator->isPatternValid("\v"));
     }
 }
