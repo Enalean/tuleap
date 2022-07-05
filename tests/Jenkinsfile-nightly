@@ -69,13 +69,6 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('E2E tests') {
-                    options { retry(1) }
-                    steps {
-                        script { actions.runEndToEndTests('full', 'mysql57') }
-                        junit 'results/e2e/full/*.xml'
-                    }
-                }
                 stage('Distributed SVN integration') {
                     options { retry(1) }
                     steps {
@@ -115,6 +108,13 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+        stage('E2E tests') {
+            options { retry(1) }
+            steps {
+                script { actions.runEndToEndTests('full', 'mysql57') }
+                junit 'results/e2e/full/*.xml'
             }
         }
         stage('Psalm static analysis (unused code)') {
