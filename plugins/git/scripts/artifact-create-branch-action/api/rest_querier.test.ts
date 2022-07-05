@@ -29,7 +29,7 @@ describe("API querier", () => {
             tlpRecursiveGet.mockResolvedValue(repositories);
 
             const project_id = 27;
-            getProjectRepositories(project_id);
+            getProjectRepositories(project_id, "acme");
 
             expect(tlpRecursiveGet).toHaveBeenCalledWith(
                 "/api/v1/projects/27/git",
@@ -37,7 +37,7 @@ describe("API querier", () => {
                     params: {
                         fields: "basic",
                         limit: 50,
-                        query: '{ "scope": "project" }',
+                        query: '{"scope":"project","allow_creation_of_branch":"acme"}',
                     },
                 })
             );

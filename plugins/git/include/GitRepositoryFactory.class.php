@@ -103,44 +103,6 @@ class GitRepositoryFactory
         return $repositories;
     }
 
-    /**
-     * @param string $scope
-     * @param int $owner_id
-     * @param string $order_by
-     * @param int $limit
-     * @param int $offset
-     * @param int $total_number_repositories
-     * @return GitRepository[]
-     */
-    public function getPaginatedRepositoriesUserCanSee(
-        Project $project,
-        PFUser $user,
-        $scope,
-        $owner_id,
-        $order_by,
-        $limit,
-        $offset,
-        &$total_number_repositories,
-    ) {
-        $repositories              = [];
-        $repository_list           = $this->dao->getPaginatedOpenRepositories(
-            $project->getID(),
-            $scope,
-            $owner_id,
-            $order_by,
-            $limit,
-            $offset
-        );
-        $total_number_repositories = $this->dao->foundRows();
-        foreach ($repository_list as $row) {
-            $repository = $this->getRepositoryFromRow($row);
-            if ($repository->userCanRead($user)) {
-                $repositories[] = $repository;
-            }
-        }
-
-        return $repositories;
-    }
 
     /**
      * Get a deleted repository by its id
