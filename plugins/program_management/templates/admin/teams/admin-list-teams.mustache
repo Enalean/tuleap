@@ -15,7 +15,7 @@
                     {{ public_name }}
                     <div class="program-management-admin-action-button">
                         {{# can_force_team_synchronization }}
-                            {{^ has_configuration_error }}
+                            {{# should_synchronize_team }}
                                 <button
                                     type="button"
                                     class="tlp-button-primary tlp-button-small tlp-button-outline program-management-admin-action-synchronize-button disabled"
@@ -24,7 +24,7 @@
                                     <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
                                     {{# dgettext }}tuleap-program_management | Sync open Program Increments {{/ dgettext }}
                                 </button>
-                            {{/ has_configuration_error }}
+                            {{/ should_synchronize_team }}
                         {{/ can_force_team_synchronization }}
                         <button
                             type="button"

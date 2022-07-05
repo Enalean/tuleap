@@ -29,6 +29,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguratio
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Tests\Builder\IterationCreatorCheckerBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreatorCheckerBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\AllProgramSearcherStub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
@@ -43,6 +44,8 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItems
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchMirrorTimeboxesFromProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
@@ -164,7 +167,9 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
                 $this->tracker_factory
             ),
             $this->project_manager,
-            RetrieveFullTrackerStub::withTracker($iteration_tracker)
+            RetrieveFullTrackerStub::withTracker($iteration_tracker),
+            SearchOpenProgramIncrementsStub::withProgramIncrements(ProgramIncrementBuilder::buildWithId(209)),
+            SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror()
         );
     }
 

@@ -161,6 +161,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationE
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ProgramIncrementCreatorChecker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\TimeboxCreatorChecker;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementsSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
@@ -493,8 +494,19 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new UserCanSubmitInTrackerVerifier($user_manager, $tracker_factory, SubmissionPermissionVerifier::instance())
         );
 
-        $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
+        $user_retriever           = new UserManagerAdapter(\UserManager::instance());
+        $project_manager_adapter  = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
+        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+        $artifact_retriever       = new ArtifactFactoryAdapter($tracker_artifact_factory);
+        $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
+        $program_increments_DAO   = new ProgramIncrementsDAO();
+        $program_adapter          = ProgramAdapter::instance();
+        $project_access_checker   = new ProjectAccessChecker(
+            new RestrictedUserCanAccessProjectVerifier(),
+            EventManager::instance()
+        );
 
+        $artifact_visible_verifier = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager, $user_manager_adapter),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
@@ -502,7 +514,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $program_dao,
             new ProjectReferenceRetriever($project_manager_adapter),
             new TeamDao(),
-            ProgramAdapter::instance(),
+            $program_adapter,
             $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
             $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
             new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
@@ -541,7 +553,40 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $tracker_factory
             ),
             $project_manager,
-            $tracker_retriever
+            $tracker_retriever,
+            new ProgramIncrementsSearcher(
+                $this->getProgramAdapter(),
+                $program_increments_dao,
+                $program_increments_dao,
+                $artifact_visible_verifier,
+                new ProgramIncrementRetriever(
+                    new StatusValueRetriever($artifact_retriever, $user_retriever),
+                    new TitleValueRetriever($artifact_retriever),
+                    new TimeframeValueRetriever(
+                        $artifact_retriever,
+                        $user_retriever,
+                        SemanticTimeframeBuilder::build(),
+                        BackendLogger::getDefaultLogger()
+                    ),
+                    new URIRetriever($artifact_retriever),
+                    new CrossReferenceRetriever($artifact_retriever),
+                    $update_verifier,
+                    new UserCanPlanInProgramIncrementVerifier(
+                        $update_verifier,
+                        $program_increments_DAO,
+                        new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever),
+                        $program_dao,
+                        $program_adapter,
+                        new VisibleTeamSearcher(
+                            $program_dao,
+                            $user_retriever,
+                            $project_manager_adapter,
+                            $project_access_checker,
+                        ),
+                    ),
+                )
+            ),
+            new MirroredTimeboxesDao(),
         );
     }
 

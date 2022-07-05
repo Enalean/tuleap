@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
@@ -61,6 +62,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
@@ -93,6 +95,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private ConfigurationErrorPresenterBuilder $error_presenter_builder,
         private \ProjectManager $project_manager,
         private RetrieveFullTracker $tracker_retriever,
+        private SearchOpenProgramIncrements $search_open_program_increments,
+        private SearchMirrorTimeboxesFromProgram $timebox_searcher,
     ) {
     }
 
@@ -227,6 +231,12 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             $teams_in_error = array_unique(array_merge($teams_in_error, $iteration_error_presenter->teams_with_error));
         }
 
+        $aggregated_teams = TeamProjectsCollection::fromProgramForAdministration(
+            $this->teams_searcher,
+            $this->project_reference_retriever,
+            $admin_program
+        );
+
         $this->template_renderer->renderToPage(
             'admin',
             new ProgramAdminPresenter(
@@ -241,11 +251,11 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     )->getPotentialTeams()
                 ),
                 TeamsPresenterBuilder::buildTeamsPresenter(
-                    TeamProjectsCollection::fromProgramForAdministration(
-                        $this->teams_searcher,
-                        $this->project_reference_retriever,
-                        $admin_program
-                    ),
+                    $this->search_open_program_increments,
+                    $this->timebox_searcher,
+                    $admin_program,
+                    $user_identifier,
+                    $aggregated_teams,
                     $teams_in_error
                 ),
                 PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
