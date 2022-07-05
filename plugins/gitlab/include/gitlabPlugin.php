@@ -298,44 +298,42 @@ class gitlabPlugin extends Plugin
         $tag_info_dao                   = new TagInfoDao();
         $cross_reference_manager        = new CrossReferenceManager();
 
-        $comment_creator = new CommentOnlyChangesetCreator(
-            new NewChangesetCreator(
-                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                    $form_element_factory,
-                    new ArtifactLinkValidator(
-                        $artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                        $artifact_links_usage_dao
-                    ),
-                    new WorkflowUpdateChecker(
-                        new FrozenFieldDetector(
-                            new TransitionRetriever(
-                                new StateFactory(
-                                    TransitionFactory::instance(),
-                                    new SimpleWorkflowDao()
-                                ),
-                                new TransitionExtractor()
-                            ),
-                            FrozenFieldsRetriever::instance()
-                        )
-                    )
+        $changeset_creator = new NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                    $artifact_links_usage_dao
                 ),
-                $fields_retriever,
-                $event_manager,
-                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-                $db_transaction_executor,
-                ArtifactChangesetSaver::build(),
-                new ParentLinkAction($artifact_factory),
-                new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-                ActionsRunner::build(\BackendLogger::getDefaultLogger()),
-                new ChangesetValueSaver(),
-                \WorkflowFactory::instance(),
-                new CommentCreator(
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                    $reference_manager,
-                    new TrackerPrivateCommentUGroupPermissionInserter(
-                        new TrackerPrivateCommentUGroupPermissionDao()
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance()
                     )
+                )
+            ),
+            $fields_retriever,
+            $event_manager,
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            $db_transaction_executor,
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($artifact_factory),
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                $reference_manager,
+                new TrackerPrivateCommentUGroupPermissionInserter(
+                    new TrackerPrivateCommentUGroupPermissionDao()
                 )
             )
         );
@@ -378,7 +376,8 @@ class gitlabPlugin extends Plugin
                                 $first_possible_value_retriever
                             ),
                             $logger,
-                            $comment_creator
+                            new CommentOnlyChangesetCreator($changeset_creator),
+                            $changeset_creator,
                         ),
                         new ArtifactRetriever($artifact_factory),
                         $user_manager,
@@ -521,44 +520,42 @@ class gitlabPlugin extends Plugin
         $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
 
-        $comment_creator = new CommentOnlyChangesetCreator(
-            new NewChangesetCreator(
-                new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
-                    $form_element_factory,
-                    new ArtifactLinkValidator(
-                        $artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
-                        $artifact_links_usage_dao
-                    ),
-                    new WorkflowUpdateChecker(
-                        new FrozenFieldDetector(
-                            new TransitionRetriever(
-                                new StateFactory(
-                                    TransitionFactory::instance(),
-                                    new SimpleWorkflowDao()
-                                ),
-                                new TransitionExtractor()
-                            ),
-                            FrozenFieldsRetriever::instance()
-                        )
-                    )
+        $changeset_creator = new NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                    $artifact_links_usage_dao
                 ),
-                $fields_retriever,
-                $event_manager,
-                new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
-                $db_transaction_executor,
-                ArtifactChangesetSaver::build(),
-                new ParentLinkAction($artifact_factory),
-                new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
-                ActionsRunner::build(\BackendLogger::getDefaultLogger()),
-                new ChangesetValueSaver(),
-                \WorkflowFactory::instance(),
-                new CommentCreator(
-                    new \Tracker_Artifact_Changeset_CommentDao(),
-                    $reference_manager,
-                    new TrackerPrivateCommentUGroupPermissionInserter(
-                        new TrackerPrivateCommentUGroupPermissionDao()
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance()
                     )
+                )
+            ),
+            $fields_retriever,
+            $event_manager,
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            $db_transaction_executor,
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($artifact_factory),
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                $reference_manager,
+                new TrackerPrivateCommentUGroupPermissionInserter(
+                    new TrackerPrivateCommentUGroupPermissionDao()
                 )
             )
         );
@@ -601,7 +598,8 @@ class gitlabPlugin extends Plugin
                                 $first_possible_value_retriever
                             ),
                             $prefixed_logger,
-                            $comment_creator
+                            new CommentOnlyChangesetCreator($changeset_creator),
+                            $changeset_creator,
                         ),
                         new ArtifactRetriever($artifact_factory),
                         $user_manager,

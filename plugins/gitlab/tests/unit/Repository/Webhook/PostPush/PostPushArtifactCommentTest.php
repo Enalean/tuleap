@@ -32,7 +32,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
+final class PostPushArtifactCommentTest extends TestCase
 {
     private const ARTIFACT_ID                   = 12;
     private const COMMIT_SHA1                   = '614b83';
@@ -46,7 +46,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
         $this->artifact = new Artifact(self::ARTIFACT_ID, 1, 101, 10050, false);
     }
 
-    private function buildComment(WebhookTuleapReference $reference): string
+    private function buildComment(WebhookTuleapReference $reference): ArtifactClosingCommentInCommonMarkFormat
     {
         $commit = new PostPushCommitWebhookData(
             self::COMMIT_SHA1,
@@ -69,7 +69,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
             false
         );
 
-        return PostPushTuleapArtifactCommentBuilder::buildComment(
+        return PostPushArtifactComment::fromCommit(
             self::USERNAME_CLOSING_THE_ARTIFACT,
             $commit,
             $reference,
@@ -116,7 +116,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
 
         $comment = $this->buildComment($reference);
 
-        self::assertSame($expected_comment, $comment);
+        self::assertSame($expected_comment, $comment->getBody());
     }
 
     public function testReturnCommentWhenKeywordIsFixes(): void
@@ -137,7 +137,7 @@ final class PostPushTuleapArtifactCommentBuilderTest extends TestCase
                 self::GITLAB_REPOSITORY_NAME,
                 self::COMMIT_SHA1,
             ),
-            $comment
+            $comment->getBody()
         );
     }
 }

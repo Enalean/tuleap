@@ -24,8 +24,8 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
+use Tuleap\Gitlab\Test\Stub\ArtifactClosingCommentInCommonMarkFormatStub;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -36,17 +36,20 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\NewCommentTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
+use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class PostPushCommitArtifactUpdaterTest extends TestCase
 {
-    private const COMMITTER_EMAIL     = 'mail@example.com';
-    private const COMMIT_SHA1         = '99aa042c9c';
-    private const COMMITTER_USERNAME  = 'asticotc';
-    private const STATUS_FIELD_ID     = 18;
-    private const DONE_BIND_VALUE_ID  = 1234;
-    private const DONE_LABEL          = 'Done';
-    private const COMMITTER_FULL_NAME = "Coco L'Asticot";
+    private const COMMITTER_EMAIL      = 'mail@example.com';
+    private const COMMIT_SHA1          = '99aa042c9c';
+    private const COMMITTER_USERNAME   = 'asticotc';
+    private const STATUS_FIELD_ID      = 18;
+    private const DONE_BIND_VALUE_ID   = 1234;
+    private const CLOSED_BIND_VALUE_ID = 3174;
+    private const DONE_LABEL           = 'Done';
+    private const COMMITTER_FULL_NAME  = "Coco L'Asticot";
+
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&StatusValueRetriever
      */
@@ -67,6 +70,11 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_Status
      */
     private $status_semantic;
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_List
+     */
+    private $status_field;
+    private CreateNewChangesetStub $changeset_creator;
 
     protected function setUp(): void
     {
@@ -74,6 +82,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->done_value_retriever   = $this->createMock(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
             ChangesetTestBuilder::aChangeset('5438')->build()
+        );
+        $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
+            ChangesetTestBuilder::aChangeset('2452')->build()
         );
 
         $this->workflow_user = new Tracker_Workflow_WorkflowUser(
@@ -85,6 +96,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
 
         $this->artifact        = $this->createMock(Artifact::class);
         $this->status_semantic = $this->createStub(\Tracker_Semantic_Status::class);
+        $this->status_field    = $this->createStub(\Tracker_FormElement_Field_List::class);
+        $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
 
         $this->success_message             = sprintf(
             'solved by @%s with gitlab_commit #MyRepo/%s',
@@ -117,14 +130,15 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->status_value_retriever,
             $this->done_value_retriever,
             new NullLogger(),
-            $this->comment_creator
+            $this->comment_creator,
+            $this->changeset_creator,
         );
         $updater->closeTuleapArtifact(
             $this->artifact,
             $this->workflow_user,
             $webhook_data,
             $this->status_semantic,
-            $this->success_message,
+            ArtifactClosingCommentInCommonMarkFormatStub::fromString($this->success_message),
             $no_semantic_comment,
         );
     }
@@ -135,11 +149,19 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
 
-        $this->artifact->method("createNewChangeset")
-            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
-
         $this->closeTuleapArtifact();
+
+        $new_changeset = $this->changeset_creator->getNewChangeset();
+        if (! $new_changeset) {
+            throw new \Exception('Expected to receive a new changeset');
+        }
+        self::assertSame($this->artifact, $new_changeset->getArtifact());
+        self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
+        self::assertSame($this->success_message, $new_changeset->getComment()->getBody());
+        self::assertEqualsCanonicalizing(
+            [self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID],
+            $new_changeset->getFieldsData()
+        );
     }
 
     public function testItClosesArtifactWithFirstClosedStatusValue(): void
@@ -149,20 +171,29 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockNoDoneValue();
         $this->mockClosedValueIsFound();
 
-        $this->artifact->method("createNewChangeset")
-            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willReturn(ChangesetTestBuilder::aChangeset('7209')->build());
-
         $this->closeTuleapArtifact();
+
+        $new_changeset = $this->changeset_creator->getNewChangeset();
+        if (! $new_changeset) {
+            throw new \Exception('Expected to receive a new changeset');
+        }
+        self::assertSame($this->artifact, $new_changeset->getArtifact());
+        self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
+        self::assertSame($this->success_message, $new_changeset->getComment()->getBody());
+        self::assertEqualsCanonicalizing(
+            [self::STATUS_FIELD_ID => self::CLOSED_BIND_VALUE_ID],
+            $new_changeset->getFieldsData()
+        );
     }
 
     public function testItDoesNothingIfArtifactIsAlreadyClosed(): void
     {
         $this->artifact->method('isOpen')->willReturn(false);
         $this->artifact->method('getId')->willReturn(25);
-        $this->artifact->expects(self::never())->method("createNewChangeset");
 
         $this->closeTuleapArtifact();
+
+        self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItThrowsIfNoPossibleValueAreFound(): void
@@ -174,10 +205,10 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with($this->artifact, $this->workflow_user)
             ->willThrowException(new NoPossibleValueException());
 
-        $this->artifact->expects(self::never())->method("createNewChangeset");
-
         $this->expectException(NoPossibleValueException::class);
         $this->closeTuleapArtifact();
+
+        self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfCommentIsNotCreated(): void
@@ -185,12 +216,11 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
-
-        $this->artifact->method("createNewChangeset")
-            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willReturn(null);
+        $this->changeset_creator = CreateNewChangesetStub::withNullReturnChangeset();
 
         $this->closeTuleapArtifact();
+
+        self::assertNotNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItDoesNotAddArtifactCommentAndUpdateStatusIfAnErrorOccursDuringTheCommentCreation(): void
@@ -198,12 +228,11 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
-
-        $this->artifact->method("createNewChangeset")
-            ->with([self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID], $this->success_message, $this->workflow_user)
-            ->willThrowException(new Tracker_NoChangeException(1, 'xref'));
+        $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_NoChangeException(1, 'xref'));
 
         $this->closeTuleapArtifact();
+
+        self::assertNotNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItAddsOnlyACommentIfStatusSemanticIsNotDefined(): void
@@ -263,16 +292,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
 
     private function mockStatusFieldIsFound(): void
     {
-        $status_field = $this->createMock(\Tracker_FormElement_Field_List::class);
-        $status_field
-            ->method('getId')
-            ->willReturn(self::STATUS_FIELD_ID);
-        $status_field
-            ->method('getFieldData')
-            ->with(self::DONE_LABEL)
-            ->willReturn(self::DONE_BIND_VALUE_ID);
-
-        $this->status_semantic->method('getField')->willReturn($status_field);
+        $this->status_semantic->method('getField')->willReturn($this->status_field);
     }
 
     private function mockStatusFieldIsNotDefined(): void
@@ -282,6 +302,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
 
     private function mockDoneValueIsFound(): void
     {
+        $this->status_field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
+
         $this->done_value_retriever->expects(self::once())
             ->method("getFirstDoneValueUserCanRead")
             ->with($this->artifact, $this->workflow_user)
@@ -298,6 +320,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
 
     private function mockClosedValueIsFound(): void
     {
+        $this->status_field->method('getFieldData')->willReturn(self::CLOSED_BIND_VALUE_ID);
+
         $this->status_value_retriever->expects(self::once())
             ->method("getFirstClosedValueUserCanRead")
             ->with($this->workflow_user, $this->artifact)

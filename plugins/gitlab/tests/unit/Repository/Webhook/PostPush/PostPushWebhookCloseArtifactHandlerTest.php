@@ -45,6 +45,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
+use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
@@ -102,6 +103,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private $done_value_retriever;
     private \Project $project;
     private CreateCommentOnlyChangesetStub $comment_creator;
+    private CreateNewChangesetStub $changeset_creator;
 
     protected function setUp(): void
     {
@@ -117,6 +119,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
             ChangesetTestBuilder::aChangeset('7290')->build()
+        );
+        $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
+            ChangesetTestBuilder::aChangeset('4257')->build()
         );
 
         $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -159,6 +164,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
                 $this->done_value_retriever,
                 $this->logger,
                 $this->comment_creator,
+                $this->changeset_creator
             ),
             $this->artifact_retriever,
             $this->user_manager,
@@ -185,20 +191,23 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             $this->getBindValue()
         );
 
-        $this->artifact->method('createNewChangeset')
-            ->with(self::anything(), self::anything(), $this->workflow_user)
-            ->willReturn(ChangesetTestBuilder::aChangeset('515')->build());
-
         $this->handleArtifactClosure();
+
+        $new_changeset = $this->changeset_creator->getNewChangeset();
+        if (! $new_changeset) {
+            throw new \Exception('Expected to receive a new changeset');
+        }
+        self::assertSame($this->artifact, $new_changeset->getArtifact());
+        self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
     }
 
     public function testItDoesNothingIfNoCloseKeywordDefined(): void
     {
         $this->reference = new WebhookTuleapReference(123);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
-
         $this->handleArtifactClosure();
+
+        self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItDoesNothingIfReferencedArtifactIsNotFound(): void
@@ -207,10 +216,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with($this->reference)
             ->willThrowException(new ArtifactNotFoundException());
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
-
         $this->handleArtifactClosure();
 
+        self::assertNull($this->changeset_creator->getNewChangeset());
         $this->assertTrue($this->logger->hasError("|  |  |_ Artifact #123 not found"));
     }
 
@@ -222,10 +230,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->with(self::GITLAB_INTEGRATION_ID, self::PROJECT_ID)
             ->willReturn(false);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
-
         $this->handleArtifactClosure();
 
+        self::assertNull($this->changeset_creator->getNewChangeset());
         $this->assertTrue(
             $this->logger->hasWarning(
                 "|  |  |_ Artifact #123 cannot be closed. " .
@@ -243,10 +250,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->user_manager->method('getUserById')->willReturn(null);
 
         $this->expectException(UserNotExistException::class);
-
-        $this->artifact->expects(self::never())->method('createNewChangeset');
-
         $this->handleArtifactClosure();
+
+        self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItDoesNothingIfRepositoryDoesNotHaveCredentials(): void
@@ -258,10 +264,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ->method('getCredentials')
             ->willReturn(null);
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
-
         $this->handleArtifactClosure();
 
+        self::assertNull($this->changeset_creator->getNewChangeset());
         $this->assertTrue(
             $this->logger->hasWarning(
                 "|  |  |_ Artifact #123 cannot be closed because no token found for integration. Skipping."
@@ -292,9 +297,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
                 )
             );
 
-        $this->artifact->expects(self::never())->method('createNewChangeset');
-
         $this->handleArtifactClosure();
+
+        self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
     public function testItAsksToAddACommentWhenNoSemanticDefined(): void

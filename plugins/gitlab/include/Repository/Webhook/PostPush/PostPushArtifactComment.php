@@ -28,22 +28,29 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Tracker\Artifact\Artifact;
 
-final class PostPushTuleapArtifactCommentBuilder
+/**
+ * @psalm-immutable
+ */
+final class PostPushArtifactComment implements ArtifactClosingCommentInCommonMarkFormat
 {
-    public static function buildComment(
+    private function __construct(private string $comment)
+    {
+    }
+
+    public static function fromCommit(
         string $user_name,
         PostPushCommitWebhookData $commit,
         WebhookTuleapReference $tuleap_reference,
         GitlabRepositoryIntegration $gitlab_repository_integration,
         Artifact $artifact,
-    ): string {
+    ): self {
         if (
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVES_KEYWORD &&
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::CLOSES_KEYWORD &&
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::FIXES_KEYWORD &&
             $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::IMPLEMENTS_KEYWORD
         ) {
-            return "";
+            return new self('');
         }
 
         $action_word = "solved";
@@ -55,6 +62,13 @@ final class PostPushTuleapArtifactCommentBuilder
             $action_word = "implemented";
         }
 
-        return "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository_integration->getName()}/{$commit->getSha1()}";
+        return new self(
+            "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository_integration->getName()}/{$commit->getSha1()}"
+        );
+    }
+
+    public function getBody(): string
+    {
+        return $this->comment;
     }
 }
