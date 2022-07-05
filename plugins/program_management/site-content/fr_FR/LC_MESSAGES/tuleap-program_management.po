@@ -456,6 +456,10 @@ msgstr ""
 "La sémantique statut est liée à aucun champ dans l'outil de suivi du "
 "programme <a href='%s'>#%s</a>:"
 
+#, php-format
+msgid "Sync open %s"
+msgstr "Sync %s ouverts"
+
 msgid "Sync open Program Increments"
 msgstr "Sync Incréments de Programme ouverts"
 
