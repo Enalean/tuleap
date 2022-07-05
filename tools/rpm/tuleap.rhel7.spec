@@ -818,6 +818,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
 
 ## Plugin mediawiki_standalone
 %{__install} plugins/mediawiki_standalone/etc/systemd/mediawiki-tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} plugins/mediawiki_standalone/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 
 #
 ## Plugin proftpd
@@ -1319,6 +1322,8 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/mediawiki_standalone
 %{_unitdir}/mediawiki-tuleap-php-fpm.service
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
