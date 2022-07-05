@@ -23,10 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+
+final class MediaWikiManagementCommandObserver implements MediaWikiManagementCommand
 {
     /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
+     * @psalm-readonly-allow-private-mutation
      */
-    public function runInstallAndUpdate(): void;
+    public bool $has_been_waited_on = false;
+
+    public function __construct(private MediaWikiManagementCommand $command_to_observe)
+    {
+    }
+
+    public function wait(): Ok|Err
+    {
+        $this->has_been_waited_on = true;
+        return $this->command_to_observe->wait();
+    }
 }

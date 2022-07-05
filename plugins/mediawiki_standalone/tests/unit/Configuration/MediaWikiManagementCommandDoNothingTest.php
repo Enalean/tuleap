@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+use Tuleap\NeverThrow\Result;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class MediaWikiManagementCommandDoNothingTest extends TestCase
 {
-    /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
-     */
-    public function runInstallAndUpdate(): void;
+    public function testIsAlwaysSuccessful(): void
+    {
+        self::assertTrue(Result::isOk((new MediaWikiManagementCommandDoNothing())->wait()));
+    }
 }

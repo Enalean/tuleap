@@ -23,10 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+interface MediaWikiManagementCommandFactory
 {
-    /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
-     */
-    public function runInstallAndUpdate(): void;
+    public function buildInstallCommand(): MediaWikiManagementCommand;
+
+    public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand;
+
+    public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand;
 }

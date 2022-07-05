@@ -24,21 +24,22 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Process\Process;
-use Tuleap\DB\DBConfig;
 
 final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAndUpdateHandler
 {
-    private const LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI = 'LocalSettings.php';
+    private const MAX_ONGOING_PROCESSES = 2;
 
     public function __construct(
-        private string $path_setting_directory,
+        private MediaWikiManagementCommandFactory $management_command_factory,
         private LocalSettingsInstantiator $local_settings_instantiator,
         private ProjectMediaWikiServiceDAO $project_mediawiki_service_dao,
         private LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @throws MediaWikiInstallAndUpdateHandlerException
+     */
     public function runInstallAndUpdate(): void
     {
         $this->installFarmInstance();
@@ -50,58 +51,55 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
 
     private function installFarmInstance(): void
     {
-        if (file_exists($this->path_setting_directory . '/' . self::LOCAL_SETTINGS_FILE_MANAGED_BY_MEDIAWIKI)) {
-            $this->logger->debug('MediaWiki standalone farm instance is already installed');
-            return;
-        }
-
         $this->logger->info('Install MediaWiki standalone farm instance');
-        $this->executeMediaWikiManagementCommand(
-            [
-                LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI,
-            '/usr/share/mediawiki-tuleap-flavor/maintenance/install.php',
-                '--confpath',
-                $this->path_setting_directory,
-                '--dbserver',
-                \ForgeConfig::get(DBConfig::CONF_HOST) . ':' . \ForgeConfig::getInt(DBConfig::CONF_PORT),
-                '--dbname',
-                'plugin_mediawiki_standalone_farm',
-                '--dbuser',
-                \ForgeConfig::get(DBConfig::CONF_DBUSER),
-                '--dbpass',
-                \ForgeConfig::get(DBConfig::CONF_DBPASSWORD),
-                '--pass',
-                base64_encode(random_bytes(32)),
-                'TuleapFarmManagement',
-                'tuleap_mediawikifarm_admin',
-            ]
-        );
+        $this->executeMediaWikiManagementCommandSynchronously($this->management_command_factory->buildInstallCommand());
     }
 
     private function updateFarmInstance(): void
     {
         $this->logger->debug('Updating MediaWiki standalone farm instance');
-        $this->executeMediaWikiManagementCommand(
-            [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/maintenance/update.php', '--quick']
-        );
+        $this->executeMediaWikiManagementCommandSynchronously($this->management_command_factory->buildUpdateFarmInstanceCommand());
     }
 
     private function updateProjectInstances(): void
     {
         $this->logger->debug('Updating MediaWiki standalone project instances');
+        $ongoing_processes = [];
+        $failures          = [];
         foreach ($this->project_mediawiki_service_dao->searchAllProjectsWithMediaWikiStandaloneServiceEnabled() as ['project_name' => $project_name]) {
-            $this->logger->debug('Updating MediaWiki project instance of project ' . $project_name);
-            $this->executeMediaWikiManagementCommand(
-                [LocalSettingsRepresentation::MEDIAWIKI_PHP_CLI, '/usr/share/mediawiki-tuleap-flavor/maintenance/update.php', '--quick', '--sfr', $project_name]
-            );
+            $this->logger->debug('Starting update of MediaWiki project instance of project ' . $project_name);
+            $ongoing_processes[] = $this->management_command_factory->buildUpdateProjectInstanceCommand($project_name);
+            if (count($ongoing_processes) >= self::MAX_ONGOING_PROCESSES) {
+                $failures = [...$failures, ...self::waitOngoingProcesses($ongoing_processes)];
+            }
+        }
+        $failures = [...$failures, ...self::waitOngoingProcesses($ongoing_processes)];
+
+        if (count($failures) > 0) {
+            throw MediaWikiInstallAndUpdateHandlerException::fromCommandFailures($failures);
         }
     }
 
-    private function executeMediaWikiManagementCommand(array $command): void
+    private function executeMediaWikiManagementCommandSynchronously(MediaWikiManagementCommand $management_command): void
     {
-        $process = new Process($command);
-        $process->setTimeout(null);
-        $process->mustRun();
-        $this->logger->debug($process->getOutput());
+        $management_command->wait()->mapErr(function (MediaWikiManagementCommandFailure $err): void {
+            throw MediaWikiInstallAndUpdateHandlerException::fromCommandFailures([$err]);
+        });
+    }
+
+    /**
+     * @param list<MediaWikiManagementCommand> $ongoing_processes
+     * @return list<MediaWikiManagementCommandFailure>
+     */
+    private static function waitOngoingProcesses(array $ongoing_processes): array
+    {
+        $failures = [];
+        foreach ($ongoing_processes as $ongoing_process) {
+            $result = $ongoing_process->wait();
+            $result->mapErr(function (MediaWikiManagementCommandFailure $failure) use (&$failures): void {
+                $failures[] = $failure;
+            });
+        }
+        return $failures;
     }
 }

@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+
+interface MediaWikiManagementCommand
 {
     /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
+     * @return Ok<null>|Err<MediaWikiManagementCommandFailure>
      */
-    public function runInstallAndUpdate(): void;
+    public function wait(): Ok|Err;
 }

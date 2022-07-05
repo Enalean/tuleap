@@ -23,10 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-interface MediaWikiInstallAndUpdateHandler
+use Psr\Log\NullLogger;
+use Tuleap\NeverThrow\Result;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class MediaWikiManagementCommandProcessTest extends TestCase
 {
-    /**
-     * @throws MediaWikiInstallAndUpdateHandlerException
-     */
-    public function runInstallAndUpdate(): void;
+    public function testGivesAnOkWhenCommandDoesNotFail(): void
+    {
+        $command = new MediaWikiManagementCommandProcess(new NullLogger(), ['true']);
+        $result  = $command->wait();
+
+        self::assertTrue(Result::isOk($result));
+    }
+
+    public function testGivesAnErrorWhenCommandFails(): void
+    {
+        $command = new MediaWikiManagementCommandProcess(new NullLogger(), ['false']);
+
+        $result = $command->wait();
+        self::assertTrue(Result::isErr($result));
+        self::assertEquals(1, $result->error->exit_code);
+    }
 }
