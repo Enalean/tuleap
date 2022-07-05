@@ -76,7 +76,7 @@ final class ConfigurationErrorsCollector
      */
     private array $title_has_incorrect_type_error = [];
     /**
-     * @var MissingArtifactLinkFieldPresenter[]
+     * @var MissingArtifactLinkField[]
      */
     private array $missing_artifact_link = [];
     /**
@@ -206,7 +206,7 @@ final class ConfigurationErrorsCollector
 
     public function addMissingFieldArtifactLink(string $field_administration_url, TrackerReference $tracker, string $project_name): void
     {
-        $this->missing_artifact_link[] = new MissingArtifactLinkFieldPresenter($field_administration_url, $tracker->getLabel(), $project_name);
+        $this->missing_artifact_link[] = new MissingArtifactLinkField($field_administration_url, $tracker->getLabel(), $project_name);
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
@@ -338,7 +338,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return MissingArtifactLinkFieldPresenter[]
+     * @return MissingArtifactLinkField[]
      */
     public function getMissingArtifactLinkErrors(): array
     {

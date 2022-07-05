@@ -26,7 +26,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 /**
  * @psalm-immutable
  */
-final class MissingArtifactLinkFieldPresenter
+final class MissingArtifactLinkField
 {
     public function __construct(public string $field_administration_url, public string $tracker_name, public string $project_name)
     {
