@@ -21,21 +21,24 @@
 
 namespace Tuleap\Git\REST\v1\Branch;
 
-use Git;
 use Git_Command_Exception;
 use Luracast\Restler\RestException;
 use Tuleap\Git\Branch\BranchCreationExecutor;
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Branch\CannotCreateNewBranchException;
 use Tuleap\Git\Branch\InvalidBranchNameException;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\REST\v1\GitBranchPOSTRepresentation;
 
 class BranchCreator
 {
     private const BRANCH_PREFIX = "refs/heads/";
 
-    public function __construct(private \Git_Exec $git_exec, private BranchCreationExecutor $branch_creation_executor)
-    {
+    public function __construct(
+        private \Git_Exec $git_exec,
+        private BranchCreationExecutor $branch_creation_executor,
+        private AccessControlVerifier $access_control_verifier,
+    ) {
     }
 
     /**
@@ -43,16 +46,6 @@ class BranchCreator
      */
     public function createBranch(\PFUser $user, \GitRepository $repository, GitBranchPOSTRepresentation $representation): void
     {
-        if (
-            ! $user->hasPermission(Git::PERM_WRITE, $repository->getId(), $repository->getProjectId())
-            && ! $user->hasPermission(Git::PERM_WPLUS, $repository->getId(), $repository->getProjectId())
-        ) {
-            throw new RestException(
-                403,
-                "User cannot update the content of the repository"
-            );
-        }
-
         try {
             BranchName::fromBranchNameShortHand($representation->branch_name);
         } catch (InvalidBranchNameException $exception) {
@@ -61,6 +54,17 @@ class BranchCreator
                 sprintf(
                     "The branch name %s is not a valid branch name",
                     $representation->branch_name
+                )
+            );
+        }
+
+        if (! $this->access_control_verifier->canWrite($user, $repository, self::BRANCH_PREFIX . $representation->branch_name)) {
+            throw new RestException(
+                403,
+                sprintf(
+                    "You are not allowed to create the branch %s in repository %s",
+                    $representation->branch_name,
+                    $repository->getName()
                 )
             );
         }
