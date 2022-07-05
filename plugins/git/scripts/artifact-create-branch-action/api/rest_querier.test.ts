@@ -37,6 +37,7 @@ describe("API querier", () => {
                     params: {
                         fields: "basic",
                         limit: 50,
+                        query: '{ "scope": "project" }',
                     },
                 })
             );
