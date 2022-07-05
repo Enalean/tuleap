@@ -28,9 +28,11 @@ use GitRepositoryFactory;
 use PFUser;
 use Project;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class CreateBranchButtonFetcher
 {
@@ -39,16 +41,18 @@ final class CreateBranchButtonFetcher
 
     public function __construct(
         private GitRepositoryFactory $git_repository_factory,
+        private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
         private JavascriptAssetGeneric $javascript_asset,
     ) {
     }
 
-    public function getActionButton(Project $project, PFUser $user): ?AdditionalButtonAction
+    public function getActionButton(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
     {
         if (! ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
             return null;
         }
 
+        $project = $artifact->getTracker()->getProject();
         if (! $this->doesProjectHaveRepositoriesUserCanRead($project, $user)) {
             return null;
         }
@@ -65,6 +69,10 @@ final class CreateBranchButtonFetcher
                 [
                     'name'  => "project-id",
                     'value' => (string) $project->getID(),
+                ],
+                [
+                    "name" => "git-branch-name-preview",
+                    "value" => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact),
                 ],
             ],
         );

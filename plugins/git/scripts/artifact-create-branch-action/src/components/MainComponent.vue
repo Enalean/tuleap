@@ -20,7 +20,10 @@
 <template>
     <Teleport to="#main-content">
         <div class="git-tracker-create-branch-modal">
-            <modal-content v-bind:repositories="repositories" />
+            <modal-content
+                v-bind:repositories="repositories"
+                v-bind:branch_name_preview="branch_name_preview"
+            />
         </div>
     </Teleport>
 </template>
@@ -31,6 +34,7 @@ import type { GitRepository } from "../types";
 
 defineProps<{
     repositories: ReadonlyArray<GitRepository>;
+    branch_name_preview: string;
 }>();
 </script>
 

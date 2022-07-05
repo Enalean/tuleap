@@ -23,3 +23,6 @@ msgstr "Dépôts Git"
 
 msgid "Must be an existing git commit SHA-1 or a branch name"
 msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
+
+msgid "The following branch will be created"
+msgstr "La branche suivante sera créée"
