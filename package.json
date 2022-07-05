@@ -77,7 +77,7 @@
     "vite-plugin-externals": "^0.3.4",
     "vite-plugin-vue2": "^1.9.3",
     "vue-eslint-parser": "^9.0.3",
-    "vue-loader": "^15.9.8",
+    "vue-loader": "^15.10.0",
     "vue-template-compiler": "^2.6.14",
     "vue-tsc": "^0.38.2",
     "webpack": "^5.72.0",

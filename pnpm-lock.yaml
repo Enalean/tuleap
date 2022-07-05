@@ -73,7 +73,7 @@ specifiers:
   vite-plugin-externals: ^0.3.4
   vite-plugin-vue2: ^1.9.3
   vue-eslint-parser: ^9.0.3
-  vue-loader: ^15.9.8
+  vue-loader: ^15.10.0
   vue-template-compiler: ^2.6.14
   vue-tsc: ^0.38.2
   webpack: ^5.72.0
@@ -156,7 +156,7 @@ devDependencies:
   vite-plugin-externals: 0.3.4_vite@2.9.1
   vite-plugin-vue2: 1.9.3_d67dkgzw7et5jdbhust6y5z5uq
   vue-eslint-parser: 9.0.3_eslint@8.12.0
-  vue-loader: 15.9.8_sfxxbsjwa24e2qulymk32q7kxe
+  vue-loader: 15.10.0_sfxxbsjwa24e2qulymk32q7kxe
   vue-template-compiler: 2.6.14
   vue-tsc: 0.38.2_typescript@4.6.2
   webpack: 5.72.0_webpack-cli@4.9.2
@@ -9149,8 +9149,8 @@ packages:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
     dev: true
 
-  /vue-loader/15.9.8_sfxxbsjwa24e2qulymk32q7kxe:
-    resolution: {integrity: sha512-GwSkxPrihfLR69/dSV3+5CdMQ0D+jXg8Ma1S4nQXKJAznYFX14vHdc/NetQc34Dw+rBbIJyP7JOuVb9Fhprvog==}
+  /vue-loader/15.10.0_sfxxbsjwa24e2qulymk32q7kxe:
+    resolution: {integrity: sha512-VU6tuO8eKajrFeBzMssFUP9SvakEeeSi1BxdTH5o3+1yUyrldp8IERkSdXlMI2t4kxF2sqYUDsQY+WJBxzBmZg==}
     peerDependencies:
       cache-loader: '*'
       css-loader: '*'
