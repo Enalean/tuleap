@@ -45,6 +45,14 @@ msgid_plural "Personal reports"
 msgstr[0] "Rapport personnel"
 msgstr[1] "Rapports personnels"
 
+msgid ""
+"Please be aware this configuration screen will be reworked in the future. "
+"The development team has knowledge of the visual and usability issues."
+msgstr ""
+"Veuillez noter que cet écran de configuration sera retravaillé à l'avenir. "
+"L'équipe de développement a connaissance des problèmes visuels et "
+"d'usabilité."
+
 msgid "Project"
 msgstr "Projet"
 

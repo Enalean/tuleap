@@ -20,10 +20,7 @@
 
 declare(strict_types=1);
 
-use Tuleap\Config\ConfigClassProvider;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DocumentGeneration\CrossReport\CrossReportExportPropertiesFetcher;
-use Tuleap\DocumentGeneration\FeatureFlagCrossTrackerReportAction;
 use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -36,7 +33,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class document_generationPlugin extends Plugin implements PluginWithConfigKeys
+class document_generationPlugin extends Plugin
 {
     public function __construct(?int $id)
     {
@@ -63,11 +60,6 @@ class document_generationPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(GetExportOptionsMenuItemsEvent::NAME);
 
         return parent::getHooksAndCallbacks();
-    }
-
-    public function getConfigKeys(ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(FeatureFlagCrossTrackerReportAction::class);
     }
 
     public function getExportOptionsMenuItems(GetExportOptionsMenuItemsEvent $event): void
@@ -121,19 +113,6 @@ class document_generationPlugin extends Plugin implements PluginWithConfigKeys
             )
         );
 
-        $document_generation_asset = new IncludeViteAssets(
-            __DIR__ . '/../frontend-assets/',
-            '/assets/document_generation'
-        );
-
-        $event->addJavascriptAssets(
-            new JavascriptViteAsset($document_generation_asset, 'scripts/tracker-report-action/src/index.ts')
-        );
-
-        if (! FeatureFlagCrossTrackerReportAction::isEnabled()) {
-            return;
-        }
-
         $cross_report_properties_fetcher = new CrossReportExportPropertiesFetcher();
 
         $event->addExportItem(
@@ -148,8 +127,12 @@ class document_generationPlugin extends Plugin implements PluginWithConfigKeys
             )
         );
 
+        $document_generation_asset = new IncludeViteAssets(
+            __DIR__ . '/../frontend-assets/',
+            '/assets/document_generation'
+        );
         $event->addJavascriptAssets(
-            new JavascriptViteAsset($document_generation_asset, 'scripts/tracker-cross-report-action/src/index.ts')
+            new JavascriptViteAsset($document_generation_asset, 'scripts/index.ts')
         );
     }
 }

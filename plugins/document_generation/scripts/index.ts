@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -15,24 +14,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\DocumentGeneration;
-
-use Tuleap\Config\ConfigKeyLegacyBool;
-use Tuleap\Config\FeatureFlagConfigKey;
-
-final class FeatureFlagCrossTrackerReportAction
-{
-    #[FeatureFlagConfigKey("Feature flag to enable the cross tracker XSLX export")]
-    #[ConfigKeyLegacyBool(false)]
-    public const FORGE_CONFIG_KEY = "doc_gen_cross_tracker_report_xslx_export";
-
-    public static function isEnabled(): bool
-    {
-        return \ForgeConfig::getFeatureFlag(self::FORGE_CONFIG_KEY) === '1';
-    }
-}
+import "./tracker-cross-report-action/src/index";
+import "./tracker-report-action/src/index";
