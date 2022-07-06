@@ -146,7 +146,7 @@ class PostPushWebhookCloseArtifactHandler
             }
 
             $committer_username   = $this->getUserClosingTheArtifactFromGitlabWebhook($post_push_commit_webhook_data);
-            $closing_comment_body = PostPushTuleapArtifactCommentBuilder::buildComment(
+            $closing_comment_body = PostPushArtifactComment::fromCommit(
                 $committer_username->getName(),
                 $post_push_commit_webhook_data,
                 $tuleap_reference,

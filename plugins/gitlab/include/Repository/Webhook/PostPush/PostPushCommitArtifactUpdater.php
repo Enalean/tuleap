@@ -29,8 +29,13 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tracker_NoChangeException;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\CreateCommentOnlyChangeset;
+use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
@@ -44,6 +49,7 @@ final class PostPushCommitArtifactUpdater
         private DoneValueRetriever $done_value_retriever,
         private LoggerInterface $logger,
         private CreateCommentOnlyChangeset $comment_creator,
+        private CreateNewChangeset $changeset_creator,
     ) {
     }
 
@@ -55,41 +61,53 @@ final class PostPushCommitArtifactUpdater
         PFUser $tracker_workflow_user,
         PostPushCommitWebhookData $commit,
         \Tracker_Semantic_Status $status_semantic,
-        string $closing_comment_body,
+        ArtifactClosingCommentInCommonMarkFormat $closing_comment_body,
         NewComment $no_semantic_comment,
     ): void {
+        if (! $artifact->isOpen()) {
+            $this->logger->info(
+                "Artifact #{$artifact->getId()} is already closed and can not be closed automatically by GitLab commit #{$commit->getSha1()}"
+            );
+            return;
+        }
+
+        $status_field = $status_semantic->getField();
+        if ($status_field === null) {
+            $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
+            if (Result::isErr($result)) {
+                $this->logger->error((string) $result->error);
+            }
+            return;
+        }
+
         try {
-            if (! $artifact->isOpen()) {
-                $this->logger->info(
-                    "Artifact #{$artifact->getId()} is already closed and can not be closed automatically by GitLab commit #{$commit->getSha1()}"
-                );
-                return;
+            $closed_value = $this->getClosedValue($artifact, $tracker_workflow_user);
+        } catch (SemanticStatusClosedValueNotFoundException $e) {
+            $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
+            if (Result::isErr($result)) {
+                $this->logger->error((string) $result->error);
             }
+            return;
+        }
 
-            $status_field = $status_semantic->getField();
-            if ($status_field === null) {
-                $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
-                if (Result::isErr($result)) {
-                    $this->logger->error((string) $result->error);
-                }
-                return;
-            }
+        $fields_data = [
+            $status_field->getId() => $status_field->getFieldData($closed_value->getLabel()),
+        ];
 
-            try {
-                $closed_value = $this->getClosedValue($artifact, $tracker_workflow_user);
-            } catch (SemanticStatusClosedValueNotFoundException $e) {
-                $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
-                if (Result::isErr($result)) {
-                    $this->logger->error((string) $result->error);
-                }
-                return;
-            }
-
-            $fields_data = [
-                $status_field->getId() => $status_field->getFieldData($closed_value->getLabel()),
-            ];
-
-            $new_followups = $artifact->createNewChangeset($fields_data, $closing_comment_body, $tracker_workflow_user);
+        try {
+            $new_followups = $this->changeset_creator->create(
+                NewChangeset::fromFieldsDataArray(
+                    $artifact,
+                    $fields_data,
+                    $closing_comment_body->getBody(),
+                    CommentFormatIdentifier::buildCommonMark(),
+                    [],
+                    $tracker_workflow_user,
+                    (new \DateTimeImmutable())->getTimestamp(),
+                    new CreatedFileURLMapping()
+                ),
+                PostCreationContext::withNoConfig(true)
+            );
 
             if ($new_followups === null) {
                 $this->logger->error("No new comment was created");

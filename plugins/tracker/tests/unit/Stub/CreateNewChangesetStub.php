@@ -27,6 +27,8 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset
 {
+    private ?NewChangeset $new_changeset = null;
+
     private function __construct(
         private ?\Tracker_Artifact_Changeset $changeset,
         private ?\Throwable $exception,
@@ -48,8 +50,15 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
         return new self(null, $param);
     }
 
+    public function getNewChangeset(): ?NewChangeset
+    {
+        return $this->new_changeset;
+    }
+
     public function create(NewChangeset $changeset, PostCreationContext $context): ?\Tracker_Artifact_Changeset
     {
+        $this->new_changeset = $changeset;
+
         if ($this->exception) {
             throw $this->exception;
         }
