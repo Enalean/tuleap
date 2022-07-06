@@ -107,7 +107,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mysql.conf.d/tuleap.cnf:ro,cached
+      - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/conf.d/tuleap.cnf:ro,cached
       - db57-data:/var/lib/mysql
 
   db-maria-10.3:
