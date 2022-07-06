@@ -83,6 +83,8 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
     {
         $properties = [];
 
+        $custom_properties = [];
+
         foreach ($iterator as $property) {
             assert($property instanceof \Docman_Metadata);
             $delete_url = '';
@@ -96,10 +98,10 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
                     false,
                 );
             }
-            $properties[] = [
-                'id' => $property->getId(),
-                'name' => $property->getName(),
-                'url' => DocmanViewURLBuilder::buildUrl(
+            $property_presenter = [
+                'id'          => $property->getId(),
+                'name'        => $property->getName(),
+                'url'         => DocmanViewURLBuilder::buildUrl(
                     $default_url,
                     [
                         'action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
@@ -109,10 +111,25 @@ class Docman_View_Admin_Metadata extends \Tuleap\Docman\View\Admin\AdminView
                 ),
                 'description' => $property->getDescription(),
                 'is_required' => $property->isRequired(),
-                'is_used' => $property->isUsed(),
-                'delete_url' => $delete_url,
+                'is_used'     => $property->isUsed(),
+                'delete_url'  => $delete_url,
             ];
+
+            if (Docman_MetadataFactory::isRealMetadata($property->getLabel())) {
+                $custom_properties[] = $property_presenter;
+            } else {
+                $properties[] = $property_presenter;
+            }
         }
+
+        usort(
+            $custom_properties,
+            static fn (array $a, array $b): int => strnatcasecmp($a['name'], $b['name']),
+        );
+        foreach ($custom_properties as $property) {
+            $properties[] = $property;
+        }
+
         return $properties;
     }
 }

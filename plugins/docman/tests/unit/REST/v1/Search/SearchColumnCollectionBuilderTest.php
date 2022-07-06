@@ -52,8 +52,8 @@ final class SearchColumnCollectionBuilderTest extends TestCase
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
                 $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
-                $this->getCustomMetadata("field_1", true),
-                $this->getCustomMetadata("field_2", false),
+                $this->getCustomMetadata('field_1', 'Custom prop 1', true),
+                $this->getCustomMetadata('field_2', 'Custom prop 2', false),
             ]);
 
         $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
@@ -77,6 +77,44 @@ final class SearchColumnCollectionBuilderTest extends TestCase
         );
     }
 
+    public function testCustomColumnsAreAlphabeticallySorted(): void
+    {
+        $metadata_factory = $this->createMock(\Docman_MetadataFactory::class);
+        $metadata_factory
+            ->method('getMetadataForGroup')
+            ->willReturn([
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_TITLE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_DESCRIPTION_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_UPDATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_CREATE_DATE_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_STATUS_LABEL),
+                $this->getHardcodedMetadata(\Docman_MetadataFactory::HARDCODED_METADATA_OBSOLESCENCE_LABEL),
+                $this->getCustomMetadata('field_1', 'ZZZ', true),
+                $this->getCustomMetadata('field_2', 'AAA', false),
+            ]);
+
+        $collection = (new SearchColumnCollectionBuilder())->getCollection($metadata_factory);
+
+        self::assertEquals(
+            [
+                "id",
+                "title",
+                "description",
+                "owner",
+                "update_date",
+                "create_date",
+                "status",
+                "obsolescence_date",
+                "location",
+                "filename",
+                "field_2",
+                "field_1",
+            ],
+            $collection->getColumnNames(),
+        );
+    }
+
     private function getHardcodedMetadata(string $label): \Docman_Metadata
     {
         $metadata = new \Docman_Metadata();
@@ -87,11 +125,11 @@ final class SearchColumnCollectionBuilderTest extends TestCase
         return $metadata;
     }
 
-    private function getCustomMetadata(string $label, bool $is_multiple_value_allowed): \Docman_Metadata
+    private function getCustomMetadata(string $label, string $name, bool $is_multiple_value_allowed): \Docman_Metadata
     {
         $metadata = new \Docman_Metadata();
         $metadata->setLabel($label);
-        $metadata->setName(\ucfirst($label));
+        $metadata->setName($name);
         $metadata->setSpecial(false);
         $metadata->setIsMultipleValuesAllowed($is_multiple_value_allowed);
 
