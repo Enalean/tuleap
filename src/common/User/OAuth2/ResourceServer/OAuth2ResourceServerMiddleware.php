@@ -35,6 +35,7 @@ use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeExce
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 use User_LoginException;
 
 /**
@@ -57,26 +58,24 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
      */
     private $access_token_identifier_unserializer;
     /**
-     * @var AuthenticationScope
-     */
-    private $required_scope;
-    /**
      * @var \User_LoginManager
      */
     private $login_manager;
 
+    /**
+     * @param AuthenticationScope<OAuth2ScopeIdentifier> $required_scope
+     */
     public function __construct(
         ResponseFactoryInterface $response_factory,
         BearerTokenHeaderParser $bearer_token_header_parser,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         private OAuth2AccessTokenVerifier $oauth2_access_token_verifier,
-        AuthenticationScope $required_scope,
+        private AuthenticationScope $required_scope,
         \User_LoginManager $login_manager,
     ) {
         $this->response_factory                     = $response_factory;
         $this->bearer_token_header_parser           = $bearer_token_header_parser;
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
-        $this->required_scope                       = $required_scope;
         $this->login_manager                        = $login_manager;
     }
 

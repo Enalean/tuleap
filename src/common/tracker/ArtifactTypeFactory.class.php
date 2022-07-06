@@ -155,7 +155,7 @@ class ArtifactTypeFactory
      *
      *  @param group_id: the group id
      *
-     *  @return    array
+     *  @return    array|false
      */
     public function getArtifactTypesFromId($group_id)
     {
@@ -539,7 +539,7 @@ class ArtifactTypeFactory
      *    @param    name: the name of the new tracker
      *    @param    description: the description of the new tracker
      *    @param    itemname: the itemname of the new tracker
-     *    @return id on success, false on failure.
+     *    @return int|false id on success, false on failure.
      */
     public function create($group_id, $group_id_template, $atid_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = [])
     {
