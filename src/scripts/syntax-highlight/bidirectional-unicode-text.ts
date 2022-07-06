@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import potentially_dangerous_bidirectional_characters from "../../common/Code/potentially-dangerous-bidirectional-characters.json";
+import { POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS } from "@tuleap/potentially-dangerous-bidirectional-characters";
 
 export function markPotentiallyDangerousBidirectionalUnicodeText(html_content: string): string {
     const regex_potentially_dangerous_bidirectional_characters = new RegExp(
-        "[" + potentially_dangerous_bidirectional_characters.join("") + "]",
+        "[" + POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]",
         "g"
     );
 

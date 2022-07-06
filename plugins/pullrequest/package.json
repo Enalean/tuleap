@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/angular-tlp": "link:../../lib/frontend/angular-tlp",
+    "@tuleap/potentially-dangerous-bidirectional-characters": "link:../../lib/frontend/potentially-dangerous-bidirectional-characters",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tooltip": "link:../../lib/frontend/tooltip",
     "@uirouter/angularjs": "^1.0.29",
