@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface SearchOpenProgramIncrements
 {
     /**
      * @return ProgramIncrement[]
+     * @throws ProjectIsNotAProgramException
      */
     public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array;
 }
