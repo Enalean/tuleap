@@ -70,6 +70,7 @@ final class ProgramAdminPresenter
     public ?TrackerErrorPresenter $plannable_error_presenter;
     public bool $can_synchronize_program_increments;
     public bool $can_force_team_synchronization;
+    public string $synchronize_button_label;
 
     /**
      * @param PotentialTeamPresenter[] $potential_teams
@@ -117,5 +118,10 @@ final class ProgramAdminPresenter
 
         $this->can_synchronize_program_increments = FeatureFlagEnableTeamJoinTrain::isEnabled();
         $this->can_force_team_synchronization     = $this->can_synchronize_program_increments;
+        if ($program_increment_sub_label) {
+            $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', "Sync open %s"), $program_increment_sub_label);
+        } else {
+            $this->synchronize_button_label = dgettext('tuleap-program_management', "Sync open Program Increments");
+        }
     }
 }

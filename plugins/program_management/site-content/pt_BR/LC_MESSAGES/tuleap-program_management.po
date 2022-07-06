@@ -366,6 +366,10 @@ msgid ""
 "%s</a>:"
 msgstr ""
 
+#, php-format
+msgid "Sync open %s"
+msgstr ""
+
 msgid "Sync open Program Increments"
 msgstr ""
 
