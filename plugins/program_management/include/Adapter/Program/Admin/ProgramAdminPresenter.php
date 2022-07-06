@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
 use Tuleap\ProgramManagement\Adapter\FeatureFlagEnableTeamJoinTrain;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 
 /**

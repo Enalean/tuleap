@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\MissingArtifactLinkFieldPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\RequiredErrorPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticErrorPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusMissingValuesPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusNoFieldPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TeamHasNoPlanningPresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TitleHasIncorrectTypePresenter;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\WorkFlowErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
@@ -212,14 +221,24 @@ final class TrackerErrorPresenter
             return null;
         }
 
+        $non_submittable_fields = [];
+        foreach ($errors_collector->getNonSubmittableFields() as $non_submittable_field) {
+            $non_submittable_fields[] = new FieldsPermissionErrorPresenter($non_submittable_field);
+        }
+
+        $non_updatable_fields = [];
+        foreach ($errors_collector->getNonUpdatableFields() as $non_submittable_field) {
+            $non_updatable_fields[] = new FieldsPermissionErrorPresenter($non_submittable_field);
+        }
+
         return new self(
             $errors_collector->getSemanticErrors(),
             $errors_collector->getRequiredFieldsErrors(),
             $errors_collector->getTransitionRuleError(),
             $errors_collector->getTransitionRuleDateError(),
             $errors_collector->getFieldDependencyError(),
-            $errors_collector->getNonSubmittableFields(),
-            $errors_collector->getNonUpdatableFields(),
+            $non_submittable_fields,
+            $non_updatable_fields,
             $errors_collector->getTeamTrackerIdErrors(),
             $errors_collector->getStatusMissingInTeams(),
             $errors_collector->getSemanticStatusNoField(),
