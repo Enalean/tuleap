@@ -43,6 +43,7 @@ final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEve
         private ProgramIncrementIdentifier $program_increment,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset,
+        private ChangesetIdentifier $old_changeset,
         PendingIterationCreation ...$iterations,
     ) {
         $this->iterations = $iterations;
@@ -52,20 +53,23 @@ final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEve
         int $program_increment_id,
         int $user_id,
         int $changeset_id,
+        int $old_changeset_id,
         PendingIterationCreation ...$iterations,
     ): self {
         $user              = UserIdentifierStub::withId($user_id);
         $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user);
         $changeset         = ChangesetIdentifierStub::withId($changeset_id);
-        return new self($program_increment, $user, $changeset, ...$iterations);
+        $old_changeset     = ChangesetIdentifierStub::withId($old_changeset_id);
+        return new self($program_increment, $user, $changeset, $old_changeset, ...$iterations);
     }
 
-    public static function withNoIterations(int $program_increment_id, int $user_id, int $changeset_id): self
+    public static function withNoIterations(int $program_increment_id, int $user_id, int $changeset_id, int $old_changeset_id): self
     {
         $user              = UserIdentifierStub::withId($user_id);
         $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser($program_increment_id, $user);
         $changeset         = ChangesetIdentifierStub::withId($changeset_id);
-        return new self($program_increment, $user, $changeset);
+        $old_changeset     = ChangesetIdentifierStub::withId($changeset_id);
+        return new self($program_increment, $user, $changeset, $old_changeset);
     }
 
     public function getProgramIncrement(): ProgramIncrementIdentifier
@@ -81,6 +85,11 @@ final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEve
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
+    }
+
+    public function getOldChangeset(): ChangesetIdentifier
+    {
+        return $this->old_changeset;
     }
 
     public function getIterations(): array

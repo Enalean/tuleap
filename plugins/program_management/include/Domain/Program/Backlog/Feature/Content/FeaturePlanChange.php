@@ -33,28 +33,41 @@ final class FeaturePlanChange
      * @var FeatureChange[]
      */
     public $user_stories;
+    /**
+     * @var FeatureChange[]
+     */
+    public $user_stories_to_remove;
 
     /**
      * @param FeatureChange[] $user_stories
      */
-    private function __construct(array $user_stories)
+    private function __construct(array $user_stories, array $user_stories_to_remove)
     {
-        $this->user_stories = $user_stories;
+        $this->user_stories           = $user_stories;
+        $this->user_stories_to_remove = $user_stories_to_remove;
     }
 
     /**
      * @param int[] $feature_to_links
      */
-    public static function fromRaw(SearchArtifactsLinks $searcher, array $feature_to_links, int $program_increment_tracker_id): self
+    public static function fromRaw(SearchArtifactsLinks $searcher, array $feature_to_links, array $features_to_unlink, int $program_increment_tracker_id): self
     {
-        $feature_change = [];
+        $feature_change         = [];
+        $user_stories_to_remove = [];
         foreach ($feature_to_links as $feature_id_to_link) {
             $links = $searcher->getArtifactsLinkedToId($feature_id_to_link, $program_increment_tracker_id);
-
             foreach ($links as $link) {
                 $feature_change[] = FeatureChange::fromRaw($link);
             }
         }
-        return new self($feature_change);
+
+        foreach ($features_to_unlink as $feature_id_to_unlink) {
+            $links = $searcher->getArtifactsLinkedToId($feature_id_to_unlink, $program_increment_tracker_id);
+            foreach ($links as $link) {
+                $user_stories_to_remove[] = FeatureChange::fromRaw($link);
+            }
+        }
+
+        return new self($feature_change, $user_stories_to_remove);
     }
 }

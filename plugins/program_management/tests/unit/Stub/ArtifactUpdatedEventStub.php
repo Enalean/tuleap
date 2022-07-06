@@ -39,6 +39,7 @@ final class ArtifactUpdatedEventStub implements ArtifactUpdatedEvent
         private TrackerIdentifier $tracker,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset,
+        private ChangesetIdentifier $old_changeset,
     ) {
     }
 
@@ -47,17 +48,14 @@ final class ArtifactUpdatedEventStub implements ArtifactUpdatedEvent
         int $tracker_id,
         int $user_id,
         int $changeset_id,
+        int $old_changeset_id,
     ): self {
-        $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id);
-        if (! $changeset) {
-            throw new \LogicException("Changeset is not valid");
-        }
-
         return new self(
             ArtifactIdentifierStub::withId($artifact_id),
             TrackerIdentifierStub::withId($tracker_id),
             UserIdentifierStub::withId($user_id),
-            $changeset
+            self::buildChangesetIdentifier($changeset_id),
+            self::buildChangesetIdentifier($old_changeset_id)
         );
     }
 
@@ -79,5 +77,19 @@ final class ArtifactUpdatedEventStub implements ArtifactUpdatedEvent
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
+    }
+
+    public function getOldChangeset(): ChangesetIdentifier
+    {
+        return $this->old_changeset;
+    }
+
+    private static function buildChangesetIdentifier(int $changeset_id): ChangesetIdentifier
+    {
+        $changeset = DomainChangeset::fromId(VerifyIsChangesetStub::withValidChangeset(), $changeset_id);
+        if (! $changeset) {
+            throw new \LogicException("Changeset with id $changeset_id is not valid");
+        }
+        return $changeset;
     }
 }

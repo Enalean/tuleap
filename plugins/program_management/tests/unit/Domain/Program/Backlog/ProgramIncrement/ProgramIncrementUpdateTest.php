@@ -33,6 +33,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROGRAM_INCREMENT_TRACKER_ID = 88;
     private const USER_ID                      = 183;
     private const CHANGESET_ID                 = 8996;
+    private const OLD_CHANGESET_ID             = 8995;
     private VerifyIsProgramIncrementTrackerStub $tracker_verifier;
     private RetrieveProgramIncrementTrackerStub $tracker_retriever;
     private ArtifactUpdatedEventStub $artifact_updated;
@@ -49,13 +50,15 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
             self::PROGRAM_INCREMENT_ID,
             self::PROGRAM_INCREMENT_TRACKER_ID,
             self::USER_ID,
-            self::CHANGESET_ID
+            self::CHANGESET_ID,
+            self::OLD_CHANGESET_ID
         );
 
         $this->update_event = ProgramIncrementUpdateEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
-            self::CHANGESET_ID
+            self::CHANGESET_ID,
+            self::OLD_CHANGESET_ID
         );
     }
 
@@ -71,6 +74,7 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getProgramIncrementTracker()->getId());
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getTracker()->getId());
         self::assertSame(self::CHANGESET_ID, $update->getChangeset()->getId());
+        self::assertSame(self::OLD_CHANGESET_ID, $update->getOldChangeset()->getId());
         self::assertSame(self::USER_ID, $update->getUser()->getId());
     }
 
@@ -97,5 +101,6 @@ final class ProgramIncrementUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::PROGRAM_INCREMENT_TRACKER_ID, $update->getTracker()->getId());
         self::assertSame(self::USER_ID, $update->getUser()->getId());
         self::assertSame(self::CHANGESET_ID, $update->getChangeset()->getId());
+        self::assertSame(self::OLD_CHANGESET_ID, $update->getOldChangeset()->getId());
     }
 }

@@ -35,6 +35,7 @@ interface ProgramIncrementUpdateEvent
     public function getProgramIncrement(): ProgramIncrementIdentifier;
     public function getUser(): UserIdentifier;
     public function getChangeset(): ChangesetIdentifier;
+    public function getOldChangeset(): ChangesetIdentifier;
 
     /**
      * @return PendingIterationCreation[]

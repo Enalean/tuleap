@@ -41,12 +41,21 @@ final class ArtifactUpdated implements Dispatchable
      * @psalm-readonly
      */
     private \Tracker_Artifact_Changeset $changeset;
+    /**
+     * @psalm-readonly
+     */
+    private \Tracker_Artifact_Changeset $old_changeset;
 
-    public function __construct(Artifact $artifact, \PFUser $user, \Tracker_Artifact_Changeset $changeset)
-    {
-        $this->artifact  = $artifact;
-        $this->user      = $user;
-        $this->changeset = $changeset;
+    public function __construct(
+        Artifact $artifact,
+        \PFUser $user,
+        \Tracker_Artifact_Changeset $changeset,
+        \Tracker_Artifact_Changeset $old_changeset,
+    ) {
+        $this->artifact      = $artifact;
+        $this->user          = $user;
+        $this->changeset     = $changeset;
+        $this->old_changeset = $old_changeset;
     }
 
     /**
@@ -71,5 +80,13 @@ final class ArtifactUpdated implements Dispatchable
     public function getChangeset(): \Tracker_Artifact_Changeset
     {
         return $this->changeset;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getOldChangeset(): \Tracker_Artifact_Changeset
+    {
+        return $this->old_changeset;
     }
 }

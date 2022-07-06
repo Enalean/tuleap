@@ -29,12 +29,13 @@ use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchUnlinkedUserStoriesOfMirroredProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchFeaturesInChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Feature\Links\LinkedFeaturesDiff;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
@@ -50,7 +51,7 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         private SearchFeatures $features_searcher,
         private LoggerInterface $logger,
         private RetrieveUser $retrieve_user,
-        private SearchUnlinkedUserStoriesOfMirroredProgramIncrement $linked_to_parent_dao,
+        private SearchFeaturesInChangeset $search_features_in_changeset,
     ) {
     }
 
@@ -60,9 +61,14 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
         $program_increment         = $program_increment_changed->program_increment;
         $user_identifier           = $program_increment_changed->user;
         $potential_feature_to_link = $this->features_searcher->searchFeatures($program_increment);
+        $features_diff             = LinkedFeaturesDiff::build(
+            $this->search_features_in_changeset,
+            $program_increment_changed
+        );
         $feature_plan_change       = FeaturePlanChange::fromRaw(
             $this->artifacts_links_search,
             $potential_feature_to_link,
+            $features_diff->getRemovedFeaturesIds(),
             $program_increment_changed->tracker->getId()
         );
 
@@ -109,10 +115,8 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
 
         $fields_data = new FieldData(
             $feature_plan_change->user_stories,
-            $this->linked_to_parent_dao->getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(
-                $mirrored_program_increment
-            ),
-            $field_artifact_link->getId()
+            $feature_plan_change->user_stories_to_remove,
+            $field_artifact_link->getId(),
         );
 
         try {

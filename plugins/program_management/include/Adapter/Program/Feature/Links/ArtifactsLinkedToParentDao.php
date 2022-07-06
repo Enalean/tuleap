@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchChildrenOfFeature;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchFeaturesInChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchParentFeatureOfAUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchPlannedUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchUnlinkedUserStoriesOfMirroredProgramIncrement;
@@ -33,7 +35,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
 
-final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, SearchUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone, SearchParentFeatureOfAUserStory
+final class ArtifactsLinkedToParentDao extends DataAccessObject implements SearchArtifactsLinks, SearchUnlinkedUserStoriesOfMirroredProgramIncrement, SearchPlannedUserStory, SearchChildrenOfFeature, VerifyIsLinkedToAnotherMilestone, SearchParentFeatureOfAUserStory, SearchFeaturesInChangeset
 {
     /**
      * @psalm-return array{id: int, project_id: int}[]
@@ -187,5 +189,22 @@ final class ArtifactsLinkedToParentDao extends DataAccessObject implements Searc
         }
 
         return $feature_id;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getArtifactsLinkedInChangeset(ChangesetIdentifier $changeset_identifier): array
+    {
+        $sql = "
+            SELECT tcva.artifact_id as artifact_id
+            FROM tracker_changeset_value
+                INNER JOIN tracker_changeset_value_artifactlink AS tcva on tracker_changeset_value.id = tcva.changeset_value_id
+            WHERE changeset_id = ?
+        ";
+
+        $rows = $this->getDB()->run($sql, $changeset_identifier->getId());
+
+        return array_map(static fn(array $row): int => $row['artifact_id'], $rows);
     }
 }

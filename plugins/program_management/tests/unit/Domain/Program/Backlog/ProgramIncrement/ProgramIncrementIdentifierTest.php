@@ -51,11 +51,13 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_id             = 127;
         $changeset_id           = 919;
+        $old_changeset_id       = 918;
         $this->artifact_updated = ArtifactUpdatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,
             $tracker_id,
             $user_id,
-            $changeset_id
+            $changeset_id,
+            $old_changeset_id
         );
         $this->artifact_created = ArtifactCreatedEventStub::withIds(
             self::PROGRAM_INCREMENT_ID,

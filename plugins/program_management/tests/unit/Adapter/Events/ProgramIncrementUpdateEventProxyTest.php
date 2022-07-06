@@ -34,13 +34,14 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramIncrementUpdateEventProxyTest extends TestCase
 {
-    private const PROGRAM_INCREMENT_ID           = 29;
-    private const USER_ID                        = 186;
-    private const PROGRAM_INCREMENT_CHANGESET_ID = 7806;
-    private const FIRST_ITERATION_ID             = 95;
-    private const FIRST_ITERATION_CHANGESET_ID   = 3874;
-    private const SECOND_ITERATION_ID            = 15;
-    private const SECOND_ITERATION_CHANGESET_ID  = 2197;
+    private const PROGRAM_INCREMENT_ID               = 29;
+    private const USER_ID                            = 186;
+    private const PROGRAM_INCREMENT_CHANGESET_ID     = 7806;
+    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 7805;
+    private const FIRST_ITERATION_ID                 = 95;
+    private const FIRST_ITERATION_CHANGESET_ID       = 3874;
+    private const SECOND_ITERATION_ID                = 15;
+    private const SECOND_ITERATION_CHANGESET_ID      = 2197;
     private TestLogger $logger;
     private VerifyIsUserStub $user_verifier;
     private VerifyIsProgramIncrementStub $program_increment_verifier;
@@ -64,6 +65,7 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
                 'program_increment_id' => self::PROGRAM_INCREMENT_ID,
                 'user_id'              => self::USER_ID,
                 'changeset_id'         => self::PROGRAM_INCREMENT_CHANGESET_ID,
+                'old_changeset_id'     => self::PROGRAM_INCREMENT_OLD_CHANGESET_ID,
                 'iterations'           => [
                     ['id' => self::FIRST_ITERATION_ID, 'changeset_id' => self::FIRST_ITERATION_CHANGESET_ID],
                     ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => self::SECOND_ITERATION_CHANGESET_ID],
@@ -163,10 +165,11 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
         self::assertTrue(
             $this->logger->hasError(
                 sprintf(
-                    'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d',
+                    'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d (previous changeset id #%d)',
                     self::PROGRAM_INCREMENT_ID,
                     self::USER_ID,
-                    self::PROGRAM_INCREMENT_CHANGESET_ID
+                    self::PROGRAM_INCREMENT_CHANGESET_ID,
+                    self::PROGRAM_INCREMENT_OLD_CHANGESET_ID
                 )
             )
         );
@@ -212,10 +215,11 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
         self::assertTrue(
             $this->logger->hasError(
                 sprintf(
-                    'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d',
+                    'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d (previous changeset id #%d)',
                     self::PROGRAM_INCREMENT_ID,
                     self::USER_ID,
-                    self::PROGRAM_INCREMENT_CHANGESET_ID
+                    self::PROGRAM_INCREMENT_CHANGESET_ID,
+                    self::PROGRAM_INCREMENT_OLD_CHANGESET_ID
                 )
             )
         );

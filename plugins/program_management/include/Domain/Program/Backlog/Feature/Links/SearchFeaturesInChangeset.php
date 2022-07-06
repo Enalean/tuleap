@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\ProgramManagement\Domain\Events;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Artifact\ArtifactIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
-/**
- * @psalm-immutable
- */
-interface ArtifactUpdatedEvent
+interface SearchFeaturesInChangeset
 {
-    public function getArtifact(): ArtifactIdentifier;
-    public function getTracker(): TrackerIdentifier;
-    public function getUser(): UserIdentifier;
-    public function getChangeset(): ChangesetIdentifier;
-    public function getOldChangeset(): ChangesetIdentifier;
+    public function getArtifactsLinkedInChangeset(ChangesetIdentifier $changeset_identifier): array;
 }

@@ -467,29 +467,45 @@ final class ProjectResourceTest extends \RestBase
         $featureB          = $this->getArtifactWithArtifactLink('description', 'FeatureB', $program_id, 'features');
         $user_story1       = $this->getArtifactWithArtifactLink('i_want_to', 'US1', $team_id, 'story');
         $user_story2       = $this->getArtifactWithArtifactLink('i_want_to', 'US2', $team_id, 'story');
-        $sprint            = $this->getArtifactWithArtifactLink('sprint_name', 'S1', $team_id, 'sprint');
 
-        // plan the feature in program increment
+
+        // Plan $user_story1 in $featureA
+        $this->updateParentArtifact(
+            $user_story1['id'],
+            $featureA['id'],
+            $user_story1['artifact_link_id']
+        );
+
+        // Plan $user_story2 in $featureB
+        $this->updateParentArtifact(
+            $user_story2['id'],
+            $featureB['id'],
+            $user_story2['artifact_link_id']
+        );
+
+        // plan featureA in program increment
         $this->updateArtifactLinks(
             $program_increment['id'],
-            [['id' => $featureA['id']], ['id' => $featureB['id']]],
+            [['id' => $featureA['id']]],
             $program_increment['artifact_link_id']
         );
 
         // check in team project that the two US stories are present in top backlog
         $this->checkLinksArePresentInReleaseTopBacklog($release_mirror['id'], [$user_story1['id'], $user_story2['id']]);
 
-        // link sprint as a child of mirrored release
-        $this->linkSprintToRelease($release_mirror['id'], $sprint['id']);
+        /*
+         * Setup explained:
+         * User stories 1 and 2 are respectively children of featureA and featureB
+         * Feature A is the only feature planned in an iteration at program level
+         * Feature B is still in the program top-backlog
+         * User stories 1 and 2 are both in the backlog of a release inside a mirrored PI of the team project
+         */
 
-        // link user story 1 to a Sprint in Team Project
-        $this->updateArtifactLinks($sprint['id'], [['id' => $user_story1['id']]], $sprint['artifact_link_id']);
-
-        // remove feature in program
+        // remove featureA from the program increment
         $this->updateArtifactLinks($program_increment['id'], [], $program_increment['artifact_link_id']);
 
-        // US1 is linked in top backlog (linked into sprint), US2 is no longer present
-        $this->checkLinksArePresentInReleaseTopBacklog($release_mirror['id'], [$user_story1['id']]);
+        // US1 should have been removed from the team backlog, US2 should be still present
+        $this->checkLinksArePresentInReleaseTopBacklog($release_mirror['id'], [$user_story2['id']]);
     }
 
     /**
@@ -707,12 +723,15 @@ final class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
     }
 
-    private function linkSprintToRelease(int $release_id, int $sprint_id): void
+    private function updateParentArtifact(int $artifact_id, int $parent_id, int $artifact_field_id): void
     {
-        $values = ["add"  => [["id" => $sprint_id]]];
+        $values = [
+            "values"  => [["field_id" => $artifact_field_id, 'links' => [], 'parent' => ['id' => $parent_id]]],
+            "comment" => ["body" => "", "format" => "text"],
+        ];
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'milestones/' . urlencode((string) $release_id) . '/milestones')->withBody($this->stream_factory->createStream(json_encode($values, JSON_THROW_ON_ERROR)))
+            $this->request_factory->createRequest('PUT', 'artifacts/' . urlencode((string) $artifact_id))->withBody($this->stream_factory->createStream(json_encode($values, JSON_THROW_ON_ERROR)))
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -764,10 +783,11 @@ final class ProjectResourceTest extends \RestBase
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $planned_elmenents = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $planned_elements = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
 
         $planned_elements_id = [];
-        foreach ($planned_elmenents as $element) {
+        foreach ($planned_elements as $element) {
             $planned_elements_id[] = $element['id'];
         }
 

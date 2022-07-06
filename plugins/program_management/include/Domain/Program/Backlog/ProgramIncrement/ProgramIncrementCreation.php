@@ -47,6 +47,7 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         private ProgramIncrementIdentifier $program_increment,
         private ProgramIncrementTrackerIdentifier $tracker,
         private ChangesetIdentifier $changeset,
+        private ChangesetIdentifier $old_changeset,
         private UserIdentifier $user,
     ) {
     }
@@ -63,7 +64,7 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         if (! $tracker) {
             return null;
         }
-        return new self($program_increment, $tracker, $event->getChangeset(), $event->getUser());
+        return new self($program_increment, $tracker, $event->getChangeset(), $event->getOldChangeset(), $event->getUser());
     }
 
     public static function fromProgramIncrementCreationEvent(
@@ -94,7 +95,7 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
         if (! $changeset) {
             return null;
         }
-        return new self($program_increment, $program_increment_tracker, $changeset, $user);
+        return new self($program_increment, $program_increment_tracker, $changeset, $changeset, $user);
     }
 
     public function getTimebox(): TimeboxIdentifier
@@ -125,5 +126,10 @@ final class ProgramIncrementCreation implements TimeboxMirroringOrder
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
+    }
+
+    public function getOldChangeset(): ChangesetIdentifier
+    {
+        return $this->old_changeset;
     }
 }

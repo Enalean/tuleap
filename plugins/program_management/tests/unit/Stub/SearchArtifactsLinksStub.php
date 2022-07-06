@@ -31,26 +31,19 @@ final class SearchArtifactsLinksStub implements SearchArtifactsLinks
     {
     }
 
-    public static function withArtifactLinks(array $artifact_links): self
-    {
-        return new self($artifact_links);
-    }
-
-    public static function withoutArtifactLinks(): self
+    public static function build(): self
     {
         return new self([]);
     }
 
-    /**
-     * @no-named-arguments
-     */
-    public static function withSuccessiveRows(array $first_rows, array ...$other_rows): self
+    public function withArtifactsLinkedToFeature(int $feature_id, array $artifact_links): self
     {
-        return new self([$first_rows, ...$other_rows]);
+        $this->artifact_links[$feature_id] = $artifact_links;
+        return $this;
     }
 
     public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
     {
-        return $this->artifact_links;
+        return $this->artifact_links[$artifact_id] ?? [];
     }
 }

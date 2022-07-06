@@ -33,10 +33,14 @@ final class ArtifactUpdatedProxyTest extends TestCase
 {
     public function testItBuildsFromArtifactUpdated(): void
     {
-        $user      = UserTestBuilder::buildWithId(110);
-        $tracker   = TrackerTestBuilder::aTracker()->withId(33)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(228)->inTracker($tracker)->build();
-        $changeset = ChangesetTestBuilder::aChangeset('884')
+        $user          = UserTestBuilder::buildWithId(110);
+        $tracker       = TrackerTestBuilder::aTracker()->withId(33)->build();
+        $artifact      = ArtifactTestBuilder::anArtifact(228)->inTracker($tracker)->build();
+        $changeset     = ChangesetTestBuilder::aChangeset('884')
+            ->ofArtifact($artifact)
+            ->submittedBy((int) $user->getId())
+            ->build();
+        $old_changeset = ChangesetTestBuilder::aChangeset('883')
             ->ofArtifact($artifact)
             ->submittedBy((int) $user->getId())
             ->build();
@@ -44,7 +48,8 @@ final class ArtifactUpdatedProxyTest extends TestCase
         $event = new ArtifactUpdated(
             $artifact,
             $user,
-            $changeset
+            $changeset,
+            $old_changeset
         );
 
         $proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);
@@ -52,5 +57,6 @@ final class ArtifactUpdatedProxyTest extends TestCase
         self::assertSame(33, $proxy->getTracker()->getId());
         self::assertSame(110, $proxy->getUser()->getId());
         self::assertSame(884, $proxy->getChangeset()->getId());
+        self::assertSame(883, $proxy->getOldChangeset()->getId());
     }
 }

@@ -33,9 +33,10 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 
 final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                        = 108;
-    private const PROGRAM_INCREMENT_ID           = 58;
-    private const PROGRAM_INCREMENT_CHANGESET_ID = 7383;
+    private const USER_ID                            = 108;
+    private const PROGRAM_INCREMENT_ID               = 58;
+    private const PROGRAM_INCREMENT_CHANGESET_ID     = 7383;
+    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 7382;
     private ProcessProgramIncrementUpdateStub $update_processor;
     private ProcessIterationCreationStub $iteration_processor;
     private ProgramIncrementUpdateEventStub $event;
@@ -48,6 +49,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
             self::PROGRAM_INCREMENT_CHANGESET_ID,
+            self::PROGRAM_INCREMENT_OLD_CHANGESET_ID,
             $first_iteration,
             $second_iteration
         );
@@ -87,7 +89,8 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
         $event = ProgramIncrementUpdateEventStub::withNoIterations(
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
-            self::PROGRAM_INCREMENT_CHANGESET_ID
+            self::PROGRAM_INCREMENT_CHANGESET_ID,
+            self::PROGRAM_INCREMENT_OLD_CHANGESET_ID
         );
 
         $this->getHandler()->handle($event);

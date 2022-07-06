@@ -40,6 +40,7 @@ final class PendingProgramIncrementUpdateRepresentation
         public int $program_increment_id,
         public int $user_id,
         public int $changeset_id,
+        public int $old_changeset_id,
         PendingIterationCreationRepresentation ...$iterations,
     ) {
         $this->iterations = $iterations;
@@ -57,6 +58,7 @@ final class PendingProgramIncrementUpdateRepresentation
             $update->getProgramIncrement()->getId(),
             $update->getUser()->getId(),
             $update->getChangeset()->getId(),
+            $update->getOldChangeset()->getId(),
             ...$iterations
         );
     }
