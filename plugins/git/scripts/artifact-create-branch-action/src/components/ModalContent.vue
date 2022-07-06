@@ -27,6 +27,11 @@
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
         </div>
+        <div v-if="error_message" class="tlp-modal-feedback">
+            <div class="feedback_error">
+                {{ error_message }}
+            </div>
+        </div>
         <div class="tlp-modal-body">
             <div class="form-block">
                 <label for="artifact-create-git-branch-select-repository">
@@ -82,7 +87,17 @@
             >
                 {{ $gettext("Cancel") }}
             </button>
-            <button type="button" class="tlp-button-primary tlp-modal-action" disabled>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-modal-action"
+                v-bind:disabled="is_creating_branch"
+                v-on:click="onClickCreateBranch"
+            >
+                <i
+                    aria-hidden="true"
+                    v-if="is_creating_branch"
+                    class="fas fa-spin fa-spinner tlp-button-icon"
+                ></i>
                 {{ $gettext("Create branch") }}
             </button>
         </div>
@@ -94,16 +109,22 @@ import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import type { GitRepository } from "../types";
+import { postGitBranch } from "../../api/rest_querier";
+import { addFeedback } from "@tuleap/fp-feedback";
+import { useGettext } from "vue3-gettext";
 
 let modal: Modal | null = null;
+const { $gettext } = useGettext();
 const root_element = ref<InstanceType<typeof Element>>();
 const reference = ref("");
+const error_message = ref("");
 
 const props = defineProps<{
     repositories: ReadonlyArray<GitRepository>;
     branch_name_preview: string;
 }>();
 
+const is_creating_branch = ref(false);
 const selected = ref(props.repositories[0]);
 let selected_repository = computed({
     get(): GitRepository {
@@ -133,6 +154,22 @@ onMounted((): void => {
 onBeforeUnmount(() => {
     modal?.destroy();
 });
+
+function onClickCreateBranch(): Promise<void> {
+    is_creating_branch.value = true;
+    const repository: GitRepository = selected.value;
+    return postGitBranch(repository.id, props.branch_name_preview, reference.value).match(
+        () => {
+            addFeedback("info", $gettext("Git Branch successfully created."));
+            is_creating_branch.value = false;
+            modal?.hide();
+        },
+        () => {
+            error_message.value = $gettext("An error occurred while creating the Git branch.");
+            is_creating_branch.value = false;
+        }
+    );
+}
 </script>
 
 <style lang="scss" scoped>

@@ -19,6 +19,9 @@
 
 import type { GitRepository } from "../src/types";
 import { recursiveGet } from "@tuleap/tlp-fetch";
+import { postJSON } from "@tuleap/fetch-result";
+import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
 
 interface RecursiveGetProjectRepositories {
     repositories: Array<GitRepository>;
@@ -40,3 +43,15 @@ export function getProjectRepositories(
         getCollectionCallback: (payload: RecursiveGetProjectRepositories) => payload.repositories,
     });
 }
+
+export const postGitBranch = (
+    repository_id: number,
+    branch_name: string,
+    reference: string
+): ResultAsync<void, Fault> =>
+    postJSON(`/api/v1/git/${encodeURIComponent(repository_id)}/branches`, {
+        branch_name,
+        reference,
+    }).map(() => {
+        // ignore response
+    });

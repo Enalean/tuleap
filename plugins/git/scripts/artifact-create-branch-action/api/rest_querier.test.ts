@@ -19,7 +19,9 @@
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { GitRepository } from "../src/types";
-import { getProjectRepositories } from "./rest_querier";
+import { getProjectRepositories, postGitBranch } from "./rest_querier";
+import * as fetch_result from "@tuleap/fetch-result";
+import { okAsync } from "neverthrow";
 
 describe("API querier", () => {
     describe("getProjectRepositories", () => {
@@ -41,6 +43,22 @@ describe("API querier", () => {
                     },
                 })
             );
+        });
+        it("asks to create the Git branch", async () => {
+            const postSpy = jest.spyOn(fetch_result, "postJSON");
+            postSpy.mockReturnValue(okAsync({} as Response));
+
+            const repository_id = 27;
+            const branch_name = "tuleap-123-title";
+            const reference = "main";
+
+            const result = await postGitBranch(repository_id, branch_name, reference);
+
+            expect(postSpy).toHaveBeenCalledWith("/api/v1/git/27/branches", {
+                branch_name: branch_name,
+                reference: reference,
+            });
+            expect(result.isOk()).toBe(true);
         });
     });
 });

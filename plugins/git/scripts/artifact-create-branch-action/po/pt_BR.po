@@ -6,6 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "An error occurred while creating the Git branch."
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -13,6 +16,9 @@ msgid "Create branch"
 msgstr ""
 
 msgid "Create branch on a Git repository"
+msgstr ""
+
+msgid "Git Branch successfully created."
 msgstr ""
 
 msgid "Git reference from where the branch should be created"
