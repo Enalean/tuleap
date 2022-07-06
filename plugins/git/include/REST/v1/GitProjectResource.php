@@ -32,6 +32,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use SystemEventManager;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\REST\AuthenticatedResource;
@@ -136,16 +137,59 @@ final class GitProjectResource extends AuthenticatedResource
      * ]
      * </pre>
      * <br>
-     * You can use <code>query</code> parameter in order to filter results. Currently you can only filter on scope or
+     * You can use <code>query</code> parameter in order to filter results. You can filter for example on scope or
      * owner_id. By default, all repositories are returned.
-     * <br>
-     * { "scope": "project" } will return only project repositories.
-     * <br>
-     * { "scope": "individual" } will return only forked repositories.
-     * <br>
-     * { "owner_id": 123 } will return all repositories created by user with id 123.
-     * <br>
-     * { "scope": "individual", "owner_id": 123 } will return all repositories forked by user with id 123.
+     *
+     * <table class="tlp-table">
+     * <thead>
+     * <tr>
+     *   <th>Query example</th>
+     *   <th>Description</th>
+     * </tr>
+     * </thead>
+     * <tbody>
+     * <tr>
+     *   <td>
+     *     `{ "scope": "project" }`
+     *   </td>
+     *   <td>
+     *     return only project repositories.
+     *   </td>
+     * </tr>
+     * <tr>
+     *   <td>
+     *     `{ "scope": "individual" }`
+     *   </td>
+     *   <td>
+     *     return only forked repositories.
+     *   </td>
+     * </tr>
+     * <tr>
+     *   <td>
+     *     `{ "owner_id": 123 }`
+     *   </td>
+     *   <td>
+     *     return all repositories created by user with id `123`.
+     *   </td>
+     * </tr>
+     * <tr>
+     *   <td>
+     *     `{ "scope": "individual", "owner_id": 123 }`
+     *   </td>
+     *   <td>
+     *     return all repositories forked by user with id `123`.
+     *   </td>
+     * </tr>
+     * <tr>
+     *   <td>
+     *     `{ "allow_creation_of_branch": "acme" }`
+     *   </td>
+     *   <td>
+     *     return only repositories where current user can create `acme` branch.
+     *   </td>
+     * </tr>
+     * </tbody>
+     * </table>
      *
      * @url    GET {id}/git
      * @access hybrid
@@ -177,26 +221,46 @@ final class GitProjectResource extends AuthenticatedResource
         $query_parameter_parser = new QueryParameterParser(new JsonDecoder());
 
         try {
-            $scope    = $this->getScopeFromQueryParameter($query_parameter_parser, $query);
-            $owner_id = $this->getOwnerIdFromQueryParameter($query_parameter_parser, $query);
+            $scope                         = $this->getScopeFromQueryParameter($query_parameter_parser, $query);
+            $owner_id                      = $this->getOwnerIdFromQueryParameter($query_parameter_parser, $query);
+            $branch_name_to_allow_creation = $this->getBranchFromQueryParameter($query_parameter_parser, $query);
         } catch (QueryParameterException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (InvalidJsonException $e) {
             throw new RestException(400, $e->getMessage());
         }
 
-        $repository_factory        = new GitRepositoryFactory(new \GitDao(), ProjectManager::instance());
-        $total_number_repositories = 0;
-        $git_repositories          = $repository_factory->getPaginatedRepositoriesUserCanSee(
-            $project,
-            $user,
-            $scope,
-            $owner_id,
-            $order_by,
-            $limit,
-            $offset,
-            $total_number_repositories
+        $git_dao            = new \GitDao();
+        $repository_factory = new GitRepositoryFactory($git_dao, ProjectManager::instance());
+        $retriever          = new PaginatedRepositoriesRetriever(
+            $git_dao,
+            $repository_factory,
+            new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
         );
+
+        $total_number_repositories = 0;
+        $git_repositories          = $branch_name_to_allow_creation ?
+                $retriever->getPaginatedRepositoriesUserCanCreateGivenBranch(
+                    $project,
+                    $user,
+                    $scope,
+                    $owner_id,
+                    $branch_name_to_allow_creation,
+                    $order_by,
+                    $limit,
+                    $offset,
+                    $total_number_repositories
+                ) :
+                $retriever->getPaginatedRepositoriesUserCanSee(
+                    $project,
+                    $user,
+                    $scope,
+                    $owner_id,
+                    $order_by,
+                    $limit,
+                    $offset,
+                    $total_number_repositories
+                );
 
         $git_plugin = \PluginManager::instance()->getPluginByName('git');
         assert($git_plugin instanceof \GitPlugin);
@@ -211,7 +275,7 @@ final class GitProjectResource extends AuthenticatedResource
             ),
             new Git_RemoteServer_GerritServerFactory(
                 new Git_RemoteServer_Dao(),
-                new \GitDao(),
+                $git_dao,
                 $git_system_event_manager,
                 ProjectManager::instance()
             ),
@@ -237,6 +301,16 @@ final class GitProjectResource extends AuthenticatedResource
         $project = \ProjectManager::instance()->getProject($id);
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
         return $project;
+    }
+
+    private function getBranchFromQueryParameter(QueryParameterParser $query_parameter_parser, string $query): string
+    {
+        try {
+            return $query_parameter_parser->getString($query, 'allow_creation_of_branch');
+        } catch (MissingMandatoryParameterException $e) {
+            // no allow_creation_of_branch is provided, skip it
+        }
+        return '';
     }
 
     /**

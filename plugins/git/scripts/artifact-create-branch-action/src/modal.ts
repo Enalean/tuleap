@@ -49,7 +49,7 @@ export async function init(
     }
 
     app = createApp(MainComponent, {
-        repositories: await getProjectRepositories(project_id),
+        repositories: await getProjectRepositories(project_id, branch_name_preview),
         branch_name_preview: branch_name_preview,
     });
     app.use(

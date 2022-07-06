@@ -24,12 +24,18 @@ interface RecursiveGetProjectRepositories {
     repositories: Array<GitRepository>;
 }
 
-export function getProjectRepositories(project_id: number): Promise<ReadonlyArray<GitRepository>> {
+export function getProjectRepositories(
+    project_id: number,
+    branch_name_preview: string
+): Promise<ReadonlyArray<GitRepository>> {
     return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/git`, {
         params: {
             fields: "basic",
             limit: 50,
-            query: '{ "scope": "project" }',
+            query: JSON.stringify({
+                scope: "project",
+                allow_creation_of_branch: branch_name_preview,
+            }),
         },
         getCollectionCallback: (payload: RecursiveGetProjectRepositories) => payload.repositories,
     });
