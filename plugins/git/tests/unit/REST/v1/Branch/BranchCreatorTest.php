@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\REST\v1\Branch;
 
-use Git;
 use Git_Command_Exception;
 use Luracast\Restler\RestException;
 use Tuleap\Git\Branch\BranchCreationExecutor;
 use Tuleap\Git\Branch\CannotCreateNewBranchException;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\REST\v1\GitBranchPOSTRepresentation;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class BranchCreatorTest extends TestCase
@@ -45,6 +46,10 @@ final class BranchCreatorTest extends TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&BranchCreationExecutor
      */
     private $branch_creation_executor;
+    /**
+     * @var AccessControlVerifier&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $access_control_verifier;
 
     protected function setUp(): void
     {
@@ -52,10 +57,12 @@ final class BranchCreatorTest extends TestCase
 
         $this->git_exec                 = $this->createMock(\Git_Exec::class);
         $this->branch_creation_executor = $this->createMock(BranchCreationExecutor::class);
+        $this->access_control_verifier  = $this->createMock(AccessControlVerifier::class);
 
         $this->creator = new BranchCreator(
             $this->git_exec,
-            $this->branch_creation_executor
+            $this->branch_creation_executor,
+            $this->access_control_verifier
         );
 
         $this->git_exec->method('getAllBranchesSortedByCreationDate')->willReturn([
@@ -90,7 +97,7 @@ final class BranchCreatorTest extends TestCase
             ->method("createNewBranch");
 
         $this->expectException(RestException::class);
-        $this->expectExceptionMessage("User cannot update the content of the repository");
+        $this->expectExceptionMessage("You are not allowed to create the branch new_branch in repository repo01");
 
         $this->creator->createBranch(
             $this->buildMockUserWithoutPermissions(),
@@ -201,22 +208,16 @@ final class BranchCreatorTest extends TestCase
 
     private function buildMockUserWithPermissions(): \PFUser
     {
-        $user = $this->createMock(\PFUser::class);
-        $user->method('hasPermission')->willReturnMap([
-            [Git::PERM_WRITE, self::REPO_ID, self::PROJECT_ID, true],
-            [Git::PERM_WPLUS, self::REPO_ID, self::PROJECT_ID, true],
-        ]);
+        $user = UserTestBuilder::anActiveUser()->build();
+        $this->access_control_verifier->method('canWrite')->willReturn(true);
 
         return $user;
     }
 
     private function buildMockUserWithoutPermissions(): \PFUser
     {
-        $user = $this->createMock(\PFUser::class);
-        $user->method('hasPermission')->willReturnMap([
-            [Git::PERM_WRITE, self::REPO_ID, self::PROJECT_ID, false],
-            [Git::PERM_WPLUS, self::REPO_ID, self::PROJECT_ID, false],
-        ]);
+        $user = UserTestBuilder::anActiveUser()->build();
+        $this->access_control_verifier->method('canWrite')->willReturn(false);
 
         return $user;
     }

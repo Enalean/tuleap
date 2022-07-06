@@ -72,6 +72,7 @@ use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
 use Tuleap\Git\GitPHP\RepositoryNotExistingException;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
@@ -919,7 +920,18 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository = $this->getRepositoryForCurrentUser($id);
 
-        (new BranchCreator(new Git_Exec($repository->getFullPath(), $repository->getFullPath()), new BranchCreationExecutor()))->createBranch(
+        $branch_creator = new BranchCreator(
+            new Git_Exec($repository->getFullPath(), $repository->getFullPath()),
+            new BranchCreationExecutor(),
+            new AccessControlVerifier(
+                new FineGrainedRetriever(
+                    new FineGrainedDao(),
+                ),
+                new \System_Command(),
+            )
+        );
+
+        $branch_creator->createBranch(
             $this->getCurrentUser(),
             $repository,
             $representation
