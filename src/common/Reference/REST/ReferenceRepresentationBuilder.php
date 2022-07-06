@@ -48,7 +48,7 @@ final class ReferenceRepresentationBuilder
         }
 
         foreach ($this->reference_manager->getReferencesByProject($project) as $reference) {
-            if (! $reference->isActive()) {
+            if (! $reference->isSystemReference() && ! $reference->isActive()) {
                 continue;
             }
             $representations[] = new ReferenceRepresentation(
