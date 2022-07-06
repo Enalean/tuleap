@@ -116,6 +116,7 @@ use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Platform\Banner\BannerDao;
 use Tuleap\Platform\Banner\BannerRetriever;
 use Tuleap\Platform\Banner\PlatformBannerAdministrationController;
+use Tuleap\Platform\RobotsTxtController;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\Admin\Export\ProjectXmlExportController;
@@ -983,14 +984,23 @@ class RouteCollector
         );
     }
 
-    public function collect(FastRoute\RouteCollector $r)
+    public static function getRobotsTxt(): RobotsTxtController
+    {
+        return new RobotsTxtController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new SapiEmitter()
+        );
+    }
+
+    public function collect(FastRoute\RouteCollector $r): void
     {
         $r->get('/', [self::class, 'getSlash']);
 
         $r->get('/contact.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/contact.php'));
         $r->addRoute(['GET', 'POST'], '/goto[.php]', $this->getLegacyControllerHandler(__DIR__ . '/../../core/goto.php'));
         $r->get('/info.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/info.php'));
-        $r->get('/robots.txt', $this->getLegacyControllerHandler(__DIR__ . '/../../core/robots.php'));
+        $r->get('/robots.txt', [self::class, 'getRobotsTxt']);
         $r->post('/make_links.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/make_links.php'));
         $r->post('/sparklines.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/sparklines.php'));
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/toggler.php'));
