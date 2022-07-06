@@ -194,7 +194,8 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      * @param Date    $startDate
      * @param Date    $endDate
      * @param int $groupId
-     * @return DataAccessResult
+     *
+     * @return LegacyDataAccessResultInterface
      */
     public function searchSizePerServiceForPeriod($service, $dateMethod, $startDate, $endDate, $groupId = null)
     {
@@ -360,7 +361,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      *
      * @param date $endDate , date $startDate
      *
-     * @return DataAccessResult
+     * @return LegacyDataAccessResultInterface
      */
     public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
     {
