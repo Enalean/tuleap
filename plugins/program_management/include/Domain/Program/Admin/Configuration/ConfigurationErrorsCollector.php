@@ -44,7 +44,7 @@ final class ConfigurationErrorsCollector
      */
     private array $semantic_errors = [];
     /**
-     * @var RequiredErrorPresenter[]
+     * @var RequiredError[]
      */
     private array $required_fields_errors = [];
     /**
@@ -121,7 +121,7 @@ final class ConfigurationErrorsCollector
 
     public function addRequiredFieldError(TrackerReference $tracker, ProjectReference $project, int $field_id, string $field_label): void
     {
-        $this->required_fields_errors[] = new RequiredErrorPresenter($field_id, $field_label, $tracker, $project);
+        $this->required_fields_errors[] = new RequiredError($field_id, $field_label, $tracker, $project);
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
@@ -274,7 +274,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return RequiredErrorPresenter[]
+     * @return RequiredError[]
      */
     public function getRequiredFieldsErrors(): array
     {
