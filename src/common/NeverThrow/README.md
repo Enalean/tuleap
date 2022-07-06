@@ -83,10 +83,11 @@ Faults can be extended to help distinguish them in error-handling. To do so, cre
 Examples:
 ```php
 /** @psalm-immutable */
-final class PermissionFault extends Tuleap\NeverThrow\Fault
+final class PermissionFault extends \Tuleap\NeverThrow\Fault
 {
-    public function __construct() {
-        parent::__construct("User does not have permission");
+    public static function build(): \Tuleap\NeverThrow\Fault // It should return Fault, otherwise Psalm will make you add every sub-type of Fault to docblocks.
+    {
+        return new self('User does not have permission');
     }
 }
 ```
@@ -290,7 +291,7 @@ private function handleResult(): Presenter
 }
 ```
 
-#### `$result_instance->map(callable $fn): Ok[Err`
+#### `$result_instance->map(callable $fn): Ok|Err`
 
 `map` applies `$fn` to an `Ok` value, leaving `Err` untouched.
 
@@ -323,7 +324,7 @@ private function modifyInnerValue(): Ok|Err
 }
 ```
 
-#### `$result_instance->mapErr(callable $fn): Ok[Err`
+#### `$result_instance->mapErr(callable $fn): Ok|Err`
 
 `mapErr` applies `$fn` to an `Err` value, leaving `Ok` untouched.
 

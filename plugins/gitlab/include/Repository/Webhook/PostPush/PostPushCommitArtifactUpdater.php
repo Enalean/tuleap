@@ -27,6 +27,9 @@ use Psr\Log\LoggerInterface;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_NoChangeException;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
@@ -41,6 +44,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class PostPushCommitArtifactUpdater
 {
@@ -54,40 +58,37 @@ final class PostPushCommitArtifactUpdater
     }
 
     /**
-     * @throws \Tuleap\Tracker\Workflow\NoPossibleValueException
+     * @return Ok<null> | Err<Fault>
      */
     public function closeTuleapArtifact(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
-        PostPushCommitWebhookData $commit,
         \Tracker_Semantic_Status $status_semantic,
         ArtifactClosingCommentInCommonMarkFormat $closing_comment_body,
         NewComment $no_semantic_comment,
-    ): void {
+    ): Ok|Err {
         if (! $artifact->isOpen()) {
-            $this->logger->info(
-                "Artifact #{$artifact->getId()} is already closed and can not be closed automatically by GitLab commit #{$commit->getSha1()}"
-            );
-            return;
+            return Result::err(ArtifactIsAlreadyClosedFault::build());
         }
 
         $status_field = $status_semantic->getField();
         if ($status_field === null) {
-            $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
-            if (Result::isErr($result)) {
-                $this->logger->error((string) $result->error);
-            }
-            return;
+            return $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact)
+                ->map(static fn() => null);
         }
 
         try {
             $closed_value = $this->getClosedValue($artifact, $tracker_workflow_user);
         } catch (SemanticStatusClosedValueNotFoundException $e) {
-            $result = $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact);
-            if (Result::isErr($result)) {
-                $this->logger->error((string) $result->error);
-            }
-            return;
+            return $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact)
+                ->map(static fn() => null);
+        } catch (NoPossibleValueException $e) {
+            return Result::err(
+                Fault::fromThrowableWithMessage(
+                    $e,
+                    sprintf('Artifact #%d cannot be closed. %s', $artifact->getId(), $e->getMessage())
+                )
+            );
         }
 
         $fields_data = [
@@ -110,11 +111,17 @@ final class PostPushCommitArtifactUpdater
             );
 
             if ($new_followups === null) {
-                $this->logger->error("No new comment was created");
+                return Result::err(Fault::fromMessage('No new comment was created'));
             }
         } catch (Tracker_NoChangeException | Tracker_Exception $e) {
-            $this->logger->error("An error occurred during the creation of the comment");
+            return Result::err(
+                Fault::fromThrowableWithMessage(
+                    $e,
+                    sprintf('An error occurred during the creation of the comment: %s', $e->getMessage())
+                )
+            );
         }
+        return Result::ok(null);
     }
 
     /**

@@ -61,6 +61,8 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private const PROJECT_ID            = 101;
     private const GITLAB_REPOSITORY_ID  = 12;
     private const MASTER_BRANCH_NAME    = 'master';
+    private const ARTIFACT_ID           = 123;
+    private const COMMIT_SHA1           = 'feff4ced04b237abb8b4a50b4160099313152c3c';
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactRetriever
@@ -87,7 +89,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      */
     private $status_semantic;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Artifact
+     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
     private $artifact;
     /**
@@ -115,7 +117,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->logger                 = new TestLogger();
         $this->status_semantic        = $this->createMock(Tracker_Semantic_Status::class);
         $this->credentials            = $this->createMock(Credentials::class);
-        $this->reference              = new WebhookTuleapReference(123, 'resolve');
+        $this->reference              = new WebhookTuleapReference(self::ARTIFACT_ID, 'resolve');
         $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
             ChangesetTestBuilder::aChangeset('7290')->build()
@@ -127,9 +129,9 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->workflow_user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
         $tracker             = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
-        $this->artifact      = $this->createMock(Artifact::class);
+        $this->artifact      = $this->createStub(Artifact::class);
+        $this->artifact->method('getId')->willReturn(self::ARTIFACT_ID);
         $this->artifact->method('getTracker')->willReturn($tracker);
-        $this->artifact->method('isOpen')->willReturn(true);
     }
 
     private function handleArtifactClosure(): void
@@ -138,7 +140,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $status_semantic_factory->method('getByTracker')->willReturn($this->status_semantic);
 
         $webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
+            self::COMMIT_SHA1,
             'A commit with references containing close artifact keyword',
             'A commit with reference: resolve TULEAP-123',
             self::MASTER_BRANCH_NAME,
@@ -158,11 +160,13 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             false
         );
 
+        $prefixed_logger = new PrefixedLogger($this->logger, self::POST_PUSH_LOG_PREFIX);
+
         $handler = new PostPushWebhookCloseArtifactHandler(
             new PostPushCommitArtifactUpdater(
                 $this->createStub(StatusValueRetriever::class),
                 $this->done_value_retriever,
-                $this->logger,
+                $prefixed_logger,
                 $this->comment_creator,
                 $this->changeset_creator
             ),
@@ -172,7 +176,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             $this->repository_project_dao,
             $this->credentials_retriever,
             $this->gitlab_project_builder,
-            new PrefixedLogger($this->logger, self::POST_PUSH_LOG_PREFIX)
+            $prefixed_logger
         );
 
         $handler->handleArtifactClosure($this->reference, $webhook_data, $gitlab_integration);
@@ -187,9 +191,8 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockCommitterMatchingTuleapUser();
         $this->mockThereIsAStatusField();
-        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn(
-            $this->getBindValue()
-        );
+        $this->mockArtifactIsOpen();
+        $this->mockDoneValueIsFound();
 
         $this->handleArtifactClosure();
 
@@ -203,7 +206,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     public function testItDoesNothingIfNoCloseKeywordDefined(): void
     {
-        $this->reference = new WebhookTuleapReference(123);
+        $this->reference = new WebhookTuleapReference(self::ARTIFACT_ID);
 
         $this->handleArtifactClosure();
 
@@ -309,6 +312,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
+        $this->mockArtifactIsOpen();
         $this->mockCommitterMatchingTuleapUser();
         $this->status_semantic->method('getField')->willReturn(null);
 
@@ -335,6 +339,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
+        $this->mockArtifactIsOpen();
         $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
         $this->status_semantic->method('getField')->willReturn(null);
 
@@ -354,6 +359,29 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         self::assertSame($this->artifact, $this->comment_creator->getArtifact());
     }
 
+    public function testItLogsInfoIfArtifactIsAlreadyClosed(): void
+    {
+        $this->mockReferencedArtifactIsFound();
+        $this->mockArtifactClosureIsEnabled();
+        $this->mockWorkflowUserIsFound();
+        $this->mockGitLabRepositoryHasCredentials();
+        $this->mockGitlabProjectDefaultBranch();
+        $this->artifact->method('isOpen')->willReturn(false);
+        $this->mockCommitterMatchingTuleapUser();
+
+        $this->handleArtifactClosure();
+
+        self::assertTrue(
+            $this->logger->hasInfo(
+                sprintf(
+                    '|  |  |_ Artifact #%d is already closed and can not be closed automatically by GitLab commit #%s',
+                    self::ARTIFACT_ID,
+                    self::COMMIT_SHA1
+                )
+            )
+        );
+    }
+
     public function testItLogsErrorIfNoValidValue(): void
     {
         $this->mockReferencedArtifactIsFound();
@@ -361,6 +389,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockWorkflowUserIsFound();
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
+        $this->mockArtifactIsOpen();
         $this->mockCommitterMatchingTuleapUser();
         $this->mockThereIsAStatusField();
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willThrowException(
@@ -373,17 +402,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             $this->logger->hasError(
                 "|  |  |_ Artifact #123 cannot be closed. No possible value found regarding your configuration. Please check your transition and field dependencies."
             )
-        );
-    }
-
-    private function getBindValue(): \Tracker_FormElement_Field_List_Bind_StaticValue
-    {
-        return new \Tracker_FormElement_Field_List_Bind_StaticValue(
-            self::DONE_BIND_VALUE_ID,
-            'Done',
-            'irrelevant',
-            3,
-            false
         );
     }
 
@@ -448,5 +466,23 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
 
         $this->status_semantic->method('getField')->willReturn($field);
+    }
+
+    private function mockDoneValueIsFound(): void
+    {
+        $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn(
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(
+                self::DONE_BIND_VALUE_ID,
+                'Done',
+                'irrelevant',
+                3,
+                false
+            )
+        );
+    }
+
+    private function mockArtifactIsOpen(): void
+    {
+        $this->artifact->method('isOpen')->willReturn(true);
     }
 }

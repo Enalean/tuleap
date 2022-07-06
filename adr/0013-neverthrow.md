@@ -94,7 +94,7 @@ Taking inspiration from TypeScript [neverthrow][2], we introduce a port to PHP: 
 ### Recommendations and rules
 
 * Functions that can have errors should return `Ok | Err`.
-* The error type wrapped in an `Ok | Err` should always be `Fault` (or a subclass of `Fault` in PHP).
+* The error type wrapped in an `Ok | Err` should always be `Fault`.
 * The value type wrapped in an `Ok | Err` can be anything we're used to: a value-object, a Presenter, a JSON Representation, …
 
 ### Positive Consequences
