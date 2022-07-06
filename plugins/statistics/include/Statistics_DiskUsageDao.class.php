@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+
 class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     // A day spreads From 00:00:00 ---> 23:59:59
@@ -192,7 +194,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      * @param Date    $startDate
      * @param Date    $endDate
      * @param int $groupId
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
+     * @return DataAccessResult
      */
     public function searchSizePerServiceForPeriod($service, $dateMethod, $startDate, $endDate, $groupId = null)
     {
@@ -229,7 +231,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
         }
 
         $sql = 'SELECT service, sum(size) as size' .
-            ' FROM plugin_statistics_diskusage_group dug ' . $where_clause;
+            ' FROM plugin_statistics_diskusage_group dug ' . $where_clause . ' GROUP BY service';
 
         return $this->retrieve($sql);
     }
@@ -299,9 +301,8 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      *
      * @param int $userId
      *
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
-    public function searchSizePerUserForPeriod($userId, $dateMethod, $startDate, $endDate)
+    public function searchSizePerUserForPeriod($userId, $dateMethod, $startDate, $endDate): LegacyDataAccessResultInterface|false
     {
         $this->_getGroupByFromDateMethod($dateMethod, $select, $groupBy);
         $sql = 'SELECT  avg(size) as size, YEAR(date) as year' . $select .
@@ -337,10 +338,8 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
 
     /**
      * Compute average size of user_id
-     *
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
-    public function searchSizePerProjectForPeriod($groupId, $dateMethod, $startDate, $endDate)
+    public function searchSizePerProjectForPeriod($groupId, $dateMethod, $startDate, $endDate): LegacyDataAccessResultInterface|false
     {
         $this->_getGroupByFromDateMethod($dateMethod, $select, $groupBy);
         $sql = 'SELECT  avg(size) as size, YEAR(date) as year' . $select .
@@ -361,7 +360,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
      *
      * @param date $endDate , date $startDate
      *
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
+     * @return DataAccessResult
      */
     public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
     {
