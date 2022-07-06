@@ -23,6 +23,9 @@ $GLOBALS['wgGroupPermissions']['user']['editmyprivateinfo'] = false;
 $GLOBALS['wgPasswordResetRoutes']                           = ['username' => false, 'email' => false];
 // Block the createaccount page, users are expected to use their Tuleap accounts
 $GLOBALS['wgGroupPermissions']['*']['createaccount'] = false;
+// Disable patrolling
+$GLOBALS['wgGroupPermissions']['sysop']['autopatrol'] = false;
+$GLOBALS['wgGroupPermissions']['sysop']['patrol']     = false;
 // Disable email features
 $GLOBALS['wgEnableEmail']         = false;
 $GLOBALS['wgEnableUserEmail']     = false;
