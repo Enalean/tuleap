@@ -45,4 +45,8 @@ export class DocumentAdapter implements RetrieveElement {
         }
         return element;
     }
+
+    getElementsByClassName(class_name: string): HTMLCollectionOf<Element> {
+        return this.doc.getElementsByClassName(class_name);
+    }
 }

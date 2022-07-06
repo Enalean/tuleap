@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,14 +15,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-export interface RetrieveElement {
-    getInputById(id: string): HTMLInputElement;
+import { put } from "@tuleap/tlp-fetch";
 
-    getSelectById(id: string): HTMLSelectElement;
-
-    getElementById(id: string): Element;
-
-    getElementsByClassName(class_name: string): HTMLCollectionOf<Element>;
+export function synchronizeTeamOfProgram(
+    project_shortname: string,
+    team_id: number
+): Promise<Response> {
+    return put(
+        "/program_management/admin/" +
+            encodeURIComponent(project_shortname) +
+            "/synchronize/" +
+            encodeURIComponent(team_id),
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
 }

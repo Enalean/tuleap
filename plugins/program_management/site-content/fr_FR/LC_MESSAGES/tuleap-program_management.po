@@ -382,6 +382,11 @@ msgstr ""
 "Le projet est défini en tant que projet Équipe. Il ne peut pas être utilisé "
 "en tant que Programme."
 
+msgid "Project is not defined as a Team project. It can not be synchronized."
+msgstr ""
+"Le projet n'est pas défini en tant que projet équipe. Il ne peut pas être "
+"synchronisé."
+
 msgid "Remove from top backlog"
 msgstr "Supprimer de la planification générale"
 
