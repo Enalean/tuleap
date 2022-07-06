@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredMilestoneCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -48,7 +49,12 @@ final class TeamsPresenterBuilder
     ): array {
         $teams_presenter = [];
 
-        $open_program_increments       = $search_open_program_increments->searchOpenProgramIncrements($admin_program->id, $user_identifier);
+        try {
+            $open_program_increments = $search_open_program_increments->searchOpenProgramIncrements($admin_program->id, $user_identifier);
+        } catch (ProjectIsNotAProgramException $e) {
+            // when program has no team yet we don't need to check PI synchronisation
+            $open_program_increments = [];
+        }
         $teams_with_missing_milestones = MirroredMilestoneCollection::buildCollectionFromProgramIdentifier($timebox_searcher, $open_program_increments, $team_collection->getTeamProjects());
 
         foreach ($team_collection->getTeamProjects() as $team) {
