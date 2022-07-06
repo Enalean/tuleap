@@ -44,7 +44,17 @@
       "outputs": ["dist/**", "frontend-assets/**", "backend-assets/**"]
     },
     "test": {
-      "outputs": []
+      "dependsOn": ["typecheck", "$CI_MODE", "$COLLECT_COVERAGE"],
+      "inputs": [
+        "package.json",
+        "tsconfig*.json",
+        "pnpm-lock.yaml",
+        "vite.config.ts",
+        "jest.config.js",
+        "scripts/**",
+        "src/**"
+      ],
+      "outputs": ["js-test-results/**"]
     }
   }
 }

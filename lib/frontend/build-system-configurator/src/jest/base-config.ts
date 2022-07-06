@@ -18,6 +18,7 @@
  */
 
 import path from "path";
+import fs from "fs";
 
 const esModules = [
     "d3-selection",
@@ -30,9 +31,26 @@ const esModules = [
     "hybrids",
 ].join("|");
 
-let coverage_directory = undefined;
-if (process.env.COVERAGE_BASE_OUTPUT_DIR) {
-    coverage_directory = process.env.COVERAGE_BASE_OUTPUT_DIR + "/" + path.basename(process.cwd());
+const OUTPUT_DIRECTORY = "js-test-results/";
+
+fs.rmSync(OUTPUT_DIRECTORY, { recursive: true, force: true });
+
+let config_additional_config = {};
+if (process.env.CI_MODE === "true") {
+    config_additional_config = {
+        ci: true,
+        reporters: ["default", ["jest-junit", { outputDirectory: OUTPUT_DIRECTORY }]],
+        maxWorkers: "30%",
+        verbose: false,
+    };
+}
+if (process.env.COLLECT_COVERAGE === "true") {
+    config_additional_config = {
+        ...config_additional_config,
+        collectCoverage: true,
+        coverageReporters: ["text-summary", "cobertura"],
+        coverageDirectory: OUTPUT_DIRECTORY,
+    };
 }
 
 const is_typechecking_enabled = process.env.DISABLE_TS_TYPECHECK !== "true";
@@ -97,5 +115,5 @@ export const base_config = {
     ],
     resetModules: true,
     restoreMocks: true,
-    coverageDirectory: coverage_directory,
+    ...config_additional_config,
 };

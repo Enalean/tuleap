@@ -14,18 +14,17 @@ def runPHPUnitTests(String version, Boolean with_coverage = false) {
     sh "make -C $WORKSPACE/sources phpunit-ci PHP_VERSION=${version} COVERAGE_ENABLED=${coverage_enabled}"
 }
 
-def runJestTests(String name, String path, Boolean with_coverage = false) {
-    def coverage_params=''
+def runJSUnitTests(String path, Boolean with_coverage = false) {
+    def coverage_env=''
     if (with_coverage) {
-        coverage_params="--coverage --coverageReporters=text-summary --coverageReporters=cobertura"
+        coverage_env='export COLLECT_COVERAGE=true'
     }
     sh """
-    mkdir -p 'results/jest/coverage/'
-    export JEST_JUNIT_OUTPUT_DIR="\$WORKSPACE/results/jest/"
-    export JEST_JUNIT_UNIQUE_OUTPUT_NAME=true
-    export JEST_SUITE_NAME="Jest ${name} test suite"
-    export COVERAGE_BASE_OUTPUT_DIR="\$WORKSPACE/results/jest/coverage/"
-    timeout 1h pnpm --prefix "sources/${path}" test -- --ci --maxWorkers=30% --reporters=default --reporters=jest-junit ${coverage_params}
+    mkdir -p 'results/js-test-results/'
+    export CI_MODE="true"
+    ${coverage_env}
+    timeout 1h pnpm --prefix "sources/${path}" test
+    pnpm -r exec -- \$WORKSPACE/sources/lib/frontend/build-system-configurator/bin/copy-js-test-results.sh \$WORKSPACE/results/js-test-results/
     """
 }
 

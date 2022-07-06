@@ -182,17 +182,17 @@ pipeline {
                     }
                     steps { script { execTestWithLimitedConcurrency({ actions.runStylelint() }) } }
                 }
-                stage ('Jest') {
+                stage ('JS Unit tests') {
                     agent {
                         dockerfile {
                             dir 'sources/tools/utils/nix/'
                             filename 'build-tools.dockerfile'
                             reuseNode true
-                            args '--network none --tmpfs /tmp/jest_cache:rw,noexec,nosuid -e TMPDIR=/tmp/jest_cache/'
+                            args '--network none --tmpfs /tmp/js_test_cache:rw,noexec,nosuid -e TMPDIR=/tmp/js_test_cache/'
                         }
                     }
-                    steps { script { execTestWithLimitedConcurrency({ actions.runJestTests('Tuleap', '.') }) } }
-                    post { always { junit 'results/jest/junit-*.xml' } }
+                    steps { script { execTestWithLimitedConcurrency({ actions.runJSUnitTests('.') }) } }
+                    post { always { junit 'results/js-test-results/junit-*.xml' } }
                 }
             }
             post {

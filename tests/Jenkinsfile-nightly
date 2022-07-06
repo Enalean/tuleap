@@ -54,14 +54,14 @@ pipeline {
                     dir 'sources/tools/utils/nix/'
                     filename 'build-tools.dockerfile'
                     reuseNode true
-                    args '--network none --tmpfs /tmp/jest_cache:rw,noexec,nosuid -e TMPDIR=/tmp/jest_cache/'
+                    args '--network none --tmpfs /tmp/js_test_cache:rw,noexec,nosuid -e TMPDIR=/tmp/js_test_cache/'
                 }
             }
-            steps { script { actions.runJestTests('Tuleap', '.', true) } }
+            steps { script { actions.runJSUnitTests('.', true) } }
             post {
                 always {
-                    junit 'results/jest/junit-*.xml'
-                    publishCoverage adapters: [istanbulCoberturaAdapter(path: 'results/jest/coverage/*/cobertura-coverage.xml', mergeToOneReport: true)], tag: 'Javascript'
+                    junit 'results/js-test-results/junit-*.xml'
+                    publishCoverage adapters: [istanbulCoberturaAdapter(path: 'results/js-test-results/cobertura-coverage-*.xml', mergeToOneReport: true)], tag: 'Javascript'
                 }
             }
         }
