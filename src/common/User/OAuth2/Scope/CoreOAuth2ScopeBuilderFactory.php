@@ -24,6 +24,9 @@ namespace Tuleap\User\OAuth2\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 
 final class CoreOAuth2ScopeBuilderFactory
 {
@@ -36,6 +39,9 @@ final class CoreOAuth2ScopeBuilderFactory
         return new AuthenticationScopeBuilderFromClassNames(
             OAuth2ProjectReadScope::class,
             OAuth2UserMembershipScope::class,
+            OAuth2SignInScope::class,
+            OpenIDConnectEmailScope::class,
+            OpenIDConnectProfileScope::class
         );
     }
 }

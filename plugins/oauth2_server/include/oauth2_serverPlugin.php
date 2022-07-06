@@ -60,9 +60,6 @@ use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2ServerCore\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OAuth2SignInScope;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectEmailScope;
-use Tuleap\OAuth2ServerCore\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2ServerCore\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\REST\Specification\Swagger\SwaggerJsonOAuth2SecurityDefinition;
 use Tuleap\OAuth2ServerCore\Scope\OAuth2ScopeSaver;
@@ -569,9 +566,6 @@ final class oauth2_serverPlugin extends Plugin
         $collector->addOAuth2ScopeBuilder(
             new AuthenticationScopeBuilderFromClassNames(
                 OAuth2OfflineAccessScope::class,
-                OAuth2SignInScope::class,
-                OpenIDConnectEmailScope::class,
-                OpenIDConnectProfileScope::class
             )
         );
     }
