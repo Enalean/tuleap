@@ -17,6 +17,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0011](0011-js-framework.md) - State of JS frameworks in the Tuleap codebase
 * [ADR-0012](0012-faults-over-exceptions.md) - Favor Faults over Exceptions
 * [ADR-0013](0013-neverthrow.md) - NeverThrow
+* [ADR-0014](0014-js-unit-test-runner.md) - JS unit test runner
 
 <!-- adrlogstop -->
 

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-process.env.DISABLE_TS_TYPECHECK = "true";
+import { beforeEach, afterEach, vi } from "vitest";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...jest_base_config,
-    displayName: "fault",
-};
+let is_console_error_or_warning = false;
+
+beforeEach(() => {
+    is_console_error_or_warning = false;
+    const originalError = global.console.error;
+    vi.spyOn(global.console, "error").mockImplementation((...args: unknown[]) => {
+        is_console_error_or_warning = true;
+        originalError(...args);
+    });
+    const originalWarn = global.console.warn;
+    vi.spyOn(global.console, "warn").mockImplementation((...args: unknown[]) => {
+        is_console_error_or_warning = true;
+        originalWarn(...args);
+    });
+});
+
+afterEach(() => {
+    if (is_console_error_or_warning) {
+        throw new Error("Console warnings and errors are not allowed");
+    }
+});
