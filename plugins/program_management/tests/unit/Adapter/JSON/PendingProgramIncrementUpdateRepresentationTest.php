@@ -28,13 +28,14 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 
 final class PendingProgramIncrementUpdateRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ITERATION_ID             = 276;
-    private const SECOND_ITERATION_ID            = 245;
-    private const FIRST_ITERATION_CHANGESET_ID   = 4807;
-    private const SECOND_ITERATION_CHANGESET_ID  = 2710;
-    private const PROGRAM_INCREMENT_ID           = 54;
-    private const PROGRAM_INCREMENT_CHANGESET_ID = 9556;
-    private const USER_ID                        = 199;
+    private const FIRST_ITERATION_ID                 = 276;
+    private const SECOND_ITERATION_ID                = 245;
+    private const FIRST_ITERATION_CHANGESET_ID       = 4807;
+    private const SECOND_ITERATION_CHANGESET_ID      = 2710;
+    private const PROGRAM_INCREMENT_ID               = 54;
+    private const PROGRAM_INCREMENT_CHANGESET_ID     = 9556;
+    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 9555;
+    private const USER_ID                            = 199;
     private ProgramIncrementUpdate $update;
 
     protected function setUp(): void
@@ -43,7 +44,8 @@ final class PendingProgramIncrementUpdateRepresentationTest extends \Tuleap\Test
             self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
             97,
-            self::PROGRAM_INCREMENT_CHANGESET_ID
+            self::PROGRAM_INCREMENT_CHANGESET_ID,
+            self::PROGRAM_INCREMENT_OLD_CHANGESET_ID
         );
     }
 

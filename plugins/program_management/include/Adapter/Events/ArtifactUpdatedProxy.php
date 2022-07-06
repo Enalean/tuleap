@@ -45,6 +45,7 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
         private TrackerIdentifier $tracker,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset,
+        private ChangesetIdentifier $old_changeset,
     ) {
     }
 
@@ -55,7 +56,8 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
         $tracker       = TrackerIdentifierProxy::fromTracker($full_artifact->getTracker());
         $user          = UserProxy::buildFromPFUser($artifact_updated->getUser());
         $changeset     = ChangesetProxy::fromChangeset($artifact_updated->getChangeset());
-        return new self($artifact, $tracker, $user, $changeset);
+        $old_changeset = ChangesetProxy::fromChangeset($artifact_updated->getOldChangeset());
+        return new self($artifact, $tracker, $user, $changeset, $old_changeset);
     }
 
     public function getArtifact(): ArtifactIdentifier
@@ -76,5 +78,10 @@ final class ArtifactUpdatedProxy implements ArtifactUpdatedEvent
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
+    }
+
+    public function getOldChangeset(): ChangesetIdentifier
+    {
+        return $this->old_changeset;
     }
 }

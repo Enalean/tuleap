@@ -80,4 +80,9 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
     {
         return $this->changeset;
     }
+
+    public function getOldChangeset(): ChangesetIdentifier
+    {
+        return $this->changeset;
+    }
 }

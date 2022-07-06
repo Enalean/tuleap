@@ -64,7 +64,8 @@ class NewChangesetCreator implements CreateNewChangeset
         if ($submitter->isAnonymous()) {
             $email = $submitter->getEmail();
         }
-        $artifact = $changeset->getArtifact();
+        $artifact      = $changeset->getArtifact();
+        $old_changeset = $artifact->getLastChangeset();
 
         try {
             $new_changeset = $this->transaction_executor->execute(function () use (
@@ -160,7 +161,10 @@ class NewChangesetCreator implements CreateNewChangeset
                 );
             }
 
-            $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter, $new_changeset));
+            if (! $old_changeset) {
+                $old_changeset = $new_changeset;
+            }
+            $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter, $new_changeset, $old_changeset));
 
             return $new_changeset;
         } catch (\PDOException $exception) {

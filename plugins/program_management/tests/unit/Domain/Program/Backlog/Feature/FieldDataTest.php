@@ -45,8 +45,16 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'id'         => self::SECOND_USER_STORY_ID,
             'project_id' => self::FIRST_TEAM_ID,
         ]);
+        $third_feature_change         = FeatureChange::fromRaw([
+            'id'         => self::THIRD_USER_STORY_ID,
+            'project_id' => self::FIRST_TEAM_ID,
+        ]);
+        $fourth_feature_change        = FeatureChange::fromRaw([
+            'id'         => self::FOURTH_USER_STORY_ID,
+            'project_id' => self::FIRST_TEAM_ID,
+        ]);
         $this->user_stories_to_add    = [$first_feature_change, $second_feature_change];
-        $this->user_stories_to_remove = [self::THIRD_USER_STORY_ID, self::FOURTH_USER_STORY_ID];
+        $this->user_stories_to_remove = [$third_feature_change, $fourth_feature_change];
     }
 
     private function callMethodUnderTest(): array
@@ -92,7 +100,15 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUserStoriesAddedAreNotAlsoRemoved(): void
     {
-        $this->user_stories_to_remove = [self::FIRST_USER_STORY_ID, self::THIRD_USER_STORY_ID];
+        $first_feature_change         = FeatureChange::fromRaw([
+            'id'         => self::FIRST_USER_STORY_ID,
+            'project_id' => self::FIRST_TEAM_ID,
+        ]);
+        $third_feature_change         = FeatureChange::fromRaw([
+            'id'         => self::THIRD_USER_STORY_ID,
+            'project_id' => self::FIRST_TEAM_ID,
+        ]);
+        $this->user_stories_to_remove = [$first_feature_change, $third_feature_change];
 
         self::assertSame([self::ARTIFACT_LINK_FIELD_ID => [
             'new_values'     => self::FIRST_USER_STORY_ID . ',' . self::SECOND_USER_STORY_ID,

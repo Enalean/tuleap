@@ -28,16 +28,18 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeatureChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchFeaturesInChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIsNotVisibleException;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesInChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchUnlinkedUserStoriesOfMirroredProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -52,45 +54,46 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
     private const FEATURE_ID             = 101;
     private const TEAM_ID                = 172;
     private const ARTIFACT_LINK_FIELD_ID = 1;
-    private SearchArtifactsLinks $search_artifacts_links;
     private ProgramIncrementChanged $program_increment_changed;
     /**
      * @var MockObject&Artifact
      */
     private $milestone;
-    private VerifyIsVisibleArtifactStub $visibility_verifier;
 
     protected function setUp(): void
     {
-        $this->search_artifacts_links = SearchArtifactsLinksStub::withoutArtifactLinks();
-
         $update                          = ProgramIncrementUpdateBuilder::build();
         $this->program_increment_changed = ProgramIncrementChanged::fromUpdate($update);
 
         $this->milestone = $this->createMock(Artifact::class);
-
-        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
     }
 
-    private function getPlanner(): UserStoriesInMirroredProgramIncrementsPlanner
-    {
+    private function getPlanner(
+        SearchArtifactsLinks $search_artifacts_links,
+        VerifyIsVisibleArtifact $verify_is_visible_artifact,
+        SearchFeaturesInChangeset $search_features_in_changeset,
+    ): UserStoriesInMirroredProgramIncrementsPlanner {
         return new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorPassthrough(),
-            $this->search_artifacts_links,
+            $search_artifacts_links,
             RetrieveFullArtifactStub::withArtifact($this->milestone),
             SearchMirroredTimeboxesStub::withIds(self::MIRRORED_TIMEBOX_ID),
-            $this->visibility_verifier,
+            $verify_is_visible_artifact,
             SearchFeaturesStub::withFeatureIds(self::FEATURE_ID),
             new NullLogger(),
             RetrieveUserStub::withGenericUser(),
-            SearchUnlinkedUserStoriesOfMirroredProgramIncrementStub::withNoUserStories()
+            $search_features_in_changeset
         );
     }
 
     public function testItAddLinksToMirroredMilestones(): void
     {
-        $raw_link                     = ['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID];
-        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([$raw_link]);
+        $feature_to_remove_id            = 60000;
+        $child_of_feature_to_remove_link = ['id' => 20000, 'project_id' => self::TEAM_ID];
+        $raw_link                        = ['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID];
+        $search_artifacts_links          = SearchArtifactsLinksStub::build();
+        $search_artifacts_links->withArtifactsLinkedToFeature(self::FEATURE_ID, [$raw_link]);
+        $search_artifacts_links->withArtifactsLinkedToFeature($feature_to_remove_id, [$child_of_feature_to_remove_link]);
 
         $this->milestone->method('getId')->willReturn(self::MIRRORED_TIMEBOX_ID);
         $team_project = ProjectTestBuilder::aProject()->withId(self::TEAM_ID)->build();
@@ -103,7 +106,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
         $fields_data = new FieldData(
             [FeatureChange::fromRaw($raw_link)],
-            [],
+            [FeatureChange::fromRaw($child_of_feature_to_remove_link)],
             self::ARTIFACT_LINK_FIELD_ID
         );
 
@@ -114,26 +117,48 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
                       self::isInstanceOf(\PFUser::class)
                   );
 
-        $this->getPlanner()->plan($this->program_increment_changed);
+        $search_features_in_changeset_stub = SearchFeaturesInChangesetStub::build();
+        $search_features_in_changeset_stub->withChangesetsAndFeatures(
+            $this->program_increment_changed->changeset,
+            [self::FEATURE_ID]
+        );
+        $search_features_in_changeset_stub->withChangesetsAndFeatures(
+            $this->program_increment_changed->old_changeset,
+            [$feature_to_remove_id]
+        );
+
+        $this->getPlanner(
+            $search_artifacts_links,
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            $search_features_in_changeset_stub
+        )->plan($this->program_increment_changed);
     }
 
     public function testItDoesNothingWhenArtifactLinkIsNotFound(): void
     {
-        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks(
+        $search_artifacts_links = SearchArtifactsLinksStub::build()->withArtifactsLinkedToFeature(
+            self::FEATURE_ID,
             [['id' => self::USER_STORY_ID, 'project_id' => self::TEAM_ID]]
         );
 
         $this->milestone->method('getAnArtifactLinkField')->willReturn(null);
 
         $this->milestone->expects(self::never())->method('createNewChangeset');
-        $this->getPlanner()->plan($this->program_increment_changed);
+        $this->getPlanner(
+            $search_artifacts_links,
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            SearchFeaturesInChangesetStub::build()
+        )->plan($this->program_increment_changed);
     }
 
     public function testItThrowsWhenUserCannotSeeOneMirroredProgramIncrement(): void
     {
-        $this->visibility_verifier = VerifyIsVisibleArtifactStub::withNoVisibleArtifact();
         $this->expectException(MirroredProgramIncrementIsNotVisibleException::class);
-        $this->getPlanner()->plan($this->program_increment_changed);
+        $this->getPlanner(
+            SearchArtifactsLinksStub::build(),
+            VerifyIsVisibleArtifactStub::withNoVisibleArtifact(),
+            SearchFeaturesInChangesetStub::build()
+        )->plan($this->program_increment_changed);
     }
 
     public function testItDoesNotAddUserStoryIfUserStoryIsNotInProject(): void
@@ -142,7 +167,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
         $raw_link = ['id' => self::USER_STORY_ID, 'project_id' => $other_project_id];
 
-        $this->search_artifacts_links = SearchArtifactsLinksStub::withArtifactLinks([$raw_link]);
+        $search_artifacts_links = SearchArtifactsLinksStub::build()->withArtifactsLinkedToFeature(self::FEATURE_ID, [$raw_link]);
 
         $this->milestone->method('getId')->willReturn(self::MIRRORED_TIMEBOX_ID);
         $team_project = ProjectTestBuilder::aProject()->withId(self::TEAM_ID)->build();
@@ -168,6 +193,10 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
                 self::isInstanceOf(\PFUser::class)
             );
 
-        $this->getPlanner()->plan($this->program_increment_changed);
+        $this->getPlanner(
+            $search_artifacts_links,
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            SearchFeaturesInChangesetStub::build()
+        )->plan($this->program_increment_changed);
     }
 }

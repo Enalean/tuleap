@@ -30,7 +30,7 @@ final class ProgramIncrementUpdateBuilder
 {
     public static function build(): ProgramIncrementUpdate
     {
-        return self::buildWithIds(141, 334, 20, 7516);
+        return self::buildWithIds(141, 334, 20, 7516, 7515);
     }
 
     public static function buildWithIds(
@@ -38,8 +38,9 @@ final class ProgramIncrementUpdateBuilder
         int $program_increment_id,
         int $tracker_id,
         int $changeset_id,
+        int $old_changeset_id,
     ): ProgramIncrementUpdate {
-        $event                    = ArtifactUpdatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id);
+        $event                    = ArtifactUpdatedEventStub::withIds($program_increment_id, $tracker_id, $user_id, $changeset_id, $old_changeset_id);
         $program_increment_update = ProgramIncrementUpdate::fromArtifactUpdatedEvent(
             VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement(),
             $event

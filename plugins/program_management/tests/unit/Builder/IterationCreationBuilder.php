@@ -39,6 +39,7 @@ final class IterationCreationBuilder
             $program_increment_id,
             $user_id,
             1072,
+            1071,
             PendingIterationCreationBuilder::buildWithIds($iteration_id, $changeset_id)
         );
         [$first_iteration] = IterationCreation::buildCollectionFromProgramIncrementUpdateEvent(

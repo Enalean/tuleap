@@ -52,7 +52,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->event = ArtifactUpdatedEventStub::withIds(87, 93, 194, 4208);
+        $this->event = ArtifactUpdatedEventStub::withIds(87, 93, 194, 4208, 4207);
 
         $this->program_increment_verifier          = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();
         $this->iteration_verifier                  = VerifyIsIterationTrackerStub::buildNotIteration();

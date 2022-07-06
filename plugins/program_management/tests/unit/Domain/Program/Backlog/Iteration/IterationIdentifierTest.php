@@ -112,7 +112,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNullIfTheUpdatedArtifactIsNotFromAnIterationTracker(): void
     {
         $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildNotIteration();
-        $event                      = ArtifactUpdatedEventStub::withIds(10, 93, $this->user->getId(), 4208);
+        $event                      = ArtifactUpdatedEventStub::withIds(10, 93, $this->user->getId(), 4208, 4207);
 
         self::assertNull(IterationIdentifier::fromArtifactUpdateEvent($iteration_tracker_verifier, $event));
     }
@@ -121,7 +121,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $iteration_tracker_verifier = VerifyIsIterationTrackerStub::buildValidIteration();
         $iteration_id               = 87;
-        $event                      = ArtifactUpdatedEventStub::withIds($iteration_id, 93, $this->user->getId(), 4208);
+        $event                      = ArtifactUpdatedEventStub::withIds($iteration_id, 93, $this->user->getId(), 4208, 4207);
 
         $iteration = IterationIdentifier::fromArtifactUpdateEvent($iteration_tracker_verifier, $event);
         self::assertNotNull($iteration);

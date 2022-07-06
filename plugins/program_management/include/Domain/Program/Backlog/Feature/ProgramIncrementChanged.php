@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ChangesetIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
@@ -37,6 +38,8 @@ final class ProgramIncrementChanged
         public ProgramIncrementIdentifier $program_increment,
         public ProgramIncrementTrackerIdentifier $tracker,
         public UserIdentifier $user,
+        public ChangesetIdentifier $changeset,
+        public ChangesetIdentifier $old_changeset,
     ) {
     }
 
@@ -45,7 +48,9 @@ final class ProgramIncrementChanged
         return new self(
             $creation->getProgramIncrement(),
             $creation->getProgramIncrementTracker(),
-            $creation->getUser()
+            $creation->getUser(),
+            $creation->getChangeset(),
+            $creation->getOldChangeset()
         );
     }
 
@@ -54,7 +59,9 @@ final class ProgramIncrementChanged
         return new self(
             $update->getProgramIncrement(),
             $update->getProgramIncrementTracker(),
-            $update->getUser()
+            $update->getUser(),
+            $update->getChangeset(),
+            $update->getOldChangeset()
         );
     }
 }

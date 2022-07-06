@@ -36,4 +36,5 @@ interface ArtifactCreatedEvent
     public function getTracker(): TrackerIdentifier;
     public function getUser(): UserIdentifier;
     public function getChangeset(): ChangesetIdentifier;
+    public function getOldChangeset(): ChangesetIdentifier;
 }

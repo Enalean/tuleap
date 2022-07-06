@@ -28,17 +28,22 @@ final class FeaturePlanChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetUserStoriesLinkedToFeature(): void
     {
-        $feature_to_links = [123, 456];
+        $feature_to_links   = [123, 456];
+        $features_to_unlink = [666];
 
-        $artifact_link_search = SearchArtifactsLinksStub::withSuccessiveRows(
-            ['id' => 789, 'project_id' => 101],
-            ['id' => 910, 'project_id' => 156],
-        );
-        $feature_plan_change  = FeaturePlanChange::fromRaw($artifact_link_search, $feature_to_links, 1);
+        $artifact_link_search = SearchArtifactsLinksStub::build();
+        $artifact_link_search->withArtifactsLinkedToFeature(123, [['id' => 789, 'project_id' => 101]]);
+        $artifact_link_search->withArtifactsLinkedToFeature(456, [['id' => 910, 'project_id' => 156]]);
+        $artifact_link_search->withArtifactsLinkedToFeature(666, [['id' => 111, 'project_id' => 222]]);
+
+        $feature_plan_change = FeaturePlanChange::fromRaw($artifact_link_search, $feature_to_links, $features_to_unlink, 1);
 
         self::assertEquals(789, $feature_plan_change->user_stories[0]->id);
         self::assertEquals(101, $feature_plan_change->user_stories[0]->project_id);
         self::assertEquals(910, $feature_plan_change->user_stories[1]->id);
         self::assertEquals(156, $feature_plan_change->user_stories[1]->project_id);
+
+        self::assertEquals(111, $feature_plan_change->user_stories_to_remove[0]->id);
+        self::assertEquals(222, $feature_plan_change->user_stories_to_remove[0]->project_id);
     }
 }

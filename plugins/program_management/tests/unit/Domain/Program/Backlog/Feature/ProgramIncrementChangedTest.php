@@ -47,7 +47,8 @@ final class ProgramIncrementChangedTest extends \Tuleap\Test\PHPUnit\TestCase
             self::USER_ID,
             self::PROGRAM_INCREMENT_ID,
             self::TRACKER_ID,
-            8949
+            8949,
+            8948
         );
     }
 

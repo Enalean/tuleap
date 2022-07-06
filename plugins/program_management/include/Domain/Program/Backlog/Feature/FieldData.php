@@ -34,7 +34,7 @@ final class FieldData
      */
     private $user_stories_to_add;
     /**
-     * @var int[]
+     * @var FeatureChange[]
      */
     private $user_stories_to_remove;
     /**
@@ -44,7 +44,7 @@ final class FieldData
 
     /**
      * @param FeatureChange[] $user_stories_to_add
-     * @param int[] $user_stories_to_remove
+     * @param FeatureChange[] $user_stories_to_remove
      */
     public function __construct(array $user_stories_to_add, array $user_stories_to_remove, int $artifact_link_field)
     {
@@ -58,7 +58,7 @@ final class FieldData
         $fields_data                                               = [];
         $fields_data[$this->artifact_link_field]['new_values']     = implode(",", $this->getFeatureChangeToAdd($this->user_stories_to_add, $milestone_project_id));
         $fields_data[$this->artifact_link_field]['removed_values'] =
-            $this->getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList($this->user_stories_to_remove);
+            $this->getFeatureChangeToRemove($this->user_stories_to_remove);
 
         return $fields_data;
     }
@@ -79,15 +79,16 @@ final class FieldData
     }
 
     /**
+     * @param FeatureChange[] $feature_changes
      * @psalm-return array<int|string, int|string>
      */
-    private function getUserStoriesThatAreLinkedToMilestoneAndNoLongerInArtifactLinkList(
-        array $user_stories_linked_to_milestones,
+    private function getFeatureChangeToRemove(
+        array $feature_changes,
     ): array {
         $user_stories_to_remove = [];
-        foreach ($user_stories_linked_to_milestones as $user_story_id) {
-            if (! in_array($user_story_id, array_column($this->user_stories_to_add, "id"), true)) {
-                $user_stories_to_remove[$user_story_id] = $user_story_id;
+        foreach ($feature_changes as $user_story_id) {
+            if (! in_array($user_story_id->id, array_column($this->user_stories_to_add, "id"), true)) {
+                $user_stories_to_remove[$user_story_id->id] = $user_story_id->id;
             }
         }
 

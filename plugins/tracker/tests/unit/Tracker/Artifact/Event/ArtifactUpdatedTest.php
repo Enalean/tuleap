@@ -29,13 +29,15 @@ final class ArtifactUpdatedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsFromArtifact(): void
     {
-        $user      = UserTestBuilder::aUser()->withId(101)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(150)->build();
-        $changeset = new \Tracker_Artifact_Changeset('1974', $artifact, $user->getId(), 1234567890, null);
+        $user          = UserTestBuilder::aUser()->withId(101)->build();
+        $artifact      = ArtifactTestBuilder::anArtifact(150)->build();
+        $changeset     = new \Tracker_Artifact_Changeset('1974', $artifact, $user->getId(), 1234567890, null);
+        $old_changeset = new \Tracker_Artifact_Changeset('1973', $artifact, $user->getId(), 1234567800, null);
 
-        $event = new ArtifactUpdated($artifact, $user, $changeset);
+        $event = new ArtifactUpdated($artifact, $user, $changeset, $old_changeset);
         self::assertSame($user, $event->getUser());
         self::assertSame($artifact, $event->getArtifact());
         self::assertSame($changeset, $event->getChangeset());
+        self::assertSame($old_changeset, $event->getOldChangeset());
     }
 }

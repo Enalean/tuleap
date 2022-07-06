@@ -54,6 +54,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         private ProgramIncrementIdentifier $program_increment,
         private UserIdentifier $user,
         private ChangesetIdentifier $changeset,
+        private ChangesetIdentifier $old_changeset,
         PendingIterationCreation ...$iterations,
     ) {
         $this->iterations = $iterations;
@@ -73,7 +74,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
             return null;
         }
         $payload = $event->getPayload();
-        if (! isset($payload['program_increment_id'], $payload['user_id'], $payload['changeset_id'], $payload['iterations'])) {
+        if (! isset($payload['program_increment_id'], $payload['user_id'], $payload['changeset_id'], $payload['old_changeset_id'], $payload['iterations'])) {
             $logger->warning("The payload for $event_name seems to be malformed, ignoring");
             $logger->debug("Malformed payload for $event_name: " . var_export($payload, true));
             return null;
@@ -81,10 +82,11 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         $user_id              = $payload['user_id'];
         $program_increment_id = $payload['program_increment_id'];
         $changeset_id         = $payload['changeset_id'];
+        $old_changeset_id     = $payload['old_changeset_id'];
         $iterations           = $payload['iterations'];
         $user                 = DomainUser::fromId($user_verifier, $payload['user_id']);
         if (! $user) {
-            self::logInvalidData($logger, $program_increment_id, $user_id, $changeset_id);
+            self::logInvalidData($logger, $program_increment_id, $user_id, $changeset_id, $old_changeset_id);
             return null;
         }
         try {
@@ -98,9 +100,10 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
             $logger->debug(sprintf('Program increment #%d is no longer valid, skipping update', $program_increment_id));
             return null;
         }
-        $changeset = DomainChangeset::fromId($changeset_verifier, $changeset_id);
-        if (! $changeset) {
-            self::logInvalidData($logger, $program_increment_id, $user_id, $changeset_id);
+        $changeset     = DomainChangeset::fromId($changeset_verifier, $changeset_id);
+        $old_changeset = DomainChangeset::fromId($changeset_verifier, $old_changeset_id);
+        if (! $changeset || ! $old_changeset) {
+            self::logInvalidData($logger, $program_increment_id, $user_id, $changeset_id, $old_changeset_id);
             return null;
         }
         $pending_iterations = self::buildPendingIterations(
@@ -112,7 +115,7 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
             $iterations
         );
 
-        return new self($program_increment, $user, $changeset, ...$pending_iterations);
+        return new self($program_increment, $user, $changeset, $old_changeset, ...$pending_iterations);
     }
 
     private static function logInvalidData(
@@ -120,13 +123,15 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
         int $program_increment_id,
         int $user_id,
         int $changeset_id,
+        int $old_changeset_id,
     ): void {
         $logger->error(
             sprintf(
-                'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d',
+                'Invalid data given in payload, skipping program increment update for artifact #%d, user #%d and changeset #%d (previous changeset id #%d)',
                 $program_increment_id,
                 $user_id,
-                $changeset_id
+                $changeset_id,
+                $old_changeset_id
             )
         );
     }
@@ -174,6 +179,11 @@ final class ProgramIncrementUpdateEventProxy implements ProgramIncrementUpdateEv
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
+    }
+
+    public function getOldChangeset(): ChangesetIdentifier
+    {
+        return $this->old_changeset;
     }
 
     public function getIterations(): array

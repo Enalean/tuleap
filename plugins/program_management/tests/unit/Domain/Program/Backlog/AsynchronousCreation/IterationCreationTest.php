@@ -32,14 +32,15 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const USER_ID                        = 101;
-    private const PROGRAM_INCREMENT_ID           = 54;
-    private const PROGRAM_INCREMENT_CHANGESET_ID = 8769;
-    private const ITERATION_TRACKER_ID           = 91;
-    private const FIRST_ITERATION_ID             = 573;
-    private const SECOND_ITERATION_ID            = 268;
-    private const FIRST_CHANGESET_ID             = 4021;
-    private const SECOND_CHANGESET_ID            = 4997;
+    private const USER_ID                            = 101;
+    private const PROGRAM_INCREMENT_ID               = 54;
+    private const PROGRAM_INCREMENT_CHANGESET_ID     = 8769;
+    private const PROGRAM_INCREMENT_OLD_CHANGESET_ID = 8768;
+    private const ITERATION_TRACKER_ID               = 91;
+    private const FIRST_ITERATION_ID                 = 573;
+    private const SECOND_ITERATION_ID                = 268;
+    private const FIRST_CHANGESET_ID                 = 4021;
+    private const SECOND_CHANGESET_ID                = 4997;
     private RetrieveLastChangesetStub $changeset_retriever;
     private TestLogger $logger;
     private RetrieveIterationTrackerStub $tracker_retriever;
@@ -120,6 +121,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
             self::PROGRAM_INCREMENT_CHANGESET_ID,
+            self::PROGRAM_INCREMENT_OLD_CHANGESET_ID,
             $first_iteration,
             $second_iteration
         );
@@ -152,7 +154,8 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         $update_event = ProgramIncrementUpdateEventStub::withNoIterations(
             self::PROGRAM_INCREMENT_ID,
             self::USER_ID,
-            self::PROGRAM_INCREMENT_CHANGESET_ID
+            self::PROGRAM_INCREMENT_CHANGESET_ID,
+            self::PROGRAM_INCREMENT_OLD_CHANGESET_ID
         );
 
         self::assertEmpty(
