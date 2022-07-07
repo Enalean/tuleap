@@ -33,8 +33,6 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
-use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use UserManager;
 use UserNotExistException;
 
@@ -145,24 +143,18 @@ class PostPushWebhookCloseArtifactHandler
                 return;
             }
 
-            $committer_username   = $this->getUserClosingTheArtifactFromGitlabWebhook($post_push_commit_webhook_data);
-            $closing_comment_body = PostPushArtifactComment::fromCommit(
+            $committer_username        = $this->getUserClosingTheArtifactFromGitlabWebhook(
+                $post_push_commit_webhook_data
+            );
+            $closing_comment_body      = PostPushArtifactComment::fromCommit(
                 $committer_username->getName(),
                 $post_push_commit_webhook_data,
                 $tuleap_reference,
                 $gitlab_repository_integration,
                 $artifact
             );
-
-            $no_semantic_comment = NewComment::fromParts(
-                sprintf(
-                    '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-                    $committer_username->getName()
-                ),
-                CommentFormatIdentifier::buildCommonMark(),
-                $tracker_workflow_user,
-                (new \DateTimeImmutable())->getTimestamp(),
-                []
+            $bad_semantic_comment_body = PostPushBadSemanticComment::fromUserClosingTheArtifact(
+                $this->getUserClosingTheArtifactFromGitlabWebhook($post_push_commit_webhook_data)
             );
 
             $status_semantic = $this->semantic_status_factory->getByTracker($artifact->getTracker());
@@ -172,7 +164,7 @@ class PostPushWebhookCloseArtifactHandler
                 $tracker_workflow_user,
                 $status_semantic,
                 $closing_comment_body,
-                $no_semantic_comment,
+                $bad_semantic_comment_body,
             );
             if (Result::isErr($result)) {
                 $fault = $result->error;

@@ -30,6 +30,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
@@ -37,7 +38,6 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\NewCommentTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
@@ -117,9 +117,11 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
      */
     private function closeTuleapArtifact(): Ok|Err
     {
-        $no_semantic_comment = NewCommentTestBuilder::aNewComment($this->no_semantic_defined_message)->withSubmitter(
-            $this->workflow_user
-        )->build();
+        $no_semantic_comment = PostPushBadSemanticComment::fromUserClosingTheArtifact(
+            UserClosingTheArtifact::fromUser(
+                UserTestBuilder::aUser()->withUserName(self::COMMITTER_USERNAME)->build()
+            )
+        );
 
         $updater = new PostPushCommitArtifactUpdater(
             $this->status_value_retriever,
