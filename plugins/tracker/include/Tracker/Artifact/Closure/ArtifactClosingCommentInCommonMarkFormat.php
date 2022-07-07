@@ -20,31 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
-
-use Tuleap\Tracker\Artifact\Closure\BadSemanticCommentInCommonMarkFormat;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 /**
+ * I hold the body of a comment added when an Artifact is closed by a Git commit.
+ * The comment format is always CommonMark.
  * @psalm-immutable
  */
-final class PostPushBadSemanticComment implements BadSemanticCommentInCommonMarkFormat
+interface ArtifactClosingCommentInCommonMarkFormat
 {
-    private function __construct(private string $comment)
-    {
-    }
-
-    public static function fromUserClosingTheArtifact(UserClosingTheArtifact $committer_username): self
-    {
-        return new self(
-            sprintf(
-                '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-                $committer_username->getName()
-            )
-        );
-    }
-
-    public function getBody(): string
-    {
-        return $this->comment;
-    }
+    public function getBody(): string;
 }

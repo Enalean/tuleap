@@ -20,16 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Tracker\Test\Stub;
 
 /**
- * I hold the body of a comment added after failing to close an Artifact because of badly configured Done and Status
- * semantics. If the Artifact's Tracker has no Done value and no Status values considered as "Closed",
- * then this comment will be added on the Artifact.
- * The comment format is always CommonMark
  * @psalm-immutable
  */
-interface BadSemanticCommentInCommonMarkFormat
+final class BadSemanticCommentInCommonMarkFormatStub implements \Tuleap\Tracker\Artifact\Closure\BadSemanticCommentInCommonMarkFormat
 {
-    public function getBody(): string;
+    private function __construct(private string $comment)
+    {
+    }
+
+    public static function fromString(string $comment): self
+    {
+        return new self($comment);
+    }
+
+    public function getBody(): string
+    {
+        return $this->comment;
+    }
 }

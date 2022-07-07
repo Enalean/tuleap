@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -163,7 +164,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $prefixed_logger = new PrefixedLogger($this->logger, self::POST_PUSH_LOG_PREFIX);
 
         $handler = new PostPushWebhookCloseArtifactHandler(
-            new PostPushCommitArtifactUpdater(
+            new ArtifactCloser(
                 $this->createStub(StatusValueRetriever::class),
                 $this->done_value_retriever,
                 $prefixed_logger,

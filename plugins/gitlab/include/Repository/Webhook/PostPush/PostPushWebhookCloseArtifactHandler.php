@@ -33,6 +33,8 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Artifact\Closure\ArtifactIsAlreadyClosedFault;
+use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use UserManager;
 use UserNotExistException;
 
@@ -59,7 +61,7 @@ class PostPushWebhookCloseArtifactHandler
      */
     private $repository_project_dao;
     /**
-     * @var PostPushCommitArtifactUpdater
+     * @var ArtifactCloser
      */
     private $artifact_updater;
 
@@ -67,7 +69,7 @@ class PostPushWebhookCloseArtifactHandler
     private GitlabProjectBuilder $gitlab_project_builder;
 
     public function __construct(
-        PostPushCommitArtifactUpdater $artifact_updater,
+        ArtifactCloser $artifact_updater,
         ArtifactRetriever $artifact_retriever,
         UserManager $user_manager,
         Tracker_Semantic_StatusFactory $semantic_status_factory,
@@ -159,7 +161,7 @@ class PostPushWebhookCloseArtifactHandler
 
             $status_semantic = $this->semantic_status_factory->getByTracker($artifact->getTracker());
 
-            $result = $this->artifact_updater->closeTuleapArtifact(
+            $result = $this->artifact_updater->closeArtifact(
                 $artifact,
                 $tracker_workflow_user,
                 $status_semantic,

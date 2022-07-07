@@ -20,14 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 /**
- * I hold the body of a comment added when an Artifact is closed by a Git commit.
- * The comment format is always CommonMark.
  * @psalm-immutable
  */
-interface ArtifactClosingCommentInCommonMarkFormat
+final class ArtifactIsAlreadyClosedFault extends \Tuleap\NeverThrow\Fault
 {
-    public function getBody(): string;
+    public static function build(): \Tuleap\NeverThrow\Fault
+    {
+        return new self('Artifact is already closed');
+    }
 }
