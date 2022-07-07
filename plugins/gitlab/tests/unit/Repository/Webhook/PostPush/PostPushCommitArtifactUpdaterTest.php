@@ -26,7 +26,10 @@ use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\Test\Stub\ArtifactClosingCommentInCommonMarkFormatStub;
+use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
@@ -41,14 +44,12 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class PostPushCommitArtifactUpdaterTest extends TestCase
 {
-    private const COMMITTER_EMAIL      = 'mail@example.com';
     private const COMMIT_SHA1          = '99aa042c9c';
     private const COMMITTER_USERNAME   = 'asticotc';
     private const STATUS_FIELD_ID      = 18;
     private const DONE_BIND_VALUE_ID   = 1234;
     private const CLOSED_BIND_VALUE_ID = 3174;
     private const DONE_LABEL           = 'Done';
-    private const COMMITTER_FULL_NAME  = "Coco L'Asticot";
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&StatusValueRetriever
@@ -59,9 +60,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
      */
     private $done_value_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Artifact
+     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
-    private Artifact $artifact;
+    private $artifact;
     private Tracker_Workflow_WorkflowUser $workflow_user;
     private string $success_message;
     private string $no_semantic_defined_message;
@@ -94,7 +95,8 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ]
         );
 
-        $this->artifact        = $this->createMock(Artifact::class);
+        $this->artifact = $this->createStub(Artifact::class);
+        $this->artifact->method('getId')->willReturn(25);
         $this->status_semantic = $this->createStub(\Tracker_Semantic_Status::class);
         $this->status_field    = $this->createStub(\Tracker_FormElement_Field_List::class);
         $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
@@ -110,18 +112,11 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         );
     }
 
-    private function closeTuleapArtifact(): void
+    /**
+     * @return Ok<null> | Err<Fault>
+     */
+    private function closeTuleapArtifact(): Ok|Err
     {
-        $webhook_data = new PostPushCommitWebhookData(
-            self::COMMIT_SHA1,
-            'Irrelevant',
-            'Irrelevant',
-            'irrelevant',
-            1361860767,
-            self::COMMITTER_EMAIL,
-            self::COMMITTER_FULL_NAME
-        );
-
         $no_semantic_comment = NewCommentTestBuilder::aNewComment($this->no_semantic_defined_message)->withSubmitter(
             $this->workflow_user
         )->build();
@@ -133,10 +128,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             $this->comment_creator,
             $this->changeset_creator,
         );
-        $updater->closeTuleapArtifact(
+        return $updater->closeTuleapArtifact(
             $this->artifact,
             $this->workflow_user,
-            $webhook_data,
             $this->status_semantic,
             ArtifactClosingCommentInCommonMarkFormatStub::fromString($this->success_message),
             $no_semantic_comment,
@@ -149,8 +143,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isOk($result));
         $new_changeset = $this->changeset_creator->getNewChangeset();
         if (! $new_changeset) {
             throw new \Exception('Expected to receive a new changeset');
@@ -171,8 +166,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockNoDoneValue();
         $this->mockClosedValueIsFound();
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isOk($result));
         $new_changeset = $this->changeset_creator->getNewChangeset();
         if (! $new_changeset) {
             throw new \Exception('Expected to receive a new changeset');
@@ -186,17 +182,18 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         );
     }
 
-    public function testItDoesNothingIfArtifactIsAlreadyClosed(): void
+    public function testItReturnsErrIfArtifactIsAlreadyClosed(): void
     {
         $this->artifact->method('isOpen')->willReturn(false);
-        $this->artifact->method('getId')->willReturn(25);
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(ArtifactIsAlreadyClosedFault::class, $result->error);
         self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
-    public function testItThrowsIfNoPossibleValueAreFound(): void
+    public function testItReturnsErrIfNoPossibleValueAreFound(): void
     {
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsFound();
@@ -205,33 +202,35 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with($this->artifact, $this->workflow_user)
             ->willThrowException(new NoPossibleValueException());
 
-        $this->expectException(NoPossibleValueException::class);
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isErr($result));
         self::assertNull($this->changeset_creator->getNewChangeset());
     }
 
-    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfCommentIsNotCreated(): void
+    public function testItReturnsErrIfChangesetIsNotCreated(): void
     {
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
         $this->changeset_creator = CreateNewChangesetStub::withNullReturnChangeset();
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isErr($result));
         self::assertNotNull($this->changeset_creator->getNewChangeset());
     }
 
-    public function testItDoesNotAddArtifactCommentAndUpdateStatusIfAnErrorOccursDuringTheCommentCreation(): void
+    public function testItReturnsErrIfAnErrorOccursDuringTheChangesetCreation(): void
     {
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
         $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_NoChangeException(1, 'xref'));
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isErr($result));
         self::assertNotNull($this->changeset_creator->getNewChangeset());
     }
 
@@ -240,8 +239,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsNotDefined();
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isOk($result));
         $new_comment = $this->comment_creator->getNewComment();
         if (! $new_comment) {
             throw new \Exception('Expected to receive a new comment');
@@ -261,8 +261,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with($this->workflow_user, $this->artifact)
             ->willThrowException(new SemanticStatusClosedValueNotFoundException());
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isOk($result));
         $new_comment = $this->comment_creator->getNewComment();
         if (! $new_comment) {
             throw new \Exception('Expected to receive a new comment');
@@ -272,7 +273,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         self::assertSame($this->artifact, $this->comment_creator->getArtifact());
     }
 
-    public function testItDoesNotAddCommentIfAnErrorOccursDuringTheCommentCreation(): void
+    public function testItReturnsErrIfAnErrorOccursDuringTheCommentCreation(): void
     {
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsNotDefined();
@@ -280,8 +281,9 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             Fault::fromMessage('Error during comment creation')
         );
 
-        $this->closeTuleapArtifact();
+        $result = $this->closeTuleapArtifact();
 
+        self::assertTrue(Result::isErr($result));
         self::assertNotNull($this->comment_creator->getNewComment());
     }
 

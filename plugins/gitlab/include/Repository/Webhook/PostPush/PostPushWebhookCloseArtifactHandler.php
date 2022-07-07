@@ -32,9 +32,9 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
-use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
 
@@ -167,18 +167,29 @@ class PostPushWebhookCloseArtifactHandler
 
             $status_semantic = $this->semantic_status_factory->getByTracker($artifact->getTracker());
 
-            $this->artifact_updater->closeTuleapArtifact(
+            $result = $this->artifact_updater->closeTuleapArtifact(
                 $artifact,
                 $tracker_workflow_user,
-                $post_push_commit_webhook_data,
                 $status_semantic,
                 $closing_comment_body,
                 $no_semantic_comment,
             );
+            if (Result::isErr($result)) {
+                $fault = $result->error;
+                if ($fault instanceof ArtifactIsAlreadyClosedFault) {
+                    $this->logger->info(
+                        sprintf(
+                            'Artifact #%d is already closed and can not be closed automatically by GitLab commit #%s',
+                            $artifact->getId(),
+                            $post_push_commit_webhook_data->getSha1()
+                        )
+                    );
+                } else {
+                    $this->logger->error((string) $fault);
+                }
+            }
         } catch (ArtifactNotFoundException $e) {
             $this->logger->error("Artifact #{$tuleap_reference->getId()} not found");
-        } catch (NoPossibleValueException $e) {
-            $this->logger->error("Artifact #{$tuleap_reference->getId()} cannot be closed. " . $e->getMessage());
         }
     }
 
