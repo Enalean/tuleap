@@ -27,6 +27,14 @@ export default vite.defineLibConfig({
             entry: path.resolve(__dirname, "src/main.ts"),
             name: "FPFeedback",
         },
+        rollupOptions: {
+            external: ["dompurify"],
+            output: {
+                globals: {
+                    dompurify: "DOMPurify",
+                },
+            },
+        },
     },
     plugins: [dts()],
 });

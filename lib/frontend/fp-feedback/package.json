@@ -15,8 +15,12 @@
       "default": "./themes/main.scss"
     }
   },
+  "dependencies": {
+    "dompurify": "^2.3.6"
+  },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+    "@tuleap/build-system-configurator": "link:../build-system-configurator",
+    "@types/dompurify": "^2.3.3"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

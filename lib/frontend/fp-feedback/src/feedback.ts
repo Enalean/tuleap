@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import dompurify from "dompurify";
+
 export type FeedbackLevel = "error" | "info" | "warning";
 
 export function addFeedback(doc: Document, level: FeedbackLevel, message: string): void {
@@ -28,7 +30,11 @@ export function addFeedback(doc: Document, level: FeedbackLevel, message: string
     const ul_element = doc.createElement("ul");
     ul_element.classList.add(`feedback_${level}`);
     const feedback_content_element = doc.createElement("li");
-    feedback_content_element.insertAdjacentText("beforeend", message);
+    const message_element = dompurify.sanitize(message, {
+        RETURN_DOM_FRAGMENT: true,
+        ALLOWED_TAGS: ["a"],
+    });
+    feedback_content_element.appendChild(message_element);
     ul_element.appendChild(feedback_content_element);
 
     feedback_element.appendChild(ul_element);

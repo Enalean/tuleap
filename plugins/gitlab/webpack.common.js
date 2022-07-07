@@ -28,9 +28,6 @@ module.exports = [
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets/")),
-        externals: {
-            codendi: "codendi",
-        },
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(),
