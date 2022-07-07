@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stub;
+namespace Tuleap\Tracker\Test\Stub;
 
 /**
  * @psalm-immutable
  */
-final class ArtifactClosingCommentInCommonMarkFormatStub implements \Tuleap\Gitlab\Repository\Webhook\PostPush\ArtifactClosingCommentInCommonMarkFormat
+final class ArtifactClosingCommentInCommonMarkFormatStub implements \Tuleap\Tracker\Artifact\Closure\ArtifactClosingCommentInCommonMarkFormat
 {
     private function __construct(private string $comment)
     {

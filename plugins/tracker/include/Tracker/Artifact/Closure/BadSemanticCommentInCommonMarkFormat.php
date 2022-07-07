@@ -20,15 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 /**
+ * I hold the body of a comment added after failing to close an Artifact because of badly configured Done and Status
+ * semantics. If the Artifact's Tracker has no Done value and no Status values considered as "Closed",
+ * then this comment will be added on the Artifact.
+ * The comment format is always CommonMark
  * @psalm-immutable
  */
-final class ArtifactIsAlreadyClosedFault extends \Tuleap\NeverThrow\Fault
+interface BadSemanticCommentInCommonMarkFormat
 {
-    public static function build(): \Tuleap\NeverThrow\Fault
-    {
-        return new self('Artifact is already closed');
-    }
+    public function getBody(): string;
 }

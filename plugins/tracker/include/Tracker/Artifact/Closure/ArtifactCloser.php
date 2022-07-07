@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
@@ -46,7 +46,7 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
-final class PostPushCommitArtifactUpdater
+final class ArtifactCloser
 {
     public function __construct(
         private StatusValueRetriever $status_value_retriever,
@@ -60,7 +60,7 @@ final class PostPushCommitArtifactUpdater
     /**
      * @return Ok<null> | Err<Fault>
      */
-    public function closeTuleapArtifact(
+    public function closeArtifact(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
         \Tracker_Semantic_Status $status_semantic,

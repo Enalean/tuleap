@@ -20,17 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_Workflow_WorkflowUser;
-use Tuleap\Gitlab\Test\Stub\ArtifactClosingCommentInCommonMarkFormatStub;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
@@ -38,14 +36,15 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Stub\ArtifactClosingCommentInCommonMarkFormatStub;
+use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
-final class PostPushCommitArtifactUpdaterTest extends TestCase
+final class ArtifactCloserTest extends TestCase
 {
-    private const COMMIT_SHA1          = '99aa042c9c';
-    private const COMMITTER_USERNAME   = 'asticotc';
+    private const CLOSER_USERNAME      = 'asticotc';
     private const STATUS_FIELD_ID      = 18;
     private const DONE_BIND_VALUE_ID   = 1234;
     private const CLOSED_BIND_VALUE_ID = 3174;
@@ -101,36 +100,28 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->status_field    = $this->createStub(\Tracker_FormElement_Field_List::class);
         $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
 
-        $this->success_message             = sprintf(
-            'solved by @%s with gitlab_commit #MyRepo/%s',
-            self::COMMITTER_USERNAME,
-            self::COMMIT_SHA1
-        );
+        $this->success_message             = sprintf('solved by @%s', self::CLOSER_USERNAME);
         $this->no_semantic_defined_message = sprintf(
-            '@%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-            self::COMMITTER_USERNAME
+            '@%s attempts to close this artifact but neither done nor status semantic defined.',
+            self::CLOSER_USERNAME
         );
     }
 
     /**
      * @return Ok<null> | Err<Fault>
      */
-    private function closeTuleapArtifact(): Ok|Err
+    private function closeArtifact(): Ok|Err
     {
-        $no_semantic_comment = PostPushBadSemanticComment::fromUserClosingTheArtifact(
-            UserClosingTheArtifact::fromUser(
-                UserTestBuilder::aUser()->withUserName(self::COMMITTER_USERNAME)->build()
-            )
-        );
+        $no_semantic_comment = BadSemanticCommentInCommonMarkFormatStub::fromString($this->no_semantic_defined_message);
 
-        $updater = new PostPushCommitArtifactUpdater(
+        $updater = new ArtifactCloser(
             $this->status_value_retriever,
             $this->done_value_retriever,
             new NullLogger(),
             $this->comment_creator,
             $this->changeset_creator,
         );
-        return $updater->closeTuleapArtifact(
+        return $updater->closeArtifact(
             $this->artifact,
             $this->workflow_user,
             $this->status_semantic,
@@ -145,7 +136,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
         $new_changeset = $this->changeset_creator->getNewChangeset();
@@ -168,7 +159,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockNoDoneValue();
         $this->mockClosedValueIsFound();
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
         $new_changeset = $this->changeset_creator->getNewChangeset();
@@ -188,7 +179,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
     {
         $this->artifact->method('isOpen')->willReturn(false);
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(ArtifactIsAlreadyClosedFault::class, $result->error);
@@ -204,7 +195,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with($this->artifact, $this->workflow_user)
             ->willThrowException(new NoPossibleValueException());
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
         self::assertNull($this->changeset_creator->getNewChangeset());
@@ -217,7 +208,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockDoneValueIsFound();
         $this->changeset_creator = CreateNewChangesetStub::withNullReturnChangeset();
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
         self::assertNotNull($this->changeset_creator->getNewChangeset());
@@ -230,7 +221,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockDoneValueIsFound();
         $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_NoChangeException(1, 'xref'));
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
         self::assertNotNull($this->changeset_creator->getNewChangeset());
@@ -241,7 +232,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
         $this->mockArtifactIsOpen();
         $this->mockStatusFieldIsNotDefined();
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
         $new_comment = $this->comment_creator->getNewComment();
@@ -263,7 +254,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             ->with($this->workflow_user, $this->artifact)
             ->willThrowException(new SemanticStatusClosedValueNotFoundException());
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
         $new_comment = $this->comment_creator->getNewComment();
@@ -283,7 +274,7 @@ final class PostPushCommitArtifactUpdaterTest extends TestCase
             Fault::fromMessage('Error during comment creation')
         );
 
-        $result = $this->closeTuleapArtifact();
+        $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
         self::assertNotNull($this->comment_creator->getNewComment());

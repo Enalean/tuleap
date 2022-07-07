@@ -69,7 +69,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferencePa
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitArtifactUpdater;
+use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -366,7 +366,7 @@ class gitlabPlugin extends Plugin
                     $logger,
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
-                        new PostPushCommitArtifactUpdater(
+                        new ArtifactCloser(
                             new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
@@ -588,7 +588,7 @@ class gitlabPlugin extends Plugin
                     $logger,
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
-                        new PostPushCommitArtifactUpdater(
+                        new ArtifactCloser(
                             new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
