@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\MissingArtifactLinkFieldPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\RequiredErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusMissingValuesPresenter;
@@ -231,6 +230,11 @@ final class TrackerErrorPresenter
             $non_updatable_fields[] = new FieldsPermissionErrorPresenter($non_submittable_field);
         }
 
+        $missing_artifact_link_fields = [];
+        foreach ($errors_collector->getMissingArtifactLinkErrors() as $error) {
+            $missing_artifact_link_fields[] = new MissingArtifactLinkFieldPresenter($error);
+        }
+
         return new self(
             $errors_collector->getSemanticErrors(),
             $errors_collector->getRequiredFieldsErrors(),
@@ -244,7 +248,7 @@ final class TrackerErrorPresenter
             $errors_collector->getSemanticStatusNoField(),
             $errors_collector->getSemanticStatusMissingValues(),
             $errors_collector->getTitleHasIncorrectTypeError(),
-            $errors_collector->getMissingArtifactLinkErrors(),
+            $missing_artifact_link_fields,
             $errors_collector->getNoMilestonePlanning(),
             $errors_collector->getNoSprintPlanning(),
             $errors_collector->getTeamsWithError()
