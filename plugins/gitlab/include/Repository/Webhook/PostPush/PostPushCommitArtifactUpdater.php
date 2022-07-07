@@ -65,7 +65,7 @@ final class PostPushCommitArtifactUpdater
         PFUser $tracker_workflow_user,
         \Tracker_Semantic_Status $status_semantic,
         ArtifactClosingCommentInCommonMarkFormat $closing_comment_body,
-        NewComment $no_semantic_comment,
+        BadSemanticCommentInCommonMarkFormat $bad_semantic_comment_body,
     ): Ok|Err {
         if (! $artifact->isOpen()) {
             return Result::err(ArtifactIsAlreadyClosedFault::build());
@@ -73,15 +73,13 @@ final class PostPushCommitArtifactUpdater
 
         $status_field = $status_semantic->getField();
         if ($status_field === null) {
-            return $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact)
-                ->map(static fn() => null);
+            return $this->addBadSemanticComment($bad_semantic_comment_body, $artifact, $tracker_workflow_user);
         }
 
         try {
             $closed_value = $this->getClosedValue($artifact, $tracker_workflow_user);
         } catch (SemanticStatusClosedValueNotFoundException $e) {
-            return $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact)
-                ->map(static fn() => null);
+            return $this->addBadSemanticComment($bad_semantic_comment_body, $artifact, $tracker_workflow_user);
         } catch (NoPossibleValueException $e) {
             return Result::err(
                 Fault::fromThrowableWithMessage(
@@ -139,5 +137,25 @@ final class PostPushCommitArtifactUpdater
         }
 
         return $this->status_value_retriever->getFirstClosedValueUserCanRead($tracker_workflow_user, $artifact);
+    }
+
+    /**
+     * @return Ok<null> | Err<Fault>
+     */
+    private function addBadSemanticComment(
+        BadSemanticCommentInCommonMarkFormat $comment_body,
+        Artifact $artifact,
+        \PFUser $tracker_workflow_user,
+    ): Err|Ok {
+        $no_semantic_comment = NewComment::fromParts(
+            $comment_body->getBody(),
+            CommentFormatIdentifier::buildCommonMark(),
+            $tracker_workflow_user,
+            (new \DateTimeImmutable())->getTimestamp(),
+            []
+        );
+
+        return $this->comment_creator->createCommentOnlyChangeset($no_semantic_comment, $artifact)
+            ->map(static fn() => null);
     }
 }
