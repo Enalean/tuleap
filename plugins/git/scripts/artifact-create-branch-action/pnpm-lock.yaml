@@ -2,22 +2,28 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/fault': link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/fp-feedback': link:../../../../lib/frontend/fp-feedback
   '@tuleap/po-gettext-plugin': link:../../../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp': link:../../../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
+  neverthrow: ^4.3.1
   vue: 3.2.31
   vue-loader: ^17.0.0
   vue3-gettext: ^2.2.1
 
 dependencies:
+  '@tuleap/fault': link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result': link:../../../../lib/frontend/fetch-result
   '@tuleap/fp-feedback': link:../../../../lib/frontend/fp-feedback
   '@tuleap/tlp': link:../../../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../../../lib/frontend/tlp-fetch
   '@tuleap/tlp-modal': link:../../../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../../../lib/frontend/vue3-gettext-init
+  neverthrow: 4.3.1
   vue: 3.2.31
   vue3-gettext: 2.3.0_vue@3.2.31
 
@@ -405,6 +411,10 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: false
+
+  /neverthrow/4.3.1:
+    resolution: {integrity: sha512-+vxjSaiDWjAj6kR6KKW0YDuV6O4UCNWGAO8m8ITjFKPWcTmU1GVnL+J5TAUTKpPnUAHCKDxXpOHVaERid223Ww==}
     dev: false
 
   /once/1.4.0:
