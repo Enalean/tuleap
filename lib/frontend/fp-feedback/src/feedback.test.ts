@@ -21,6 +21,15 @@ import type { FeedbackLevel } from "./feedback";
 import { addFeedback, clearAllFeedbacks } from "./feedback";
 
 const MESSAGE = "A feedback message";
+const MESSAGE_WITH_HTML_LINK = 'A feedback message with <a href="#">link</a>';
+
+jest.mock("dompurify", () => {
+    const realDomPurify = jest.requireActual("dompurify");
+    return {
+        __esModule: true,
+        default: { ...realDomPurify },
+    };
+});
 
 describe(`Feedback`, () => {
     let doc: Document;
@@ -46,7 +55,16 @@ describe(`Feedback`, () => {
             const feedback = insertFeedbackElement();
             addFeedback(doc, "warning", MESSAGE);
 
-            expect(feedback.textContent?.trim()).toBe(MESSAGE);
+            expect(feedback.firstChild?.textContent).toBe(MESSAGE);
+        });
+
+        it(`renders the given feedback message with HTML links`, () => {
+            const feedback = insertFeedbackElement();
+            addFeedback(doc, "info", MESSAGE_WITH_HTML_LINK);
+
+            expect(feedback.getElementsByTagName("li").item(0)?.innerHTML).toBe(
+                MESSAGE_WITH_HTML_LINK
+            );
         });
 
         const info: FeedbackLevel = "info";

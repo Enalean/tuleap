@@ -136,7 +136,6 @@
 <script setup lang="ts">
 import type { GitLabIntegrationCreatedBranchInformation } from "../api/rest-querier";
 import { postGitlabBranch, postGitlabMergeRequest } from "../api/rest-querier";
-import * as codendi from "codendi";
 import type { GitlabIntegrationWithDefaultBranch } from "../fetch-gitlab-repositories-information";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
@@ -147,6 +146,7 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { BranchCreationFault } from "../BranchCreationFault";
 import { MergeRequestCreationFault } from "../MergeRequestCreationFault";
+import { addFeedback } from "@tuleap/fp-feedback";
 
 const { interpolate, $gettext } = useGettext();
 
@@ -214,10 +214,7 @@ const createMergeRequest = (
 ): ResultAsync<void, Fault> =>
     postGitlabMergeRequest(integration.id, props.artifact_id, branch.branch_name)
         .map(() => {
-            codendi.feedback.log(
-                "info",
-                $gettext("The associated merge request has been created.")
-            );
+            addFeedback("info", $gettext("The associated merge request has been created."));
         })
         .mapErr(MergeRequestCreationFault.fromFault);
 
@@ -244,7 +241,7 @@ function onClickCreateBranch(): Promise<void> {
                 }
             );
 
-            codendi.feedback.log("info", success_message);
+            addFeedback("info", success_message);
 
             if (!must_create_gitlab_mr.value) {
                 return okAsync("irrelevant return");

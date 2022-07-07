@@ -5,6 +5,7 @@ specifiers:
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
   '@tuleap/fault': link:../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../lib/frontend/fetch-result
+  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
@@ -18,6 +19,7 @@ dependencies:
   '@tuleap/concurrency-limit-pool': link:../../lib/frontend/concurrency-limit-pool
   '@tuleap/fault': link:../../lib/frontend/fault
   '@tuleap/fetch-result': link:../../lib/frontend/fetch-result
+  '@tuleap/fp-feedback': link:../../lib/frontend/fp-feedback
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init

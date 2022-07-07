@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import codendi from "codendi";
+import { addFeedback } from "@tuleap/fp-feedback";
 
 document.addEventListener("DOMContentLoaded", () => {
     const create_branch_link = document.getElementById("artifact-create-gitlab-branches");
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             await init(create_branch_link, modal_mount_point);
         } catch (e) {
-            codendi.feedback.log("error", "Error while loading the GitLab branch creation modal.");
+            addFeedback("error", "Error while loading the GitLab branch creation modal.");
             throw e;
         } finally {
             document.body.removeChild(loading_modal_element);
