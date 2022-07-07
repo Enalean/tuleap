@@ -215,7 +215,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     final public function getPrefixedName(): string
     {
-        return self::PREFIX_NAME_SQL_COLUMN . str_replace('-', 'A', $this->name);
+        return self::PREFIX_NAME_SQL_COLUMN . '_' . $this->getTrackerId() . '_' . $this->getId();
     }
 
     /**
