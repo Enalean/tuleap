@@ -39,7 +39,7 @@ abstract class AdminView
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         $project = $this->getProjectFromParams($params);
-        if (! $project || $project->isError() || ! $project->isActive()) {
+        if ($project === null || $project->isError()) {
             throw new NotFoundException();
         }
 
