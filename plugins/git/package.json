@@ -23,6 +23,7 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
     "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support",
+    "@tuleap/potentially-dangerous-bidirectional-characters": "link:../../lib/frontend/potentially-dangerous-bidirectional-characters",
     "@tuleap/tlp": "link:../../src/themes/tlp",
     "@tuleap/vuex-store-wrapper-jest": "link:../../lib/frontend/vuex-store-wrapper-jest",
     "@types/javascript-time-ago": "^2.0.1",
@@ -33,7 +34,8 @@
     "vuex-class": "^0.3.2"
   },
   "scripts": {
-    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",
+    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js && pnpm run build:backend-assets",
+    "build:backend-assets": "rm -rf ./backend-assets && mkdir ./backend-assets && ./node_modules/.bin/potentially-dangerous-bidirectional-characters > ./backend-assets/potentially-dangerous-bidirectional-characters.json",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
   }

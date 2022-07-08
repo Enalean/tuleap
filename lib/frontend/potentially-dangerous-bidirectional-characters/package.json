@@ -1,0 +1,19 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/potentially-dangerous-bidirectional-characters",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "potentially-dangerous-bidirectional-characters":  "src/potentially-dangerous-bidirectional-characters-cli.mjs"
+  },
+  "scripts": {
+    "build": "rm -rf dist/ && tsc",
+    "watch": "rm -rf dist/ && tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.3"
+  }
+}

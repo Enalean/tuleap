@@ -6,6 +6,7 @@ specifiers:
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/filter-inline-table': link:../../lib/frontend/filter-table
   '@tuleap/html-escaper': link:../../lib/frontend/html-escaper
+  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../lib/frontend/potentially-dangerous-bidirectional-characters
   '@tuleap/project-privacy-helper': link:../../lib/frontend/project-privacy-helper
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
@@ -45,6 +46,7 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
+  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../lib/frontend/potentially-dangerous-bidirectional-characters
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/vuex-store-wrapper-jest': link:../../lib/frontend/vuex-store-wrapper-jest
   '@types/javascript-time-ago': 2.0.1

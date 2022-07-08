@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../lib/frontend/potentially-dangerous-bidirectional-characters
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
   '@types/codemirror': ^5.60.1
@@ -21,6 +22,7 @@ specifiers:
 
 dependencies:
   '@tuleap/angular-tlp': link:../../lib/frontend/angular-tlp
+  '@tuleap/potentially-dangerous-bidirectional-characters': link:../../lib/frontend/potentially-dangerous-bidirectional-characters
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tooltip': link:../../lib/frontend/tooltip
   '@uirouter/angularjs': 1.0.29_angular@1.8.2

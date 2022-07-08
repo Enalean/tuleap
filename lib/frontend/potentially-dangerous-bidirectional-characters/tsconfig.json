@@ -1,0 +1,10 @@
+{
+    "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "dist",
+        "sourceMap": false,
+        "esModuleInterop": true
+    },
+    "include": ["src/**/*.ts"]
+}

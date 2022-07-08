@@ -18,7 +18,7 @@
  */
 
 import CodeMirror from "codemirror";
-import potentially_dangerous_bidirectional_characters from "../../../../../../src/common/Code/potentially-dangerous-bidirectional-characters.json";
+import { POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS } from "@tuleap/potentially-dangerous-bidirectional-characters";
 
 interface Diff {
     charset: string;
@@ -39,7 +39,7 @@ export function doesChangedCodeContainsPotentiallyDangerousBidirectionalUnicodeT
 }
 
 function doesTextContentPotentiallyDangerousBidirectionalUnicodeText(text: string): boolean {
-    return potentially_dangerous_bidirectional_characters.some((character) =>
+    return POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.some((character) =>
         text.includes(character)
     );
 }
@@ -49,7 +49,7 @@ export function getCodeMirrorConfigurationToMakePotentiallyDangerousBidirectiona
 ): CodeMirror.EditorConfiguration {
     const special_chars_current: RegExp = config.specialChars || CodeMirror.defaults.specialChars;
     const regex_potentially_dangerous_bidirectional_characters = new RegExp(
-        "[" + potentially_dangerous_bidirectional_characters.join("") + "]"
+        "[" + POTENTIALLY_DANGEROUS_BIDIRECTIONAL_CHARACTERS.join("") + "]"
     );
 
     return {
