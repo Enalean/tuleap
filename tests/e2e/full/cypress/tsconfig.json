@@ -3,7 +3,8 @@
         "strict": true,
         "target": "es6",
         "lib": ["es6", "dom"],
-        "types": ["cypress", "@tuleap/cypress-utilities-support"]
+        "types": ["cypress", "@tuleap/cypress-utilities-support"],
+        "moduleResolution": "node"
     },
     "include": [
         "**/*.ts"

@@ -1,0 +1,24 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/user-group-constants",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "module": "dist/user-group-constants.es.js",
+  "main": "dist/user-group-constants.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/user-group-constants.es.js",
+      "require": "./dist/user-group-constants.umd.js"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../build-system-configurator"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}
