@@ -46,7 +46,11 @@ describe("API querier", () => {
         });
         it("asks to create the Git branch", async () => {
             const postSpy = jest.spyOn(fetch_result, "postJSON");
-            postSpy.mockReturnValue(okAsync({} as Response));
+            postSpy.mockReturnValue(
+                okAsync({
+                    json: () => Promise.resolve({ html_url: "URL" }),
+                } as unknown as Response)
+            );
 
             const repository_id = 27;
             const branch_name = "tuleap-123-title";

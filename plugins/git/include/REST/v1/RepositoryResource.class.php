@@ -879,8 +879,11 @@ class RepositoryResource extends AuthenticatedResource
                 $commit = $project->GetCommit($branch);
                 if ($commit !== null) {
                     $commit_representation = $commit_representation_collection->getRepresentation($commit);
-                    $branch_representation = new GitBranchRepresentation();
-                    $branch_representation->build($name, $commit_representation);
+                    $branch_representation = GitBranchRepresentation::build(
+                        $name,
+                        $repository,
+                        $commit_representation
+                    );
 
                     $result[] = $branch_representation;
                 }
@@ -912,8 +915,9 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 404
+     * @throws RestException 500
      */
-    public function createBranch($id, GitBranchPOSTRepresentation $representation): void
+    public function createBranch($id, GitBranchPOSTRepresentation $representation): GitBranchRepresentation
     {
         $this->checkAccess();
         $this->optionsGetPostBranches($id);
@@ -936,6 +940,30 @@ class RepositoryResource extends AuthenticatedResource
             $repository,
             $representation
         );
+
+        try {
+            $gitphp_project = $this->getGitPHPProject($id);
+            $commit         = $gitphp_project->GetCommit($representation->branch_name);
+
+            if ($commit === null) {
+                throw new RestException(
+                    500,
+                    "Associated commit not found"
+                );
+            }
+
+            $commit_representation = $this->commit_representation_builder->build($repository, $commit);
+            return GitBranchRepresentation::build(
+                $representation->branch_name,
+                $repository,
+                $commit_representation
+            );
+        } catch (RepositoryNotExistingException $ex) {
+            throw new RestException(
+                500,
+                "GitPHP project not found for repository"
+            );
+        }
     }
 
     /**
