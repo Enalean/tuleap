@@ -80,7 +80,7 @@
     "vitest": "^0.18.0",
     "vue-eslint-parser": "^9.0.3",
     "vue-loader": "^15.10.0",
-    "vue-template-compiler": "^2.6.14",
+    "vue-template-compiler": "^2.7.4",
     "vue-tsc": "^0.38.2",
     "webpack": "^5.72.0",
     "webpack-assets-manifest": "^5.1.0",

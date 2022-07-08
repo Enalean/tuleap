@@ -57,6 +57,9 @@ const webpack_config_for_vue = {
     ],
     resolve: {
         extensions: [".ts", ".js", ".vue"],
+        alias: {
+            vue: path.resolve(__dirname, "node_modules", "vue"),
+        },
     },
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,
