@@ -21,22 +21,44 @@
 
 namespace Tuleap\Git\REST\v1;
 
+use GitRepository;
+
+/**
+ * @psalm-immutable
+ */
 class GitBranchRepresentation
 {
     /**
      * @var string
      */
     public $name;
-
     /**
      * @var GitCommitRepresentation
      */
     public $commit;
+    /**
+     * @var string
+     */
+    public $html_url;
 
-
-    public function build($name, GitCommitRepresentation $commit)
+    private function __construct(string $name, string $html_url, GitCommitRepresentation $commit)
     {
-        $this->name   = $name;
-        $this->commit = $commit;
+        $this->name     = $name;
+        $this->html_url = $html_url;
+        $this->commit   = $commit;
+    }
+
+    public static function build(string $name, GitRepository $repository, GitCommitRepresentation $commit): self
+    {
+        return new self(
+            $name,
+            $repository->getRelativeHTTPUrl() . '?' . http_build_query(
+                [
+                    'a' => 'tree',
+                    'hb' => $name,
+                ]
+            ),
+            $commit,
+        );
     }
 }

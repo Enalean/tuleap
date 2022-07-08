@@ -273,6 +273,7 @@ final class RepositoryTest extends TestBase
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
                     ],
+                    "html_url" => '/plugins/git/test-git/repo01?a=tree&hb=master',
                 ],
                 [
                     'name' => 'branch_file_02',
@@ -300,6 +301,7 @@ final class RepositoryTest extends TestBase
                         'commit_status' => null,
                         'verification'  => ['signature' => null],
                     ],
+                    "html_url" => '/plugins/git/test-git/repo01?a=tree&hb=branch_file_02',
                 ],
             ]
         );
@@ -321,6 +323,39 @@ final class RepositoryTest extends TestBase
         );
 
         $this->assertEquals(201, $response->getStatusCode());
+
+        $branche_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertEqualsCanonicalizing(
+            $branche_json,
+            [
+                "name" => "newbranch01",
+                "html_url" => "/plugins/git/test-git/repo01?a=tree&hb=newbranch01",
+                'commit' => [
+                    'html_url'       => '/plugins/git/test-git/repo01?a=commit&h=bcbc8956071c646493d484c64a6034b663e073e0',
+                    'id'             => 'bcbc8956071c646493d484c64a6034b663e073e0',
+                    'title'          => '03',
+                    'message'        => '03',
+                    'author_name'    => 'Test User 1',
+                    'author_email'   => 'test_user_1@example.com',
+                    'authored_date'  => '2018-09-05T11:10:39+02:00',
+                    'committed_date' => '2018-09-05T11:10:39+02:00',
+                    'author'         => [
+                        'id'           => 102,
+                        'uri'          => 'users/102',
+                        'user_url'     => '/users/rest_api_tester_1',
+                        'real_name'    => 'Test User 1',
+                        'display_name' => 'Test User 1 (rest_api_tester_1)',
+                        'username'     => 'rest_api_tester_1',
+                        'ldap_id'      => 'tester1',
+                        'avatar_url'   => 'https://localhost/users/rest_api_tester_1/avatar.png',
+                        'is_anonymous' => false,
+                        'has_avatar'   => true,
+                    ],
+                    'commit_status' => null,
+                    'verification'  => ['signature' => null],
+                ],
+            ],
+        );
     }
 
     public function testCreateABranchMustFailWithNonValidBranchName(): void

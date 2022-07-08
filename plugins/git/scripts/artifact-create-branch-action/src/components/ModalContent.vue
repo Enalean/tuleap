@@ -112,6 +112,7 @@ import type { GitRepository } from "../types";
 import { postGitBranch } from "../../api/rest_querier";
 import { addFeedback } from "@tuleap/fp-feedback";
 import { useGettext } from "vue3-gettext";
+import { okAsync } from "neverthrow";
 
 let modal: Modal | null = null;
 const { $gettext, interpolate } = useGettext();
@@ -158,37 +159,38 @@ onBeforeUnmount(() => {
 function onClickCreateBranch(): Promise<void> {
     is_creating_branch.value = true;
     const repository: GitRepository = selected.value;
-    return postGitBranch(repository.id, props.branch_name_preview, reference.value).match(
-        () => {
+    return postGitBranch(repository.id, props.branch_name_preview, reference.value)
+        .andThen((created_branch) => {
             const success_message = interpolate(
                 $gettext(
                     'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
                 ),
                 {
                     branch_name: props.branch_name_preview,
-                    branch_url:
-                        repository.html_url +
-                        "?a=tree&hb=" +
-                        encodeURIComponent(props.branch_name_preview),
+                    branch_url: created_branch.html_url,
                     repo_url: repository.html_url,
                     repo_name: repository.name,
                 }
             );
 
             addFeedback("info", success_message);
-            is_creating_branch.value = false;
-            modal?.hide();
-        },
-        (fault) => {
-            error_message.value = interpolate(
-                $gettext(
-                    "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
-                ),
-                { branch_name: props.branch_name_preview, error: String(fault) }
-            );
-            is_creating_branch.value = false;
-        }
-    );
+            return okAsync("branch created");
+        })
+        .match(
+            () => {
+                is_creating_branch.value = false;
+                modal?.hide();
+            },
+            (fault) => {
+                error_message.value = interpolate(
+                    $gettext(
+                        "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
+                    ),
+                    { branch_name: props.branch_name_preview, error: String(fault) }
+                );
+                is_creating_branch.value = false;
+            }
+        );
 }
 </script>
 
