@@ -6,8 +6,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "An error occurred while creating the Git branch."
-msgstr "Une erreur est survenue lors de la création de la branche Git."
+msgid ""
+"An error occurred while creating the Git branch %{ branch_name }: %{ error }"
+msgstr ""
+"Une erreur est survenue lors de la création de la branche %{ branch_name } : "
+"%{ error }"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -18,9 +21,6 @@ msgstr "Créer la branche"
 msgid "Create branch on a Git repository"
 msgstr "Créer une branche dans un dépôt Git"
 
-msgid "Git Branch successfully created."
-msgstr "La branche Git a été créée avec succès."
-
 msgid "Git reference from where the branch should be created"
 msgstr "La référence Git à partir de laquelle la branche va être créée"
 
@@ -29,6 +29,13 @@ msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
 
 msgid "Project Git repositories"
 msgstr "Dépôts Git du projet"
+
+msgid ""
+"The branch <a href=\"%{ branch_url }\">%{ branch_name }</a> has been "
+"successfully created on <a href=\"%{ repo_url }\">%{ repo_name }</a>"
+msgstr ""
+"La branche <a href=\"%{ branch_url }\">%{ branch_name }</a> a été créée avec "
+"succès dans le dépôt <a href=\"%{ repo_url }\">%{ repo_name }</a>"
 
 msgid "The following branch will be created"
 msgstr "La branche suivante sera créée"

@@ -244,6 +244,10 @@ msgstr ""
 "pour les permissions fines Git."
 
 #, php-format
+msgid "An error occurred while creating the branch: %s"
+msgstr "Une erreur est survenue lors de la création de la branche : %s"
+
+#, php-format
 msgid ""
 "As a reminder, the management of the repository (permissions, ...) has been "
 "delegated to Gerrit: <ul><li>A project <em>%1$s</em> has been created on the "
@@ -1264,6 +1268,14 @@ msgstr "Modèle modifié"
 msgid "Templates"
 msgstr "Modèles"
 
+#, php-format
+msgid "The branch %s already exists in the repository %s"
+msgstr "La branche %s existe déjà dans le dépôt %s"
+
+#, php-format
+msgid "The branch name %s is not a valid branch name"
+msgstr "Le nom de branche %s n'est pas valide"
+
 msgid ""
 "The deletion of the project under Gerrit is on going, please wait for a few "
 "minutes."
@@ -1315,6 +1327,14 @@ msgstr ""
 #, php-format
 msgid "The notification is already enabled for this email %1$s"
 msgstr "La notification est déja activée pour l'adresse mail %1$s"
+
+#, php-format
+msgid "The object %s does not exist in the repository %s"
+msgstr "L'objet %s n'existe pas dans le dépôt %s"
+
+#, php-format
+msgid "The object %s is neither a branch nor a commit in repository %s."
+msgstr "L'objet %s n'est ni un commit ni une branche dans le dépôt %s "
 
 #, php-format
 msgid "The pattern %1$s is not well formed. Skipping."
@@ -1769,6 +1789,10 @@ msgstr "Vous êtes sur le point de créer un fork du dépôt: %1$s"
 
 msgid "You are not allowed to access this page"
 msgstr "Vous n'êtes pas autorisé à accéder à cette page"
+
+#, php-format
+msgid "You are not allowed to create the branch %s in repository %s"
+msgstr "Vous n'êtes pas autorisé à créer la branche %s dans le dépôt %s"
 
 msgid ""
 "You are using a version of Gerrit that is not supported, please contact your "

@@ -201,6 +201,10 @@ msgid ""
 msgstr ""
 
 #, php-format
+msgid "An error occurred while creating the branch: %s"
+msgstr ""
+
+#, php-format
 msgid ""
 "As a reminder, the management of the repository (permissions, ...) has been "
 "delegated to Gerrit: <ul><li>A project <em>%1$s</em> has been created on the "
@@ -1154,6 +1158,14 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
+#, php-format
+msgid "The branch %s already exists in the repository %s"
+msgstr ""
+
+#, php-format
+msgid "The branch name %s is not a valid branch name"
+msgstr ""
+
 msgid ""
 "The deletion of the project under Gerrit is on going, please wait for a few "
 "minutes."
@@ -1192,6 +1204,14 @@ msgstr ""
 
 #, php-format
 msgid "The notification is already enabled for this email %1$s"
+msgstr ""
+
+#, php-format
+msgid "The object %s does not exist in the repository %s"
+msgstr ""
+
+#, php-format
+msgid "The object %s is neither a branch nor a commit in repository %s."
 msgstr ""
 
 #, php-format
@@ -1567,6 +1587,10 @@ msgid "You are going to fork repository: %1$s"
 msgstr ""
 
 msgid "You are not allowed to access this page"
+msgstr ""
+
+#, php-format
+msgid "You are not allowed to create the branch %s in repository %s"
 msgstr ""
 
 msgid ""
