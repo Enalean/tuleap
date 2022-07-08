@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
+import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 import type {
     AfterDropListener,
     DragDropHandlers,
@@ -29,23 +31,17 @@ import * as handlers_factory_module from "./event-handler-factory";
 import { OngoingDrag } from "./OngoingDrag";
 import { DropGhost } from "./DropGhost";
 import { DocumentEventsHandler } from "./DocumentEventsHandler";
-jest.mock("./event-handler-factory");
-jest.mock("./OngoingDrag", () => {
-    return {
-        OngoingDrag: jest.fn().mockImplementation(() => {
-            return {} as OngoingDrag;
-        }),
-    };
+vi.mock("./OngoingDrag", () => {
+    return { OngoingDrag: vi.fn() };
 });
-jest.mock("./DropGhost");
-jest.mock("./DocumentEventsHandler", () => {
-    return {
-        DocumentEventsHandler: jest.fn().mockImplementation(() => {
-            return {
-                attachDragDropListeners: jest.fn(),
-            } as unknown as DocumentEventsHandler;
-        }),
-    };
+vi.mock("./DropGhost", () => {
+    const mocked_class = { create: vi.fn() };
+    return { DropGhost: mocked_class };
+});
+vi.mock("./DocumentEventsHandler", () => {
+    const mocked_class = vi.fn();
+    mocked_class.prototype.attachDragDropListeners = vi.fn();
+    return { DocumentEventsHandler: mocked_class };
 });
 
 describe(`DrekkenovState`, () => {
@@ -55,15 +51,15 @@ describe(`DrekkenovState`, () => {
     beforeEach(() => {
         doc = createLocalDocument();
         options = {
-            cleanupAfterDragCallback: jest.fn(),
+            cleanupAfterDragCallback: vi.fn(),
         } as unknown as DrekkenovInitOptions;
         state = new DrekkenovState(options, doc);
     });
 
     afterEach(() => {
-        const ongoing_drag_constructor = OngoingDrag as unknown as jest.SpyInstance;
+        const ongoing_drag_constructor = OngoingDrag as unknown as SpyInstance;
         ongoing_drag_constructor.mockClear();
-        const document_constructor = DocumentEventsHandler as unknown as jest.SpyInstance;
+        const document_constructor = DocumentEventsHandler as unknown as SpyInstance;
         document_constructor.mockClear();
     });
 
@@ -72,10 +68,10 @@ describe(`DrekkenovState`, () => {
             and calls options' cleanupAfterDragCallback()
             and detaches all listeners`, () => {
             const fake_listener: AfterDropListener = {
-                afterDrop: jest.fn(),
+                afterDrop: vi.fn(),
             };
             const other_fake_listener: AfterDropListener = {
-                afterDrop: jest.fn(),
+                afterDrop: vi.fn(),
             };
 
             state.attachAfterDropListener(fake_listener);
@@ -93,8 +89,8 @@ describe(`DrekkenovState`, () => {
 
     describe(`createDragStartHandler()`, () => {
         it(`returns a dragstart handler initialized with options`, () => {
-            const mock_handler: DragHandler = jest.fn();
-            const dragStartHandlerFactory = jest
+            const mock_handler: DragHandler = vi.fn();
+            const dragStartHandlerFactory = vi
                 .spyOn(handlers_factory_module, "dragStartFactory")
                 .mockImplementation(() => mock_handler);
 
@@ -109,9 +105,9 @@ describe(`DrekkenovState`, () => {
         it(`creates an OngoingDrag, a DropGhost, drag handlers and a DocumentEventsHandler,
             and attaches drag/drop listeners on the document`, () => {
             const drop_ghost = {} as DropGhost;
-            jest.spyOn(DropGhost, "create").mockReturnValue(drop_ghost);
+            (DropGhost.create as unknown as SpyInstance).mockReturnValue(drop_ghost);
             const handlers = {} as DragDropHandlers;
-            const handlersFactory = jest
+            const handlersFactory = vi
                 .spyOn(handlers_factory_module, "handlersFactory")
                 .mockReturnValue(handlers);
 
@@ -126,22 +122,29 @@ describe(`DrekkenovState`, () => {
 
             state.startDrag(drag_start_context);
 
-            const ongoing_drag_constructor = OngoingDrag as unknown as jest.SpyInstance;
-            const ongoing_drag = ongoing_drag_constructor.mock.results[0].value;
-            expect(ongoing_drag_constructor).toHaveBeenCalledWith(state, drag_start_context);
-            expect(DropGhost.create).toHaveBeenCalledWith(state, ongoing_drag);
-            expect(handlersFactory).toHaveBeenCalledWith(options, state, ongoing_drag, drop_ghost);
+            const ongoing_drag_constructor = OngoingDrag as unknown as SpyInstance;
 
-            const document_constructor = DocumentEventsHandler as unknown as jest.SpyInstance;
-            const document_event_handler = document_constructor.mock.results[0].value;
+            expect(ongoing_drag_constructor).toHaveBeenCalledWith(state, drag_start_context);
+            expect(DropGhost.create).toHaveBeenCalledWith(
+                state,
+                expect.any(ongoing_drag_constructor)
+            );
+            expect(handlersFactory).toHaveBeenCalledWith(
+                options,
+                state,
+                expect.any(ongoing_drag_constructor),
+                drop_ghost
+            );
+
+            const document_constructor = DocumentEventsHandler as unknown as SpyInstance;
             expect(document_constructor).toHaveBeenCalledWith(state, handlers, doc);
-            expect(document_event_handler.attachDragDropListeners).toHaveBeenCalled();
+            expect(DocumentEventsHandler.prototype.attachDragDropListeners).toHaveBeenCalled();
         });
     });
 
     describe(`cleanup()`, () => {
         it(`dispatches afterDrop event`, () => {
-            jest.spyOn(state, "dispatchAfterDropEvent");
+            vi.spyOn(state, "dispatchAfterDropEvent");
 
             state.cleanup();
 

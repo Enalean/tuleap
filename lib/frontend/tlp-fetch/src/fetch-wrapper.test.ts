@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import type { SpyInstance } from "vitest";
 import * as wrapper from "./fetch-wrapper";
 import { mockFetchSuccess } from "../mocks/tlp-fetch-mock-helper";
 
 describe(`fetch-wrapper`, () => {
-    let globalFetch: jest.SpyInstance;
+    let globalFetch: SpyInstance;
     beforeEach(() => {
-        window.fetch = globalFetch = jest.fn();
+        window.fetch = globalFetch = vi.fn();
     });
 
     afterEach(() => {
@@ -61,7 +63,7 @@ describe(`fetch-wrapper`, () => {
                 },
             });
 
-            expect(result).toEqual(expected_result);
+            expect(result).toStrictEqual(expected_result);
             const expected_url =
                 "https://example.com/fetch-wrapper-recursive-get?limit=50&offset=0";
             expect(window.fetch).toHaveBeenCalledWith(
@@ -114,7 +116,7 @@ describe(`fetch-wrapper`, () => {
             deal with getting to the "array of things"
             and calls it after the first GET request`, async () => {
             const options = {
-                getCollectionCallback: jest.fn().mockImplementation(({ collection }) => collection),
+                getCollectionCallback: vi.fn().mockImplementation(({ collection }) => collection),
             };
             const expected_collection = [{ id: 93 }, { id: 53 }];
             const return_json = {
@@ -125,7 +127,7 @@ describe(`fetch-wrapper`, () => {
             const result = await wrapper.recursiveGet(url, options);
 
             expect(options.getCollectionCallback).toHaveBeenCalledWith(return_json);
-            expect(result).toEqual(expected_collection);
+            expect(result).toStrictEqual(expected_collection);
         });
 
         it(`When the route does not return a X-PAGINATION-SIZE header,
@@ -169,7 +171,7 @@ describe(`fetch-wrapper`, () => {
                 const results = await wrapper.recursiveGet(url, { params: { limit: 2 } });
 
                 const expected_results_in_order = batch_A.concat(batch_B).concat(batch_C);
-                expect(results).toEqual(expected_results_in_order);
+                expect(results).toStrictEqual(expected_results_in_order);
 
                 expect(globalFetch.mock.calls).toHaveLength(3);
                 const [, ...later_calls] = globalFetch.mock.calls;
@@ -199,7 +201,7 @@ describe(`fetch-wrapper`, () => {
                     getCollectionCallback: ({ collection }) => collection,
                 });
 
-                expect(results).toEqual([
+                expect(results).toStrictEqual([
                     { id: 11 },
                     { id: 25 },
                     { id: 26 },

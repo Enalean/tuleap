@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockedFunction } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import { SelectionManager } from "./SelectionManager";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
@@ -38,7 +40,7 @@ describe("SelectionManager", () => {
         dropdown_manager: DropdownManager,
         item_1: RenderedItem,
         item_2: RenderedItem,
-        selection_callback: jest.MockedFunction<LinkSelectorSelectionCallback>,
+        selection_callback: MockedFunction<LinkSelectorSelectionCallback>,
         clear_search_field: ClearSearchFieldStub;
 
     beforeEach(() => {
@@ -55,9 +57,9 @@ describe("SelectionManager", () => {
         placeholder = placeholder_element;
         dropdown = dropdown_element;
 
-        selection_callback = jest.fn();
+        selection_callback = vi.fn();
         items_map_manager = new ItemsMapManager(ListItemMapBuilder(TemplatingCallbackStub.build()));
-        dropdown_manager = { openLinkSelector: jest.fn() } as unknown as DropdownManager;
+        dropdown_manager = { openLinkSelector: vi.fn() } as unknown as DropdownManager;
         clear_search_field = ClearSearchFieldStub();
         manager = new SelectionManager(
             source_select_box,

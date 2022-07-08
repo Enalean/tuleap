@@ -20,11 +20,12 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { installProjectSidebarElement } from "./load-custom-element";
 
 describe("LoadCustomElement", () => {
     it("defines the custom element", () => {
-        const installation_hook_spy = jest.fn();
+        const installation_hook_spy = vi.fn();
 
         expect(window.customElements.get("tuleap-project-sidebar")).toBeUndefined();
         installProjectSidebarElement(window, installation_hook_spy);

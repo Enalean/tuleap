@@ -1,8 +1,7 @@
 {
     "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["ES2021", "DOM"],
-        "types": ["jest"]
+        "lib": ["ES2021", "DOM"]
     },
     "include": ["src/**/*"]
 }

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
     appendGroupedOptionsToSourceSelectBox,
     appendSimpleOptionsToSourceSelectBox,
@@ -256,7 +257,7 @@ describe("ListItemBuilder", () => {
         let options: ListPickerOptions;
         beforeEach(() => {
             options = {
-                items_template_formatter: jest
+                items_template_formatter: vi
                     .fn()
                     .mockReturnValue(Promise.resolve("A beautiful template")),
             };
@@ -264,7 +265,7 @@ describe("ListItemBuilder", () => {
         });
 
         it("should call it for each item once and cache the templates", async () => {
-            const itemsTemplateFormatter = jest.spyOn(options, "items_template_formatter");
+            const itemsTemplateFormatter = vi.spyOn(options, "items_template_formatter");
             appendSimpleOptionsToSourceSelectBox(select);
             await builder.buildListPickerItemsMap();
 

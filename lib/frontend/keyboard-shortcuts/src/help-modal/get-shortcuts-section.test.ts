@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import { getGlobalShortcutsSection, getSpecificShortcutsSection } from "./get-shortcuts-section";
 
 describe("get-shortcuts-section.ts", () => {

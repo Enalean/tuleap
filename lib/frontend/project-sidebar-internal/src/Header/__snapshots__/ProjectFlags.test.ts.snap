@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`ProjectFlags displays the project flags with a popover 1`] = `
+exports[`ProjectFlags > displays the project flags with a popover 1`] = `
 <div
   data-v-app=""
 >

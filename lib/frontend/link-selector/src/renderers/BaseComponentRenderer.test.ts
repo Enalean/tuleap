@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, beforeEach } from "vitest";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 
 describe("base-component-renderer", () => {

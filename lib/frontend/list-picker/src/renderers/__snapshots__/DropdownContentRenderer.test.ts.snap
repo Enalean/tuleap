@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`DropDownContentRenderer without search input renders grouped list items 1`] = `
+exports[`DropDownContentRenderer > without search input > renders grouped list items 1`] = `
 <ul class="list-picker-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li class="list-picker-item-group"><strong class="list-picker-group-label">Group 1</strong>
     <ul role="group" aria-label="Group 1" class="list-picker-dropdown-option-group">
@@ -43,7 +43,7 @@ exports[`DropDownContentRenderer without search input renders grouped list items
 </ul>
 `;
 
-exports[`DropDownContentRenderer without search input renders simple list items 1`] = `
+exports[`DropDownContentRenderer > without search input > renders simple list items 1`] = `
 <ul class="list-picker-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li role="option" aria-selected="false" data-test="list-picker-item" data-item-id="list-picker-item-100" class="list-picker-dropdown-option-value">
 

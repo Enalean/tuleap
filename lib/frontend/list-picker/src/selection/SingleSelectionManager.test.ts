@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import { SingleSelectionManager } from "./SingleSelectionManager";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
@@ -55,7 +56,7 @@ describe("SingleSelectionManager", () => {
         dropdown = dropdown_element;
 
         items_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
-        dropdown_manager = { openListPicker: jest.fn() } as unknown as DropdownManager;
+        dropdown_manager = { openListPicker: vi.fn() } as unknown as DropdownManager;
         manager = new SingleSelectionManager(
             source_select_box,
             dropdown,
@@ -64,7 +65,7 @@ describe("SingleSelectionManager", () => {
             dropdown_manager,
             items_map_manager
         );
-        jest.spyOn(source_select_box, "dispatchEvent");
+        vi.spyOn(source_select_box, "dispatchEvent");
         await items_map_manager.refreshItemsMap();
         item_1 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
         item_2 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");

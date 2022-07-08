@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { Dropdown } from "./dropdowns";
 import {
     createDropdown,
@@ -25,17 +26,27 @@ import {
     DROPDOWN_MENU_CLASS_NAME,
     DROPDOWN_SHOWN_CLASS_NAME,
 } from "./dropdowns";
-import * as floating_ui from "@floating-ui/dom";
 import type { ComputePositionReturn } from "@floating-ui/dom";
 
-jest.mock("@floating-ui/dom");
-jest.useFakeTimers();
+vi.useFakeTimers();
+
+const computePosition = vi.fn();
+const cleanup = vi.fn();
+
+vi.mock("@floating-ui/dom", async () => {
+    const floating_ui_dom = await vi.importActual<Record<string, unknown>>("@floating-ui/dom");
+    return {
+        ...floating_ui_dom,
+        autoUpdate: (): (() => void) => cleanup,
+        computePosition: (...args: unknown[]): Promise<ComputePositionReturn> => {
+            return computePosition(...args);
+        },
+    };
+});
 
 describe(`Dropdowns`, () => {
     let trigger_element: HTMLElement, dropdown_element: HTMLElement;
     let doc: Document;
-    let cleanup: () => void;
-    let computePosition: jest.SpyInstance<Promise<ComputePositionReturn>>;
 
     beforeEach(() => {
         doc = createLocalDocument();
@@ -43,20 +54,17 @@ describe(`Dropdowns`, () => {
         dropdown_element = doc.createElement("div");
         dropdown_element.classList.add(DROPDOWN_MENU_CLASS_NAME);
         doc.body.append(trigger_element, dropdown_element);
-        computePosition = jest.spyOn(floating_ui, "computePosition");
         computePosition.mockResolvedValue({
             x: 10,
             y: 20,
             placement: "top",
         } as ComputePositionReturn);
-        cleanup = jest.fn();
-        jest.spyOn(floating_ui, "autoUpdate").mockReturnValue(cleanup);
     });
 
     afterEach(() => {
         trigger_element.remove();
         dropdown_element.remove();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe(`constructor`, () => {
@@ -167,7 +175,7 @@ describe(`Dropdowns`, () => {
             });
 
             dropdown.hide();
-            jest.runAllTimers();
+            vi.runAllTimers();
             expect(event_dispatched).toBe(true);
         });
 
@@ -253,7 +261,7 @@ describe(`Dropdowns`, () => {
     describe(`removeEventListener`, () => {
         it(`removes a listener from the dropdown`, () => {
             const dropdown = createDropdown(doc, trigger_element);
-            const listener = jest.fn();
+            const listener = vi.fn();
             dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, listener);
             dropdown.show();
 

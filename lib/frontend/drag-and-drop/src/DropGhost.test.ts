@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { GHOST_CSS_CLASS, HIDE_CSS_CLASS } from "./constants";
 import type { OngoingDrag } from "./OngoingDrag";
 import { DropGhost } from "./DropGhost";
@@ -28,8 +29,8 @@ describe(`DropGhost`, () => {
 
     beforeEach(() => {
         mock_event_source = {
-            attachAfterDropListener: jest.fn(),
-            dispatchAfterDropEvent: jest.fn(),
+            attachAfterDropListener: vi.fn(),
+            dispatchAfterDropEvent: vi.fn(),
         };
         doc = createLocalDocument();
     });
@@ -43,7 +44,7 @@ describe(`DropGhost`, () => {
 
         it(`clones the dragged element, removes the HIDE css class, adds the GHOST css class
             and returns a new DropGhost with the clone`, () => {
-            const cloneElement = jest.spyOn(dom_manipulation, "cloneHTMLElement");
+            const cloneElement = vi.spyOn(dom_manipulation, "cloneHTMLElement");
             DropGhost.create(mock_event_source, ongoing_drag);
 
             const clone = cloneElement.mock.results[0].value;
@@ -53,7 +54,7 @@ describe(`DropGhost`, () => {
 
         it(`will not touch the dragged_element's existing CSS classes`, () => {
             ongoing_drag.dragged_element.classList.add("custom-css-class");
-            const cloneElement = jest.spyOn(dom_manipulation, "cloneHTMLElement");
+            const cloneElement = vi.spyOn(dom_manipulation, "cloneHTMLElement");
             DropGhost.create(mock_event_source, ongoing_drag);
 
             const clone = cloneElement.mock.results[0].value;
@@ -108,7 +109,7 @@ describe(`DropGhost`, () => {
 
         describe(`afterDrop()`, () => {
             it(`removes the ghost element`, () => {
-                jest.spyOn(ghost_element, "remove");
+                vi.spyOn(ghost_element, "remove");
 
                 ghost.afterDrop();
 
@@ -123,7 +124,7 @@ describe(`DropGhost`, () => {
         beforeEach(() => {
             ghost_element = doc.createElement("div");
             ghost_element.classList.add(GHOST_CSS_CLASS);
-            jest.spyOn(window, "requestAnimationFrame").mockImplementation(
+            vi.spyOn(window, "requestAnimationFrame").mockImplementation(
                 (callback: FrameRequestCallback) => {
                     callback(0);
                     return 0;
@@ -139,7 +140,7 @@ describe(`DropGhost`, () => {
                 dragged_element.classList.add(HIDE_CSS_CLASS);
                 ongoing_drag = {
                     dragged_element,
-                    hideDraggedElement: jest.fn(),
+                    hideDraggedElement: vi.fn(),
                 } as unknown as OngoingDrag;
                 ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
                 target_dropzone = doc.createElement("div");
@@ -147,7 +148,7 @@ describe(`DropGhost`, () => {
 
             it(`will hide the dragged element`, () => {
                 const options = {} as DrekkenovInitOptions;
-                jest.spyOn(ongoing_drag, "hideDraggedElement");
+                vi.spyOn(ongoing_drag, "hideDraggedElement");
 
                 ghost.update(target_dropzone, options, y_coordinate);
 
@@ -195,7 +196,7 @@ describe(`DropGhost`, () => {
                     },
                 } as DrekkenovInitOptions;
                 target_dropzone.append(ignored_element, next_sibling);
-                jest.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(next_sibling);
+                vi.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(next_sibling);
 
                 ghost.update(target_dropzone, options, y_coordinate);
 
@@ -220,7 +221,7 @@ describe(`DropGhost`, () => {
                 it(`when the ghost element's next sibling is null,
                     it will insert the ghost element after the target dropzone's last child`, () => {
                     target_dropzone.append(first_child, last_child);
-                    jest.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(null);
+                    vi.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(null);
 
                     ghost.update(target_dropzone, options, y_coordinate);
 
@@ -231,7 +232,7 @@ describe(`DropGhost`, () => {
                     and the ghost element is already after the last child,
                     it will do nothing`, () => {
                     target_dropzone.append(first_child, last_child, ghost_element);
-                    jest.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(null);
+                    vi.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(null);
 
                     ghost.update(target_dropzone, options, y_coordinate);
 
@@ -241,9 +242,7 @@ describe(`DropGhost`, () => {
                 it(`when there is a next sibling,
                     it will insert the ghost element before it in the target dropzone`, () => {
                     target_dropzone.append(first_child, last_child);
-                    jest.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(
-                        last_child
-                    );
+                    vi.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(last_child);
 
                     ghost.update(target_dropzone, options, y_coordinate);
 
@@ -254,9 +253,7 @@ describe(`DropGhost`, () => {
                     and the ghost element is already before it,
                     it will do nothing`, () => {
                     target_dropzone.append(first_child, ghost_element, last_child);
-                    jest.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(
-                        last_child
-                    );
+                    vi.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(last_child);
 
                     ghost.update(target_dropzone, options, y_coordinate);
 

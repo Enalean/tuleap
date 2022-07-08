@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, beforeEach } from "vitest";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 
 describe("base-component-renderer", () => {
@@ -98,9 +99,11 @@ describe("base-component-renderer", () => {
             }
 
             expect(search_field_element.getAttribute("data-test")).toBe("list-picker-search-field");
-            expect(search_field_element.parentElement.classList).toContain(
-                "list-picker-multiple-search-section"
-            );
+            expect(
+                search_field_element.parentElement.classList.contains(
+                    "list-picker-multiple-search-section"
+                )
+            ).toBe(true);
         });
 
         it("should add a 'disabled' class on the search field parent when the source <select> is disabled", () => {
@@ -111,9 +114,11 @@ describe("base-component-renderer", () => {
                 throw new Error("Search input has no parent");
             }
 
-            expect(search_field_element.parentElement.classList).toContain(
-                "list-picker-multiple-search-section-disabled"
-            );
+            expect(
+                search_field_element.parentElement.classList.contains(
+                    "list-picker-multiple-search-section-disabled"
+                )
+            ).toBe(true);
         });
 
         it("should create a selection element tailored to contain multiple values", () => {

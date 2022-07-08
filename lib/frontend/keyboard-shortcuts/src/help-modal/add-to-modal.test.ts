@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { GLOBAL_SCOPE } from "../type";
 import type { ShortcutsGroup } from "../type";
 
@@ -25,9 +26,9 @@ import * as getter_shortcuts_group_head from "./create-shortcuts-group-container
 import * as getter_shortcuts_group_table from "./create-shortcuts-group-container/create-shortcuts-group-table";
 import * as getter_shortcut_section from "./get-shortcuts-section";
 
-jest.mock("./create-shortcuts-group-container/create-shortcuts-group-head");
-jest.mock("./create-shortcuts-group-container/create-shortcuts-group-table");
-jest.mock("./get-shortcuts-section");
+vi.mock("./create-shortcuts-group-container/create-shortcuts-group-head");
+vi.mock("./create-shortcuts-group-container/create-shortcuts-group-table");
+vi.mock("./get-shortcuts-section");
 
 describe("add-to-help-modal.ts", () => {
     let doc: Document;
@@ -49,23 +50,23 @@ describe("add-to-help-modal.ts", () => {
         global_shortcuts_section = doc.createElement("section");
         specific_shortcuts_section = doc.createElement("section");
 
-        jest.spyOn(getter_shortcuts_group_head, "createShortcutsGroupHead").mockReturnValue(
+        vi.spyOn(getter_shortcuts_group_head, "createShortcutsGroupHead").mockReturnValue(
             shortcuts_group_head
         );
-        jest.spyOn(getter_shortcuts_group_table, "createShortcutsGroupTable").mockReturnValue(
+        vi.spyOn(getter_shortcuts_group_table, "createShortcutsGroupTable").mockReturnValue(
             shortcuts_group_table
         );
-        jest.spyOn(getter_shortcut_section, "getGlobalShortcutsSection").mockReturnValue(
+        vi.spyOn(getter_shortcut_section, "getGlobalShortcutsSection").mockReturnValue(
             global_shortcuts_section
         );
-        jest.spyOn(getter_shortcut_section, "getSpecificShortcutsSection").mockReturnValue(
+        vi.spyOn(getter_shortcut_section, "getSpecificShortcutsSection").mockReturnValue(
             specific_shortcuts_section
         );
     });
 
     describe("addShortcutsGroupToShortcutsModal", () => {
         it("adds to the global shortcuts section in the shortcuts modal if GLOBAL_SCOPE is provided", () => {
-            const get_global_shortcuts_section = jest.spyOn(
+            const get_global_shortcuts_section = vi.spyOn(
                 getter_shortcut_section,
                 "getGlobalShortcutsSection"
             );
@@ -75,7 +76,7 @@ describe("add-to-help-modal.ts", () => {
         });
 
         it("adds to the specific shortcuts section in the shortcuts modal if no scope is provided", () => {
-            const get_specific_shortcuts_section = jest.spyOn(
+            const get_specific_shortcuts_section = vi.spyOn(
                 getter_shortcut_section,
                 "getSpecificShortcutsSection"
             );

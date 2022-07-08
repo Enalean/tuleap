@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, beforeEach, expect, vi } from "vitest";
 import { FieldFocusManager } from "./FieldFocusManager";
 
 describe("FieldFocusManager", () => {
@@ -37,8 +38,8 @@ describe("FieldFocusManager", () => {
 
         source_select_box.setAttribute("tabindex", "-1");
 
-        jest.spyOn(selection_element, "focus");
-        jest.spyOn(search_field_element, "focus");
+        vi.spyOn(selection_element, "focus");
+        vi.spyOn(search_field_element, "focus");
     });
 
     describe("init", () => {

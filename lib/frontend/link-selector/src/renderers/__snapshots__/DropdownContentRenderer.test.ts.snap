@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`DropDownContentRenderer rendering renders grouped list items 1`] = `
+exports[`DropDownContentRenderer > rendering > renders grouped list items 1`] = `
 <span class="link-selector-single-dropdown-search-section"><input data-test="link-selector-search-field" class="link-selector-search-field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="none" role="searchbox" aria-autocomplete="list" aria-controls="link-selector-dropdown-values-list"></span>
 <ul class="link-selector-dropdown-values-list" role="listbox" aria-expanded="false" aria-hidden="false">
   <li class="link-selector-item-group">

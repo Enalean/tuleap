@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import type { ScrollingManager } from "../events/ScrollingManager";
@@ -32,14 +34,14 @@ describe("dropdown-manager", () => {
         dropdown_manager: DropdownManager,
         scroll_manager: ScrollingManager,
         field_focus_manager: FieldFocusManager,
-        ResizeObserverSpy: jest.SpyInstance,
-        disconnect: jest.SpyInstance;
+        ResizeObserverSpy: SpyInstance,
+        disconnect: SpyInstance;
 
     beforeEach(() => {
-        disconnect = jest.fn();
-        window.ResizeObserver = ResizeObserverSpy = jest.fn().mockImplementation(() => {
+        disconnect = vi.fn();
+        window.ResizeObserver = ResizeObserverSpy = vi.fn().mockImplementation(() => {
             return {
-                observe: jest.fn(),
+                observe: vi.fn(),
                 disconnect,
             };
         });
@@ -59,13 +61,13 @@ describe("dropdown-manager", () => {
         }).renderBaseComponent();
 
         scroll_manager = {
-            lockScrolling: jest.fn(),
-            unlockScrolling: jest.fn(),
+            lockScrolling: vi.fn(),
+            unlockScrolling: vi.fn(),
         } as unknown as ScrollingManager;
 
         field_focus_manager = {
-            applyFocusOnListPicker: jest.fn(),
-            applyFocusOnSearchField: jest.fn(),
+            applyFocusOnListPicker: vi.fn(),
+            applyFocusOnSearchField: vi.fn(),
         } as unknown as FieldFocusManager;
 
         wrapper = wrapper_element;
@@ -94,14 +96,14 @@ describe("dropdown-manager", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown_manager.openListPicker();
 
-        expect(list_picker.classList).toContain("list-picker-with-open-dropdown");
-        expect(dropdown.classList).toContain("list-picker-dropdown-shown");
+        expect(list_picker.classList.contains("list-picker-with-open-dropdown")).toBe(true);
+        expect(dropdown.classList.contains("list-picker-dropdown-shown")).toBe(true);
         expect(list.getAttribute("aria-expanded")).toBe("true");
         expect(field_focus_manager.applyFocusOnSearchField).toHaveBeenCalled();
         expect(scroll_manager.lockScrolling).toHaveBeenCalled();
-        expect(dropdown.style).toContain("top");
-        expect(dropdown.style).toContain("left");
-        expect(dropdown.style).toContain("width");
+        expect(dropdown.style.top.length).toBeGreaterThan(0);
+        expect(dropdown.style.left.length).toBeGreaterThan(0);
+        expect(dropdown.style.width.length).toBeGreaterThan(0);
     });
 
     it("closes the dropdown by removing the 'shown' class to the dropdown element", () => {
@@ -109,8 +111,8 @@ describe("dropdown-manager", () => {
         dropdown_manager.openListPicker();
         dropdown_manager.closeListPicker();
 
-        expect(list_picker.classList).not.toContain("list-picker-with-open-dropdown");
-        expect(dropdown.classList).not.toContain("list-picker-dropdown-shown");
+        expect(list_picker.classList.contains("list-picker-with-open-dropdown")).toBe(false);
+        expect(dropdown.classList.contains("list-picker-dropdown-shown")).toBe(false);
         expect(list.getAttribute("aria-expanded")).toBe("false");
         expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
         expect(field_focus_manager.applyFocusOnListPicker).toHaveBeenCalled();
@@ -120,7 +122,7 @@ describe("dropdown-manager", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown.classList.add("list-picker-dropdown-shown");
 
-        jest.spyOn(dropdown.classList, "add");
+        vi.spyOn(dropdown.classList, "add");
         dropdown_manager.openListPicker();
 
         expect(dropdown.classList.add).not.toHaveBeenCalled();
@@ -129,7 +131,7 @@ describe("dropdown-manager", () => {
 
     it("should not close the list picker if it's already closed", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
-        jest.spyOn(dropdown.classList, "remove");
+        vi.spyOn(dropdown.classList, "remove");
         dropdown_manager.closeListPicker();
 
         expect(dropdown.classList.remove).not.toHaveBeenCalled();
@@ -177,10 +179,10 @@ describe("dropdown-manager", () => {
         }
 
         beforeEach(() => {
-            jest.spyOn(dropdown, "getBoundingClientRect").mockReturnValue({
+            vi.spyOn(dropdown, "getBoundingClientRect").mockReturnValue({
                 height: 250,
             } as DOMRect);
-            jest.spyOn(wrapper, "getBoundingClientRect").mockReturnValue({
+            vi.spyOn(wrapper, "getBoundingClientRect").mockReturnValue({
                 left: 60,
                 bottom: 900,
                 width: 250,
@@ -193,8 +195,8 @@ describe("dropdown-manager", () => {
 
             dropdown_manager.openListPicker();
 
-            expect(list_picker.classList).not.toContain("list-picker-with-dropdown-above");
-            expect(dropdown.classList).not.toContain("list-picker-dropdown-above");
+            expect(list_picker.classList.contains("list-picker-dropdown-above")).toBe(false);
+            expect(dropdown.classList.contains("list-picker-with-dropdown-above")).toBe(false);
             expect(dropdown.style.left).toBe("60px");
             expect(dropdown.style.width).toBe("250px");
             expect(dropdown.style.top).toBe("900px"); // Below the wrapper
@@ -207,8 +209,8 @@ describe("dropdown-manager", () => {
 
             dropdown_manager.openListPicker();
 
-            expect(list_picker.classList).toContain("list-picker-with-dropdown-above");
-            expect(dropdown.classList).toContain("list-picker-dropdown-above");
+            expect(list_picker.classList.contains("list-picker-with-dropdown-above")).toBe(true);
+            expect(dropdown.classList.contains("list-picker-dropdown-above")).toBe(true);
             expect(dropdown.style.left).toBe("60px");
             expect(dropdown.style.width).toBe("250px");
             expect(dropdown.style.top).toBe("610px"); // Above the wrapper

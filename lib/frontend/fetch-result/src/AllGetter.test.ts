@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { GetAll } from "./AllGetter";
 import { PAGINATION_SIZE_HEADER, AllGetter } from "./AllGetter";
 import { FetchInterfaceStub } from "../tests/stubs/FetchInterfaceStub";
@@ -107,7 +108,7 @@ describe(`AllGetter`, () => {
         deal with getting to the "array of things"
         and calls it after the first GET request`, async () => {
         const options = {
-            getCollectionCallback: jest.fn().mockImplementation(({ collection }) => collection),
+            getCollectionCallback: vi.fn().mockImplementation(({ collection }) => collection),
         };
         const collection = [{ id: 93 }, { id: 53 }];
         const json_payload = { collection };

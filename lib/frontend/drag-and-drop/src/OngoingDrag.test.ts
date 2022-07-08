@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, beforeEach, vi } from "vitest";
 import type { AfterDropEventSource, DragStartContext, DrekkenovInitOptions } from "./types";
 import { OngoingDrag } from "./OngoingDrag";
 import { HIDE_CSS_CLASS } from "./constants";
@@ -26,8 +27,8 @@ describe(`OngoingDrag`, () => {
 
     beforeEach(() => {
         mock_event_source = {
-            attachAfterDropListener: jest.fn(),
-            dispatchAfterDropEvent: jest.fn(),
+            attachAfterDropListener: vi.fn(),
+            dispatchAfterDropEvent: vi.fn(),
         };
     });
 
@@ -39,7 +40,7 @@ describe(`OngoingDrag`, () => {
             const doc = createLocalDocument();
             const drag_start_context = createDragStartContext(doc, true);
             const rect = { height: 100 } as DOMRect;
-            jest.spyOn(drag_start_context.source_dropzone, "getBoundingClientRect").mockReturnValue(
+            vi.spyOn(drag_start_context.source_dropzone, "getBoundingClientRect").mockReturnValue(
                 rect
             );
             const ongoing_drag = new OngoingDrag(mock_event_source, drag_start_context);

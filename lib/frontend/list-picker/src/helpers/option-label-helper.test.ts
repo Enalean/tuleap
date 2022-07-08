@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, it, expect } from "vitest";
 import { getOptionsLabel } from "./option-label-helper";
 
 describe("option-label-helper", () => {

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import type { AfterDropEventSource, DragHandler, DrekkenovInitOptions } from "./types";
 import type { DrekkenovState } from "./DrekkenovState";
 import { dragStartFactory, handlersFactory } from "./event-handler-factory";
@@ -37,12 +38,12 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = {
-                isInvalidDragHandle: jest.fn(),
-                isDropZone: jest.fn(),
-                onDragStart: jest.fn(),
+                isInvalidDragHandle: vi.fn(),
+                isDropZone: vi.fn(),
+                onDragStart: vi.fn(),
             } as unknown as DrekkenovInitOptions;
             state = {
-                startDrag: jest.fn(),
+                startDrag: vi.fn(),
             } as unknown as DrekkenovState;
             dragStartHandler = dragStartFactory(options, state);
         });
@@ -67,7 +68,7 @@ describe(`event-handler-factory`, () => {
         it(`when the event target is a dropzone,
             it does nothing because Dropzones cannot also be Draggables`, () => {
             const target = doc.createElement("div");
-            jest.spyOn(options, "isDropZone").mockReturnValue(true);
+            vi.spyOn(options, "isDropZone").mockReturnValue(true);
             const event = { dataTransfer: {}, target } as unknown as DragEvent;
 
             dragStartHandler(event);
@@ -79,11 +80,11 @@ describe(`event-handler-factory`, () => {
             it prevents the default handler to forbid dragging
             so that links that are invalid handles won't be draggable`, () => {
             const target = doc.createElement("div");
-            jest.spyOn(options, "isInvalidDragHandle").mockReturnValue(true);
+            vi.spyOn(options, "isInvalidDragHandle").mockReturnValue(true);
             const event = {
                 dataTransfer: {},
                 target,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dragStartHandler(event);
@@ -94,7 +95,7 @@ describe(`event-handler-factory`, () => {
 
         it(`when the event target has no draggable ancestor, it does nothing`, () => {
             const target = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDraggable").mockReturnValue(null);
+            vi.spyOn(dom_manipulation, "findClosestDraggable").mockReturnValue(null);
             const event = { dataTransfer: {}, target } as unknown as DragEvent;
 
             dragStartHandler(event);
@@ -105,8 +106,8 @@ describe(`event-handler-factory`, () => {
         it(`when the event target has no dropzone ancestor, it does nothing`, () => {
             const target = doc.createElement("span");
             const draggable = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDraggable").mockReturnValue(draggable);
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
+            vi.spyOn(dom_manipulation, "findClosestDraggable").mockReturnValue(draggable);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
             const event = { dataTransfer: {}, target } as unknown as DragEvent;
 
             dragStartHandler(event);
@@ -125,10 +126,10 @@ describe(`event-handler-factory`, () => {
             const initial_sibling = doc.createElement("div");
             source_dropzone.append(draggable, initial_sibling);
 
-            jest.spyOn(dom_manipulation, "findClosestDraggable").mockReturnValue(draggable);
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(source_dropzone);
+            vi.spyOn(dom_manipulation, "findClosestDraggable").mockReturnValue(draggable);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(source_dropzone);
             const dataTransfer = {
-                setData: jest.fn(),
+                setData: vi.fn(),
                 effectAllowed: "uninitialized",
             };
             const event = { dataTransfer, target } as unknown as DragEvent;
@@ -154,8 +155,8 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = {
-                onDragEnter: jest.fn(),
-                doesDropzoneAcceptDraggable: jest.fn(),
+                onDragEnter: vi.fn(),
+                doesDropzoneAcceptDraggable: vi.fn(),
             } as unknown as DrekkenovInitOptions;
             const dragged_element = doc.createElement("div");
             const source_dropzone = doc.createElement("div");
@@ -164,9 +165,9 @@ describe(`event-handler-factory`, () => {
                 source_dropzone,
             } as unknown as OngoingDrag;
             drop_ghost = {
-                contains: jest.fn(),
-                revertAtInitialPlace: jest.fn(),
-                update: jest.fn(),
+                contains: vi.fn(),
+                revertAtInitialPlace: vi.fn(),
+                update: vi.fn(),
             } as unknown as DropGhost;
             const event_source = {} as AfterDropEventSource;
             dragEnterHandler = handlersFactory(
@@ -182,7 +183,7 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer: null,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dragEnterHandler(event);
@@ -197,7 +198,7 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dragEnterHandler(event);
@@ -212,7 +213,7 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dragEnterHandler(event);
@@ -228,9 +229,9 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(true);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(true);
 
             dragEnterHandler(event);
 
@@ -246,10 +247,10 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(false);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
 
             dragEnterHandler(event);
 
@@ -266,12 +267,12 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(false);
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
-            jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(false);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(false);
 
             dragEnterHandler(event);
 
@@ -290,12 +291,12 @@ describe(`event-handler-factory`, () => {
                 target,
                 dataTransfer,
                 clientY: 200,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(false);
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
-            jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
 
             dragEnterHandler(event);
 
@@ -317,13 +318,13 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = {
-                onDragLeave: jest.fn(),
+                onDragLeave: vi.fn(),
             } as unknown as DrekkenovInitOptions;
             const dragged_element = doc.createElement("div");
             ongoing_drag = { dragged_element } as unknown as OngoingDrag;
             const event_source = {} as AfterDropEventSource;
             drop_ghost = {
-                contains: jest.fn(),
+                contains: vi.fn(),
             } as unknown as DropGhost;
             dragLeaveHandler = handlersFactory(
                 options,
@@ -346,7 +347,7 @@ describe(`event-handler-factory`, () => {
             it does nothing to avoid triggering too many events`, () => {
             const target = doc.createElement("div");
             const event = { target } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(true);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(true);
 
             dragLeaveHandler(event);
 
@@ -356,8 +357,8 @@ describe(`event-handler-factory`, () => {
         it(`when the event target has no dropzone ancestor, it does nothing`, () => {
             const target = doc.createElement("div");
             const event = { target } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(false);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
 
             dragLeaveHandler(event);
 
@@ -367,9 +368,9 @@ describe(`event-handler-factory`, () => {
         it(`when all conditions are met, it will call the onDragLeave() callback from options`, () => {
             const target = doc.createElement("div");
             const event = { target } as unknown as DragEvent;
-            jest.spyOn(drop_ghost, "contains").mockReturnValue(false);
+            vi.spyOn(drop_ghost, "contains").mockReturnValue(false);
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
 
             dragLeaveHandler(event);
 
@@ -388,7 +389,7 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = {
-                doesDropzoneAcceptDraggable: jest.fn(),
+                doesDropzoneAcceptDraggable: vi.fn(),
             } as unknown as DrekkenovInitOptions;
 
             const dragged_element = doc.createElement("div");
@@ -398,7 +399,7 @@ describe(`event-handler-factory`, () => {
                 source_dropzone,
             } as unknown as OngoingDrag;
             drop_ghost = {
-                isAtDraggedElementInitialPlace: jest.fn(),
+                isAtDraggedElementInitialPlace: vi.fn(),
             } as unknown as DropGhost;
             const event_source = {} as AfterDropEventSource;
             dragOverHandler = handlersFactory(
@@ -411,7 +412,7 @@ describe(`event-handler-factory`, () => {
 
         it(`when the event target is not a Node, it does nothing`, () => {
             const target = new EventTarget();
-            const event = { target, preventDefault: jest.fn() } as unknown as DragEvent;
+            const event = { target, preventDefault: vi.fn() } as unknown as DragEvent;
 
             dragOverHandler(event);
 
@@ -423,7 +424,7 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer: null,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dragOverHandler(event);
@@ -436,9 +437,9 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer: {},
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
 
             dragOverHandler(event);
 
@@ -450,11 +451,11 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer: {},
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
-            jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(false);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(false);
 
             dragOverHandler(event);
 
@@ -467,12 +468,12 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer: {},
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
-            jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
-            jest.spyOn(drop_ghost, "isAtDraggedElementInitialPlace").mockReturnValue(true);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
+            vi.spyOn(drop_ghost, "isAtDraggedElementInitialPlace").mockReturnValue(true);
 
             dragOverHandler(event);
 
@@ -487,12 +488,12 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
-            jest.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
-            jest.spyOn(drop_ghost, "isAtDraggedElementInitialPlace").mockReturnValue(false);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(options, "doesDropzoneAcceptDraggable").mockReturnValue(true);
+            vi.spyOn(drop_ghost, "isAtDraggedElementInitialPlace").mockReturnValue(false);
 
             dragOverHandler(event);
 
@@ -510,10 +511,10 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = {
-                onDrop: jest.fn(),
+                onDrop: vi.fn(),
             } as unknown as DrekkenovInitOptions;
             after_drop_dispatcher = {
-                dispatchAfterDropEvent: jest.fn(),
+                dispatchAfterDropEvent: vi.fn(),
             } as unknown as AfterDropEventSource;
             const dragged_element = doc.createElement("div");
             const source_dropzone = doc.createElement("div");
@@ -537,7 +538,7 @@ describe(`event-handler-factory`, () => {
 
         it(`when the event target is not a Node, it does nothing`, () => {
             const target = new EventTarget();
-            const event = { target, preventDefault: jest.fn() } as unknown as DragEvent;
+            const event = { target, preventDefault: vi.fn() } as unknown as DragEvent;
 
             dropHandler(event);
 
@@ -549,7 +550,7 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer: null,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dropHandler(event);
@@ -563,7 +564,7 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
 
             dropHandler(event);
@@ -577,9 +578,9 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(null);
 
             dropHandler(event);
 
@@ -595,10 +596,10 @@ describe(`event-handler-factory`, () => {
             const event = {
                 target,
                 dataTransfer,
-                preventDefault: jest.fn(),
+                preventDefault: vi.fn(),
             } as unknown as DragEvent;
             const target_dropzone = doc.createElement("div");
-            jest.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
+            vi.spyOn(dom_manipulation, "findClosestDropzone").mockReturnValue(target_dropzone);
 
             dropHandler(event);
 
@@ -620,10 +621,10 @@ describe(`event-handler-factory`, () => {
 
         beforeEach(() => {
             options = {
-                isDraggable: jest.fn(),
+                isDraggable: vi.fn(),
             } as unknown as DrekkenovInitOptions;
             after_drop_dispatcher = {
-                dispatchAfterDropEvent: jest.fn(),
+                dispatchAfterDropEvent: vi.fn(),
             } as unknown as AfterDropEventSource;
             const ongoing_drag = {} as OngoingDrag;
             const drop_ghost = {} as DropGhost;
@@ -647,7 +648,7 @@ describe(`event-handler-factory`, () => {
         it(`when the event target is not draggable, it does nothing`, () => {
             const target = doc.createElement("div");
             const event = { target } as unknown as DragEvent;
-            jest.spyOn(options, "isDraggable").mockReturnValue(false);
+            vi.spyOn(options, "isDraggable").mockReturnValue(false);
 
             dragEndHandler(event);
 
@@ -657,7 +658,7 @@ describe(`event-handler-factory`, () => {
         it(`when the event target is draggable, it will dispatch the AfterDrop event`, () => {
             const target = doc.createElement("div");
             const event = { target } as unknown as DragEvent;
-            jest.spyOn(options, "isDraggable").mockReturnValue(true);
+            vi.spyOn(options, "isDraggable").mockReturnValue(true);
 
             dragEndHandler(event);
 

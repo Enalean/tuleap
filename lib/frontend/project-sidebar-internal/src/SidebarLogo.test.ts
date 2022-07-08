@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect } from "vitest";
 import SidebarLogo from "./SidebarLogo.vue";
 import { shallowMount } from "@vue/test-utils";
 import { example_config } from "./project-sidebar-example-config";

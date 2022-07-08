@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SidebarHeader from "./SidebarHeader.vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";

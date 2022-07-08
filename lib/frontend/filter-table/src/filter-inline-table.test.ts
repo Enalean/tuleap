@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
     filterInlineTable,
     EMPTY_STATE_CLASS_NAME,

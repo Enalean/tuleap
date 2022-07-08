@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @vitest-environment node
+ */
+
+import { describe, it, expect } from "vitest";
 import plugin from "./po-gettext-plugin";
 import type { UnpluginOptions } from "unplugin";
 

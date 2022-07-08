@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { POFile } from "./main";
 import { initVueGettext } from "./main";
 import { createGettext } from "vue3-gettext";
@@ -51,7 +52,7 @@ describe("vue3-gettext-init", () => {
         });
 
         it("loads the translations and gives them to vue3-gettext, skipping untranslated strings", async () => {
-            const create_gettext_spy = jest.fn(createGettext);
+            const create_gettext_spy = vi.fn(createGettext);
 
             const gettext = await initVueGettext(create_gettext_spy, callback);
 
@@ -66,15 +67,15 @@ describe("vue3-gettext-init", () => {
     });
 
     describe("when a locale is NOT defined on the document's body", () => {
-        const callback = jest.fn(() => Promise.resolve({ translations: { "": {} } }));
+        const callback = vi.fn(() => Promise.resolve({ translations: { "": {} } }));
 
         it("does not call the callback", async () => {
-            await initVueGettext(jest.fn(), callback);
+            await initVueGettext(vi.fn(), callback);
             expect(callback).not.toHaveBeenCalled();
         });
 
         it("gives an empty translations object to vue-gettext", async () => {
-            const create_gettext_spy = jest.fn(createGettext);
+            const create_gettext_spy = vi.fn(createGettext);
 
             const gettext = await initVueGettext(create_gettext_spy, callback);
             expect(create_gettext_spy).toHaveBeenCalledWith(

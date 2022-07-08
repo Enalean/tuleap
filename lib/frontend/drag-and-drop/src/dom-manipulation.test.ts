@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
     cloneHTMLElement,
     findClosestDraggable,
@@ -265,18 +266,18 @@ function createChildrenWithRects(
         top: first_middle_coordinate - 25,
         bottom: first_middle_coordinate + 25,
     } as DOMRect;
-    jest.spyOn(first_child, "getBoundingClientRect").mockReturnValue(first_rect);
+    vi.spyOn(first_child, "getBoundingClientRect").mockReturnValue(first_rect);
     const second_child = doc.createElement("div");
     const second_rect = {
         top: second_middle_coordinate - 25,
         bottom: second_middle_coordinate + 25,
     } as DOMRect;
-    jest.spyOn(second_child, "getBoundingClientRect").mockReturnValue(second_rect);
+    vi.spyOn(second_child, "getBoundingClientRect").mockReturnValue(second_rect);
     const third_child = doc.createElement("div");
     const third_rect = {
         top: third_middle_coordinate - 25,
         bottom: third_middle_coordinate + 25,
     } as DOMRect;
-    jest.spyOn(third_child, "getBoundingClientRect").mockReturnValue(third_rect);
+    vi.spyOn(third_child, "getBoundingClientRect").mockReturnValue(third_rect);
     return [first_child, second_child, third_child];
 }

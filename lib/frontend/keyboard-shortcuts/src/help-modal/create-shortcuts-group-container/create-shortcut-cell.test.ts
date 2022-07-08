@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import { createKeyboardInputElement, createShortcutCell } from "./create-shortcut-cell";
 import type { Shortcut } from "../../type";
 

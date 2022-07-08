@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect } from "vitest";
 import { ItemsMapManager } from "./ItemsMapManager";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";

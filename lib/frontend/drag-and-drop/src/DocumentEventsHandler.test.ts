@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { DocumentEventsHandler } from "./DocumentEventsHandler";
 import type { AfterDropEventSource, DragDropHandlers } from "./types";
 
@@ -28,15 +29,15 @@ describe(`DocumentEventsHandler`, () => {
 
     beforeEach(() => {
         mock_event_source = {
-            attachAfterDropListener: jest.fn(),
-            dispatchAfterDropEvent: jest.fn(),
+            attachAfterDropListener: vi.fn(),
+            dispatchAfterDropEvent: vi.fn(),
         };
         handlers = {
-            dragOverHandler: jest.fn(),
-            dropHandler: jest.fn(),
-            dragEnterHandler: jest.fn(),
-            dragEndHandler: jest.fn(),
-            dragLeaveHandler: jest.fn(),
+            dragOverHandler: vi.fn(),
+            dropHandler: vi.fn(),
+            dragEnterHandler: vi.fn(),
+            dragEndHandler: vi.fn(),
+            dragLeaveHandler: vi.fn(),
         };
         doc = createLocalDocument();
         events_handler = new DocumentEventsHandler(mock_event_source, handlers, doc);
@@ -50,7 +51,7 @@ describe(`DocumentEventsHandler`, () => {
 
     describe(`attachDragDropListeners()`, () => {
         it(`attaches all handlers to drag/drop events only when drag has begun`, () => {
-            jest.spyOn(doc, "addEventListener");
+            vi.spyOn(doc, "addEventListener");
             events_handler.attachDragDropListeners();
 
             expect(doc.addEventListener).toHaveBeenCalledWith(
@@ -69,7 +70,7 @@ describe(`DocumentEventsHandler`, () => {
 
     describe(`afterDrop()`, () => {
         it(`detaches all handlers from drag/drop events`, () => {
-            jest.spyOn(doc, "removeEventListener");
+            vi.spyOn(doc, "removeEventListener");
             events_handler.afterDrop();
 
             expect(doc.removeEventListener).toHaveBeenCalledWith(

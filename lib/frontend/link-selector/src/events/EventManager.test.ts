@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { EventManager } from "./EventManager";
 import { ManageDropdownStub } from "../../tests/stubs/ManageDropdownStub";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
@@ -93,21 +94,21 @@ describe("event manager", () => {
         dropdown = dropdown_element;
 
         item_highlighter = {
-            resetHighlight: jest.fn(),
-            highlightItem: jest.fn(),
-            getHighlightedItem: jest.fn(),
+            resetHighlight: vi.fn(),
+            highlightItem: vi.fn(),
+            getHighlightedItem: vi.fn(),
         } as unknown as ListItemHighlighter;
 
         dropdown_content_renderer = {
-            renderFilteredLinkSelectorDropdownContent: jest.fn(),
-            renderAfterDependenciesUpdate: jest.fn(),
+            renderFilteredLinkSelectorDropdownContent: vi.fn(),
+            renderAfterDependenciesUpdate: vi.fn(),
         } as unknown as DropdownContentRenderer;
 
         field_focus_manager = {
-            doesSelectionElementHaveTheFocus: jest.fn(),
+            doesSelectionElementHaveTheFocus: vi.fn(),
         } as unknown as FieldFocusManager;
 
-        navigation_manager = { navigate: jest.fn() } as unknown as KeyboardNavigationManager;
+        navigation_manager = { navigate: vi.fn() } as unknown as KeyboardNavigationManager;
     });
 
     it("When the source <select> is disabled, then it should not attach any event", () => {
@@ -119,10 +120,10 @@ describe("event manager", () => {
             ManageSelectionStub.withNoSelection()
         );
 
-        jest.spyOn(doc, "addEventListener");
-        jest.spyOn(component_wrapper, "addEventListener");
-        jest.spyOn(search_field, "addEventListener");
-        jest.spyOn(clickable_item, "addEventListener");
+        vi.spyOn(doc, "addEventListener");
+        vi.spyOn(component_wrapper, "addEventListener");
+        vi.spyOn(search_field, "addEventListener");
+        vi.spyOn(clickable_item, "addEventListener");
 
         source_select_box.setAttribute("disabled", "disabled");
 
@@ -169,7 +170,7 @@ describe("event manager", () => {
         });
 
         it("When a keyboard selection has occurred, and user hits Enter, then it should reopen the dropdown", () => {
-            const doesSelectionElementHaveTheFocus = jest.spyOn(
+            const doesSelectionElementHaveTheFocus = vi.spyOn(
                 field_focus_manager,
                 "doesSelectionElementHaveTheFocus"
             );
@@ -177,7 +178,7 @@ describe("event manager", () => {
             manager.attachEvents();
 
             // Keyboard selection has occurred
-            jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
+            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
             expect(manage_dropdown.isDropdownOpen()).toBe(false);
 
@@ -312,7 +313,7 @@ describe("event manager", () => {
 
         it("should not reopen the dropdown when a keyboard selection has just occurred", () => {
             const highlighted_item = document.createElement("li");
-            jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
+            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
 
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
             search_field.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
@@ -371,17 +372,17 @@ describe("event manager", () => {
 
         describe("Forms error handling", () => {
             it("should add an 'error' class on the component wrapper when the source <select> value has changed and is invalid", () => {
-                jest.spyOn(source_select_box, "checkValidity").mockImplementation(() => false);
+                vi.spyOn(source_select_box, "checkValidity").mockImplementation(() => false);
 
                 source_select_box.dispatchEvent(new Event("change"));
-                expect(component_wrapper.classList).toContain("link-selector-error");
+                expect(component_wrapper.classList.contains("link-selector-error")).toBe(true);
             });
 
             it("should remove the 'error' class on the component wrapper when the source <select> value has changed and is valid", () => {
-                jest.spyOn(source_select_box, "checkValidity").mockImplementation(() => true);
+                vi.spyOn(source_select_box, "checkValidity").mockImplementation(() => true);
 
                 source_select_box.dispatchEvent(new Event("change"));
-                expect(component_wrapper.classList).not.toContain("link-selector-error");
+                expect(component_wrapper.classList.contains("link-selector-error")).toBe(false);
             });
         });
     });
@@ -419,7 +420,7 @@ describe("event manager", () => {
         });
 
         it("should call the navigation manager when the dropdown is open", () => {
-            jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(null);
+            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(null);
 
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
@@ -429,7 +430,7 @@ describe("event manager", () => {
 
         it("should select the currently highlighted item when the Enter key is pressed", () => {
             const highlighted_item = document.createElement("li");
-            jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
+            vi.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
 
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));

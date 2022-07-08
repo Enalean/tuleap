@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, expect, it } from "vitest";
 import { convertBadColorHexToRGB, isColorBad } from "./color-helper";
 
 describe("color-helper", () => {

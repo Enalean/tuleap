@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { SearchFieldEventCallbackHandler } from "./SearchFieldEventCallbackHandler";
 import { LinkSelectorStub } from "../../tests/stubs/LinkSelectorStub";
 import type { LinkSelector, LinkSelectorSearchFieldCallback } from "../type";
@@ -40,8 +41,8 @@ describe("SearchFieldEventCallbackHandler", () => {
         search_field_element = doc.createElement("input");
         link_selector = LinkSelectorStub.build();
 
-        callback = jest.fn();
-        jest.useFakeTimers();
+        callback = vi.fn();
+        vi.useFakeTimers();
 
         init(callback);
     });
@@ -50,11 +51,11 @@ describe("SearchFieldEventCallbackHandler", () => {
         search_field_element.value = "a query";
         search_field_element.dispatchEvent(new Event("input"));
 
-        jest.advanceTimersByTime(249); // 249 ms elapsed
+        vi.advanceTimersByTime(249); // 249 ms elapsed
 
         expect(callback).not.toHaveBeenCalled();
 
-        jest.advanceTimersByTime(1); // 250 ms elapsed
+        vi.advanceTimersByTime(1); // 250 ms elapsed
 
         expect(callback).toHaveBeenCalledWith(link_selector, "a query");
     });
@@ -65,7 +66,7 @@ describe("SearchFieldEventCallbackHandler", () => {
             search_field_element.dispatchEvent(new Event("input"));
         });
 
-        jest.advanceTimersByTime(250);
+        vi.advanceTimersByTime(250);
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(link_selector, "nana nana nana BATMAN");
@@ -75,7 +76,7 @@ describe("SearchFieldEventCallbackHandler", () => {
         search_field_element.value = "";
         search_field_element.dispatchEvent(new Event("input"));
 
-        jest.advanceTimersByTime(0); // 0 ms elapsed
+        vi.advanceTimersByTime(0); // 0 ms elapsed
 
         expect(callback).toHaveBeenCalledWith(link_selector, "");
     });

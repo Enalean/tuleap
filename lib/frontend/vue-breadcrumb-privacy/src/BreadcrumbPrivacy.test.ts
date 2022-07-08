@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import BreadcrumbPrivacy from "./BreadcrumbPrivacy.vue";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
-jest.mock("@tuleap/tlp-popovers", () => {
+vi.mock("@tuleap/tlp-popovers", () => {
     return {
         createPopover: (): void => {
             //Do nothing

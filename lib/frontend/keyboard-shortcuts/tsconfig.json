@@ -1,9 +1,7 @@
 {
     "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["ES2015", "DOM"],
-        "outDir": "types/",
-        "types": ["jest"]
+        "lib": ["ES2015", "DOM"]
     },
     "include": ["src/**/*"]
 }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as modal from "./modal";
 import {
     openModalAndReplacePlaceholders,
@@ -25,11 +27,11 @@ import {
 } from "./modal-opener";
 
 describe(`Modal Opener`, () => {
-    let doc: Document, createModal: jest.SpyInstance;
+    let doc: Document, createModal: SpyInstance;
     beforeEach(() => {
         doc = createLocalDocument();
-        createModal = jest.spyOn(modal, "createModal");
-        jest.resetAllMocks();
+        createModal = vi.spyOn(modal, "createModal");
+        vi.resetAllMocks();
     });
 
     describe(`openTargetModalIdOnClick()`, () => {
@@ -73,11 +75,11 @@ describe(`Modal Opener`, () => {
                 createAndAppendElementById(doc, "div", "modal_id");
                 simulateClick(button);
 
-                createModal.mockImplementation(() => ({ show: jest.fn() }));
+                createModal.mockImplementation(() => ({ show: vi.fn() }));
             });
 
             it(`when the button is clicked, it will create a modal from the data-target-modal-id and show it`, () => {
-                const modal = { show: jest.fn() };
+                const modal = { show: vi.fn() };
                 createModal.mockImplementation(() => modal);
 
                 openTargetModalIdOnClick(doc, "button_id");
@@ -87,7 +89,7 @@ describe(`Modal Opener`, () => {
             });
 
             it(`Given that a callback has been passed, when the button is clicked, it will call it before opening the modal`, () => {
-                const callback = jest.fn();
+                const callback = vi.fn();
 
                 openTargetModalIdOnClick(doc, "button_id", callback);
 
@@ -128,11 +130,11 @@ describe(`Modal Opener`, () => {
                 createAndAppendElementById(doc, "div", "modal_id");
                 simulateClick(button);
 
-                createModal.mockImplementation(() => ({ show: jest.fn() }));
+                createModal.mockImplementation(() => ({ show: vi.fn() }));
             });
 
             it(`when the button is clicked, it will create a modal from the data-target-modal-id and show it`, () => {
-                const modal = { show: jest.fn() };
+                const modal = { show: vi.fn() };
                 createModal.mockImplementation(() => modal);
 
                 openAllTargetModalsOnClick(doc, ".button-class");
@@ -203,7 +205,7 @@ describe(`Modal Opener`, () => {
                 doc.body.append(hidden_input);
                 simulateClick(delete_button);
 
-                createModal.mockImplementation(() => ({ show: jest.fn() }));
+                createModal.mockImplementation(() => ({ show: vi.fn() }));
             });
 
             it(`will replace the paragraph's text using the options' callback`, () => {
@@ -219,7 +221,7 @@ describe(`Modal Opener`, () => {
             });
 
             it(`will create the TLP modal and show it`, () => {
-                const modal = { show: jest.fn() };
+                const modal = { show: vi.fn() };
                 createModal.mockImplementation(() => modal);
 
                 replaceModalWithOptions();
@@ -254,7 +256,7 @@ function createAndAppendButtonWithClassName(doc: Document): HTMLElement {
 }
 
 function simulateClick(button: HTMLElement): void {
-    jest.spyOn(button, "addEventListener").mockImplementation(
+    vi.spyOn(button, "addEventListener").mockImplementation(
         (event: string, handler: EventListenerOrEventListenerObject) => {
             if (handler instanceof Function) {
                 handler(new Event("click"));

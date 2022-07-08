@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 
 describe("ListItemHighlighter", () => {
@@ -45,16 +46,16 @@ describe("ListItemHighlighter", () => {
 
             highlighter.resetHighlight();
 
-            expect(item_1.classList).toContain("list-picker-item-highlighted");
-            expect(item_2.classList).not.toContain("list-picker-item-highlighted");
+            expect(item_1.classList.contains("list-picker-item-highlighted")).toBe(true);
+            expect(item_2.classList.contains("list-picker-item-highlighted")).toBe(false);
         });
 
         it("when there are no selected items, then it highlights the first item in the list", () => {
             highlighter.resetHighlight();
 
-            expect(item_1.classList).toContain("list-picker-item-highlighted");
-            expect(item_2.classList).not.toContain("list-picker-item-highlighted");
-            expect(item_3.classList).not.toContain("list-picker-item-highlighted");
+            expect(item_1.classList.contains("list-picker-item-highlighted")).toBe(true);
+            expect(item_2.classList.contains("list-picker-item-highlighted")).toBe(false);
+            expect(item_3.classList.contains("list-picker-item-highlighted")).toBe(false);
         });
     });
 
@@ -62,15 +63,15 @@ describe("ListItemHighlighter", () => {
         it("should remove the highlight on highlighted items and highlight the requested one", () => {
             highlighter.highlightItem(item_2);
 
-            expect(item_1.classList).not.toContain("list-picker-item-highlighted");
-            expect(item_2.classList).toContain("list-picker-item-highlighted");
-            expect(item_3.classList).not.toContain("list-picker-item-highlighted");
+            expect(item_1.classList.contains("list-picker-item-highlighted")).toBe(false);
+            expect(item_2.classList.contains("list-picker-item-highlighted")).toBe(true);
+            expect(item_3.classList.contains("list-picker-item-highlighted")).toBe(false);
 
             highlighter.highlightItem(item_3);
 
-            expect(item_1.classList).not.toContain("list-picker-item-highlighted");
-            expect(item_2.classList).not.toContain("list-picker-item-highlighted");
-            expect(item_3.classList).toContain("list-picker-item-highlighted");
+            expect(item_1.classList.contains("list-picker-item-highlighted")).toBe(false);
+            expect(item_2.classList.contains("list-picker-item-highlighted")).toBe(false);
+            expect(item_3.classList.contains("list-picker-item-highlighted")).toBe(true);
         });
     });
 });

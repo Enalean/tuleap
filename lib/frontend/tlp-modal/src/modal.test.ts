@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { Modal } from "./modal";
 import {
     createModal,
@@ -147,13 +148,10 @@ describe(`Modal`, () => {
         it(`given the modal had the "destroy_on_hide" option, it will destroy the modal`, () => {
             const first_closing_element = doc.createElement("span");
             first_closing_element.dataset.dismiss = "modal";
-            const removeFirstClickListener = jest.spyOn(
-                first_closing_element,
-                "removeEventListener"
-            );
+            const removeFirstClickListener = vi.spyOn(first_closing_element, "removeEventListener");
             const second_closing_element = doc.createElement("span");
             second_closing_element.dataset.dismiss = "modal";
-            const removeSecondClickListener = jest.spyOn(
+            const removeSecondClickListener = vi.spyOn(
                 second_closing_element,
                 "removeEventListener"
             );
@@ -206,7 +204,7 @@ describe(`Modal`, () => {
             const data_modal_focus_element = doc.createElement("div");
             data_modal_focus_element.setAttribute("data-modal-focus", "");
             modal_element.append(form_element, data_modal_focus_element);
-            const focus = jest.spyOn(data_modal_focus_element, "focus");
+            const focus = vi.spyOn(data_modal_focus_element, "focus");
 
             modal.show();
 
@@ -216,7 +214,7 @@ describe(`Modal`, () => {
         it(`focuses the first form element when modal opens`, () => {
             const form_element = doc.createElement("input");
             modal_element.appendChild(form_element);
-            const focus = jest.spyOn(form_element, "focus");
+            const focus = vi.spyOn(form_element, "focus");
 
             modal.show();
 
@@ -227,7 +225,7 @@ describe(`Modal`, () => {
             const data_dismiss_element = doc.createElement("div");
             data_dismiss_element.setAttribute("data-dismiss", "modal");
             modal_element.appendChild(data_dismiss_element);
-            const focus = jest.spyOn(data_dismiss_element, "focus");
+            const focus = vi.spyOn(data_dismiss_element, "focus");
 
             modal.show();
 
@@ -349,7 +347,7 @@ describe(`Modal`, () => {
     describe(`removeEventListener`, () => {
         it(`removes a listener from the modal`, () => {
             const modal = createModal(doc, modal_element);
-            const listener = jest.fn();
+            const listener = vi.fn();
             modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, listener);
             modal.show();
 
@@ -391,7 +389,7 @@ describe(`Modal`, () => {
         });
 
         it(`when it is destroyed, the modal will remove its keyup listener`, () => {
-            const removeEventListener = jest.spyOn(doc, "removeEventListener");
+            const removeEventListener = vi.spyOn(doc, "removeEventListener");
             modal.destroy();
 
             expect(removeEventListener).toHaveBeenCalledWith("keyup", expect.anything());
