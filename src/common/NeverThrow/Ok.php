@@ -80,6 +80,11 @@ final class Ok implements IResult
         return new Ok($this->value);
     }
 
+    /**
+     * @template TReturn
+     * @param callable(TValue): TReturn $ok_fn
+     * @return TReturn
+     */
     public function match(callable $ok_fn, callable $err_fn): mixed
     {
         return $ok_fn($this->value);

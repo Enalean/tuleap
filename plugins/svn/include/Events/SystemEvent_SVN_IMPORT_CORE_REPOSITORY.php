@@ -24,7 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Events;
 
 use SystemEventManager;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\SVN\Logs\LastAccessDao;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
@@ -88,49 +93,82 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
      */
     public function process(): bool
     {
-        $repository = $this->repository_manager->getCoreRepository($this->getProjectFromParameters());
+        return $this->getProjectFromParameters()
+            ->andThen(
+                /**
+                 * @return Ok<Repository>|Err<Fault>
+                 */
+                function (\Project $project): Ok|Err {
+                    try {
+                        return Result::ok($this->repository_manager->getCoreRepository($project));
+                    } catch (CannotFindRepositoryException $exception) {
+                        return Result::err(Fault::fromThrowableWithMessage($exception, 'Repository cannot be found'));
+                    }
+                }
+            )->andThen(
+                /**
+                 * @return Ok<null>|Err<Fault>
+                 */
+                function (Repository $repository): Ok|Err {
+                    $repository_hooks_path = realpath($repository->getSystemPath() . '/hooks');
+                    foreach (self::HOOK_FILES as $file) {
+                        $hook_file_path = $repository_hooks_path . '/' . $file;
+                        if (is_file($hook_file_path)) {
+                            unlink($hook_file_path);
+                        }
+                    }
 
-        $repository_hooks_path = realpath($repository->getSystemPath() . '/hooks');
-        foreach (self::HOOK_FILES as $file) {
-            $hook_file_path = $repository_hooks_path . '/' . $file;
-            if (is_file($hook_file_path)) {
-                unlink($hook_file_path);
-            }
-        }
+                    $this->last_access_dao->importCoreLastCommitDate($repository);
 
-        $this->last_access_dao->importCoreLastCommitDate($repository);
+                    $status = $this->backend_svn->updateHooks(
+                        $repository->getProject(),
+                        $repository->getSystemPath(),
+                        true,
+                        dirname(__DIR__, 2) . '/bin',
+                        basename(__DIR__ . '/../../bin/svn_post_commit.php'),
+                        dirname(__DIR__, 4) . '/src/utils/php-launcher.sh',
+                        basename(__DIR__ . '/../../bin/svn_pre_commit.php'),
+                    );
 
-        $status = $this->backend_svn->updateHooks(
-            $repository->getProject(),
-            $repository->getSystemPath(),
-            true,
-            dirname(__DIR__, 2) . '/bin',
-            basename(__DIR__ . '/../../bin/svn_post_commit.php'),
-            dirname(__DIR__, 4) . '/src/utils/php-launcher.sh',
-            basename(__DIR__ . '/../../bin/svn_pre_commit.php'),
-        );
-        if (! $status) {
-            $this->error('Hooks cannot be updated');
-            return false;
-        }
-
-        $this->done();
-        return true;
+                    if ($status) {
+                        return Result::ok(null);
+                    }
+                    return Result::err(Fault::fromMessage('Hooks cannot be updated'));
+                }
+            )->match(
+                function (): bool {
+                    $this->done();
+                    return true;
+                },
+                function (Fault $fault): bool {
+                    $this->error($fault->__toString());
+                    return false;
+                }
+            );
     }
 
     public function verbalizeParameters($with_link): string
     {
-        $project = $this->getProjectFromParameters();
-        return $this->verbalizeProjectId($project->getID(), $with_link);
+        /**
+         * @psalm-trace $result
+         */
+        $result = $this->getProjectFromParameters();
+        return $result->match(
+            fn (\Project $project): string => $this->verbalizeProjectId($project->getID(), $with_link),
+            fn (Fault $fault): string => $fault->__toString(),
+        );
     }
 
-    private function getProjectFromParameters(): \Project
+    /**
+     * @return Ok<\Project>|Err<Fault>
+     */
+    private function getProjectFromParameters(): Ok|Err
     {
         $project = $this->project_manager->getProject((int) $this->getRequiredParameter(0));
         if (! $project || $project->isError() || ! $project->isActive()) {
-            throw new \RuntimeException('Project doesnt exist or is no longer active');
+            return Result::err(Fault::fromMessage('Associated project cannot be found (or is not active)'));
         }
-        return $project;
+        return Result::ok($project);
     }
 
     public static function queueEvent(SystemEventManager $system_event_manager, Repository $repository): void

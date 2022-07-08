@@ -80,6 +80,11 @@ final class Err implements IResult
         return $fn($this->error);
     }
 
+    /**
+     * @template TReturn
+     * @param callable(TError): TReturn $err_fn
+     * @return TReturn
+     */
     public function match(callable $ok_fn, callable $err_fn): mixed
     {
         return $err_fn($this->error);
