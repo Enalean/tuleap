@@ -93,6 +93,7 @@ $GLOBALS['wgCSPHeader'] = true;
 // MediaWiki Core default settings - END ###
 
 // Tuleap Specific - START ###
+$GLOBALS['wgTuleapEnableLocalLogin'] = false;
 wfLoadExtension('TuleapIntegration');
 $GLOBALS['wgTuleapOAuth2Config']['redirectUri']
     // "_oauth" is a virtual instance served by `Extension:TuleapWikifarm`
@@ -102,7 +103,6 @@ wfLoadSkin('TuleapSkin');
 
 $GLOBALS['wgSkipSkins'] = ['timeless', 'monobook', 'vector'];
 
-$GLOBALS['wgHiddenPrefs'][] = 'language';
 $GLOBALS['wgHiddenPrefs'][] = 'variant';
 $GLOBALS['wgHiddenPrefs'][] = 'noconvertlink';
 
@@ -132,6 +132,7 @@ $GLOBALS['wgDebugLogGroups'] = [
     'exception' => '/var/log/tuleap/mediawiki_log',
     'error' => '/var/log/tuleap/mediawiki_log',
     'fatal' => '/var/log/tuleap/mediawiki_log',
+    'TuleapFarm' => '/var/log/tuleap/mediawiki_log',
 ];
 
 // Tuleap Specific - END ###

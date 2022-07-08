@@ -68,12 +68,12 @@
     }
   ],
   "require": {
-    "mediawiki/math": "^1.35.6",
     "mediawiki/labeled-section-transclusion": "^1.35.6",
+    "mediawiki/math": "^1.35.6",
     "mediawiki/pdf-book": "^2.0.5",
-    "mediawiki/tuleap-integration": "dev-master#e4acab5488f80969fea1375f92a18e108ab5214d",
-    "mediawiki/tuleap-wiki-farm": "dev-master#0c1261fef5678d173dbd52affadd94dc0d35caa2",
-    "mediawiki/tuleap-skin": "dev-master#bdb67177fcedca87c805cf225692fe36bd07b133"
+    "mediawiki/tuleap-integration": "dev-master#48b33e02401d9dfca981eba1b0af023c391fc5bb",
+    "mediawiki/tuleap-skin": "dev-master#b3f3a23781ca299c1fa59d44986b70d7f64f7b3f",
+    "mediawiki/tuleap-wiki-farm": "dev-master#7e83f9793d60e8fa8dc185ef98d506ebf5b37e7d"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
