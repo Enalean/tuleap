@@ -28,7 +28,7 @@ use Tracker_Report_Renderer_Table;
 class TableRendererForReportRetriever
 {
     /**
-     * @return Tracker_Report_Renderer_Table[]
+     * @return list<Tracker_Report_Renderer_Table>
      */
     public function getTableReportRendererForReport(Tracker_Report $report): array
     {

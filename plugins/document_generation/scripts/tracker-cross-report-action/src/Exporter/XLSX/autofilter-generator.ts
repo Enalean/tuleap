@@ -26,7 +26,11 @@ const STARTING_COLUMN = "A";
 const STARTING_ROW = 2;
 
 export function generateAutofilterRange(formatted_data: ReportSection): string {
-    if (formatted_data.headers === undefined || formatted_data.artifacts_rows === undefined) {
+    if (
+        formatted_data.headers === undefined ||
+        formatted_data.artifacts_rows === undefined ||
+        formatted_data.headers.reports_fields_labels.length <= 0
+    ) {
         return "";
     }
 

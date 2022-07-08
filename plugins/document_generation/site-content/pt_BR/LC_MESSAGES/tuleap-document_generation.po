@@ -12,6 +12,9 @@ msgstr ""
 msgid "Export Tuleap tracker reports as documents."
 msgstr ""
 
+msgid "Export all report columns"
+msgstr ""
+
 msgid "Generate cross trackers document"
 msgstr ""
 

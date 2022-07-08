@@ -39,22 +39,26 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
     {
         $current_project_id = 999;
 
-        $tracker           = TrackerTestBuilder::aTracker()
+        $tracker             = TrackerTestBuilder::aTracker()
             ->withId(789)->withName('Tracker Name')
             ->withProject(ProjectTestBuilder::aProject()->withId($current_project_id)->build())
             ->build();
-        $current_report_id = 101;
-        $current_report    = self::buildReport($tracker, $current_report_id, 'Public', null);
+        $current_report_id   = 101;
+        $current_report_name = 'Public';
+        $current_report      = self::buildReport($tracker, $current_report_id, $current_report_name, null);
 
         $props = $this->fetcher->fetchExportProperties(
             $tracker,
             $current_report,
+            new \Tracker_Report_Renderer_Table(136, $current_report, 'Renderer', '', 1, 10, false)
         );
 
         self::assertEquals($current_project_id, $props->current_project_id);
         self::assertEquals(789, $props->current_tracker_id);
         self::assertEquals('Tracker Name', $props->current_tracker_name);
         self::assertEquals($current_report_id, $props->current_report_id);
+        self::assertEquals($current_report_name, $props->current_report_name);
+        self::assertEquals(136, $props->current_renderer_id);
     }
 
     private static function buildReport(\Tracker $tracker, int $id, string $name, ?\PFUser $owned_by): \Tracker_Report

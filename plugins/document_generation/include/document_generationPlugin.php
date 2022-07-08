@@ -120,7 +120,7 @@ class document_generationPlugin extends Plugin
                 'tracker-cross-report-action',
                 [
                     'properties' => json_encode(
-                        $cross_report_properties_fetcher->fetchExportProperties($tracker, $report),
+                        $cross_report_properties_fetcher->fetchExportProperties($tracker, $report, $event->getRendererTable()),
                         JSON_THROW_ON_ERROR
                     ),
                 ]

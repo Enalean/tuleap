@@ -28,14 +28,19 @@ import type { ArtifactForCrossReportDocGen } from "./type";
 
 export function getReportArtifacts(
     report_id: number,
-    report_has_changed: boolean
+    report_has_changed: boolean,
+    table_renderer_id: number | undefined
 ): Promise<ArtifactForCrossReportDocGen[]> {
+    const params: Record<string, number | string | boolean> = {
+        values: "from_table_renderer",
+        with_unsaved_changes: report_has_changed,
+        limit: 50,
+    };
+    if (table_renderer_id !== undefined) {
+        params.table_renderer_id = table_renderer_id;
+    }
     return recursiveGet(`/api/v1/tracker_reports/${encodeURIComponent(report_id)}/artifacts`, {
-        params: {
-            values: "from_table_renderer",
-            with_unsaved_changes: report_has_changed,
-            limit: 50,
-        },
+        params,
     });
 }
 
