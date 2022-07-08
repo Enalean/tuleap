@@ -114,7 +114,7 @@ import { addFeedback } from "@tuleap/fp-feedback";
 import { useGettext } from "vue3-gettext";
 
 let modal: Modal | null = null;
-const { $gettext } = useGettext();
+const { $gettext, interpolate } = useGettext();
 const root_element = ref<InstanceType<typeof Element>>();
 const reference = ref("");
 const error_message = ref("");
@@ -160,12 +160,32 @@ function onClickCreateBranch(): Promise<void> {
     const repository: GitRepository = selected.value;
     return postGitBranch(repository.id, props.branch_name_preview, reference.value).match(
         () => {
-            addFeedback("info", $gettext("Git Branch successfully created."));
+            const success_message = interpolate(
+                $gettext(
+                    'The branch <a href="%{ branch_url }">%{ branch_name }</a> has been successfully created on <a href="%{ repo_url }">%{ repo_name }</a>'
+                ),
+                {
+                    branch_name: props.branch_name_preview,
+                    branch_url:
+                        repository.html_url +
+                        "?a=tree&hb=" +
+                        encodeURIComponent(props.branch_name_preview),
+                    repo_url: repository.html_url,
+                    repo_name: repository.name,
+                }
+            );
+
+            addFeedback("info", success_message);
             is_creating_branch.value = false;
             modal?.hide();
         },
-        () => {
-            error_message.value = $gettext("An error occurred while creating the Git branch.");
+        (fault) => {
+            error_message.value = interpolate(
+                $gettext(
+                    "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
+                ),
+                { branch_name: props.branch_name_preview, error: String(fault) }
+            );
             is_creating_branch.value = false;
         }
     );

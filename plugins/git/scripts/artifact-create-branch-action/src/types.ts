@@ -21,4 +21,5 @@ export interface GitRepository {
     readonly id: number;
     readonly name: string;
     readonly default_branch: string;
+    readonly html_url: string;
 }

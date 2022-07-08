@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Git\REST\v1\Branch;
 
 use Git_Command_Exception;
-use Luracast\Restler\RestException;
 use Tuleap\Git\Branch\BranchCreationExecutor;
 use Tuleap\Git\Branch\CannotCreateNewBranchException;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\REST\v1\GitBranchPOSTRepresentation;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -96,8 +96,7 @@ final class BranchCreatorTest extends TestCase
         $this->branch_creation_executor->expects(self::never())
             ->method("createNewBranch");
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionMessage("You are not allowed to create the branch new_branch in repository repo01");
+        $this->expectException(I18NRestException::class);
 
         $this->creator->createBranch(
             $this->buildMockUserWithoutPermissions(),
@@ -114,8 +113,7 @@ final class BranchCreatorTest extends TestCase
         $this->branch_creation_executor->expects(self::never())
             ->method("createNewBranch");
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionMessage("The branch name new~branch is not a valid branch name");
+        $this->expectException(I18NRestException::class);
 
         $this->creator->createBranch(
             $this->buildMockUserWithPermissions(),
@@ -132,8 +130,7 @@ final class BranchCreatorTest extends TestCase
         $this->branch_creation_executor->expects(self::never())
             ->method("createNewBranch");
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionMessage("The object tag01 is neither a branch nor a commit in repository repo01.");
+        $this->expectException(I18NRestException::class);
 
         $this->creator->createBranch(
             $this->buildMockUserWithPermissions(),
@@ -150,8 +147,7 @@ final class BranchCreatorTest extends TestCase
         $this->branch_creation_executor->expects(self::never())
             ->method("createNewBranch");
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionMessage("The branch existing_branch_01 already exists in the repository repo01");
+        $this->expectException(I18NRestException::class);
 
         $this->creator->createBranch(
             $this->buildMockUserWithPermissions(),
@@ -172,8 +168,7 @@ final class BranchCreatorTest extends TestCase
             new Git_Command_Exception("cmd", [], 128)
         );
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionMessage("The object 0 does not exist in the repository repo01");
+        $this->expectException(I18NRestException::class);
 
         $this->creator->createBranch(
             $this->buildMockUserWithPermissions(),
@@ -193,8 +188,7 @@ final class BranchCreatorTest extends TestCase
                 new CannotCreateNewBranchException("")
             );
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionMessageMatches("*An error occurred while creating the branch*");
+        $this->expectException(I18NRestException::class);
 
         $this->creator->createBranch(
             $this->buildMockUserWithPermissions(),

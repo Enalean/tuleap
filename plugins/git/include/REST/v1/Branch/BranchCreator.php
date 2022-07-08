@@ -22,13 +22,13 @@
 namespace Tuleap\Git\REST\v1\Branch;
 
 use Git_Command_Exception;
-use Luracast\Restler\RestException;
 use Tuleap\Git\Branch\BranchCreationExecutor;
 use Tuleap\Git\Branch\BranchName;
 use Tuleap\Git\Branch\CannotCreateNewBranchException;
 use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\REST\v1\GitBranchPOSTRepresentation;
+use Tuleap\REST\I18NRestException;
 
 class BranchCreator
 {
@@ -42,27 +42,27 @@ class BranchCreator
     }
 
     /**
-     * @throws RestException
+     * @throws I18NRestException
      */
     public function createBranch(\PFUser $user, \GitRepository $repository, GitBranchPOSTRepresentation $representation): void
     {
         try {
             BranchName::fromBranchNameShortHand($representation->branch_name);
         } catch (InvalidBranchNameException $exception) {
-            throw new RestException(
+            throw new I18NRestException(
                 400,
                 sprintf(
-                    "The branch name %s is not a valid branch name",
+                    dgettext("tuleap-git", "The branch name %s is not a valid branch name"),
                     $representation->branch_name
                 )
             );
         }
 
         if (! $this->access_control_verifier->canWrite($user, $repository, self::BRANCH_PREFIX . $representation->branch_name)) {
-            throw new RestException(
+            throw new I18NRestException(
                 403,
                 sprintf(
-                    "You are not allowed to create the branch %s in repository %s",
+                    dgettext("tuleap-git", "You are not allowed to create the branch %s in repository %s"),
                     $representation->branch_name,
                     $repository->getName()
                 )
@@ -71,10 +71,10 @@ class BranchCreator
 
         $all_branches_names = $this->git_exec->getAllBranchesSortedByCreationDate();
         if (in_array($representation->branch_name, $all_branches_names)) {
-            throw new RestException(
+            throw new I18NRestException(
                 400,
                 sprintf(
-                    "The branch %s already exists in the repository %s",
+                    dgettext("tuleap-git", "The branch %s already exists in the repository %s"),
                     $representation->branch_name,
                     $repository->getName()
                 )
@@ -84,10 +84,10 @@ class BranchCreator
         try {
             $object_type = $this->git_exec->getObjectType($representation->reference);
         } catch (Git_Command_Exception $exception) {
-            throw new RestException(
+            throw new I18NRestException(
                 400,
                 sprintf(
-                    "The object %s does not exist in the repository %s",
+                    dgettext("tuleap-git", "The object %s does not exist in the repository %s"),
                     $representation->reference,
                     $repository->getName()
                 )
@@ -98,10 +98,10 @@ class BranchCreator
             ! in_array($representation->reference, $all_branches_names)
             && $object_type !== 'commit'
         ) {
-            throw new RestException(
+            throw new I18NRestException(
                 400,
                 sprintf(
-                    "The object %s is neither a branch nor a commit in repository %s.",
+                    dgettext("tuleap-git", "The object %s is neither a branch nor a commit in repository %s."),
                     $representation->reference,
                     $repository->getName()
                 )
@@ -115,9 +115,12 @@ class BranchCreator
                 $representation->reference
             );
         } catch (CannotCreateNewBranchException $exception) {
-            throw new RestException(
+            throw new I18NRestException(
                 500,
-                "An error occurred while creating the branch: " . $exception->getMessage()
+                sprintf(
+                    dgettext("tuleap-git", "An error occurred while creating the branch: %s"),
+                    $exception->getMessage()
+                )
             );
         }
     }
