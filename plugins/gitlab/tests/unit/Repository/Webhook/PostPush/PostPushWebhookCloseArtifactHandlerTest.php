@@ -35,6 +35,7 @@ use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\Gitlab\Repository\Webhook\ClosingKeyword;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -118,7 +119,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->logger                 = new TestLogger();
         $this->status_semantic        = $this->createMock(Tracker_Semantic_Status::class);
         $this->credentials            = $this->createMock(Credentials::class);
-        $this->reference              = new WebhookTuleapReference(self::ARTIFACT_ID, 'resolve');
+        $this->reference              = new WebhookTuleapReference(self::ARTIFACT_ID, ClosingKeyword::buildResolves());
         $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
             ChangesetTestBuilder::aChangeset('7290')->build()
@@ -207,7 +208,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     public function testItDoesNothingIfNoCloseKeywordDefined(): void
     {
-        $this->reference = new WebhookTuleapReference(self::ARTIFACT_ID);
+        $this->reference = new WebhookTuleapReference(self::ARTIFACT_ID, null);
 
         $this->handleArtifactClosure();
 

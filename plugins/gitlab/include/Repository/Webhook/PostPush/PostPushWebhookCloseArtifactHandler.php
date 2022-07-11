@@ -98,7 +98,7 @@ class PostPushWebhookCloseArtifactHandler
         PostPushCommitWebhookData $post_push_commit_webhook_data,
         GitlabRepositoryIntegration $gitlab_repository_integration,
     ): void {
-        if ($tuleap_reference->getCloseArtifactKeyword() === null) {
+        if ($tuleap_reference->getClosingKeyword() === null) {
             return;
         }
 

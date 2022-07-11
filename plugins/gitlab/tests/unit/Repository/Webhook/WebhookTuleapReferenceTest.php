@@ -22,12 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-class WebhookTuleapReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebhookTuleapReferenceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItCanBeConvertedToStringForArrayDiffOperations(): void
     {
         $ref = new WebhookTuleapReference(123, null);
 
-        self::assertEquals("123", (string) $ref);
+        self::assertSame('123', (string) $ref);
+    }
+
+    public function testItBuildsAReferenceWithAClosingKeyword(): void
+    {
+        $ref = new WebhookTuleapReference(123, ClosingKeyword::buildFixes());
+
+        self::assertSame(123, $ref->getId());
+        self::assertNotNull($ref->getClosingKeyword());
+    }
+
+    public function testItBuildsWithoutClosingKeyword(): void
+    {
+        $ref = new WebhookTuleapReference(93, null);
+
+        self::assertSame(93, $ref->getId());
+        self::assertNull($ref->getClosingKeyword());
     }
 }

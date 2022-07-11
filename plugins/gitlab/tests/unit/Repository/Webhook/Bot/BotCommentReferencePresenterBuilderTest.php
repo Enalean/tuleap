@@ -41,7 +41,7 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItReturnsPresenterWithOneReference(): void
     {
-        $references = [new WebhookTuleapReference(123)];
+        $references = [new WebhookTuleapReference(123, null)];
 
         $presenters = $this->builder->build($references);
         self::assertCount(1, $presenters);
@@ -51,7 +51,7 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItReturnsPresenterWithMultipleReferences(): void
     {
-        $references = [new WebhookTuleapReference(123), new WebhookTuleapReference(59)];
+        $references = [new WebhookTuleapReference(123, null), new WebhookTuleapReference(59, null)];
 
         $presenters = $this->builder->build($references);
         self::assertCount(2, $presenters);

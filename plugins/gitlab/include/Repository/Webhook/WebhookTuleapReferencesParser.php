@@ -23,62 +23,20 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class WebhookTuleapReferencesParser
 {
-    private const RESOLVE_KEYWORDS = [
-        'resolve',
-        'resolves',
-        'resolved',
-        'resolving',
-    ];
-
-    private const CLOSE_KEYWORDS = [
-        'close',
-        'closes',
-        'closed',
-        'closing',
-    ];
-
-    private const FIX_KEYWORDS = [
-        'fix',
-        'fixes',
-        'fixed',
-        'fixing',
-    ];
-
-    private const IMPLEMENT_KEYWORDS = [
-        'implement',
-        'implements',
-        'implemented',
-        'implementing',
-    ];
-
-    public const  RESOLVES_KEYWORD   = "resolves";
-    public const  CLOSES_KEYWORD     = "closes";
-    public const  FIXES_KEYWORD      = "fixes";
-    public const  IMPLEMENTS_KEYWORD = "implements";
-
     public function extractCollectionOfTuleapReferences(
         string $message,
     ): WebhookTuleapReferenceCollection {
         $matches = [];
-        $pattern = '/(' . $this->buildClosureKeywordsRegexpPart() . ')?(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
+        $pattern = '/(' . ClosingKeyword::getKeywordsRegexpPart() . ')?(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
         preg_match_all($pattern, $message, $matches);
 
         $parsed_tuleap_references = [];
         if (isset($matches[2])) {
             for ($match_index = 0; $match_index < count($matches[2]); $match_index++) {
-                $close_artifact_keyword = preg_replace('/\s+/', '', $matches[1][$match_index]);
-                $artifact_id            = $matches[2][$match_index];
-                if (in_array(strtolower($close_artifact_keyword), self::RESOLVE_KEYWORDS) === true) {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::RESOLVES_KEYWORD);
-                } elseif (in_array(strtolower($close_artifact_keyword), self::CLOSE_KEYWORDS) === true) {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::CLOSES_KEYWORD);
-                } elseif (in_array(strtolower($close_artifact_keyword), self::FIX_KEYWORDS) === true) {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::FIXES_KEYWORD);
-                } elseif (in_array(strtolower($close_artifact_keyword), self::IMPLEMENT_KEYWORDS) === true) {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, self::IMPLEMENTS_KEYWORD);
-                } else {
-                    $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, null);
-                }
+                $close_artifact_keyword     = preg_replace('/\s+/', '', $matches[1][$match_index]);
+                $artifact_id                = $matches[2][$match_index];
+                $keyword                    = ClosingKeyword::fromString($close_artifact_keyword);
+                $parsed_tuleap_references[] = new WebhookTuleapReference((int) $artifact_id, $keyword);
             }
         }
 
@@ -87,22 +45,5 @@ class WebhookTuleapReferencesParser
         return WebhookTuleapReferenceCollection::fromReferences(
             ...array_values(array_unique($parsed_tuleap_references))
         );
-    }
-
-    private function buildClosureKeywordsRegexpPart(): string
-    {
-        $all_keywords = array_merge(
-            self::CLOSE_KEYWORDS,
-            self::FIX_KEYWORDS,
-            self::RESOLVE_KEYWORDS,
-            self::IMPLEMENT_KEYWORDS,
-        );
-
-        $regexp = implode(
-            '|',
-            array_map('preg_quote', $all_keywords)
-        );
-
-        return '(?:' . $regexp . ')\s?';
     }
 }

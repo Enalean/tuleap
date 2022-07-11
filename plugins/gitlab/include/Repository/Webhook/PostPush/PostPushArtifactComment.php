@@ -25,7 +25,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingCommentInCommonMarkFormat;
 
@@ -45,23 +44,17 @@ final class PostPushArtifactComment implements ArtifactClosingCommentInCommonMar
         GitlabRepositoryIntegration $gitlab_repository_integration,
         Artifact $artifact,
     ): self {
-        if (
-            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::RESOLVES_KEYWORD &&
-            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::CLOSES_KEYWORD &&
-            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::FIXES_KEYWORD &&
-            $tuleap_reference->getCloseArtifactKeyword() !== WebhookTuleapReferencesParser::IMPLEMENTS_KEYWORD
-        ) {
+        $closing_keyword = $tuleap_reference->getClosingKeyword();
+        if ($closing_keyword === null) {
             return new self('');
         }
 
-        $action_word = "solved";
-        if ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::CLOSES_KEYWORD) {
-            $action_word = "closed";
-        } elseif ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::FIXES_KEYWORD) {
-            $action_word = "{$artifact->getTracker()->getItemName()} fixed";
-        } elseif ($tuleap_reference->getCloseArtifactKeyword() === WebhookTuleapReferencesParser::IMPLEMENTS_KEYWORD) {
-            $action_word = "implemented";
-        }
+        $action_word = $closing_keyword->match(
+            'solved',
+            'closed',
+            "{$artifact->getTracker()->getItemName()} fixed",
+            'implemented',
+        );
 
         return new self(
             "$action_word by $user_name with " . GitlabCommitReference::REFERENCE_NAME . " #{$gitlab_repository_integration->getName()}/{$commit->getSha1()}"
