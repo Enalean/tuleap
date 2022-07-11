@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 /**
  * I hold a keyword to close an Artifact. Multiple variants of each keyword are supported.
