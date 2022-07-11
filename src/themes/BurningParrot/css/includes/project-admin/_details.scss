@@ -46,6 +46,34 @@
     }
 }
 
+.project-admin-icon-picker {
+    z-index: 10000; // avoid to be under the select2
+
+    &[class*="themes_lightTheme"] {
+        --accent-color: var(--tlp-main-color);
+        --category-tab-color: var(--tlp-dimmed-color);
+        --background-color: var(--tlp-fade-background-color);
+        --secondary-background-color: var(--tlp-fade-background-color-darker-01);
+        --hover-background-color: var(--tlp-main-color-hover-background);
+        --text-color: var(--tlp-typo-default-text-color);
+        --tag-background-color: var(--tlp-neutral-dark-color);
+        --category-name-text-color: var(--tlp-main-color);
+        --search-background-color: var(--tlp-white-color);
+    }
+
+    > button {
+        z-index: 10001;
+    }
+
+    // reset header styles set by BurningParrot for main header
+    header {
+        position: relative;
+        z-index: auto;
+        justify-content: normal;
+        transition: none;
+    }
+}
+
 .project-admin-details-form {
     display: flex;
     flex-direction: column;

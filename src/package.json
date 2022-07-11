@@ -7,7 +7,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
-    "@joeattardi/emoji-button": "^4.6.2",
+    "@picmo/popup-picker": "^5.2.0",
     "@tuleap/autocomplete-for-select2": "link:../lib/frontend/autocomplete-for-select2",
     "@tuleap/copy-to-clipboard": "link:../lib/frontend/copy-to-clipboard",
     "@tuleap/date-helper": "link:../lib/frontend/date-helper",
@@ -38,6 +38,7 @@
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
+    "picmo": "^5.2.0",
     "prismjs": "^1.28.0",
     "slugify": "^1.6.1",
     "sprintf-js": "^1.1.2",
