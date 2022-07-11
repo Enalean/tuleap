@@ -10,10 +10,20 @@ msgid ""
 "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
 msgstr ""
 
+msgid ""
+"An error occurred while creating the associated pull request: %{ error }"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
+msgid "Create a pull request based on this new branch to the default branch"
+msgstr ""
+
 msgid "Create branch"
+msgstr ""
+
+msgid "Create branch and pull request"
 msgstr ""
 
 msgid "Create branch on a Git repository"
@@ -26,6 +36,9 @@ msgid "Must be an existing git commit SHA-1 or a branch name"
 msgstr ""
 
 msgid "Project Git repositories"
+msgstr ""
+
+msgid "The associated pull request has been created."
 msgstr ""
 
 msgid ""

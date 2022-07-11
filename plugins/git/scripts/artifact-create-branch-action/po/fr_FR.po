@@ -1,10 +1,16 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid ""
 "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
@@ -12,11 +18,25 @@ msgstr ""
 "Une erreur est survenue lors de la création de la branche %{ branch_name } : "
 "%{ error }"
 
+msgid ""
+"An error occurred while creating the associated pull request: %{ error }"
+msgstr ""
+"Une erreur est survenue lors de la création de la pull request associée : "
+"%{ error }"
+
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Create a pull request based on this new branch to the default branch"
+msgstr ""
+"Créer une pull request basée sur cette nouvelle branche vers la branche par "
+"défaut"
+
 msgid "Create branch"
 msgstr "Créer la branche"
+
+msgid "Create branch and pull request"
+msgstr "Créer la branche et la pull request"
 
 msgid "Create branch on a Git repository"
 msgstr "Créer une branche dans un dépôt Git"
@@ -29,6 +49,9 @@ msgstr "Doit être le SHA-1 d'un commit existant ou le nom d'une branche"
 
 msgid "Project Git repositories"
 msgstr "Dépôts Git du projet"
+
+msgid "The associated pull request has been created."
+msgstr "La pull request associée a été créée."
 
 msgid ""
 "The branch <a href=\"%{ branch_url }\">%{ branch_name }</a> has been "

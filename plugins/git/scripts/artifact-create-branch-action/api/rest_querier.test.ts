@@ -19,7 +19,11 @@
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { GitRepository } from "../src/types";
-import { getProjectRepositories, postGitBranch } from "./rest_querier";
+import {
+    getProjectRepositories,
+    postGitBranch,
+    postPullRequestOnDefaultBranch,
+} from "./rest_querier";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
 
@@ -44,6 +48,8 @@ describe("API querier", () => {
                 })
             );
         });
+    });
+    describe("postGitBranch", () => {
         it("asks to create the Git branch", async () => {
             const postSpy = jest.spyOn(fetch_result, "postJSON");
             postSpy.mockReturnValue(
@@ -61,6 +67,31 @@ describe("API querier", () => {
             expect(postSpy).toHaveBeenCalledWith("/api/v1/git/27/branches", {
                 branch_name: branch_name,
                 reference: reference,
+            });
+            expect(result.isOk()).toBe(true);
+        });
+    });
+    describe("postPullRequestOnDefaultBranch", () => {
+        it("asks to create the Git branch", async () => {
+            const postSpy = jest.spyOn(fetch_result, "postJSON");
+            postSpy.mockReturnValue(
+                okAsync({
+                    json: () => Promise.resolve({ id: 123 }),
+                } as unknown as Response)
+            );
+
+            const repository: GitRepository = {
+                id: 27,
+                default_branch: "main",
+            } as GitRepository;
+
+            const result = await postPullRequestOnDefaultBranch(repository, "tuleap-123-title");
+
+            expect(postSpy).toHaveBeenCalledWith("/api/v1/pull_requests", {
+                repository_id: 27,
+                repository_dest_id: 27,
+                branch_src: "tuleap-123-title",
+                branch_dest: "main",
             });
             expect(result.isOk()).toBe(true);
         });
