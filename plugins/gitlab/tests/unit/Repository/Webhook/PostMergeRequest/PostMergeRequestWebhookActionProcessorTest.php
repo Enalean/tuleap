@@ -194,7 +194,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->with(
                 $merge_request_webhook_data,
                 $integration,
-                [new WebhookTuleapReference(45)]
+                [new WebhookTuleapReference(45, null)]
             );
 
         $this->processor->process($integration, $merge_request_webhook_data);
@@ -455,7 +455,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
             ->with(
                 $merge_request_webhook_data,
                 $integration,
-                [new WebhookTuleapReference(58)]
+                [new WebhookTuleapReference(58, null)]
             );
 
         $this->processor->process($integration, $merge_request_webhook_data);

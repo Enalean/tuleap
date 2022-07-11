@@ -136,7 +136,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->commenter->addCommentOnCommit(
             $this->webhook_data,
             $this->gitlab_repository,
-            [new WebhookTuleapReference(123)]
+            [new WebhookTuleapReference(123, null)]
         );
     }
 
@@ -161,8 +161,8 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($credentials);
 
         $references = [
-            new WebhookTuleapReference(123),
-            new WebhookTuleapReference(59),
+            new WebhookTuleapReference(123, null),
+            new WebhookTuleapReference(59, null),
         ];
 
         $references_presenter = [
@@ -221,7 +221,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn($credentials);
 
         $references = [
-            new WebhookTuleapReference(123),
+            new WebhookTuleapReference(123, null),
         ];
 
         $references_presenter = [

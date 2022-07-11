@@ -27,8 +27,8 @@ final class WebhookTuleapReferenceCollectionTest extends TestCase
 {
     public function testCreatesCollectionFromSetOfReferences(): void
     {
-        $ref_1 = new WebhookTuleapReference(1);
-        $ref_2 = new WebhookTuleapReference(2);
+        $ref_1 = new WebhookTuleapReference(1, null);
+        $ref_2 = new WebhookTuleapReference(2, null);
 
         $collection = WebhookTuleapReferenceCollection::fromReferences($ref_1, $ref_2);
 
@@ -37,8 +37,8 @@ final class WebhookTuleapReferenceCollectionTest extends TestCase
 
     public function testAggregatesCollection(): void
     {
-        $ref_1 = new WebhookTuleapReference(1);
-        $ref_2 = new WebhookTuleapReference(2);
+        $ref_1 = new WebhookTuleapReference(1, null);
+        $ref_2 = new WebhookTuleapReference(2, null);
 
         $collection = WebhookTuleapReferenceCollection::aggregateCollections(
             WebhookTuleapReferenceCollection::fromReferences($ref_1),
@@ -62,7 +62,7 @@ final class WebhookTuleapReferenceCollectionTest extends TestCase
 
     public function testReferencesAreDeduplicated(): void
     {
-        $reference = new WebhookTuleapReference(1);
+        $reference = new WebhookTuleapReference(1, null);
 
         $collection = WebhookTuleapReferenceCollection::fromReferences($reference, $reference);
 

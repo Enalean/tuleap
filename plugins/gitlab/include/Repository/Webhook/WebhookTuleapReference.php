@@ -24,23 +24,10 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 /**
  * @psalm-immutable
  */
-class WebhookTuleapReference
+final class WebhookTuleapReference
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * Supported keys: 'resolves', 'closes' or 'fixes'
-     * @var string | null
-     */
-    private $close_artifact_keyword;
-
-    public function __construct(int $id, ?string $close_artifact_keyword = null)
+    public function __construct(private int $id, private ?ClosingKeyword $closing_keyword)
     {
-        $this->id                     = $id;
-        $this->close_artifact_keyword = $close_artifact_keyword;
     }
 
     public function getId(): int
@@ -48,9 +35,9 @@ class WebhookTuleapReference
         return $this->id;
     }
 
-    public function getCloseArtifactKeyword(): ?string
+    public function getClosingKeyword(): ?ClosingKeyword
     {
-        return $this->close_artifact_keyword;
+        return $this->closing_keyword;
     }
 
     public function __toString(): string

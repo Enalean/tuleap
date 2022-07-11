@@ -280,8 +280,8 @@ class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
 
         self::assertEquals(
             [
-                new WebhookTuleapReference(8),
-                new WebhookTuleapReference(58),
+                new WebhookTuleapReference(8, null),
+                new WebhookTuleapReference(58, null),
             ],
             $this->retriever->retrievePreviousReferences($webhook_data, $integration)
         );

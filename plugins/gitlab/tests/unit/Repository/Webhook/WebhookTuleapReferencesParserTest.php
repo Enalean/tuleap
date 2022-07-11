@@ -19,9 +19,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
-
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+namespace Tuleap\Gitlab\Repository\Webhook;
 
 final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -48,9 +46,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame(123, $references[0]->getId());
         self::assertSame(234, $references[1]->getId());
         self::assertSame(345, $references[2]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
-        self::assertNull($references[1]->getCloseArtifactKeyword());
-        self::assertNull($references[2]->getCloseArtifactKeyword());
+        self::assertNull($references[0]->getClosingKeyword());
+        self::assertNull($references[1]->getClosingKeyword());
+        self::assertNull($references[2]->getClosingKeyword());
     }
 
     public function testItReturnsReferencesSortedById(): void
@@ -62,9 +60,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame(2, $references[0]->getId());
         self::assertSame(10, $references[1]->getId());
         self::assertSame(66, $references[2]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
-        self::assertNull($references[1]->getCloseArtifactKeyword());
-        self::assertNull($references[2]->getCloseArtifactKeyword());
+        self::assertNull($references[0]->getClosingKeyword());
+        self::assertNull($references[1]->getClosingKeyword());
+        self::assertNull($references[2]->getClosingKeyword());
     }
 
     public function testItRetrievesTuleapReferencesWithMixedCharsInSingleLineMessage(): void
@@ -74,7 +72,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertCount(1, $references);
         self::assertSame(12, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertNull($references[0]->getClosingKeyword());
     }
 
     public function testItRetrievesTuleapReferencesInMultipleLinesMessage(): void
@@ -88,9 +86,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertSame(123, $references[0]->getId());
         self::assertSame(254, $references[1]->getId());
         self::assertSame(898, $references[2]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
-        self::assertNull($references[1]->getCloseArtifactKeyword());
-        self::assertNull($references[2]->getCloseArtifactKeyword());
+        self::assertNull($references[0]->getClosingKeyword());
+        self::assertNull($references[1]->getClosingKeyword());
+        self::assertNull($references[2]->getClosingKeyword());
     }
 
     public function testItRetrievesTuleapReferencesOnlyOnce(): void
@@ -110,7 +108,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertCount(1, $references);
         self::assertSame(123, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertNull($references[0]->getClosingKeyword());
     }
 
     public function testItDoesNotRetrievesTuleapReferenceThatDoesNotReferenceIntegerIds(): void
@@ -143,7 +141,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertCount(1, $references, "${char}TULEAP-123 should be parsed");
         self::assertSame(123, $references[0]->getId());
-        self::assertNull($references[0]->getCloseArtifactKeyword());
+        self::assertNull($references[0]->getClosingKeyword());
     }
 
     /**
@@ -177,9 +175,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertSame(15, $references[0]->getId());
         if ($reference_must_be_found) {
-            self::assertSame('resolves', $references[0]->getCloseArtifactKeyword());
+            self::assertNotNull($references[0]->getClosingKeyword());
         } else {
-            self::assertNull($references[0]->getCloseArtifactKeyword());
+            self::assertNull($references[0]->getClosingKeyword());
         }
     }
 
@@ -221,16 +219,16 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertSame('resolves', $references[0]->getCloseArtifactKeyword());
+        self::assertNotNull($references[0]->getClosingKeyword());
 
         self::assertSame(36, $references[1]->getId());
-        self::assertSame('resolves', $references[1]->getCloseArtifactKeyword());
+        self::assertNotNull($references[1]->getClosingKeyword());
 
         self::assertSame(68, $references[2]->getId());
-        self::assertSame('resolves', $references[2]->getCloseArtifactKeyword());
+        self::assertNotNull($references[2]->getClosingKeyword());
 
         self::assertSame(88, $references[3]->getId());
-        self::assertSame('resolves', $references[3]->getCloseArtifactKeyword());
+        self::assertNotNull($references[3]->getClosingKeyword());
     }
 
     /**
@@ -245,9 +243,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertSame(15, $references[0]->getId());
         if ($reference_must_be_found) {
-            self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
+            self::assertNotNull($references[0]->getClosingKeyword());
         } else {
-            self::assertNull($references[0]->getCloseArtifactKeyword());
+            self::assertNull($references[0]->getClosingKeyword());
         }
     }
 
@@ -289,16 +287,16 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
+        self::assertNotNull($references[0]->getClosingKeyword());
 
         self::assertSame(36, $references[1]->getId());
-        self::assertSame('closes', $references[1]->getCloseArtifactKeyword());
+        self::assertNotNull($references[1]->getClosingKeyword());
 
         self::assertSame(68, $references[2]->getId());
-        self::assertSame('closes', $references[2]->getCloseArtifactKeyword());
+        self::assertNotNull($references[2]->getClosingKeyword());
 
         self::assertSame(88, $references[3]->getId());
-        self::assertSame('closes', $references[3]->getCloseArtifactKeyword());
+        self::assertNotNull($references[3]->getClosingKeyword());
     }
 
     /**
@@ -313,9 +311,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertSame(15, $references[0]->getId());
         if ($reference_must_be_found) {
-            self::assertSame('fixes', $references[0]->getCloseArtifactKeyword());
+            self::assertNotNull($references[0]->getClosingKeyword());
         } else {
-            self::assertNull($references[0]->getCloseArtifactKeyword());
+            self::assertNull($references[0]->getClosingKeyword());
         }
     }
 
@@ -357,16 +355,16 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertSame('fixes', $references[0]->getCloseArtifactKeyword());
+        self::assertNotNull($references[0]->getClosingKeyword());
 
         self::assertSame(36, $references[1]->getId());
-        self::assertSame('fixes', $references[1]->getCloseArtifactKeyword());
+        self::assertNotNull($references[1]->getClosingKeyword());
 
         self::assertSame(68, $references[2]->getId());
-        self::assertSame('fixes', $references[2]->getCloseArtifactKeyword());
+        self::assertNotNull($references[2]->getClosingKeyword());
 
         self::assertSame(88, $references[3]->getId());
-        self::assertSame('fixes', $references[3]->getCloseArtifactKeyword());
+        self::assertNotNull($references[3]->getClosingKeyword());
     }
 
     /**
@@ -381,9 +379,9 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
 
         self::assertSame(15, $references[0]->getId());
         if ($reference_must_be_found) {
-            self::assertSame('implements', $references[0]->getCloseArtifactKeyword());
+            self::assertNotNull($references[0]->getClosingKeyword());
         } else {
-            self::assertNull($references[0]->getCloseArtifactKeyword());
+            self::assertNull($references[0]->getClosingKeyword());
         }
     }
 
@@ -426,16 +424,16 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(4, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertSame('implements', $references[0]->getCloseArtifactKeyword());
+        self::assertNotNull($references[0]->getClosingKeyword());
 
         self::assertSame(36, $references[1]->getId());
-        self::assertSame('implements', $references[1]->getCloseArtifactKeyword());
+        self::assertNotNull($references[1]->getClosingKeyword());
 
         self::assertSame(68, $references[2]->getId());
-        self::assertSame('implements', $references[2]->getCloseArtifactKeyword());
+        self::assertNotNull($references[2]->getClosingKeyword());
 
         self::assertSame(88, $references[3]->getId());
-        self::assertSame('implements', $references[3]->getCloseArtifactKeyword());
+        self::assertNotNull($references[3]->getClosingKeyword());
     }
 
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordsWhenMixed(): void
@@ -449,18 +447,18 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertCount(5, $references);
 
         self::assertSame(15, $references[0]->getId());
-        self::assertSame('closes', $references[0]->getCloseArtifactKeyword());
+        self::assertNotNull($references[0]->getClosingKeyword());
 
         self::assertSame(36, $references[1]->getId());
-        self::assertSame('closes', $references[1]->getCloseArtifactKeyword());
+        self::assertNotNull($references[1]->getClosingKeyword());
 
         self::assertSame(68, $references[2]->getId());
-        self::assertSame('resolves', $references[2]->getCloseArtifactKeyword());
+        self::assertNotNull($references[2]->getClosingKeyword());
 
         self::assertSame(85, $references[3]->getId());
-        self::assertSame('fixes', $references[3]->getCloseArtifactKeyword());
+        self::assertNotNull($references[3]->getClosingKeyword());
 
         self::assertSame(87, $references[4]->getId());
-        self::assertSame('implements', $references[4]->getCloseArtifactKeyword());
+        self::assertNotNull($references[4]->getClosingKeyword());
     }
 }
