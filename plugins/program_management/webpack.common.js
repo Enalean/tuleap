@@ -39,6 +39,9 @@ module.exports = [
         ),
         resolve: {
             extensions: [".js", ".ts", ".vue"],
+            alias: {
+                vue: path.resolve(__dirname, "node_modules", "vue"),
+            },
         },
         externals: {
             tlp: "tlp",

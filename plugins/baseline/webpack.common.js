@@ -33,6 +33,11 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
+        resolve: {
+            alias: {
+                vue: path.resolve(__dirname, "node_modules", "vue"),
+            },
+        },
         externals: {
             tlp: "tlp",
             "@tuleap/tlp": "tlp",

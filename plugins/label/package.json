@@ -9,7 +9,7 @@
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "mustache": "^4.2.0",
-    "vue": "^2.6.14",
+    "vue": "^2.7.4",
     "vue-dompurify-html": "^2.5.1",
     "vue-gettext": "^2.1.12"
   },

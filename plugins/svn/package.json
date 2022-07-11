@@ -7,7 +7,7 @@
   "dependencies": {
     "@tuleap/html-escaper": "link:../../lib/frontend/html-escaper",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
-    "vue": "^2.6.14",
+    "vue": "^2.7.4",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {

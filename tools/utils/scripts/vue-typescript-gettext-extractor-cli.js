@@ -20,17 +20,9 @@
 
 const { execute } = require("./gettext/common-cli");
 const vueTemplateCompiler = require("vue-template-compiler");
-const { transform } = require("unplugin-vue2-script-setup");
 
 const tuleapVue2Compiler = {
-    parse(file) {
-        const vue_script_setup_transform = transform(file, "A.vue");
-        if (vue_script_setup_transform !== null) {
-            return vueTemplateCompiler.parseComponent(vue_script_setup_transform.code);
-        }
-
-        return vueTemplateCompiler.parseComponent(file);
-    },
+    parse: vueTemplateCompiler.parseComponent,
     compile: vueTemplateCompiler.compile,
 };
 

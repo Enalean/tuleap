@@ -46,6 +46,7 @@ module.exports = [
                     "@vue",
                     "composition-api"
                 ),
+                vue: path.resolve(__dirname, "node_modules", "vue"),
             },
         },
         module: {
