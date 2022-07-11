@@ -92,6 +92,11 @@ final class SearchColumnFilterTest extends TestCase
                 "is_selected" => false,
             ],
             [
+                "name" => "filename",
+                "label" => "Filename",
+                "is_selected" => false,
+            ],
+            [
                 "name" => "field_1",
                 "label" => "Field_1",
                 "is_selected" => true,

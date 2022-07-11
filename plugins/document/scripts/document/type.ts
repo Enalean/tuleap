@@ -296,8 +296,9 @@ export interface FolderProperties {
 
 export interface FileProperties {
     file_type: string;
-    download_href: string;
+    file_name: string;
     file_size: number;
+    download_href: string;
     level?: number;
 }
 

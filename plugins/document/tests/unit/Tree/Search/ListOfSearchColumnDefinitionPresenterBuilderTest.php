@@ -170,6 +170,7 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
                 "status",
                 "obsolescence_date",
                 "location",
+                "filename",
             ],
             array_map(
                 static fn(SearchColumnDefinitionPresenter $column): string => $column->name,

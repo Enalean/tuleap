@@ -46,6 +46,7 @@ import CellUpdateDate from "./Cells/CellUpdateDate.vue";
 import CellCreateDate from "./Cells/CellCreateDate.vue";
 import CellObsolescenceDate from "./Cells/CellObsolescenceDate.vue";
 import CellLocation from "./Cells/CellLocation.vue";
+import CellFilename from "./Cells/CellFilename.vue";
 import CellStatus from "./Cells/CellStatus.vue";
 import CellCustomProperty from "./Cells/CellCustomProperty.vue";
 import type { SearchResultColumnDefinition } from "../../../type";
@@ -61,6 +62,7 @@ export default defineComponent({
         CellCreateDate,
         CellObsolescenceDate,
         CellLocation,
+        CellFilename,
         CellStatus,
         CellCustomProperty,
     },
