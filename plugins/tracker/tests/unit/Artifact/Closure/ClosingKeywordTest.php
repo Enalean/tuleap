@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 final class ClosingKeywordTest extends \Tuleap\Test\PHPUnit\TestCase
 {

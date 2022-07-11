@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use Project;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\Webhook\ClosingKeyword;
+use Tuleap\Tracker\Artifact\Closure\ClosingKeyword;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingCommentInCommonMarkFormat;

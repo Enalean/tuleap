@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
+use Tuleap\Tracker\Artifact\Closure\ClosingKeyword;
+
 /**
  * @psalm-immutable
  */
