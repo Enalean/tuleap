@@ -17,18 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { BuildOptions, CSSOptions, ServerOptions, UserConfig, UserConfigExport } from "vite";
-// vite is still defined at the root of the workspace to make it easier to call it in package.json scripts
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { defineConfig as viteDefineConfig } from "vite";
+import path from "path";
+import type { UserConfigExport } from "vitest/config";
+import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
+import { defineConfig as viteDefineConfig } from "vitest/config";
+import type { C8Options } from "vitest";
 import { browserlist_config, esbuild_target } from "./browserslist_config";
 import autoprefixer from "autoprefixer";
 
 type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
 type OverloadedServerOptions = Omit<ServerOptions, "fs">;
 type OverloadedCSSOptions = Omit<CSSOptions, "postcss">;
-type UserConfigWithoutBuildAndServer = Omit<UserConfig, "build" | "server">;
-type OverloadedUserConfig = UserConfigWithoutBuildAndServer & { build?: OverloadedBuildOptions } & {
+type UserConfigWithoutBuildAndServerAndTest = Omit<UserConfig, "build" | "server" | "test">;
+type OverloadedUserConfig = UserConfigWithoutBuildAndServerAndTest & {
+    build?: OverloadedBuildOptions;
+} & {
     server?: OverloadedServerOptions;
 } & { css?: OverloadedCSSOptions };
 
@@ -40,7 +43,7 @@ type OverloadedBuildAppOptions = Omit<
     OverloadedBuildOptions,
     "lib" | "manifest" | "outDir" | "emptyOutDir"
 >;
-type OverloadedAppUserConfig = Omit<UserConfigWithoutBuildAndServer, "base"> & {
+type OverloadedAppUserConfig = Omit<UserConfigWithoutBuildAndServerAndTest, "base"> & {
     build?: OverloadedBuildAppOptions;
 } & {
     server?: OverloadedServerOptions;
@@ -67,7 +70,25 @@ export function defineAppConfig(
     });
 }
 
+const TEST_OUTPUT_DIRECTORY = "./js-test-results/";
+
 function defineBaseConfig(config: UserConfig): UserConfigExport {
+    const test_reporters = ["default"];
+
+    if (process.env.CI_MODE === "true") {
+        test_reporters.push("junit");
+    }
+    let test_coverage: C8Options = {
+        reportsDirectory: TEST_OUTPUT_DIRECTORY,
+    };
+    if (process.env.COLLECT_COVERAGE === "true") {
+        test_coverage = {
+            ...test_coverage,
+            enabled: true,
+            reporter: ["text-summary", "cobertura"],
+        };
+    }
+
     return viteDefineConfig({
         ...config,
         build: {
@@ -87,6 +108,32 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
                 allow: [__dirname + "/../../../../"],
                 strict: true,
             },
+        },
+        test: {
+            watch: false,
+            restoreMocks: true,
+            environment: "jsdom",
+            include: ["**/?(*.)+(test).{js,ts}"],
+            exclude: [
+                "**/node_modules/**",
+                "**/vendor/**",
+                "**/assets/**",
+                "**/frontend-assets/**",
+                "**/dist/**",
+                "**/tests/**",
+                "**/*.d.ts",
+                "**/scripts/lib/**",
+                "**/js-test-results/**",
+            ],
+            setupFiles: [
+                path.resolve(__dirname, "../src/vitest/setup-snapshot-serializer.ts"),
+                path.resolve(__dirname, "../src/vitest/fail-console-error-warning.ts"),
+            ],
+            reporters: test_reporters,
+            outputFile: {
+                junit: TEST_OUTPUT_DIRECTORY + "/junit.xml",
+            },
+            coverage: test_coverage,
         },
     });
 }

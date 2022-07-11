@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { Fault, isFault } from "./Fault";
 
 const FAULT_MESSAGE = "User is not allowed to do that";
