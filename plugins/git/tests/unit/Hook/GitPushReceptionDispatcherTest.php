@@ -25,6 +25,7 @@ namespace Tuleap\Git\Hook;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessor;
 use Tuleap\Git\Stub\BuildCommitAnalysisProcessorStub;
+use Tuleap\Git\Stub\EventDispatcherStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -52,7 +53,8 @@ final class GitPushReceptionDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     $this->logger,
                     RetrieveCommitMessageStub::withMessage(
                         'art #' . self::FIRST_ARTIFACT_ID . "\n " . self::SECOND_KEYWORD . '# ' . self::SECOND_ARTIFACT_ID
-                    )
+                    ),
+                    EventDispatcherStub::withCallback(static fn($event) => $event),
                 )
             )
         );

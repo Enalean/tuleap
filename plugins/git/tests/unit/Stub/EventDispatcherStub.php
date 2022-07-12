@@ -20,36 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\Stub;
 
-use Tuleap\Git\Hook\CommitHash;
-
-/**
- * @psalm-immutable
- */
-final class CommitAnalysisOrder
+final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherInterface
 {
-    private function __construct(private CommitHash $commit_hash, private \PFUser $pusher, private \Project $project)
+    private function __construct(public \Closure $callback)
     {
     }
 
-    public static function fromComponents(CommitHash $commit_hash, \PFUser $pusher, \Project $project): self
+    public static function withCallback(\Closure $callback): self
     {
-        return new self($commit_hash, $pusher, $project);
+        return new self($callback);
     }
 
-    public function getCommitHash(): CommitHash
+    public function dispatch(object $event): object
     {
-        return $this->commit_hash;
-    }
-
-    public function getPusher(): \PFUser
-    {
-        return $this->pusher;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
+        return ($this->callback)($event);
     }
 }
