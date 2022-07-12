@@ -24,7 +24,7 @@ use Tuleap\SVNCore\CoreApacheConfRepository;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
 
@@ -40,6 +40,7 @@ class SVN_Apache_ModPerlTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
         $this->root_dir = vfsStream::setup('root', null, ['conf' => []])->url();
         ForgeConfig::set('sys_custom_dir', $this->root_dir);
         ForgeConfig::set(DBAuthUserConfig::PASSWORD, \ForgeConfig::encryptValue(new ConcealedString('dat password')));

@@ -34,7 +34,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalSVNPollution;
 
-class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
@@ -43,6 +43,7 @@ class LDAPBackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
+        \ForgeConfig::setFeatureFlag('disable_php_based_svn_auth', '1');
         \ForgeConfig::set('svn_prefix', '/svnroot');
         \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Platform');
     }

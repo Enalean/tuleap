@@ -21,7 +21,7 @@
 namespace FastRoute;
 
 /**
- * @psalm-type HTTPMethod = 'GET'|'HEAD'|'POST'|'PUT'|'DELETE'|'CONNECT'|'OPTIONS'|'TRACE'|'PATCH'|'COPY'|'LOCK'|'UNLOCK'|'MKCOL'|'MOVE'|'PROPFIND'|'PROPPATCH'
+ * @psalm-type HTTPMethod = 'GET'|'HEAD'|'POST'|'PUT'|'DELETE'|'CONNECT'|'OPTIONS'|'TRACE'|'PATCH'|'COPY'|'LOCK'|'UNLOCK'|'MKCOL'|'MKACTIVITY'|'MOVE'|'PROPFIND'|'PROPPATCH'|'REPORT'|'CHECKOUT'|'MERGE'
  */
 class RouteCollector
 {

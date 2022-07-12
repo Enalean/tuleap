@@ -60,7 +60,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
         $this->cookie_manager->shouldReceive('getCookie')->once()->andReturn('test_value');
         $this->plugin_loader->shouldReceive('loadPlugins')->once();
 
-        $this->loader_scheduler->loadPluginsThenStartSession(false);
+        $this->loader_scheduler->loadPluginsThenStartSession(false, []);
 
         $this->assertSame('test_value', $GLOBALS['session_hash']);
     }
@@ -70,6 +70,14 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
         $this->cookie_manager->shouldNotReceive('isCookie');
         $this->plugin_loader->shouldReceive('loadPlugins')->once();
 
-        $this->loader_scheduler->loadPluginsThenStartSession(true);
+        $this->loader_scheduler->loadPluginsThenStartSession(true, []);
+    }
+
+    public function testSessionIsNotLoadedWhenAFastCgiParamIsSetToDisableIt(): void
+    {
+        $this->cookie_manager->shouldNotReceive('isCookie');
+        $this->plugin_loader->shouldReceive('loadPlugins')->once();
+
+        $this->loader_scheduler->loadPluginsThenStartSession(false, ['TULEAP_DISABLE_AUTO_SESSION_START' => 'true']);
     }
 }

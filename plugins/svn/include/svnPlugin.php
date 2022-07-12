@@ -81,6 +81,7 @@ use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
 use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
+use Tuleap\SVNCore\AccessControl\SVNProjectAccessRouteDefinition;
 use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\Svnlook;
@@ -793,6 +794,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $r->get('/index.php{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
             $r->addRoute(['GET', 'POST'], '[/{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
         });
+        SVNProjectAccessRouteDefinition::defineRoute($event->getRouteCollector(), '/svnplugin');
     }
 
     private function getBackendSVN(): BackendSVN

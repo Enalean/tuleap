@@ -63,11 +63,13 @@ class SVN_Apache_SvnrootConf
         return $this->getApacheConfHeaders() . $conf;
     }
 
-    private function collectApacheConfHeaders(SVN_Apache $auth)
+    private function collectApacheConfHeaders(SVN_Apache $auth): void
     {
-        $headers                       = $auth->getHeaders();
-        $key                           = md5($headers);
-        $this->apacheConfHeaders[$key] = $headers;
+        if (ForgeConfig::getFeatureFlag(\Tuleap\SVNCore\AccessControl\SVNProjectAccessController::FEATURE_FLAG_DISABLE) === '1') {
+            $headers                       = $auth->getHeaders();
+            $key                           = md5($headers);
+            $this->apacheConfHeaders[$key] = $headers;
+        }
     }
 
     private function getApacheConfHeaders()
