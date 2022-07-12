@@ -1,0 +1,13 @@
+{
+    "name": "tuleap/plugin-onlyoffice",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\OnlyOffice\\": "include/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\OnlyOffice\\": "tests/unit/"
+        }
+    }
+}
