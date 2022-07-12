@@ -70,14 +70,24 @@
                     {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
                 </p>
             </div>
-            <div>
+            <p>
                 <label for="artifact-create-git-branch-name">
                     {{ $gettext("The following branch will be created") }}
                 </label>
                 <code id="artifact-create-git-branch-name">
                     {{ branch_name_preview }}
                 </code>
-            </div>
+            </p>
+            <p>
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" v-model="must_create_pr" />
+                    {{
+                        $gettext(
+                            "Create a pull request based on this new branch to the default branch"
+                        )
+                    }}
+                </label>
+            </p>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -98,7 +108,7 @@
                     v-if="is_creating_branch"
                     class="fas fa-spin fa-spinner tlp-button-icon"
                 ></i>
-                {{ $gettext("Create branch") }}
+                {{ button_label }}
             </button>
         </div>
     </div>
@@ -109,10 +119,13 @@ import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import type { GitRepository } from "../types";
-import { postGitBranch } from "../../api/rest_querier";
+import { postGitBranch, postPullRequestOnDefaultBranch } from "../../api/rest_querier";
 import { addFeedback } from "@tuleap/fp-feedback";
 import { useGettext } from "vue3-gettext";
+import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { PullRequestCreationFault } from "../PullRequestCreationFault";
 
 let modal: Modal | null = null;
 const { $gettext, interpolate } = useGettext();
@@ -137,6 +150,11 @@ let selected_repository = computed({
     },
 });
 
+const must_create_pr = ref(true);
+const button_label = computed((): string =>
+    must_create_pr.value ? $gettext("Create branch and pull request") : $gettext("Create branch")
+);
+
 onMounted((): void => {
     if (root_element.value === undefined) {
         throw new Error("Cannot find modal root element");
@@ -156,6 +174,19 @@ onBeforeUnmount(() => {
     modal?.destroy();
 });
 
+const createPullRequest = (
+    repository: GitRepository,
+    branch_name: string
+): ResultAsync<void, Fault> =>
+    postPullRequestOnDefaultBranch(repository, branch_name)
+        .map(() => {
+            addFeedback("info", $gettext("The associated pull request has been created."));
+        })
+        .mapErr(PullRequestCreationFault.fromFault);
+
+const isPullRequestCreationFault = (fault: Fault): boolean =>
+    "isPullRequestCreationFault" in fault && fault.isPullRequestCreationFault() === true;
+
 function onClickCreateBranch(): Promise<void> {
     is_creating_branch.value = true;
     const repository: GitRepository = selected.value;
@@ -174,7 +205,11 @@ function onClickCreateBranch(): Promise<void> {
             );
 
             addFeedback("info", success_message);
-            return okAsync("branch created");
+
+            if (!must_create_pr.value) {
+                return okAsync("branch created");
+            }
+            return createPullRequest(repository, props.branch_name_preview);
         })
         .match(
             () => {
@@ -182,12 +217,21 @@ function onClickCreateBranch(): Promise<void> {
                 modal?.hide();
             },
             (fault) => {
-                error_message.value = interpolate(
-                    $gettext(
-                        "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
-                    ),
-                    { branch_name: props.branch_name_preview, error: String(fault) }
-                );
+                if (isPullRequestCreationFault(fault)) {
+                    error_message.value = interpolate(
+                        $gettext(
+                            "An error occurred while creating the associated pull request: %{ error }"
+                        ),
+                        { error: String(fault) }
+                    );
+                } else {
+                    error_message.value = interpolate(
+                        $gettext(
+                            "An error occurred while creating the Git branch %{ branch_name }: %{ error }"
+                        ),
+                        { branch_name: props.branch_name_preview, error: String(fault) }
+                    );
+                }
                 is_creating_branch.value = false;
             }
         );

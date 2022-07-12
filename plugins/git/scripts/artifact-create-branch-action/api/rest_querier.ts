@@ -57,3 +57,14 @@ export const postGitBranch = (
         branch_name,
         reference,
     }).andThen((response) => decodeJSON<GitCreateBranchResponse>(response));
+
+export const postPullRequestOnDefaultBranch = (
+    repository: GitRepository,
+    branch_name: string
+): ResultAsync<Response, Fault> =>
+    postJSON(`/api/v1/pull_requests`, {
+        repository_id: repository.id,
+        repository_dest_id: repository.id,
+        branch_src: branch_name,
+        branch_dest: repository.default_branch,
+    });
