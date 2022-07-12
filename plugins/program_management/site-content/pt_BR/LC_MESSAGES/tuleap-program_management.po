@@ -308,6 +308,9 @@ msgstr ""
 msgid "Project is defined as a Team project. It can not be used as a Program."
 msgstr ""
 
+msgid "Project is not defined as a Team project. It can not be synchronized."
+msgstr ""
+
 msgid "Remove from top backlog"
 msgstr "Remover do backlog principal"
 

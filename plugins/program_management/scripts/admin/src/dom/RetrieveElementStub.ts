@@ -56,6 +56,10 @@ export class RetrieveElementStub implements RetrieveElement {
         return element;
     }
 
+    getElementsByClassName(): HTMLCollectionOf<Element> {
+        throw new Error("Not implemented yet");
+    }
+
     static withElements(...elements: Element[]): RetrieveElementStub {
         return new RetrieveElementStub(elements);
     }

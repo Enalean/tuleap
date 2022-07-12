@@ -241,6 +241,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             'admin',
             new ProgramAdminPresenter(
                 $admin_program,
+                $project->getUnixNameLowerCase(),
                 PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
                     PotentialTeamsCollection::buildPotentialTeams(
                         $this->teams_searcher,

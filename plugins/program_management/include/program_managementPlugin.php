@@ -182,6 +182,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\ComponentInvolvedVerifier;
 use Tuleap\ProgramManagement\ProgramManagementBreadCrumbsBuilder;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\REST\ResourcesInjector;
+use Tuleap\ProgramManagement\SynchronizeTeamController;
 use Tuleap\ProgramManagement\Templates\PortfolioTemplate;
 use Tuleap\ProgramManagement\Templates\ProgramTemplate;
 use Tuleap\ProgramManagement\Templates\TeamTemplate;
@@ -379,6 +380,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     '/admin/{project_name:[A-z0-9-]+}[/]',
                     $this->getRouteHandler('routeGetAdminProgramManagement')
                 );
+                $r->put(
+                    '/admin/{project_name:[A-z0-9-]+}/synchronize/{team_id:[0-9]+}[\]',
+                    $this->getRouteHandler('routeGetSynchronizeTeam')
+                );
                 $r->get(
                     '/{project_name:[A-z0-9-]+}/increments/{increment_id:\d+}/plan[\]',
                     $this->getRouteHandler('routeGetPlanIterations')
@@ -386,6 +391,11 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetProgramManagement'));
             }
         );
+    }
+
+    public function routeGetSynchronizeTeam(): SynchronizeTeamController
+    {
+        return new SynchronizeTeamController(ProjectManager::instance(), new TeamDao(), $this->getLogger());
     }
 
     public function routeGetProgramManagement(): DisplayProgramBacklogController

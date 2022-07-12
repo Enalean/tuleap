@@ -71,6 +71,7 @@ final class ProgramAdminPresenter
     public bool $can_synchronize_program_increments;
     public bool $can_force_team_synchronization;
     public string $synchronize_button_label;
+    public string $program_shortname;
 
     /**
      * @param PotentialTeamPresenter[] $potential_teams
@@ -82,6 +83,7 @@ final class ProgramAdminPresenter
      */
     public function __construct(
         ProgramForAdministrationIdentifier $program,
+        string $program_shortname,
         array $potential_teams,
         array $aggregated_teams,
         array $potential_program_increments,
@@ -97,6 +99,7 @@ final class ProgramAdminPresenter
         ?TrackerErrorPresenter $plannable_error_presenter,
     ) {
         $this->program_id                   = $program->id;
+        $this->program_shortname            = $program_shortname;
         $this->potential_teams              = $potential_teams;
         $this->aggregated_teams             = $aggregated_teams;
         $this->has_aggregated_teams         = count($aggregated_teams) > 0;
