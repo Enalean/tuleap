@@ -33,6 +33,8 @@ final class CrossReportExportProperties
         public int $current_tracker_id,
         public string $current_tracker_name,
         public int $current_report_id,
+        public string $current_report_name,
+        public int $current_renderer_id,
     ) {
     }
 }

@@ -50,10 +50,11 @@ class MatchingArtifactRepresentationBuilder
     public function buildMatchingArtifactRepresentationCollection(
         PFUser $current_user,
         Tracker_Report $report,
+        ?int $table_renderer_id,
         int $limit,
         int $offset,
     ): MatchingArtifactRepresentationCollection {
-        $renderer_table        = $this->getTableReportRendererForReport($report);
+        $renderer_table        = $this->getTableReportRendererForReport($report, $table_renderer_id);
         $renderer_table_fields = $this->used_fields_retriever->getUsedFieldsInRendererUserCanSee(
             $current_user,
             $renderer_table,
@@ -100,7 +101,7 @@ class MatchingArtifactRepresentationBuilder
     /**
      * @throw RestException
      */
-    private function getTableReportRendererForReport(Tracker_Report $report): Tracker_Report_Renderer_Table
+    private function getTableReportRendererForReport(Tracker_Report $report, ?int $table_renderer_id): Tracker_Report_Renderer_Table
     {
         $table_renderers = $this->table_renderer_retriever->getTableReportRendererForReport($report);
 
@@ -109,14 +110,29 @@ class MatchingArtifactRepresentationBuilder
                 400,
                 'The report does not have a table renderer'
             );
-        } elseif (count($table_renderers) > 1) {
+        }
+
+        foreach ($table_renderers as $table_renderer) {
+            if ($table_renderer->getId() === $table_renderer_id) {
+                return $table_renderer;
+            }
+        }
+
+        if (count($table_renderers) > 1) {
             throw new RestException(
                 400,
                 'The report has more than one table renderer'
             );
         }
 
-        return $table_renderers[0];
+        if ($table_renderer_id === null) {
+            return $table_renderers[0];
+        }
+
+        throw new RestException(
+            400,
+            'The requested table report renderer has not been found in the report'
+        );
     }
 
     /**

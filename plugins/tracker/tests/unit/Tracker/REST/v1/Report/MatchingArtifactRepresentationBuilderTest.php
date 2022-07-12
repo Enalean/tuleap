@@ -183,6 +183,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $artifact_representations = $this->representation_builder->buildMatchingArtifactRepresentationCollection(
             $user,
             $report,
+            null,
             10,
             0,
         );
@@ -211,6 +212,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $this->representation_builder->buildMatchingArtifactRepresentationCollection(
             $user,
             $report,
+            null,
             10,
             0,
         );
@@ -255,6 +257,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
         $this->representation_builder->buildMatchingArtifactRepresentationCollection(
             $user,
             $report,
+            null,
             10,
             0,
         );

@@ -92,4 +92,18 @@ describe("autofilter-generator", () => {
 
         expect(autofilter_range).toBe("");
     });
+
+    it("generates empty autofilter range when there is no report fields", (): void => {
+        const formatted_data: ReportSection = {
+            artifacts_rows: [],
+            headers: {
+                tracker_names: [],
+                reports_fields_labels: [],
+            },
+        };
+
+        const autofilter_range: string = generateAutofilterRange(formatted_data);
+
+        expect(autofilter_range).toBe("");
+    });
 });

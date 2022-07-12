@@ -33,7 +33,11 @@ export async function organizeReportsData(
     } = export_settings;
 
     const first_level_report_artifacts_responses: ArtifactForCrossReportDocGen[] =
-        await getReportArtifacts(export_settings_first_level.report_id, true);
+        await getReportArtifacts(
+            export_settings_first_level.report_id,
+            true,
+            export_settings_first_level.table_renderer_id
+        );
 
     const first_level_artifacts_representations_map: Map<number, ArtifactForCrossReportDocGen> =
         new Map();
@@ -103,7 +107,7 @@ async function retrieveLinkedArtifactsData(
     linked_artifacts_maps: Map<number, ReadonlyArray<number>>
 ): Promise<void> {
     const following_level_report_artifacts_responses: ArtifactForCrossReportDocGen[] =
-        await getReportArtifacts(report_id, true);
+        await getReportArtifacts(report_id, true, undefined);
 
     await limitConcurrencyPool(5, artifact_ids, async (artifact_id: number): Promise<void> => {
         for (const artifact_link_type of artifact_link_types) {

@@ -74,12 +74,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         $this->rank        = $rank;
     }
 
-    /**
-     * Return the id of the renderer
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

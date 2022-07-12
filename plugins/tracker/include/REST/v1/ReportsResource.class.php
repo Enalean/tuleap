@@ -148,7 +148,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * <p>
      *   "from_table_renderer" values option only work if there is only one table renderer in the report.<br/>
-     *    An error will be thrown if there is no or mulitple table renderer.<br/>
+     *    An error will be thrown if there is no or multiple table renderers with no specific choice.<br/>
      *    <strong>Warning:</strong> Please note that artifact link field values are not exported in this value format.
      * </p>
      *
@@ -159,6 +159,7 @@ class ReportsResource extends AuthenticatedResource
      * @param int $id Id of the report
      * @param bool $with_unsaved_changes Enable to take into account unsaved changes made to the report on your ongoing session {@from query}{@required false}
      * @param string $values Which fields to include in the response. Default is no field values {@from query}{@choice ,all,from_table_renderer}
+     * @param int | null $table_renderer_id Which table renderer to use when values=from_table_renderer {@from query}{@required false}
      * @param int $limit Number of elements displayed per page {@from query}{@min 1} {@max 50}
      * @param int $offset Position of the first element to display {@from query}{@min 0}
      *
@@ -170,6 +171,7 @@ class ReportsResource extends AuthenticatedResource
         int $id,
         bool $with_unsaved_changes = false,
         ?string $values = self::DEFAULT_VALUES,
+        ?int $table_renderer_id = null,
         int $limit = self::DEFAULT_LIMIT,
         int $offset = self::DEFAULT_OFFSET,
     ): array {
@@ -194,6 +196,7 @@ class ReportsResource extends AuthenticatedResource
             $artifact_collection = $builder->buildMatchingArtifactRepresentationCollection(
                 $user,
                 $report,
+                $table_renderer_id,
                 $limit,
                 $offset
             );

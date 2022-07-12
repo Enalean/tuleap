@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setupLinkForTheDocumentExport } from "./entrypoint-document-generation";
-import { setupLinkForTheSpreadsheetExport } from "./entrypoint-spreadsheet-generation";
+export async function showLoaderWhileProcessing(processing_fn: () => Promise<void>): Promise<void> {
+    const loading_modal_element = document.createElement("div");
+    loading_modal_element.classList.add("tuleap-modal-loading");
+    document.body.appendChild(loading_modal_element);
 
-document.addEventListener("DOMContentLoaded", () => {
-    setupLinkForTheDocumentExport();
-    setupLinkForTheSpreadsheetExport();
-});
-
-export {};
+    try {
+        await processing_fn();
+    } finally {
+        document.body.removeChild(loading_modal_element);
+    }
+}

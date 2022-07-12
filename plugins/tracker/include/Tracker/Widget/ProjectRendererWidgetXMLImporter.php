@@ -92,6 +92,6 @@ class ProjectRendererWidgetXMLImporter
             throw new RuntimeException("Reference $ref for tracker renderer widget was not found");
         }
         assert($renderer instanceof Tracker_Report_Renderer);
-        return (int) $renderer->getId();
+        return $renderer->getId();
     }
 }
