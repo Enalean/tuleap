@@ -22,7 +22,9 @@
 
 describe("SVN", () => {
     before(() => {
-        cy.login();
+        cy.visit("/");
+        cy.get("[data-test=form_loginname]").type("alice");
+        cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
     });
 
     it("should display display repository content", () => {
