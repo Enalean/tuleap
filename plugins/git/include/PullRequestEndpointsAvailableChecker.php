@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git;
 
-final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherInterface
+use Psr\EventDispatcher\EventDispatcherInterface;
+
+final class PullRequestEndpointsAvailableChecker
 {
-    private function __construct(public \Closure $callback)
+    public function __construct(private EventDispatcherInterface $dispatcher)
     {
     }
 
-    public static function withCallback(\Closure $callback): self
+    public function arePullRequestEndpointsAvailable(): bool
     {
-        return new self($callback);
-    }
-
-    public static function withIdentityCallback(): self
-    {
-        return new self(static fn($event) => $event);
-    }
-
-    public function dispatch(object $event): object
-    {
-        return ($this->callback)($event);
+        return $this->dispatcher
+            ->dispatch(new PullRequestEndpointsAvailableEvent())
+            ->areEndpointsAvailable();
     }
 }

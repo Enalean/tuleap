@@ -321,6 +321,9 @@ msgstr ""
 msgid "Create Git branch"
 msgstr ""
 
+msgid "Create Git branch and pull request"
+msgstr ""
+
 msgid "Create new"
 msgstr ""
 

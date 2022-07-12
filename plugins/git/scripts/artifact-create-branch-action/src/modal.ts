@@ -43,6 +43,9 @@ export async function init(
 
     const project_id = Number(git_create_branch_link.dataset.projectId);
     const branch_name_preview = git_create_branch_link.dataset.gitBranchNamePreview;
+    const are_pullrequest_endpoints_available = Boolean(
+        git_create_branch_link.dataset.arePullrequestEndpointsAvailable
+    );
 
     if (app !== null) {
         app.unmount();
@@ -51,6 +54,7 @@ export async function init(
     app = createApp(MainComponent, {
         repositories: await getProjectRepositories(project_id, branch_name_preview),
         branch_name_preview: branch_name_preview,
+        are_pullrequest_endpoints_available,
     });
     app.use(
         await initVueGettext(createGettext, (locale: string) => {

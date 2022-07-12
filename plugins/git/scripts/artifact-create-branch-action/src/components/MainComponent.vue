@@ -23,6 +23,7 @@
             <modal-content
                 v-bind:repositories="repositories"
                 v-bind:branch_name_preview="branch_name_preview"
+                v-bind:are_pullrequest_endpoints_available="are_pullrequest_endpoints_available"
             />
         </div>
     </Teleport>
@@ -35,6 +36,7 @@ import type { GitRepository } from "../types";
 defineProps<{
     repositories: ReadonlyArray<GitRepository>;
     branch_name_preview: string;
+    are_pullrequest_endpoints_available: boolean;
 }>();
 </script>
 

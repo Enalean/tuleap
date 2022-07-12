@@ -37,6 +37,7 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
+use Tuleap\Git\PullRequestEndpointsAvailableEvent;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationCache;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 use Tuleap\Git\Repository\CollectAssets;
@@ -135,7 +136,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         if (defined('GIT_BASE_URL')) {
-            $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
+            $this->addHook(PullRequestEndpointsAvailableEvent::NAME);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
@@ -205,12 +206,9 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $injector->populate($params['restler']);
     }
 
-    /**
-     * @see REST_GIT_PULL_REQUEST_ENDPOINTS
-     */
-    public function rest_git_pull_request_endpoints($params) // phpcs:ignore
+    public function pullRequestEndpointsAvailableEvent(PullRequestEndpointsAvailableEvent $event): void
     {
-        $params['available'] = true;
+        $event->endpointsAreAvailable();
     }
 
     /**

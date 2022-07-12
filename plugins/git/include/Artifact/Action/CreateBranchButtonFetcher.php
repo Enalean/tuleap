@@ -28,6 +28,7 @@ use GitRepositoryFactory;
 use PFUser;
 use Project;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Git\PullRequestEndpointsAvailableChecker;
 use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
@@ -43,6 +44,7 @@ final class CreateBranchButtonFetcher
         private GitRepositoryFactory $git_repository_factory,
         private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
         private JavascriptAssetGeneric $javascript_asset,
+        private PullRequestEndpointsAvailableChecker $pr_checker,
     ) {
     }
 
@@ -57,13 +59,17 @@ final class CreateBranchButtonFetcher
             return null;
         }
 
-        $link_label = dgettext('tuleap-git', 'Create Git branch');
-        $icon       = 'fas fa-code-branch';
-        $link       = new AdditionalButtonLinkPresenter(
+        $are_pullrequest_endpoints_available = $this->pr_checker->arePullRequestEndpointsAvailable();
+
+        $link_label = $are_pullrequest_endpoints_available ?
+            dgettext('tuleap-git', 'Create Git branch and pull request') :
+            dgettext('tuleap-git', 'Create Git branch');
+
+        $link = new AdditionalButtonLinkPresenter(
             $link_label,
             "",
             "",
-            $icon,
+            'fas fa-code-branch',
             'artifact-create-git-branches',
             [
                 [
@@ -71,8 +77,12 @@ final class CreateBranchButtonFetcher
                     'value' => (string) $project->getID(),
                 ],
                 [
-                    "name" => "git-branch-name-preview",
+                    "name"  => "git-branch-name-preview",
                     "value" => $this->branch_name_creator_from_artifact->getBaseBranchName($artifact),
+                ],
+                [
+                    "name"  => "are-pullrequest-endpoints-available",
+                    "value" => $are_pullrequest_endpoints_available,
                 ],
             ],
         );

@@ -78,7 +78,7 @@
                     {{ branch_name_preview }}
                 </code>
             </p>
-            <p>
+            <p v-if="are_pullrequest_endpoints_available">
                 <label class="tlp-label tlp-checkbox">
                     <input type="checkbox" v-model="must_create_pr" />
                     {{
@@ -136,6 +136,7 @@ const error_message = ref("");
 const props = defineProps<{
     repositories: ReadonlyArray<GitRepository>;
     branch_name_preview: string;
+    are_pullrequest_endpoints_available: boolean;
 }>();
 
 const is_creating_branch = ref(false);
@@ -150,7 +151,7 @@ let selected_repository = computed({
     },
 });
 
-const must_create_pr = ref(true);
+const must_create_pr = ref(props.are_pullrequest_endpoints_available);
 const button_label = computed((): string =>
     must_create_pr.value ? $gettext("Create branch and pull request") : $gettext("Create branch")
 );
