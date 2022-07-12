@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\CommitMetadata\RetrieveCommitMessage;
 
 final class CommitAnalysisProcessor
@@ -30,6 +32,7 @@ final class CommitAnalysisProcessor
     public function __construct(
         private LoggerInterface $logger,
         private RetrieveCommitMessage $message_retriever,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -49,6 +52,6 @@ final class CommitAnalysisProcessor
             $this->logger->error('Could not retrieve commit message', ['exception' => $e]);
             return;
         }
-        $this->logger->debug(sprintf('Found commit message %s', $commit_message));
+        $this->event_dispatcher->dispatch(new PotentialReferencesReceived($commit_message));
     }
 }

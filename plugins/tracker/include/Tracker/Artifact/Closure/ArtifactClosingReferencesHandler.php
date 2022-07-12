@@ -20,36 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Tracker\Artifact\Closure;
 
-use Tuleap\Git\Hook\CommitHash;
+use Psr\Log\LoggerInterface;
+use Tuleap\Event\Events\PotentialReferencesReceived;
 
-/**
- * @psalm-immutable
- */
-final class CommitAnalysisOrder
+final class ArtifactClosingReferencesHandler
 {
-    private function __construct(private CommitHash $commit_hash, private \PFUser $pusher, private \Project $project)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+    ) {
     }
 
-    public static function fromComponents(CommitHash $commit_hash, \PFUser $pusher, \Project $project): self
+    public function handlePotentialReferencesReceived(PotentialReferencesReceived $event): void
     {
-        return new self($commit_hash, $pusher, $project);
-    }
-
-    public function getCommitHash(): CommitHash
-    {
-        return $this->commit_hash;
-    }
-
-    public function getPusher(): \PFUser
-    {
-        return $this->pusher;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
+        $this->logger->debug(sprintf('Searching for references in text: %s', $event->text_with_potential_references));
     }
 }

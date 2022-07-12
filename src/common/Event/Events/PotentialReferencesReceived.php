@@ -20,36 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
-
-use Tuleap\Git\Hook\CommitHash;
+namespace Tuleap\Event\Events;
 
 /**
+ * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
  * @psalm-immutable
  */
-final class CommitAnalysisOrder
+final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
 {
-    private function __construct(private CommitHash $commit_hash, private \PFUser $pusher, private \Project $project)
-    {
-    }
+    public const NAME = 'receivePotentialReferences';
 
-    public static function fromComponents(CommitHash $commit_hash, \PFUser $pusher, \Project $project): self
+    public function __construct(public string $text_with_potential_references)
     {
-        return new self($commit_hash, $pusher, $project);
-    }
-
-    public function getCommitHash(): CommitHash
-    {
-        return $this->commit_hash;
-    }
-
-    public function getPusher(): \PFUser
-    {
-        return $this->pusher;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
     }
 }

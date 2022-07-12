@@ -32,6 +32,7 @@ use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Event\Events\ExportXmlProject;
+use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -103,6 +104,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\DiffProcessor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
+use Tuleap\Tracker\Artifact\Closure\ArtifactClosingReferencesHandler;
 use Tuleap\Tracker\Artifact\CrossReference\CrossReferenceArtifactOrganizer;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
 use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
@@ -323,6 +325,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(GetProjectWithTrackerAdministrationPermission::NAME);
+        $this->addHook(PotentialReferencesReceived::NAME);
 
         $this->addHook(CollectTuleapComputedMetrics::NAME);
         $this->addHook(ConfigureAtXMLImport::NAME);
@@ -2475,5 +2478,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function issuesTemplateDashboardDefinition(IssuesTemplateDashboardDefinition $dashboard_definition): void
     {
         \Tuleap\Tracker\Template\IssuesTemplate::defineDashboards($dashboard_definition);
+    }
+
+    public function receivePotentialReferences(PotentialReferencesReceived $event): void
+    {
+        $handler = new ArtifactClosingReferencesHandler($this->getBackendLogger());
+        $handler->handlePotentialReferencesReceived($event);
     }
 }
