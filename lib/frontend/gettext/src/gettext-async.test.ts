@@ -17,21 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
     initGettext,
     getPOFileFromLocale,
     getPOFileFromLocaleWithoutExtension,
 } from "./gettext-async";
 
-jest.mock("node-gettext");
+vi.mock("node-gettext", () => {
+    const mocked_gettext_class = vi.fn();
+    mocked_gettext_class.prototype = {
+        setLocale: vi.fn(),
+        setTextDomain: vi.fn(),
+        addTranslations: vi.fn(),
+    };
+
+    return { default: mocked_gettext_class };
+});
 
 describe("initGettext", () => {
     beforeEach(() => {
-        jest.resetModules();
+        vi.resetModules();
     });
 
     it("instantiates Gettext with given locale and domain", async () => {
-        const load_translations_callback = jest.fn();
+        const load_translations_callback = vi.fn();
         const gettext_provider = await initGettext(
             "en_US",
             "my-domain",

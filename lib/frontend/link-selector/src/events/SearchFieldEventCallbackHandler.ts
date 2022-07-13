@@ -43,7 +43,7 @@ export const SearchFieldEventCallbackHandler = (
                 callback(link_selector, query);
             }
 
-            timeout_id = setTimeout(() => {
+            timeout_id = window.setTimeout(() => {
                 callback(link_selector, query);
             }, TRIGGER_CALLBACK_DELAY_IN_MS);
         });

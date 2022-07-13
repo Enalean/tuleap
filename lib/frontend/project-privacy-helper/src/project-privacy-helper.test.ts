@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import type { ProjectPrivacy } from "./project-privacy-helper";
 import { getProjectPrivacyIcon } from "./project-privacy-helper";
 

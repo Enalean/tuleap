@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, beforeEach, vi, expect } from "vitest";
 import type { DropdownManager } from "../dropdown/DropdownManager";
 import type { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
@@ -65,7 +66,7 @@ describe("MultipleSelectionManager", () => {
         } as GettextProvider;
         search_input = search_field_element;
         selection_container = selection_element;
-        openListPicker = jest.fn();
+        openListPicker = vi.fn();
 
         item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
 
@@ -96,7 +97,7 @@ describe("MultipleSelectionManager", () => {
 
         item_1 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
         item_2 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");
-        jest.spyOn(source_select_box, "dispatchEvent");
+        vi.spyOn(source_select_box, "dispatchEvent");
     });
 
     describe("initSelection", () => {

@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { SearchFieldClearer } from "./SearchFieldClearer";
 
 describe("SearchFieldClearer", () => {
     it('should clear the field and trigger an "input" event', () => {
         const search_field = document.implementation.createHTMLDocument().createElement("input");
         search_field.value = "An query about to be cleared";
-        const dispatchEvent = jest.spyOn(search_field, "dispatchEvent");
+        const dispatchEvent = vi.spyOn(search_field, "dispatchEvent");
 
         SearchFieldClearer(search_field).clearSearchField();
 

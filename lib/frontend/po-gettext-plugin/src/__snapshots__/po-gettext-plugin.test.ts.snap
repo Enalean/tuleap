@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`plugin-po-gettext transform converts .PO files 1`] = `
-Object {
+exports[`plugin-po-gettext > transform > converts .PO files 1`] = `
+{
   "code": "export var charset = \\"utf-8\\";
 export var headers = undefined;
 export var translations = {

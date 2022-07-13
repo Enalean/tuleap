@@ -34,6 +34,6 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "dev": "vite",
-    "test": "jest"
+    "test": "vitest"
   }
 }

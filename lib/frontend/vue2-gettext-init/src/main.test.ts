@@ -17,26 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
 import type { VueGettextPOFile } from "./main";
 import { initVueGettext } from "./main";
 import type { VueConfiguration } from "vue/types/vue";
 
-jest.mock("vue", () => {
+vi.mock("vue", () => {
     return {
         __esModule: true,
         default: {
-            use: jest.fn(),
+            use: vi.fn(),
             config: {},
         },
     };
 });
-jest.mock("vue-gettext");
+vi.mock("vue-gettext");
 
 describe(`vue-gettext-init`, () => {
     beforeEach(() => {
-        jest.resetModules();
+        vi.resetModules();
         document.body.dataset.userLocale = "";
         Vue.config = {} as VueConfiguration;
     });
@@ -70,7 +71,7 @@ describe(`vue-gettext-init`, () => {
     });
 
     describe(`when a locale is NOT defined on the document's body`, () => {
-        const callback = jest.fn().mockImplementation(() => Promise.resolve({ messages: {} }));
+        const callback = vi.fn().mockImplementation(() => Promise.resolve({ messages: {} }));
         beforeEach(async () => {
             await initVueGettext(Vue, callback);
         });

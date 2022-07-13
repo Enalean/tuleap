@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, beforeEach, expect, it } from "vitest";
 import {
     appendGroupedOptionsToSourceSelectBox,
     appendSimpleOptionsToSourceSelectBox,

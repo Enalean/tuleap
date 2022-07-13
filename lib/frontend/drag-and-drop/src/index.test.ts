@@ -17,41 +17,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
+import { describe, expect, it, afterEach, vi } from "vitest";
 import type { DrekkenovInitOptions } from "./index";
 import { init } from "./index";
 import { DrekkenovState } from "./DrekkenovState";
+let state_create_start_handler_called = false;
 const noop_function = (): void => {
     // Do nothing
 };
-jest.mock("./DrekkenovState", () => {
-    return {
-        DrekkenovState: jest.fn().mockImplementation(() => {
-            return {
-                createDragStartHandler: jest.fn().mockReturnValue(noop_function),
-                cleanup: jest.fn(),
-            };
-        }),
+vi.mock("./DrekkenovState", () => {
+    const mocked_class = vi.fn();
+    mocked_class.prototype.createDragStartHandler = (): (() => void) => {
+        state_create_start_handler_called = true;
+        return noop_function;
     };
+    mocked_class.prototype.cleanup = vi.fn();
+
+    return { DrekkenovState: mocked_class };
 });
 
 describe(`drekkenov`, () => {
     afterEach(() => {
-        const state_constructor = DrekkenovState as unknown as jest.SpyInstance;
+        state_create_start_handler_called = false;
+        const state_constructor = DrekkenovState as unknown as SpyInstance;
         state_constructor.mockClear();
     });
 
     describe(`init()`, () => {
         it(`will attach a dragstart listener on document,
             and it will return a new Drekkenov instance`, () => {
-            const addEventListener = jest.spyOn(document, "addEventListener");
+            const addEventListener = vi.spyOn(document, "addEventListener");
             const options = {} as DrekkenovInitOptions;
 
             init(options);
 
-            const state_constructor = DrekkenovState as unknown as jest.SpyInstance;
-            const state = state_constructor.mock.results[0].value;
-            expect(state_constructor).toHaveBeenCalled();
-            expect(state.createDragStartHandler).toHaveBeenCalled();
+            expect(DrekkenovState).toHaveBeenCalled();
+            expect(state_create_start_handler_called).toBe(true);
             expect(addEventListener).toHaveBeenCalledWith("dragstart", noop_function);
         });
     });
@@ -60,17 +62,14 @@ describe(`drekkenov`, () => {
         describe(`destroy()`, () => {
             it(`will cleanup the state,
                 and it will remove the dragstart listener on document`, () => {
-                jest.spyOn(document, "addEventListener");
-                const removeEventListener = jest.spyOn(document, "removeEventListener");
+                vi.spyOn(document, "addEventListener");
+                const removeEventListener = vi.spyOn(document, "removeEventListener");
                 const options = {} as DrekkenovInitOptions;
 
                 const drekkenov_instance = init(options);
                 drekkenov_instance.destroy();
 
-                const state_constructor = DrekkenovState as unknown as jest.SpyInstance;
-                const state = state_constructor.mock.results[0].value;
-
-                expect(state.cleanup).toHaveBeenCalled();
+                expect(DrekkenovState.prototype.cleanup).toHaveBeenCalled();
                 expect(removeEventListener).toHaveBeenCalledWith("dragstart", noop_function);
             });
         });

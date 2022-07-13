@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import { html } from "lit/html.js";
 import { DropdownContentRenderer, getRenderedListItem } from "./DropdownContentRenderer";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
@@ -151,7 +152,9 @@ describe("DropDownContentRenderer", () => {
                 true
             );
 
-            expect(item.classList).toContain("link-selector-dropdown-option-value-disabled");
+            expect(item.classList.contains("link-selector-dropdown-option-value-disabled")).toBe(
+                true
+            );
         });
     });
 });

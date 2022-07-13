@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { relativeDatePlacement, relativeDatePreference } from "./relative-date-helper";
 
 describe("relative-date helpers", () => {

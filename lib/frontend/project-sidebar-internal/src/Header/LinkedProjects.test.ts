@@ -20,17 +20,18 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import LinkedProjects from "./LinkedProjects.vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
-import * as tlp_popovers from "@tuleap/tlp-popovers";
+import tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 
 describe("LinkedProjects", () => {
     it("displays the linked projects with a popover", () => {
-        const create_popover_spy = jest
+        const create_popover_spy = vi
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 

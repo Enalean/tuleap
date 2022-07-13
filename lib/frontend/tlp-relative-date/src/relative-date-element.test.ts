@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, beforeAll } from "vitest";
 import { RelativeDateElement } from "./relative-date-element";
 
 describe("relative-date element", () => {

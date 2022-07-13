@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
 import { GroupCollectionBuilder } from "../../tests/builders/GroupCollectionBuilder";
 import { TemplatingCallbackStub } from "../../tests/stubs/TemplatingCallbackStub";

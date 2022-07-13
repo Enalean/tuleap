@@ -17,19 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import type { FeedbackLevel } from "./feedback";
 import { addFeedback, clearAllFeedbacks } from "./feedback";
 
 const MESSAGE = "A feedback message";
 const MESSAGE_WITH_HTML_LINK = 'A feedback message with <a href="#">link</a>';
-
-jest.mock("dompurify", () => {
-    const realDomPurify = jest.requireActual("dompurify");
-    return {
-        __esModule: true,
-        default: { ...realDomPurify },
-    };
-});
 
 describe(`Feedback`, () => {
     let doc: Document;

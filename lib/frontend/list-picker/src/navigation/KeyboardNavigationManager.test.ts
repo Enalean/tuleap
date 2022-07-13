@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, beforeEach, afterEach, it } from "vitest";
 import { KeyboardNavigationManager } from "./KeyboardNavigationManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
@@ -75,9 +76,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group1-value_1")
-                        .element.classList
-                ).toContain("list-picker-item-highlighted");
+                    item_map_manager
+                        .findListPickerItemInItemMap("list-picker-item-group1-value_1")
+                        .element.classList.contains("list-picker-item-highlighted")
+                ).toBe(true);
             });
 
             it("When the user reaches the last valid item, then it should keep it highlighted", () => {
@@ -87,9 +89,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // won't highlight 5th since it is disabled
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group2-value_4")
-                        .element.classList
-                ).toContain("list-picker-item-highlighted");
+                    item_map_manager
+                        .findListPickerItemInItemMap("list-picker-item-group2-value_4")
+                        .element.classList.contains("list-picker-item-highlighted")
+                ).toBe(true);
             });
         });
 
@@ -99,9 +102,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // highlights 1st
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group1-value_0")
-                        .element.classList
-                ).toContain("list-picker-item-highlighted");
+                    item_map_manager
+                        .findListPickerItemInItemMap("list-picker-item-group1-value_0")
+                        .element.classList.contains("list-picker-item-highlighted")
+                ).toBe(true);
             });
 
             it("When the user reaches the first item, then it should keep it highlighted", () => {
@@ -111,9 +115,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // same
 
                 expect(
-                    item_map_manager.findListPickerItemInItemMap("list-picker-item-group1-value_0")
-                        .element.classList
-                ).toContain("list-picker-item-highlighted");
+                    item_map_manager
+                        .findListPickerItemInItemMap("list-picker-item-group1-value_0")
+                        .element.classList.contains("list-picker-item-highlighted")
+                ).toBe(true);
             });
         });
     });

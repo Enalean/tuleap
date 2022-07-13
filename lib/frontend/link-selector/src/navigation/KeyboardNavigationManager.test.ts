@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { KeyboardNavigationManager } from "./KeyboardNavigationManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
@@ -73,9 +74,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" }));
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-1")
-                        .element.classList
-                ).toContain("link-selector-item-highlighted");
+                    item_map_manager
+                        .findLinkSelectorItemInItemMap("link-selector-item-group1-1")
+                        .element.classList.contains("link-selector-item-highlighted")
+                ).toBe(true);
             });
 
             it("When the user reaches the last valid item, then it should keep it highlighted", () => {
@@ -85,9 +87,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowDown" })); // highlights id 4
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group2-4")
-                        .element.classList
-                ).toContain("link-selector-item-highlighted");
+                    item_map_manager
+                        .findLinkSelectorItemInItemMap("link-selector-item-group2-4")
+                        .element.classList.contains("link-selector-item-highlighted")
+                ).toBe(true);
             });
         });
 
@@ -97,9 +100,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // highlights 1st
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-0")
-                        .element.classList
-                ).toContain("link-selector-item-highlighted");
+                    item_map_manager
+                        .findLinkSelectorItemInItemMap("link-selector-item-group1-0")
+                        .element.classList.contains("link-selector-item-highlighted")
+                ).toBe(true);
             });
 
             it("When the user reaches the first item, then it should keep it highlighted", () => {
@@ -109,9 +113,10 @@ describe("KeyboardNavigationManager", () => {
                 manager.navigate(new KeyboardEvent("keydown", { key: "ArrowUp" })); // same
 
                 expect(
-                    item_map_manager.findLinkSelectorItemInItemMap("link-selector-item-group1-0")
-                        .element.classList
-                ).toContain("link-selector-item-highlighted");
+                    item_map_manager
+                        .findLinkSelectorItemInItemMap("link-selector-item-group1-0")
+                        .element.classList.contains("link-selector-item-highlighted")
+                ).toBe(true);
             });
         });
     });

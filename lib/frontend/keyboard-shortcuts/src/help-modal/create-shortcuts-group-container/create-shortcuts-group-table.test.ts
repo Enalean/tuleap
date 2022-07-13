@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import type { Shortcut, ShortcutsGroup } from "../../type";
 import { createShortcutsGroupTable, getTableHead } from "./create-shortcuts-group-table";
 

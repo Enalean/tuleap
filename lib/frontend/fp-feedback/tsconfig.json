@@ -1,9 +1,7 @@
 {
     "extends": "../../../tools/utils/scripts/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["es2019", "DOM"],
-        "types": ["jest"]
+        "lib": ["es2019", "DOM"]
     },
-    "include": ["src/**/*"],
-    "exclude": ["src/**/*.test.ts"]
+    "include": ["src/**/*"]
 }

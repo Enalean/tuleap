@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import { isLinkSelectorInAModal } from "./link-selector-in-modals-helper";
 
 describe("link-selector-in-modals-helper", () => {

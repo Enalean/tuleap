@@ -20,6 +20,8 @@
  * SOFTWARE.
  */
 
+import { describe, it, expect } from "vitest";
+
 describe("Main instantiation of the Tuleap Project Sidebar element", () => {
     it("instantiates the element", async () => {
         expect(document.head.getElementsByTagName("style")).toHaveLength(0);
@@ -31,7 +33,3 @@ describe("Main instantiation of the Tuleap Project Sidebar element", () => {
         expect(window.customElements.get("tuleap-project-sidebar")).toBeDefined();
     });
 });
-
-// Since we only do an async import we have to add an explicit empty export so the file can be considered as a module
-// eslint-disable-next-line jest/no-export
-export {};

@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, it, expect } from "vitest";
 import { html, render } from "lit/html.js";
 import { convertBadColorHexToRGB } from "../color-helper";
 import { retrievePredefinedTemplate } from "./predefined-item-template-retriever-helper";

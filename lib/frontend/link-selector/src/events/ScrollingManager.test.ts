@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { ScrollingManager } from "./ScrollingManager";
 
 describe("ScrollingManager", () => {
@@ -73,12 +74,12 @@ describe("ScrollingManager", () => {
 
     describe("scrolling lock/unlock", () => {
         beforeEach(() => {
-            jest.spyOn(window, "addEventListener");
-            jest.spyOn(window, "removeEventListener");
+            vi.spyOn(window, "addEventListener");
+            vi.spyOn(window, "removeEventListener");
         });
 
         afterEach(() => {
-            jest.clearAllMocks();
+            vi.clearAllMocks();
         });
 
         describe("lockScrolling", () => {
@@ -104,7 +105,7 @@ describe("ScrollingManager", () => {
 
             it("should not lock scrolling when the link-selector is not in a scrollable parent", () => {
                 const { wrapper_element, modal_section } = getModalElements();
-                jest.spyOn(modal_section, "addEventListener");
+                vi.spyOn(modal_section, "addEventListener");
 
                 const scrolling_manager = new ScrollingManager(wrapper_element);
                 scrolling_manager.lockScrolling();
@@ -116,7 +117,7 @@ describe("ScrollingManager", () => {
             it("should lock scrolling when the link-selector is in a scrollable parent", () => {
                 const { wrapper_element, modal_section } = getModalElements();
                 modal_section.style.overflowY = "scroll";
-                jest.spyOn(modal_section, "addEventListener");
+                vi.spyOn(modal_section, "addEventListener");
 
                 const scrolling_manager = new ScrollingManager(wrapper_element);
                 scrolling_manager.lockScrolling();
@@ -132,12 +133,13 @@ describe("ScrollingManager", () => {
                 const scrolling_manager = new ScrollingManager(wrapper_element);
                 scrolling_manager.lockScrolling();
 
-                jest.spyOn(window, "scroll").mockImplementation();
+                vi.spyOn(window, "scroll").mockImplementation(() => {
+                    // Do nothing
+                });
                 window.dispatchEvent(new Event("scroll"));
                 expect(window.scroll).toHaveBeenCalledWith(0, 0);
 
-                // eslint-disable-next-line jest/prefer-spy-on
-                modal_section.scroll = jest.fn();
+                modal_section.scroll = vi.fn() as unknown as typeof modal_section.scroll;
                 modal_section.dispatchEvent(new Event("scroll"));
                 expect(modal_section.scroll).toHaveBeenCalledWith(0, 0);
             });
@@ -147,7 +149,7 @@ describe("ScrollingManager", () => {
             it("should release locks on window and scrollable parent", () => {
                 const { wrapper_element, modal_section } = getModalElements();
                 modal_section.style.overflowY = "scroll";
-                jest.spyOn(modal_section, "removeEventListener");
+                vi.spyOn(modal_section, "removeEventListener");
 
                 const scrolling_manager = new ScrollingManager(wrapper_element);
                 scrolling_manager.lockScrolling();

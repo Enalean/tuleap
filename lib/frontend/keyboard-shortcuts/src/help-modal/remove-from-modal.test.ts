@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import type { ShortcutsGroup } from "../type";
 import { removeShortcutsGroupFromShortcutsModal } from "./remove-from-modal";
 

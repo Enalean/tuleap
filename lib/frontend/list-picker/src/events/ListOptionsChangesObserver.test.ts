@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ItemsMapManager } from "../items/ItemsMapManager";
 import type { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import type { SelectionManager } from "../type";
@@ -29,7 +31,7 @@ import {
 
 describe("ListOptionsChangesObserver", () => {
     let source_select_box: HTMLSelectElement,
-        list_picker_element_attributes_updater: jest.Mock,
+        list_picker_element_attributes_updater: Mock,
         items_map_manager: ItemsMapManager,
         dropdown_content_renderer: DropdownContentRenderer,
         selection_manager: SelectionManager,
@@ -38,20 +40,20 @@ describe("ListOptionsChangesObserver", () => {
 
     beforeEach(() => {
         source_select_box = document.createElement("select");
-        list_picker_element_attributes_updater = jest.fn();
+        list_picker_element_attributes_updater = vi.fn();
         dropdown_content_renderer = {
-            renderAfterDependenciesUpdate: jest.fn(),
+            renderAfterDependenciesUpdate: vi.fn(),
         } as unknown as DropdownContentRenderer;
 
         items_map_manager = {
-            refreshItemsMap: jest.fn().mockReturnValue(Promise.resolve()),
+            refreshItemsMap: vi.fn().mockReturnValue(Promise.resolve()),
         } as unknown as ItemsMapManager;
 
         selection_manager = {
-            resetAfterDependenciesUpdate: jest.fn(),
+            resetAfterDependenciesUpdate: vi.fn(),
         } as unknown as SelectionManager;
 
-        event_manager = { attachItemListEvent: jest.fn() } as unknown as EventManager;
+        event_manager = { attachItemListEvent: vi.fn() } as unknown as EventManager;
 
         list_options_changes_observer = new ListOptionsChangesObserver(
             source_select_box,
@@ -64,12 +66,10 @@ describe("ListOptionsChangesObserver", () => {
     });
 
     it("should refresh the list-picker when options are added in the source <select>", async () => {
-        await new Promise<void>((done) => {
-            list_options_changes_observer.startWatchingChanges();
+        list_options_changes_observer.startWatchingChanges();
+        appendGroupedOptionsToSourceSelectBox(source_select_box);
 
-            appendGroupedOptionsToSourceSelectBox(source_select_box);
-            done();
-        });
+        await new Promise(process.nextTick);
 
         await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
@@ -78,13 +78,12 @@ describe("ListOptionsChangesObserver", () => {
     });
 
     it("should refresh the list-picker when options are removed in the source <select>", async () => {
-        await new Promise<void>((done) => {
-            appendSimpleOptionsToSourceSelectBox(source_select_box);
-            list_options_changes_observer.startWatchingChanges();
+        appendSimpleOptionsToSourceSelectBox(source_select_box);
+        list_options_changes_observer.startWatchingChanges();
 
-            source_select_box.innerHTML = "";
-            done();
-        });
+        source_select_box.innerHTML = "";
+
+        await new Promise(process.nextTick);
 
         await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();
@@ -93,13 +92,12 @@ describe("ListOptionsChangesObserver", () => {
     });
 
     it("should refresh the list-picker when attribute disabled on children is added", async () => {
-        await new Promise<void>((done) => {
-            appendSimpleOptionsToSourceSelectBox(source_select_box);
-            list_options_changes_observer.startWatchingChanges();
+        appendSimpleOptionsToSourceSelectBox(source_select_box);
+        list_options_changes_observer.startWatchingChanges();
 
-            source_select_box.options[0].disabled = true;
-            done();
-        });
+        source_select_box.options[0].disabled = true;
+
+        await new Promise(process.nextTick);
 
         await expect(items_map_manager.refreshItemsMap).toHaveBeenCalled();
         expect(dropdown_content_renderer.renderAfterDependenciesUpdate).toHaveBeenCalled();

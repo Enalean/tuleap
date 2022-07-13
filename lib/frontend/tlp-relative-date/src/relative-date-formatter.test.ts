@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import formatRelativeDate from "./relative-date-formatter";
 
 const a_second_in_ms = 1000;

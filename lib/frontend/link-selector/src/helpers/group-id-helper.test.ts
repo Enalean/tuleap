@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import type { GroupOfItems } from "../items/GroupCollection";
 import { getGroupId } from "./group-id-helper";
 

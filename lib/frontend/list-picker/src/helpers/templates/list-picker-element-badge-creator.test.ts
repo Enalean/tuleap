@@ -18,6 +18,7 @@
  *
  */
 
+import { describe, beforeEach, it, expect, vi } from "vitest";
 import { appendSimpleOptionsToSourceSelectBox } from "../../test-helpers/select-box-options-generator";
 import { ItemsMapManager } from "../../items/ItemsMapManager";
 import { createItemBadgeTemplate } from "./list-picker-element-badge-creator";
@@ -35,7 +36,7 @@ describe("list-picker-element-badge-creator", () => {
         appendSimpleOptionsToSourceSelectBox(source_select_box);
         item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
         await item_map_manager.refreshItemsMap();
-        event_listener = jest.fn();
+        event_listener = vi.fn();
     });
 
     describe("listPickerElementBadgeCreator", () => {

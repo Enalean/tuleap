@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, beforeEach } from "vitest";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import type { FetchResult } from "./ResultFetcher";

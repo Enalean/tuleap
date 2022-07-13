@@ -17,18 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
+import { describe, it, beforeAll, beforeEach, expect, vi } from "vitest";
 import { CopyToClipboardElement } from "./copy-to-clipboard-element";
 import * as clipboard from "./clipboard";
 
 describe("copy-to-clipboard element", () => {
-    let writeTextToClipboardSpy: jest.SpyInstance;
+    let writeTextToClipboardSpy: SpyInstance;
 
     beforeAll(() => {
         window.customElements.define("copy-to-clipboard", CopyToClipboardElement);
     });
 
     beforeEach(() => {
-        writeTextToClipboardSpy = jest.spyOn(clipboard, "writeTextToClipboard").mockResolvedValue();
+        writeTextToClipboardSpy = vi.spyOn(clipboard, "writeTextToClipboard").mockResolvedValue();
     });
 
     it("copies value on click", () => {
