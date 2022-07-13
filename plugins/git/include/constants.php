@@ -31,7 +31,6 @@ define('GITOLITE3_LOGS_PATH', '/var/lib/gitolite/.gitolite/logs/');
  *     'platform_can_use_gerrit' => boolean
  */
 define('GIT_EVENT_PLATFORM_CAN_USE_GERRIT', 'git_event_platform_can_use_gerrit');
-define('REST_GIT_PULL_REQUEST_ENDPOINTS', 'rest_git_pull_request_endpoints');
 define('REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY', 'rest_git_pull_request_get_for_repository');
 
 /**

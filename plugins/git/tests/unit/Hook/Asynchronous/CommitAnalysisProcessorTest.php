@@ -43,7 +43,7 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->logger            = new TestLogger();
         $this->message_retriever = RetrieveCommitMessageStub::withMessage(self::COMMIT_MESSAGE);
-        $this->event_dispatcher  = EventDispatcherStub::withCallback(static fn($event) => $event);
+        $this->event_dispatcher  = EventDispatcherStub::withIdentityCallback();
     }
 
     private function process(): void

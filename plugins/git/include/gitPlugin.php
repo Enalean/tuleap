@@ -2903,7 +2903,8 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             new \Tuleap\Layout\JavascriptAsset(
                 $this->getAssets(),
                 'git-artifact-create-branch.js'
-            )
+            ),
+            new \Tuleap\Git\PullRequestEndpointsAvailableChecker(EventManager::instance()),
         );
 
         $button_action = $button_fetcher->getActionButton(

@@ -28,7 +28,9 @@ use ForgeConfig;
 use GitRepository;
 use GitRepositoryFactory;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Git\PullRequestEndpointsAvailableChecker;
 use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
+use Tuleap\Git\Stub\EventDispatcherStub;
 use Tuleap\Layout\IncludeAssetsGeneric;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -65,7 +67,8 @@ final class CreateBranchButtonFetcherTest extends TestCase
             new JavascriptAsset(
                 $this->include_asset,
                 ""
-            )
+            ),
+            new PullRequestEndpointsAvailableChecker(EventDispatcherStub::withIdentityCallback()),
         );
 
         $this->include_asset->method("getFileURL")->willReturn("");

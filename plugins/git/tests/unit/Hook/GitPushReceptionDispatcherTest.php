@@ -54,7 +54,7 @@ final class GitPushReceptionDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
                     RetrieveCommitMessageStub::withMessage(
                         'art #' . self::FIRST_ARTIFACT_ID . "\n " . self::SECOND_KEYWORD . '# ' . self::SECOND_ARTIFACT_ID
                     ),
-                    EventDispatcherStub::withCallback(static fn($event) => $event),
+                    EventDispatcherStub::withIdentityCallback(),
                 )
             )
         );

@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid " At least a git repository is migrated to gerrit"
 msgstr " Au moins un repertoire git est migré sur gerrit"
@@ -367,6 +367,9 @@ msgstr "L'adresse mail %1$s n'a pas pu être supprimé"
 
 msgid "Create Git branch"
 msgstr "Créer une branche Git"
+
+msgid "Create Git branch and pull request"
+msgstr "Créer une branche Git et une pull request"
 
 msgid "Create new"
 msgstr "Nouveau modèle"

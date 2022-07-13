@@ -89,6 +89,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpRepositoryDao;
 use Tuleap\Git\Permissions\RegexpTemplateDao;
+use Tuleap\Git\PullRequestEndpointsAvailableChecker;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
@@ -1201,16 +1202,9 @@ class RepositoryResource extends AuthenticatedResource
 
     private function checkPullRequestEndpointsAvailable()
     {
-        $available = false;
+        $checker = new PullRequestEndpointsAvailableChecker(EventManager::instance());
 
-        EventManager::instance()->processEvent(
-            REST_GIT_PULL_REQUEST_ENDPOINTS,
-            [
-                'available' => &$available,
-            ]
-        );
-
-        if ($available === false) {
+        if (! $checker->arePullRequestEndpointsAvailable()) {
             throw new RestException(404, 'PullRequest plugin not activated');
         }
     }
