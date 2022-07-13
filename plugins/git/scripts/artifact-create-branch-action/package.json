@@ -18,6 +18,10 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
     "@tuleap/po-gettext-plugin": "link:../../../../lib/frontend/po-gettext-plugin",
-    "vue-loader": "^17.0.0"
+    "vue-loader": "^17.0.0",
+    "@vue/test-utils": "^2.0.2"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

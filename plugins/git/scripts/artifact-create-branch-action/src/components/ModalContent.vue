@@ -43,6 +43,7 @@
                     required="required"
                     aria-required="true"
                     v-model="selected_repository"
+                    data-test="repositories-select"
                 >
                     <option
                         v-for="repository in repositories"
@@ -65,6 +66,7 @@
                     required="required"
                     aria-required="true"
                     v-model="reference"
+                    data-test="branch-reference-input"
                 />
                 <p class="text-info">
                     {{ $gettext("Must be an existing git commit SHA-1 or a branch name") }}
@@ -80,7 +82,11 @@
             </p>
             <p v-if="are_pullrequest_endpoints_available">
                 <label class="tlp-label tlp-checkbox">
-                    <input type="checkbox" v-model="must_create_pr" />
+                    <input
+                        type="checkbox"
+                        v-model="must_create_pr"
+                        data-test="create-pr-checkbox"
+                    />
                     {{
                         $gettext(
                             "Create a pull request based on this new branch to the default branch"
@@ -102,6 +108,7 @@
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_creating_branch"
                 v-on:click="onClickCreateBranch"
+                data-test="create-branch-submit-button"
             >
                 <i
                     aria-hidden="true"
