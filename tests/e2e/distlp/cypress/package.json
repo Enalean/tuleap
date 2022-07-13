@@ -1,0 +1,10 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/core-cypress-e2e-distlp",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@tuleap/cypress-utilities-support": "link:../../../../lib/test-utils/cypress-utilities-support"
+  }
+}
