@@ -69,6 +69,7 @@ final class SearchColumnCollectionBuilderTest extends TestCase
                 "status",
                 "obsolescence_date",
                 "location",
+                "filename",
                 "field_1",
                 "field_2",
             ],

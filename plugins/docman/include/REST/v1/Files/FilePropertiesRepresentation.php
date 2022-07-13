@@ -40,11 +40,17 @@ class FilePropertiesRepresentation
      */
     public $file_size;
 
-    private function __construct(string $file_type, string $download_href, int $file_size)
+    /**
+     * @var string
+     */
+    public $file_name;
+
+    private function __construct(string $file_type, string $download_href, int $file_size, string $file_name)
     {
         $this->file_type     = $file_type;
         $this->download_href = $download_href;
         $this->file_size     = $file_size;
+        $this->file_name     = $file_name;
     }
 
     public static function build(\Docman_Version $docman_version, string $download_href): self
@@ -52,7 +58,8 @@ class FilePropertiesRepresentation
         return new self(
             $docman_version->getFiletype(),
             $download_href,
-            $docman_version->getFilesize()
+            $docman_version->getFilesize(),
+            $docman_version->getFilename(),
         );
     }
 }
