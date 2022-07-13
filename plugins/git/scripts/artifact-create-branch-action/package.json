@@ -5,13 +5,12 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/fp-feedback": "link:../../../../lib/frontend/fp-feedback",
-    "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
-    "@tuleap/tlp-fetch": "link:../../../../lib/frontend/tlp-fetch",
-    "@tuleap/tlp": "link:../../../../src/themes/tlp",
-    "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
     "@tuleap/fault": "link:../../../../lib/frontend/fault",
     "@tuleap/fetch-result": "link:../../../../lib/frontend/fetch-result",
+    "@tuleap/fp-feedback": "link:../../../../lib/frontend/fp-feedback",
+    "@tuleap/tlp": "link:../../../../src/themes/tlp",
+    "@tuleap/tlp-modal": "link:../../../../lib/frontend/tlp-modal",
+    "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
     "neverthrow": "^4.3.1",
     "vue": "3.2.31",
     "vue3-gettext": "^2.2.1"

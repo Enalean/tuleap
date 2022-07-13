@@ -18,31 +18,32 @@
  */
 
 import type { GitRepository } from "../src/types";
-import { recursiveGet } from "@tuleap/tlp-fetch";
-import { decodeJSON, postJSON } from "@tuleap/fetch-result";
+import { decodeJSON, postJSON, getAllJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 
 interface RecursiveGetProjectRepositories {
-    repositories: Array<GitRepository>;
+    readonly repositories: ReadonlyArray<GitRepository>;
 }
 
-export function getProjectRepositories(
+export const getProjectRepositories = (
     project_id: number,
     branch_name_preview: string
-): Promise<ReadonlyArray<GitRepository>> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/git`, {
-        params: {
-            fields: "basic",
-            limit: 50,
-            query: JSON.stringify({
-                scope: "project",
-                allow_creation_of_branch: branch_name_preview,
-            }),
-        },
-        getCollectionCallback: (payload: RecursiveGetProjectRepositories) => payload.repositories,
-    });
-}
+): ResultAsync<readonly GitRepository[], Fault> =>
+    getAllJSON<RecursiveGetProjectRepositories, GitRepository>(
+        `/api/v1/projects/${project_id}/git`,
+        {
+            params: {
+                fields: "basic",
+                limit: 50,
+                query: JSON.stringify({
+                    scope: "project",
+                    allow_creation_of_branch: branch_name_preview,
+                }),
+            },
+            getCollectionCallback: (payload) => payload.repositories,
+        }
+    );
 
 export interface GitCreateBranchResponse {
     readonly html_url: string;
