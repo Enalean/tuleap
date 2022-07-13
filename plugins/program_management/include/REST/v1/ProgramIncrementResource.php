@@ -57,6 +57,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
@@ -269,6 +270,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     $user_retriever,
                     $project_manager_adapter,
                     $project_access_checker,
+                    new TeamDao()
                 ),
             ),
             $visibility_verifier,

@@ -305,10 +305,11 @@ msgstr ""
 msgid "Project #%d is not a Program. Please use a project defined as a Program"
 msgstr ""
 
-msgid "Project is defined as a Team project. It can not be used as a Program."
+#, php-format
+msgid "Project %d is not a team of program %d"
 msgstr ""
 
-msgid "Project is not defined as a Team project. It can not be synchronized."
+msgid "Project is defined as a Team project. It can not be used as a Program."
 msgstr ""
 
 msgid "Remove from top backlog"
@@ -446,6 +447,10 @@ msgstr ""
 
 #, php-format
 msgid "User #%d cannot manipulate the top backlog of the Program #%d"
+msgstr ""
+
+#, php-format
+msgid "User #%d cannot see one of the teams of Program #%d"
 msgstr ""
 
 #, php-format

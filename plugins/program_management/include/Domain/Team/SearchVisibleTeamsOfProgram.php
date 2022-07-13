@@ -35,4 +35,13 @@ interface SearchVisibleTeamsOfProgram
      * @throws TeamIsNotVisibleException
      */
     public function searchTeamIdsOfProgram(ProgramIdentifier $program, UserIdentifier $user): array;
+
+    /**
+     * Returns the $team_id when it belongs to the given $program.
+     * It guarantees that the Team is visible by $user, otherwise it throws an Exception.
+     * Throws an exception if the $team_id does not refer a project aggregated by the given $program.
+     * @throws TeamIsNotAggregatedByProgramException
+     * @throws TeamIsNotVisibleException
+     */
+    public function searchTeamWithIdInProgram(ProgramIdentifier $program, UserIdentifier $user, int $team_id): int;
 }

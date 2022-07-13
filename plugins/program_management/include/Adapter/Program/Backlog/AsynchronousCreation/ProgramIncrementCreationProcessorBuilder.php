@@ -42,6 +42,7 @@ use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
+use Tuleap\ProgramManagement\Adapter\Team\TeamDao;
 use Tuleap\ProgramManagement\Adapter\Team\VisibleTeamSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
@@ -159,7 +160,13 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $mirror_creator,
             MessageLog::buildFromLogger($logger),
             $user_stories_planner,
-            new VisibleTeamSearcher($program_dao, $user_retriever, $project_manager_adapter, $project_access_checker),
+            new VisibleTeamSearcher(
+                $program_dao,
+                $user_retriever,
+                $project_manager_adapter,
+                $project_access_checker,
+                new TeamDao()
+            ),
             new ProjectReferenceRetriever($project_manager_adapter),
             $synchronized_fields_gatherer,
             new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),

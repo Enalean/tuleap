@@ -46,6 +46,7 @@ use Tuleap\ProgramManagement\Adapter\Events\ProjectServiceBeforeActivationProxy;
 use Tuleap\ProgramManagement\Adapter\Events\RedirectUserAfterArtifactCreationOrUpdateEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
+use Tuleap\ProgramManagement\Adapter\Events\TeamSynchronizationEventProxy;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
@@ -55,10 +56,12 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Iterat
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationUpdateDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationUpdateProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\MirroredTimeboxesSynchronizationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateProcessorBuilder;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\SynchronizeTeamProcessor;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\RequiredFieldVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\SemanticsVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck\StatusIsAlignedVerifier;
@@ -156,6 +159,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Iterati
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationUpdateEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationEventHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateEventHandler;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TeamSynchronizationHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\CanSubmitNewArtifactHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\IterationCreatorChecker;
@@ -395,7 +399,28 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
     public function routeGetSynchronizeTeam(): SynchronizeTeamController
     {
-        return new SynchronizeTeamController(ProjectManager::instance(), new TeamDao(), $this->getLogger());
+        $project_manager = ProjectManager::instance();
+        $user_manager    = new UserManagerAdapter(UserManager::instance());
+        $logger          = $this->getLogger();
+
+        return new SynchronizeTeamController(
+            $project_manager,
+            new MirroredTimeboxesSynchronizationDispatcher(
+                $logger,
+                new QueueFactory($logger),
+            ),
+            new VisibleTeamSearcher(
+                new ProgramDao(),
+                $user_manager,
+                new ProjectManagerAdapter($project_manager, $user_manager),
+                new ProjectAccessChecker(
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new TeamDao()
+            ),
+            ProgramAdapter::instance(),
+        );
     }
 
     public function routeGetProgramManagement(): DisplayProgramBacklogController
@@ -439,6 +464,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     {
         $project_manager               = ProjectManager::instance();
         $program_dao                   = new ProgramDao();
+        $team_dao                      = new TeamDao();
         $tracker_factory               = TrackerFactory::instance();
         $user_manager                  = UserManager::instance();
         $user_manager_adapter          = new UserManagerAdapter($user_manager);
@@ -523,7 +549,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new ProgramManagementBreadCrumbsBuilder(),
             $program_dao,
             new ProjectReferenceRetriever($project_manager_adapter),
-            new TeamDao(),
+            $team_dao,
             $program_adapter,
             $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
             $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
@@ -592,6 +618,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                             $user_retriever,
                             $project_manager_adapter,
                             $project_access_checker,
+                            $team_dao
                         ),
                     ),
                 )
@@ -658,6 +685,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                             $user_retriever,
                             $project_manager_adapter,
                             $project_access_checker,
+                            new TeamDao()
                         ),
                     ),
                 )
@@ -764,6 +792,15 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $iterations_DAO,
                 $changeset_verifier,
                 $visibility_verifier,
+                $event
+            )
+        );
+
+        (new TeamSynchronizationHandler(
+            new SynchronizeTeamProcessor($logger)
+        ))->handle(
+            TeamSynchronizationEventProxy::fromWorkerEvent(
+                $logger,
                 $event
             )
         );

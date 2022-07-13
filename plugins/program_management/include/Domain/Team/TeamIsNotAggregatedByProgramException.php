@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,25 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Team;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
-
-final class TeamIsNotVisibleException extends \Exception
+final class TeamIsNotAggregatedByProgramException extends \Exception
 {
     private string $i18n_message;
 
-    public function __construct(ProgramIdentifier $program, UserIdentifier $user)
+    public function __construct(int $team_id, int $program_id)
     {
-        $this->i18n_message =
-            sprintf(
-                dgettext('tuleap-program_management', 'User #%d cannot see one of the teams of Program #%d'),
-                $user->getId(),
-                $program->getId()
-            );
-
-        parent::__construct(
-            $this->i18n_message
+        $this->i18n_message = sprintf(
+            dgettext(
+                'tuleap-program_management',
+                "Project %d is not a team of program %d",
+            ),
+            $team_id,
+            $program_id
         );
+
+        parent::__construct($this->i18n_message);
     }
 
     public function getI18NExceptionMessage(): string

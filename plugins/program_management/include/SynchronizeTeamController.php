@@ -22,9 +22,14 @@
 namespace Tuleap\ProgramManagement;
 
 use HTTPRequest;
-use Psr\Log\LoggerInterface;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchMirroredTimeboxesSynchronization;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\TeamSynchronizationCommand;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -34,8 +39,9 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
 {
     public function __construct(
         private \ProjectManager $project_manager,
-        private VerifyIsTeam $verify_is_team,
-        private LoggerInterface $logger,
+        private DispatchMirroredTimeboxesSynchronization $synchronization_dispatcher,
+        private SearchVisibleTeamsOfProgram $teams_searcher,
+        private BuildProgram $build_program,
     ) {
     }
 
@@ -61,17 +67,35 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
             );
         }
 
-        if (! $this->verify_is_team->isATeam($variables['team_id'])) {
-            throw new ForbiddenException(
-                dgettext(
-                    "tuleap-program_management",
-                    "Project is not defined as a Team project. It can not be synchronized."
-                )
+        $user = UserProxy::buildFromPFUser($request->getCurrentUser());
+        try {
+            $program = ProgramIdentifier::fromId(
+                $this->build_program,
+                (int) $project->getID(),
+                $user,
+                null
             );
+
+            $team = TeamIdentifier::buildTeamOfProgramById(
+                $this->teams_searcher,
+                $program,
+                $user,
+                $variables['team_id']
+            );
+        } catch (
+            Domain\Program\Plan\ProgramAccessException |
+            Domain\Program\Plan\ProjectIsNotAProgramException |
+            Domain\Team\TeamIsNotVisibleException $e
+        ) {
+            throw new ForbiddenException($e->getI18NExceptionMessage());
+        } catch (Domain\Team\TeamIsNotAggregatedByProgramException $e) {
+            throw new NotFoundException($e->getI18NExceptionMessage());
         }
 
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
-        $this->logger->debug("Should synchronize team " . $variables['team_id']);
+        $this->synchronization_dispatcher->dispatchSynchronizationCommand(
+            TeamSynchronizationCommand::fromProgramAndTeam($program, $team)
+        );
     }
 }

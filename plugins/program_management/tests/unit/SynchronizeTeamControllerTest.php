@@ -22,9 +22,9 @@
 namespace Tuleap\ProgramManagement;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\Log\Test\TestLogger;
-use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
-use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\DispatchSynchronizationCommandStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -40,21 +40,27 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \HTTPRequest $request;
     private array $variables;
 
+    private const TEAM_ID = 123;
+
     protected function setUp(): void
     {
         $this->project_manager = $this->createStub(\ProjectManager::class);
-        $this->variables       = ["project_name" => "my-program", 'team_id' => 123];
+        $this->variables       = ["project_name" => "my-program", 'team_id' => self::TEAM_ID];
 
         $user          = UserTestBuilder::buildWithDefaults();
         $this->request = HTTPRequestBuilder::get()->withUser($user)->build();
     }
 
-    private function getController(VerifyIsTeam $verify_is_team): SynchronizeTeamController
-    {
+    private function getController(
+        DispatchSynchronizationCommandStub $dispatch_synchronization_command_stub,
+        SearchVisibleTeamsOfProgramStub $visible_teams_of_program_stub,
+        BuildProgramStub $build_program_stub,
+    ): SynchronizeTeamController {
         return new SynchronizeTeamController(
             $this->project_manager,
-            $verify_is_team,
-            new TestLogger()
+            $dispatch_synchronization_command_stub,
+            $visible_teams_of_program_stub,
+            $build_program_stub
         );
     }
 
@@ -63,7 +69,11 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProjectByUnixName')->willReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->getController(VerifyIsTeamStub::withValidTeam())->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(
+            DispatchSynchronizationCommandStub::build(),
+            SearchVisibleTeamsOfProgramStub::withNoTeam(),
+            BuildProgramStub::stubInvalidProgram()
+        )->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
     public function testItThrowsNotFoundWhenServiceIsNotAvailable(): void
@@ -72,16 +82,71 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
 
         $this->expectException(NotFoundException::class);
-        $this->getController(VerifyIsTeamStub::withValidTeam())->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(
+            DispatchSynchronizationCommandStub::build(),
+            SearchVisibleTeamsOfProgramStub::withNoTeam(),
+            BuildProgramStub::stubInvalidProgram()
+        )->process($this->request, LayoutBuilder::build(), $this->variables);
     }
 
-    public function testPreventsAccessWhenProjectIsATeam(): void
+    public function testPreventsAccessWhenProjectIsNotAProgram(): void
     {
         $project = $this->getProject(true);
         $this->project_manager->method('getProjectByUnixName')->willReturn($project);
 
         $this->expectException(ForbiddenException::class);
-        $this->getController(VerifyIsTeamStub::withNotValidTeam())->process($this->request, LayoutBuilder::build(), $this->variables);
+        $this->getController(
+            DispatchSynchronizationCommandStub::build(),
+            SearchVisibleTeamsOfProgramStub::withNoTeam(),
+            BuildProgramStub::stubInvalidProgram()
+        )->process($this->request, LayoutBuilder::build(), $this->variables);
+    }
+
+    public function testPreventsAccessWhenUserHasNoAccessToProject(): void
+    {
+        $project = $this->getProject(true);
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+
+        $this->expectException(ForbiddenException::class);
+        $this->getController(
+            DispatchSynchronizationCommandStub::build(),
+            SearchVisibleTeamsOfProgramStub::withNoTeam(),
+            BuildProgramStub::stubInvalidProgramAccess()
+        )->process($this->request, LayoutBuilder::build(), $this->variables);
+    }
+
+    public function testPreventsAccessWhenProvidedTeamIsNotATeamOfCurrentProgram(): void
+    {
+        $project = $this->getProject(true);
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+
+        $this->expectException(NotFoundException::class);
+        $this->getController(
+            DispatchSynchronizationCommandStub::build(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds(200, 300),
+            BuildProgramStub::stubValidProgram()
+        )->process($this->request, LayoutBuilder::build(), $this->variables);
+    }
+
+    public function testItDispatchesATeamSynchronizationCommand(): void
+    {
+        $project = $this->getProject(true);
+        $this->project_manager->method('getProjectByUnixName')->willReturn($project);
+
+        $dispatch = DispatchSynchronizationCommandStub::build();
+
+        $this->getController(
+            $dispatch,
+            SearchVisibleTeamsOfProgramStub::withTeamIds(self::TEAM_ID),
+            BuildProgramStub::stubValidProgram()
+        )->process($this->request, LayoutBuilder::build(), $this->variables);
+
+        $dispatched_command = $dispatch->getCallParamsAtIndex(0);
+
+        self::assertEquals(1, $dispatch->getCallsCount());
+        self::assertNotNull($dispatched_command);
+        self::assertSame($dispatched_command->getProgramId(), 1);
+        self::assertSame($dispatched_command->getTeamId(), self::TEAM_ID);
     }
 
     private function getProject(bool $is_program_management_used = true): \Project

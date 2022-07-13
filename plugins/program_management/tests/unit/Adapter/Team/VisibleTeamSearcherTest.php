@@ -25,12 +25,15 @@ namespace Tuleap\ProgramManagement\Adapter\Team;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotAggregatedByProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeamOfProgram;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamOfProgramStub;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -46,13 +49,15 @@ final class VisibleTeamSearcherTest extends TestCase
     private CheckProjectAccess $access_checker;
     private ProgramIdentifier $program;
     private UserIdentifierStub $user;
+    private VerifyIsTeamOfProgram $verify_is_team_of_program;
 
     protected function setUp(): void
     {
-        $this->teams_searcher = SearchTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);
-        $this->access_checker = CheckProjectAccessStub::withValidAccess();
-        $this->program        = ProgramIdentifierBuilder::build();
-        $this->user           = UserIdentifierStub::buildGenericUser();
+        $this->teams_searcher            = SearchTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);
+        $this->access_checker            = CheckProjectAccessStub::withValidAccess();
+        $this->program                   = ProgramIdentifierBuilder::build();
+        $this->user                      = UserIdentifierStub::buildGenericUser();
+        $this->verify_is_team_of_program = VerifyIsTeamOfProgramStub::withTeamAggregatedByProgram();
     }
 
     private function getSearcher(): VisibleTeamSearcher
@@ -64,7 +69,8 @@ final class VisibleTeamSearcherTest extends TestCase
                 ProjectTestBuilder::aProject()->withId(self::FIRST_TEAM_ID)->build(),
                 ProjectTestBuilder::aProject()->withId(self::SECOND_TEAM_ID)->build(),
             ),
-            $this->access_checker
+            $this->access_checker,
+            $this->verify_is_team_of_program
         );
     }
 
@@ -101,5 +107,28 @@ final class VisibleTeamSearcherTest extends TestCase
         $this->access_checker = $access_checker;
         $this->expectException(TeamIsNotVisibleException::class);
         $this->getSearcher()->searchTeamIdsOfProgram($this->program, $this->user);
+    }
+
+    public function testItSearchTeamWithIdInProgram(): void
+    {
+        $team_id = $this->getSearcher()->searchTeamWithIdInProgram($this->program, $this->user, self::FIRST_TEAM_ID);
+        self::assertEquals($team_id, self::FIRST_TEAM_ID);
+    }
+
+    public function testItThrowsWhenTeamIsNotAggregatedByProgram(): void
+    {
+        $this->verify_is_team_of_program = VerifyIsTeamOfProgramStub::withTeamNotAggregatedByProgram();
+        $this->expectException(TeamIsNotAggregatedByProgramException::class);
+        $this->getSearcher()->searchTeamWithIdInProgram($this->program, $this->user, self::FIRST_TEAM_ID);
+    }
+
+    /**
+     * @dataProvider dataProviderAccessExceptions
+     */
+    public function testItThrowsWhenUserCannotSeeTheTeam(CheckProjectAccess $access_checker): void
+    {
+        $this->access_checker = $access_checker;
+        $this->expectException(TeamIsNotVisibleException::class);
+        $this->getSearcher()->searchTeamWithIdInProgram($this->program, $this->user, self::FIRST_TEAM_ID);
     }
 }

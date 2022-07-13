@@ -28,7 +28,9 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotAggregatedByProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeamOfProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Project\CheckProjectAccess;
 
@@ -39,6 +41,7 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
         private RetrieveUser $user_retriever,
         private RetrieveFullProject $project_retriever,
         private CheckProjectAccess $access_checker,
+        private VerifyIsTeamOfProgram $verify_is_team_of_program,
     ) {
     }
 
@@ -58,5 +61,23 @@ final class VisibleTeamSearcher implements SearchVisibleTeamsOfProgram
             }
         }
         return $team_ids;
+    }
+
+    public function searchTeamWithIdInProgram(ProgramIdentifier $program, UserIdentifier $user, int $team_id): int
+    {
+        if (! $this->verify_is_team_of_program->isATeamFromProgram($program->getId(), $team_id)) {
+            throw new TeamIsNotAggregatedByProgramException($program->getId(), $team_id);
+        }
+
+        $pfuser  = $this->user_retriever->getUserWithId($user);
+        $project = $this->project_retriever->getProject($team_id);
+
+        try {
+            $this->access_checker->checkUserCanAccessProject($pfuser, $project);
+        } catch (\Project_AccessException $e) {
+            throw new TeamIsNotVisibleException($program, $user);
+        }
+
+        return $team_id;
     }
 }
