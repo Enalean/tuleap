@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
@@ -31,7 +32,7 @@ use Tuleap\Reference\NatureCollection;
  * Reference Manager
  * Performs all operations on references, including DB access (through ReferenceDAO)
  */
-class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * array of active Reference objects arrays of arrays, indexed by group_id, keyword, and num args.
@@ -826,13 +827,10 @@ class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
      */
     public function stringContainsReferences($string, Project $project)
     {
-        return count($this->extractReferences($string, $project->getId())) > 0;
+        return count($this->extractReferences($string, (int) $project->getId())) > 0;
     }
 
-    /**
-     * @return list<ReferenceInstance>
-     */
-    public function extractReferences($html, $group_id): array
+    public function extractReferences(string $html, int $group_id): array
     {
         $this->tmpGroupIdForCallbackFunction = $group_id;
         $referencesInstances                 = [];

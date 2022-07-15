@@ -24,18 +24,32 @@ namespace Tuleap\Git\Stub;
 
 final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\RetrieveCommitMessage
 {
-    private function __construct(private bool $should_throw, private string $return_value)
+    /**
+     * @param list<string> $return_values
+     */
+    private function __construct(
+        private bool $should_throw,
+        private bool $always_return,
+        private array $return_values,
+    ) {
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withSuccessiveMessages(string $message, string ...$other_messages): self
     {
+        return new self(false, false, [$message, ...$other_messages]);
     }
 
     public static function withMessage(string $message): self
     {
-        return new self(false, $message);
+        return new self(false, true, [$message]);
     }
 
     public static function withError(): self
     {
-        return new self(true, '');
+        return new self(true, false, ['']);
     }
 
     public function getCommitMessage(string $ref): string
@@ -43,6 +57,12 @@ final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\Retr
         if ($this->should_throw) {
             throw new \Git_Command_Exception('log', [], 1);
         }
-        return $this->return_value;
+        if ($this->always_return) {
+            return $this->return_values[0];
+        }
+        if (count($this->return_values) > 0) {
+            return array_shift($this->return_values);
+        }
+        throw new \LogicException('No commit message configured');
     }
 }

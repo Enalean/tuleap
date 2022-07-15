@@ -2482,7 +2482,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function receivePotentialReferences(PotentialReferencesReceived $event): void
     {
-        $handler = new ArtifactClosingReferencesHandler($this->getBackendLogger());
+        $handler = new ArtifactClosingReferencesHandler($this->getBackendLogger(), \ReferenceManager::instance());
         $handler->handlePotentialReferencesReceived($event);
     }
 }

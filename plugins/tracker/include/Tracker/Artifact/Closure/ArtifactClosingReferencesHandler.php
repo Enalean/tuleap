@@ -24,16 +24,41 @@ namespace Tuleap\Tracker\Artifact\Closure;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Event\Events\PotentialReferencesReceived;
+use Tuleap\Reference\ExtractReferences;
+use Tuleap\Reference\ReferenceInstance;
+use Tuleap\Tracker\Artifact\Artifact;
 
 final class ArtifactClosingReferencesHandler
 {
     public function __construct(
         private LoggerInterface $logger,
+        private ExtractReferences $reference_extractor,
     ) {
     }
 
     public function handlePotentialReferencesReceived(PotentialReferencesReceived $event): void
     {
-        $this->logger->debug(sprintf('Searching for references in text: %s', $event->text_with_potential_references));
+        $reference_instances = $this->reference_extractor->extractReferences(
+            $event->text_with_potential_references,
+            (int) $event->project->getID()
+        );
+        foreach ($reference_instances as $instance) {
+            $this->handleSingleReference($event, $instance);
+        }
+    }
+
+    private function handleSingleReference(PotentialReferencesReceived $event, ReferenceInstance $instance): void
+    {
+        if ($instance->getReference()->getNature() !== Artifact::REFERENCE_NATURE) {
+            return;
+        }
+        if ((int) $event->project->getID() !== (int) $instance->getReference()->getGroupId()) {
+            return;
+        }
+        $closing_keyword = ClosingKeyword::fromString($instance->getContextWord());
+        if (! $closing_keyword) {
+            return;
+        }
+        $this->logger->debug(sprintf('Found reference %s with closing keyword', $instance->getMatch()));
     }
 }
