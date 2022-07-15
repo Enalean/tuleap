@@ -452,15 +452,6 @@ msgstr ""
 msgid "There is no notification"
 msgstr "Il n'y a aucune notification"
 
-msgid ""
-"These settings only apply to instance using the modperl authentication mode, "
-"projects having SVN token authentication mode enabled or repositories in the "
-"SVN plugin."
-msgstr ""
-"Ces paramètres s'appliquent uniquement à une instance utilisant le mode "
-"d'authentification modperl, aux projets pouvant utiliser les jetons "
-"d'authentification ou aux dépôts du plugin SVN."
-
 msgid "This action cannot be undone."
 msgstr "Cette action est irréversible."
 

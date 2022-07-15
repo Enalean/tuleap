@@ -22,6 +22,8 @@
 namespace Tuleap\SVN\SiteAdmin;
 
 use CSRFSynchronizerToken;
+use ForgeConfig;
+use Tuleap\SVNCore\AccessControl\SVNProjectAccessController;
 use Tuleap\SVNCore\Cache\Parameters;
 
 /**
@@ -42,18 +44,15 @@ final class CachePresenter extends AdminPresenter
      */
     public $lifetime;
     /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
      * @var string
      */
     public $update_url = UpdateTuleapPMParamsController::URL;
+    public bool $is_php_based_auth_enabled;
 
-    public function __construct(Parameters $parameters, CSRFSynchronizerToken $csrf_token)
+    public function __construct(Parameters $parameters, public CSRFSynchronizerToken $csrf_token)
     {
-        $this->maximum_credentials = $parameters->getMaximumCredentials();
-        $this->lifetime            = $parameters->getLifetime();
-        $this->csrf_token          = $csrf_token;
+        $this->maximum_credentials       = $parameters->getMaximumCredentials();
+        $this->lifetime                  = $parameters->getLifetime();
+        $this->is_php_based_auth_enabled = ForgeConfig::getFeatureFlag(SVNProjectAccessController::FEATURE_FLAG_DISABLE) !== '1';
     }
 }
