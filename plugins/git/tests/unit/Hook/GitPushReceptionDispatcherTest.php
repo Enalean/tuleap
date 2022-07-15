@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook;
 
-use Psr\Log\Test\TestLogger;
+use Psr\Log\NullLogger;
+use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessor;
 use Tuleap\Git\Stub\BuildCommitAnalysisProcessorStub;
 use Tuleap\Git\Stub\EventDispatcherStub;
@@ -32,17 +33,17 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class GitPushReceptionDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const FIRST_ARTIFACT_ID  = 96;
-    private const SECOND_KEYWORD     = 'bug';
-    private const SECOND_ARTIFACT_ID = 76;
-    private const PROJECT_ID         = 162;
-    private const FIRST_COMMIT_SHA1  = '25c107ca25';
-    private const SECOND_COMMIT_SHA1 = '154961e96f';
-    private TestLogger $logger;
+    private const FIRST_COMMIT_MESSAGE  = 'closes art #96';
+    private const SECOND_COMMIT_MESSAGE = 'fixed bug #76';
+
+    private EventDispatcherStub $event_dispatcher;
+    private \Project $project;
 
     protected function setUp(): void
     {
-        $this->logger = new TestLogger();
+        $this->project = ProjectTestBuilder::aProject()->withId(162)->build();
+
+        $this->event_dispatcher = EventDispatcherStub::withIdentityCallback();
     }
 
     private function dispatch(): void
@@ -50,33 +51,46 @@ final class GitPushReceptionDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $dispatcher = new GitPushReceptionDispatcher(
             BuildCommitAnalysisProcessorStub::withProcessor(
                 new CommitAnalysisProcessor(
-                    $this->logger,
-                    RetrieveCommitMessageStub::withMessage(
-                        'art #' . self::FIRST_ARTIFACT_ID . "\n " . self::SECOND_KEYWORD . '# ' . self::SECOND_ARTIFACT_ID
+                    new NullLogger(),
+                    RetrieveCommitMessageStub::withSuccessiveMessages(
+                        self::FIRST_COMMIT_MESSAGE,
+                        self::SECOND_COMMIT_MESSAGE
                     ),
-                    EventDispatcherStub::withIdentityCallback(),
+                    $this->event_dispatcher,
                 )
             )
         );
         $repository = $this->createStub(\GitRepository::class);
-        $repository->method('getProject')->willReturn(
-            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()
-        );
+        $repository->method('getProject')->willReturn($this->project);
         $details = new PushDetails(
             $repository,
             UserTestBuilder::buildWithDefaults(),
             'refs/heads/main',
             PushDetails::ACTION_UPDATE,
             PushDetails::OBJECT_TYPE_COMMIT,
-            [self::FIRST_COMMIT_SHA1, self::SECOND_COMMIT_SHA1]
+            ['25c107ca25', '154961e96f']
         );
         $dispatcher->dispatchGitPushReception($details);
     }
 
     public function testItProcessesEachCommitOfThePushedReference(): void
     {
+        /** @var list<PotentialReferencesReceived> $events */
+        $events                 = [];
+        $this->event_dispatcher = EventDispatcherStub::withCallback(
+            static function ($event) use (&$events) {
+                $events[] = $event;
+                return $event;
+            }
+        );
+
         $this->dispatch();
-        self::assertTrue($this->logger->hasDebugThatContains('Analyzing commit with hash ' . self::FIRST_COMMIT_SHA1));
-        self::assertTrue($this->logger->hasDebugThatContains('Analyzing commit with hash ' . self::SECOND_COMMIT_SHA1));
+
+        self::assertCount(2, $events);
+        [$first_event, $second_event] = $events;
+        self::assertSame(self::FIRST_COMMIT_MESSAGE, $first_event->text_with_potential_references);
+        self::assertSame($this->project, $first_event->project);
+        self::assertSame(self::SECOND_COMMIT_MESSAGE, $second_event->text_with_potential_references);
+        self::assertSame($this->project, $second_event->project);
     }
 }

@@ -32,7 +32,7 @@ final class SearchLinkedProjectsStub implements SearchLinkedProjects
     private array $projects;
 
     /**
-     * @param \Project[]
+     * @param \Project[] $projects
      */
     private function __construct(array $projects)
     {

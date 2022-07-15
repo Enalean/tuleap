@@ -38,20 +38,12 @@ final class CommitAnalysisProcessor
 
     public function process(CommitAnalysisOrder $order): void
     {
-        $this->logger->debug(
-            sprintf(
-                'Analyzing commit with hash %s pushed by user #%d in project #%d',
-                (string) $order->getCommitHash(),
-                $order->getPusher()->getId(),
-                $order->getProject()->getID()
-            )
-        );
         try {
             $commit_message = $this->message_retriever->getCommitMessage((string) $order->getCommitHash());
         } catch (\Git_Command_Exception $e) {
             $this->logger->error('Could not retrieve commit message', ['exception' => $e]);
             return;
         }
-        $this->event_dispatcher->dispatch(new PotentialReferencesReceived($commit_message));
+        $this->event_dispatcher->dispatch(new PotentialReferencesReceived($commit_message, $order->getProject()));
     }
 }

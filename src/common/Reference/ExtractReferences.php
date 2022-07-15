@@ -18,19 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Reference;
 
-namespace Tuleap\Event\Events;
-
-/**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * @psalm-immutable
- */
-final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
+interface ExtractReferences
 {
-    public const NAME = 'receivePotentialReferences';
-
-    public function __construct(public string $text_with_potential_references, public \Project $project)
-    {
-    }
+    /**
+     * @return list<ReferenceInstance>
+     */
+    public function extractReferences(string $html, int $group_id): array;
 }

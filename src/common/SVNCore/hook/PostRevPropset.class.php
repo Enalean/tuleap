@@ -25,7 +25,7 @@
 /**
  * I'm responsible of handling what happens in post-revprop-change subversion hook
  */
-class SVN_Hook_PostRevPropset
+class SVN_Hook_PostRevPropset // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var SVN_Hooks */
     private $svn_hooks;
@@ -74,7 +74,7 @@ class SVN_Hook_PostRevPropset
     private function removePreviousCrossReferences(Project $project, $revision, $old_commit_message)
     {
         $GLOBALS['group_id'] = $project->getID();
-        $references          = $this->reference_manager->extractReferences($old_commit_message, $project->getID());
+        $references          = $this->reference_manager->extractReferences($old_commit_message, (int) $project->getID());
         foreach ($references as $reference_instance) {
             $reference = $reference_instance->getReference();
             \assert($reference instanceof Reference);

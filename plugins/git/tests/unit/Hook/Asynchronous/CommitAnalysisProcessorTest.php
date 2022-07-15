@@ -32,15 +32,16 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID     = 163;
-    private const COMMIT_MESSAGE = 'richly philomelanist';
-    private const COMMIT_SHA1    = '6c31bec0c';
+    private const COMMIT_MESSAGE = 'closes story #822';
     private TestLogger $logger;
     private RetrieveCommitMessageStub $message_retriever;
     private EventDispatcherStub $event_dispatcher;
+    private \Project $project;
 
     protected function setUp(): void
     {
+        $this->project = ProjectTestBuilder::aProject()->withId(163)->build();
+
         $this->logger            = new TestLogger();
         $this->message_retriever = RetrieveCommitMessageStub::withMessage(self::COMMIT_MESSAGE);
         $this->event_dispatcher  = EventDispatcherStub::withIdentityCallback();
@@ -55,18 +56,19 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $processor->process(
             CommitAnalysisOrder::fromComponents(
-                CommitHash::fromString(self::COMMIT_SHA1),
+                CommitHash::fromString('6c31bec0c'),
                 UserTestBuilder::buildWithDefaults(),
-                ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()
+                $this->project
             )
         );
     }
 
     public function testItDispatchesAnEventToSearchReferencesOnTheCommitMessageFromTheGivenHash(): void
     {
+        /** @var ?PotentialReferencesReceived $event */
         $event                  = null;
         $this->event_dispatcher = EventDispatcherStub::withCallback(
-            static function (PotentialReferencesReceived $inner) use (&$event) {
+            static function ($inner) use (&$event) {
                 $event = $inner;
                 return $inner;
             }
@@ -74,6 +76,8 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process();
 
         self::assertNotNull($event);
+        self::assertSame(self::COMMIT_MESSAGE, $event->text_with_potential_references);
+        self::assertSame($this->project, $event->project);
     }
 
     public function testItLogsErrorWhenItCannotReadCommitMessage(): void

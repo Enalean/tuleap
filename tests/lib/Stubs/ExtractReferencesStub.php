@@ -20,17 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Event\Events;
+namespace Tuleap\Test\Stubs;
 
-/**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * @psalm-immutable
- */
-final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
+use Tuleap\Reference\ReferenceInstance;
+
+final class ExtractReferencesStub implements \Tuleap\Reference\ExtractReferences
 {
-    public const NAME = 'receivePotentialReferences';
-
-    public function __construct(public string $text_with_potential_references, public \Project $project)
+    /**
+     * @param list<ReferenceInstance> $references
+     */
+    private function __construct(private array $references)
     {
+    }
+
+    /**
+     * @no-named-arguments
+     */
+    public static function withReferenceInstances(
+        ReferenceInstance $instance,
+        ReferenceInstance ...$other_instances,
+    ): self {
+        return new self([$instance, ...$other_instances]);
+    }
+
+    public static function withNoReference(): self
+    {
+        return new self([]);
+    }
+
+    public function extractReferences(string $html, int $group_id): array
+    {
+        return $this->references;
     }
 }

@@ -60,7 +60,7 @@ if ($request->existAndNonEmpty('group_id')) {
     if ($group_name != false) {
         $project = ProjectManager::instance()->getProjectByUnixName(trim($group_name));
         if ($project) {
-            $group_id = $project->getID();
+            $group_id = (int) $project->getID();
         }
     }
 }
