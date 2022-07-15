@@ -42,6 +42,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
@@ -49,6 +50,7 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 final class ArtifactCloser
 {
     public function __construct(
+        private RetrieveStatusField $status_retriever,
         private StatusValueRetriever $status_value_retriever,
         private DoneValueRetriever $done_value_retriever,
         private LoggerInterface $logger,
@@ -63,7 +65,6 @@ final class ArtifactCloser
     public function closeArtifact(
         Artifact $artifact,
         PFUser $tracker_workflow_user,
-        \Tracker_Semantic_Status $status_semantic,
         ArtifactClosingCommentInCommonMarkFormat $closing_comment_body,
         BadSemanticCommentInCommonMarkFormat $bad_semantic_comment_body,
     ): Ok|Err {
@@ -71,7 +72,7 @@ final class ArtifactCloser
             return Result::err(ArtifactIsAlreadyClosedFault::build());
         }
 
-        $status_field = $status_semantic->getField();
+        $status_field = $this->status_retriever->getStatusField($artifact->getTracker());
         if ($status_field === null) {
             return $this->addBadSemanticComment($bad_semantic_comment_body, $artifact, $tracker_workflow_user);
         }

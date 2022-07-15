@@ -25,7 +25,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use DateTimeImmutable;
 use Psr\Log\Test\TestLogger;
 use Tracker_FormElement_Field_Selectbox;
-use Tracker_Semantic_Status;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
@@ -48,6 +47,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
+use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
@@ -87,10 +87,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
      */
     private $gitlab_project_builder;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_Status
-     */
-    private $status_semantic;
-    /**
      * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
     private $artifact;
@@ -108,6 +104,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private \Project $project;
     private CreateCommentOnlyChangesetStub $comment_creator;
     private CreateNewChangesetStub $changeset_creator;
+    private RetrieveStatusFieldStub $status_retriever;
 
     protected function setUp(): void
     {
@@ -117,7 +114,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->credentials_retriever  = $this->createMock(CredentialsRetriever::class);
         $this->gitlab_project_builder = $this->createMock(GitlabProjectBuilder::class);
         $this->logger                 = new TestLogger();
-        $this->status_semantic        = $this->createMock(Tracker_Semantic_Status::class);
         $this->credentials            = $this->createMock(Credentials::class);
         $this->reference              = new WebhookTuleapReference(self::ARTIFACT_ID, ClosingKeyword::buildResolves());
         $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
@@ -127,6 +123,12 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
             ChangesetTestBuilder::aChangeset('4257')->build()
         );
+
+        $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $field->method('getId')->willReturn(945);
+        $field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
+
+        $this->status_retriever = RetrieveStatusFieldStub::withField($field);
 
         $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->workflow_user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
@@ -138,9 +140,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
     private function handleArtifactClosure(): void
     {
-        $status_semantic_factory = $this->createStub(\Tracker_Semantic_StatusFactory::class);
-        $status_semantic_factory->method('getByTracker')->willReturn($this->status_semantic);
-
         $webhook_data = new PostPushCommitWebhookData(
             self::COMMIT_SHA1,
             'A commit with references containing close artifact keyword',
@@ -166,6 +165,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $handler = new PostPushWebhookCloseArtifactHandler(
             new ArtifactCloser(
+                $this->status_retriever,
                 $this->createStub(StatusValueRetriever::class),
                 $this->done_value_retriever,
                 $prefixed_logger,
@@ -174,7 +174,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
             ),
             $this->artifact_retriever,
             $this->user_manager,
-            $status_semantic_factory,
             $this->repository_project_dao,
             $this->credentials_retriever,
             $this->gitlab_project_builder,
@@ -192,7 +191,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitLabRepositoryHasCredentials();
         $this->mockGitlabProjectDefaultBranch();
         $this->mockCommitterMatchingTuleapUser();
-        $this->mockThereIsAStatusField();
         $this->mockArtifactIsOpen();
         $this->mockDoneValueIsFound();
 
@@ -316,7 +314,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->mockCommitterMatchingTuleapUser();
-        $this->status_semantic->method('getField')->willReturn(null);
+        $this->status_retriever = RetrieveStatusFieldStub::withNoField();
 
         $this->handleArtifactClosure();
 
@@ -343,7 +341,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
-        $this->status_semantic->method('getField')->willReturn(null);
+        $this->status_retriever = RetrieveStatusFieldStub::withNoField();
 
         $this->handleArtifactClosure();
 
@@ -393,7 +391,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->mockCommitterMatchingTuleapUser();
-        $this->mockThereIsAStatusField();
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willThrowException(
             new NoPossibleValueException()
         );
@@ -459,15 +456,6 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->user_manager->method('getUserByEmail')->willReturn(
             UserTestBuilder::aUser()->withUserName(self::COMMITTER_USERNAME)->build()
         );
-    }
-
-    private function mockThereIsAStatusField(): void
-    {
-        $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $field->method('getId')->willReturn(945);
-        $field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
-
-        $this->status_semantic->method('getField')->willReturn($field);
     }
 
     private function mockDoneValueIsFound(): void

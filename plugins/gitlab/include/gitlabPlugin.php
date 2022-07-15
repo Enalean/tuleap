@@ -128,6 +128,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -367,6 +368,7 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new ArtifactCloser(
+                            new StatusFieldRetriever($semantic_status_factory),
                             new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
@@ -381,7 +383,6 @@ class gitlabPlugin extends Plugin
                         ),
                         new ArtifactRetriever($artifact_factory),
                         $user_manager,
-                        $semantic_status_factory,
                         new GitlabRepositoryProjectDao(),
                         $credentials_retriever,
                         new GitlabProjectBuilder($gitlab_api_client),
@@ -589,6 +590,7 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new ArtifactCloser(
+                            new StatusFieldRetriever($semantic_status_factory),
                             new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
@@ -603,7 +605,6 @@ class gitlabPlugin extends Plugin
                         ),
                         new ArtifactRetriever($artifact_factory),
                         $user_manager,
-                        $semantic_status_factory,
                         new GitlabRepositoryProjectDao(),
                         $credentials_retriever,
                         new GitlabProjectBuilder($gitlab_api_client),
