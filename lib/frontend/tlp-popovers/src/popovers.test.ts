@@ -17,25 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { SpyInstance } from "vitest";
+import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
+
 import type { Popover } from "./popovers";
 import { createPopover, POPOVER_SHOWN_CLASS_NAME } from "./popovers";
 import * as floating_ui from "@floating-ui/dom";
 import type { ComputePositionConfig, ComputePositionReturn } from "@floating-ui/dom";
 
+vi.mock("@floating-ui/dom", async () => {
+    const actual_floating_ui_dom: typeof floating_ui = await vi.importActual("@floating-ui/dom");
+    return {
+        ...actual_floating_ui_dom,
+        autoUpdate: vi.fn(),
+        computePosition: vi.fn(),
+    };
+});
+
 describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
     let doc: Document;
     let cleanup: () => void;
-    let computePosition: jest.SpyInstance<Promise<ComputePositionReturn | void>>;
+    let computePosition: SpyInstance;
 
     beforeEach(() => {
         doc = createLocalDocument();
         trigger_element = doc.createElement("span");
         content_element = doc.createElement("div");
         doc.body.append(trigger_element, content_element);
-        cleanup = jest.fn();
-        jest.spyOn(floating_ui, "autoUpdate").mockReturnValue(cleanup);
-        computePosition = jest.spyOn(floating_ui, "computePosition");
+        cleanup = vi.fn();
+        const auto_update_spy = floating_ui.autoUpdate as unknown as SpyInstance;
+        auto_update_spy.mockReturnValue(cleanup);
+        computePosition = floating_ui.computePosition as unknown as SpyInstance;
         computePosition.mockResolvedValue({
             x: 10,
             y: 20,
@@ -46,7 +59,7 @@ describe(`Popovers`, () => {
     afterEach(() => {
         trigger_element.remove();
         content_element.remove();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe(`configuration`, () => {
