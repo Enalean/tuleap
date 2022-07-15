@@ -52,7 +52,7 @@ export async function init(
     }
 
     app = createApp(MainComponent, {
-        repositories: await getProjectRepositories(project_id, branch_name_preview),
+        repositories: await getProjectRepositories(project_id, branch_name_preview).unwrapOr([]),
         branch_name_preview: branch_name_preview,
         are_pullrequest_endpoints_available,
     });

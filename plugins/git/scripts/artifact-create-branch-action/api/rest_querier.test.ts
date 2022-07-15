@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { GitRepository } from "../src/types";
 import {
     getProjectRepositories,
@@ -29,15 +28,16 @@ import { okAsync } from "neverthrow";
 
 describe("API querier", () => {
     describe("getProjectRepositories", () => {
-        it("Given a project id then it will recursively get all project repositories", () => {
+        it("Given a project id then it will recursively get all project repositories", async () => {
             const repositories = [{ id: 37 } as GitRepository, { id: 91 } as GitRepository];
-            const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
-            tlpRecursiveGet.mockResolvedValue(repositories);
+            const getAllJSON = jest
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync(repositories));
 
             const project_id = 27;
-            getProjectRepositories(project_id, "acme");
+            const result = await getProjectRepositories(project_id, "acme");
 
-            expect(tlpRecursiveGet).toHaveBeenCalledWith(
+            expect(getAllJSON).toHaveBeenCalledWith(
                 "/api/v1/projects/27/git",
                 expect.objectContaining({
                     params: {
@@ -47,6 +47,7 @@ describe("API querier", () => {
                     },
                 })
             );
+            expect(result.isOk()).toBe(true);
         });
     });
     describe("postGitBranch", () => {
