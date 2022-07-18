@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...jest_base_config,
-    displayName: "git",
-    testPathIgnorePatterns: jest_base_config.testPathIgnorePatterns.concat([
-        "scripts/artifact-create-branch-action",
-    ]),
-};
+import { createGettext } from "vue3-gettext";
+import type { GlobalMountOptions } from "@vue/test-utils/dist/types";
+
+export function getGlobalTestOptions(): GlobalMountOptions {
+    return {
+        plugins: [createGettext({ silent: true })],
+    };
+}
