@@ -380,7 +380,7 @@ deploy-mailhog-conf:
 
 start-gitlab:
 	@echo "Start gitlab instance for your Tuleap dev"
-	$(DOCKER_COMPOSE) up -d gitlab
+	$(DOCKER_COMPOSE) up --build -d gitlab
 	@echo "You should update your own /etc/hosts with: "
 	@echo "$(call get_ip_addr,gitlab) gitlab.local"
 
