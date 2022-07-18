@@ -524,6 +524,49 @@ final class ProjectResourceTest extends \RestBase
     /**
      * @depends testGetProgramIncrements
      */
+    public function testUserCannotRemoveFeatureFromPIWhenItHasChildrenPlannedInMilestones(int $program_increment_id): void
+    {
+        $team_id        = $this->getTeamProjectId();
+        $program_id     = $this->getProgramProjectId();
+        $featureB       = $this->getArtifactWithArtifactLink('description', 'FeatureB', $program_id, 'features');
+        $release_mirror = $this->getArtifactWithArtifactLink('release_number', 'PI', $team_id, 'rel');
+        $user_story2    = $this->getArtifactWithArtifactLink('i_want_to', 'US2', $team_id, 'story');
+        $sprint         = $this->getArtifactWithArtifactLink('sprint_name', 'S1', $team_id, 'sprint');
+
+        // Set featureB parent of user story 2
+        $this->updateParentArtifact(
+            $user_story2['id'],
+            $featureB['id'],
+            $user_story2['artifact_link_id']
+        );
+
+        // link sprint as a child of mirrored release
+        $this->linkSprintToRelease($release_mirror['id'], $sprint['id']);
+
+        // link user story 2 to a Sprint in Team Project
+        $this->updateArtifactLinks($sprint['id'], [['id' => $user_story2['id']]], $sprint['artifact_link_id']);
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'program_increment/' . urlencode((string) $program_increment_id) . '/content')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode(
+                            [
+                                'add' => [$featureB['id']],
+                                'order' => null,
+                                'remove_from_program_increment_to_add_to_the_backlog' => true,
+                            ],
+                            JSON_THROW_ON_ERROR
+                        )
+                    )
+                )
+        );
+        self::assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetProgramIncrements
+     */
     public function testReorderFeatureInPIContent(int $program_increment_id): void
     {
         $program_id        = $this->getProgramProjectId();
@@ -707,6 +750,15 @@ final class ProjectResourceTest extends \RestBase
             'remove' => self::formatTopBacklogElementChange($to_remove),
             "remove_from_program_increment_to_add_to_the_backlog" => $remove_program_increment_link,
         ];
+    }
+
+    private function linkSprintToRelease(int $release_id, int $sprint_id): void
+    {
+        $values   = ["add"  => [["id" => $sprint_id]]];
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('PATCH', 'milestones/' . urlencode((string) $release_id) . '/milestones')->withBody($this->stream_factory->createStream(json_encode($values, JSON_THROW_ON_ERROR)))
+        );
+        self::assertEquals(200, $response->getStatusCode());
     }
 
     private function updateArtifactLinks(int $artifact_id, array $links, int $artifact_field_id): void
