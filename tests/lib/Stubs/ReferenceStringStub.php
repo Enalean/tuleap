@@ -20,24 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub;
+namespace Tuleap\Test\Stubs;
 
 /**
  * @psalm-immutable
  */
-final class ArtifactClosingCommentInCommonMarkFormatStub implements \Tuleap\Tracker\Artifact\Closure\ArtifactClosingCommentInCommonMarkFormat
+final class ReferenceStringStub implements \Tuleap\Reference\ReferenceString
 {
-    private function __construct(private string $comment)
+    private function __construct(private string $reference)
     {
     }
 
-    public static function fromString(string $comment): self
+    public static function fromString(string $reference): self
     {
-        return new self($comment);
+        return new self($reference);
     }
 
-    public function getBody(): string
+    public function getStringReference(): string
     {
-        return $this->comment;
+        return $this->reference;
     }
 }
