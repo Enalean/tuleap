@@ -36,10 +36,12 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\ArtifactClosingCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
+use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class ArtifactCloserTest extends TestCase
@@ -67,17 +69,18 @@ final class ArtifactCloserTest extends TestCase
     private string $no_semantic_defined_message;
     private CreateCommentOnlyChangesetStub $comment_creator;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_Status
-     */
-    private $status_semantic;
-    /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_List
      */
     private $status_field;
     private CreateNewChangesetStub $changeset_creator;
+    private RetrieveStatusFieldStub $status_retriever;
 
     protected function setUp(): void
     {
+        $this->status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
+        $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
+
+        $this->status_retriever       = RetrieveStatusFieldStub::withField($this->status_field);
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
         $this->done_value_retriever   = $this->createMock(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
@@ -96,9 +99,7 @@ final class ArtifactCloserTest extends TestCase
 
         $this->artifact = $this->createStub(Artifact::class);
         $this->artifact->method('getId')->willReturn(25);
-        $this->status_semantic = $this->createStub(\Tracker_Semantic_Status::class);
-        $this->status_field    = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
+        $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
         $this->success_message             = sprintf('solved by @%s', self::CLOSER_USERNAME);
         $this->no_semantic_defined_message = sprintf(
@@ -115,6 +116,7 @@ final class ArtifactCloserTest extends TestCase
         $no_semantic_comment = BadSemanticCommentInCommonMarkFormatStub::fromString($this->no_semantic_defined_message);
 
         $updater = new ArtifactCloser(
+            $this->status_retriever,
             $this->status_value_retriever,
             $this->done_value_retriever,
             new NullLogger(),
@@ -124,7 +126,6 @@ final class ArtifactCloserTest extends TestCase
         return $updater->closeArtifact(
             $this->artifact,
             $this->workflow_user,
-            $this->status_semantic,
             ArtifactClosingCommentInCommonMarkFormatStub::fromString($this->success_message),
             $no_semantic_comment,
         );
@@ -133,7 +134,6 @@ final class ArtifactCloserTest extends TestCase
     public function testItClosesArtifactWithDoneValue(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
 
         $result = $this->closeArtifact();
@@ -155,7 +155,6 @@ final class ArtifactCloserTest extends TestCase
     public function testItClosesArtifactWithFirstClosedStatusValue(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsFound();
         $this->mockNoDoneValue();
         $this->mockClosedValueIsFound();
 
@@ -189,7 +188,6 @@ final class ArtifactCloserTest extends TestCase
     public function testItReturnsErrIfNoPossibleValueAreFound(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsFound();
 
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')
             ->with($this->artifact, $this->workflow_user)
@@ -204,7 +202,6 @@ final class ArtifactCloserTest extends TestCase
     public function testItReturnsErrIfChangesetIsNotCreated(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
         $this->changeset_creator = CreateNewChangesetStub::withNullReturnChangeset();
 
@@ -217,7 +214,6 @@ final class ArtifactCloserTest extends TestCase
     public function testItReturnsErrIfAnErrorOccursDuringTheChangesetCreation(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsFound();
         $this->mockDoneValueIsFound();
         $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_NoChangeException(1, 'xref'));
 
@@ -230,7 +226,7 @@ final class ArtifactCloserTest extends TestCase
     public function testItAddsOnlyACommentIfStatusSemanticIsNotDefined(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsNotDefined();
+        $this->status_retriever = RetrieveStatusFieldStub::withNoField();
 
         $result = $this->closeArtifact();
 
@@ -247,7 +243,6 @@ final class ArtifactCloserTest extends TestCase
     public function testItAddsOnlyACommentIfClosedValueNotFound(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsFound();
         $this->mockNoDoneValue();
         $this->status_value_retriever->expects(self::once())
             ->method("getFirstClosedValueUserCanRead")
@@ -269,8 +264,8 @@ final class ArtifactCloserTest extends TestCase
     public function testItReturnsErrIfAnErrorOccursDuringTheCommentCreation(): void
     {
         $this->mockArtifactIsOpen();
-        $this->mockStatusFieldIsNotDefined();
-        $this->comment_creator = CreateCommentOnlyChangesetStub::withFault(
+        $this->status_retriever = RetrieveStatusFieldStub::withNoField();
+        $this->comment_creator  = CreateCommentOnlyChangesetStub::withFault(
             Fault::fromMessage('Error during comment creation')
         );
 
@@ -283,16 +278,6 @@ final class ArtifactCloserTest extends TestCase
     private function mockArtifactIsOpen(): void
     {
         $this->artifact->method('isOpen')->willReturn(true);
-    }
-
-    private function mockStatusFieldIsFound(): void
-    {
-        $this->status_semantic->method('getField')->willReturn($this->status_field);
-    }
-
-    private function mockStatusFieldIsNotDefined(): void
-    {
-        $this->status_semantic->method('getField')->willReturn(null);
     }
 
     private function mockDoneValueIsFound(): void

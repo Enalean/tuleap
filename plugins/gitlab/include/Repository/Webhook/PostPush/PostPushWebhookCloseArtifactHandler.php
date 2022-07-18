@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Psr\Log\LoggerInterface;
-use Tracker_Semantic_StatusFactory;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\Artifact\ArtifactNotFoundException;
@@ -53,10 +52,6 @@ class PostPushWebhookCloseArtifactHandler
      */
     private $logger;
     /**
-     * @var Tracker_Semantic_StatusFactory
-     */
-    private $semantic_status_factory;
-    /**
      * @var GitlabRepositoryProjectDao
      */
     private $repository_project_dao;
@@ -72,20 +67,18 @@ class PostPushWebhookCloseArtifactHandler
         ArtifactCloser $artifact_updater,
         ArtifactRetriever $artifact_retriever,
         UserManager $user_manager,
-        Tracker_Semantic_StatusFactory $semantic_status_factory,
         GitlabRepositoryProjectDao $repository_project_dao,
         CredentialsRetriever $credentials_retriever,
         GitlabProjectBuilder $gitlab_project_builder,
         LoggerInterface $logger,
     ) {
-        $this->artifact_updater        = $artifact_updater;
-        $this->artifact_retriever      = $artifact_retriever;
-        $this->user_manager            = $user_manager;
-        $this->semantic_status_factory = $semantic_status_factory;
-        $this->repository_project_dao  = $repository_project_dao;
-        $this->credentials_retriever   = $credentials_retriever;
-        $this->gitlab_project_builder  = $gitlab_project_builder;
-        $this->logger                  = $logger;
+        $this->artifact_updater       = $artifact_updater;
+        $this->artifact_retriever     = $artifact_retriever;
+        $this->user_manager           = $user_manager;
+        $this->repository_project_dao = $repository_project_dao;
+        $this->credentials_retriever  = $credentials_retriever;
+        $this->gitlab_project_builder = $gitlab_project_builder;
+        $this->logger                 = $logger;
     }
 
     /**
@@ -159,12 +152,9 @@ class PostPushWebhookCloseArtifactHandler
                 $this->getUserClosingTheArtifactFromGitlabWebhook($post_push_commit_webhook_data)
             );
 
-            $status_semantic = $this->semantic_status_factory->getByTracker($artifact->getTracker());
-
             $result = $this->artifact_updater->closeArtifact(
                 $artifact,
                 $tracker_workflow_user,
-                $status_semantic,
                 $closing_comment_body,
                 $bad_semantic_comment_body,
             );
