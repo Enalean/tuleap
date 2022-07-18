@@ -62,14 +62,15 @@ class MetadataRepresentationBuilder
     {
         $this->factory->appendItemMetadataList($item);
 
-        $metadata_representations = [];
+        $metadata_representations        = [];
+        $custom_metadata_representations = [];
 
         $item_metadata = $item->getMetadata();
 
         foreach ($item_metadata as $metadata) {
             $transformed_values = $this->getMetadataValues($metadata);
 
-            $metadata_representations[] = new ItemMetadataRepresentation(
+            $representation = new ItemMetadataRepresentation(
                 $metadata->getName(),
                 $this->getMetadataType((int) $metadata->getType()),
                 $metadata->isMultipleValuesAllowed(),
@@ -79,6 +80,20 @@ class MetadataRepresentationBuilder
                 $metadata->isEmptyAllowed(),
                 $metadata->getLabel()
             );
+
+            if ($metadata->isSpecial()) {
+                $metadata_representations[] = $representation;
+            } else {
+                $custom_metadata_representations[] = $representation;
+            }
+        }
+
+        usort(
+            $custom_metadata_representations,
+            static fn(ItemMetadataRepresentation $a, ItemMetadataRepresentation $b): int => strnatcasecmp($a->name, $b->name),
+        );
+        foreach ($custom_metadata_representations as $representation) {
+            $metadata_representations[] = $representation;
         }
 
         return $metadata_representations;

@@ -49,6 +49,10 @@ final class SearchColumnCollectionBuilder
         $columns->add(SearchColumn::buildForHardcodedProperty("location", dgettext('tuleap-document', 'Location')));
         $columns->add(SearchColumn::buildForHardcodedProperty("filename", dgettext('tuleap-document', 'Filename')));
 
+        usort(
+            $custom_columns,
+            static fn(SearchColumn $a, SearchColumn $b): int => strnatcasecmp($a->getLabel(), $b->getLabel())
+        );
         foreach ($custom_columns as $column) {
             $columns->add($column);
         }

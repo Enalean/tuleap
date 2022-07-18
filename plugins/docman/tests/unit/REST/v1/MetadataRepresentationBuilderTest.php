@@ -51,6 +51,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $simple_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $simple_metadata->shouldReceive('getLabel')->andReturn("simple_metadata_label");
         $simple_metadata->shouldReceive('getGroupId')->andReturn(102);
+        $simple_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $value1 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value1->shouldReceive('getId')->andReturn(1);
@@ -70,6 +71,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $list_metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
         $list_metadata->shouldReceive('getLabel')->andReturn("list_metadata_label");
+        $list_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $factory->shouldReceive('appendItemMetadataList');
         $item->shouldReceive('getMetadata')->andReturn(
@@ -84,16 +86,6 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $expected_representation = [
             new ItemMetadataRepresentation(
-                "simple metadata label",
-                'text',
-                false,
-                "my simple value",
-                'value with references',
-                null,
-                true,
-                "simple_metadata_label"
-            ),
-            new ItemMetadataRepresentation(
                 "list metadata label",
                 'list',
                 true,
@@ -106,9 +98,19 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 false,
                 "list_metadata_label"
             ),
+            new ItemMetadataRepresentation(
+                "simple metadata label",
+                'text',
+                false,
+                "my simple value",
+                'value with references',
+                null,
+                true,
+                "simple_metadata_label"
+            ),
         ];
 
-        $this->assertEquals($representation, $expected_representation);
+        $this->assertEquals($expected_representation, $representation);
     }
 
     public function testMetadataWithDatePropertyIsCorrectlyBuilt(): void
@@ -129,6 +131,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
         $date_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
+        $date_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $factory->shouldReceive('appendItemMetadataList');
 
@@ -171,6 +174,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
         $date_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
+        $date_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $factory->shouldReceive('appendItemMetadataList');
 
@@ -210,6 +214,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $owner_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
         $owner_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $owner_metadata->shouldReceive('getLabel')->andReturn('owner');
+        $owner_metadata->shouldReceive('isSpecial')->andReturn(false);
 
         $factory->shouldReceive('appendItemMetadataList');
 
