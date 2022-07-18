@@ -22,12 +22,40 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Closure;
 
+use Tuleap\Reference\ReferenceString;
+
 /**
- * I hold the body of a comment added when an Artifact is closed by a Git commit.
+ * I hold the body of a comment added when an Artifact is closed automatically.
  * The comment format is always CommonMark.
  * @psalm-immutable
  */
-interface ArtifactClosingCommentInCommonMarkFormat
+final class ArtifactClosingCommentInCommonMarkFormat
 {
-    public function getBody(): string;
+    private function __construct(private string $comment)
+    {
+    }
+
+    public static function fromParts(
+        string $user_name,
+        ?ClosingKeyword $closing_keyword,
+        \Tracker $tracker,
+        ReferenceString $origin_reference,
+    ): self {
+        if (! $closing_keyword) {
+            return new self('');
+        }
+        $action_word = $closing_keyword->match(
+            'solved',
+            'closed',
+            "{$tracker->getItemName()} fixed",
+            'implemented',
+        );
+
+        return new self("$action_word by $user_name with {$origin_reference->getStringReference()}");
+    }
+
+    public function getBody(): string
+    {
+        return $this->comment;
+    }
 }

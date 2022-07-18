@@ -37,8 +37,8 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\ArtifactClosingCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
+use Tuleap\Test\Stubs\ReferenceStringStub;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
@@ -46,11 +46,12 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 final class ArtifactCloserTest extends TestCase
 {
-    private const CLOSER_USERNAME      = 'asticotc';
+    private const CLOSER_USERNAME      = '@asticotc';
     private const STATUS_FIELD_ID      = 18;
     private const DONE_BIND_VALUE_ID   = 1234;
     private const CLOSED_BIND_VALUE_ID = 3174;
     private const DONE_LABEL           = 'Done';
+    private const ORIGIN_REFERENCE     = 'git #heelmaker/54022373';
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&StatusValueRetriever
@@ -101,9 +102,13 @@ final class ArtifactCloserTest extends TestCase
         $this->artifact->method('getId')->willReturn(25);
         $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
-        $this->success_message             = sprintf('solved by @%s', self::CLOSER_USERNAME);
+        $this->success_message             = sprintf(
+            'solved by %s with %s',
+            self::CLOSER_USERNAME,
+            self::ORIGIN_REFERENCE
+        );
         $this->no_semantic_defined_message = sprintf(
-            '@%s attempts to close this artifact but neither done nor status semantic defined.',
+            '%s attempts to close this artifact but neither done nor status semantic defined.',
             self::CLOSER_USERNAME
         );
     }
@@ -114,6 +119,12 @@ final class ArtifactCloserTest extends TestCase
     private function closeArtifact(): Ok|Err
     {
         $no_semantic_comment = BadSemanticCommentInCommonMarkFormatStub::fromString($this->no_semantic_defined_message);
+        $closing_comment     = ArtifactClosingCommentInCommonMarkFormat::fromParts(
+            self::CLOSER_USERNAME,
+            ClosingKeyword::buildResolves(),
+            TrackerTestBuilder::aTracker()->build(),
+            ReferenceStringStub::fromString(self::ORIGIN_REFERENCE)
+        );
 
         $updater = new ArtifactCloser(
             $this->status_retriever,
@@ -126,7 +137,7 @@ final class ArtifactCloserTest extends TestCase
         return $updater->closeArtifact(
             $this->artifact,
             $this->workflow_user,
-            ArtifactClosingCommentInCommonMarkFormatStub::fromString($this->success_message),
+            $closing_comment,
             $no_semantic_comment,
         );
     }

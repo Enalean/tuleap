@@ -32,6 +32,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Artifact\Closure\ArtifactClosingCommentInCommonMarkFormat;
 use Tuleap\Tracker\Artifact\Closure\ArtifactIsAlreadyClosedFault;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use UserManager;
@@ -141,12 +142,14 @@ class PostPushWebhookCloseArtifactHandler
             $committer_username        = $this->getUserClosingTheArtifactFromGitlabWebhook(
                 $post_push_commit_webhook_data
             );
-            $closing_comment_body      = PostPushArtifactComment::fromCommit(
+            $closing_comment_body      = ArtifactClosingCommentInCommonMarkFormat::fromParts(
                 $committer_username->getName(),
-                $post_push_commit_webhook_data,
-                $tuleap_reference,
-                $gitlab_repository_integration,
-                $artifact
+                $tuleap_reference->getClosingKeyword(),
+                $artifact->getTracker(),
+                GitlabCommitReferenceString::fromRepositoryAndCommit(
+                    $gitlab_repository_integration,
+                    $post_push_commit_webhook_data
+                )
             );
             $bad_semantic_comment_body = PostPushBadSemanticComment::fromUserClosingTheArtifact(
                 $this->getUserClosingTheArtifactFromGitlabWebhook($post_push_commit_webhook_data)
