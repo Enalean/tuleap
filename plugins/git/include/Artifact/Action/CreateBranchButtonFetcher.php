@@ -23,11 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Artifact\Action;
 
-use ForgeConfig;
 use GitRepositoryFactory;
 use PFUser;
 use Project;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Git\PullRequestEndpointsAvailableChecker;
 use Tuleap\Git\REST\v1\Branch\BranchNameCreatorFromArtifact;
 use Tuleap\Layout\JavascriptAssetGeneric;
@@ -37,9 +35,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class CreateBranchButtonFetcher
 {
-    #[FeatureFlagConfigKey("Feature flag to allow users to create Git branches from artifacts")]
-    public const FEATURE_FLAG_KEY = 'artifact-create-git-branches';
-
     public function __construct(
         private GitRepositoryFactory $git_repository_factory,
         private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
@@ -50,10 +45,6 @@ final class CreateBranchButtonFetcher
 
     public function getActionButton(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
     {
-        if (! ForgeConfig::getFeatureFlag(self::FEATURE_FLAG_KEY)) {
-            return null;
-        }
-
         $project = $artifact->getTracker()->getProject();
         if (! $this->doesProjectHaveRepositoriesUserCanRead($project, $user)) {
             return null;
