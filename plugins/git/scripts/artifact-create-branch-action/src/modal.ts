@@ -20,20 +20,17 @@
 import { createApp } from "vue";
 import type { App } from "vue";
 import MainComponent from "./components/MainComponent.vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
-import { createGettext } from "vue3-gettext";
 import { getProjectRepositories } from "../api/rest_querier";
+import { addFeedback } from "@tuleap/fp-feedback";
+import type { createGettext } from "vue3-gettext";
 
 let app: App<Element> | null = null;
 
 export async function init(
     git_create_branch_link: HTMLElement,
-    mount_point: Element
+    mount_point: Element,
+    gettext_provider: ReturnType<typeof createGettext>
 ): Promise<void> {
-    const user_locale = document.body.dataset.userLocale;
-    if (!user_locale) {
-        return;
-    }
     if (!git_create_branch_link.dataset.projectId) {
         throw new Error("Missing project id in dataset");
     }
@@ -51,15 +48,26 @@ export async function init(
         app.unmount();
     }
 
-    app = createApp(MainComponent, {
-        repositories: await getProjectRepositories(project_id, branch_name_preview).unwrapOr([]),
-        branch_name_preview: branch_name_preview,
-        are_pullrequest_endpoints_available,
-    });
-    app.use(
-        await initVueGettext(createGettext, (locale: string) => {
-            return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-        })
+    await getProjectRepositories(project_id, branch_name_preview).match(
+        (project_repositories) => {
+            app = createApp(MainComponent, {
+                repositories: project_repositories,
+                branch_name_preview: branch_name_preview,
+                are_pullrequest_endpoints_available,
+            });
+            app.use(gettext_provider);
+            app.mount(mount_point);
+        },
+        (fault) => {
+            addFeedback(
+                "error",
+                gettext_provider.interpolate(
+                    gettext_provider.$gettext(
+                        "Error while retrieving the Git project repositories: %{ error }"
+                    ),
+                    { error: String(fault) }
+                )
+            );
+        }
     );
-    app.mount(mount_point);
 }

@@ -18,8 +18,15 @@
  */
 
 import { addFeedback } from "@tuleap/fp-feedback";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const user_locale = document.body.dataset.userLocale;
+    if (!user_locale) {
+        throw new Error("No user locale");
+    }
+
     const git_create_branch_link = document.getElementById("artifact-create-git-branches");
     const action_dropdown_icon = document.getElementById("tracker-artifact-action-icon");
 
@@ -44,14 +51,27 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("Cannot find the mount point for the tracker actions modal");
         }
 
+        const gettext_provider = await initVueGettext(
+            createGettext,
+            (locale: string) =>
+                import(
+                    /* webpackChunkName: "artifact-create-branch-action-po-" */ `../po/${getPOFileFromLocaleWithoutExtension(
+                        locale
+                    )}.po`
+                )
+        );
+
         try {
             const { init } = await import(
                 /* webpackChunkName: "create-git-branch-modal" */ "./modal"
             );
 
-            await init(git_create_branch_link, modal_mount_point);
+            await init(git_create_branch_link, modal_mount_point, gettext_provider);
         } catch (e) {
-            addFeedback("error", "Error while loading the GitLab branch creation modal.");
+            addFeedback(
+                "error",
+                gettext_provider.$gettext("Error while loading the Git branch creation modal.")
+            );
             throw e;
         } finally {
             document.body.removeChild(loading_modal_element);
