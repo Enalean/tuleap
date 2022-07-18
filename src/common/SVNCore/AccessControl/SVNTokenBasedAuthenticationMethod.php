@@ -27,18 +27,24 @@ use Tuleap\Http\Server\IPAddressExtractor;
 
 final class SVNTokenBasedAuthenticationMethod implements SVNAuthenticationMethod
 {
-    public function __construct(private \SVN_TokenHandler $token_handler, private LoggerInterface $logger)
+    public function __construct(private SVNLoginNameUserProvider $user_provider, private \SVN_TokenHandler $token_handler, private LoggerInterface $logger)
     {
     }
 
-    public function isAuthenticated(\PFUser $user, ConcealedString $user_secret, ServerRequestInterface $request): bool
+    public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser
     {
-        if ($this->token_handler->isTokenValid($user, $user_secret, IPAddressExtractor::getIPAddressFromServerParams($request->getServerParams()))) {
-            $this->logger->debug(sprintf('SVN token based authentication rejected: no matching token found for user #%d (%s)', $user->getId(), $user->getUserName()));
-            return true;
+        $user = $this->user_provider->getUserFromSVNLoginName($login_name, $project);
+        if ($user === null) {
+            $this->logger->debug(sprintf('SVN token based authentication rejected: no user found with the login name %s', $login_name));
+            return null;
         }
 
-        $this->logger->debug(sprintf('SVN token based authentication success for user #%d (%s)', $user->getId(), $user->getUserName()));
-        return false;
+        if ($this->token_handler->isTokenValid($user, $user_secret, IPAddressExtractor::getIPAddressFromServerParams($request->getServerParams()))) {
+            $this->logger->debug(sprintf('SVN token based authentication success for user #%d (%s)', $user->getId(), $user->getUserName()));
+            return $user;
+        }
+
+        $this->logger->debug(sprintf('SVN token based authentication rejected: no matching token found for user #%d (%s)', $user->getId(), $user->getUserName()));
+        return null;
     }
 }

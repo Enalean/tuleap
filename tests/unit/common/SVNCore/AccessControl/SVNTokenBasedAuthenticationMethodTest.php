@@ -23,11 +23,16 @@ namespace Tuleap\SVNCore\AccessControl;
 use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class SVNTokenBasedAuthenticationMethodTest extends TestCase
 {
+    /**
+     * @var \PHPUnit\Framework\MockObject\Stub&SVNLoginNameUserProvider
+     */
+    private $user_provider;
     /**
      * @var \SVN_TokenHandler&\PHPUnit\Framework\MockObject\Stub
      */
@@ -36,23 +41,36 @@ final class SVNTokenBasedAuthenticationMethodTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->user_provider = $this->createStub(SVNLoginNameUserProvider::class);
         $this->token_handler = $this->createStub(\SVN_TokenHandler::class);
-        $this->auth_method   = new SVNTokenBasedAuthenticationMethod($this->token_handler, new NullLogger());
+        $this->auth_method   = new SVNTokenBasedAuthenticationMethod($this->user_provider, $this->token_handler, new NullLogger());
     }
 
     public function testAuthenticationCanBeSuccessful(): void
     {
         $this->token_handler->method('isTokenValid')->willReturn(true);
-        $is_auth = $this->auth_method->isAuthenticated(UserTestBuilder::anActiveUser()->build(), new ConcealedString('valid_token'), new NullServerRequest());
+        $user = UserTestBuilder::anActiveUser()->build();
+        $this->user_provider->method('getUserFromSVNLoginName')->willReturn($user);
+        $authenticated_user = $this->auth_method->isAuthenticated('username', new ConcealedString('valid_token'), ProjectTestBuilder::aProject()->build(), new NullServerRequest());
 
-        self::assertTrue($is_auth);
+        self::assertSame($user, $authenticated_user);
     }
 
     public function testAuthenticationIsRejectedWhenTokenIsNotValid(): void
     {
         $this->token_handler->method('isTokenValid')->willReturn(false);
-        $is_auth = $this->auth_method->isAuthenticated(UserTestBuilder::anActiveUser()->build(), new ConcealedString('incorrect_token'), new NullServerRequest());
+        $this->user_provider->method('getUserFromSVNLoginName')->willReturn(UserTestBuilder::anActiveUser()->build());
+        $user = $this->auth_method->isAuthenticated('username', new ConcealedString('incorrect_token'), ProjectTestBuilder::aProject()->build(), new NullServerRequest());
 
-        self::assertFalse($is_auth);
+        self::assertNull($user);
+    }
+
+    public function testAuthenticationIsRejectedWhenUserCannotBeFoundFromItsLoginName(): void
+    {
+        $this->user_provider->method('getUserFromSVNLoginName')->willReturn(null);
+
+        $user = $this->auth_method->isAuthenticated('incorrect_username', new ConcealedString('valid_token'), ProjectTestBuilder::aProject()->build(), new NullServerRequest());
+
+        self::assertNull($user);
     }
 }

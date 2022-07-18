@@ -16,17 +16,42 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\SVNCore\AccessControl;
 
-use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\AfterLocalLogin;
 
-interface SVNAuthenticationMethod
+final class AfterLocalSVNLogin implements AfterLocalLogin
 {
-    public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser;
+    public const NAME = 'afterLocalSVNLogin';
+
+    private bool $is_login_allowed   = true;
+    private string $feedback_message = '';
+
+    public function __construct(
+        /** @psalm-readonly */
+        public \PFUser $user,
+        /** @psalm-readonly */
+        public \Project $project,
+    ) {
+    }
+
+    public function refuseLogin(string $feedback): void
+    {
+        $this->feedback_message = $feedback;
+        $this->is_login_allowed = false;
+    }
+
+    public function isIsLoginAllowed(): bool
+    {
+        return $this->is_login_allowed;
+    }
+
+    public function getFeedbackMessage(): string
+    {
+        return $this->feedback_message;
+    }
 }

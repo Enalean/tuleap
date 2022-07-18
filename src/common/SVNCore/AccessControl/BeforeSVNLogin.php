@@ -16,17 +16,48 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\SVNCore\AccessControl;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\BeforeLogin;
 
-interface SVNAuthenticationMethod
+final class BeforeSVNLogin implements BeforeLogin
 {
-    public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser;
+    public const NAME = 'beforeSVNLogin';
+
+    private ?\PFUser $user = null;
+
+    public function __construct(
+        /** @psalm-readonly */
+        private string $login_name,
+        /** @psalm-readonly */
+        private ConcealedString $password,
+        /** @psalm-readonly */
+        public \Project $project,
+    ) {
+    }
+
+    public function getLoginName(): string
+    {
+        return $this->login_name;
+    }
+
+    public function getPassword(): ConcealedString
+    {
+        return $this->password;
+    }
+
+    public function setUser(?\PFUser $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getUser(): ?\PFUser
+    {
+        return $this->user;
+    }
 }

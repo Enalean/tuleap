@@ -76,7 +76,6 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible imple
         private ResponseFactoryInterface $response_factory,
         private LoggerInterface $logger,
         private BasicAuthLoginExtractor $basic_auth_login_extractor,
-        private \UserManager $user_manager,
         private \ProjectManager $project_factory,
         private CheckProjectAccess $check_project_access,
         private array $svn_authentication_methods,
@@ -108,21 +107,28 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible imple
         }
         $project_name = $request->getAttribute('project_name');
 
-        $user_secret = $credentials_set->getPassword();
-
-        $login_name = $credentials_set->getUsername();
-        $user       = $this->user_manager->getUserByLoginName($login_name);
-        if ($user === null) {
-            $this->logger->debug(sprintf('Rejected SVN access request: no user with the login name %s', $login_name));
-            return $this->buildAuthenticationRequiredResponse();
-        }
-
         try {
             $project = $this->project_factory->getValidProjectByShortNameOrId($project_name);
         } catch (\Project_NotFoundException $e) {
             $this->logger->debug(sprintf('Rejected SVN access request: project %s is not valid', $project_name), ['exception' => $e]);
             return $this->buildAccessDeniedResponse();
         }
+
+        $user        = null;
+        $login_name  = $credentials_set->getUsername();
+        $user_secret = $credentials_set->getPassword();
+        foreach ($this->svn_authentication_methods as $authentication_method) {
+            $user = $authentication_method->isAuthenticated($login_name, $user_secret, $project, $request);
+            if ($user !== null) {
+                break;
+            }
+        }
+
+        if ($user === null) {
+            $this->logger->debug(sprintf('Rejected SVN access request: could not authenticate user with the login name %s', $login_name));
+            return $this->buildAuthenticationRequiredResponse();
+        }
+
         try {
             $this->check_project_access->checkUserCanAccessProject($user, $project);
         } catch (\Project_AccessException $e) {
@@ -130,14 +136,7 @@ final class SVNProjectAccessController extends DispatchablePSR15Compatible imple
             return $this->buildAccessDeniedResponse();
         }
 
-        foreach ($this->svn_authentication_methods as $authentication_method) {
-            if ($authentication_method->isAuthenticated($user, $user_secret, $request)) {
-                return $this->buildAccessAllowedResponse();
-            }
-        }
-
-        $this->logger->debug(sprintf('Rejected SVN access request: no authentication methods was successful for user #%d (%s)', $user->getId(), $user->getUserName()));
-        return $this->buildAuthenticationRequiredResponse();
+        return $this->buildAccessAllowedResponse();
     }
 
     private function buildAuthenticationRequiredResponse(): ResponseInterface
