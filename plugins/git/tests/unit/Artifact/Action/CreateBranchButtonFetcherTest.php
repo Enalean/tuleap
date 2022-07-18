@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Git\Artifact\Action;
 
 use Cocur\Slugify\Slugify;
-use ForgeConfig;
 use GitRepository;
 use GitRepositoryFactory;
 use Tuleap\ForgeConfigSandbox;
@@ -74,32 +73,8 @@ final class CreateBranchButtonFetcherTest extends TestCase
         $this->include_asset->method("getFileURL")->willReturn("");
     }
 
-    public function testItReturnsNullIfFeatureFlagIsNotSet(): void
-    {
-        self::assertNull(
-            $this->getActionButton()
-        );
-    }
-
-    public function testItReturnsNullIfFeatureFlagIsFalse(): void
-    {
-        ForgeConfig::setFeatureFlag(
-            CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
-            false
-        );
-
-        self::assertNull(
-            $this->getActionButton()
-        );
-    }
-
     public function testItReturnsNullIfThereIsNoRepositoryInProject(): void
     {
-        ForgeConfig::setFeatureFlag(
-            CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
-            true
-        );
-
         $this->git_repository_factory->method("getAllRepositories")->willReturn([]);
 
         self::assertNull(
@@ -109,11 +84,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsNullIfThereIsNoReadableRepositoryForUser(): void
     {
-        ForgeConfig::setFeatureFlag(
-            CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
-            true
-        );
-
         $git_repository = $this->createMock(GitRepository::class);
         $git_repository->method("userCanRead")->willReturn(false);
         $this->git_repository_factory->method("getAllRepositories")->willReturn([$git_repository]);
@@ -125,11 +95,6 @@ final class CreateBranchButtonFetcherTest extends TestCase
 
     public function testItReturnsPresenterWhenAllPreconditionsAreMet(): void
     {
-        ForgeConfig::setFeatureFlag(
-            CreateBranchButtonFetcher::FEATURE_FLAG_KEY,
-            true
-        );
-
         $git_repository = $this->createMock(GitRepository::class);
         $git_repository->method("userCanRead")->willReturn(true);
         $this->git_repository_factory->method("getAllRepositories")->willReturn([$git_repository]);
