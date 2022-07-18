@@ -59,6 +59,7 @@ export const add_modal_mixin = {
                 is_used: true,
                 is_in_new_tab: false,
                 rank: this.minimal_rank,
+                is_disabled_reason: "",
             };
         },
     },
