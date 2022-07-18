@@ -50,6 +50,21 @@ final class TeamIdentifier
         return array_map(static fn(int $id) => new self($id), $team_ids);
     }
 
+    /**
+     * @throws TeamIsNotAggregatedByProgramException
+     * @throws TeamIsNotVisibleException
+     */
+    public static function buildTeamOfProgramById(
+        SearchVisibleTeamsOfProgram $team_searcher,
+        ProgramIdentifier $program_identifier,
+        UserIdentifier $user_identifier,
+        int $team_id,
+    ): self {
+        return new self(
+            $team_searcher->searchTeamWithIdInProgram($program_identifier, $user_identifier, $team_id)
+        );
+    }
+
     public function getId(): int
     {
         return $this->id;

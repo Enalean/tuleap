@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotAggregatedByProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -64,5 +65,16 @@ final class SearchVisibleTeamsOfProgramStub implements SearchVisibleTeamsOfProgr
             throw new TeamIsNotVisibleException($program, $user);
         }
         return $this->team_ids;
+    }
+
+    public function searchTeamWithIdInProgram(ProgramIdentifier $program, UserIdentifier $user, int $team_id): int
+    {
+        if ($this->has_no_team || ! in_array($team_id, $this->team_ids, true)) {
+            throw new TeamIsNotAggregatedByProgramException($team_id, $program->getId());
+        }
+        if ($this->is_error_not_visible) {
+            throw new TeamIsNotVisibleException($program, $user);
+        }
+        return $team_id;
     }
 }

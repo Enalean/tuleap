@@ -28,9 +28,10 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamStore;
 use Tuleap\ProgramManagement\Domain\Team\SearchProgramsOfTeam;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
+use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeamOfProgram;
 use Tuleap\ProgramManagement\ProgramService;
 
-final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam, SearchProgramsOfTeam
+final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam, VerifyIsTeamOfProgram, SearchProgramsOfTeam
 {
     /**
      * @throws \Throwable
@@ -67,6 +68,13 @@ final class TeamDao extends DataAccessObject implements TeamStore, VerifyIsTeam,
         $sql = 'SELECT * FROM plugin_program_management_team_projects WHERE team_project_id = ?';
 
         return $this->getDB()->exists($sql, $project_id);
+    }
+
+    public function isATeamFromProgram(int $program_id, int $team_id): bool
+    {
+        $sql = 'SELECT * FROM plugin_program_management_team_projects WHERE program_project_id = ? AND team_project_id = ?';
+
+        return $this->getDB()->exists($sql, $program_id, $team_id);
     }
 
     /**

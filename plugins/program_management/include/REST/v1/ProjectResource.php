@@ -201,6 +201,7 @@ final class ProjectResource extends AuthenticatedResource
                         $this->user_manager_adapter,
                         $project_manager_adapter,
                         $project_access_checker,
+                        $team_dao
                     ),
                 )
             )

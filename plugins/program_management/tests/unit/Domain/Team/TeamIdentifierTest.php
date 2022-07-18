@@ -50,4 +50,19 @@ final class TeamIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertContains(self::FIRST_TEAM_ID, $ids);
         self::assertContains(self::SECOND_TEAM_ID, $ids);
     }
+
+    public function testItBuildsTeamOfProgramById(): void
+    {
+        $team = TeamIdentifier::buildTeamOfProgramById(
+            SearchVisibleTeamsOfProgramStub::withTeamIds(
+                self::FIRST_TEAM_ID,
+                self::SECOND_TEAM_ID
+            ),
+            ProgramIdentifierBuilder::build(),
+            UserIdentifierStub::buildGenericUser(),
+            self::FIRST_TEAM_ID
+        );
+
+        self::assertEquals(self::FIRST_TEAM_ID, $team->getId());
+    }
 }

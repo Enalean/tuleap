@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
-final class TeamIsNotVisibleException extends \Exception
+/**
+ * @psalm-immutable
+ */
+final class TeamSynchronizationCommand implements CommandTeamSynchronization
 {
-    private string $i18n_message;
+    private function __construct(
+        private int $program_id,
+        private int $team_id,
+    ) {
+    }
 
-    public function __construct(ProgramIdentifier $program, UserIdentifier $user)
+    public static function fromProgramAndTeam(ProgramIdentifier $program, TeamIdentifier $team): self
     {
-        $this->i18n_message =
-            sprintf(
-                dgettext('tuleap-program_management', 'User #%d cannot see one of the teams of Program #%d'),
-                $user->getId(),
-                $program->getId()
-            );
-
-        parent::__construct(
-            $this->i18n_message
+        return new self(
+            $program->getId(),
+            $team->getId()
         );
     }
 
-    public function getI18NExceptionMessage(): string
+    public function getProgramId(): int
     {
-        return $this->i18n_message;
+        return $this->program_id;
+    }
+
+    public function getTeamId(): int
+    {
+        return $this->team_id;
     }
 }
