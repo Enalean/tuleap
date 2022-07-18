@@ -31,6 +31,7 @@ final class TeamSynchronizationEventProxy implements TeamSynchronizationEvent
     private function __construct(
         private int $program_id,
         private int $team_id,
+        private int $user_id,
     ) {
     }
 
@@ -42,7 +43,7 @@ final class TeamSynchronizationEventProxy implements TeamSynchronizationEvent
         }
 
         $payload = $worker_event->getPayload();
-        if (! isset($payload['program_id'], $payload['team_id'])) {
+        if (! isset($payload['program_id'], $payload['team_id'], $payload['user_id'])) {
             $logger->warning("The payload for $event_name seems to be malformed, ignoring");
             $logger->debug("Malformed payload for $event_name: " . var_export($payload, true));
             return null;
@@ -50,7 +51,8 @@ final class TeamSynchronizationEventProxy implements TeamSynchronizationEvent
 
         return new self(
             $payload['program_id'],
-            $payload['team_id']
+            $payload['team_id'],
+            $payload['user_id'],
         );
     }
 
@@ -62,5 +64,10 @@ final class TeamSynchronizationEventProxy implements TeamSynchronizationEvent
     public function getTeamId(): int
     {
         return $this->team_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 }

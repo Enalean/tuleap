@@ -27,9 +27,12 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 /**
  * @psalm-immutable
  */
-final class MirroredMilestoneCollection
+final class MissingMirroredMilestoneCollection
 {
-    private function __construct(public int $team_id)
+    /**
+     * @param int[] $missing_program_increments_ids
+     */
+    private function __construct(public int $team_id, public array $missing_program_increments_ids)
     {
     }
 
@@ -45,13 +48,41 @@ final class MirroredMilestoneCollection
     ): array {
         $missing_open_program_increments = [];
         foreach ($aggregated_teams as $team) {
+            $missing_program_increment_ids = [];
             foreach ($open_program_increments as $open_program_increment) {
-                if (! $timebox_searcher->hashMirroredTimeboxesFromProgram($team, $open_program_increment->title)) {
-                    $missing_open_program_increments[$team->getId()] = new self($team->getId());
+                if (! $timebox_searcher->hasMirroredTimeboxesFromProgram($team, $open_program_increment)) {
+                    $missing_program_increment_ids[] = $open_program_increment->id;
                 }
+            }
+
+            if (! empty($missing_program_increment_ids)) {
+                $missing_open_program_increments[$team->getId()] = new self($team->getId(), $missing_program_increment_ids);
             }
         }
 
         return $missing_open_program_increments;
+    }
+
+    /**
+     * @param ProgramIncrement[] $open_program_increments
+     * @param ProjectReference[] $aggregated_teams
+     */
+    public static function buildFromProgramIdentifierAndTeam(
+        SearchMirrorTimeboxesFromProgram $timebox_searcher,
+        array $open_program_increments,
+        ProjectReference $team,
+    ): ?self {
+        $missing_program_increment_ids = [];
+        foreach ($open_program_increments as $open_program_increment) {
+            if (! $timebox_searcher->hasMirroredTimeboxesFromProgram($team, $open_program_increment)) {
+                $missing_program_increment_ids[] = $open_program_increment->id;
+            }
+        }
+
+        if (! empty($missing_program_increment_ids)) {
+            return new self($team->getId(), $missing_program_increment_ids);
+        }
+
+        return null;
     }
 }

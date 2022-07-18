@@ -63,7 +63,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($teams_presenter[0]->should_synchronize_team);
     }
 
-    public function testBuildPresenterWithTeamWithMissingMirror(): void
+    public function testBuildPresenterWithSynchronizeButtonWhenTeamHasMissingMirror(): void
     {
         $team       = ProjectReferenceStub::withId(150);
         $collection = TeamProjectsCollectionBuilder::withProjects(
@@ -79,10 +79,10 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
-        self::assertFalse($teams_presenter[0]->should_synchronize_team);
+        self::assertTrue($teams_presenter[0]->should_synchronize_team);
     }
 
-    public function testBuildPresenterWithTeamWithoutMissingMirror(): void
+    public function testBuildPresenterWithoutSynchronizeButtonWhenTeamHasNoMissingMirror(): void
     {
         $team       = ProjectReferenceStub::withId(150);
         $collection = TeamProjectsCollectionBuilder::withProjects(
@@ -98,6 +98,6 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             []
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
-        self::assertTrue($teams_presenter[0]->should_synchronize_team);
+        self::assertFalse($teams_presenter[0]->should_synchronize_team);
     }
 }

@@ -21,27 +21,28 @@
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 
 final class SearchMirrorTimeboxesFromProgramStub implements SearchMirrorTimeboxesFromProgram
 {
-    private function __construct(private bool $has_mirror)
+    private function __construct(private bool $has_missing_mirror)
     {
     }
 
     public static function buildWithMissingMirror(): self
     {
-        return new self(true);
+        return new self(false);
     }
 
     public static function buildWithoutMissingMirror(): self
     {
-        return new self(false);
+        return new self(true);
     }
 
-    public function hashMirroredTimeboxesFromProgram(ProjectReference $team, string $title): bool
+    public function hasMirroredTimeboxesFromProgram(ProjectIdentifier $team, ProgramIncrement $program_increment): bool
     {
-        return $this->has_mirror;
+        return $this->has_missing_mirror;
     }
 }

@@ -29,14 +29,16 @@ final class CommandTeamSynchronizationStub implements CommandTeamSynchronization
     private function __construct(
         private int $program_id,
         private int $team_id,
+        private int $user_id,
     ) {
     }
 
-    public static function withProgramAndTeamIds(int $program_id, int $team_id): self
+    public static function withProgramAndTeamIdsAndUserId(int $program_id, int $team_id, int $user_id): self
     {
         return new self(
             $program_id,
-            $team_id
+            $team_id,
+            $user_id
         );
     }
 
@@ -48,5 +50,10 @@ final class CommandTeamSynchronizationStub implements CommandTeamSynchronization
     public function getTeamId(): int
     {
         return $this->team_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 }

@@ -21,15 +21,35 @@
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
+use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\SearchMirrorTimeboxesFromProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\TeamSynchronizationEventStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const PROGRAM_ID = 1;
+
     public function testItHandlesTeamSynchronizationEvents(): void
     {
-        $logger = new TestLogger();
-        $event  = TeamSynchronizationEventStub::buildWithIds(1, 123);
-        (new SynchronizeTeamProcessor($logger))->processTeamSynchronization($event);
+        $logger       = new TestLogger();
+        $event        = TeamSynchronizationEventStub::buildWithIds(self::PROGRAM_ID, 123, 456);
+        $user_manager = $this->createMock(\UserManager::class);
+        $user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
+        $project_manager = $this->createMock(\ProjectManager::class);
+        $project_manager->method('getProject')->willReturn(new \Project(['group_id' => self::PROGRAM_ID, 'group_name' => "project", "unix_group_name" => "project", "icon_codepoint" => ""]));
+        (new SynchronizeTeamProcessor(
+            MessageLog::buildFromLogger($logger),
+            $project_manager,
+            $user_manager,
+            new MissingProgramIncrementCreator(
+                SearchOpenProgramIncrementsStub::withProgramIncrements(ProgramIncrementBuilder::buildWithId(self::PROGRAM_ID)),
+                SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror()
+            )
+        ))->processTeamSynchronization($event);
 
         self::assertTrue($logger->hasDebugThatContains("Team 123 of Program 1 needs PI and Iterations synchronization"));
     }

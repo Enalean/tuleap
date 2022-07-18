@@ -31,6 +31,7 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
 {
     private const PROGRAM_ID = 1;
     private const TEAM_ID    = 123;
+    private const USER_ID    = 456;
 
     private TestLogger $logger;
     /**
@@ -44,9 +45,10 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
         $this->logger        = new TestLogger();
         $this->queue_factory = $this->createStub(QueueFactory::class);
 
-        $this->command = CommandTeamSynchronizationStub::withProgramAndTeamIds(
+        $this->command = CommandTeamSynchronizationStub::withProgramAndTeamIdsAndUserId(
             self::PROGRAM_ID,
             self::TEAM_ID,
+            self::USER_ID
         );
     }
 
@@ -70,6 +72,7 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
                 [
                     'program_id' => self::PROGRAM_ID,
                     'team_id' => self::TEAM_ID,
+                    'user_id' => self::USER_ID,
                 ]
             );
 

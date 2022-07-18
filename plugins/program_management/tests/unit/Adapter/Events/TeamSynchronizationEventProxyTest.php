@@ -70,6 +70,7 @@ class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
             'payload'    => [
                 'program_id' => 1,
                 'team_id' => 123,
+                'user_id' => 456,
             ],
         ]);
 

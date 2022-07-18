@@ -46,6 +46,7 @@ final class MirroredTimeboxesSynchronizationDispatcher implements DispatchMirror
             $queue->pushSinglePersistentMessage(TeamSynchronizationEvent::TOPIC, [
                 'program_id' => $team_synchronization_command->getProgramId(),
                 'team_id' => $team_synchronization_command->getTeamId(),
+                'user_id' => $team_synchronization_command->getUserId(),
             ]);
         } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {
             $this->logger->error(

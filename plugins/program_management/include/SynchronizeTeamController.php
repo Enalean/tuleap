@@ -95,7 +95,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
         $this->synchronization_dispatcher->dispatchSynchronizationCommand(
-            TeamSynchronizationCommand::fromProgramAndTeam($program, $team)
+            TeamSynchronizationCommand::fromProgramAndTeam($program, $team, $user)
         );
     }
 }
