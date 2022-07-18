@@ -32,7 +32,9 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const COMMIT_MESSAGE = 'closes story #822';
+    private const COMMIT_MESSAGE  = 'closes story #822';
+    private const COMMIT_SHA1     = '6c31bec0c';
+    private const REPOSITORY_PATH = 'cymogene/homiletics';
     private TestLogger $logger;
     private RetrieveCommitMessageStub $message_retriever;
     private EventDispatcherStub $event_dispatcher;
@@ -49,6 +51,9 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function process(): void
     {
+        $git_repository = $this->createStub(\GitRepository::class);
+        $git_repository->method('getFullName')->willReturn(self::REPOSITORY_PATH);
+
         $processor = new CommitAnalysisProcessor(
             $this->logger,
             $this->message_retriever,
@@ -56,8 +61,9 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $processor->process(
             CommitAnalysisOrder::fromComponents(
-                CommitHash::fromString('6c31bec0c'),
+                CommitHash::fromString(self::COMMIT_SHA1),
                 UserTestBuilder::buildWithDefaults(),
+                $git_repository,
                 $this->project
             )
         );
@@ -78,6 +84,10 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNotNull($event);
         self::assertSame(self::COMMIT_MESSAGE, $event->text_with_potential_references);
         self::assertSame($this->project, $event->project);
+        self::assertSame(
+            sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, self::REPOSITORY_PATH, self::COMMIT_SHA1),
+            $event->back_reference->getStringReference()
+        );
     }
 
     public function testItLogsErrorWhenItCannotReadCommitMessage(): void

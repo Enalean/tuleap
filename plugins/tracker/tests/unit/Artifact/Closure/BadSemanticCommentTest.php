@@ -20,24 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Event\Events;
+namespace Tuleap\Tracker\Artifact\Closure;
 
-use Tuleap\Reference\ReferenceString;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-/**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * It has a reference string pattern back to the origin of the text.
- * @psalm-immutable
- */
-final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
+final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public const NAME = 'receivePotentialReferences';
+    private const USER_LOGIN = 'jambrosius';
 
-    public function __construct(
-        public string $text_with_potential_references,
-        public \Project $project,
-        public \PFUser $user,
-        public ReferenceString $back_reference,
-    ) {
+    private function getBody(): string
+    {
+        $user = UserTestBuilder::aUser()->withUserName(self::USER_LOGIN)->build();
+
+        return BadSemanticComment::fromUser($user)->getBody();
+    }
+
+    public function testItBuildsFromUser(): void
+    {
+        self::assertStringContainsString('@' . self::USER_LOGIN, $this->getBody());
     }
 }

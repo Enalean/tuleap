@@ -25,8 +25,5 @@ namespace Tuleap\Tracker\Artifact;
 
 interface RetrieveViewableArtifact
 {
-    /**
-     * @param int $id
-     */
-    public function getArtifactByIdUserCanView(\PFUser $user, $id): ?Artifact;
+    public function getArtifactByIdUserCanView(\PFUser $user, int $id): ?Artifact;
 }

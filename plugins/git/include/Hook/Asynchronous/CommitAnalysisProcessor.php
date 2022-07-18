@@ -25,6 +25,7 @@ namespace Tuleap\Git\Hook\Asynchronous;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Event\Events\PotentialReferencesReceived;
+use Tuleap\Git\CommitMetadata\GitCommitReferenceString;
 use Tuleap\Git\CommitMetadata\RetrieveCommitMessage;
 
 final class CommitAnalysisProcessor
@@ -44,6 +45,12 @@ final class CommitAnalysisProcessor
             $this->logger->error('Could not retrieve commit message', ['exception' => $e]);
             return;
         }
-        $this->event_dispatcher->dispatch(new PotentialReferencesReceived($commit_message, $order->getProject()));
+        $back_reference = GitCommitReferenceString::fromRepositoryAndCommit(
+            $order->getRepository(),
+            $order->getCommitHash()
+        );
+        $this->event_dispatcher->dispatch(
+            new PotentialReferencesReceived($commit_message, $order->getProject(), $order->getPusher(), $back_reference)
+        );
     }
 }

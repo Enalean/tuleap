@@ -64208,6 +64208,11 @@
       <code>userCanSeeUgroup</code>
     </MissingReturnType>
   </file>
+  <file src="src/common/User/RetrieveUserById.php">
+    <MissingParamType occurrences="1">
+      <code>$user_id</code>
+    </MissingParamType>
+  </file>
   <file src="src/common/User/SessionManager.php">
     <MissingParamType occurrences="5">
       <code>$current_time</code>
@@ -84387,5 +84392,10 @@
       <code>$request</code>
       <code>$request</code>
     </UndefinedGlobalVariable>
+  </file>
+  <file src="tests/lib/Stubs/RetrieveUserByIdStub.php">
+    <MissingParamType occurrences="1">
+      <code>$user_id</code>
+    </MissingParamType>
   </file>
 </files>

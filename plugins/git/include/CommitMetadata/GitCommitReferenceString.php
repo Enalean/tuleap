@@ -20,49 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\CommitMetadata;
 
 use Tuleap\Git\Hook\CommitHash;
 
 /**
  * @psalm-immutable
  */
-final class CommitAnalysisOrder
+final class GitCommitReferenceString implements \Tuleap\Reference\ReferenceString
 {
-    private function __construct(
-        private CommitHash $commit_hash,
-        private \PFUser $pusher,
-        private \GitRepository $repository,
-        private \Project $project,
-    ) {
-    }
-
-    public static function fromComponents(
-        CommitHash $commit_hash,
-        \PFUser $pusher,
-        \GitRepository $repository,
-        \Project $project,
-    ): self {
-        return new self($commit_hash, $pusher, $repository, $project);
-    }
-
-    public function getCommitHash(): CommitHash
+    private function __construct(private string $reference)
     {
-        return $this->commit_hash;
     }
 
-    public function getPusher(): \PFUser
+    public static function fromRepositoryAndCommit(\GitRepository $repository, CommitHash $commit_hash): self
     {
-        return $this->pusher;
+        return new self(
+            sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, $repository->getFullName(), (string) $commit_hash)
+        );
     }
 
-    public function getRepository(): \GitRepository
+    public function getStringReference(): string
     {
-        return $this->repository;
-    }
-
-    public function getProject(): \Project
-    {
-        return $this->project;
+        return $this->reference;
     }
 }

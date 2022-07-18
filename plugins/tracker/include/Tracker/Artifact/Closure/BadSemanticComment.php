@@ -20,24 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Event\Events;
-
-use Tuleap\Reference\ReferenceString;
+namespace Tuleap\Tracker\Artifact\Closure;
 
 /**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * It has a reference string pattern back to the origin of the text.
  * @psalm-immutable
  */
-final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
+final class BadSemanticComment implements BadSemanticCommentInCommonMarkFormat
 {
-    public const NAME = 'receivePotentialReferences';
+    private function __construct(private string $comment)
+    {
+    }
 
-    public function __construct(
-        public string $text_with_potential_references,
-        public \Project $project,
-        public \PFUser $user,
-        public ReferenceString $back_reference,
-    ) {
+    public static function fromUser(\PFUser $user): self
+    {
+        return new self(
+            sprintf(
+                '@%s attempts to close this artifact but neither done nor status semantic allow closing it.',
+                $user->getUserName()
+            )
+        );
+    }
+
+    public function getBody(): string
+    {
+        return $this->comment;
     }
 }
