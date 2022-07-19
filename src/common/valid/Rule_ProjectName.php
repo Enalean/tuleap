@@ -114,14 +114,24 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
      */
     public function isValid($val)
     {
-        return $this->isDNSCompliant($val) && parent::isValid($val) && $this->isNameAvailable($val) && $this->getPendingProjectRename($val);
+        return $this->isStartingWithAlphanumericCharacter($val) && $this->isDNSCompliant($val) && parent::isValid($val) && $this->isNameAvailable($val) && $this->getPendingProjectRename($val);
     }
-    protected function _getErrorExists()
+    protected function _getErrorExists() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('rule_group_name', 'error_exists');
     }
-    protected function _getErrorNoSpaces()
+    protected function _getErrorNoSpaces() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $GLOBALS['Language']->getText('include_account', 'project_spaces');
+    }
+
+    private function isStartingWithAlphanumericCharacter(string $val): bool
+    {
+        $is_starting_with_alphanumeric_character = ctype_alnum($val[0]);
+        if (! $is_starting_with_alphanumeric_character) {
+            $this->error = _("Short name must start with an alphanumeric character.");
+        }
+
+        return $is_starting_with_alphanumeric_character;
     }
 }

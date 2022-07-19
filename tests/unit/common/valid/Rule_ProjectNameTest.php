@@ -55,6 +55,30 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($r->isValid("group.test.1"));
     }
 
+    public function testNotStartWithNonAlphanumericCharacter(): void
+    {
+        $r = new Rule_ProjectName();
+        self::assertFalse($r->isValid("-shortname"));
+        self::assertFalse($r->isValid("'shortname"));
+        self::assertFalse($r->isValid("&shortname"));
+        self::assertFalse($r->isValid("\"shortname"));
+        self::assertFalse($r->isValid("(shortname"));
+        self::assertFalse($r->isValid("-shortname"));
+        self::assertFalse($r->isValid("çshortname"));
+        self::assertFalse($r->isValid("àshortname"));
+        self::assertFalse($r->isValid(")shortname"));
+        self::assertFalse($r->isValid("=shortname"));
+        self::assertFalse($r->isValid("?shortname"));
+        self::assertFalse($r->isValid(",shortname"));
+        self::assertFalse($r->isValid(";shortname"));
+        self::assertFalse($r->isValid(".shortname"));
+        self::assertFalse($r->isValid("/shortname"));
+        self::assertFalse($r->isValid("!shortname"));
+        self::assertFalse($r->isValid("*shortname"));
+        self::assertFalse($r->isValid("%shortname"));
+        self::assertFalse($r->isValid("£shortname"));
+    }
+
     public function testReservedNames(): void
     {
         $r = new Rule_ProjectName();
