@@ -205,7 +205,7 @@ class Search_SearchController
         $reference_manager = ReferenceManager::instance();
         $references        = $reference_manager->extractReferences(
             $query->getWords(),
-            $query->getProject()->getId()
+            (int) $query->getProject()->getId()
         );
         if (count($references) === 1 && $references[0]->getMatch() === trim($query->getWords())) {
             $GLOBALS['HTML']->redirect($references[0]->getFullGotoLink());

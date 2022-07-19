@@ -1003,7 +1003,7 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
      */
     public function extractReferencesGrouped($html, $group_id)
     {
-        $referencesInstances        = $this->extractReferences($html, $group_id);
+        $referencesInstances        = $this->extractReferences($html, (int) $group_id);
         $groupedReferencesInstances = [];
         foreach ($referencesInstances as $idx => $referenceInstance) {
             $reference = $referenceInstance->getReference();
