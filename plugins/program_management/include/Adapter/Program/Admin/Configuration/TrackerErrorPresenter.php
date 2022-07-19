@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusMissingValuesPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusNoFieldPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TeamHasNoPlanningPresenter;
@@ -239,8 +238,13 @@ final class TrackerErrorPresenter
             $required_field_error[] = new RequiredErrorPresenter($error);
         }
 
+        $semantic_error = [];
+        foreach ($errors_collector->getSemanticErrors() as $error) {
+            $semantic_error[] = new SemanticErrorPresenter($error);
+        }
+
         return new self(
-            $errors_collector->getSemanticErrors(),
+            $semantic_error,
             $required_field_error,
             $errors_collector->getTransitionRuleError(),
             $errors_collector->getTransitionRuleDateError(),

@@ -28,7 +28,7 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 /**
  * @psalm-immutable
  */
-final class SemanticErrorPresenter
+final class SemanticError
 {
     /**
      * @param TrackerReference[] $potential_trackers_in_error

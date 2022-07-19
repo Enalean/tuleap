@@ -40,7 +40,7 @@ final class ConfigurationErrorsCollector
      */
     private array $field_dependency_error = [];
     /**
-     * @var SemanticErrorPresenter[]
+     * @var SemanticError[]
      */
     private array $semantic_errors = [];
     /**
@@ -111,7 +111,7 @@ final class ConfigurationErrorsCollector
         string $semantic_short_name,
         array $potential_trackers_in_error,
     ): void {
-        $this->semantic_errors[] = new SemanticErrorPresenter(
+        $this->semantic_errors[] = new SemanticError(
             $semantic_name,
             $semantic_short_name,
             $potential_trackers_in_error
@@ -266,7 +266,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return SemanticErrorPresenter[]
+     * @return SemanticError[]
      */
     public function getSemanticErrors(): array
     {
