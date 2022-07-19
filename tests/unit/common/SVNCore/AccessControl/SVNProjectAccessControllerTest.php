@@ -40,13 +40,13 @@ final class SVNProjectAccessControllerTest extends TestCase
     use ForgeConfigSandbox;
 
     /**
-     * @var \UserManager&\PHPUnit\Framework\MockObject\Stub
+     * @var SVNLoginNameUserProvider&\PHPUnit\Framework\MockObject\Stub
      */
-    private $user_manager;
+    private $user_retriever;
 
     protected function setUp(): void
     {
-        $this->user_manager = $this->createStub(\UserManager::class);
+        $this->user_retriever = $this->createStub(SVNLoginNameUserProvider::class);
     }
 
     private function buildController(
@@ -55,15 +55,18 @@ final class SVNProjectAccessControllerTest extends TestCase
         bool $is_user_authentication_successful,
         int $cache_lifetime_minutes = ParameterRetriever::LIFETIME_DEFAULT,
     ): SVNProjectAccessController {
-        $auth_method = new class ($is_user_authentication_successful) implements SVNAuthenticationMethod
+        $auth_method = new class ($is_user_authentication_successful, $this->user_retriever) implements SVNAuthenticationMethod
         {
-            public function __construct(private bool $is_success)
+            public function __construct(private bool $is_success, private SVNLoginNameUserProvider $user_retriever)
             {
             }
 
-            public function isAuthenticated(\PFUser $user, ConcealedString $user_secret, ServerRequestInterface $request): bool
+            public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser
             {
-                return $this->is_success;
+                if ($this->is_success) {
+                    return $this->user_retriever->getUserFromSVNLoginName($login_name, $project);
+                }
+                return null;
             }
         };
 
@@ -74,7 +77,6 @@ final class SVNProjectAccessControllerTest extends TestCase
             HTTPFactoryBuilder::responseFactory(),
             new NullLogger(),
             new BasicAuthLoginExtractor(),
-            $this->user_manager,
             $project_factory,
             $check_project_access,
             [$auth_method],
@@ -93,7 +95,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $controller = $this->buildController($project_factory, $check_project_access, true, 10);
 
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
-        $this->user_manager->method('getUserByLoginName')->willReturn($user);
+        $this->user_retriever->method('getUserFromSVNLoginName')->willReturn($user);
 
         $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'password');
         $response = $controller->handle($request);
@@ -138,9 +140,12 @@ final class SVNProjectAccessControllerTest extends TestCase
 
     public function testRequestIsRejectedWhenUserCannotBeFoundFromItsLoginName(): void
     {
-        $controller = $this->buildController($this->createStub(\ProjectManager::class), CheckProjectAccessStub::withNotValidProject(), false);
+        $project         = ProjectTestBuilder::aProject()->withId(102)->build();
+        $project_factory = $this->createStub(\ProjectManager::class);
+        $project_factory->method('getValidProjectByShortNameOrId')->willReturn($project);
+        $controller = $this->buildController($project_factory, CheckProjectAccessStub::withNotValidProject(), false);
 
-        $this->user_manager->method('getUserByLoginName')->willReturn(null);
+        $this->user_retriever->method('getUserFromSVNLoginName')->willReturn(null);
 
         $request  = self::buildServerRequest('name', 'invalid_login_name', 'password');
         $response = $controller->handle($request);
@@ -155,7 +160,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $controller = $this->buildController($project_factory, CheckProjectAccessStub::withNotValidProject(), false);
 
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
-        $this->user_manager->method('getUserByLoginName')->willReturn($user);
+        $this->user_retriever->method('getUserFromSVNLoginName')->willReturn($user);
 
         $request  = self::buildServerRequest('not_found', 'valid_login_name', 'password');
         $response = $controller->handle($request);
@@ -168,10 +173,10 @@ final class SVNProjectAccessControllerTest extends TestCase
         $project         = ProjectTestBuilder::aProject()->withId(102)->build();
         $project_factory = $this->createStub(\ProjectManager::class);
         $project_factory->method('getValidProjectByShortNameOrId')->willReturn($project);
-        $controller = $this->buildController($project_factory, CheckProjectAccessStub::withNotValidProject(), false);
+        $controller = $this->buildController($project_factory, CheckProjectAccessStub::withNotValidProject(), true);
 
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
-        $this->user_manager->method('getUserByLoginName')->willReturn($user);
+        $this->user_retriever->method('getUserFromSVNLoginName')->willReturn($user);
 
         $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'password');
         $response = $controller->handle($request);
@@ -187,7 +192,7 @@ final class SVNProjectAccessControllerTest extends TestCase
         $controller = $this->buildController($project_factory, CheckProjectAccessStub::withValidAccess(), false);
 
         $user = UserTestBuilder::anActiveUser()->withUserName('valid_user_name')->build();
-        $this->user_manager->method('getUserByLoginName')->willReturn($user);
+        $this->user_retriever->method('getUserFromSVNLoginName')->willReturn($user);
 
         $request  = self::buildServerRequest($project->getUnixName(), 'valid_login_name', 'wrong_password');
         $response = $controller->handle($request);

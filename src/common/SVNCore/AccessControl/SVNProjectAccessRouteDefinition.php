@@ -59,11 +59,11 @@ final class SVNProjectAccessRouteDefinition
             HTTPFactoryBuilder::responseFactory(),
             $logger,
             new BasicAuthLoginExtractor(),
-            $user_manager,
             \ProjectManager::instance(),
             new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager),
             [
                 new SVNTokenBasedAuthenticationMethod(
+                    new SVNLoginNameUserProvider($user_manager, $event_manager),
                     new \SVN_TokenHandler(new \SVN_TokenDao(), new \RandomNumberGenerator(), $password_handler),
                     $logger
                 ),

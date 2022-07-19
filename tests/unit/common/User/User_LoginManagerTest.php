@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\User\AfterLocalLogin;
-use Tuleap\User\BeforeLogin;
+use Tuleap\User\AfterLocalStandardLogin;
+use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\UserAuthenticationSucceeded;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -76,7 +76,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             public $after_called         = false;
             public $auth_succeded_called = false;
 
-            public function beforeLogin(BeforeLogin $event): void
+            public function beforeLogin(BeforeStandardLogin $event): void
             {
                 if ($event->getLoginName() === 'john' && (string) $event->getPassword() === 'password') {
                     $this->before_called = true;
@@ -84,7 +84,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             }
 
-            public function afterLocalLogin(AfterLocalLogin $event): void
+            public function afterLocalLogin(AfterLocalStandardLogin $event): void
             {
                 $this->after_called = true;
             }
@@ -164,12 +164,12 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             public $auth_succeded_called = false;
             public $user;
 
-            public function beforeLogin(BeforeLogin $event): void
+            public function beforeLogin(BeforeStandardLogin $event): void
             {
                 $this->before_called = true;
             }
 
-            public function afterLocalLogin(AfterLocalLogin $event): void
+            public function afterLocalLogin(AfterLocalStandardLogin $event): void
             {
                 $this->after_called = true;
                 $this->user         = $event->user;
@@ -241,12 +241,12 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             public $after_called         = false;
             public $auth_succeded_called = false;
 
-            public function beforeLogin(BeforeLogin $event): void
+            public function beforeLogin(BeforeStandardLogin $event): void
             {
                 $this->before_called = true;
             }
 
-            public function afterLocalLogin(AfterLocalLogin $event): void
+            public function afterLocalLogin(AfterLocalStandardLogin $event): void
             {
                 $this->after_called = true;
                 $event->refuseLogin("nope");
@@ -268,12 +268,12 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItRaisesAnExceptionIfAPluginForbidLoginOfAnotherPlugin(): void
     {
         $plugin1 = new class extends \Plugin {
-            public function beforeLogin(BeforeLogin $event): void
+            public function beforeLogin(BeforeStandardLogin $event): void
             {
                 $event->setUser(UserTestBuilder::aUser()->withStatus(PFUser::STATUS_ACTIVE)->build());
             }
         };
-        $this->event_manager->addListener(BeforeLogin::NAME, $plugin1, BeforeLogin::NAME, false);
+        $this->event_manager->addListener(BeforeStandardLogin::NAME, $plugin1, BeforeStandardLogin::NAME, false);
 
         $plugin2 = new class extends \Plugin {
             public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void
@@ -301,12 +301,12 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 public $after_called         = false;
                 public $auth_succeded_called = false;
 
-                public function beforeLogin(BeforeLogin $event): void
+                public function beforeLogin(BeforeStandardLogin $event): void
                 {
                     $this->before_called = true;
                 }
 
-                public function afterLocalLogin(AfterLocalLogin $event): void
+                public function afterLocalLogin(AfterLocalStandardLogin $event): void
                 {
                     $this->after_called = true;
                 }
@@ -321,8 +321,8 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function addListeners(\Plugin $plugin): \Plugin
     {
-        $this->event_manager->addListener(BeforeLogin::NAME, $plugin, BeforeLogin::NAME, false);
-        $this->event_manager->addListener(AfterLocalLogin::NAME, $plugin, AfterLocalLogin::NAME, false);
+        $this->event_manager->addListener(BeforeStandardLogin::NAME, $plugin, BeforeStandardLogin::NAME, false);
+        $this->event_manager->addListener(AfterLocalStandardLogin::NAME, $plugin, AfterLocalStandardLogin::NAME, false);
         $this->event_manager->addListener(UserAuthenticationSucceeded::NAME, $plugin, UserAuthenticationSucceeded::NAME, false);
         return $plugin;
     }

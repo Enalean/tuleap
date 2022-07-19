@@ -33,18 +33,22 @@ final class SVNPasswordBasedAuthenticationMethod implements SVNAuthenticationMet
     {
     }
 
-    public function isAuthenticated(\PFUser $user, ConcealedString $user_secret, ServerRequestInterface $request): bool
+    public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser
     {
-        $user_name = $user->getUserName();
         try {
-            $user = $this->login_manager->authenticate($user->getUserName(), $user_secret);
+            $user = $this->login_manager->authenticate(
+                $login_name,
+                $user_secret,
+                fn (string $login_name, ConcealedString $password): BeforeSVNLogin => new BeforeSVNLogin($login_name, $user_secret, $project),
+                fn (\PFUser $user): AfterLocalSVNLogin => new AfterLocalSVNLogin($user, $project)
+            );
             $this->login_manager->validateAndSetCurrentUser($user);
         } catch (\User_LoginException $e) {
             $this->logger->debug(sprintf('SVN password based authentication rejected (%s)', $e->getMessage()), ['exception' => $e]);
-            return false;
+            return null;
         }
 
-        $this->logger->debug(sprintf('SVN password based authentication success for user #%d (%s)', $user->getId(), $user_name));
-        return true;
+        $this->logger->debug(sprintf('SVN password based authentication success for user #%d (%s)', $user->getId(), $user->getUserName()));
+        return $user;
     }
 }

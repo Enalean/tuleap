@@ -58,8 +58,8 @@ use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Account\RedirectAfterLogin;
 use Tuleap\User\Account\RegistrationGuardEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
-use Tuleap\User\AfterLocalLogin;
-use Tuleap\User\BeforeLogin;
+use Tuleap\User\AfterLocalStandardLogin;
+use Tuleap\User\BeforeStandardLogin;
 use Tuleap\User\UserNameNormalizer;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 
@@ -98,8 +98,10 @@ class LdapPlugin extends Plugin
         $this->addHook(Event::SEARCH_TYPE);
 
         // Authentication
-        $this->addHook(BeforeLogin::NAME);
-        $this->addHook(AfterLocalLogin::NAME);
+        $this->addHook(BeforeStandardLogin::NAME);
+        $this->addHook(\Tuleap\SVNCore\AccessControl\BeforeSVNLogin::NAME);
+        $this->addHook(AfterLocalStandardLogin::NAME);
+        $this->addHook(\Tuleap\SVNCore\AccessControl\AfterLocalSVNLogin::NAME);
 
         // Login
         $this->addHook('login_presenter');
@@ -110,6 +112,7 @@ class LdapPlugin extends Plugin
         $this->addHook('user_manager_find_user', 'user_manager_find_user', false);
         $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
         $this->addHook(UserRetrieverByLoginNameEvent::NAME);
+        $this->addHook(\Tuleap\SVNCore\AccessControl\UserRetrieverBySVNLoginNameEvent::NAME);
 
         // User Home
         $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
@@ -355,7 +358,7 @@ class LdapPlugin extends Plugin
         );
     }
 
-    public function beforeLogin(BeforeLogin $event): void
+    public function beforeLogin(BeforeStandardLogin $event): void
     {
         if ($this->isLdapAuthType()) {
             try {
@@ -367,6 +370,17 @@ class LdapPlugin extends Plugin
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (LDAP_AuthenticationFailedException $exception) {
                 $this->getLogger()->info("[LDAP] User " . $event->getLoginName() . " failed to authenticate");
+            }
+        }
+    }
+
+    public function beforeSVNLogin(\Tuleap\SVNCore\AccessControl\BeforeSVNLogin $event): void
+    {
+        if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
+            try {
+                $event->setUser($this->getLdapUserManager()->authenticate($event->getLoginName(), $event->getPassword()));
+            } catch (LDAP_UserNotFoundException | LDAP_AuthenticationFailedException $ex) {
+                // Do nothing, user will not be able to login
             }
         }
     }
@@ -396,7 +410,7 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function afterLocalLogin(AfterLocalLogin $event): void
+    public function afterLocalLogin(AfterLocalStandardLogin $event): void
     {
         if ($this->isLdapAuthType()) {
             if ($event->user->getLdapId() != null) {
@@ -411,6 +425,23 @@ class LdapPlugin extends Plugin
             } catch (Exception $exception) {
                 $this->getLogger()->error('An error occurred while registering user (afterLogin): ' . $exception->getMessage());
             }
+        }
+    }
+
+    public function afterLocalSVNLogin(\Tuleap\SVNCore\AccessControl\AfterLocalSVNLogin $event): void
+    {
+        if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
+            if ($event->user->getLdapId() !== null) {
+                $event->refuseLogin(sprintf(dgettext('tuleap-ldap', 'Please use your %1$s login (not the %2$s one).'), $this->getLDAPServerCommonName(), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)));
+            }
+        }
+    }
+
+    public function retrieveUserBySVNLoginName(\Tuleap\SVNCore\AccessControl\UserRetrieverBySVNLoginNameEvent $event): void
+    {
+        if ($this->isLdapAuthType() && (new LDAP_ProjectManager())->hasSVNLDAPAuth((int) $event->project->getID())) {
+            $event->can_user_be_provided_by_other_means = false;
+            $event->user                                = $this->getLdapUserManager()->getUserByIdentifier('ldapuid:' . $event->login_name);
         }
     }
 

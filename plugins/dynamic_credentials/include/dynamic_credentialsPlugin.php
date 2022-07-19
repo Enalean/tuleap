@@ -28,8 +28,10 @@ use Tuleap\DynamicCredentials\REST\ResourcesInjector;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\User\DynamicUser;
 use Tuleap\DynamicCredentials\User\DynamicUserCreator;
-use Tuleap\User\AfterLocalLogin;
-use Tuleap\User\BeforeLogin;
+use Tuleap\SVNCore\AccessControl\AfterLocalSVNLogin;
+use Tuleap\SVNCore\AccessControl\BeforeSVNLogin;
+use Tuleap\User\AfterLocalStandardLogin;
+use Tuleap\User\BeforeStandardLogin;
 
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 {
@@ -54,8 +56,10 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(BeforeLogin::NAME);
-        $this->addHook(AfterLocalLogin::NAME);
+        $this->addHook(BeforeStandardLogin::NAME);
+        $this->addHook(BeforeSVNLogin::NAME, BeforeStandardLogin::NAME);
+        $this->addHook(AfterLocalStandardLogin::NAME);
+        $this->addHook(AfterLocalSVNLogin::NAME, AfterLocalStandardLogin::NAME);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
 
@@ -68,7 +72,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         $injector->populate($params['restler']);
     }
 
-    public function beforeLogin(BeforeLogin $event): void
+    public function beforeLogin(BeforeStandardLogin|BeforeSVNLogin $event): void
     {
         $credential_retriever = $this->getCredentialRetriever();
         if (session_status() === PHP_SESSION_NONE) {
@@ -86,7 +90,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function afterLocalLogin(AfterLocalLogin $event): void
+    public function afterLocalLogin(AfterLocalStandardLogin|AfterLocalSVNLogin $event): void
     {
         if ((int) $event->user->getId() === DynamicUser::ID) {
             $event->refuseLogin(dgettext('tuleap-dynamic_credentials', 'Dynamic User cannot authenticate with login/password'));

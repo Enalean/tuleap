@@ -23,6 +23,7 @@ namespace Tuleap\SVNCore\AccessControl;
 use Psr\Log\NullLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use User_InvalidPasswordException;
@@ -48,7 +49,7 @@ final class SVNPasswordBasedAuthenticationMethodTest extends TestCase
         $this->login_manager->method('authenticate')->willReturn($user);
         $this->login_manager->method('validateAndSetCurrentUser');
 
-        self::assertTrue($this->auth_method->isAuthenticated($user, new ConcealedString('valid_password'), new NullServerRequest()));
+        self::assertSame($user, $this->auth_method->isAuthenticated('username', new ConcealedString('valid_password'), ProjectTestBuilder::aProject()->build(), new NullServerRequest()));
     }
 
     public function testAuthenticationIsRejectedWhenUserCannotBeAuthenticatedWithThePassword(): void
@@ -56,7 +57,7 @@ final class SVNPasswordBasedAuthenticationMethodTest extends TestCase
         $user = UserTestBuilder::anActiveUser()->withUserName('username')->build();
         $this->login_manager->method('authenticate')->willThrowException(new User_InvalidPasswordException());
 
-        self::assertFalse($this->auth_method->isAuthenticated($user, new ConcealedString('invalid_password'), new NullServerRequest()));
+        self::assertNull($this->auth_method->isAuthenticated('username', new ConcealedString('invalid_password'), ProjectTestBuilder::aProject()->build(), new NullServerRequest()));
     }
 
     public function testAuthenticationIsRejectedWhenUserCannotBeValidated(): void
@@ -65,6 +66,6 @@ final class SVNPasswordBasedAuthenticationMethodTest extends TestCase
         $this->login_manager->method('authenticate')->willReturn($user);
         $this->login_manager->method('validateAndSetCurrentUser')->willThrowException(new User_StatusInvalidException());
 
-        self::assertFalse($this->auth_method->isAuthenticated($user, new ConcealedString('invalid_password'), new NullServerRequest()));
+        self::assertNull($this->auth_method->isAuthenticated('username', new ConcealedString('invalid_password'), ProjectTestBuilder::aProject()->build(), new NullServerRequest()));
     }
 }
