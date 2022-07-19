@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const PROJECT_ADMINISTRATORS_ID: number;
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import dts from "vite-dts";
+
+export default vite.defineLibConfig({
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/index.ts"),
+            name: "TuleapUserGroupConstants",
+        },
+    },
+    plugins: [dts()],
+});

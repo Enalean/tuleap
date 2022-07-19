@@ -18,7 +18,7 @@
  *
  */
 
-import { PROJECT_ADMINISTRATORS_ID } from "../../../../../../../src/scripts/user/user-group-constants";
+import { PROJECT_ADMINISTRATORS_ID } from "@tuleap/user-group-constants";
 import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants";
 
 function getTrackerIdFromTrackerListPage(): Cypress.Chainable<JQuery<HTMLElement>> {

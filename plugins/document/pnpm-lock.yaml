@@ -11,6 +11,7 @@ specifiers:
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init
@@ -48,6 +49,7 @@ dependencies:
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-relative-date': link:../../lib/frontend/tlp-relative-date
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/user-group-constants': link:../../lib/frontend/user-group-constants
   '@tuleap/vue-breadcrumb-privacy': link:../../lib/frontend/vue-breadcrumb-privacy
   '@tuleap/vue2-gettext-composition-helper': link:../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../../lib/frontend/vue2-gettext-init

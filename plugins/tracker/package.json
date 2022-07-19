@@ -41,6 +41,7 @@
     "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
     "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support",
     "@tuleap/tlp": "link:../../src/themes/tlp",
+    "@tuleap/user-group-constants": "link:../../lib/frontend/user-group-constants",
     "@tuleap/vuex-store-wrapper-jest": "link:../../lib/frontend/vuex-store-wrapper-jest",
     "@types/bootstrap": "^4.5.1",
     "@types/ckeditor": "^4.9.10",
