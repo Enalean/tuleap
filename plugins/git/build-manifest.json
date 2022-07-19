@@ -16,7 +16,7 @@
     },
     "gettext-vue3": {
         "artifact-create-branch-action": {
-            "src": "scripts/artifact-create-branch-action",
+            "src": "scripts/artifact-create-branch-action/src",
             "po": "scripts/artifact-create-branch-action/po"
         }
     },

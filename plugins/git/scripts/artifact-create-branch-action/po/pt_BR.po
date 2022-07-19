@@ -29,6 +29,12 @@ msgstr ""
 msgid "Create branch on a Git repository"
 msgstr ""
 
+msgid "Error while loading the Git branch creation modal."
+msgstr ""
+
+msgid "Error while retrieving the Git project repositories: %{ error }"
+msgstr ""
+
 msgid "Git reference from where the branch should be created"
 msgstr ""
 
