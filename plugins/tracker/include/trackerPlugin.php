@@ -99,11 +99,21 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\AsynchronousArtifactsDeletionActionsRunner;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\CommentOnlyChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\DiffProcessor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingReferencesHandler;
 use Tuleap\Tracker\Artifact\CrossReference\CrossReferenceArtifactOrganizer;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
@@ -144,8 +154,10 @@ use Tuleap\Tracker\Creation\TrackerCreationPresenterBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -208,6 +220,13 @@ use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
+use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
@@ -217,9 +236,18 @@ use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Widget\ProjectRendererWidgetXMLImporter;
+use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
+use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
@@ -2482,7 +2510,81 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function receivePotentialReferences(PotentialReferencesReceived $event): void
     {
-        $handler = new ArtifactClosingReferencesHandler($this->getBackendLogger(), \ReferenceManager::instance());
+        $status_semantic_factory        = \Tracker_Semantic_StatusFactory::instance();
+        $form_element_factory           = \Tracker_FormElementFactory::instance();
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $user_manager                   = \UserManager::instance();
+        $event_manager                  = EventManager::instance();
+        $reference_manager              = \ReferenceManager::instance();
+        $db_transaction_executor        = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+        $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
+        $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $first_possible_value_retriever = new FirstPossibleValueInListRetriever(
+            new FirstValidValueAccordingToDependenciesRetriever($form_element_factory),
+            new ValidValuesAccordingToTransitionsRetriever(
+                \Workflow_Transition_ConditionFactory::build()
+            )
+        );
+        $logger                         = $this->getBackendLogger();
+        $changeset_creator              = new NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                    $artifact_links_usage_dao
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance()
+                    )
+                )
+            ),
+            $fields_retriever,
+            $event_manager,
+            new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory),
+            $db_transaction_executor,
+            ArtifactChangesetSaver::build(),
+            new ParentLinkAction($artifact_factory),
+            new AfterNewChangesetHandler($artifact_factory, $fields_retriever),
+            ActionsRunner::build($logger),
+            new ChangesetValueSaver(),
+            \WorkflowFactory::instance(),
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                $reference_manager,
+                new TrackerPrivateCommentUGroupPermissionInserter(
+                    new TrackerPrivateCommentUGroupPermissionDao()
+                )
+            )
+        );
+
+        $handler = new ArtifactClosingReferencesHandler(
+            $logger,
+            $reference_manager,
+            $artifact_factory,
+            $user_manager,
+            new ArtifactCloser(
+                new StatusFieldRetriever($status_semantic_factory),
+                new StatusValueRetriever($status_semantic_factory, $first_possible_value_retriever),
+                new DoneValueRetriever(
+                    new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker()),
+                    $first_possible_value_retriever
+                ),
+                $logger,
+                new CommentOnlyChangesetCreator($changeset_creator),
+                $changeset_creator
+            )
+        );
         $handler->handlePotentialReferencesReceived($event);
     }
 }

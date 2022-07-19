@@ -22,46 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-final class RetrieveStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\RetrieveStatusField
+use Tuleap\Tracker\Artifact\Artifact;
+
+final class RetrieveViewableArtifactStub implements \Tuleap\Tracker\Artifact\RetrieveViewableArtifact
 {
     /**
-     * @param list<\Tracker_FormElement_Field_List> $return_values
+     * @param list<Artifact> $return_values
      */
-    private function __construct(private bool $return_null, private bool $always_return, private array $return_values)
+    private function __construct(private bool $return_null, private array $return_values)
     {
-    }
-
-    public static function withField(\Tracker_FormElement_Field_List $field): self
-    {
-        return new self(false, true, [$field]);
     }
 
     /**
      * @no-named-arguments
      */
-    public static function withSuccessiveFields(
-        \Tracker_FormElement_Field_List $field,
-        \Tracker_FormElement_Field_List ...$other_fields,
-    ): self {
-        return new self(false, false, [$field, ...$other_fields]);
-    }
-
-    public static function withNoField(): self
+    public static function withSuccessiveArtifacts(Artifact $artifact, Artifact ...$other_artifacts): self
     {
-        return new self(true, false, []);
+        return new self(false, [$artifact, ...$other_artifacts]);
     }
 
-    public function getStatusField(\Tracker $tracker): ?\Tracker_FormElement_Field_List
+    public static function withNoArtifact(): self
+    {
+        return new self(true, []);
+    }
+
+    public function getArtifactByIdUserCanView(\PFUser $user, int $id): ?Artifact
     {
         if ($this->return_null) {
             return null;
         }
-        if ($this->always_return) {
-            return $this->return_values[0];
-        }
         if (count($this->return_values) > 0) {
             return array_shift($this->return_values);
         }
-        throw new \LogicException('No status field configured');
+        throw new \LogicException('No artifact configured');
     }
 }

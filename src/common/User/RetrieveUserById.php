@@ -18,26 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\User;
 
-namespace Tuleap\Event\Events;
+use PFUser;
 
-use Tuleap\Reference\ReferenceString;
-
-/**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * It has a reference string pattern back to the origin of the text.
- * @psalm-immutable
- */
-final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
+interface RetrieveUserById
 {
-    public const NAME = 'receivePotentialReferences';
-
-    public function __construct(
-        public string $text_with_potential_references,
-        public \Project $project,
-        public \PFUser $user,
-        public ReferenceString $back_reference,
-    ) {
-    }
+    /**
+     * @param int the user_id of the user to find
+     * @return PFUser|null if the user is not found
+     */
+    public function getUserById($user_id);
 }

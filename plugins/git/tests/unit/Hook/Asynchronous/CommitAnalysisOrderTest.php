@@ -32,14 +32,16 @@ final class CommitAnalysisOrderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromComponents(): void
     {
-        $hash    = CommitHash::fromString(self::COMMIT_SHA1);
-        $user    = UserTestBuilder::buildWithDefaults();
-        $project = ProjectTestBuilder::aProject()->build();
+        $hash       = CommitHash::fromString(self::COMMIT_SHA1);
+        $user       = UserTestBuilder::buildWithDefaults();
+        $project    = ProjectTestBuilder::aProject()->build();
+        $repository = $this->createStub(\GitRepository::class);
 
-        $order = CommitAnalysisOrder::fromComponents($hash, $user, $project);
+        $order = CommitAnalysisOrder::fromComponents($hash, $user, $repository, $project);
 
         self::assertSame($hash, $order->getCommitHash());
         self::assertSame($user, $order->getPusher());
         self::assertSame($project, $order->getProject());
+        self::assertSame($repository, $order->getRepository());
     }
 }

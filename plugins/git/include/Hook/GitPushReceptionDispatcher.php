@@ -39,7 +39,12 @@ final class GitPushReceptionDispatcher implements DispatchGitPushReception
         $processor  = $this->builder->getProcessor($repository);
         foreach ($details->getRevisionList() as $commit_sha1) {
             $processor->process(
-                CommitAnalysisOrder::fromComponents(CommitHash::fromString($commit_sha1), $pusher, $project)
+                CommitAnalysisOrder::fromComponents(
+                    CommitHash::fromString($commit_sha1),
+                    $pusher,
+                    $repository,
+                    $project
+                )
             );
         }
     }

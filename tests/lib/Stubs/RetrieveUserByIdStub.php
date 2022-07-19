@@ -20,24 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Event\Events;
+namespace Tuleap\Test\Stubs;
 
-use Tuleap\Reference\ReferenceString;
-
-/**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * It has a reference string pattern back to the origin of the text.
- * @psalm-immutable
- */
-final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
+final class RetrieveUserByIdStub implements \Tuleap\User\RetrieveUserById
 {
-    public const NAME = 'receivePotentialReferences';
+    private function __construct(private ?\PFUser $user)
+    {
+    }
 
-    public function __construct(
-        public string $text_with_potential_references,
-        public \Project $project,
-        public \PFUser $user,
-        public ReferenceString $back_reference,
-    ) {
+    public static function withUser(\PFUser $user): self
+    {
+        return new self($user);
+    }
+
+    public static function withNoUser(): self
+    {
+        return new self(null);
+    }
+
+    public function getUserById($user_id)
+    {
+        return $this->user;
     }
 }

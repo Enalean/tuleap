@@ -62,6 +62,7 @@ final class GitPushReceptionDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $repository = $this->createStub(\GitRepository::class);
         $repository->method('getProject')->willReturn($this->project);
+        $repository->method('getFullName')->willReturn('foamflower/newmarket');
         $details = new PushDetails(
             $repository,
             UserTestBuilder::buildWithDefaults(),
