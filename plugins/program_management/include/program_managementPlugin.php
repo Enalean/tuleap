@@ -796,8 +796,65 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             )
         );
 
+        $tracker_artifact_factory  = Tracker_ArtifactFactory::instance();
+        $artifact_retriever        = new ArtifactFactoryAdapter($tracker_artifact_factory);
+        $tracker_factory           = \TrackerFactory::instance();
+        $tracker_retriever         = new TrackerFactoryAdapter($tracker_factory);
+        $form_element_factory      = \Tracker_FormElementFactory::instance();
+        $field_retriever           = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
+        $update_verifier           = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
+        $artifact_retriever        = new ArtifactFactoryAdapter($tracker_artifact_factory);
+        $program_increments_dao    = new ProgramIncrementsDAO();
+        $artifact_visible_verifier = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
+        $program_dao               = new ProgramDao();
+        $program_adapter           = ProgramAdapter::instance();
+        $project_manager_adapter   = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
+
         (new TeamSynchronizationHandler(
-            new SynchronizeTeamProcessor($logger)
+            new SynchronizeTeamProcessor(
+                MessageLog::buildFromLogger($logger),
+                ProjectManager::instance(),
+                $user_manager,
+                new \Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator(
+                    new ProgramIncrementsSearcher(
+                        $this->getProgramAdapter(),
+                        $program_increments_dao,
+                        $program_increments_dao,
+                        $artifact_visible_verifier,
+                        new ProgramIncrementRetriever(
+                            new StatusValueRetriever($artifact_retriever, $user_retriever),
+                            new TitleValueRetriever($artifact_retriever),
+                            new TimeframeValueRetriever(
+                                $artifact_retriever,
+                                $user_retriever,
+                                SemanticTimeframeBuilder::build(),
+                                BackendLogger::getDefaultLogger()
+                            ),
+                            new URIRetriever($artifact_retriever),
+                            new CrossReferenceRetriever($artifact_retriever),
+                            $update_verifier,
+                            new UserCanPlanInProgramIncrementVerifier(
+                                $update_verifier,
+                                $program_increments_dao,
+                                new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever),
+                                $program_dao,
+                                $program_adapter,
+                                new VisibleTeamSearcher(
+                                    $program_dao,
+                                    $user_retriever,
+                                    $project_manager_adapter,
+                                    new ProjectAccessChecker(
+                                        new RestrictedUserCanAccessProjectVerifier(),
+                                        EventManager::instance()
+                                    ),
+                                    new TeamDao()
+                                ),
+                            ),
+                        )
+                    ),
+                    new MirroredTimeboxesDao(),
+                )
+            )
         ))->handle(
             TeamSynchronizationEventProxy::fromWorkerEvent(
                 $logger,

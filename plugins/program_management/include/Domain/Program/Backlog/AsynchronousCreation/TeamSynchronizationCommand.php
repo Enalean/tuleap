@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
  * @psalm-immutable
@@ -33,14 +34,19 @@ final class TeamSynchronizationCommand implements CommandTeamSynchronization
     private function __construct(
         private int $program_id,
         private int $team_id,
+        private int $user_id,
     ) {
     }
 
-    public static function fromProgramAndTeam(ProgramIdentifier $program, TeamIdentifier $team): self
-    {
+    public static function fromProgramAndTeam(
+        ProgramIdentifier $program,
+        TeamIdentifier $team,
+        UserIdentifier $user,
+    ): self {
         return new self(
             $program->getId(),
-            $team->getId()
+            $team->getId(),
+            $user->getId()
         );
     }
 
@@ -52,5 +58,10 @@ final class TeamSynchronizationCommand implements CommandTeamSynchronization
     public function getTeamId(): int
     {
         return $this->team_id;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user_id;
     }
 }

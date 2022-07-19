@@ -22,14 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
+use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Events\TeamSynchronizationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessTeamSynchronization;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator;
+use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 
 final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
 {
-    public function __construct(private LoggerInterface $logger)
-    {
+    public function __construct(
+        private LogMessage $logger,
+        private \ProjectManager $project_manager,
+        private \UserManager $user_manager,
+        private MissingProgramIncrementCreator $missing_program_increment_creator,
+    ) {
     }
 
     public function processTeamSynchronization(TeamSynchronizationEvent $event): void
@@ -41,5 +48,22 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
                 $event->getProgramId(),
             )
         );
+
+        $user = $this->user_manager->getUserById($event->getUserId());
+        if (! $user) {
+            $this->logger->error(
+                sprintf(
+                    "User %d not found, exiting...",
+                    $event->getUserId()
+                )
+            );
+            return;
+        }
+        $user_identifier = UserProxy::buildFromPFUser($user);
+
+        $team       = $this->project_manager->getProject($event->getTeamId());
+        $team_proxy = ProjectProxy::buildFromProject($team);
+
+        $this->missing_program_increment_creator->detectAndCreateMissingProgramIncrements($event, $user_identifier, $team_proxy, $this->logger);
     }
 }

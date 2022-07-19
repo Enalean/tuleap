@@ -21,9 +21,10 @@
 
 namespace Tuleap\ProgramManagement\Domain\Team\MirroredTimebox;
 
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 
 interface SearchMirrorTimeboxesFromProgram
 {
-    public function hashMirroredTimeboxesFromProgram(ProjectReference $team, string $title): bool;
+    public function hasMirroredTimeboxesFromProgram(ProjectIdentifier $team, ProgramIncrement $program_increment): bool;
 }

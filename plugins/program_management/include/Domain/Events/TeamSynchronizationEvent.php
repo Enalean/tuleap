@@ -27,4 +27,6 @@ interface TeamSynchronizationEvent
     public function getProgramId(): int;
 
     public function getTeamId(): int;
+
+    public function getUserId(): int;
 }

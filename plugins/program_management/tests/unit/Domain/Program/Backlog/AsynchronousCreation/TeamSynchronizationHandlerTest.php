@@ -36,7 +36,7 @@ class TeamSynchronizationHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItHandlesTeamSynchronizationEvents(): void
     {
         $process_team_synchronization_stub = ProcessTeamSynchronizationStub::build();
-        $event                             = TeamSynchronizationEventStub::buildWithIds(1, 123);
+        $event                             = TeamSynchronizationEventStub::buildWithIds(1, 123, 456);
 
         $this->getHandler($process_team_synchronization_stub)->handle($event);
 
