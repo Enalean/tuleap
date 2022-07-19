@@ -34,6 +34,7 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\SVNCore\Cache\ParameterRetriever as CacheParameterRetriever;
 
 /**
@@ -63,7 +64,7 @@ use Tuleap\SVNCore\Cache\ParameterRetriever as CacheParameterRetriever;
  *                                          │                            │
  *                                          └────────────────────────────┘
  */
-final class SVNProjectAccessController extends DispatchablePSR15Compatible
+final class SVNProjectAccessController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
     #[FeatureFlagConfigKey("Feature flag to disable the PHP based Subversion authentication/authorization and fallback to mod_perl based one.")]
     public const FEATURE_FLAG_DISABLE = 'disable_php_based_svn_auth';
