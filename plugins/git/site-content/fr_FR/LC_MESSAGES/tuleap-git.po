@@ -246,15 +246,15 @@ msgstr ""
 "Une erreur est survenue, impossible d'activer les expressions régulières "
 "pour les permissions fines Git."
 
+#, php-format
+msgid "An error occurred while creating the branch: %s"
+msgstr "Une erreur est survenue lors de la création de la branche : %s"
+
 msgid "Artifact closure is not allowed anymore for repository"
 msgstr "La fermeture des artéfacts n'est plus autorisée pour ce dépôt"
 
 msgid "Artifact closure is now allowed for repository"
 msgstr "La fermeture des artéfacts est maintenant autorisée pour ce dépôt"
-
-#, php-format
-msgid "An error occurred while creating the branch: %s"
-msgstr "Une erreur est survenue lors de la création de la branche : %s"
 
 #, php-format
 msgid ""
