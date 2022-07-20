@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectManager;
 use ReferenceManager;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use UserManager;
 
 final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -268,6 +269,26 @@ final class ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             'Text &#x27;<a href="https:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text',
             $html
         );
+    }
+
+    public function testItLeavesReferencesThatDontMatchAnythingIntact(): void
+    {
+        $reference_dao = $this->createStub(\ReferenceDao::class);
+        $reference_dao->method('searchActiveByGroupID')->willReturn(\TestHelper::emptyDar());
+        $reference_dao->method('getSystemReferenceNatureByKeyword')->willReturn(false);
+        $this->rm->shouldReceive('_getReferenceDao')->andReturn($reference_dao);
+
+        $this->project_manager->shouldReceive('getProject')->andReturn(
+            ProjectTestBuilder::aProject()->withId(102)->build()
+        );
+
+        $html = 'myref #123';
+        $this->rm->insertReferences($html, 102);
+        self::assertSame('myref #123', $html);
+
+        $html = 'Text myref #123';
+        $this->rm->insertReferences($html, 102);
+        self::assertSame('Text myref #123', $html);
     }
 
     public function testItInsertsLinkForMentionAtTheBeginningOfTheString(): void
