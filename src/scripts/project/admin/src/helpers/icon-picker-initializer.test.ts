@@ -19,14 +19,14 @@
  */
 
 import { initIconPicker } from "./icon-picker-initializer";
-import * as icon_picker from "@picmo/popup-picker";
+import * as icon_picker from "@joeattardi/emoji-button";
 
-jest.mock("@picmo/popup-picker", () => {
+jest.mock("@joeattardi/emoji-button", () => {
     return {
-        PopupPickerController: jest.fn().mockImplementation(() => {
+        EmojiButton: jest.fn().mockImplementation(() => {
             return {
-                toggle: jest.fn(),
-                addEventListener: jest.fn(),
+                togglePicker: jest.fn(),
+                on: jest.fn(),
             };
         }),
     };
@@ -39,7 +39,7 @@ describe("icon-picker-initializer", () => {
     });
 
     it("does not initialize the icon picker if the button and the input are not found", () => {
-        const icon_picker_instance = new icon_picker.PopupPickerController({}, {});
+        const icon_picker_instance = new icon_picker.EmojiButton();
 
         const whatever_button = doc.createElement("button");
         whatever_button.id = "not-icon-picker-button";
@@ -51,7 +51,7 @@ describe("icon-picker-initializer", () => {
 
         initIconPicker(doc, icon_picker_instance);
         whatever_button.click();
-        expect(icon_picker_instance.addEventListener).not.toHaveBeenCalled();
+        expect(icon_picker_instance.on).not.toHaveBeenCalled();
     });
 
     it("does not initialize the icon picker if the picker is not built", () => {
@@ -73,7 +73,7 @@ describe("icon-picker-initializer", () => {
     });
 
     it("does initialize the icon picker if the button and the input are found", () => {
-        const icon_picker_instance = new icon_picker.PopupPickerController({}, {});
+        const icon_picker_instance = new icon_picker.EmojiButton();
 
         const icon_removal_button = doc.createElement("button");
         icon_removal_button.id = "icon-removal-button";
@@ -84,11 +84,11 @@ describe("icon-picker-initializer", () => {
         doc.body.append(icon_removal_button, icon_input);
 
         initIconPicker(doc, icon_picker_instance);
-        expect(icon_picker_instance.addEventListener).toHaveBeenCalled();
+        expect(icon_picker_instance.on).toHaveBeenCalled();
     });
 
     it("does not show the icon removal button when there is no selected icon", () => {
-        const icon_picker_instance = new icon_picker.PopupPickerController({}, {});
+        const icon_picker_instance = new icon_picker.EmojiButton();
 
         const icon_removal_button = doc.createElement("button");
         icon_removal_button.id = "icon-removal-button";

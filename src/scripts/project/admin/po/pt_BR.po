@@ -12,23 +12,11 @@ msgstr ""
 msgid "Animals & Nature"
 msgstr ""
 
-msgid "Clear recent icons"
-msgstr ""
-
-msgid "Clear search"
-msgstr ""
-
 msgid "Custom"
 msgstr ""
 
 msgid "Email"
 msgstr "Email"
-
-msgid "Failed to load icons"
-msgstr ""
-
-msgid "Failed to search icons"
-msgstr ""
 
 msgid "Flags"
 msgstr ""
@@ -72,9 +60,6 @@ msgstr ""
 msgid "Travel & Places"
 msgstr ""
 
-msgid "Try again"
-msgstr ""
-
 msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
 msgstr ""
 "Você está prestes a adicionar <b>%s</b> em <b>%s</b> grupo de usuários."
@@ -85,9 +70,6 @@ msgid ""
 msgstr ""
 "Você está prestes a remover <b>%s</b> de <b>%s</b>. Por favor, confirme a "
 "sua ação."
-
-msgid "You haven't selected any icons yet."
-msgstr ""
 
 msgid ""
 "You're about to remove <b>%s</b> from this project. Please confirm your "
