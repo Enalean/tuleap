@@ -54,7 +54,7 @@ $request = HTTPRequest::instance();
 
 $group_id = 100;
 if ($request->existAndNonEmpty('group_id')) {
-    $group_id = $request->getValidated('group_id', 'uint', 100);
+    $group_id = (int) $request->getValidated('group_id', 'uint', 100);
 } else {
     $group_name = $request->getValidated('group_name', 'string', false);
     if ($group_name != false) {
