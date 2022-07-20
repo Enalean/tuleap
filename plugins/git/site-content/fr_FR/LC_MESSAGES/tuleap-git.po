@@ -180,6 +180,9 @@ msgstr "Autoriser tous les projets à utiliser ce serveur Gerrit."
 msgid "Allow all the projects to use this mirror."
 msgstr "Autoriser tous les projets à utiliser ce miroir."
 
+msgid "Allow artifact closure"
+msgstr "Autoriser la fermeture des artéfacts"
+
 msgid ""
 "Allow usage of regular expressions in branches and tags during repository "
 "permission definition"
@@ -242,6 +245,12 @@ msgid ""
 msgstr ""
 "Une erreur est survenue, impossible d'activer les expressions régulières "
 "pour les permissions fines Git."
+
+msgid "Artifact closure is not allowed anymore for repository"
+msgstr "La fermeture des artéfacts n'est plus autorisée pour ce dépôt"
+
+msgid "Artifact closure is now allowed for repository"
+msgstr "La fermeture des artéfacts est maintenant autorisée pour ce dépôt"
 
 #, php-format
 msgid "An error occurred while creating the branch: %s"
@@ -679,6 +688,13 @@ msgstr "Identifiant"
 
 msgid "Identity file"
 msgstr "Fichier d'identité"
+
+msgid ""
+"If selected, artifacts of this project can be closed with commit messages "
+"from the repository."
+msgstr ""
+"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"messages de commit de ce dépôt."
 
 msgid ""
 "In order to make sure I have the correct access on Gerrit, it can be "

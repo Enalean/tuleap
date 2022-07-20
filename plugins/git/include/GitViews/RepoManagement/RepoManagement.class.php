@@ -31,6 +31,7 @@ use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Webhook\WebhookFactory;
 
@@ -40,105 +41,31 @@ use Tuleap\Git\Webhook\WebhookFactory;
 class GitViews_RepoManagement
 {
     /**
-     * @var GitPermissionsManager
+     * @var Pane\Pane[]
      */
-    private $git_permission_manager;
-
-    /**
-     * @var DefaultFineGrainedPermissionFactory
-     */
-    private $default_fine_grained_factory;
-
-    /**
-     * @var FineGrainedRepresentationBuilder
-     */
-    private $fine_grained_builder;
-
-    /**
-     * @var FineGrainedRetriever
-     */
-    private $fine_grained_retriever;
-
-    /**
-     * @var FineGrainedPermissionFactory
-     */
-    private $fine_grained_permission_factory;
-
-    /**
-     * @var GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var Codendi_Request
-     */
-    private $request;
-
-    /**
-     * @var Git_RemoteServer_GerritServer[]
-     */
-    private $gerrit_servers;
-
-    /** @var Git_Driver_Gerrit_GerritDriverFactory */
-    private $driver_factory;
-
-    /** @var Git_Driver_Gerrit_Template_Template[] */
-    private $gerrit_config_templates;
-
-    /** @var Git_Mirror_MirrorDataMapper */
-    private $mirror_data_mapper;
-
-    /**
-     * @var GerritCanMigrateChecker
-     */
-    private $gerrit_can_migrate_checker;
-    /**
-     * @var RegexpFineGrainedRetriever
-     */
-    private $regexp_retriever;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
+    private array $panes;
+    private string $current_pane;
 
     public function __construct(
-        GitRepository $repository,
-        Codendi_Request $request,
-        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        array $gerrit_servers,
-        array $gerrit_config_templates,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        FineGrainedPermissionFactory $fine_grained_permission_factory,
-        FineGrainedRetriever $fine_grained_retriever,
-        FineGrainedRepresentationBuilder $fine_grained_builder,
-        DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
-        GitPermissionsManager $git_permission_manager,
-        RegexpFineGrainedRetriever $regexp_retriever,
-        EventManager $event_manager,
-        ProjectManager $project_manager,
+        private GitRepository $repository,
+        private Codendi_Request $request,
+        private Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        private array $gerrit_servers,
+        private array $gerrit_config_templates,
+        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        private GerritCanMigrateChecker $gerrit_can_migrate_checker,
+        private FineGrainedPermissionFactory $fine_grained_permission_factory,
+        private FineGrainedRetriever $fine_grained_retriever,
+        private FineGrainedRepresentationBuilder $fine_grained_builder,
+        private DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
+        private GitPermissionsManager $git_permission_manager,
+        private RegexpFineGrainedRetriever $regexp_retriever,
+        private EventManager $event_manager,
+        private ProjectManager $project_manager,
+        private VerifyArtifactClosureIsAllowed $closure_verifier,
     ) {
-        $this->project_manager                 = $project_manager;
-        $this->repository                      = $repository;
-        $this->request                         = $request;
-        $this->driver_factory                  = $driver_factory;
-        $this->gerrit_servers                  = $gerrit_servers;
-        $this->gerrit_config_templates         = $gerrit_config_templates;
-        $this->mirror_data_mapper              = $mirror_data_mapper;
-        $this->gerrit_can_migrate_checker      = $gerrit_can_migrate_checker;
-        $this->fine_grained_permission_factory = $fine_grained_permission_factory;
-        $this->fine_grained_retriever          = $fine_grained_retriever;
-        $this->fine_grained_builder            = $fine_grained_builder;
-        $this->default_fine_grained_factory    = $default_fine_grained_factory;
-        $this->git_permission_manager          = $git_permission_manager;
-        $this->regexp_retriever                = $regexp_retriever;
-        $this->event_manager                   = $event_manager;
-        $this->panes                           = $this->buildPanes($repository);
-        $this->current_pane                    = 'settings';
+        $this->panes        = $this->buildPanes($repository);
+        $this->current_pane = 'settings';
 
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
@@ -146,12 +73,12 @@ class GitViews_RepoManagement
     }
 
     /**
-     * @return array
+     * @return Pane\Pane[]
      */
-    private function buildPanes(GitRepository $repository)
+    private function buildPanes(GitRepository $repository): array
     {
         $collection = new PanesCollection($repository, $this->request);
-        $collection->add(new Pane\GeneralSettings($repository, $this->request));
+        $collection->add(new Pane\GeneralSettings($repository, $this->request, $this->closure_verifier));
 
         if ($repository->getBackendType() == GitDao::BACKEND_GITOLITE) {
             $collection->add(
