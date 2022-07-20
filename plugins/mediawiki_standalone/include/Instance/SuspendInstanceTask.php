@@ -49,6 +49,6 @@ final class SuspendInstanceTask implements QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return '';
+        return 'Suspend MediaWiki instance #' . $this->project_id;
     }
 }

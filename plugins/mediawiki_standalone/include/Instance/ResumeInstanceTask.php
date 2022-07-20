@@ -49,6 +49,6 @@ final class ResumeInstanceTask implements QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return sprintf('Resume MediaWiki instance %d', $this->project_id);
+        return 'Resume MediaWiki instance #' . $this->project_id;
     }
 }
