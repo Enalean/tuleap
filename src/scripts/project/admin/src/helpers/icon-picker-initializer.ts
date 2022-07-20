@@ -18,11 +18,11 @@
  *
  */
 
-import type { PopupPickerController } from "@picmo/popup-picker";
+import type { EmojiButton } from "@joeattardi/emoji-button";
 
-const ICON_PICKER_EVENT = "emoji:select";
+const ICON_PICKER_EVENT = "emoji";
 
-export function initIconPicker(doc: Document, icon_picker: PopupPickerController | null): void {
+export function initIconPicker(doc: Document, icon_picker: EmojiButton | null): void {
     if (!icon_picker) {
         return;
     }
@@ -41,13 +41,17 @@ export function initIconPicker(doc: Document, icon_picker: PopupPickerController
         showIconRemovalButton(icon_removal_button);
     }
 
-    icon_picker.addEventListener(ICON_PICKER_EVENT, (selection) => {
+    icon_picker.on(ICON_PICKER_EVENT, (selection) => {
         icon_input.setAttribute("value", selection.emoji);
         showIconRemovalButton(icon_removal_button);
     });
 
     icon_input.addEventListener("click", () => {
-        icon_picker.toggle();
+        if (icon_picker.isPickerVisible()) {
+            return;
+        }
+
+        icon_picker.togglePicker(icon_input);
     });
 
     icon_removal_button.addEventListener("click", () => {

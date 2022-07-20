@@ -20,8 +20,14 @@
 
 import { buildIconPicker } from "./icon-picker-builder";
 import type { GetText } from "@tuleap/gettext";
-import * as icon_picker from "@picmo/popup-picker";
-import type { PopupPickerController } from "@picmo/popup-picker";
+
+jest.mock("@joeattardi/emoji-button", () => {
+    return {
+        EmojiButton: class {
+            // do nothing
+        },
+    };
+});
 
 describe("icon-picker-builder", () => {
     let doc: Document;
@@ -73,12 +79,6 @@ describe("icon-picker-builder", () => {
         mount_point.dataset.allProjectIcons = `{"categories":["smileys"],"emoji":[{"emoji":"😀","category":0,"name":"grinning face","version":"1.0"}]}`;
 
         doc.body.append(mount_point);
-
-        const input = doc.createElement("div");
-        input.id = "icon-input";
-        doc.body.append(input);
-
-        jest.spyOn(icon_picker, "createPopup").mockReturnValue({} as PopupPickerController);
 
         const picker = buildIconPicker(gettext_provider, doc);
 
