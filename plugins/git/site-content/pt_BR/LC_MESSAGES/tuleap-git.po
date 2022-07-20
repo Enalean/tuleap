@@ -203,14 +203,14 @@ msgid ""
 "grained permission."
 msgstr ""
 
+#, php-format
+msgid "An error occurred while creating the branch: %s"
+msgstr ""
+
 msgid "Artifact closure is not allowed anymore for repository"
 msgstr ""
 
 msgid "Artifact closure is now allowed for repository"
-msgstr ""
-
-#, php-format
-msgid "An error occurred while creating the branch: %s"
 msgstr ""
 
 #, php-format
