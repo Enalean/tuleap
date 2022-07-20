@@ -729,7 +729,8 @@ class ReferenceManager implements ExtractReferences // phpcs:ignore PSR1.Classes
                 function ($match) {
                     $ref_instance = $this->_getReferenceInstanceFromMatch($match);
                     if (! $ref_instance) {
-                        return $match['key'] . " #" . $match['project_name'] . $match['value'] . $match['after_reference'];
+                        $context_word_with_space = $match['context_word'] !== '' ? $match['context_word'] . ' ' : '';
+                        return $context_word_with_space . $match['key'] . " #" . $match['project_name'] . $match['value'] . $match['after_reference'];
                     }
                     return $this->buildLinkForReference($ref_instance) . $match['after_reference'];
                 },
