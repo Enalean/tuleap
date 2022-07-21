@@ -22,11 +22,12 @@ namespace Tuleap\Git\Hook;
 
 use Mockery;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
-use Tuleap\Git\Stub\DispatchGitPushReceptionStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\Git\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Git\Webhook\WebhookRequestSender;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\EnqueueTaskStub;
 
 final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -51,7 +52,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_manager;
     /**
-     * @var \GitRepository & Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var \GitRepository & \PHPUnit\Framework\MockObject\Stub
      */
     private $repository;
     /**
@@ -71,9 +72,8 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&DefaultBranchPostReceiveUpdater
      */
     private $default_branch_post_receive_updater;
-    private VerifyArtifactClosureIsAllowedStub $closure_verifier;
-    private DispatchGitPushReceptionStub $dispatcher;
     private VerifyIsDefaultBranchStub $default_branch_verifier;
+    private EnqueueTaskStub $enqueuer;
 
     protected function setUp(): void
     {
@@ -81,16 +81,22 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->log_analyzer                        = \Mockery::spy(LogAnalyzer::class);
         $this->git_repository_factory              = \Mockery::spy(\GitRepositoryFactory::class);
         $this->user_manager                        = \Mockery::spy(\UserManager::class);
-        $this->repository                          = \Mockery::spy(\GitRepository::class);
+        $this->repository                          = $this->createStub(\GitRepository::class);
         $this->ci_launcher                         = \Mockery::spy(\Git_Ci_Launcher::class);
         $this->parse_log                           = \Mockery::spy(ParseLog::class);
         $this->system_event_manager                = \Mockery::spy(\Git_SystemEventManager::class);
         $this->default_branch_post_receive_updater = $this->createMock(DefaultBranchPostReceiveUpdater::class);
-        $this->closure_verifier                    = VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed();
-        $this->dispatcher                          = DispatchGitPushReceptionStub::withCount();
-        $this->default_branch_verifier             = VerifyIsDefaultBranchStub::withAlwaysDefaultBranch();
 
-        $this->repository->shouldReceive('getNotifiedMails')->andReturns([]);
+        $this->repository->method('getNotifiedMails')->willReturn([]);
+        $this->repository->method('getId')->willReturn(300);
+        $this->repository->method('getFullName')->willReturn('foamflower/newmarket');
+        $this->repository->method('getFullPath')->willReturn(
+            '/var/lib/tuleap/gitolite/repositories/foamflower/newmarket.git'
+        );
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->repository->method('getProject')->willReturn($project);
+
+        $this->enqueuer = new EnqueueTaskStub();
     }
 
     private function executePostReceive(): void
@@ -106,9 +112,11 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(WebhookRequestSender::class),
             \Mockery::spy(PostReceiveMailSender::class),
             $this->createStub(DefaultBranchPostReceiveUpdater::class),
-            $this->closure_verifier,
-            $this->dispatcher,
-            $this->default_branch_verifier,
+            new PushCommitsAnalyzer(
+                VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed(),
+                VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()
+            ),
+            $this->enqueuer
         );
         $post_receive->execute(
             self::REPOSITORY_PATH,
@@ -195,29 +203,8 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
 
         $this->executePostReceive();
-        self::assertSame(1, $this->dispatcher->getCallCount());
-    }
 
-    public function testIfArtifactClosureIsDisallowedItDoesNotDispatch(): void
-    {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
-        $this->closure_verifier = VerifyArtifactClosureIsAllowedStub::withNeverAllowed();
-
-        $this->executePostReceive();
-        self::assertSame(0, $this->dispatcher->getCallCount());
-    }
-
-    public function testIfPushIsNotOnDefaultBranchItDoesNotDispatch(): void
-    {
-        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithNewRevision());
-        $this->default_branch_verifier = VerifyIsDefaultBranchStub::withNeverDefaultBranch();
-
-        $this->executePostReceive();
-        self::assertSame(0, $this->dispatcher->getCallCount());
+        self::assertNotNull($this->enqueuer->queue_task);
     }
 
     private function getPushDetailsWithoutRevisions(): PushDetails
@@ -257,9 +244,11 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(WebhookRequestSender::class),
             $this->createStub(PostReceiveMailSender::class),
             $this->default_branch_post_receive_updater,
-            $this->closure_verifier,
-            $this->dispatcher,
-            $this->default_branch_verifier,
+            new PushCommitsAnalyzer(
+                VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed(),
+                VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()
+            ),
+            $this->enqueuer
         );
         $post_receive->beforeParsingReferences(self::REPOSITORY_PATH);
     }

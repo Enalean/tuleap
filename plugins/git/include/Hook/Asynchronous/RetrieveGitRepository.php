@@ -20,28 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Hook\Asynchronous;
 
-use Tuleap\Git\Hook\PushDetails;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-final class DispatchGitPushReceptionStub implements \Tuleap\Git\Hook\DispatchGitPushReception
+interface RetrieveGitRepository
 {
-    private function __construct(private int $call_count = 0)
-    {
-    }
-
-    public static function withCount(): self
-    {
-        return new self();
-    }
-
-    public function dispatchGitPushReception(PushDetails $details): void
-    {
-        $this->call_count++;
-    }
-
-    public function getCallCount(): int
-    {
-        return $this->call_count;
-    }
+    /**
+     * @return Ok<\GitRepository> | Err<Fault>
+     */
+    public function getRepository(int $repository_id, \PFUser $user): Ok|Err;
 }

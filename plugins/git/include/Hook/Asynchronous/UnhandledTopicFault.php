@@ -22,23 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
-use Tuleap\Git\Hook\CommitHash;
-use Tuleap\Test\Builders\UserTestBuilder;
-
-final class CommitAnalysisOrderTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @psalm-immutable
+ */
+final class UnhandledTopicFault extends \Tuleap\NeverThrow\Fault
 {
-    private const COMMIT_SHA1 = 'bb7870508a';
-
-    public function testItBuildsFromComponents(): void
+    public static function build(): \Tuleap\NeverThrow\Fault
     {
-        $hash       = CommitHash::fromString(self::COMMIT_SHA1);
-        $user       = UserTestBuilder::buildWithDefaults();
-        $repository = $this->createStub(\GitRepository::class);
-
-        $order = CommitAnalysisOrder::fromComponents($hash, $user, $repository);
-
-        self::assertSame($hash, $order->getCommitHash());
-        self::assertSame($user, $order->getPusher());
-        self::assertSame($repository, $order->getRepository());
+        return new self(sprintf('WorkerEvent topic did not match %s', AnalyzeCommitTask::TOPIC));
     }
 }

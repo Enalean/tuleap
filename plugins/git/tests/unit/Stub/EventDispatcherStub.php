@@ -24,7 +24,9 @@ namespace Tuleap\Git\Stub;
 
 final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherInterface
 {
-    private function __construct(public \Closure $callback)
+    private int $call_count = 0;
+
+    private function __construct(private \Closure $callback)
     {
     }
 
@@ -40,6 +42,12 @@ final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherI
 
     public function dispatch(object $event): object
     {
+        $this->call_count++;
         return ($this->callback)($event);
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }
