@@ -5,9 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/tlp-popovers.es.js",
-  "main": "dist/tlp-popovers.umd.js",
+  "type": "module",
+  "module": "dist/tlp-popovers.js",
+  "main": "dist/tlp-popovers.umd.cjs",
   "style": "dist/style.css",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@floating-ui/dom": "^0.5.4"
   },

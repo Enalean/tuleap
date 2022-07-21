@@ -5,8 +5,9 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/mention.es.js",
-  "main": "dist/mention.umd.js",
+  "type": "module",
+  "module": "dist/mention.js",
+  "main": "dist/mention.umd.cjs",
   "types": "src/mention.d.ts",
   "style": "dist/style.css",
   "dependencies": {

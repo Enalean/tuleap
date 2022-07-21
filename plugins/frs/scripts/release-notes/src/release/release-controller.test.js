@@ -22,7 +22,7 @@ import tuleap_frs_module from "../app.js";
 import BaseController from "./release-controller.js";
 
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
 describe("ReleaseController", () => {
     let wrapPromise, $q, ReleaseController, ReleaseRestService, SharedPropertiesService;

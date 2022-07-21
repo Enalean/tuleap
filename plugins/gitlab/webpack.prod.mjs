@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * as vite from "./vite/vite-configurator";
-export * from "./vite/vite-plugin-dts";
-export * as webpack_configurator from "./webpack/main";
-export { esbuild_target } from "./browserslist_config";
-export { base_config as jest_base_config } from "./jest/base-config";
-export { createAngularPromiseWrapper } from "./jest/angular-promise-wrapper";
+import common from "./webpack.common.mjs";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+
+export default webpack_configurator.extendProdConfiguration(common);

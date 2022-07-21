@@ -17,11 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
-const { VueLoaderPlugin } = require("vue-loader");
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { webpack_configurator } from "@tuleap/build-system-configurator";
+import { VueLoaderPlugin }  from "vue-loader";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-module.exports = [
+export default [
     {
         entry: {
             "artifact-create-branch": "./scripts/artifact-create-branch-action/src/index.ts",
@@ -45,7 +49,7 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            require("@tuleap/po-gettext-plugin").default.webpack(),
+            POGettextPlugin.webpack(),
             new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],

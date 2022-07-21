@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+process.env.DISABLE_TS_TYPECHECK = "true";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+import { jest_base_config }  from "@tuleap/build-system-configurator";
+export default {
+    ...jest_base_config,
+    displayName: "document_generation",
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+};

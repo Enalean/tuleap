@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/tlp-fetch.es.js",
-  "main": "dist/tlp-fetch.umd.js",
+  "type": "module",
+  "module": "dist/tlp-fetch.js",
+  "main": "dist/tlp-fetch.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/tlp-fetch.es.js",
-      "require": "./dist/tlp-fetch.umd.js"
+      "import": "./dist/tlp-fetch.js",
+      "require": "./dist/tlp-fetch.umd.cjs"
     },
     "./mocks/tlp-fetch-mock-helper": {
       "import": "./mocks/tlp-fetch-mock-helper.js",

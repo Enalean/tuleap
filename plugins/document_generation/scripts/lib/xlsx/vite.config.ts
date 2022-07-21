@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import dts from "vite-dts";
 
 export default vite.defineLibConfig({
     build: {
@@ -28,5 +27,5 @@ export default vite.defineLibConfig({
             name: "DocGenXlsx",
         },
     },
-    plugins: [dts()],
+    plugins: [viteDtsPlugin()],
 });

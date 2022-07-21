@@ -5,12 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/angular-tlp.es.js",
+  "type": "module",
+  "module": "dist/angular-tlp.mjs",
   "main": "dist/angular-tlp.umd.js",
   "exports": {
     ".": {
-      "import": "./dist/angular-tlp.es.js",
-      "require": "./dist/angular-tlp.umd.js"
+      "import": "./dist/angular-tlp.js",
+      "require": "./dist/angular-tlp.umd.cjs"
     }
   },
   "peerDependencies": {

@@ -4,6 +4,7 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "link:../../lib/frontend/concurrency-limit-pool",
     "@tuleap/gettext": "link:../../lib/frontend/gettext",

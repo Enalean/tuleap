@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 const context = path.resolve(__dirname);
@@ -27,7 +30,8 @@ const output = webpack_configurator.configureOutput(
     "/assets/git/"
 );
 
-const webpack_config_for_vue3 = require("./scripts/artifact-create-branch-action/webpack.common");
+import artifact_create_branch_action from "./scripts/artifact-create-branch-action/webpack.common.mjs";
+const webpack_config_for_vue3 = artifact_create_branch_action;
 webpack_config_for_vue3.output = output;
 webpack_config_for_vue3.plugins.push(manifest_plugin);
 
@@ -131,7 +135,7 @@ const webpack_config_for_themes = {
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
-module.exports = [
+export default [
     webpack_config_for_vue,
     webpack_config_for_vanilla,
     webpack_config_for_legacy_scripts,

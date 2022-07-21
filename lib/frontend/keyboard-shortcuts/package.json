@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/keyboard-shortcuts.es.js",
-  "main": "dist/keyboard-shortcuts.umd.js",
+  "type": "module",
+  "module": "dist/keyboard-shortcuts.js",
+  "main": "dist/keyboard-shortcuts.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/keyboard-shortcuts.es.js",
-      "require": "./dist/keyboard-shortcuts.umd.js"
+      "import": "./dist/keyboard-shortcuts.js",
+      "require": "./dist/keyboard-shortcuts.umd.cjs"
     }
   },
   "dependencies": {

@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/date-helper.es.js",
-  "main": "dist/date-helper.umd.js",
+  "type": "module",
+  "module": "dist/date-helper.js",
+  "main": "dist/date-helper.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/date-helper.es.js",
-      "require": "./dist/date-helper.umd.js"
+      "import": "./dist/date-helper.js",
+      "require": "./dist/date-helper.umd.cjs"
     }
   },
   "devDependencies": {

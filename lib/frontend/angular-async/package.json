@@ -5,12 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/angular-async.es.js",
-  "main": "dist/angular-async.umd.js",
+  "type": "module",
+  "module": "dist/angular-async.js",
+  "main": "dist/angular-async.umd.cjs",
   "exports": {
     ".": {
-      "import": "./dist/angular-async.es.js",
-      "require": "./dist/angular-async.umd.js"
+      "import": "./dist/angular-async.js",
+      "require": "./dist/angular-async.umd.cjs"
     }
   },
   "peerDependencies": {

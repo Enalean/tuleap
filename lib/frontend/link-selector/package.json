@@ -5,9 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/link-selector.es.js",
-  "main": "dist/link-selector.umd.js",
+  "type": "module",
+  "module": "dist/link-selector.js",
+  "main": "dist/link-selector.umd.cjs",
   "style": "dist/style.css",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@tuleap/tlp": "link:../../../src/themes/tlp",
     "lit": "^2.2.3"

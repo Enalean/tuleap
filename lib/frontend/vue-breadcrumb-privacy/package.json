@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/vue-breadcrumb-privacy.es.js",
-  "main": "dist/vue-breadcrumb-privacy.umd.js",
+  "type": "module",
+  "module": "dist/vue-breadcrumb-privacy.js",
+  "main": "dist/vue-breadcrumb-privacy.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue-breadcrumb-privacy.es.js",
-      "require": "./dist/vue-breadcrumb-privacy.umd.js"
+      "import": "./dist/vue-breadcrumb-privacy.js",
+      "require": "./dist/vue-breadcrumb-privacy.umd.cjs"
     }
   },
   "dependencies": {

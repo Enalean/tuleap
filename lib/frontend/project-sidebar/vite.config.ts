@@ -20,9 +20,8 @@
  * SOFTWARE.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import dts from "vite-plugin-dts";
 
 export default vite.defineLibConfig({
     build: {
@@ -31,5 +30,5 @@ export default vite.defineLibConfig({
             name: "TuleapProjectSidebar",
         },
     },
-    plugins: [dts({ insertTypesEntry: true })],
+    plugins: [viteDtsPlugin()],
 });

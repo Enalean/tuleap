@@ -5,9 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/drag-and-drop.es.js",
-  "main": "dist/drag-and-drop.umd.js",
+  "type": "module",
+  "module": "dist/drag-and-drop.js",
+  "main": "dist/drag-and-drop.umd.cjs",
   "style": "dist/style.css",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@tuleap/build-system-configurator": "link:../build-system-configurator"
   },

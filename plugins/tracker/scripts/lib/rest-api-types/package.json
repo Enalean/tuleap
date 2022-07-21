@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/plugin-tracker-rest-api-types.es.js",
-  "main": "dist/plugin-tracker-rest-api-types.umd.js",
+  "type": "module",
+  "module": "dist/plugin-tracker-rest-api-types.js",
+  "main": "dist/plugin-tracker-rest-api-types.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/plugin-tracker-rest-api-types.es.js",
-      "require": "./dist/plugin-tracker-rest-api-types.umd.js"
+      "import": "./dist/plugin-tracker-rest-api-types.js",
+      "require": "./dist/plugin-tracker-rest-api-types.umd.cjs"
     }
   },
   "dependencies": {

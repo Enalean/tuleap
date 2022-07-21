@@ -4,9 +4,10 @@
   "license": "MIT",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "types": "dist/index.d.ts",
-  "module": "dist/project-sidebar-internal.es.js",
-  "main": "dist/project-sidebar-internal.umd.js",
+  "module": "dist/project-sidebar-internal.js",
+  "main": "dist/project-sidebar-internal.umd.cjs",
   "style": "dist/style.css",
   "files": [
     "dist/",

@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/copy-to-clipboard.es.js",
-  "main": "dist/copy-to-clipboard.umd.js",
+  "type": "module",
+  "module": "dist/copy-to-clipboard.js",
+  "main": "dist/copy-to-clipboard.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/copy-to-clipboard.es.js",
-      "require": "./dist/copy-to-clipboard.umd.js"
+      "import": "./dist/copy-to-clipboard.js",
+      "require": "./dist/copy-to-clipboard.umd.cjs"
     }
   },
   "devDependencies": {

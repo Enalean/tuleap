@@ -5,13 +5,15 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/fp-feedback.es.js",
-  "main": "dist/fp-feedback.umd.js",
+  "type": "module",
+  "module": "dist/fp-feedback.js",
+  "main": "dist/fp-feedback.umd.cjs",
   "style": "themes/main.scss",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fp-feedback.es.js",
-      "require": "./dist/fp-feedback.umd.js",
+      "import": "./dist/fp-feedback.js",
+      "require": "./dist/fp-feedback.umd.cjs",
       "default": "./themes/main.scss"
     }
   },
