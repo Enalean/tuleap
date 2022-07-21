@@ -52,9 +52,8 @@ final class Err implements IResult
 
     /**
      * @template TNewError
-     * @psalm-param pure-callable(TError): TNewError $fn
+     * @psalm-param callable(TError): TNewError $fn
      * @return Err<TNewError>
-     * @psalm-mutation-free
      */
     public function mapErr(callable $fn): Err
     {
@@ -63,6 +62,7 @@ final class Err implements IResult
 
     /**
      * @return Err<TError>
+     * @psalm-mutation-free
      */
     public function andThen(callable $fn): Err
     {

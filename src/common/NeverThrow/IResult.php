@@ -45,7 +45,6 @@ interface IResult
      * @template TNewValue
      * @psalm-param pure-callable(TValue): TNewValue $fn
      * @return Ok<TNewValue> | Err<TError>
-     * @psalm-mutation-free
      */
     public function map(callable $fn): Ok|Err;
 
@@ -63,7 +62,6 @@ interface IResult
      * @template TNewError
      * @psalm-param pure-callable(TError): TNewError $fn
      * @return Ok<TValue> | Err<TNewError>
-     * @psalm-mutation-free
      */
     public function mapErr(callable $fn): Ok|Err;
 
