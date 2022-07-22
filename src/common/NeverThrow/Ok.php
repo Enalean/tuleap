@@ -43,9 +43,8 @@ final class Ok implements IResult
 
     /**
      * @template TNewValue
-     * @psalm-param pure-callable(TValue): TNewValue $fn
+     * @psalm-param callable(TValue): TNewValue $fn
      * @return Ok<TNewValue>
-     * @psalm-mutation-free
      */
     public function map(callable $fn): Ok
     {
@@ -74,6 +73,7 @@ final class Ok implements IResult
 
     /**
      * @return Ok<TValue>
+     * @psalm-mutation-free
      */
     public function orElse(callable $fn): Ok
     {
