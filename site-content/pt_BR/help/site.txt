@@ -1,0 +1,22 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-life-ring tlp-pane-title-icon"></i>
+                Get help
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">Access Tuleap documentation</h2>
+
+            <p>If you have a question about Tuleap usage or are stumped by an issue, you should first take a look at the <a href="/doc/en/index.html">documentation</a>.</p>
+
+            <h2 class="tlp-pane-subtitle">Ask question</h2>
+
+            <p>Latest tips and tricks and tutorial can be found on <a href="https://www.tuleap.org/get-started">tuleap.org</a> web site as well as the <a href="https://chat.tuleap.org">community chat room</a>.</p>
+
+            <h2 class="tlp-pane-subtitle">Contact Us</h2>
+            <p>For all other inquiries, <a href="/contact.php">get in touch</a> with us.</p>
+        </section>
+    </div>
+</section>

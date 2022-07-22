@@ -1,0 +1,713 @@
+#
+# Copyright (c) Xerox Corporation, CodeX, Codendi 2004-2009.
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/editgroupinfo.php
+#
+project_admin_editgroupinfo	upd_fail	Update failed or no data changed!
+project_admin_editgroupinfo	changed_public_info	Changed Public Info
+project_admin_editgroupinfo	editing_g_info	Editing Group Info
+project_admin_editgroupinfo	long_desc	Long Description:
+project_admin_editgroupinfo	patents	Patents and Invention Proposals (IPs)
+project_admin_editgroupinfo	soft_required	Other Software Required
+project_admin_editgroupinfo	comments	Other Comments:
+project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as you type)
+project_admin_editgroupinfo	visibility_section	Access
+project_admin_editgroupinfo	use_truncated_emails	Use truncated emails
+project_admin_editgroupinfo	truncated_emails_title	Truncated Emails
+project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	Truncated emails are emails that have their content cleared (confidentiality) and replaced by a link of the modified item.
+project_admin_editgroupinfo	truncated_emails_impacted_services_no_available	No service using truncated emails is activated.
+project_admin_editgroupinfo	truncated_emails_impacted_services_impacted_services	Impacted services:
+project_admin_editgroupinfo	restricted_warning	Only project members can access a <b>private</b> project. <br>A <b>public</b> project is accessible to all <b>except restricted users</b>.<br>It is not advisable to allow <b>restricted users</b> to access you project without good reason.<br />Please note that <b>Public incl. Restricted</b> only applies to <em>project dashboard page</em>, <em>Mediawiki</em> and <em>git repositories</em>.
+project_admin_editgroupinfo	general_warning	Only project members can access a <b>private</b> project <br>A <b>public</b> project is accessible to everyone.
+project_admin_editgroupinfo	under_construction	Page under construction.
+project_admin_editgroupinfo	term_of_service	Please accept platform <a href='/tos/tos.php'>Term of Services</a>
+
+## There must be a label and description value here for each service name (system or project wide) that should be localized
+## Naming rule for the key:
+## service_<service short name>_lbl_key for the service label
+## service_<service short name>_desc_key for the service description
+project_admin_editservice	service_summary_lbl_key	Summary
+project_admin_editservice	service_summary_desc_key	Project Summary
+project_admin_editservice	service_admin_lbl_key	Admin
+project_admin_editservice	service_admin_desc_key	Project Administration
+project_admin_editservice	service_homepage_lbl_key	Home Page
+project_admin_editservice	service_homepage_desc_key	Project Home Page
+project_admin_editservice	service_forum_lbl_key	Forums
+project_admin_editservice	service_forum_desc_key	Project Forums
+project_admin_editservice	service_bugs_lbl_key	Bugs
+project_admin_editservice	service_bugs_desc_key	Bug Tracking System
+project_admin_editservice	service_support_lbl_key	Support
+project_admin_editservice	service_support_desc_key	Support Request Manager
+project_admin_editservice	service_patch_lbl_key	Patches
+project_admin_editservice	service_patch_desc_key	Patch Manager
+project_admin_editservice	service_mail_lbl_key	Lists
+project_admin_editservice	service_mail_desc_key	Mailing Lists
+project_admin_editservice	service_task_lbl_key	Tasks
+project_admin_editservice	service_task_desc_key	Task Manager
+project_admin_editservice	service_doc_lbl_key	Docs
+project_admin_editservice	service_doc_desc_key	Document Manager
+project_admin_editservice	service_news_lbl_key	News
+project_admin_editservice	service_news_desc_key	Project News
+project_admin_editservice	service_cvs_lbl_key	CVS
+project_admin_editservice	service_cvs_desc_key	CVS Access
+project_admin_editservice	service_file_lbl_key	Files
+project_admin_editservice	service_file_desc_key	File Releases
+project_admin_editservice	service_tracker_lbl_key	Trackers v3
+project_admin_editservice	service_tracker_desc_key	Project Trackers (version 3)
+project_admin_editservice	service_svn_lbl_key	Subversion
+project_admin_editservice	service_svn_desc_key	Subversion Access
+project_admin_editservice	service_wiki_lbl_key	Wiki
+project_admin_editservice	service_wiki_desc_key	Wiki
+#-----------------------------------------------
+# Script: SF/www/project/admin/editugroup.php
+#
+project_admin_editugroup	desc	Description
+project_admin_editugroup	proj_members	Project Members
+project_admin_editugroup	edit_ug	Edit User Group
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/grouptrove.php
+#
+project_admin_grouptrove	changed_trove	Changed Trove
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/history.php
+#
+project_admin_history	proj_history	Project History
+project_admin_history	proj_change_log_msg	This log shows who made significant changes to your project and when.
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/index.php
+#
+project_admin_index	invalid_p	Invalid Project
+project_admin_index	p_not_found	That project could not be found.
+project_admin_index	user_not_removed	User Not Removed - You cannot remove admins from a project. You must first turn off their admin flag and/or find another admin for the project
+project_admin_index	not_get_atf	Could Not Get ArtifactTypeFactory
+project_admin_index	del_tracker_perm_fail	Failed to delete tracker permission ($1)
+project_admin_index	del_user_from_ug_fail	Failed to delete user from ugroups
+project_admin_index	user_removed	Removed a User
+project_admin_index	self_user_remove	You are no longer a member of
+project_admin_index	p_admin	Project Admin: $1
+project_admin_index	p_edit	Project Info: $1
+project_admin_index	login_name	Login Name:
+project_admin_index	add_user	Add User
+project_admin_index	bug_admin	Bug Admin
+project_admin_index	support_admin	Support Manager Admin
+project_admin_index	patch_admin	Patch Admin
+project_admin_index	task_admin	Task Manager Admin
+project_admin_index	doc_admin	DocManager Admin
+project_admin_index	tracker_admin	Tracker Admin
+project_admin_index	no_tracker_found	No Accessible Trackers Found
+project_admin_index	admin	Admin
+project_admin_index	member_request_delegation_title	Project membership requests delegation
+project_admin_index	member_request_delegation_desc_private_group	When people don't have access to your project, because your project is private, they can request to be added as members.
+project_admin_index	member_request_delegation_desc_selected_group	The request is sent to the following users group:
+project_admin_index	member_request_delegation_desc_restricted_user	When people don't have access to your project, because they are restricted and only have access to projects they are member of, they can request to be added as members.
+project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
+project_admin_index	member_request_delegation_ugroups_all_invalid	All selected user groups could not be added, they contain no project admins or they are empty
+project_admin_index	member_request_delegation_ugroups_some_invalid	Those selected user groups ($1) could not be added, they contain no project admins or they are empty
+project_admin_index	member_request_delegation_ugroups_non_admins	Some selected user groups contain non project admins ($1 non project admins in total, they will not receive premission requests).
+project_admin_index	member_request_delegation_ugroups_msg	The user group(s) to be notified for admin delegation ($1) have been updated.
+project_admin_index	member_request_delegation_msg_to_requester	Please write something meaningful for the admin.
+project_admin_index	member_request_delegation_msg_desc	This is the default message which will be displayed to requester. You can personnalize it.
+project_admin_index	member_request_delegation_msg_info	The default message for requester has been updated successfully.
+project_admin_index	member_request_delegation_msg_error	Can not update the default message for requester.
+project_admin_index	or	or
+project_admin_index	changed_group_type	Changed Project Type
+project_admin_index	import_user	[Import List Of Users]
+project_admin_index	show_projects	Projects created from this template
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/permissions.php
+#
+project_admin_permissions	news_access	News Read
+project_admin_permissions	pack_download	Package Download
+project_admin_permissions	rel_download	Release Download
+project_admin_permissions	doc_access	Document Access
+project_admin_permissions	docgroup_access	Document Group Access
+project_admin_permissions	wiki_access	Wiki Access
+project_admin_permissions	wiki_attachment_access	Wiki Attachment Access
+project_admin_permissions	wiki	wiki
+project_admin_permissions	wikiattachment	wiki attachment
+project_admin_permissions	tracker_artifact_access	Access to an artifact
+project_admin_permissions	tracker_full_access	Access to all tracker artifacts
+project_admin_permissions	tracker_submitter_access	Access to tracker artifacts submitted by group
+project_admin_permissions	tracker_assignee_access	Access to tracker artifacts assigned to group
+project_admin_permissions	tracker_field_submit	Can submit tracker field
+project_admin_permissions	tracker_field_read	Can read tracker field
+project_admin_permissions	tracker_field_update	Can update tracker field
+project_admin_permissions	perm_type_not_def	permission_type '$1' is not defined
+project_admin_permissions	submit_perm	Submit Permissions
+project_admin_permissions	admins_create_modify_ug	Project admins can also <a href="$1">create or modify</a> user groups.
+project_admin_permissions	perm_reset_for	Permission reset for $1
+project_admin_permissions	perm_granted_for	Permission granted for $1
+project_admin_permissions	obj_id_missed	object_id is missing
+project_admin_permissions	perm_type_missed	permission_type is missing
+project_admin_permissions	g_id_missed	group_id is missing
+project_admin_permissions	all_users_added	All users added, including anonymous ones
+project_admin_permissions	cant_add_ug_anonymous	$1 - ERROR: Cannot add ugroup Anonymous
+project_admin_permissions	ignore_g	- ignoring other specified groups
+project_admin_permissions	all_registered_users_added	All registered users added
+project_admin_permissions	cant_add_ug_reg_users	$1 - ERROR: Cannot add ugroup Registered Users
+project_admin_permissions	g_nobody_ignored	Group 'nobody' ignored since other groups where selected.
+project_admin_permissions	nobody_has_no_access	Please note that 'nobody' doesn't have access to this object any longer!
+project_admin_permissions	cant_add_ug	$1 - ERROR: Cannot add ugroup $2. Are you an administrator for this service?
+project_admin_permissions	def_val	(default values)
+project_admin_permissions	perm_update_success	$1 - Permissions successfully updated
+project_admin_permissions	reset_to_def	Reset To Defaults
+project_admin_permissions	save_db_error	An error occurred while saving permissions in database, please contact your site admin
+project_admin_permissions	override	Ignore $1 permission set to $2 because it was already granted to $3
+#-----------------------------------------------
+# Script: SF/www/project/admin/reference.php
+#
+project_reference	create_for_tracker_fail	Reference pattern not created: the shortname is not valid (reserved, or already exists). You may still reference tracker artifacts with the 'art' or 'artifact' keyword.
+project_reference	t_r_deleted	Corresponding Reference Pattern Deleted
+project_reference	extract_syntax	Parameters:\n  group_id : project where reference patterns are defined\n  text     : input text
+project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : project where reference patterns are defined<br>- text : input text
+## Description value here for each reference pattern (system or project wide) that should be localized
+## Naming rule for the key:
+## reference_<reference keyword>_desc_key for the reference pattern description
+project_reference	reference_art_desc_key	Tracker Artifact
+project_reference	reference_cvs_desc_key	CVS commit detail
+project_reference	reference_svn_desc_key	Subversion revision details
+project_reference	reference_wiki_desc_key	Wiki page
+project_reference	reference_wikiversion_desc_key	Wiki version
+project_reference	reference_file_desc_key	File
+project_reference	reference_doc_desc_key	Document
+project_reference	reference_news_desc_key	Piece of news
+project_reference	reference_forum_desc_key	Forum
+project_reference	reference_msg_desc_key	Forum message
+project_reference	reference_bug_desc_key	Bug
+project_reference	reference_task_desc_key	Task
+project_reference	reference_sr_desc_key	Support Request
+project_reference	reference_patch_desc_key	Patch
+project_reference	reference_release_desc_key	Release
+
+project_reference	reference_artifact_nature_key	Artifact
+project_reference	reference_document_nature_key	Document
+project_reference	reference_cvs_commit_nature_key	CVS Commit
+project_reference	reference_svn_revision_nature_key	Subversion Revision
+project_reference	reference_file_nature_key	File
+project_reference	reference_release_nature_key	Release
+project_reference	reference_forum_nature_key	Forum
+project_reference	reference_forum_message_nature_key	Forum Message
+project_reference	reference_news_nature_key	News
+project_reference	reference_wiki_page_nature_key	Wiki Page
+project_reference	reference_other_nature_key	Other
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/project_admin_utils.php
+#
+project_admin_utils	edit_public_info	Edit Public Info
+project_admin_utils	edit_project_visibility	Project visibility
+project_admin_utils	user_perms	User Permissions
+project_admin_utils	references	Reference Configuration
+project_admin_utils	ug_admin	User Groups Admin
+project_admin_utils	project_data_export	Project Data Export
+project_admin_utils	tracker_import	Tracker Import
+project_admin_utils	access_logs	Access Logs
+project_admin_utils	g_change_history	Project Change History
+project_admin_utils	event	Event
+project_admin_utils	event_placeholder	Choose an event?
+project_admin_utils	val	Value
+project_admin_utils	date	Date
+project_admin_utils	access	Change Access
+project_admin_utils	no_g_change	No changes, that corresponds to the filter, have been made to this project
+project_admin_utils	permission_request	Update Selected groups and message
+project_admin_utils	selected_ugroups_title	User group(s) to be notified for admin delegation:
+project_admin_utils	notif_message_title	Default notification message:
+
+project_admin_utils	previous	Previous
+project_admin_utils	next	Next
+
+project_admin_utils	search_user	Search by user name:
+
+# ... message for the group_history field_name
+# they do not appear in the code !!!!
+project_admin_utils	approved	Approved
+project_admin_utils	deleted	Deleted
+project_admin_utils	is_public	Is public
+project_admin_utils	type	Type
+project_admin_utils	http_domain	HTTP domain
+project_admin_utils	unix_box	Unix box
+project_admin_utils	feedback_history	feedback history
+project_admin_utils	changed_personal_email_notif	Changed Personal Notification Email Settings
+project_admin_utils	changed_bts_form_message	Changed BTS bug form message
+project_admin_utils	changed_bts_allow_anon	Changed BTS bug allow anonymous submission
+project_admin_utils	doc_deleted	Document deleted
+project_admin_utils	removed_project	Removed project
+project_admin_utils	added_user	Added user ($1)
+project_admin_utils	removed_user	Removed user
+project_admin_utils	added_project	Added project
+project_admin_utils	data_updated	Data updated
+project_admin_utils	changed_patch_mgr_settings	Changed Patch Mgr Settings
+project_admin_utils	changed_task_mgr_other_settings	Changed Task Manager Other Settings
+project_admin_utils	changed_public_info	Changed Public Information
+project_admin_utils	changed_trove	Changed Trove Categorization
+project_admin_utils	upd_ug	Changed user group $1
+project_admin_utils	del_ug	Deleted user group $1
+project_admin_utils	changed_member_perm	Changed member permissions
+project_admin_utils	perm_reset_for	Permission reset for user $1
+project_admin_utils	perm_granted_for	Permission granted to user $1
+project_admin_utils	changed_sr_settings	Change Support Request Settings
+project_admin_utils	mass_change	Tracker mass change
+project_admin_utils	import	Data import
+project_admin_utils	rename_request	Request project rename
+project_admin_utils	rename_done	Rename project done
+project_admin_utils	rename_with_error	Rename project with error(s)
+project_admin_utils	membership_request_updated	Membership ugroup delegation updated
+project_admin_utils	add_custom_quota	Request cutom disk quota
+project_admin_utils	restore_default_quota	Restore default disk quota
+# There must be one message here for each return value of
+# the permission_get_object_type function in www/project/admin/permissions.php
+project_admin_utils	perm_reset_for_field	Permission reset for field $1
+project_admin_utils	perm_reset_for_tracker	Permission reset for tracker $1
+project_admin_utils	perm_reset_for_package	Permission reset for package $1
+project_admin_utils	perm_reset_for_release	Permission reset for release $1
+project_admin_utils	perm_reset_for_document	Permission reset for document $1
+project_admin_utils	perm_reset_for_folder	Permission reset for folder $1
+project_admin_utils	perm_reset_for_docgroup	Permission reset for document group $1
+project_admin_utils	perm_reset_for_wiki	Permission reset for wiki $1
+project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
+project_admin_utils	perm_reset_for_wikiattachment	Permission reset for wiki attachment $1
+project_admin_utils	perm_reset_for_object	Permission reset for object $1
+project_admin_utils	perm_granted_for_field	Permission granted for field $1
+project_admin_utils	perm_granted_for_files	Permission granted for files $1
+project_admin_utils	perm_granted_for_tracker	Permission granted for tracker $1
+project_admin_utils	perm_granted_for_package	Permission granted for package $1
+project_admin_utils	perm_granted_for_release	Permission granted for release $1
+project_admin_utils	perm_granted_for_document	Permission granted for document $1
+project_admin_utils	perm_granted_for_folder	Permission granted for folder $1
+project_admin_utils	perm_granted_for_docgroup	Permission granted for document group  $1
+project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
+project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1
+project_admin_utils	perm_granted_for_wikiattachment	Permission granted for wiki attachment $1
+project_admin_utils	perm_granted_for_object	Permission granted for object $1
+project_admin_utils	menu_config	Configuration:
+project_admin_utils	menu_permissions	Permissions:
+project_admin_utils	menu_data	Data:
+project_admin_utils	group_type	Changed Project Type
+project_admin_utils	action	Action
+project_admin_utils	event_permission	Permissions
+project_admin_utils	event_user	Users
+project_admin_utils	event_ug	User Group
+project_admin_utils	event_project	Project
+project_admin_utils	event_others	Others
+project_admin_utils	export_history	Export project history
+project_admin_utils	toggle_search	Toggle search
+project_admin_utils	history_search_title	Search within project history
+project_admin_utils	choose_event	--Choose an event--
+project_admin_utils	verify_start_date	Verify start date
+project_admin_utils	verify_end_date	Verify end date
+project_admin_utils	verify_dates	Start date must be inferior to end date
+project_admin_utils	from	From
+project_admin_utils	to	To
+project_admin_utils	status	Status changed
+project_admin_utils	ugroup_add_binding	User group binding added
+project_admin_utils	ugroup_remove_binding	Project user group binding removed
+project_admin_utils	frs_self_add_monitor_package	Add package monitoring to himself
+project_admin_utils	frs_add_monitor_package	Add package monitoring
+project_admin_utils	frs_stop_monitor_package	Stop package monitoring
+project_admin_utils	ugroup_binding	Binding
+project_admin_utils	truncated_emails	Use truncated emails
+project_admin_utils	label_created	Label created
+project_admin_utils	label_deleted	Label deleted
+project_admin_utils	label_renamed	Label renamed
+project_admin_utils	ugroup_membership_management_updated	Permissions delegation (membership management) for ugroup $1
+
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/servicebar.php
+#
+project_admin_servicebar	unavailable	Unavailable
+project_admin_servicebar	disabled	Disabled
+project_admin_servicebar	warning_del_s	*********** WARNING *********** Do you want to delete the service? This will remove this service ($1) from ALL projects of this server. Are you SURE you want to continue ?
+project_admin_servicebar	del_s	Delete this service ?
+project_admin_servicebar	del	DELETE
+project_admin_servicebar	s_id_not_given	FAILED: Service Id was not specified
+project_admin_servicebar	s_del	Service Deleted
+project_admin_servicebar	cant_delete_s_from_p	- Cannot delete service from all projects: service shortname is missing
+project_admin_servicebar	del_fail	An error occurred while deleting the service from all projects
+project_admin_servicebar	s_del_from_p	Service deleted from all projects
+project_admin_servicebar	label_missed	The label is missing
+project_admin_servicebar	link_missed	The link is missing
+project_admin_servicebar	rank_missed	The rank is missing
+project_admin_servicebar	cant_make_s	Cannot make system-wide service without short name
+project_admin_servicebar	short_name_exist	A service with this short name ($short_name) already exists
+project_admin_servicebar	cant_make_system_wide_s	Cannot make system-wide service in project other than 100
+project_admin_servicebar	cant_create_s	Can not create service
+project_admin_servicebar	s_create_success	Successfully Created Service
+project_admin_servicebar	s_add_success	Successfully Added Service to $1 Projects
+project_admin_servicebar	s_id_missed	The service ID is missing
+project_admin_servicebar	edit_s_bar	Editing Service Bar
+project_admin_servicebar	edit_system_s	Editing System Services
+project_admin_servicebar	edit_s_for	Editing Services for <B>$1</B>
+project_admin_servicebar	new_s	New Service
+project_admin_servicebar	create_s	Create a new service.
+project_admin_servicebar	manage_s	Manage Existing Services
+project_admin_servicebar	availability	Availability
+project_admin_servicebar	rank_on_screen	Rank On Screen
+project_admin_servicebar	del?	Delete?
+project_admin_servicebar	home_page	Home Page
+project_admin_servicebar	cant_create_s_for_p	ERROR - Can not create service for project $1
+project_admin_servicebar	bad_rank	The rank must be superior to $1.
+project_admin_servicebar	not_allowed	Service is not allowed
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/ugroup.php
+#
+project_admin_ugroup	manage_ug	Manage User Groups
+project_admin_ugroup	permission_request	Permission Request
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/ugroup_utils.php
+#
+project_admin_ugroup_utils	ug_create_success	User group created successfully
+project_admin_ugroup_utils	no_g_template	No group template selected
+project_admin_ugroup_utils	cant_insert_u_in_g	ERROR - Can not insert user $1 in group $2: $3
+project_admin_ugroup_utils	user_already_exist	User already exist
+project_admin_ugroup_utils	u_added	$1 users added
+project_admin_ugroup_utils	cant_update_ug	ERROR - Can not update user group: $1
+project_admin_ugroup_utils	ug_upd_success	User group $1 updated successfully ($2 members)
+project_admin_ugroup_utils	ug_not_given	FAILED: ugroup ID was not specified
+project_admin_ugroup_utils	g_del	User group deleted
+project_admin_ugroup_utils	cant_remove_u	Error: cannot remove users! $1
+project_admin_ugroup_utils	all_u_removed	All users removed from this group
+project_admin_ugroup_utils	cant_remove_perm	Error: cannot remove permissions! $1
+project_admin_ugroup_utils	perm_warning	WARNING: $1 associated permissions deleted. If this group was the only one authorized to access an object, permissions are now reset to default for this object.
+project_admin_ugroup_utils	ug_upd_empty	This user group became empty. It will be commented, if exists, in Subversion access control list
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/userperms.php
+#
+project_admin_userperms	invalid_g	Invalid Group
+project_admin_userperms	group_not_exist	That group does not exist.
+project_admin_userperms	unable_load_p	Unable to load project object
+project_admin_userperms	perm_fail_for	Permissions Failed For $1
+project_admin_userperms	perm_upd	Permissions Updated
+project_admin_userperms	user_name	User name
+project_admin_userperms	bug_track	Bug Tracking
+project_admin_userperms	forums	Forums
+project_admin_userperms	news	News
+project_admin_userperms	svn	SVN
+project_admin_userperms	task_man	Task Manager
+project_admin_userperms	patch_man	Patch Manager
+project_admin_userperms	supp_man	Support Manager
+project_admin_userperms	doc_man	Doc. Manager
+project_admin_userperms	file_man	File Manager
+project_admin_userperms	tracker	Tracker: $1
+project_admin_userperms	no_users_found	No corresponding project members found
+project_admin_userperms	tech_only	Tech Only
+project_admin_userperms	admin_only	Admin Only
+project_admin_userperms	admin	Admin
+project_admin_userperms	tech&admin	Tech & Admin
+project_admin_userperms	upd_user_perm	Update User Permissions
+
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_export.php
+#
+project_export_artifact_export	ath_not_created	ArtifactTypeHtml could not be created
+project_export_artifact_export	follow_up_comments	Follow-up Comments
+project_export_artifact_export	depend_on	Depend on
+project_export_artifact_export	all_followup_comments	All follow-up comments in one chunk of text
+project_export_artifact_export	depend_on_list	List of artifacts this artifact depends on
+project_export_artifact_export	art_export	Artifact Export
+project_export_artifact_export	no_art_found	No artifact found. Could not generate an export.
+project_export_artifact_export	db_access_err	Error while accessing your artifact database. Please report the error to the $1 Administrator
+project_export_artifact_export	art_exp_format	Artifact Export Format
+project_export_artifact_export	art_exp_format_msg	The artifact export provides you with the following artifact fields. The sample values indicate what the field data types are.
+project_export_artifact_export	add_cc_lbl	CC List
+project_export_artifact_export	add_cc_dsc	List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)
+project_export_artifact_export	cc_comment_lbl	CC Comment
+project_export_artifact_export	cc_comment_dsc	Explain why these CC names were added and/or who they are
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/artifact_history_export.php
+#
+project_export_artifact_history_export	art_id	Artifact ID
+project_export_artifact_history_export	field_name	Field Name
+project_export_artifact_history_export	old_val	Old Value
+project_export_artifact_history_export	new_val	New Value
+project_export_artifact_history_export	mod_by	Modified By
+project_export_artifact_history_export	email	Email
+project_export_artifact_history_export	mod_on	Modified On
+project_export_artifact_history_export	comment_type	Comment Type
+project_export_artifact_history_export	label	Label
+project_export_artifact_history_export	field_name_desc	Internal name of the field which value changed
+project_export_artifact_history_export	old_val_desc	Value of the field before it changed
+project_export_artifact_history_export	new_val_desc	Value of the field after it changed
+project_export_artifact_history_export	mod_by_desc	Login name of the user who changed the value
+project_export_artifact_history_export	mod_on_desc	Modification date
+project_export_artifact_history_export	comment_type_desc	Type of the followup comment added to history
+project_export_artifact_history_export	label_desc	Public name of the field which value changed
+project_export_artifact_history_export	art_hist_export	Artifact History export
+project_export_artifact_history_export	no_hist_found	No artifact history found. Could not generate an export.
+project_export_artifact_history_export	db_access_err	Error while accessing your artifact history database. Please report the error to the $1 Administrator
+project_export_artifact_history_export	hist_export_format	Artifact History Export Format
+project_export_artifact_history_export	hist_export_format_msg	The Artifact History export provides you with the following artifact history fields. The sample values indicate what the field data types are.<p>
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/project_export_utils.php
+#
+project_export_utils	ins_err	Error in Insert $1: $2
+project_export_utils	label	Label
+project_export_utils	sample_val	Sample Value
+project_export_utils	server	Server
+project_export_utils	port	Port
+project_export_utils	leave_blank	(leave it blank)
+project_export_utils	db	Database
+project_export_utils	user	User
+project_export_utils	passwd	Password
+project_export_utils	type	Type
+project_export_utils	query_is	Query is ($1): $2
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/support_request_export.php
+#
+project_export_support_request_export	support_id	Support ID
+project_export_support_request_export	category	Category
+project_export_support_request_export	summary	Summary
+project_export_support_request_export	priority	Priority
+project_export_support_request_export	submitted_by	Submitted by
+project_export_support_request_export	assigned_to	Assigned to
+project_export_support_request_export	open_date	Open Date
+project_export_support_request_export	close_date	Close Date
+project_export_support_request_export	support_id_desc	Unique support request identifier
+project_export_support_request_export	category_desc	Name of the category the support request is in
+project_export_support_request_export	summary_desc	One line description of the support request
+project_export_support_request_export	submitted_by_desc	Name of the user who submitted the support request
+project_export_support_request_export	assigned_to_desc	Project member the support request is assigned to
+project_export_support_request_export	open_date_desc	Support request submission date
+project_export_support_request_export	close_date_desc	Support request close date
+project_export_support_request_export	status_desc	Status (Open, Closed&hellip;)
+project_export_support_request_export	follow_up_desc	All follow-up comments in one chunk of text including the original description
+#
+#-----------------------------------------------
+# Script: src/www/project/export/access_logs_export.php
+#
+project_export_access_logs_export	time	Date
+project_export_access_logs_export	user	User
+project_export_access_logs_export	email	Email
+project_export_access_logs_export	page	Page Name
+project_export_access_logs_export	document	Document
+project_export_access_logs_export	doc	Doc
+project_export_access_logs_export	file	File
+project_export_access_logs_export	attachment	Attachment
+project_export_access_logs_export	access	Accesses
+project_export_access_logs_export	file_brows	File Browsing
+project_export_access_logs_export	chk_upd	Checkout/Update
+project_export_access_logs_export	local_time	Local Time
+project_export_access_logs_export	date_desc	The date (D/M/Y) when the user access occurred
+project_export_access_logs_export	user_desc	Author of the access
+project_export_access_logs_export	email_desc	E-mail address of access author
+project_export_access_logs_export	page_desc	Wiki page accessed
+project_export_access_logs_export	local_time_desc	Local time of the access (H:m)
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/task_assigned_to_export.php
+#
+project_export_task_assigned_to_export	task_id	Task ID
+project_export_task_assigned_to_export	task_id_desc	Unique task identifier
+project_export_task_assigned_to_export	assigned_to_desc	Project members the task is assigned to
+#
+#-----------------------------------------------
+# Script: SF/www/project/export/task_export.php
+#
+project_export_task_export	subproject	Subproject
+project_export_task_export	summary	Task Summary
+project_export_task_export	details	Original Comment
+project_export_task_export	percent_complete	Percent Complete
+project_export_task_export	hours	Hours
+project_export_task_export	start_date	Start Date
+project_export_task_export	end_date	End Date
+project_export_task_export	created_by	Created By
+project_export_task_export	depend_on_task	Depend on Task(s)
+project_export_task_export	subproject_desc	Name of the subproject the task is in
+project_export_task_export	summary_desc	One line description of the task
+project_export_task_export	details_desc	Detailed description of the task
+project_export_task_export	percent_complete_desc	How much of the task has already been completed
+project_export_task_export	hours_desc	Effort spent on the task in hours
+project_export_task_export	start_date_desc	Date when the task was started
+project_export_task_export	end_date_desc	Date when the task was finished
+project_export_task_export	created_by_desc	Project member who created the task
+project_export_task_export	depend_on_task_desc	List of  tasks this task depends on
+
+project_stats_index	months	Months
+project_stats_index	weeks	Weeks
+project_stats_index	days	Days
+project_stats_index	cvs	CVS
+
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/source_code_access.php
+#
+project_stats_source_code_access	all_users	All Users
+project_stats_source_code_access	non_proj_members	Non Project Members
+project_stats_source_code_access	access_log_from	Access Log From
+project_stats_source_code_access	for_last	For Last...
+project_stats_source_code_access	logs_export	Export Matching Logs
+#
+#-----------------------------------------------
+# Script: SF/www/project/stats/source_code_access_utils.php
+#
+project_stats_source_code_access_utils	file_download	File Download
+project_stats_source_code_access_utils	frs_actions	FRS actions
+project_stats_source_code_access_utils	frs_elements	Packages/releases/elements
+project_stats_source_code_access_utils	files	Files
+project_stats_source_code_access_utils	frs_create_package	Create package
+project_stats_source_code_access_utils	frs_update_package	Update package
+project_stats_source_code_access_utils	frs_delete_package	Delete package
+project_stats_source_code_access_utils	frs_create_release	Create release
+project_stats_source_code_access_utils	frs_update_release	Update release
+project_stats_source_code_access_utils	frs_delete_release	Delete release
+project_stats_source_code_access_utils	frs_create_file	Create file
+project_stats_source_code_access_utils	frs_update_file	Update file
+project_stats_source_code_access_utils	frs_delete_file	Delete file
+project_stats_source_code_access_utils	frs_create_link	Create link
+project_stats_source_code_access_utils	frs_delete_link	Delete link
+project_stats_source_code_access_utils	frs_restore	Restore file
+project_stats_source_code_access_utils	frs_unknown_action	Unknown Action
+project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days
+project_stats_source_code_access_utils	in_total	$1 in total
+project_stats_source_code_access_utils	time	Local Time
+project_stats_source_code_access_utils	no_access	None for this period.
+project_stats_source_code_access_utils	subversion	Subversion
+project_stats_source_code_access_utils	docs	Docs
+project_stats_source_code_access_utils	wiki	Wiki
+project_stats_source_code_access_utils	wiki_attachments	Wiki Attachments
+project_stats_source_code_access_utils	cvs_co_upd	CVS Access (checkout/update
+project_stats_source_code_access_utils	svn_access	Subversion accesses
+project_stats_source_code_access_utils	doc_download	Document Download
+project_stats_source_code_access_utils	documents	Documents
+project_stats_source_code_access_utils	wiki_access	Wiki access
+project_stats_source_code_access_utils	wiki_page	Pages
+project_stats_source_code_access_utils	wiki_attachment_access	Wiki Attachment access
+project_stats_source_code_access_utils	wiki_attachment_title	Attachment
+project_stats_source_code_access_utils	cvs_access	CVS Access
+project_stats_source_code_access_utils	co_upd	Checkout/Update
+project_stats_source_code_access_utils	browsing	File Browsing
+project_stats_source_code_access_utils	accesses	Accesses
+#
+#-----------------------------------------------
+# Script: SF/www/project/index.php
+#
+project_index	g_missed	Missing Group Argument
+project_index	must_spec_g	A group must be specified for this page.
+#
+#-----------------------------------------------
+# Script: SF/www/project/memberlist.php
+#
+project_memberlist	proj_member_list	Project Member List
+project_memberlist	contact_to_become_member	<P>If you would like to become a member of this project, contact one of the project admins, designated in bold text below.<br><br>
+project_memberlist	developer	Member
+project_memberlist	username	Username
+#
+#-----------------------------------------------
+# Script:
+#
+project_ugroup	ugroup_anonymous_users_desc_key	Anonymous
+project_ugroup	ugroup_registered_users_desc_key	Registered users
+project_ugroup	ugroup_authenticated_users_desc_key	Authenticated users
+project_ugroup	ugroup_project_members_desc_key	Project members
+project_ugroup	ugroup_project_admins_desc_key	Project administrators
+project_ugroup	ugroup_file_manager_admin_desc_key	File manager administrators
+project_ugroup	ugroup_document_tech_desc_key	Document manager technicians
+project_ugroup	ugroup_document_admin_desc_key	Document manager administrators
+project_ugroup	ugroup_wiki_admin_desc_key	Wiki administrators
+project_ugroup	ugroup_tracker_admins_desc_key	Tracker administrators
+#project_ugroup	ugroup_tracker_techs_desc_key	Tracker technicians
+project_ugroup	ugroup_nobody_desc_key	Empty group
+project_ugroup	ugroup_anonymous_users_name_key	all_users
+project_ugroup	ugroup_registered_users_name_key	registered_users
+project_ugroup	ugroup_authenticated_users_name_key	authenticated_users
+project_ugroup	ugroup_project_members_name_key	project_members
+project_ugroup	ugroup_project_admins_name_key	project_admins
+project_ugroup	ugroup_file_manager_admin_name_key	file_manager_admins
+project_ugroup	ugroup_document_tech_name_key	document_techs
+project_ugroup	ugroup_document_admin_name_key	document_admins
+project_ugroup	ugroup_wiki_admin_name_key	wiki_admins
+project_ugroup	ugroup_forum_admin_name_key	forum_moderator
+project_ugroup	ugroup_forum_admin_desc_key	Forum moderators
+project_ugroup	ugroup_news_writer_name_key	News writers
+project_ugroup	ugroup_news_writer_desc_key	News writers
+project_ugroup	ugroup_news_admin_name_key	News administrators
+project_ugroup	ugroup_news_admin_desc_key	News administrators
+project_ugroup	ugroup_tracker_admins_name_key	tracker_admins
+#project_ugroup	ugroup_tracker_techs_name_key	tracker_techs
+project_ugroup	ugroup_all_users	All Users
+project_ugroup	ugroup_nobody_name_key	nobody
+project_ugroup	ugroup_nobody	Nobody
+project_ugroup	ugroup_anonymous_users	Anonymous
+project_ugroup	ugroup_authenticated_users	Registered and restricted users
+project_ugroup	ugroup_registered_users	Registered users
+project_ugroup	ugroup_project_members	Project members
+project_ugroup	ugroup_project_admins	Project administrators
+project_ugroup	ugroup_file_manager_admins	File manager administrators
+project_ugroup	ugroup_document_techs	Document manager technicians
+project_ugroup	ugroup_document_admins	Document manager administrators
+project_ugroup	ugroup_wiki_admins	Wiki administrators
+project_ugroup	ugroup_forum_admins	Forum moderators
+project_ugroup	ugroup_news_writers	News writers
+project_ugroup	ugroup_news_admins	News administrators
+
+# Script: /www/project/Project.class.php
+#
+project_desc_name	full_desc	Full Project Description
+project_desc_name	other_comments	Other Comments
+project_desc_name	req_soft	Required Software
+project_desc_name	int_prop	Intellectual Property
+
+project_desc_desc	full_desc	<b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.
+project_desc_desc	other_comments	Anything you'd like to say about your projects that is not covered above. For instance, if your software is used in other products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.
+project_desc_desc	req_soft	If your project requires the use of 3rd Party (commercial or Open Source) or other internal software to work properly, list them here.
+project_desc_desc	int_prop	If your project is covered by Patents or IPs list them here.
+#-----------------------------------------------
+# Script: /www/project/privacy.php
+#
+project_privacy	private	Private
+project_privacy	public	Public
+
+project_privacy	email_visibility_change_title	The privacy policy of the project $1 has changed
+project_privacy	email_visibility_change_body_private	The project $1 is now private.
+project_privacy	email_visibility_change_body_public	The project $1 is now public.
+project_privacy	email_visibility_change_body_unrestricted	The project $1 is now public and accessible to restricted users.
+project_privacy	email_visibility_change_body_private_unrestricted	The project $1 is now private and accessible to restricted users.
+
+project_service	service_not_used	$1 service is not enabled
+project	does_not_exist	The project doesn't exist
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	ugroup	User group
+project_ugroup_binding	binding	Binding
+project_ugroup_binding	update_binding	Update binding
+project_ugroup_binding	add_binding	Add binding
+project_ugroup_binding	binding_added	Binding added
+project_ugroup_binding	add_error	Something went wrong when binding user group
+project_ugroup_binding	duplicate_binding_warning	The user group with the id $1 is already defined as binding source
+project_ugroup_binding	binding_removed	User group binding successfully removed
+project_ugroup_binding	remove_error	User group binding not removed
+project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
+project_ugroup_binding	reset_error	Unable to reset ugroup $1
+project_ugroup_binding	clone_error	Unable to clone ugroup $1
+
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
+project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
+
+
+project_admin	generic_member_settings	Generic User Settings
+project_admin	generic_member_updated	Generic user settings updated
+project_admin	generic_member_not_updated	Error while updating generic user settings
+project_admin	generic_member_not_changed	Generic user settings not changed
+project_admin	generic_member_leave_blank	Leave empty to keep the current password
+project_admin	edit_generic_user_settings	edit settings
+
+project_import	invalid_user	Invalid username $1 User must be project admin and active
+project_import	invalid_xml	Invalid XML

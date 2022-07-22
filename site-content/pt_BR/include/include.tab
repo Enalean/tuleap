@@ -1,0 +1,315 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Tuleap
+#  * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/include/account.php
+#
+include_account	pwd_length_err	Password must be at least 6 characters.
+include_account	account_notactive	Account '$1' not active. User not added.
+include_account	user_already_member	User is already a member
+include_account	user_not_exist	User does not exist
+include_account	welcome	$1 - Welcome to Project $2
+include_account	login_err	There cannot be any spaces in the login name.
+include_account	project_spaces	There cannot be any spaces in the short name.
+include_account	char_err	The name must start with a letter.
+include_account	illegal_char	Illegal character in name.
+include_account	name_too_short	Name is too short. It must be at least 3 characters.
+include_account	name_too_long	Name is too long. It must be less than $1 characters.
+include_account	reserved	Name is reserved.
+include_account	reserved_cvs	Name is reserved for CVS.
+include_account	reserved_dns	Name is reserved for DNS purposes.
+include_account	dns_error	Short name cannot contain underscore or dot.
+include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name
+include_account	used_by_cvs	This short name is not available: An CVS directory already exists with this name
+include_account	used_by_sys	This short name is not available: A home project already exists with this name
+#
+#-----------------------------------------------
+# Script: SF/www/include/account.php
+#
+include_cache	unable_open_cache	Unable to open cache file for writing after obtaining lock.
+#
+#-----------------------------------------------
+# Script: SF/www/include/exit.php
+#
+include_exit	error	Error
+include_exit	info	Information
+include_exit	perm_denied	Permission Denied
+include_exit	exit_error	Exiting with Error
+include_exit	no_perm	You are not granted sufficient permission to perform this operation.
+include_exit	mail_list_no_perm	You need to be registered to post a new thread. Please login or request an account.
+include_exit	restricted_user_no_perm	You have a restricted user account.<br>You may only access web pages of projects you are member of.<p><a href="/my/">Back to your personal page.</a>
+include_exit	not_logged_in	Not Logged In
+include_exit	need_to_login	Sorry, you have to be <A HREF="/account/login.php">logged in</A> to view this page.
+include_exit	choose_proj_err	Error - Choose a Project
+include_exit	no_gid_err	Error - No group_id was chosen.
+include_exit	missing_param_err	Error - Missing Parameters
+include_exit	private_project_no_perm	Private Project. You may only access private projects you are member of.<br><a href="/my/">Back to your personal page</a>
+include_exit	request_to_admin	<em> or you can request to be added as a member.</em><br /> Write your message below and click on the button to send your request to the project administrators.
+include_exit	send_mail	Send mail
+include_exit	request_sent	Your request has been sent to project administrators. You will be informed about any news.
+include_exit	mail_content_private_project	Dear project administrator,\n\n$1 (login: $2) requests access to the resource $3 from the project "$4":\n$5\n\n$1 wrote a message for you:\n$6\n\nThis project is private, only project members can access it.\nIf you decide to accept the request, please take the appropriate actions to grant access and communicate that information to the requester..\nOtherwise, please inform the requester ($7) that he will not get access to the requested data.\n\nPlease note that adding $1 as project member might not be enough if you set specific permissions on the requested resource.\n--\n$1.
+include_exit	mail_content_restricted_user	Dear project administrator,\n\n$1 (login: $2) requests access to the resource $3 from the project "$4":\n$5\n\n$1 wrote a message for you:\n$6\n\nHe is a restricted user, he may only access web pages of projects he is member of.\nIf you decide to accept the request, please take the appropriate actions to grant access and communicate that information to the requester.\nOtherwise, please inform the requester ($7) that he will not get access to the requested data.\n\nPlease note that adding $1 as project member might not be enough if you set specific permissions on the requested resource.\n--\n$1.
+include_exit	mail_content_unvalid_ugroup	You receive this Email because the selected project: $1 is not valid, it may be empty or have no admins. You should modify it.
+include_exit	mail_subject_private_project	$2 requests to be member of "$1" private project
+include_exit	mail_subject_restricted_user	Restricted user $2 requests to be member of "$1" project
+include_exit	data_type	related to service:
+include_exit	project_status_P	This project is pending
+include_exit	project_status_s	This is a system project
+
+include_exit	project_suspended_cutom_message	All access to its resources are temporarily disabled.
+#
+#-----------------------------------------------
+# Script: SF/www/include/group.php
+#
+include_group	g_not_found	Group Not Found
+#
+#-----------------------------------------------
+# Script: SF/www/include/html.php
+#
+include_html	lowest	Lowest
+include_html	medium	Medium
+include_html	highest	Highest
+include_html	g_not_exist	That group does not exist.
+include_html	invalid_g	Invalid Group
+include_html	unknown_value	*** unknown value ***
+#
+#-----------------------------------------------
+# Script: SF/www/include/layout.php
+#
+include_layout	latest_news_rss	Latest News RSS
+include_layout	newest_releases_rss	Newest Releases RSS
+include_layout	newest_projects_rss	Newest Projects RSS
+include_layout	query_count	Query Count
+include_layout	banner	Banner
+include_layout	logo	Logo
+include_layout	counter	Counter
+include_layout	Help	Help
+include_layout	template_warning	Beware this project is a template project
+#
+#-----------------------------------------------
+# Script: SF/www/include/menu.php
+#
+include_menu	main_page	Main Page
+include_menu	user_admin	User Admin
+include_menu	group_admin	Group Admin
+include_menu	pending_projects	Pending Projects
+include_menu	pending_users	Pending Users
+include_menu	site_news_approve	Site News Approval
+include_menu	mass_mail	Mass Mail
+include_menu	trove_cat_list	Trove Cat. List
+include_menu	trove_cat_add	Trove Cat. Add
+include_menu	bugs	Bugs
+include_menu	tasks	Tasks
+include_menu	supp_requ	Support Requests
+include_menu	all_trackers	All trackers
+include_menu	wiki	Wiki
+include_menu	new_releases	New Releases
+include_menu	other_site_mirrors	Other Site Mirrors
+include_menu	help_index	Help Index
+include_menu	site_doc	Site Documentation
+include_menu	contact_us	Contact Us
+include_menu	games	Games
+include_menu	printing	Printing
+include_menu	proj	Project
+include_menu	proj_summary	Project Summary
+include_menu	proj_admin	Project Admin
+include_menu	summary_page	Summary Page
+include_menu	logged_in	Logged In
+include_menu	logout	Logout
+include_menu	account_maintenance	Account Maintenance
+include_menu	my_perso_page	My Personal Page
+include_menu	bookmark_this_page	Bookmark This Page
+include_menu	login	Login
+include_menu	new_user	New User
+include_menu	auth_last_failure	Last log-on failure:
+include_menu	auth_nb_failure	Number of bad attempts:
+include_menu	help	Help
+include_menu	api	API
+include_menu	get_help	Get Help
+include_menu	filter_projects	Filter...
+include_menu	add_project	New project
+#
+#-----------------------------------------------
+# Script: SF/www/include/project.php
+#
+include_project	services_not_found	Services not found for this group
+#
+#-----------------------------------------------
+# Script: SF/www/include/project_home.php
+#
+include_project_home	not_official_site	<P>NOTE: This project entry is maintained by the $1 staff. We are not \nthe official site for this product. Additional copyright information may be found on this project's homepage.\n
+include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.
+include_project_home	latest_file_releases	Latest File Releases
+include_project_home	package	Package
+include_project_home	version	Version
+include_project_home	download	Download
+include_project_home	no_files_released	This Project Has Not Released Any Files
+include_project_home	release_notes	Read Release Notes and Changelog
+include_project_home	monitor_pack	Monitor This Package
+include_project_home	view_all_files	View ALL Project Files
+include_project_home	public_areas	Public Areas
+include_project_home	project_description	Project Description
+include_project_home	project_classification	Project Classification
+include_project_home	homepage	Homepage
+include_project_home	proj_home	Project Homepage
+include_project_home	public_forums	Public Forums
+include_project_home	msg	<B>$1</B> messages in
+include_project_home	forums	<B>$1</B> forums
+include_project_home	bug_track	Bug Tracking
+include_project_home	open_bugs	open bugs
+include_project_home	supp_manager	Support Manager
+include_project_home	open_requ	<B>$1</B> open requests
+include_project_home	tech_supp_manager	Tech Support Manager
+include_project_home	doc	Documentation
+include_project_home	patch_manager	Patch Manager
+include_project_home	open_patches	<B>$1</B> open patches
+include_project_home	mail_lists	Mailing Lists
+include_project_home	public_mail_lists	<B>$1</B> public mailing lists
+include_project_home	total	<B>$1</B> total
+include_project_home	task_manager	Task Manager
+include_project_home	proj_task_man	Project/Task Manager
+include_project_home	no_public_proj	There are no public projects available
+include_project_home	wiki	Wiki
+include_project_home	nb_wiki_pages	<B>$1</B> pages
+include_project_home	cvs_repo	CVS Repository
+include_project_home	commits	<B>$1</B> commits
+include_project_home	adds	<B>$1</B> adds
+include_project_home	co	<B>$1</B> checkouts
+include_project_home	browse_cvs	Browse CVS
+include_project_home	svn_repo	Subversion Repository
+include_project_home	browse_svn	Browse Subversion
+include_project_home	accesses	<B>$1</B> accesses
+include_project_home	file_releases	File Releases
+include_project_home	packages	<B>$1</B> packages
+include_project_home	trackers	Trackers
+include_project_home	no_arttypefact	Could Not Get ArtifactTypeFactory
+include_project_home	no_trackers_accessible	No Accessible Trackers Found
+include_project_home	anon_ftp_space	Anonymous FTP Space
+include_project_home	latest_news	Latest News
+include_project_home	start_monitoring	Monitor this package
+include_project_home	stop_monitoring	Stop monitoring this package
+include_project_home	latest_svn_commit	Latest SVN Commits
+include_project_home	latest_cvs_commit	Latest CVS Commit
+include_project_home	contact_admins	Contact project administrators
+
+contact_admins	title	Contact administrators of project $1
+contact_admins	mail_sent_admin	Mail sent to all administrators of project $1
+contact_admins	mail_not_sent_admin	Mail not sent to administrators of project $1
+contact_admins	body_info	(Mail sent to all the administrators of the project)
+
+#
+#-----------------------------------------------
+# Script: SF/www/include/proj_email.php
+#
+include_proj_email	g_not_exist	Group [ $1 ] does not exist.
+include_proj_email	no_admin	Group [ $1 ] does not seem to have any administrators.
+include_proj_email	proj_type	Project Type
+include_proj_email	proj_approve	Project $1 Approved
+include_proj_email	account_register	$1 Account Registration
+#
+#-----------------------------------------------
+# Script: SF/www/include/session.php
+#
+include_session	missing_pwd	Missing Password Or User Name
+include_session	invalid_ldap_name	Invalid LDAP User Name
+include_session	dir_authent	Directory Authentication
+include_session	use_ldap_login	Please use your ldap login
+include_session	account_suspended	Account Suspended
+include_session	account_pending	Account Pending
+include_session	account_deleted	Account Deleted
+include_session	account_not_active	Account Not Active
+include_session	insufficient_g_access	Insufficient Group Access
+include_session	no_perm_to_view	You do not have permission to view this page
+include_session	insufficient_u_access	Insufficient User Access
+include_session	required_login	Required Login
+include_session	login	In order to view this page, you must be logged in.
+include_session	insufficient_access	Insufficient Access
+include_session	no_access	You have attempted to reach a part of the site for which you do not have access. This can probably be fixed by properly navigating through the site.
+include_session	hash_err	ERROR - two people had the same hash - backarrow and re-login. It should never happen again
+include_session	expired_password	Your password has expired.
+include_session	password_will_expire	Your password will expire in $1 day(s).
+#
+#-----------------------------------------------
+# Script: SF/www/include/squal_exit.php
+#
+include_squal_exit	err	ERROR
+include_squal_exit	perm_denied	PERMISSION DENIED
+include_squal_exit	choose_proj	CHOOSE A PROJECT/GROUP
+include_squal_exit	missing_param	MISSING REQUIRED PARAMETERS
+#
+#-----------------------------------------------
+# Script: SF/www/include/squal_pre.php
+#
+include_squal_pre	not_connect_db	Could Not Connect to Database
+#
+#-----------------------------------------------
+# Script: SF/www/include/trove.php
+#
+include_trove	none_selected	None Selected
+include_trove	now_filter	Now Filtering
+include_trove	filter	Filter
+
+include_user_home	login_name	Login Name
+include_user_home	real_name	Real Name
+include_user_home	member_since	Site Member Since
+
+#
+#-----------------------------------------------
+# Script: SF/www/include/user.php
+#
+include_user	not_found	Error - Not Found
+include_user	email_not_found	email-not-found
+include_user	invalid_u_id	Invalid User ID
+#
+#-----------------------------------------------
+# Script: SF/www/include/utils.php
+#
+include_utils	prio_colors	Priority Colors
+include_utils	address_problem	There are problems with the following addresses
+include_utils	email_explain	Email addresses must either be valid user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@example.com'). Lists of email addresses may be separated by either commas or semicolons.
+include_utils	invalid_email	Email format invalid
+include_utils	1_minute	1 minute
+include_utils	less_1_minute	less than a minute
+include_utils	less_than_one_second	less than one second
+include_utils	less_than_X_seconds	less than $1 seconds
+include_utils	half_a_minute	half a minute
+include_utils	X_minutes	$1 minutes
+include_utils	about_1_hour	1 hour
+include_utils	about_X_hours	$1 hours
+include_utils	about_1_day	1 day
+include_utils	X_days	$1 days
+include_utils	about_1_month	1 month
+include_utils	X_months	$1 months
+include_utils	about_1_year	1 year
+include_utils	over_X_years	$1 years
+#
+#-----------------------------------------------
+# Script: SF/common/include/Error.class.php
+#
+include_common_error	no_err	No Error
+#
+#-----------------------------------------------
+# Script: SF/common/include/GroupFactory.class.php
+#
+include_common_groupfactory	none_found	None Found $1
+#
+#-----------------------------------------------
+# Script: SF/common/include/Template.class.php
+#
+include_common_template	project	Project
+include_common_template	template	Template
+include_common_template	test_project	Test Project
+#
+#-----------------------------------------------
+# Script: SF/common/mvc/View.class.php
+#
+common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1

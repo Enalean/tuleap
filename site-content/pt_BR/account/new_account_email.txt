@@ -1,0 +1,34 @@
+<?php
+// Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+//
+//
+$title = "Bem vindo à ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)."!";
+
+$section_one = "Você agora é um usuário registrado, seu login é: ";
+
+$section_two = " Como um usuário registrado, você pode participar plenamente das atividades do Web Site ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME).
+               ."Você pode utilizar os fóruns, inscrever-se em listas de email, navegar pela lista de projetos hospedados, ou até mesmo iniciar seu "
+               ." próprio projeto.";
+
+$section_three = "** OBSERVAÇÕES IMPORTANTES **\n\n Embora sua conta Web já esteja disponível, leva um certo tempo para ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)
+                   ."criar a sua conta Shell. Alguns recursos como acesso ao CVS e SVN dependem disso. Sua conta Shell será ativada em menos de duas"
+                   ." horas a partir de agora. \n\n\n Nesse meio tempo, recomendamos que você navegue pelo site, leia "
+                   ."a sua documenação e finalize a configuração do seu Perfil de Usuário "
+                   ."(Defina suas preferências, etc.)\n\n\nAproveite o site e nos envie um feedback sobre como podemos melhorar "
+                   .\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." e divulgue ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)." com todos.";
+
+$section_after_login = "\nA senha deve ter lhe sido comunicada por um dos administradores locais. Por favor, altere-a na sua primeira conexão ao Web Site. Se a senha não foi lhe informada, você pode usar o procedimento de 'Esqueci minha senha' para gerar uma nova senha.";
+
+$thanks = "Obrigado!";
+
+$signature = "- Time ".\ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+
+$help = "Caso precise de suporte contacte: ".\ForgeConfig::get('sys_email_admin');
+
+$message = $title . "\n\n" .  $section_one . $login  . '.' . $section_after_login . "\n\n" . $section_two . "\n\n"
+            .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

@@ -1,0 +1,44 @@
+#/**
+#  *
+#  * Tracker scripts message catalog (English)
+#  * Tuleap
+#  * Copyright (c) Enalean SAS, Tuleap Team, 2011 - Present.All rights reserved
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  *
+#  *
+#  *
+#  */
+#
+widget	close_title	Remove
+widget	maximize_title	Maximize
+widget	minimize_title	Minimize
+widget	preferences_title	Preferences
+
+widget_add	already_used	Already used
+
+widget_imageviewer	invalid_url	Only http:// and https:// URLs are accepted.
+
+widget_dashboard	updated	Your <a href="$1">dashboard</a> has been updated.
+
+widget_description_my_bookmarks	description	Lists your favorite bookmarks (your favorite pages in Tuleap or external).<br>Note that in many cases Tuleap uses URL with enough embedded information to bookmark sophisticated items like Software Map browsing, typical search in your project Bug or Task database, etc . <br>Bookmarked items can be edited which means that both the title of the bookmark and its destination URL can be modified.
+widget_description_my_artifacts	description	Lists artifacts you have submitted or assigned to you, by project.
+widget_description_my_latest_svn_commits	description	Lists SVN commits you have done, by project.
+widget_description_my_monitored_forums	description	Lists forums that you are currently monitoring, by project. <br>To cancel any of the monitored items just click on the trash icon next to the item label.
+widget_description_my_monitored_fp	description	Lists packages that you are currently monitoring, by project.<br>To cancel any of the monitored items just click on the trash icon next to the item label.
+widget_description_my_projects	description	Lists the projects you belong to. Selecting any of these projects brings you to the corresponding Project Summary page.
+widget_description_rss	description	Allows you to include public rss (or atom) feeds into your personal page.
+widget_description_my_system_event	description	Lists the system events.
+widget_description_my_tasks	description	Lists the tasks assigned to you.
+widget_description_twitter_follow	description	Lists the information on the twitter you decided to follow.
+widget_description_project_latest_file_releases	description	Lists the most recent packages available for download along with their revision. <br>A Release Notes icon allows you to see the latest changes and developers comments associated with this revision. <br>Then comes the monitor icon, selecting this icon will cause this package to be monitored for you. <br>Anytime the project development team posts a new release, you will be automatically notified via e-mail. All monitored File Releases are listed in your Personal Page and can be canceled from this page or from the main page of the file release system. .
+widget_description_project_classification	description	Lists the categories of the project.
+widget_description_project_description	description	Allows you to view the project description.
+widget_description_project_latest_news	description	Lists the last 10 pieces of news posted by the project members.
+widget_description_project_public_areas	description	Lists all available services for this project along with some information next to it. Click on any of this item to access a service. <br>The role of this area is pretty much equivalent to the Project Main Menu at the top of the screen except that it shows additional information about each of the service (e.g. total number of open bugs, tasks, ...)
+widget_description_project_latest_cvs_commits	description	Lists the latest CVS commits of the project.
+widget_description_project_latest_svn_commits	description	Lists the latest SVN commits of the project.
+widget_description_project_svn_stats	description	Shows the svn statistics of the project by week.The result is shown on a bar chart.
+widget_description_project_contacts	description	Allows you to contact project administrators
+
+widget_project_contacts	title	Contacts

@@ -1,0 +1,18 @@
+# Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+
+# Contact
+contact	title	Fale Conosco
+
+# Homepage
+homepage	title	Bem vindo(a)
+homepage	username_placeholder	Usuário
+homepage	password_placeholder	Senha
+homepage	sign_in_submit	Login
+homepage	forgot_password	 Ooops, esqueci minha senha
+homepage	not_a_member	Ainda não é membro?
+homepage	create_account	Criar Conta
+homepage	welcome_back	Bem vindo de volta
+homepage	welcome_title	Olá, bem vindo à $1!
+homepage	my_personal_page	Minha página pessoal

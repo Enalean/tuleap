@@ -1,0 +1,65 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * Copyright (c) Enalean, 2019 - Present. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: src/common/project//confirmation.php
+#
+register_confirmation	registration_complete	Registration Complete
+register_confirmation	upd_fail	UPDATING TO ACTIVE FAILED. PLEASE report to $1 $2
+register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. PLEASE report to admin@$1 $2
+register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. PLEASE report to $1 $2
+register_confirmation	get_help	Get Help
+register_confirmation	developers	Developers
+register_confirmation	cant_copy_cvs_infos	ERROR - Can not copy default CVS information
+register_confirmation	cant_copy_svn_infos	ERROR - Can not copy default SVN information
+register_confirmation	cant_copy_truncated_emails	ERROR - Cannot copy truncated emails option from parent project
+register_confirmation	cant_copy_msg_to_requester	ERROR - Can not copy default message to requester to access your project.
+
+register_project_one_step	services_used	Services used:
+#
+# Script: src/common/mail/MailProjectOneStepRegisterPresenter.php
+#
+mail_register_project_one_step	title	$1 Project approved
+mail_register_project_one_step	section_one	Please take some time to read the <a href="$1">site documentation</a> about the tools and services offered by $2 to project administrators (including a detailed User Guide).
+mail_register_project_one_step	section_two	We now invite you to visit the <a href="$1">Summary page</a> of your project, create a short public description for your project and categorize it in the Software Map if it hasn't been done.
+mail_register_project_one_step	section_three	As project administrator, you can <a href="$1">fully administrate your project</a> environment. You can create and customize trackers to trace and track any kind of activity, create git repositories or plan releases and manage testing.
+mail_register_project_one_step	full_name	Full name
+mail_register_project_one_step	short_name	Short name
+mail_register_project_one_step	summary_page	Summary page
+#
+#-----------------------------------------------
+# Script: src/common/mail/MailProjectNotificationPresenter.php
+#
+mail_register_project_one_step_notification	title	Registered project
+mail_register_project_one_step_notification	section_one	A new project has just been registered on $1.
+mail_register_project_one_step_notification	section_two	Project name: $1.
+mail_register_project_one_step_notification	section_three	According to the website configuration, the project was automatically approved.
+mail_register_project_one_step_notification	redirect_button	Go to the administration panel
+#
+#-----------------------------------------------
+# Script: src/common/mail/MailProjectNotificationMustBeApprovedPresenter.php
+#
+mail_register_project_one_step_notification_approved	title	Registered project
+mail_register_project_one_step_notification_approved	section_one	A new project has just been registered on $1.
+mail_register_project_one_step_notification_approved	section_two	Project name: $1.
+mail_register_project_one_step_notification_approved	section_three	Please click on the button to approve the registration of this project:
+mail_register_project_one_step_notification_approved	redirect_button	Approve the project
+#
+#-----------------------------------------------
+# Script:
+#   src/common/mail/MailProjectNotificationMustBeApprovedPresenter.php
+#   src/common/mail/MailProjectNotificationPresenter.php
+#   src/common/mail/MailProjectOneStepRegisterPresenter.php
+#
+mail_outline	help	For any help contact: $1
+mail_outline	thanks	Thanks!
+mail_outline	signature	-- The $1 Team

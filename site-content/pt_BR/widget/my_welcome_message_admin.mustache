@@ -1,0 +1,39 @@
+This note gives you some tips to get started.
+
+You need to know a few things:
+
+* The base unit of Tuleap is the Project.
+* It's a kind of workspace where you will find various tools called Services (eg 'git', 'documentation', 'tracking')
+* The user who creates a Project is the default Project administrator (others can be added later on).
+* Project administrator is 100% autonomous in his project and won't need a Site administrator for most, if not all, actions.
+
+When you are lost, you can get help from [Documentation](/doc/en/index.html) or [Tuleap Community](https://www.tuleap.org/tuleap-community). You can also look for [Pro
+Support](https://www.tuleap.org/tuleap-community/professional-partners).
+
+What to do next ?
+-----------------
+
+After install you might want to
+
+* Create a "non admin" user and a project to start working on (it's not recommended to do regular work as Site Administrator)
+
+What do I need to configure ?
+-----------------------------
+
+You can tune Tuleap configuration via the Admin web UI and in `/etc/tuleap/conf/local.inc` on the file system. You can
+adjust the site to your taste (Is the platform public or private ? Do I need to approve all user accounts ? etc).
+
+You will probably need to configure email as well. Tuleap comes with a default `postfix` setup but you probably need
+to adjust settings, look at `/etc/postfix/main.cf`.
+
+In enterprise, you might also want to configure LDAP connexion, you will need LDAP plugin and configure it accordingly.
+
+What's the role of Site Administrator ?
+---------------------------------------
+
+Site administrators are not mandatory for most actions but they are key for a few things:
+
+* They have access to "Admin" section of the platform (look at the Navigation Bar on top)
+* They "validate" projects (any user can request one)
+* They install and activate plugins (see Plugin Administration in Site Admin)
+* They configure the platform, either in "Admin" web UI or directly on the system in `/etc/tuleap/conf/local.inc`

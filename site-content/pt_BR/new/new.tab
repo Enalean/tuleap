@@ -1,0 +1,37 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/new/index.php
+#
+new_index	new_file_release	New File Releases
+new_index	new_releases	New Releases
+new_index	no_release_found	No new releases found.
+new_index	no_projects_found	No new projects found.
+new_index	db_err	DB error.	
+new_index	released_by	Released by
+new_index	module	Module
+new_index	version	Version
+new_index	no_desc	This project has not submitted a description.
+new_index	download	Download
+new_index	total	Project Total
+new_index	notes	Notes & Changes
+new_index	newer_releases	Newer Releases
+new_index	newer_projects	Newer Projects
+new_index	older_releases	Older Releases
+new_index	older_projects	Older Projects
+new_index	new_projects	New Projects
+new_index	prog_lang	Programming Language
+new_index	os	Operating System
+new_index	devel_status	Development Status
+new_index	contact	Contact
+new_index	languages	Languages
+new_index	os_runtime_support	OS Runtime Support
