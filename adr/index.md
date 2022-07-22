@@ -18,6 +18,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0012](0012-faults-over-exceptions.md) - Favor Faults over Exceptions
 * [ADR-0013](0013-neverthrow.md) - NeverThrow
 * [ADR-0014](0014-js-unit-test-runner.md) - JS unit test runner
+* [ADR-0015](0015-0015-mercure-realtime.md) - Replacing NodeJs realtime server with Mercure
 
 <!-- adrlogstop -->
 
