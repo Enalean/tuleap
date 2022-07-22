@@ -23,7 +23,7 @@ import "angular-mocks";
 
 import BaseBacklogController from "./backlog-controller.js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
 function createElement(tag_name, class_name) {
     const local_document = document.implementation.createHTMLDocument();

@@ -5,13 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/plugin-tracker-artifact-ckeditor-image-upload.es.js",
-  "main": "dist/plugin-tracker-artifact-ckeditor-image-upload.umd.js",
+  "type": "module",
+  "module": "dist/plugin-tracker-artifact-ckeditor-image-upload.js",
+  "main": "dist/plugin-tracker-artifact-ckeditor-image-upload.umd.cjs",
   "types": "src/definitions.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/plugin-tracker-artifact-ckeditor-image-upload.es.js",
-      "require": "./dist/plugin-tracker-artifact-ckeditor-image-upload.umd.js"
+      "import": "./dist/plugin-tracker-artifact-ckeditor-image-upload.js",
+      "require": "./dist/plugin-tracker-artifact-ckeditor-image-upload.umd.cjs"
     }
   },
   "dependencies": {

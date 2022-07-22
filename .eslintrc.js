@@ -347,6 +347,6 @@ module.exports = {
         },
     ],
     settings: {
-        "import/core-modules": ["vitest"],
+        "import/core-modules": ["vitest", "vite-plugin-dts"],
     },
 };

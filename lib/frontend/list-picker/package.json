@@ -5,9 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "types": "dist/index.d.ts",
-  "module": "dist/list-picker.es.js",
-  "main": "dist/list-picker.umd.js",
+  "module": "dist/list-picker.js",
+  "main": "dist/list-picker.umd.cjs",
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/gettext": "link:../gettext",

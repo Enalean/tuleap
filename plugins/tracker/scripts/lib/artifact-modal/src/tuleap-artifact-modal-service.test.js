@@ -26,7 +26,7 @@ import * as rest_service from "./rest/rest-service";
 import * as form_tree_builder from "./model/form-tree-builder.js";
 import * as workflow_field_values_filter from "./model/workflow-field-values-filter.js";
 import * as file_upload_rules_state from "./fields/file-field/file-upload-rules-state.js";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 import * as field_values_formatter from "./model/field-values-formatter.js";
 import * as tracker_transformer from "./model/tracker-transformer.js";
 

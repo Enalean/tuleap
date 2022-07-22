@@ -22,8 +22,8 @@
     "vue-loader": "^17.0.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "webpack --config webpack.prod.mjs",
+    "watch": "webpack --config webpack.dev.mjs --watch",
     "test": "jest",
     "typecheck": "vue-tsc --noEmit"
   }

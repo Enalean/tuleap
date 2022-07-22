@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/fault.es.js",
-  "main": "dist/fault.umd.js",
+  "type": "module",
+  "module": "dist/fault.js",
+  "main": "dist/fault.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fault.es.js",
-      "require": "./dist/fault.umd.js"
+      "import": "./dist/fault.js",
+      "require": "./dist/fault.umd.cjs"
     }
   },
   "scripts": {

@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/filter-inline-table.es.js",
-  "main": "dist/filter-inline-table.umd.js",
+  "type": "module",
+  "module": "dist/filter-inline-table.js",
+  "main": "dist/filter-inline-table.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/filter-inline-table.es.js",
-      "require": "./dist/filter-inline-table.umd.js"
+      "import": "./dist/filter-inline-table.js",
+      "require": "./dist/filter-inline-table.umd.cjs"
     }
   },
   "devDependencies": {

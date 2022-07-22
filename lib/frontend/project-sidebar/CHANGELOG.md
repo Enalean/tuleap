@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Update bundled library `@vueuse/core` to 8.7.3 to avoid errors when using Chrome
+* Path of UMD script has been changed
 
 ## 2.1.0
 

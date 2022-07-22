@@ -20,7 +20,7 @@
 import execution_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 import * as tlp from "@tuleap/tlp-fetch";
 
 describe("ExecutionRestService", () => {

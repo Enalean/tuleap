@@ -34,9 +34,9 @@
     "vuex-class": "^0.3.2"
   },
   "scripts": {
-    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js && pnpm run build:backend-assets",
+    "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.mjs && pnpm run build:backend-assets",
     "build:backend-assets": "rm -rf ./backend-assets && mkdir ./backend-assets && ./node_modules/.bin/potentially-dangerous-bidirectional-characters > ./backend-assets/potentially-dangerous-bidirectional-characters.json",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "watch": "webpack --config webpack.dev.mjs --watch",
     "test": "jest"
   }
 }

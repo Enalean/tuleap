@@ -2,7 +2,7 @@ import angular from "angular";
 import tuleap_pullrequest_module from "../app.js";
 
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
 describe("PullRequestCollectionService -", function () {
     let $q,

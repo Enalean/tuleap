@@ -5,8 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/plugin-docgen-docx.es.js",
-  "main": "dist/plugin-docgen-docx.umd.js",
+  "type": "module",
+  "module": "dist/plugin-docgen-docx.js",
+  "main": "dist/plugin-docgen-docx.umd.cjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",

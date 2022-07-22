@@ -32,6 +32,7 @@ export default vite.defineLibConfig({
                 globals: {
                     angular: "angular",
                 },
+                exports: "named",
             },
         },
     },

@@ -24,7 +24,7 @@ import campaign_module from "./campaign.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./campaign-list-controller.js";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
 jest.mock("../keyboard-navigation/setup-shortcuts");
 

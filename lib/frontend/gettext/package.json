@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/gettext.es.js",
-  "main": "dist/gettext.umd.js",
+  "type": "module",
+  "module": "dist/gettext.js",
+  "main": "dist/gettext.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/gettext.es.js",
-      "require": "./dist/gettext.umd.js"
+      "import": "./dist/gettext.js",
+      "require": "./dist/gettext.umd.cjs"
     }
   },
   "dependencies": {

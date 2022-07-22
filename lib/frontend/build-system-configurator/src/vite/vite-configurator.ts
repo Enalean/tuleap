@@ -22,10 +22,10 @@ import type { UserConfigExport } from "vitest/config";
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
 import { defineConfig as viteDefineConfig } from "vitest/config";
 import type { C8Options } from "vitest";
-import { browserlist_config, esbuild_target } from "./browserslist_config";
+import { browserlist_config, esbuild_target } from "../browserslist_config";
 import autoprefixer from "autoprefixer";
 
-type OverloadedBuildOptions = Omit<BuildOptions, "brotliSize" | "minify" | "target">;
+type OverloadedBuildOptions = Omit<BuildOptions, "reportCompressedSize" | "minify" | "target">;
 type OverloadedServerOptions = Omit<ServerOptions, "fs">;
 type OverloadedCSSOptions = Omit<CSSOptions, "postcss">;
 type UserConfigWithoutBuildAndServerAndTest = Omit<UserConfig, "build" | "server" | "test">;
@@ -93,7 +93,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         ...config,
         build: {
             ...config.build,
-            brotliSize: false,
+            reportCompressedSize: false,
             minify: "esbuild",
             target: esbuild_target,
         },
@@ -105,7 +105,7 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
         },
         server: {
             fs: {
-                allow: [__dirname + "/../../../../"],
+                allow: [__dirname + "/../../../../../"],
                 strict: true,
             },
         },
@@ -126,8 +126,8 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
                 "**/js-test-results/**",
             ],
             setupFiles: [
-                path.resolve(__dirname, "../src/vitest/setup-snapshot-serializer.ts"),
-                path.resolve(__dirname, "../src/vitest/fail-console-error-warning.ts"),
+                path.resolve(__dirname, "../../src/vitest/setup-snapshot-serializer.ts"),
+                path.resolve(__dirname, "../../src/vitest/fail-console-error-warning.ts"),
             ],
             reporters: test_reporters,
             outputFile: {

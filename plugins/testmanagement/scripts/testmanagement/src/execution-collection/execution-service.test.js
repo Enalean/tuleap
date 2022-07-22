@@ -22,7 +22,7 @@ import CKEDITOR from "ckeditor4";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 
 describe("ExecutionService", () => {
     let $q,

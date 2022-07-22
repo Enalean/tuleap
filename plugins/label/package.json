@@ -4,6 +4,7 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/core": "link:../../src",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",

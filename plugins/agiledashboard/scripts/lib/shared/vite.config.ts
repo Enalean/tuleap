@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import dts from "vite-dts";
 import pkg from "./package.json";
 
 export default vite.defineLibConfig({
@@ -32,5 +31,5 @@ export default vite.defineLibConfig({
             external: Object.keys(pkg.dependencies),
         },
     },
-    plugins: [dts()],
+    plugins: [viteDtsPlugin()],
 });

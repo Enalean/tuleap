@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/vue2-gettext-composition-helper.es.js",
-  "main": "dist/vue2-gettext-composition-helper.umd.js",
+  "type": "module",
+  "module": "dist/vue2-gettext-composition-helper.js",
+  "main": "dist/vue2-gettext-composition-helper.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue2-gettext-composition-helper.es.js",
-      "require": "./dist/vue2-gettext-composition-helper.umd.js"
+      "import": "./dist/vue2-gettext-composition-helper.js",
+      "require": "./dist/vue2-gettext-composition-helper.umd.cjs"
     }
   },
   "scripts": {

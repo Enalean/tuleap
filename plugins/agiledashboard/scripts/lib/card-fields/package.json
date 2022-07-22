@@ -5,12 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/plugin-agiledashboard-card-fields.es.js",
-  "main": "dist/plugin-agiledashboard-card-fields.umd.js",
+  "type": "module",
+  "module": "dist/plugin-agiledashboard-card-fields.js",
+  "main": "dist/plugin-agiledashboard-card-fields.umd.cjs",
   "exports": {
     ".": {
-      "import": "./dist/plugin-agiledashboard-card-fields.es.js",
-      "require": "./dist/plugin-agiledashboard-card-fields.umd.js"
+      "import": "./dist/plugin-agiledashboard-card-fields.js",
+      "require": "./dist/plugin-agiledashboard-card-fields.umd.cjs"
     }
   },
   "dependencies": {

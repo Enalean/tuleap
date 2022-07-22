@@ -57,4 +57,4 @@ import "@tuleap/project-sidebar";
 
 ### Loading the script without using a bundler
 
-Insert the script `dist/project-sidebar.umd.js` and the stylesheet `dist/style.css` into the page.
+Insert the script `dist/project-sidebar.umd.cjs` and the stylesheet `dist/style.css` into the page.

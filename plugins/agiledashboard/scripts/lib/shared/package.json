@@ -5,12 +5,14 @@
   "license": "MIT",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/plugin-agiledashboard-shared.es.js",
-  "main": "dist/plugin-agiledashboard-shared.umd.js",
+  "type": "module",
+  "module": "dist/plugin-agiledashboard-shared.js",
+  "main": "dist/plugin-agiledashboard-shared.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/plugin-agiledashboard-shared.es.js",
-      "require": "./dist/plugin-agiledashboard-shared.umd.js"
+      "import": "./dist/plugin-agiledashboard-shared.js",
+      "require": "./dist/plugin-agiledashboard-shared.umd.cjs"
     }
   },
   "devDependencies": {

@@ -19,8 +19,8 @@
 
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
+import { jest_base_config } from "@tuleap/build-system-configurator";
+export default {
     ...jest_base_config,
     displayName: "agiledashboard-shared",
 };

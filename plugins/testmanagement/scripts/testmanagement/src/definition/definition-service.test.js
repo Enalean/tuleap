@@ -20,7 +20,7 @@
 import testmanagment_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator";
+import { createAngularPromiseWrapper } from "@tuleap/build-system-configurator/dist/jest/angular-promise-wrapper";
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 import * as rest_querier from "../api/rest-querier";
 

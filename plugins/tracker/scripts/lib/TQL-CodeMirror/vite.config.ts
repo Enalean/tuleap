@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import dts from "vite-dts";
 
 export default vite.defineLibConfig({
-    plugins: [dts()],
+    plugins: [viteDtsPlugin()],
     optimizeDeps: {
         // This is needed since CodeMirror and its addons are only shipped as CommonJS
         // See https://github.com/codemirror/CodeMirror/issues/5403 https://github.com/codemirror/CodeMirror/issues/6355

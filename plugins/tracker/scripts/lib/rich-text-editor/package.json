@@ -5,9 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "types": "dist/index.d.ts",
-  "module": "dist/plugin-tracker-rich-text-editor.es.js",
-  "main": "dist/plugin-tracker-rich-text-editor.umd.js",
+  "module": "dist/plugin-tracker-rich-text-editor.js",
+  "main": "dist/plugin-tracker-rich-text-editor.umd.cjs",
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/gettext": "link:../../../../../lib/frontend/gettext",

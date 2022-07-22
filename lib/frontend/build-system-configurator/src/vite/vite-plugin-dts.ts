@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-process.env.DISABLE_TS_TYPECHECK = "true";
+import dts from "vite-plugin-dts";
+import type { Plugin } from "vite";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-module.exports = {
-    ...jest_base_config,
-    displayName: "document_generation",
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-};
+type dts_plugin_options = Parameters<typeof dts>[0];
+
+export function viteDtsPlugin(options?: dts_plugin_options): Plugin {
+    return dts({
+        insertTypesEntry: true,
+        ...options,
+    });
+}

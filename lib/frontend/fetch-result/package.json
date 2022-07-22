@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/fetch-result.es.js",
-  "main": "dist/fetch-result.umd.js",
+  "type": "module",
+  "module": "dist/fetch-result.js",
+  "main": "dist/fetch-result.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/fetch-result.es.js",
-      "require": "./dist/fetch-result.umd.js"
+      "import": "./dist/fetch-result.js",
+      "require": "./dist/fetch-result.umd.cjs"
     }
   },
   "dependencies": {

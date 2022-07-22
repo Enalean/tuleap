@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "main": "dist/po-gettext-plugin.js",
   "scripts": {
     "typecheck": "tsc --noEmit",

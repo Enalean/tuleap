@@ -30,8 +30,8 @@
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.dev.js --watch",
+    "build": "webpack --config webpack.prod.mjs",
+    "watch": "webpack --config webpack.dev.mjs --watch",
     "test": "jest"
   }
 }

@@ -19,10 +19,8 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import dts from "vite-dts";
 
 export default vite.defineLibConfig({
-    plugins: [dts()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/main.ts"),

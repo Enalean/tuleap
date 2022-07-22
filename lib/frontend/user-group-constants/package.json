@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/user-group-constants.es.js",
-  "main": "dist/user-group-constants.umd.js",
+  "type": "module",
+  "module": "dist/user-group-constants.js",
+  "main": "dist/user-group-constants.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/user-group-constants.es.js",
-      "require": "./dist/user-group-constants.umd.js"
+      "import": "./dist/user-group-constants.js",
+      "require": "./dist/user-group-constants.umd.cjs"
     }
   },
   "devDependencies": {

@@ -5,12 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/vue2-gettext-init.es.js",
-  "main": "dist/vue2-gettext-init.umd.js",
+  "type": "module",
+  "module": "dist/vue2-gettext-init.js",
+  "main": "dist/vue2-gettext-init.umd.cjs",
+  "types": "src/main.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue2-gettext-init.es.js",
-      "require": "./dist/vue2-gettext-init.umd.js"
+      "import": "./dist/vue2-gettext-init.js",
+      "require": "./dist/vue2-gettext-init.umd.cjs"
     }
   },
   "dependencies": {

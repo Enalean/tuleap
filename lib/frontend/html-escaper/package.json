@@ -5,13 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "version": "0.0.0",
-  "module": "dist/html-escaper.es.js",
-  "main": "dist/html-escaper.umd.js",
+  "type": "module",
+  "module": "dist/html-escaper.js",
+  "main": "dist/html-escaper.umd.cjs",
   "types": "src/escaper.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/html-escaper.es.js",
-      "require": "./dist/html-escaper.umd.js"
+      "import": "./dist/html-escaper.js",
+      "require": "./dist/html-escaper.umd.cjs"
     }
   },
   "devDependencies": {
