@@ -708,7 +708,6 @@ CREATE TABLE stats_project (
   file_releases smallint(6) NOT NULL default '0',
   downloads int(11) NOT NULL default '0',
   site_views int(11) NOT NULL default '0',
-  subdomain_views int(11) NOT NULL default '0',
   msg_posted smallint(6) NOT NULL default '0',
   msg_uniq_auth smallint(6) NOT NULL default '0',
   cvs_checkouts smallint(6) NOT NULL default '0',
