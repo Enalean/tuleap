@@ -10,6 +10,7 @@ specifiers:
   '@tuleap/tlp': link:../../src/themes/tlp
   '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@tuleap/vue3-gettext-init': link:../../lib/frontend/vue3-gettext-init
+  '@vue/test-utils': ^2.0.2
   neverthrow: ^4.3.1
   vue: ^3.2.31
   vue-loader: ^17.0.0
@@ -30,6 +31,7 @@ dependencies:
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/po-gettext-plugin': link:../../lib/frontend/po-gettext-plugin
+  '@vue/test-utils': 2.0.2_vue@3.2.31
   vue-loader: 17.0.0
 
 packages:
@@ -166,6 +168,14 @@ packages:
   /@vue/shared/3.2.31:
     resolution: {integrity: sha512-ymN2pj6zEjiKJZbrf98UM2pfDd6F2H7ksKw7NDt/ZZ1fh5Ei39X5tABugtT03ZRlWd9imccoK0hE8hpjpU7irQ==}
     dev: false
+
+  /@vue/test-utils/2.0.2_vue@3.2.31:
+    resolution: {integrity: sha512-E2P4oXSaWDqTZNbmKZFVLrNN/siVN78YkEqs7pHryWerrlZR9bBFLWdJwRoguX45Ru6HxIflzKl4vQvwRMwm5g==}
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      vue: 3.2.31
+    dev: true
 
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
