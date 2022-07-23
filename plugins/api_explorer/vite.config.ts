@@ -27,5 +27,11 @@ export default vite.defineAppConfig("api-explorer", {
                 "api-explorer": path.resolve(__dirname, "scripts/index.tsx"),
             },
         },
+        commonjsOptions: {
+            include: [],
+        },
+    },
+    optimizeDeps: {
+        disabled: false,
     },
 });
