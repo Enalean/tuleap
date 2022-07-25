@@ -212,6 +212,7 @@ abstract class LDAP_GroupManager
         $this->usersToAdd       = null;
         $this->usersToRemove    = null;
         $this->usersNotImpacted = null;
+        $this->cached_users     = [];
     }
 
     /**
