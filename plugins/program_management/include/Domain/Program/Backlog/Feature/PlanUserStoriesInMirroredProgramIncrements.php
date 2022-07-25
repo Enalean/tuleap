@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 interface PlanUserStoriesInMirroredProgramIncrements
 {
@@ -30,4 +31,9 @@ interface PlanUserStoriesInMirroredProgramIncrements
      * @throws UserStoryPlanException
      */
     public function plan(ProgramIncrementChanged $program_increment_changed): void;
+
+    /**
+     * @throws UserStoryPlanException
+     */
+    public function planForATeam(ProgramIncrementChanged $program_increment_changed, TeamIdentifier $team_identifier): void;
 }

@@ -30,6 +30,7 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
     private ?NewChangeset $new_changeset = null;
 
     private function __construct(
+        private int $calls_count,
         private ?\Tracker_Artifact_Changeset $changeset,
         private ?\Throwable $exception,
     ) {
@@ -37,17 +38,17 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
 
     public static function withReturnChangeset(\Tracker_Artifact_Changeset $changeset): self
     {
-        return new self($changeset, null);
+        return new self(0, $changeset, null);
     }
 
     public static function withNullReturnChangeset(): self
     {
-        return new self(null, null);
+        return new self(0, null, null);
     }
 
     public static function withException(\Throwable $param): self
     {
-        return new self(null, $param);
+        return new self(0, null, $param);
     }
 
     public function getNewChangeset(): ?NewChangeset
@@ -62,6 +63,12 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
         if ($this->exception) {
             throw $this->exception;
         }
+        $this->calls_count++;
         return $this->changeset;
+    }
+
+    public function getCallsCount(): int
+    {
+        return $this->calls_count;
     }
 }

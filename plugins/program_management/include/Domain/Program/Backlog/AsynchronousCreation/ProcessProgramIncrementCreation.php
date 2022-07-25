@@ -23,8 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 interface ProcessProgramIncrementCreation
 {
     public function processCreation(ProgramIncrementCreation $creation): void;
+
+    public function processCreationForOneTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void;
 }

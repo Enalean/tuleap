@@ -19,26 +19,34 @@
  *
  */
 
-namespace unit\Adapter\Program\Backlog\TeamSynchronization;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Events\TeamSynchronizationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirrorTimeboxesFromProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TeamSynchronizationEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class MissingProgramIncrementCreatorTest extends TestCase
 {
     private const PROGRAM_INCREMENT_ID = 1;
+    private const TEAM_ID              = 101;
     private TestLogger $logger;
     private TeamSynchronizationEvent $event;
     private UserIdentifier $user;
@@ -48,7 +56,7 @@ final class MissingProgramIncrementCreatorTest extends TestCase
     protected function setUp(): void
     {
         $this->logger                        = new TestLogger();
-        $this->event                         = TeamSynchronizationEventStub::buildWithIds(1, 123, 456);
+        $this->event                         = TeamSynchronizationEventStub::buildWithIds(1, self::TEAM_ID, 456);
         $this->user                          = UserIdentifierStub::buildGenericUser();
         $this->team                          = ProjectReferenceStub::buildGeneric();
         $this->search_open_program_increment = SearchOpenProgramIncrementsStub::withProgramIncrements(
@@ -58,22 +66,23 @@ final class MissingProgramIncrementCreatorTest extends TestCase
 
     public function testsItDoesNothingWhenNoMilestoneAreMissing(): void
     {
-        $timebox_searcher = SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror();
-
-        $creator = new MissingProgramIncrementCreator($this->search_open_program_increment, $timebox_searcher);
-        $creator->detectAndCreateMissingProgramIncrements($this->event, $this->user, $this->team, MessageLog::buildFromLogger($this->logger));
+        $processor = ProcessProgramIncrementCreationStub::withCount();
+        $this->getCreator(
+            SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror(),
+            $processor
+        )->detectAndCreateMissingProgramIncrements($this->event, $this->user, $this->team, MessageLog::buildFromLogger($this->logger));
 
         self::assertFalse($this->logger->hasDebugRecords());
+        self::assertEquals(0, $processor->getCallCount());
     }
 
     public function testItLogsMissingMilestones(): void
     {
-        $creator = new MissingProgramIncrementCreator(
-            $this->search_open_program_increment,
-            SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror()
-        );
-
-        $creator->detectAndCreateMissingProgramIncrements(
+        $processor = ProcessProgramIncrementCreationStub::withCount();
+        $this->getCreator(
+            SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror(),
+            $processor
+        )->detectAndCreateMissingProgramIncrements(
             $this->event,
             $this->user,
             $this->team,
@@ -81,5 +90,24 @@ final class MissingProgramIncrementCreatorTest extends TestCase
         );
 
         self::assertTrue($this->logger->hasDebugThatContains("Missing milestones 1"));
+        self::assertEquals(1, $processor->getCallCount());
+    }
+
+    private function getCreator(
+        SearchMirrorTimeboxesFromProgramStub $search_mirror_timeboxes,
+        ProcessProgramIncrementCreationStub $increment_creation_processor,
+    ): MissingProgramIncrementCreator {
+        return new MissingProgramIncrementCreator(
+            $this->search_open_program_increment,
+            $search_mirror_timeboxes,
+            VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            RetrieveProgramIncrementTrackerStub::withValidTracker(888),
+            VerifyIsChangesetStub::withValidChangeset(),
+            RetrieveLastChangesetStub::withLastChangesetIds(111),
+            $increment_creation_processor,
+            SearchVisibleTeamsOfProgramStub::withTeamIds(self::TEAM_ID),
+            BuildProgramStub::stubValidProgram()
+        );
     }
 }

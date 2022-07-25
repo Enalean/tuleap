@@ -23,12 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Psr\Log\LoggerInterface;
-use Tracker_NoChangeException;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\RetrieveFullArtifact;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FieldData;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchFeaturesInChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\PlanUserStoriesInMirroredProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
@@ -36,8 +32,11 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\SearchFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Feature\Links\LinkedFeaturesDiff;
+use Tuleap\ProgramManagement\Domain\Program\Feature\PlanUserStoryInOneMirror;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementFromTeam;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirroredTimeboxes;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 
 final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserStoriesInMirroredProgramIncrements
@@ -45,36 +44,25 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,
         private SearchArtifactsLinks $artifacts_links_search,
-        private RetrieveFullArtifact $artifact_retriever,
         private SearchMirroredTimeboxes $mirrored_timeboxes_searcher,
         private VerifyIsVisibleArtifact $visibility_verifier,
         private SearchFeatures $features_searcher,
         private LoggerInterface $logger,
-        private RetrieveUser $retrieve_user,
         private SearchFeaturesInChangeset $search_features_in_changeset,
+        private RetrieveMirroredProgramIncrementFromTeam $retrieve_mirrored_program_increment_from_team,
+        private PlanUserStoryInOneMirror $story_in_one_mirror_planner,
     ) {
     }
 
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
         $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");
-        $program_increment         = $program_increment_changed->program_increment;
-        $user_identifier           = $program_increment_changed->user;
-        $potential_feature_to_link = $this->features_searcher->searchFeatures($program_increment);
-        $features_diff             = LinkedFeaturesDiff::build(
-            $this->search_features_in_changeset,
-            $program_increment_changed
-        );
-        $feature_plan_change       = FeaturePlanChange::fromRaw(
-            $this->artifacts_links_search,
-            $potential_feature_to_link,
-            $features_diff->getRemovedFeaturesIds(),
-            $program_increment_changed->tracker->getId()
-        );
+        $program_increment   = $program_increment_changed->program_increment;
+        $user_identifier     = $program_increment_changed->user;
+        $feature_plan_change = $this->getPlanChange($program_increment, $program_increment_changed);
 
-        $user = $this->retrieve_user->getUserWithId($user_identifier);
         $this->db_transaction_executor->execute(
-            function () use ($feature_plan_change, $user, $user_identifier, $program_increment) {
+            function () use ($feature_plan_change, $user_identifier, $program_increment) {
                 $mirrored_program_increments = MirroredProgramIncrementIdentifier::buildCollectionOnlyWhenUserCanSee(
                     $this->mirrored_timeboxes_searcher,
                     $this->visibility_verifier,
@@ -82,60 +70,58 @@ final class UserStoriesInMirroredProgramIncrementsPlanner implements PlanUserSto
                     $user_identifier
                 );
                 foreach ($mirrored_program_increments as $mirrored_program_increment) {
-                    $this->planInOneMirror(
+                    $this->story_in_one_mirror_planner->planInOneMirror(
                         $program_increment,
                         $mirrored_program_increment,
                         $feature_plan_change,
-                        $user
+                        $user_identifier
                     );
                 }
             }
         );
     }
 
-    private function planInOneMirror(
-        ProgramIncrementIdentifier $program_increment,
-        MirroredProgramIncrementIdentifier $mirrored_program_increment,
-        FeaturePlanChange $feature_plan_change,
-        \PFUser $user,
-    ): void {
-        $this->logger->info(sprintf("Found mirrored PI %d", $mirrored_program_increment->getId()));
-        $mirror_artifact = $this->artifact_retriever->getNonNullArtifact($mirrored_program_increment);
+    public function planForATeam(ProgramIncrementChanged $program_increment_changed, TeamIdentifier $team_identifier): void
+    {
+        $this->logger->debug("Check if we need to plan/unplan items in mirrored releases.");
 
-        $field_artifact_link = $mirror_artifact->getAnArtifactLinkField($user);
-        if (! $field_artifact_link) {
-            $this->logger->info(
-                sprintf(
-                    "Mirrored PI %d does not have an artifact link field",
-                    $mirrored_program_increment->getId()
-                )
-            );
+        $program_increment_identifier = $program_increment_changed->program_increment;
+        $user_identifier              = $program_increment_changed->user;
+        $feature_plan_change          = $this->getPlanChange($program_increment_identifier, $program_increment_changed);
+
+        $mirrored_program_increment = MirroredProgramIncrementIdentifier::fromProgramIncrementAndTeam(
+            $this->retrieve_mirrored_program_increment_from_team,
+            $this->visibility_verifier,
+            $program_increment_identifier,
+            $team_identifier,
+            $user_identifier
+        );
+
+        if (! $mirrored_program_increment) {
+            $this->logger->error(sprintf("Mirrored of program increment with id %d not found", $program_increment_identifier->getId()));
             return;
         }
 
-        $fields_data = new FieldData(
-            $feature_plan_change->user_stories,
-            $feature_plan_change->user_stories_to_remove,
-            $field_artifact_link->getId(),
+        $this->story_in_one_mirror_planner->planInOneMirror(
+            $program_increment_identifier,
+            $mirrored_program_increment,
+            $feature_plan_change,
+            $user_identifier
         );
+    }
 
-        try {
-            $this->logger->debug(
-                sprintf(
-                    "Change in PI #%d trying to add a changeset to the mirrored PI #%d",
-                    $program_increment->getId(),
-                    $mirror_artifact->getId()
-                )
-            );
-            $mirror_artifact->createNewChangeset(
-                $fields_data->getFieldDataForChangesetCreationFormat(
-                    (int) $mirror_artifact->getTracker()->getGroupId()
-                ),
-                "",
-                $user
-            );
-        } catch (Tracker_NoChangeException $e) {
-            //Don't stop transaction if linked artifact is not concerned by the change
-        }
+    private function getPlanChange(ProgramIncrementIdentifier $program_increment_identifier, ProgramIncrementChanged $program_increment_changed): FeaturePlanChange
+    {
+        $potential_feature_to_link = $this->features_searcher->searchFeatures($program_increment_identifier);
+        $features_diff             = LinkedFeaturesDiff::build(
+            $this->search_features_in_changeset,
+            $program_increment_changed
+        );
+        return FeaturePlanChange::fromRaw(
+            $this->artifacts_links_search,
+            $potential_feature_to_link,
+            $features_diff->getRemovedFeaturesIds(),
+            $program_increment_changed->tracker->getId()
+        );
     }
 }

@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDao;
@@ -55,16 +56,34 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Process
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessor;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncrementCreationProcessor
 {
@@ -84,22 +103,75 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $field_retriever                = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter        = new ProjectManagerAdapter($project_manager, $user_retriever);
+        $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
+        $transaction_executor           = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
+        $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $field_initializator            = new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory);
+        $artifact_changeset_saver       = ArtifactChangesetSaver::build();
+        $after_new_changeset_handler    = new AfterNewChangesetHandler($artifact_factory, $fields_retriever);
+        $retrieve_workflow              = \WorkflowFactory::instance();
 
-        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $new_changeset_creator = new NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(
+                        new TypeDao(),
+                        $artifact_links_usage_dao
+                    ),
+                    $artifact_links_usage_dao
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                \TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance()
+                    ),
+                ),
+            ),
+            $fields_retriever,
+            \EventManager::instance(),
+            $field_initializator,
+            $transaction_executor,
+            $artifact_changeset_saver,
+            new ParentLinkAction($artifact_factory),
+            $after_new_changeset_handler,
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            $retrieve_workflow,
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
+        );
 
         $user_stories_planner = new UserStoriesInMirroredProgramIncrementsPlanner(
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $artifacts_linked_to_parent_dao,
-            $artifact_retriever,
-            new MirroredTimeboxesDao(),
+            $mirrored_timeboxes_dao,
             $visibility_verifier,
             new ContentDao(),
             $logger,
-            $user_retriever,
-            $artifacts_linked_to_parent_dao
+            $artifacts_linked_to_parent_dao,
+            $mirrored_timeboxes_dao,
+            new UserStoryInOneMirrorPlanner(
+                $artifact_retriever,
+                $logger,
+                $new_changeset_creator,
+                $user_retriever,
+                $form_element_factory
+            )
         );
 
-        $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+
         $event_manager    = \EventManager::instance();
         $artifact_creator = new ArtifactCreatorAdapter(
             TrackerArtifactCreator::build(
