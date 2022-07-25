@@ -61,17 +61,6 @@ final class StartCommunityEditionContainerCommand extends Command
         '/var/lib/tuleap',
     ];
 
-    private const SUPERVISORD_UNITS = [
-        Supervisord::UNIT_CROND,
-        Supervisord::UNIT_SSHD,
-        Supervisord::UNIT_RSYSLOG,
-        Supervisord::UNIT_NGINX,
-        Supervisord::UNIT_POSTFIX,
-        Supervisord::UNIT_HTTPD,
-        Supervisord::UNIT_FPM,
-        Supervisord::UNIT_BACKEND_WORKERS,
-    ];
-
     private DataPersistence $data_persistence;
 
     public function __construct(private ProcessFactory $process_factory)
@@ -109,7 +98,7 @@ final class StartCommunityEditionContainerCommand extends Command
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);
 
-            $supervisord = new Supervisord(...self::SUPERVISORD_UNITS);
+            $supervisord = new Supervisord();
             $supervisord->run($output);
             return Command::SUCCESS;
         } catch (\Exception $exception) {
