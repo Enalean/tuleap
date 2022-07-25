@@ -26,6 +26,7 @@ namespace Tuleap\MediawikiStandalone\Instance;
 use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\ForgeConfigSandbox;
@@ -151,10 +152,34 @@ final class InstanceManagementTest extends TestCase
             }
         );
 
+        $update_instance_has_been_called = false;
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/maintenance/gpig/update$', null, 'POST'),
+            function () use (&$update_instance_has_been_called) {
+                $update_instance_has_been_called = true;
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
 
         self::assertTrue($resume_has_been_called);
+        self::assertTrue($update_instance_has_been_called);
         self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testErrorIsDetectedWhenCurrentStatusOfTheInstanceCannotBeDetermined(): void
+    {
+        $this->mediawiki_client->on(
+            new RequestMatcher('^/mediawiki/w/rest.php/tuleap/instance/gpig$', null, 'GET'),
+            static function (): ResponseInterface {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(500);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => CreateInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertTrue($this->logger->hasErrorThatContains('Could not determine current status of the gpig instance'));
     }
 
     public function testSuspendIsSuccessful(): void

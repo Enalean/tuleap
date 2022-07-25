@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\NeverThrow;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * I hold a technical or business error that is not fatal and does not require the program to stop immediately.
  * The error must be recoverable, otherwise use Exceptions.
@@ -79,5 +81,14 @@ class Fault
     public function __toString(): string
     {
         return $this->message;
+    }
+
+    public static function writeToLogger(self $fault, LoggerInterface $logger): void
+    {
+        if ($fault->exception instanceof \Exception) {
+            $logger->error($fault->message, ['exception' => $fault->exception]);
+            return;
+        }
+        $logger->error($fault->message);
     }
 }
