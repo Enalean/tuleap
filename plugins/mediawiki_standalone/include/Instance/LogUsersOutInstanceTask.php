@@ -65,6 +65,9 @@ final class LogUsersOutInstanceTask implements QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return '';
+        if ($this->project_id === null) {
+            return 'Log-out users of all MediaWiki instances';
+        }
+        return 'Log-out users of MediaWiki instance #' . $this->project_id;
     }
 }

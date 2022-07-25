@@ -49,6 +49,6 @@ final class RenameInstanceTask implements QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return sprintf('Rename MediaWiki instance %d to %s', $this->project_id, $this->new_name);
+        return 'Rename MediaWiki instance #' . $this->project_id . ' to ' . $this->new_name;
     }
 }
