@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/date-helper': link:../../lib/frontend/date-helper
   '@tuleap/drag-and-drop': link:../../lib/frontend/drag-and-drop
@@ -42,6 +43,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
+  '@tuleap/cypress-configurator': link:../../lib/test-utils/cypress-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/list-picker': link:../../lib/frontend/list-picker
   '@tuleap/tlp': link:../../src/themes/tlp

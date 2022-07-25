@@ -4,10 +4,10 @@
     "target": "es6",
     "lib": ["es6", "dom"],
     "types": ["cypress"],
-    "module": "commonjs",
+    "module": "ES6",
     "outDir": "dist",
     "sourceMap": false,
-    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"]
 }

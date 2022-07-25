@@ -18,7 +18,6 @@
     "watch": "webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator",
-    "@tuleap/cypress-utilities-support": "link:../../lib/test-utils/cypress-utilities-support"
+    "@tuleap/build-system-configurator": "link:../../lib/frontend/build-system-configurator"
   }
 }
