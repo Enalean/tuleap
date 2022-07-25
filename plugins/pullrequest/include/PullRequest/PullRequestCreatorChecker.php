@@ -45,6 +45,7 @@ final class PullRequestCreatorChecker
         PFUser $creator,
         GitRepository $repository_src,
         string $branch_src,
+        string $sha1_src,
         GitRepository $repository_dest,
         string $branch_dest,
     ): void {
@@ -67,11 +68,12 @@ final class PullRequestCreatorChecker
             throw new PullRequestCannotBeCreatedException();
         }
 
-        $this->checkIfPullRequestAlreadyExists(
+        $this->checkIfPullRequestWithSameBranchesAndSourceReferenceAlreadyExists(
             $repository_src,
             $repository_dest,
             $branch_src,
-            $branch_dest
+            $sha1_src,
+            $branch_dest,
         );
     }
 
@@ -94,17 +96,19 @@ final class PullRequestCreatorChecker
     /**
      * @throws PullRequestAlreadyExistsException
      */
-    private function checkIfPullRequestAlreadyExists(
+    private function checkIfPullRequestWithSameBranchesAndSourceReferenceAlreadyExists(
         GitRepository $repository_src,
         GitRepository $repository_dest,
         string $branch_src,
+        string $sha1_src,
         string $branch_dest,
     ): void {
-        $is_pull_request_already_existing = $this->pull_request_dao->isPullRequestAlreadyExisting(
+        $is_pull_request_already_existing = $this->pull_request_dao->isPullRequestWithSameBranchesAndSourceReferenceAlreadyExisting(
             $repository_src->getId(),
             $branch_src,
+            $sha1_src,
             $repository_dest->getId(),
-            $branch_dest
+            $branch_dest,
         );
 
         if ($is_pull_request_already_existing) {
