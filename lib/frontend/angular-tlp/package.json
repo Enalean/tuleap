@@ -7,7 +7,7 @@
   "version": "0.0.0",
   "type": "module",
   "module": "dist/angular-tlp.mjs",
-  "main": "dist/angular-tlp.umd.js",
+  "main": "dist/angular-tlp.umd.cjs",
   "exports": {
     ".": {
       "import": "./dist/angular-tlp.js",
