@@ -351,7 +351,7 @@ const fat_combined_files = [
         "./www/scripts/codendi/common.js",
         "./www/scripts/codendi/feedback.js",
         "./www/scripts/codendi/cross_references.js",
-        "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
+        "./node_modules/@tuleap/tooltip/dist/tooltip.umd.cjs",
         "./www/scripts/codendi/Tooltip-loader.js",
         "./www/scripts/codendi/Toggler.js",
         "./www/scripts/codendi/DropDownPanel.js",
@@ -360,7 +360,7 @@ const fat_combined_files = [
         "./www/scripts/tablekit/tablekit.js",
         "./www/scripts/lytebox/lytebox.js",
         "./www/scripts/lightwindow/lightwindow.js",
-        "./node_modules/@tuleap/html-escaper/dist/html-escaper.umd.js",
+        "./node_modules/@tuleap/html-escaper/dist/html-escaper.umd.cjs",
         "./www/scripts/codendi/Tracker.js",
         "./www/scripts/codendi/TreeNode.js",
         "./www/scripts/tuleap/tuleap-modal.js",
@@ -378,7 +378,7 @@ const fat_combined_files = [
     subset_combined_flamingparrot_files = [
         "./www/scripts/bootstrap/bootstrap-dropdown.js",
         "./www/scripts/bootstrap/bootstrap-modal.js",
-        "./node_modules/@tuleap/tooltip/dist/tooltip.umd.js",
+        "./node_modules/@tuleap/tooltip/dist/tooltip.umd.cjs",
     ];
 
 const webpack_config_legacy_combined = {
