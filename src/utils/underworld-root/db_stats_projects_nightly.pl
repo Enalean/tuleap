@@ -99,8 +99,6 @@ if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
 
 } 
 
-print "Postponed: subdomain_views need to be inserted later from the project server logs...\n" if $verbose;
-
 ## msg_posted
 $sql = "INSERT INTO stats_project_build_tmp
 	SELECT forum_group_list.group_id,'msg_posted',COUNT(forum.msg_id)
@@ -159,7 +157,6 @@ $sql = "CREATE TABLE stats_project_tmp (
         file_releases   smallint(6) DEFAULT '0' NOT NULL,
         downloads       int(11) DEFAULT '0' NOT NULL,
         site_views      int(11) DEFAULT '0' NOT NULL,
-        subdomain_views int(11) DEFAULT '0' NOT NULL,
         msg_posted      smallint(6) DEFAULT '0' NOT NULL,
         msg_uniq_auth   smallint(6) DEFAULT '0' NOT NULL,
         cvs_checkouts   smallint(6) DEFAULT '0' NOT NULL,
@@ -260,8 +257,8 @@ $sql = "DELETE FROM stats_project WHERE month='$year$mon' AND day='$day'";
 $rel = $dbh->prepare($sql)->execute();
 print "Cleared Old data from stats_project...\n" if $verbose;
 
-$sql = "INSERT INTO stats_project (month, week, day, group_id, group_ranking, group_metric, developers, file_releases, downloads, site_views, subdomain_views, msg_posted, msg_uniq_auth, cvs_checkouts, cvs_commits, cvs_adds, svn_commits, svn_adds, svn_deletes, svn_checkouts, svn_access_count, artifacts_opened, artifacts_closed)
-	SELECT * FROM stats_project_tmp";
+$sql = "INSERT INTO stats_project (month, week, day, group_id, group_ranking, group_metric, developers, file_releases, downloads, site_views, msg_posted, msg_uniq_auth, cvs_checkouts, cvs_commits, cvs_adds, svn_commits, svn_adds, svn_deletes, svn_checkouts, svn_access_count, artifacts_opened, artifacts_closed)
+	SELECT month, week, day, group_id, group_ranking, group_metric, developers, file_releases, downloads, site_views, msg_posted, msg_uniq_auth, cvs_checkouts, cvs_commits, cvs_adds, svn_commits, svn_adds, svn_deletes, svn_checkouts, svn_access_count, artifacts_opened, artifacts_closed FROM stats_project_tmp";
 $rel = $dbh->prepare($sql)->execute();
 print "Wrote back new data to stats_project...\n" if $verbose;
 

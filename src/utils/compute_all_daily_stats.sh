@@ -37,10 +37,3 @@ cd $CODENDI_UTILS_PREFIX/cvs1
 # Codendi DB
 cd $CODENDI_UTILS_PREFIX/underworld-root
 ./stats_nightly.sh $*
-
-
-# Then insert the per project Web page
-# views (subdomain views)in the stats_project table
-cd $CODENDI_UTILS_PREFIX/projects-fileserver
-./stats_projects_logparse.pl $*
-
