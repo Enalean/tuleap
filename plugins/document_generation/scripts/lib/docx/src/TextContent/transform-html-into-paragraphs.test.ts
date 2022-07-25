@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { transformHTMLIntoParagraphs } from "./transform-html-into-paragraphs";
 import type { IRunPropertiesOptions } from "docx";
 import {
@@ -186,7 +187,7 @@ describe("transform-html-into-paragraph", () => {
             data: "Success",
             transformation: { width: 1, height: 1 },
         });
-        jest.spyOn(image_loader, "loadImage").mockImplementation(
+        vi.spyOn(image_loader, "loadImage").mockImplementation(
             (image_url: string): Promise<ImageRun> => {
                 if (image_url === "/success") {
                     return Promise.resolve(expected_image_run);
@@ -332,7 +333,7 @@ describe("transform-html-into-paragraph", () => {
     });
 
     it("manages inlined styles", async () => {
-        jest.spyOn(style_extractor, "extractInlineStyles").mockImplementation(
+        vi.spyOn(style_extractor, "extractInlineStyles").mockImplementation(
             (
                 node: HTMLElement,
                 source_style: Readonly<IRunPropertiesOptions>
@@ -380,7 +381,7 @@ function transformHTML(content: string): Promise<Paragraph[]> {
 
 function setListInstanceIDGenerator(): void {
     let list_instance_id = 90000;
-    jest.spyOn(list_instance_id_generator, "getListInstanceID").mockImplementation(
+    vi.spyOn(list_instance_id_generator, "getListInstanceID").mockImplementation(
         () => list_instance_id++
     );
 }

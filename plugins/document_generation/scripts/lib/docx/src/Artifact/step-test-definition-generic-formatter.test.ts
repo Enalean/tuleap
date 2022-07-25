@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import type { ArtifactReportResponseStepDefinitionFieldValue } from "../type";
 import { formatStepDefinitionField } from "./step-test-definition-generic-formatter";
 

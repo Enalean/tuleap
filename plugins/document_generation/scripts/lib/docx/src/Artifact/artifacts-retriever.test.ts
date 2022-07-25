@@ -17,14 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import type { ArtifactResponse } from "../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getArtifacts } from "./artifacts-retriever";
 
+vi.mock("@tuleap/tlp-fetch");
+
 describe("getArtifacts", () => {
     it("retrieves a bunch of artifacts", async () => {
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = vi.spyOn(tlp, "get");
 
         const expected_artifacts = [{ id: 12 } as ArtifactResponse, { id: 14 } as ArtifactResponse];
 
@@ -39,7 +42,7 @@ describe("getArtifacts", () => {
     });
 
     it("sends no queries when no artifacts needs to be retrieved", async () => {
-        const tlpGet = jest.spyOn(tlp, "get");
+        const tlpGet = vi.spyOn(tlp, "get");
         const artifacts = await getArtifacts(new Set());
         expect(artifacts.size).toBe(0);
         expect(tlpGet).not.toBeCalled();

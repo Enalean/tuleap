@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import { extractInlineStyles } from "./extract-style-html-element";
 
 describe("extract-style-html-element", () => {
