@@ -1649,7 +1649,6 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             new ProjectHistoryDao(),
             new DefaultBranchUpdater(new DefaultBranchUpdateExecutorAsGitoliteUser()),
             $this->getDescriptionUpdater(),
-            $this->getGitPhpAccessLogger(),
             $this->getRegexpFineGrainedRetriever(),
             $this->getRegexpFineGrainedEnabler(),
             $this->getRegexpFineGrainedDisabler(),

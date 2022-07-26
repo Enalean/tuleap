@@ -22,7 +22,6 @@
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
@@ -49,7 +48,6 @@ class GitViews extends PluginViews
         private FineGrainedRetriever $fine_grained_retriever,
         private DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
         private FineGrainedRepresentationBuilder $fine_grained_builder,
-        private GitPhpAccessLogger $access_loger,
         private RegexpFineGrainedRetriever $regexp_retriever,
         private Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         private HeaderRenderer $header_renderer,
