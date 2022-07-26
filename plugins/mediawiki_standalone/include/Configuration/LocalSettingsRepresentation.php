@@ -31,7 +31,8 @@ final class LocalSettingsRepresentation
 {
     public const MEDIAWIKI_PHP_CLI = '/opt/remi/php74/root/usr/bin/php';
 
-    public string $php_cli_path = self::MEDIAWIKI_PHP_CLI;
+    public string $php_cli_path             = self::MEDIAWIKI_PHP_CLI;
+    public string $supported_languages_json = '';
 
     public function __construct(
         public ConcealedString $pre_shared_key,
@@ -39,6 +40,12 @@ final class LocalSettingsRepresentation
         public string $oauth2_client_id,
         public ConcealedString $oauth2_client_secret,
         public string $forge_access_mode,
+        string $forge_supported_languages,
     ) {
+        $supported_languages = [];
+        foreach (explode(',', $forge_supported_languages) as $supported_language) {
+            $supported_languages[] = strtolower(trim(explode('_', $supported_language)[0]));
+        }
+        $this->supported_languages_json = json_encode(array_flip($supported_languages), JSON_THROW_ON_ERROR);
     }
 }

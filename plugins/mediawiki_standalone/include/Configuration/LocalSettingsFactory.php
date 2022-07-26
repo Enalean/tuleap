@@ -42,7 +42,8 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
             ServerHostname::HTTPSUrl(),
             ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),
             $oauth2_secret->getSecret(),
-            \ForgeConfig::get(\ForgeAccess::CONFIG, \ForgeAccess::RESTRICTED)
+            \ForgeConfig::get(\ForgeAccess::CONFIG, \ForgeAccess::RESTRICTED),
+            \ForgeConfig::get('sys_supported_languages', 'en_US'),
         );
     }
 }
