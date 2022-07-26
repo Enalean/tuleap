@@ -34,7 +34,7 @@ final class PHPStringMustacheRenderer extends MustacheRenderer
             $loader,
             $template_cache,
             function (string $value): string {
-                return "'" . addslashes($value) . "'";
+                return "'" . addcslashes($value, "'\0\\") . "'";
             }
         );
     }

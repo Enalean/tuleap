@@ -33,7 +33,8 @@ final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRe
             'https://example.com',
             'tlp-client-id-test',
             new ConcealedString('tlp-client-secret'),
-            \ForgeAccess::ANONYMOUS
+            \ForgeAccess::ANONYMOUS,
+            'en_US',
         );
     }
 }

@@ -23,13 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\MediawikiStandalone\Configuration;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\OAuth2ServerCore\App\LastGeneratedClientSecret;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class LocalSettingsFactoryTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     public function testGeneratesRepresentation(): void
     {
+        \ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
         $factory = new LocalSettingsFactory(
             new class implements MediaWikiOAuth2AppSecretGenerator {
                 public function generateOAuth2AppSecret(): LastGeneratedClientSecret
@@ -51,5 +55,6 @@ final class LocalSettingsFactoryTest extends TestCase
         self::assertStringContainsString('789', $representation->oauth2_client_id);
         self::assertEquals('random_oauth2_secret', $representation->oauth2_client_secret->getString());
         self::assertEquals('random_shared_secret', $representation->pre_shared_key->getString());
+        self::assertEqualsCanonicalizing(['en', 'fr'], array_keys(json_decode($representation->supported_languages_json, true, 2, JSON_THROW_ON_ERROR)));
     }
 }
