@@ -19,12 +19,14 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+use Tuleap\Reference\CheckCrossReferenceValidityEvent;
 use Tuleap\Reference\Presenters\CrossReferenceFieldPresenter;
 use Tuleap\Reference\Presenters\CrossReferenceByNaturePresenterBuilder;
 use Tuleap\Reference\Presenters\CrossReferenceLinkListPresenterBuilder;
 use Tuleap\Reference\Presenters\CrossReferenceLinkPresenterCollectionBuilder;
 use Tuleap\Reference\CrossReferenceByNatureCollection;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class CrossReferenceFactory
 {
     public $entity_id;
@@ -103,6 +105,8 @@ class CrossReferenceFactory
                 }
             }
         }
+
+        $this->getValidCrossReferences();
     }
 
     public function getNbReferences()
@@ -121,7 +125,7 @@ class CrossReferenceFactory
     }
 
     /**Display function */
-    public function DisplayCrossRefs()
+    public function DisplayCrossRefs() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         echo $this->getHTMLDisplayCrossRefs();
     }
@@ -156,7 +160,7 @@ class CrossReferenceFactory
 
     public function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true): string
     {
-        $user           = UserManager::instance()->getCurrentUser();
+        $user           = $this->getCurrentUser();
         $can_delete     = $isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'));
         $renderer       = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/common');
         $display_params = $with_links && $can_delete && ! $condensed;
@@ -311,5 +315,23 @@ class CrossReferenceFactory
         // Sort array by Nature
         ksort($crossRefArray);
         return $crossRefArray;
+    }
+
+    private function getValidCrossReferences(): void
+    {
+        $event_manager = EventManager::instance();
+
+        $event = new CheckCrossReferenceValidityEvent($this->target_refs_datas, $this->getCurrentUser());
+        $event_manager->processEvent($event);
+        $this->target_refs_datas = array_values($event->getCrossReferences());
+
+        $event = new CheckCrossReferenceValidityEvent($this->source_refs_datas, $this->getCurrentUser());
+        $event_manager->processEvent($event);
+        $this->source_refs_datas = array_values($event->getCrossReferences());
+    }
+
+    private function getCurrentUser(): PFUser
+    {
+        return UserManager::instance()->getCurrentUser();
     }
 }

@@ -70,6 +70,7 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Reference\CheckCrossReferenceValidityEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -215,6 +216,7 @@ use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
+use Tuleap\Tracker\Reference\CrossReferenceValidator;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
@@ -319,6 +321,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(GetUriFromCrossReference::NAME);
+        $this->addHook(CheckCrossReferenceValidityEvent::NAME);
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
@@ -2045,6 +2048,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             ),
             new DiffProcessor(new Codendi_UnifiedDiffFormatter())
         );
+    }
+
+    public function checkCrossReferenceValidityEvent(CheckCrossReferenceValidityEvent $event): void
+    {
+        $cross_reference_validator = new CrossReferenceValidator(Tracker_ArtifactFactory::instance());
+        $cross_reference_validator->removeInvalidCrossReferences($event);
     }
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
