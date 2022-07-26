@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
@@ -238,5 +239,80 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
         $this->getProcessor()->processCreation($this->creation);
 
         self::assertTrue($this->logger->hasError('Error during planning of user stories in mirror program increments'));
+    }
+
+    public function testItProcessesProgramIncrementCreationForOneTeam(): void
+    {
+        $this->getProcessor()->processCreationForOneTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
+
+        self::assertTrue(
+            $this->logger->hasDebug(
+                sprintf(
+                    'Processing program increment creation with program increment #%d for user #%d for team #%d',
+                    self::PROGRAM_INCREMENT_ID,
+                    self::USER_ID,
+                    self::FIRST_TEAM_ID
+                )
+            )
+        );
+        self::assertSame(1, $this->user_stories_planner->getCallCount());
+        self::assertSame(1, $this->artifact_creator->getCallCount());
+        [$first_changeset] = $this->artifact_creator->getArguments();
+        $first_values      = $first_changeset->values;
+        self::assertSame(
+            self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID,
+            $first_changeset->mirrored_timebox_tracker->getId()
+        );
+        self::assertSame(self::FIRST_TITLE_FIELD_ID, $first_values->title_field->getId());
+        self::assertSame(self::FIRST_DESCRIPTION_FIELD_ID, $first_values->description_field->getId());
+        self::assertSame(self::FIRST_STATUS_FIELD_ID, $first_values->status_field->getId());
+        self::assertEquals([self::FIRST_MAPPED_STATUS_BIND_VALUE_ID], $first_values->mapped_status_value->getValues());
+        self::assertSame(self::FIRST_START_DATE_FIELD_ID, $first_values->start_date_field->getId());
+        self::assertSame(self::FIRST_END_DATE_FIELD_ID, $first_values->end_period_field->getId());
+        self::assertSame(self::FIRST_ARTIFACT_LINK_FIELD_ID, $first_values->artifact_link_field->getId());
+
+        foreach ($this->artifact_creator->getArguments() as $changeset) {
+            $values = $changeset->values;
+            self::assertSame(self::TITLE_VALUE, $values->title_value->getValue());
+            self::assertSame(self::DESCRIPTION_VALUE, $values->description_value->value);
+            self::assertSame(self::DESCRIPTION_FORMAT, $values->description_value->format);
+            self::assertSame(self::START_DATE_VALUE, $values->start_date_value->getValue());
+            self::assertSame(self::END_DATE_VALUE, $values->end_period_value->getValue());
+            self::assertSame(self::PROGRAM_INCREMENT_ID, $values->artifact_link_value?->linked_artifact?->getId());
+            self::assertSame(TimeboxArtifactLinkType::ART_LINK_SHORT_NAME, (string) $values->artifact_link_value?->type);
+            self::assertSame(self::USER_ID, $changeset->user->getId());
+            self::assertSame(self::SUBMISSION_DATE, $changeset->submission_date->getValue());
+        }
+    }
+
+    public function testItStopsExecutionIfThereIsAnIssueInTheSourceProgramIncrementForOneTeam(): void
+    {
+        $this->fields_gatherer = GatherSynchronizedFieldsStub::withError();
+
+        $this->getProcessor()->processCreationForOneTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
+
+        self::assertSame(0, $this->artifact_creator->getCallCount());
+        self::assertSame(0, $this->user_stories_planner->getCallCount());
+        self::assertTrue($this->logger->hasError('Error during creation of mirror program increments for one team'));
+    }
+
+    public function testItStopsExecutionIfThereIsAnIssueWhileCreatingAMirroredProgramIncrementForOneTeam(): void
+    {
+        $this->artifact_creator = CreateArtifactStub::withError();
+
+        $this->getProcessor()->processCreationForOneTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
+
+        self::assertSame(1, $this->artifact_creator->getCallCount());
+        self::assertSame(0, $this->user_stories_planner->getCallCount());
+        self::assertTrue($this->logger->hasError('Error during creation of mirror program increments for one team'));
+    }
+
+    public function testItLogsErrorWhilePlanningUserStoriesInMirrorsForOneTeam(): void
+    {
+        $this->user_stories_planner = PlanUserStoriesInMirroredProgramIncrementsStub::withError();
+
+        $this->getProcessor()->processCreationForOneTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
+
+        self::assertTrue($this->logger->hasError('Error during planning of user stories in mirror program increments for one team'));
     }
 }

@@ -104,6 +104,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUs
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
+use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
@@ -208,18 +209,31 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
+use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
+use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
+use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\PossibleParentSelector;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -233,10 +247,17 @@ use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValueUpdater;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\PostAction\ExternalPostActionSaveObjectEvent;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalPostActionPluginsEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoriesEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -810,6 +831,16 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $program_adapter           = ProgramAdapter::instance();
         $project_manager_adapter   = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
 
+        $visible_team_searcher = new VisibleTeamSearcher(
+            $program_dao,
+            $user_retriever,
+            $project_manager_adapter,
+            new ProjectAccessChecker(
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            new TeamDao()
+        );
         (new TeamSynchronizationHandler(
             new SynchronizeTeamProcessor(
                 MessageLog::buildFromLogger($logger),
@@ -839,20 +870,19 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                                 new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever),
                                 $program_dao,
                                 $program_adapter,
-                                new VisibleTeamSearcher(
-                                    $program_dao,
-                                    $user_retriever,
-                                    $project_manager_adapter,
-                                    new ProjectAccessChecker(
-                                        new RestrictedUserCanAccessProjectVerifier(),
-                                        EventManager::instance()
-                                    ),
-                                    new TeamDao()
-                                ),
+                                $visible_team_searcher,
                             ),
                         )
                     ),
                     new MirroredTimeboxesDao(),
+                    $program_increments_dao,
+                    $artifact_visible_verifier,
+                    $program_increments_dao,
+                    $changeset_verifier,
+                    new LastChangesetRetriever($artifact_retriever, Tracker_Artifact_ChangesetFactoryBuilder::build()),
+                    (new ProgramIncrementCreationProcessorBuilder())->getProcessor(),
+                    $visible_team_searcher,
+                    $program_adapter
                 )
             )
         ))->handle(
@@ -890,25 +920,81 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $iterations_DAO                 = new IterationsDAO();
         $mirrored_timeboxes_dao         = new MirroredTimeboxesDao();
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
+        $transaction_executor           = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $queue_factory                  = new QueueFactory($logger);
+        $user_manager                   = \UserManager::instance();
+        $form_element_factory           = \Tracker_FormElementFactory::instance();
+        $logger                         = \BackendLogger::getDefaultLogger('program_management_syslog');
+        $artifact_factory               = \Tracker_ArtifactFactory::instance();
+        $user_retriever                 = new UserManagerAdapter($user_manager);
+        $artifact_links_usage_dao       = new ArtifactLinksUsageDao();
+        $fields_retriever               = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $field_initializator            = new \Tracker_Artifact_Changeset_ChangesetDataInitializator($form_element_factory);
+        $artifact_changeset_saver       = ArtifactChangesetSaver::build();
+        $after_new_changeset_handler    = new AfterNewChangesetHandler($artifact_factory, $fields_retriever);
+        $retrieve_workflow              = \WorkflowFactory::instance();
 
-        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-
-        $queue_factory = new QueueFactory($logger);
+        $new_changeset_creator = new NewChangesetCreator(
+            new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+                $form_element_factory,
+                new ArtifactLinkValidator(
+                    $artifact_factory,
+                    new TypePresenterFactory(
+                        new TypeDao(),
+                        $artifact_links_usage_dao
+                    ),
+                    $artifact_links_usage_dao
+                ),
+                new WorkflowUpdateChecker(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                \TransitionFactory::instance(),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
+                        FrozenFieldsRetriever::instance()
+                    ),
+                ),
+            ),
+            $fields_retriever,
+            \EventManager::instance(),
+            $field_initializator,
+            $transaction_executor,
+            $artifact_changeset_saver,
+            new ParentLinkAction($artifact_factory),
+            $after_new_changeset_handler,
+            ActionsRunner::build(\BackendLogger::getDefaultLogger()),
+            new ChangesetValueSaver(),
+            $retrieve_workflow,
+            new CommentCreator(
+                new \Tracker_Artifact_Changeset_CommentDao(),
+                \ReferenceManager::instance(),
+                new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+            )
+        );
 
         $handler = new ArtifactUpdatedHandler(
             $program_increments_DAO,
             $iterations_DAO,
-            new UserStoriesInMirroredProgramIncrementsPlanner(
+            (new UserStoriesInMirroredProgramIncrementsPlanner(
                 $transaction_executor,
                 $artifacts_linked_to_parent_dao,
-                $artifact_retriever,
                 $mirrored_timeboxes_dao,
                 $visibility_verifier,
                 new ContentDao(),
                 $logger,
-                $user_retriever,
-                $artifacts_linked_to_parent_dao
-            ),
+                $artifacts_linked_to_parent_dao,
+                new MirroredTimeboxesDao(),
+                new UserStoryInOneMirrorPlanner(
+                    $artifact_retriever,
+                    $logger,
+                    $new_changeset_creator,
+                    $user_retriever,
+                    $form_element_factory,
+                )
+            )),
             new ArtifactsExplicitTopBacklogDAO(),
             new IterationCreationDetector(
                 $iterations_linked_dao,
@@ -924,7 +1010,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new ProgramIncrementUpdateProcessorBuilder(),
                 new IterationCreationProcessorBuilder()
             ),
-            new IterationUpdateDispatcher($logger, new IterationUpdateProcessorBuilder(), $queue_factory)
+            new IterationUpdateDispatcher($logger, new IterationUpdateProcessorBuilder(), $queue_factory),
         );
 
         $event_proxy = ArtifactUpdatedProxy::fromArtifactUpdated($event);

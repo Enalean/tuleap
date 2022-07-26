@@ -24,9 +24,17 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementCreationStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirrorTimeboxesFromProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TeamSynchronizationEventStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,7 +55,15 @@ final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             $user_manager,
             new MissingProgramIncrementCreator(
                 SearchOpenProgramIncrementsStub::withProgramIncrements(ProgramIncrementBuilder::buildWithId(self::PROGRAM_ID)),
-                SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror()
+                SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror(),
+                VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+                VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+                RetrieveProgramIncrementTrackerStub::withValidTracker(888),
+                VerifyIsChangesetStub::withValidChangeset(),
+                RetrieveLastChangesetStub::withLastChangesetIds(),
+                ProcessProgramIncrementCreationStub::withCount(),
+                SearchVisibleTeamsOfProgramStub::withTeamIds(123),
+                BuildProgramStub::stubValidProgram()
             )
         ))->processTeamSynchronization($event);
 

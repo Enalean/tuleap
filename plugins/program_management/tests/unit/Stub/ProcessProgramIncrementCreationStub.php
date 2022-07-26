@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 
 final class ProcessProgramIncrementCreationStub implements ProcessProgramIncrementCreation
 {
@@ -44,5 +45,10 @@ final class ProcessProgramIncrementCreationStub implements ProcessProgramIncreme
     public function getCallCount(): int
     {
         return $this->call_count;
+    }
+
+    public function processCreationForOneTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
+    {
+        $this->call_count++;
     }
 }
