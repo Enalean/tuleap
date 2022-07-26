@@ -59,6 +59,7 @@ use Tuleap\MediawikiStandalone\OAuth2\MediawikiStandaloneOAuth2ConsentChecker;
 use Tuleap\MediawikiStandalone\OAuth2\RejectAuthorizationRequiringConsent;
 use Tuleap\MediawikiStandalone\REST\MediawikiStandaloneResourcesInjector;
 use Tuleap\MediawikiStandalone\REST\OAuth2\OAuth2MediawikiStandaloneReadScope;
+use Tuleap\MediawikiStandalone\Service\MediawikiFlavorUsageDao;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
 use Tuleap\MediawikiStandalone\Service\ServiceActivationEvent;
 use Tuleap\MediawikiStandalone\Service\ServiceActivationHandler;
@@ -198,12 +199,12 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
-        (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event));
+        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(new ServiceAvailabilityProjectServiceBeforeAvailabilityEvent($event));
     }
 
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
-        (new ServiceAvailabilityHandler())->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
+        (new ServiceAvailabilityHandler(new MediawikiFlavorUsageDao()))->handle(new ServiceAvailabilityServiceDisabledCollectorEvent($event));
     }
 
     /**

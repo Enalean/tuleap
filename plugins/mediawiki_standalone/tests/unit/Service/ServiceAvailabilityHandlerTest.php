@@ -29,10 +29,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class ServiceAvailabilityHandlerTest extends TestCase
 {
     private ServiceAvailabilityHandler $handler;
+    private MediawikiFlavorUsageStub $legacy_mediawiki_usage;
 
     protected function setUp(): void
     {
-        $this->handler = new ServiceAvailabilityHandler();
+        $this->legacy_mediawiki_usage = new MediawikiFlavorUsageStub();
+        $this->handler                = new ServiceAvailabilityHandler($this->legacy_mediawiki_usage);
     }
 
     public function testCannotActivateTheMediawikiServiceWhenTheMediawikiStandaloneServiceIsEnabled(): void
@@ -61,5 +63,31 @@ final class ServiceAvailabilityHandlerTest extends TestCase
         $this->handler->handle($service_activation);
 
         self::assertFalse($service_activation->cannot_be_activated);
+    }
+
+    public function testCannotActivateMediawikiStandaloneWhenThereIsLegacyMediawikiData(): void
+    {
+        $project = $this->createMock(\Project::class);
+        $project->method('usesService')->with('plugin_mediawiki')->willReturn(false);
+
+        $this->legacy_mediawiki_usage->was_legacy_used = true;
+
+        $service_activation = new StubServiceAvailability('plugin_mediawiki_standalone', $project);
+        $this->handler->handle($service_activation);
+
+        self::assertTrue($service_activation->cannot_be_activated);
+    }
+
+    public function testCannotActivateMediawikiLegacyWhenThereIsMediaWikiStandaloneData(): void
+    {
+        $project = $this->createMock(\Project::class);
+        $project->method('usesService')->with('plugin_mediawiki_standalone')->willReturn(false);
+
+        $this->legacy_mediawiki_usage->was_standalone_used = true;
+
+        $service_activation = new StubServiceAvailability('plugin_mediawiki', $project);
+        $this->handler->handle($service_activation);
+
+        self::assertTrue($service_activation->cannot_be_activated);
     }
 }
