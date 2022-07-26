@@ -23,7 +23,6 @@ use Tuleap\Git\DefaultBranch\CannotSetANonExistingBranchAsDefaultException;
 use Tuleap\Git\DefaultBranch\DefaultBranchUpdater;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\PathJoinUtil;
@@ -267,11 +266,6 @@ class Git extends PluginController
     private $history_dao;
 
     /**
-     * @var GitPhpAccessLogger
-     */
-    private $access_loger;
-
-    /**
      * @var HeaderRenderer
      */
     private $header_renderer;
@@ -308,7 +302,6 @@ class Git extends PluginController
         ProjectHistoryDao $history_dao,
         DefaultBranchUpdater $default_branch_updater,
         DescriptionUpdater $description_updater,
-        GitPhpAccessLogger $access_loger,
         RegexpFineGrainedRetriever $regexp_retriever,
         RegexpFineGrainedEnabler $regexp_enabler,
         RegexpFineGrainedDisabler $regexp_disabler,
@@ -339,7 +332,6 @@ class Git extends PluginController
         $this->mirror_data_mapper         = $mirror_data_mapper;
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
-        $this->access_loger               = $access_loger;
 
         $valid = new Valid_GroupId('group_id');
         $valid->required();
@@ -395,7 +387,6 @@ class Git extends PluginController
             $this->fine_grained_retriever,
             $this->default_fine_grained_permission_factory,
             $this->fine_grained_builder,
-            $this->access_loger,
             $this->regexp_retriever,
             $this->gerrit_server_factory,
             $this->header_renderer,
