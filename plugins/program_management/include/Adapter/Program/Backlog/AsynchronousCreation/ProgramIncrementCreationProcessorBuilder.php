@@ -54,6 +54,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementCreationProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementsPlanner;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -228,8 +229,6 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         );
 
         return new ProgramIncrementCreationProcessor(
-            new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
-            $mirror_creator,
             MessageLog::buildFromLogger($logger),
             $user_stories_planner,
             new VisibleTeamSearcher(
@@ -239,12 +238,16 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 $project_access_checker,
                 new TeamDao()
             ),
-            new ProjectReferenceRetriever($project_manager_adapter),
-            $synchronized_fields_gatherer,
-            new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
-            new SubmissionDateRetriever($artifact_retriever),
             $program_dao,
             ProgramAdapter::instance(),
+            new ProgramIncrementsPlanner(
+                new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
+                $mirror_creator,
+                new ProjectReferenceRetriever($project_manager_adapter),
+                $synchronized_fields_gatherer,
+                new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
+                new SubmissionDateRetriever($artifact_retriever),
+            )
         );
     }
 }

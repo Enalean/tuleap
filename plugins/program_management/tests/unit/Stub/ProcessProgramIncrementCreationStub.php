@@ -47,7 +47,7 @@ final class ProcessProgramIncrementCreationStub implements ProcessProgramIncreme
         return $this->call_count;
     }
 
-    public function processCreationForOneTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
+    public function synchronizeProgramIncrementAndIterationsForTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
     {
         $this->call_count++;
     }
