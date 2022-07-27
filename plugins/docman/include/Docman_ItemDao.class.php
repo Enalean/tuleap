@@ -156,7 +156,7 @@ class Docman_ItemDao extends DataAccessObject
 
     /**
      *
-     * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
+     * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool, light_search?: bool, items_ids_to_fetch?: int[]} $params
      *
      * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
@@ -227,6 +227,11 @@ class Docman_ItemDao extends DataAccessObject
         return $this->_searchWithCurrentVersion($sql_where, '', $sql_order, $from, $params);
     }
 
+    private function getLightItemSearchSelectStmt(): string
+    {
+        return "SELECT i.item_id, i.parent_id ";
+    }
+
     public function _getItemSearchSelectStmt()
     {
         $sql = 'SELECT i.*, ' . implode(', ', [
@@ -276,12 +281,18 @@ class Docman_ItemDao extends DataAccessObject
     /**
      * $params['ignore_deleted'] boolean By default the query *exclude* deleted items.
      * $params['ignore_obsolete'] boolean By default the query *include* obsolete items.
+     * $params['light_search'] boolean Only for count purpose. Only retrieve item_id and parent_id.
+     * $params['items_ids_to_fetch'] int[] used to retrieve specific items in the query.
      *
-     * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool} $params
+     * @psalm-param array{user?: PFUser, filter?: Docman_Report, ignore_obsolete?: bool, limit?: int, offset?: int, obsolete_only?: bool, getall?: bool, ignore_deleted?: bool, ignore_folders?: bool, light_search?: bool, items_ids_to_fetch?: int[]} $params
      */
     public function _searchWithCurrentVersion($where, $group, $order, $from, $params)
     {
-        $sql  = $this->_getItemSearchSelectStmt();
+        if (isset($params['light_search']) && $params['light_search'] === true) {
+            $sql = $this->getLightItemSearchSelectStmt();
+        } else {
+            $sql = $this->_getItemSearchSelectStmt();
+        }
         $sql .= $this->_getItemSearchFromStmt();
         $sql .= (count($from) > 0 ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $from) : '')
             . ' WHERE 1 AND ';
@@ -294,6 +305,12 @@ class Docman_ItemDao extends DataAccessObject
         if (isset($params['ignore_folders']) && $params['ignore_folders'] == true) {
             $sql .= ' i.item_type <> ' . PLUGIN_DOCMAN_ITEM_TYPE_FOLDER . ' AND ';
         }
+        if (isset($params['items_ids_to_fetch']) && is_array($params['items_ids_to_fetch'])) {
+            /** @psalm-suppress DeprecatedMethod */
+            $items_ids_imploded = $this->da->escapeIntImplode($params['items_ids_to_fetch']);
+            $sql               .= "i.item_id IN ($items_ids_imploded) AND ";
+        }
+
         // Related to the 2 LEFT JOIN on docman_version in _getItemSearchFromStmt()
         $sql .= ' v2.id IS NULL AND lv2.id IS NULL AND ';
 
