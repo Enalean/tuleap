@@ -200,7 +200,7 @@ class Git_Exec
     }
 
     /**
-     * List all commits between the two revisions
+     * List all commits between the two revisions (from the newest to the oldest)
      *
      * @param String $oldrev
      * @param String $newrev
@@ -211,6 +211,19 @@ class Git_Exec
     {
         $output = [];
         $this->gitCmdWithOutput('rev-list ' . escapeshellarg($oldrev) . '..' . escapeshellarg($newrev), $output);
+        return $output;
+    }
+
+    /**
+     * Will list the revision list from the oldest to the newest
+     *
+     * @throws Git_Command_Exception
+     * @return string[]
+     */
+    public function revListInChronologicalOrder(string $oldrev, string $newrev): array
+    {
+        $output = [];
+        $this->gitCmdWithOutput('rev-list --reverse ' . escapeshellarg($oldrev) . '..' . escapeshellarg($newrev), $output);
         return $output;
     }
 
@@ -226,7 +239,7 @@ class Git_Exec
     {
         $output         = [];
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
-        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --stdin ' . escapeshellarg($newrev), $output);
+        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --reverse --stdin ' . escapeshellarg($newrev), $output);
         return $output;
     }
 

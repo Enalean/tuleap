@@ -59,7 +59,7 @@ class LogAnalyzer
             } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
                 $change_type = PushDetails::ACTION_DELETE;
             } else {
-                $revision_list = $this->exec_repo->revList($oldrev, $newrev);
+                $revision_list = $this->exec_repo->revListInChronologicalOrder($oldrev, $newrev);
                 $change_type   = PushDetails::ACTION_UPDATE;
             }
 
