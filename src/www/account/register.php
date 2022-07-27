@@ -34,6 +34,9 @@ $GLOBALS['HTML']->includeCalendarScripts();
 $request               = HTTPRequest::instance();
 $page                  = $request->get('page');
 $confirmation_register = false;
+
+$GLOBALS['Language']->loadLanguage($request->getCurrentUser()->getLocale());
+
 // ###### function register_valid()
 // ###### checks for valid register from form post
 if ($page == "admin_creation") {
