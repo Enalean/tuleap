@@ -43,7 +43,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $verify_is_program_increment = VerifyIsProgramIncrementStub::withValidProgramIncrement();
         $verify_is_visible_artifact  = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
-        $search_iterations           = SearchIterationsStub::withIterationIds(456);
+        $search_iterations           = SearchIterationsStub::withIterations([['id' => 456, 'changeset_id' => 1]]);
         $tracker_factory             = $this->createStub(\Tracker_ArtifactFactory::class);
         $artifact                    = ArtifactTestBuilder::anArtifact(456)->build();
 

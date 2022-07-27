@@ -30,12 +30,12 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 final class IterationIdentifierCollectionBuilder
 {
     /**
-     * @no-named-arguments
+     * @param $iterations array{id: int, changeset_id: int}[]
      */
-    public static function buildWithIds(int $iteration_id, int ...$other_ids): IterationIdentifierCollection
+    public static function buildWithIterations(array $iterations): IterationIdentifierCollection
     {
         return IterationIdentifierCollection::fromProgramIncrement(
-            SearchIterationsStub::withIterationIds($iteration_id, ...$other_ids),
+            SearchIterationsStub::withIterations($iterations),
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
             ProgramIncrementIdentifierBuilder::buildWithId(130),
             UserIdentifierStub::buildGenericUser()

@@ -44,9 +44,9 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->program_increment_update = ProgramIncrementUpdateBuilder::build();
-        $this->iterations_searcher      = SearchIterationsStub::withIterationIds(
-            self::FIRST_ITERATION_ID,
-            self::SECOND_ITERATION_ID
+        $this->iterations_searcher      = SearchIterationsStub::withIterations(
+            [['id' => self::FIRST_ITERATION_ID, 'changeset_id' => 1],
+            ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => 2]]
         );
         $this->visibility_verifier      = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
         $this->iteration_link_verifier  = VerifyIterationHasBeenLinkedBeforeStub::withNoIteration();

@@ -25,16 +25,24 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreateProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherFieldValuesStub;
 use Tuleap\ProgramManagement\Tests\Stub\GatherSynchronizedFieldsStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveChangesetSubmissionDateStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFieldValuesGathererStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,6 +52,7 @@ final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SECOND_TEAM_ID               = 149;
     private const CHANGESET_ID                 = 6053;
     private const PROGRAM_INCREMENT_TRACKER_ID = 54;
+    private const ITERATION_TRACKER_ID         = 89;
 
     private GatherSynchronizedFieldsStub $fields_gatherer;
     private ProgramIncrementCreation $creation;
@@ -114,6 +123,16 @@ final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             ),
             RetrieveChangesetSubmissionDateStub::withDate(1395687908),
+            ProcessIterationCreationStub::withCount(),
+            RetrieveProgramOfProgramIncrementStub::withProgram(self::PROGRAM_INCREMENT_ID),
+            BuildProgramStub::stubValidProgram(),
+            RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID),
+            VerifyIsIterationStub::withValidIteration(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            SearchIterationsStub::withIterations([
+                ['id' => 123, 'changeset_id' => self::CHANGESET_ID ],
+            ]),
+            RetrieveLastChangesetStub::withLastChangesetIds(self::CHANGESET_ID)
         );
     }
 

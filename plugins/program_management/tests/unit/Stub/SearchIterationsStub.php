@@ -27,21 +27,20 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 
 final class SearchIterationsStub implements SearchIterations
 {
-    private function __construct(private array $iteration_ids)
+    private function __construct(private array $iterations)
     {
     }
 
     public function searchIterations(ProgramIncrementIdentifier $program_increment): array
     {
-        return $this->iteration_ids;
+        return $this->iterations;
     }
-
     /**
-     * @no-named-arguments
+     * @param $iterations array{id: int, changeset_id: int}[]
      */
-    public static function withIterationIds(int $iteration_id, int ...$other_ids): self
+    public static function withIterations(array $iterations): self
     {
-        return new self([$iteration_id, ...$other_ids]);
+        return new self($iterations);
     }
 
     public static function withNoIteration(): self

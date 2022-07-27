@@ -68,7 +68,7 @@ final class IterationIdentifier implements TimeboxIdentifier
     ): array {
         $iteration_ids = $iteration_searcher->searchIterations($program_increment);
         $visible_ids   = array_filter(
-            $iteration_ids,
+            array_column($iteration_ids, 'id'),
             static fn(int $id): bool => $visibility_verifier->isVisible($id, $user)
         );
         return array_map(
