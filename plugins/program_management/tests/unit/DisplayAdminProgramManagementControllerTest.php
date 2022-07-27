@@ -49,7 +49,9 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchProjectsUserIsAdminStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchTrackersOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
@@ -169,7 +171,9 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             $this->project_manager,
             RetrieveFullTrackerStub::withTracker($iteration_tracker),
             SearchOpenProgramIncrementsStub::withProgramIncrements(ProgramIncrementBuilder::buildWithId(209)),
-            SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror()
+            SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror(),
+            VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds(self::TEAM_ID)
         );
     }
 

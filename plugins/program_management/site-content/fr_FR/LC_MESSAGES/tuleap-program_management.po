@@ -504,6 +504,9 @@ msgstr ""
 msgid "The user group %s does not exist in the Program"
 msgstr "Le groupe  utilisateur %s  n'existe pas dans le Programme"
 
+msgid "This team is being synchronized"
+msgstr "Cette équipe est en cours de synchronisation"
+
 msgid "Timeframe"
 msgstr "Plage de temps"
 

@@ -406,6 +406,9 @@ msgstr ""
 msgid "The user group %s does not exist in the Program"
 msgstr ""
 
+msgid "This team is being synchronized"
+msgstr ""
+
 msgid "Timeframe"
 msgstr ""
 

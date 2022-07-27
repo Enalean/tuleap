@@ -23,11 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsSynchronizationPending;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MissingMirroredMilestoneCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
+use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
+use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 /**
@@ -45,6 +50,9 @@ final class TeamsPresenterBuilder
         ProgramForAdministrationIdentifier $admin_program,
         UserIdentifier $user_identifier,
         TeamProjectsCollection $team_collection,
+        VerifyIsSynchronizationPending $verify_is_synchronization_pending,
+        SearchVisibleTeamsOfProgram $team_searcher,
+        BuildProgram $build_program,
         array $teams_in_error,
     ): array {
         $teams_presenter = [];
@@ -59,7 +67,20 @@ final class TeamsPresenterBuilder
 
         foreach ($team_collection->getTeamProjects() as $team) {
             $should_synchronize_team = ! in_array($team->getId(), $teams_in_error, true) && isset($teams_with_missing_milestones[$team->getId()]);
-            $teams_presenter[]       = new TeamPresenter($team, $should_synchronize_team);
+            $program_identifier      = ProgramIdentifier::fromId(
+                $build_program,
+                $admin_program->id,
+                $user_identifier,
+                null
+            );
+            $teams_presenter[]       = new TeamPresenter(
+                $team,
+                $should_synchronize_team,
+                $verify_is_synchronization_pending->hasSynchronizationPending(
+                    $program_identifier,
+                    TeamIdentifier::buildTeamOfProgramById($team_searcher, $program_identifier, $user_identifier, $team->getId()),
+                )
+            );
         }
 
         return $teams_presenter;

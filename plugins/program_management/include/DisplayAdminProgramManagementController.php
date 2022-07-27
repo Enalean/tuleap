@@ -38,6 +38,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsSynchronizationPending;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
@@ -63,6 +64,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
+use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
@@ -97,6 +99,8 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private RetrieveFullTracker $tracker_retriever,
         private SearchOpenProgramIncrements $search_open_program_increments,
         private SearchMirrorTimeboxesFromProgram $timebox_searcher,
+        private VerifyIsSynchronizationPending $verify_is_synchronization_pending,
+        private SearchVisibleTeamsOfProgram $team_searcher,
     ) {
     }
 
@@ -257,6 +261,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     $admin_program,
                     $user_identifier,
                     $aggregated_teams,
+                    $this->verify_is_synchronization_pending,
+                    $this->team_searcher,
+                    $this->build_program,
                     $teams_in_error
                 ),
                 PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(

@@ -25,6 +25,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ClearPendingTeamSynchronizationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessProgramIncrementCreationStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
@@ -49,6 +50,7 @@ final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithDefaults());
         $project_manager = $this->createMock(\ProjectManager::class);
         $project_manager->method('getProject')->willReturn(new \Project(['group_id' => self::PROGRAM_ID, 'group_name' => "project", "unix_group_name" => "project", "icon_codepoint" => ""]));
+        $clear_pending_synchronisation = ClearPendingTeamSynchronizationStub::withCount();
         (new SynchronizeTeamProcessor(
             MessageLog::buildFromLogger($logger),
             $project_manager,
@@ -64,9 +66,13 @@ final class SynchronizeTeamProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ProcessProgramIncrementCreationStub::withCount(),
                 SearchVisibleTeamsOfProgramStub::withTeamIds(123),
                 BuildProgramStub::stubValidProgram()
-            )
+            ),
+            $clear_pending_synchronisation,
+            BuildProgramStub::stubValidProgram(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds(123)
         ))->processTeamSynchronization($event);
 
         self::assertTrue($logger->hasDebugThatContains("Team 123 of Program 1 needs PI and Iterations synchronization"));
+        self::assertSame(1, $clear_pending_synchronisation->getCallCount());
     }
 }

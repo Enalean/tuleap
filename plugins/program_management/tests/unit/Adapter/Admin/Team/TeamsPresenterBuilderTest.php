@@ -25,10 +25,13 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamProjectsCollectionBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirrorTimeboxesFromProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -57,6 +60,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program_for_admin,
             $this->user_identifier,
             $collection,
+            VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
+            BuildProgramStub::stubValidProgram(),
             [$team->getId()]
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
@@ -76,6 +82,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program_for_admin,
             $this->user_identifier,
             $collection,
+            VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
+            BuildProgramStub::stubValidProgram(),
             []
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
@@ -95,6 +104,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->program_for_admin,
             $this->user_identifier,
             $collection,
+            VerifyIsSynchronizationPendingStub::withOnGoingSynchronization(),
+            SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
+            BuildProgramStub::stubValidProgram(),
             []
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);

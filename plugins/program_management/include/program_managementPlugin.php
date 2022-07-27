@@ -57,6 +57,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\Iterat
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationUpdateProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\LastChangesetRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\MirroredTimeboxesSynchronizationDispatcher;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\PendingSynchronizationDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationDispatcher;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ProgramIncrementUpdateDispatcher;
@@ -170,6 +171,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\SynchronizationCleaner;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
@@ -322,6 +324,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $this->addHook(\Tuleap\Glyph\GlyphLocationsCollector::NAME);
         $this->addHook(ImportXMLProjectTrackerDone::NAME);
         $this->addHook(PossibleParentSelector::NAME);
+        $this->addHook('codendi_daily_start');
 
         return parent::getHooksAndCallbacks();
     }
@@ -441,6 +444,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new TeamDao()
             ),
             ProgramAdapter::instance(),
+            new PendingSynchronizationDao()
         );
     }
 
@@ -562,6 +566,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new RestrictedUserCanAccessProjectVerifier(),
             EventManager::instance()
         );
+        $visible_searcher         = new VisibleTeamSearcher(
+            $program_dao,
+            $user_retriever,
+            $project_manager_adapter,
+            $project_access_checker,
+            $team_dao
+        );
 
         $artifact_visible_verifier = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         return new DisplayAdminProgramManagementController(
@@ -634,17 +645,13 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                         new UserCanLinkToProgramIncrementVerifier($user_retriever, $field_retriever),
                         $program_dao,
                         $program_adapter,
-                        new VisibleTeamSearcher(
-                            $program_dao,
-                            $user_retriever,
-                            $project_manager_adapter,
-                            $project_access_checker,
-                            $team_dao
-                        ),
+                        $visible_searcher
                     ),
                 )
             ),
             new MirroredTimeboxesDao(),
+            new PendingSynchronizationDao(),
+            $visible_searcher
         );
     }
 
@@ -883,7 +890,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     (new ProgramIncrementCreationProcessorBuilder())->getProcessor(),
                     $visible_team_searcher,
                     $program_adapter
-                )
+                ),
+                new PendingSynchronizationDao(),
+                $this->getProgramAdapter(),
+                $visible_team_searcher
             )
         ))->handle(
             TeamSynchronizationEventProxy::fromWorkerEvent(
@@ -1653,5 +1663,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(\Tuleap\ProgramManagement\Adapter\FeatureFlagEnableTeamJoinTrain::class);
+    }
+
+    public function codendi_daily_start(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $dao     = new PendingSynchronizationDao();
+        $cleaner = new SynchronizationCleaner($dao);
+        $cleaner->clean();
     }
 }
