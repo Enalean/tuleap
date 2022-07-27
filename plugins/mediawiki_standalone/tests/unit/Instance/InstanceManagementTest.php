@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
+use Http\Message\RequestMatcher\CallbackRequestMatcher;
 use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
@@ -241,7 +243,13 @@ final class InstanceManagementTest extends TestCase
     public function testLogsOutUserOnAllInstancesIsSuccessful(): void
     {
         $this->mediawiki_client->on(
-            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/\*/terminate-sessions$', null, 'POST'),
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                           $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/%2A/terminate-sessions' &&
+                           $request->getBody()->getContents() === '{}';
+                }
+            ),
             function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
@@ -252,16 +260,42 @@ final class InstanceManagementTest extends TestCase
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testLogsOutUserOnSpecificIsSuccessful(): void
+    public function testLogsOutUserOnSpecificInstanceIsSuccessful(): void
     {
         $this->mediawiki_client->on(
-            new RequestMatcher('^/mediawiki/w/rest\.php/tuleap/maintenance/gpig/terminate-sessions$', null, 'POST'),
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                           $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/terminate-sessions' &&
+                           $request->getBody()->getContents() === '{}';
+                }
+            ),
             function () {
                 return HTTPFactoryBuilder::responseFactory()->createResponse(200);
             }
         );
 
         $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120]]));
+
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testLogsOutSpecificUserOnSpecificInstanceIsSuccessful(): void
+    {
+        $this->mediawiki_client->on(
+            new CallbackRequestMatcher(
+                function (RequestInterface $request): bool {
+                    return $request->getMethod() === 'POST' &&
+                           $request->getUri()->getPath() === '/mediawiki/w/rest.php/tuleap/maintenance/gpig/terminate-sessions' &&
+                           $request->getBody()->getContents() === '{"user":"103"}';
+                }
+            ),
+            function () {
+                return HTTPFactoryBuilder::responseFactory()->createResponse(200);
+            }
+        );
+
+        $this->instance_management->process(new WorkerEvent(new NullLogger(), ['event_name' => LogUsersOutInstance::TOPIC, 'payload' => ['project_id' => 120, 'user_id' => 103]]));
 
         self::assertFalse($this->logger->hasErrorRecords());
     }

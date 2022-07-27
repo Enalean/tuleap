@@ -31,13 +31,13 @@ use Tuleap\Queue\QueueTask;
  */
 final class LogUsersOutInstanceTask implements QueueTask
 {
-    private function __construct(private ?int $project_id)
+    private function __construct(private ?int $project_id, private ?int $user_id)
     {
     }
 
     public static function logsOutUserOnAllInstances(): self
     {
-        return new self(null);
+        return new self(null, null);
     }
 
     public static function logsOutUserOfAProjectFromItsID(int $project_id, ProjectByIDFactory $project_factory): ?self
@@ -50,7 +50,19 @@ final class LogUsersOutInstanceTask implements QueueTask
         if (! $project->usesService(MediawikiStandaloneService::SERVICE_SHORTNAME)) {
             return null;
         }
-        return new self($project_id);
+        return new self($project_id, null);
+    }
+
+    public static function logsSpecificUserOutOfAProjectFromItsID(int $project_id, ProjectByIDFactory $project_factory, int $user_id): ?self
+    {
+        $task = self::logsOutUserOfAProjectFromItsID($project_id, $project_factory);
+        if ($task === null) {
+            return null;
+        }
+        $task          = clone $task;
+        $task->user_id = $user_id;
+
+        return $task;
     }
 
     public function getTopic(): string
@@ -60,14 +72,19 @@ final class LogUsersOutInstanceTask implements QueueTask
 
     public function getPayload(): array
     {
-        return ['project_id' => $this->project_id];
+        return ['project_id' => $this->project_id, 'user_id' => $this->user_id];
     }
 
     public function getPreEnqueueMessage(): string
     {
-        if ($this->project_id === null) {
-            return 'Log-out users of all MediaWiki instances';
+        $log_out_phrase = 'Log-out users';
+        if ($this->user_id !== null) {
+            $log_out_phrase = 'Log-out user #' . $this->user_id;
         }
-        return 'Log-out users of MediaWiki instance #' . $this->project_id;
+
+        if ($this->project_id === null) {
+            return $log_out_phrase . ' of all MediaWiki instances';
+        }
+        return $log_out_phrase . ' of MediaWiki instance #' . $this->project_id;
     }
 }
