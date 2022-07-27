@@ -49,8 +49,8 @@ class WikiPlugin_BackLinks extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             ['include_self' => false,
-                   'noheader'     => false,
-                   'page'         => '[pagename]',
+                'noheader'     => false,
+                'page'         => '[pagename]',
             ]
         );
     }

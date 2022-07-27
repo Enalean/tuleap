@@ -64,8 +64,9 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         )));
 
         $table    = HTML::table(['border' => 1,
-                                   'cellpadding' => 2,
-                                   'cellspacing' => 0]);
+            'cellpadding' => 2,
+            'cellspacing' => 0,
+        ]);
         $pagedata = $backend->get_pagedata($page);
         if (! $pagedata) {
             // FIXME: invalid HTML
@@ -115,8 +116,9 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                 $this->_fixupData($val);
                 $data[$key] = HTML::table(
                     ['border' => 1,
-                                                'cellpadding' => 2,
-                                                'cellspacing' => 0],
+                        'cellpadding' => 2,
+                        'cellspacing' => 0,
+                    ],
                     $this->_showhash(false, $val)
                 );
             } elseif (is_array($val)) {
@@ -124,8 +126,9 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                 $this->_fixupData($val);
                 $data[$key] = HTML::table(
                     ['border' => 1,
-                                                'cellpadding' => 2,
-                                                'cellspacing' => 0],
+                        'cellpadding' => 2,
+                        'cellspacing' => 0,
+                    ],
                     $this->_showhash(false, $val)
                 );
             } elseif ($key and $key == '%content') {
@@ -146,10 +149,12 @@ class WikiPlugin__BackendInfo extends WikiPlugin
         if ($heading) {
             $rows[] = HTML::tr(
                 ['bgcolor' => '#ffcccc',
-                                     'style' => 'color:#000000'],
+                    'style' => 'color:#000000',
+                ],
                 HTML::td(
                     ['colspan' => 2,
-                                              'style' => 'color:#000000'],
+                        'style' => 'color:#000000',
+                    ],
                     $heading
                 )
             );
@@ -159,8 +164,9 @@ class WikiPlugin__BackendInfo extends WikiPlugin
             $rows[] = HTML::tr(
                 HTML::td(
                     ['align' => 'right',
-                                              'bgcolor' => '#cccccc',
-                                              'style' => 'color:#000000'],
+                        'bgcolor' => '#cccccc',
+                        'style' => 'color:#000000',
+                    ],
                     HTML(
                         HTML::raw('&nbsp;'),
                         $key,
@@ -169,7 +175,8 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                 ),
                 HTML::td(
                     ['bgcolor' => '#ffffff',
-                                              'style' => 'color:#000000'],
+                        'style' => 'color:#000000',
+                    ],
                     $val ? $val : HTML::raw('&nbsp;')
                 )
             );

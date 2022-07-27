@@ -30,10 +30,11 @@ class Docman_View_SOAP_Search
             $params['item']->getId(),
             $nbItemsFound,
             ['user' => $params['user'],
-                                                        'ignore_collapse' => true,
-                                                        'ignore_obsolete' => true,
-                                                        'filter' => $params['filter'],
-            'getall' => true]
+                'ignore_collapse' => true,
+                'ignore_obsolete' => true,
+                'filter' => $params['filter'],
+                'getall' => true,
+            ]
         );
 
         $result = [];

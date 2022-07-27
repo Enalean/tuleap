@@ -36,8 +36,9 @@ class Tracker_CardFields
     public function __construct()
     {
         $this->displayed_fields     = [Tracker::REMAINING_EFFORT_FIELD_NAME,
-                                            Tracker::ASSIGNED_TO_FIELD_NAME,
-                                            Tracker::IMPEDIMENT_FIELD_NAME];
+            Tracker::ASSIGNED_TO_FIELD_NAME,
+            Tracker::IMPEDIMENT_FIELD_NAME,
+        ];
         $this->user_manager         = UserManager::instance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
     }

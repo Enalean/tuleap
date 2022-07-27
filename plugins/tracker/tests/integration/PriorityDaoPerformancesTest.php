@@ -52,11 +52,11 @@ class PriorityDaoPerformancesTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         foreach (
             [
-            100,
-            10000,
-            100000,
-            500000,
-            1000000,
+                100,
+                10000,
+                100000,
+                500000,
+                1000000,
             ] as $n
         ) {
             $csv['labels'][] = $n;

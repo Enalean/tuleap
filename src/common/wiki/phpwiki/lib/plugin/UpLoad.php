@@ -56,9 +56,9 @@ class WikiPlugin_UpLoad extends WikiPlugin
         return ['logfile'  => false,
                  // add a link of the fresh file automatically to the
                  // end of the page (or current page)
-                 'autolink' => false,
-                 'page'     => '[pagename]',
-                 ];
+            'autolink' => false,
+            'page'     => '[pagename]',
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -111,25 +111,30 @@ ws[cfh]"
         //$url_prefix = SERVER_NAME . DATA_PATH;
 
         $form     = HTML::form(['action' => $request->getPostURL(),
-                                 'enctype' => 'multipart/form-data',
-                                 'method' => 'post']);
+            'enctype' => 'multipart/form-data',
+            'method' => 'post',
+        ]);
         $contents = HTML::div(['class' => 'wikiaction']);
         $contents->pushContent(HTML::input(['type' => 'hidden',
-                                                 'name' => 'MAX_FILE_SIZE',
-                                                 'value' => MAX_UPLOAD_SIZE]));
+            'name' => 'MAX_FILE_SIZE',
+            'value' => MAX_UPLOAD_SIZE,
+        ]));
         /// MV add pv
         /// @todo: have a generic method to transmit pv
         if (! empty($_REQUEST['pv'])) {
             $contents->pushContent(HTML::input(['type' => 'hidden',
-                                                     'name' => 'pv',
-                                                     'value' => $_REQUEST['pv']]));
+                'name' => 'pv',
+                'value' => $_REQUEST['pv'],
+            ]));
         }
         $contents->pushContent(HTML::input(['name' => 'userfile',
-                                                 'type' => 'file',
-                                                 'size' => '50']));
+            'type' => 'file',
+            'size' => '50',
+        ]));
         $contents->pushContent(HTML::raw(" "));
         $contents->pushContent(HTML::input(['value' => _("Upload"),
-                                                 'type' => 'submit']));
+            'type' => 'submit',
+        ]));
         $form->pushContent($contents);
 
         $message = HTML();
@@ -214,7 +219,8 @@ ws[cfh]"
         }
 
         $attchTab = HTML::table(['border' => '1',
-                                      'width'  => '100%']);
+            'width'  => '100%',
+        ]);
         $attchTab->pushContent(HTML::tr(
             HTML::th(_("Attachment")),
             HTML::th(_("Number of revision"))
@@ -223,7 +229,8 @@ ws[cfh]"
             GROUP_ID,
             UserManager::instance()->getCurrentUser()->getId(),
             ['offset' => $offset,
-            'nb'     => $limit]
+                'nb'     => $limit,
+            ]
         );
         $wai->rewind();
         while ($wai->valid()) {

@@ -145,14 +145,15 @@ class Docman_CloneItemsVisitor implements ItemVisitor
             $user           = $params['user'];
 
             $newVersionArray = ['item_id'   => $newItemId,
-                                     'number'    => 0,
-                                     'user_id'   => $user->getId(),
-                                     'label'     => dgettext('tuleap-docman', 'Copy from template'),
-                                     'changelog' => $this->getChangelogForCopiedItem($item),
-                                     'filename'  => $srcVersion->getFilename(),
-                                     'filesize'  => $srcVersion->getFilesize(),
-                                     'filetype'  => $srcVersion->getFiletype(),
-                                     'path'      => $dstPath];
+                'number'    => 0,
+                'user_id'   => $user->getId(),
+                'label'     => dgettext('tuleap-docman', 'Copy from template'),
+                'changelog' => $this->getChangelogForCopiedItem($item),
+                'filename'  => $srcVersion->getFilename(),
+                'filesize'  => $srcVersion->getFilesize(),
+                'filetype'  => $srcVersion->getFiletype(),
+                'path'      => $dstPath,
+            ];
 
             $versionId = $versionFactory->create($newVersionArray);
         }

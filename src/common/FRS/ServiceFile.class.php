@@ -200,7 +200,8 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                                         'action'   => 'edit-permissions',
                                     ]
                                 ),
-                            )]
+                            ),
+                        ]
                     )
                 )
             );

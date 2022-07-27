@@ -40,7 +40,8 @@ switch ($perm_type) {
 
         //display
         $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_field_usage', 'usage_admin'),
-         'help' => 'tracker-v3.html#permissions-management']);
+            'help' => 'tracker-v3.html#permissions-management',
+        ]);
         $ugroups_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
         $ath->displayPermissionsTracker($ugroups_permissions);
         break;
@@ -53,13 +54,15 @@ switch ($perm_type) {
         }
         //display
         $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_field_usage', 'usage_admin'),
-         'help' => 'tracker-v3.html#permissions-management']);
+            'help' => 'tracker-v3.html#permissions-management',
+        ]);
         $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), false);
         $ath->displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id);
         break;
     default:
         $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_field_usage', 'usage_admin'),
-         'help' => 'tracker-v3.html#permissions-management']);
+            'help' => 'tracker-v3.html#permissions-management',
+        ]);
         $ath->displayPermissionsGeneralMenu();
         break;
 }

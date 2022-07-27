@@ -282,10 +282,10 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = ['F25' => 102,
-                                   'F28' => 103,
-                                   'F29' => 801,
-                                   'F22' => 806,
-                                   ];
+            'F28' => 103,
+            'F29' => 801,
+            'F22' => 806,
+        ];
 
         $r1 = new Tracker_Rule_Date();
         $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)

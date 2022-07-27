@@ -134,20 +134,21 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $siteadmin    = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ug_siteadmin = [
             '1' => [
-                    'user_group_id' => '1',
-                    'user_id' => '101',
-                    'group_id' => '1',
-                    'admin_flags' => 'A',
-                    'bug_flags' => '2',
-                    'forum_flags' => '2',
-                    'project_flags' => '2',
-                    'patch_flags' => '2',
-                    'support_flags' => '2',
-                    'file_flags' => '2',
-                    'wiki_flags' => '2',
-                    'svn_flags' => '2',
-                    'news_flags' => '2',
-                  ]];
+                'user_group_id' => '1',
+                'user_id' => '101',
+                'group_id' => '1',
+                'admin_flags' => 'A',
+                'bug_flags' => '2',
+                'forum_flags' => '2',
+                'project_flags' => '2',
+                'patch_flags' => '2',
+                'support_flags' => '2',
+                'file_flags' => '2',
+                'wiki_flags' => '2',
+                'svn_flags' => '2',
+                'news_flags' => '2',
+            ],
+        ];
         $siteadmin->shouldReceive('getUserGroupData')->andReturns($ug_siteadmin);
 
         $this->assertTrue($siteadmin->isMember(1));
@@ -235,7 +236,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
             . 'QQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YL'
             . 'Rp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $user = new PFUser(['language_id'     => 'en_US',
-                               'authorized_keys' => $k1]);
+            'authorized_keys' => $k1,
+        ]);
         $this->assertEquals($user->getAuthorizedKeysRaw(), $k1);
         $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($res[0], $k1);
@@ -257,7 +259,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
             . 'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
         $ssh  = $k1 . PFUser::SSH_KEY_SEPARATOR . $k2;
         $user = new PFUser(['language_id'     => 'en_US',
-                               'authorized_keys' => $ssh]);
+            'authorized_keys' => $ssh,
+        ]);
         $this->assertEquals($user->getAuthorizedKeysRaw(), $ssh);
         $res = $user->getAuthorizedKeysArray();
         $this->assertEquals($k1, $res[0]);
@@ -279,7 +282,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
             . 'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             . 'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
         $user = new PFUser(['language_id'     => 'en_US',
-                               'authorized_keys' => $k1 . PFUser::SSH_KEY_SEPARATOR . PFUser::SSH_KEY_SEPARATOR . $k2]);
+            'authorized_keys' => $k1 . PFUser::SSH_KEY_SEPARATOR . PFUser::SSH_KEY_SEPARATOR . $k2,
+        ]);
         $res  = $user->getAuthorizedKeysArray();
         $this->assertEquals($k1, $res[0]);
         $this->assertFalse(isset($res[1]));
@@ -291,7 +295,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $activeUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $activeUser->setId(123);
         $activeUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
-                                                              102 => []]);
+            102 => [],
+        ]);
         $activeUser->setStatus(PFUser::STATUS_ACTIVE);
 
         $notProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -305,7 +310,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $restrictedUser->setId(123);
         $restrictedUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
-                                                                  102 => []]);
+            102 => [],
+        ]);
         $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
 
         $otherProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -319,7 +325,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $restrictedUser->setId(123);
         $restrictedUser->shouldReceive('getUserGroupData')->andReturns([101 => [],
-                                                                  102 => []]);
+            102 => [],
+        ]);
         $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
 
         $notProjectMember = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -331,7 +338,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetAuthorizedKeysSplitedWithoutKey(): void
     {
         $user = new PFUser(['language_id'     => 'en_US',
-                               'authorized_keys' => '']);
+            'authorized_keys' => '',
+        ]);
         $res  = $user->getAuthorizedKeysArray();
         $this->assertCount(0, $res);
     }

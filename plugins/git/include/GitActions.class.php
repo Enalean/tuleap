@@ -1127,9 +1127,10 @@ class GitActions extends PluginActions
     public function forkRepositoriesPermissions($repos, $project, $namespace, $scope)
     {
         $this->addData(['repos'     => join(',', $repos),
-                             'group_id'  => $project,
-                             'namespace' => $namespace,
-                             'scope'     => $scope]);
+            'group_id'  => $project,
+            'namespace' => $namespace,
+            'scope'     => $scope,
+        ]);
     }
 
     public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user)

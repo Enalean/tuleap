@@ -141,7 +141,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             'Database value comes from database.inc' => [
                 'local_inc' => [
-                  'db_config_file' =>  __DIR__ . '/_fixtures/sequence/database.inc',
+                    'db_config_file' =>  __DIR__ . '/_fixtures/sequence/database.inc',
                 ],
                 'database' => [],
                 'environment' => [],

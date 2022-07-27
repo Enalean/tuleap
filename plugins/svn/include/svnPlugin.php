@@ -887,9 +887,9 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $query   = $builder->buildQuery($project, $params['span'], $params['who']);
 
              $params['logs'][] = [
-                'sql'   => $query,
-                'field' => dgettext('tuleap-svn', 'Repository name'),
-                'title' => dgettext('tuleap-svn', 'SVN'),
+                 'sql'   => $query,
+                 'field' => dgettext('tuleap-svn', 'Repository name'),
+                 'title' => dgettext('tuleap-svn', 'SVN'),
              ];
         }
     }

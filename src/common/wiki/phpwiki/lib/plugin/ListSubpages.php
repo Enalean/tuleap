@@ -54,11 +54,11 @@ class WikiPlugin_ListSubpages extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             ['noheader' => false, // no header
-                     'basepage' => false, // subpages of which page, default: current
-                     'maxpages' => '',    // maximum number of pages to include, change that to limit
+                'basepage' => false, // subpages of which page, default: current
+                'maxpages' => '',    // maximum number of pages to include, change that to limit
                      //'exclude'  => '',
                      /*'relative' => false, */
-                     'info'     => '',
+                'info'     => '',
             ]
         );
     }

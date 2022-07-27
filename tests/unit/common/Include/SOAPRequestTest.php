@@ -24,8 +24,9 @@ class SOAPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testInit()
     {
         $request = new SOAPRequest([
-           'param_1' => 'value_1',
-           'param_2' => 'value_2']);
+            'param_1' => 'value_1',
+            'param_2' => 'value_2',
+        ]);
         $this->assertEquals('value_1', $request->get('param_1'));
         $this->assertEquals('value_2', $request->get('param_2'));
         $this->assertFalse($request->get('does_not_exist'));

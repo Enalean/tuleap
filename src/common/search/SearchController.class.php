@@ -39,7 +39,7 @@ class Search_SearchController
         $this->event_manager = $event_manager;
         $this->renderer      = TemplateRendererFactory::build()->getRenderer(
             [
-                 ForgeConfig::get('codendi_dir') . '/src/templates/search',
+                ForgeConfig::get('codendi_dir') . '/src/templates/search',
             ]
         );
         $this->search_types  = [

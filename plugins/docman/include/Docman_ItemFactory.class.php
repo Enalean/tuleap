@@ -123,14 +123,14 @@ class Docman_ItemFactory
                     $item->setCurrentVersion(
                         new Docman_LinkVersion(
                             [
-                            'id'        => $row['link_version_id'],
-                            'user_id'   => $row['link_version_user_id'],
-                            'item_id'   => $item->getId(),
-                            'number'    => $row['link_version_number'],
-                            'label'     => $row['link_version_label'],
-                            'changelog' => $row['link_version_changelog'],
-                            'date'      => $row['link_version_date'],
-                            'link_url'      => $row['link_version_link_url'],
+                                'id'        => $row['link_version_id'],
+                                'user_id'   => $row['link_version_user_id'],
+                                'item_id'   => $item->getId(),
+                                'number'    => $row['link_version_number'],
+                                'label'     => $row['link_version_label'],
+                                'changelog' => $row['link_version_changelog'],
+                                'date'      => $row['link_version_date'],
+                                'link_url'      => $row['link_version_link_url'],
                             ]
                         )
                     );
@@ -1210,12 +1210,13 @@ class Docman_ItemFactory
 
             $cloneItemsVisitor = $destination->getCloneItemsVisitor();
             $visitorParams     = ['parentId' => $parent_id,
-                               'user' => $user,
-                               'metadataMapping' => $metadataMapping,
-                               'ugroupsMapping'  => $ugroupsMapping,
-                               'data_root' => $dataRoot,
-                               'newRank' => $rank,
-                               'srcRootId' => $source_item->getId()];
+                'user' => $user,
+                'metadataMapping' => $metadataMapping,
+                'ugroupsMapping'  => $ugroupsMapping,
+                'data_root' => $dataRoot,
+                'newRank' => $rank,
+                'srcRootId' => $source_item->getId(),
+            ];
             $itemTree->accept($cloneItemsVisitor, $visitorParams);
             $itemMapping = $cloneItemsVisitor->getItemMapping();
         }
@@ -1578,9 +1579,10 @@ class Docman_ItemFactory
             // Log the event
             $user = $this->_getUserManager()->getCurrentUser();
             $this->_getEventManager()->processEvent('plugin_docman_event_restore', [
-                    'group_id'   => $item->getGroupId(),
-                    'item'       => $item,
-                    'user'       => $user]);
+                'group_id'   => $item->getGroupId(),
+                'item'       => $item,
+                'user'       => $user,
+            ]);
             return $dao->restore($item->getId());
         }
         return false;

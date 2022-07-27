@@ -68,10 +68,10 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         $html .= '<div class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         $html .= '<a href="?' . http_build_query([
-                'tracker'  => $this->tracker_id,
-                'func'     => 'admin-formElement-remove',
-                'formElement' => $this->id,
-            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
+            'tracker'  => $this->tracker_id,
+            'func'     => 'admin-formElement-remove',
+            'formElement' => $this->id,
+        ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         $html .= '</div>';
         $html .= '<br />';
         $html .= $this->fetchAdminFormElement();

@@ -555,9 +555,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 );
 
                 $params = ['group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
-                                'artifact'     => $this->getArtifact(),
-                                'changeset_id' => $this->getId(),
-                                'text'         => $body];
+                    'artifact'     => $this->getArtifact(),
+                    'changeset_id' => $this->getId(),
+                    'text'         => $body,
+                ];
 
                 EventManager::instance()->processEvent('tracker_followup_event_update', $params);
 

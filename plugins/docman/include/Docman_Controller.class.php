@@ -592,7 +592,8 @@ class Docman_Controller extends Controler
             case 'admin_change_view':
                 $this->action                            = $view;
                 $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_View::IDENTIFIER,
-                                                             'id'      => $item->getParentId()];
+                    'id'      => $item->getParentId(),
+                ];
                 $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'details':
@@ -716,7 +717,8 @@ class Docman_Controller extends Controler
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action                            = $view;
                     $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                                                                 'md' => $this->request->get('md')];
+                        'md' => $this->request->get('md'),
+                    ];
                 } else {
                     $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
                 }
@@ -728,7 +730,8 @@ class Docman_Controller extends Controler
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action                            = $view;
                     $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                                                                 'md' => $this->request->get('md')];
+                        'md' => $this->request->get('md'),
+                    ];
                 } else {
                     $this->_viewParams['default_url_params'] = ['action'  => \Docman_View_Admin_Metadata::IDENTIFIER];
                 }
@@ -996,7 +999,8 @@ class Docman_Controller extends Controler
                 $this->action = $view;
                 if (! $this->request->exist('ajax_copy')) {
                     $this->_viewParams['default_url_params'] = ['action'  => $_action,
-                                                                 'id'      => $_id];
+                        'id'      => $_id,
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
@@ -1009,7 +1013,8 @@ class Docman_Controller extends Controler
                 $this->action = $view;
                 if (! $this->request->exist('ajax_cut')) {
                     $this->_viewParams['default_url_params'] = ['action'  => $_action,
-                                                                 'id'      => $_id];
+                        'id'      => $_id,
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
@@ -1100,8 +1105,9 @@ class Docman_Controller extends Controler
                     }
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'details',
-                                                                 'section' => 'approval',
-                                                                 'id'      => $item->getId()];
+                        'section' => 'approval',
+                        'id'      => $item->getId(),
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
@@ -1167,13 +1173,15 @@ class Docman_Controller extends Controler
                     // Special handeling of table deletion
                     if ($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
                         $this->_viewParams['default_url_params'] = ['action' => 'approval_create',
-                                                                     'delete' => 'confirm',
-                                                                     'id'     => $item->getId()];
+                            'delete' => 'confirm',
+                            'id'     => $item->getId(),
+                        ];
                     } else {
                         // Action!
                         $this->action                            = $view;
                         $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
-                                                                     'id'      => $item->getId()];
+                            'id'      => $item->getId(),
+                        ];
                     }
                     if ($this->_actionParams['version'] !== null) {
                         $this->_viewParams['default_url_params']['version'] = $this->_actionParams['version'];
@@ -1193,7 +1201,8 @@ class Docman_Controller extends Controler
                     $this->action                   = $view;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
-                                                                 'id'      => $item->getId()];
+                        'id'      => $item->getId(),
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
@@ -1208,7 +1217,8 @@ class Docman_Controller extends Controler
                     $this->action                   = $view;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
-                                                                 'id'      => $item->getId()];
+                        'id'      => $item->getId(),
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
@@ -1258,8 +1268,9 @@ class Docman_Controller extends Controler
                     $this->action = $view;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'details',
-                                                                 'section' => 'approval',
-                                                                 'id'      => $item->getId()];
+                        'section' => 'approval',
+                        'id'      => $item->getId(),
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
@@ -1273,7 +1284,8 @@ class Docman_Controller extends Controler
                     $this->_actionParams['item'] = $item;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
-                                                                 'id'      => $item->getId()];
+                        'id'      => $item->getId(),
+                    ];
                     $this->view                              = 'RedirectAfterCrud';
                 }
                 break;

@@ -79,7 +79,7 @@ final class MirroredIterationIdentifierCollectionTest extends \Tuleap\Test\PHPUn
             IterationIdentifierCollectionBuilder::buildWithIterations([
                 ['id' => 516, 'chanegset_id' => 1],
                 ['id' => 541, 'chanegset_id' => 2],
-                ]),
+            ]),
             UserIdentifierStub::buildGenericUser()
         );
     }

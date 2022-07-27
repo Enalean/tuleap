@@ -44,11 +44,11 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
             ];
             foreach ($this->getAvailableTypes() as $type) {
                 $change_links[] = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
-                        'tracker'            => $this->formElement->tracker_id,
-                        'func'               => 'admin-formElement-update',
-                        'formElement'        => $this->formElement->id,
-                        'change-type'        => $type,
-                    ]) . '" onclick="return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?') . '\');">'
+                    'tracker'            => $this->formElement->tracker_id,
+                    'func'               => 'admin-formElement-update',
+                    'formElement'        => $this->formElement->id,
+                    'change-type'        => $type,
+                ]) . '" onclick="return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?') . '\');">'
                        . $labels[$type] . '</a> ';
             }
             $html .= implode(', ', $change_links);

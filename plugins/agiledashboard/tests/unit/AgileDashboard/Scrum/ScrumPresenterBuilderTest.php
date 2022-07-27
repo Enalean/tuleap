@@ -126,7 +126,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [new Planning_PlanningAdminPresenter(
                 $planning,
                 false
-            )],
+            ),
+            ],
             101,
             true,
             "",
@@ -188,7 +189,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [new Planning_PlanningAdminPresenter(
                 $planning,
                 false
-            )],
+            ),
+            ],
             101,
             false,
             "tracker name",
@@ -252,7 +254,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [new Planning_PlanningAdminPresenter(
                 $planning,
                 false
-            )],
+            ),
+            ],
             101,
             false,
             "tracker name",
@@ -313,7 +316,8 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [new Planning_PlanningAdminPresenter(
                 $planning,
                 true
-            )],
+            ),
+            ],
             101,
             false,
             "tracker name",

@@ -49,7 +49,8 @@ class WebDAVProject implements ICollection
         $em    = $this->utils->getEventManager();
         $roots = [];
         $em->processEvent('webdav_root_for_service', ['project' => $this->project,
-                                                           'roots'    => &$roots]);
+            'roots'    => &$roots,
+        ]);
         foreach ($roots as $service => $root) {
             if ($service === 'docman') {
                 $docman                       = new WebDAVDocmanFolder($this->user, $this->project, $root, $this->utils);

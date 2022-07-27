@@ -195,13 +195,13 @@ class Docman_SOAPActions extends Docman_Actions
                     $filename   = null;
                 }
                 $res[] = [
-                             'id'          => $item->getId(),
-                             'parent_id'   => $item->getParentId(),
-                             'title'       => $item->getTitle(),
-                             'filename'    => $filename,
-                             'type'        => $type,
-                             'nb_versions' => $nbVersions,
-                         ];
+                    'id'          => $item->getId(),
+                    'parent_id'   => $item->getParentId(),
+                    'title'       => $item->getTitle(),
+                    'filename'    => $filename,
+                    'type'        => $type,
+                    'nb_versions' => $nbVersions,
+                ];
             }
 
             $this->_controler->_viewParams['action_result'] = $res;

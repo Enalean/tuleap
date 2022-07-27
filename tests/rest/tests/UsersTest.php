@@ -214,9 +214,9 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $value = json_encode(
             [
-            'values' => [
+                'values' => [
                     'status' => "R",
-            ],
+                ],
             ]
         );
 
@@ -240,9 +240,9 @@ final class UsersTest extends RestBase // phpcs:ignore
 
         $value    = json_encode(
             [
-            'values' => [
+                'values' => [
                     'status' => "A",
-            ],
+                ],
             ]
         );
         $response = $this->getResponseByName(
@@ -1108,13 +1108,13 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $history_entries = json_encode(
             [
-                 [
+                [
                     'visit_time' => 1496386853,
                     'xref' => 'bugs #845',
                     'link' => '/plugins/tracker/?aid=845',
                     'title' => '',
-                 ],
-             ]
+                ],
+            ]
         );
 
         $response = $this->getResponseByName(

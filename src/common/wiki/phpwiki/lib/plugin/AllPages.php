@@ -54,11 +54,11 @@ class WikiPlugin_AllPages extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             [
-                   'noheader'      => false,
-                   'include_empty' => false,
+                'noheader'      => false,
+                'include_empty' => false,
                    //'pages'         => false, // DONT, this would be ListPages then.
-                   'info'          => '',
-                   'debug'         => false,
+                'info'          => '',
+                'debug'         => false,
             ]
         );
     }

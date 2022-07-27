@@ -212,7 +212,8 @@ XML;
             'status_id' => FRSRelease::STATUS_ACTIVE,
             'preformatted' => false,
             'release_date' => strtotime('2015-12-03T14:55:00'),
-            'released_by' => $user_id];
+            'released_by' => $user_id,
+        ];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once();
 
         $frs_mapping = [];
@@ -314,7 +315,8 @@ XML;
             'status_id' => FRSRelease::STATUS_ACTIVE,
             'preformatted' => false,
             'release_date' => strtotime('2015-12-03T14:55:00'),
-            'released_by' => $user_id];
+            'released_by' => $user_id,
+        ];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
 
         $release_array_with_group             = $expected_release_array;
@@ -341,7 +343,8 @@ XML;
             'computed_md5'  => "c58ef9ab0b1fc7f6f90ffb607dee0073",
             'reference_md5' => "c58ef9ab0b1fc7f6f90ffb607dee0073",
             'user_id'       => $user_id,
-            'comment'       => "one file to rule them all"];
+            'comment'       => "one file to rule them all",
+        ];
 
         $this->file_dao->shouldReceive('createFromArray')->with($expected_file_array)->once()->andReturns($file_id);
 
@@ -412,7 +415,8 @@ XML;
             'status_id' => FRSRelease::STATUS_ACTIVE,
             'preformatted' => false,
             'release_date' => strtotime('2015-12-03T14:55:00'),
-            'released_by' => $user_id];
+            'released_by' => $user_id,
+        ];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
 
         $release_array_with_group             = $expected_release_array;
@@ -436,6 +440,7 @@ XML;
             'name' => $name,
             'status_id' => FRSPackage::STATUS_ACTIVE,
             'rank' => 'end',
-            'approve_license' => '1'];
+            'approve_license' => '1',
+        ];
     }
 }

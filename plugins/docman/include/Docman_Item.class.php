@@ -423,9 +423,10 @@ class Docman_Item
     public function fireEvent($event, $user, $parent = null)
     {
         $params = ['group_id' => $this->getGroupId(),
-                        'parent'   => $parent,
-                        'item'     => $this,
-                        'user'     => $user];
+            'parent'   => $parent,
+            'item'     => $this,
+            'user'     => $user,
+        ];
         $this->getEventManager()->processEvent($event, $params);
     }
 

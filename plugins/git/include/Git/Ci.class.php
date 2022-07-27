@@ -136,10 +136,11 @@ class Git_Ci
                              </p>';
                 $editForm = $warning . '<label for="hudson_use_plugin_git_trigger">' . dgettext('tuleap-git', 'Trigger a build after Git pushes in repository') . ': </label>' . $selectBox;
                 return ['service'       => GitPlugin::SERVICE_SHORTNAME,
-                             'title'         => dgettext('tuleap-git', 'Git trigger'),
-                             'used'          => $used,
-                             'add_form'      => $addForm,
-                             'edit_form'     => $editForm];
+                    'title'         => dgettext('tuleap-git', 'Git trigger'),
+                    'used'          => $used,
+                    'add_form'      => $addForm,
+                    'edit_form'     => $editForm,
+                ];
             }
         }
     }

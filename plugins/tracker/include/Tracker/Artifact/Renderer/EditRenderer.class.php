@@ -143,7 +143,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
         $breadcrumbs = [
             ['title' => $this->artifact->getXRef(),
-                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()],
+                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId(),
+            ],
         ];
         $params      = [
             'body_class' => ['widgetable', 'has-sidebar-with-pinned-header', 'tracker-artifact-view-body'],

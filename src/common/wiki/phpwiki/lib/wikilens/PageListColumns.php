@@ -117,11 +117,11 @@ class _PageList_Column_minmisery extends _PageList_Column_custom
 global $WikiTheme;
 $WikiTheme->addPageListColumn(
     [
-    'numbacklinks'
+        'numbacklinks'
     => ['_PageList_Column_numbacklinks','custom:numbacklinks', _("# things"), false],
-    'coagreement'
+        'coagreement'
     => ['_PageList_Column_coagreement','custom:coagreement', _("Go?"), 'center'],
-    'minmisery'
+        'minmisery'
     => ['_PageList_Column_minmisery','custom:minmisery', _("MinMisery"), 'center'],
     ]
 );

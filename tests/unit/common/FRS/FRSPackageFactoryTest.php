@@ -51,30 +51,30 @@ class FRSPackageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
     public function testGetFRSPackageFromDb()
     {
         $packageArray1       = ['package_id'       => 1,
-                               'group_id'         => 1,
-                               'name'             => 'pkg1',
-                               'status_id'        => 2,
-                               'rank'             => null,
-                               'approve_license'  => null,
-                               'data_array'       => null,
-                               'package_releases' => null,
-                               'error_state'      => null,
-                               'error_message'    => null,
-                               ];
+            'group_id'         => 1,
+            'name'             => 'pkg1',
+            'status_id'        => 2,
+            'rank'             => null,
+            'approve_license'  => null,
+            'data_array'       => null,
+            'package_releases' => null,
+            'error_state'      => null,
+            'error_message'    => null,
+        ];
         $frs_package_factory = new FRSPackageFactory();
         $package1            = $frs_package_factory->getFRSPackageFromArray($packageArray1);
 
         $packageArray2 = ['package_id'       => 2,
-                               'group_id'         => 2,
-                               'name'             => 'pkg2',
-                               'status_id'        => 1,
-                               'rank'             => null,
-                               'approve_license'  => null,
-                               'data_array'       => null,
-                               'package_releases' => null,
-                               'error_state'      => null,
-                               'error_message'    => null,
-                               ];
+            'group_id'         => 2,
+            'name'             => 'pkg2',
+            'status_id'        => 1,
+            'rank'             => null,
+            'approve_license'  => null,
+            'data_array'       => null,
+            'package_releases' => null,
+            'error_state'      => null,
+            'error_message'    => null,
+        ];
         $package2      = $frs_package_factory->getFRSPackageFromArray($packageArray2);
 
         $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);

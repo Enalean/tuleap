@@ -400,8 +400,9 @@ class ParsedBlock extends Block_HtmlElement
         if (! is_object($_regexpset)) {
             foreach (
                 ['oldlists', 'list', 'dl', 'table_dl',
-                           'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
-                           'plugin', 'p'] as $type
+                    'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
+                    'plugin', 'p',
+                ] as $type
             ) {
                    $class                = "Block_$type";
                    $proto                = new $class();

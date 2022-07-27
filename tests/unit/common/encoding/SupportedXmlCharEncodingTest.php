@@ -35,20 +35,20 @@ final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends
     public function testItReplacesOtherBadCharacters(): void
     {
         $bad_chars =  [
-           "\x01" => ' ',
-           "\x02" => ' ',
-           "\x03" => ' ',
-           "\x04" => ' ',
-           "\x05" => ' ',
-           "\x06" => ' ',
-           "\x07" => ' ',
-           "\x08" => ' ',
-           "\x0b" => ' ',
-           "\x0c" => ' ',
-           "\x0e" => ' ',
-           "\x0f" => ' ',
-           "\x11" => ' ',
-           "’"    => '?',
+            "\x01" => ' ',
+            "\x02" => ' ',
+            "\x03" => ' ',
+            "\x04" => ' ',
+            "\x05" => ' ',
+            "\x06" => ' ',
+            "\x07" => ' ',
+            "\x08" => ' ',
+            "\x0b" => ' ',
+            "\x0c" => ' ',
+            "\x0e" => ' ',
+            "\x0f" => ' ',
+            "\x11" => ' ',
+            "’"    => '?',
         ];
 
         foreach ($bad_chars as $bad_char => $replace) {

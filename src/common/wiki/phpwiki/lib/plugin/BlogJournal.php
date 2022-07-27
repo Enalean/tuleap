@@ -40,11 +40,11 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
     public function getDefaultArguments()
     {
         return ['count'    => 7,
-                     'user'     => '',
-                     'order'    => 'reverse',        // latest first
-                     'month'    => false,
-                     'noheader' => 0,
-                     ];
+            'user'     => '',
+            'order'    => 'reverse',        // latest first
+            'month'    => false,
+            'noheader' => 0,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

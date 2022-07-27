@@ -178,7 +178,8 @@ class Gradient
                 $adj         = 1.4;
                 $m           = ($adj - 1.0) * (255 - min(255, min($from_color[0], min($from_color[1], $from_color[2]))));
                 $from_color2 = [min(255, $from_color[0] + $m),
-                min(255, $from_color[1] + $m), min(255, $from_color[2] + $m)];
+                    min(255, $from_color[1] + $m), min(255, $from_color[2] + $m),
+                ];
 
                 $this->GetColArray($from_color2, $to_color, $steps1, $colors, $this->numcolors);
                 $n = count($colors);
@@ -225,7 +226,8 @@ class Gradient
                 $adj        = 1.4;
                 $m          = ($adj - 1.0) * (255 - min(255, min($from_color[0], min($from_color[1], $from_color[2]))));
                 $from_color = [min(255, $from_color[0] + $m),
-                min(255, $from_color[1] + $m), min(255, $from_color[2] + $m)];
+                    min(255, $from_color[1] + $m), min(255, $from_color[2] + $m),
+                ];
 
                 $steps = abs($xr - $xl) - $steps1 - $steps2;
                 $this->GetColArray($to_color, $from_color, $steps, $colors, $this->numcolors);

@@ -31,11 +31,12 @@ class _UserPreference_recalgo extends _UserPreference // recommendation engine a
 {
     public $valid_values  =
         [
-         'itemCos',  // Item-based Top-N recommendation algorithm with cosine-based similarity function
-         'itemProb', // Item-based Top-N recommendation algorithm with probability-based similarity function.
+            'itemCos',  // Item-based Top-N recommendation algorithm with cosine-based similarity function
+            'itemProb', // Item-based Top-N recommendation algorithm with probability-based similarity function.
                      // This algorithms tends to outperform the rest.
-         'userCos',  // User-based Top-N recommendation algorithm with cosine-based similarity function.
-         'bayes'];   // Na�ve Bayesian Classifier
+            'userCos',  // User-based Top-N recommendation algorithm with cosine-based similarity function.
+            'bayes',
+        ];   // Na�ve Bayesian Classifier
     public $default_value = 'itemProb';
 
     public function sanify($value)
@@ -54,11 +55,11 @@ class _UserPreference_recnnbr extends _UserPreference_numeric
 
 $WikiTheme->customUserPreferences(
     [
-          'recengine' => new _UserPreference_recengine('php'),
-          'recalgo'   => new _UserPreference_recalgo('itemProb'),
+        'recengine' => new _UserPreference_recengine('php'),
+        'recalgo'   => new _UserPreference_recalgo('itemProb'),
           //recnnbr: typically 15-30 for item-based, 40-80 for user-based algos
-          'recnnbr'   => new _UserPreference_recnnbr(10, 14, 80),
-         ]
+        'recnnbr'   => new _UserPreference_recnnbr(10, 14, 80),
+    ]
 );
 
 

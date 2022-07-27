@@ -78,7 +78,8 @@
     {
         return [
             'group'  => $params['group_id'],
-            'toptab' => 'docman'];
+            'toptab' => 'docman',
+        ];
     }
 
 

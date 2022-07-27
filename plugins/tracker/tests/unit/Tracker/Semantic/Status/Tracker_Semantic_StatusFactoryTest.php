@@ -50,18 +50,18 @@ class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $f3->shouldReceive('getId')->andReturns(113);
 
         $mapping         = [
-                    'F9'  => $f1,
-                    'F14' => $f3,
-                    'F13' => $f2,
-                    'F14-V61' => 801,
-                    'F14-V62' => 802,
-                    'F14-V63' => 803,
-                    'F14-V64' => 804,
-                    'F14-V65' => 805,
-                    'F14-V66' => 806,
-                    'F14-V67' => 807,
-                    'F14-V68' => 808,
-                    'F14-V69' => 809,
+            'F9'  => $f1,
+            'F14' => $f3,
+            'F13' => $f2,
+            'F14-V61' => 801,
+            'F14-V62' => 802,
+            'F14-V63' => 803,
+            'F14-V64' => 804,
+            'F14-V65' => 805,
+            'F14-V66' => 806,
+            'F14-V67' => 807,
+            'F14-V68' => 808,
+            'F14-V69' => 809,
         ];
         $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML(
             $xml,

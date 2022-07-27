@@ -524,11 +524,12 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     public function wiki_page_updated($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = new Docman_WikiRequest(['action' => 'wiki_page_updated',
-                                                'wiki_page' => $params['wiki_page'],
-                                                'diff_link' => $params['diff_link'],
-                                                'group_id'  => $params['group_id'],
-                                                'user'      => $params['user'],
-                                                'version'   => $params['version']]);
+            'wiki_page' => $params['wiki_page'],
+            'diff_link' => $params['diff_link'],
+            'group_id'  => $params['group_id'],
+            'user'      => $params['user'],
+            'version'   => $params['version'],
+        ]);
         $this->getWikiController($request)->process();
     }
 

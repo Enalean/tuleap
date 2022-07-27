@@ -62,16 +62,19 @@ final class UpdateRequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Backlog tracker ids are not integers' => [[
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => ['bad', 'bad'],
-            ]],
+            ],
+            ],
             'Missing planning tracker id'          => [[
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
-            ]],
+            ],
+            ],
             'Planning tracker id is not integer'   => [[
                 \PlanningParameters::NAME                => 'Release Planning',
                 \PlanningParameters::BACKLOG_TRACKER_IDS => [10, 26],
                 \PlanningParameters::PLANNING_TRACKER_ID => 'bad',
-            ]],
+            ],
+            ],
         ];
     }
 

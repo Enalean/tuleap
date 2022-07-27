@@ -254,7 +254,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return $user;
         }
         $eParams = ['ident' => $ident,
-                         'user'  => &$user];
+            'user'  => &$user,
+        ];
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
 
         if (! $user && preg_match("/^\d+$/", $ident)) {
@@ -391,8 +392,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         $em                  = $this->_getEventManager();
         $tokenFoundInPlugins = false;
         $params              = ['identifier' => $identifier,
-                        'user'       => &$user,
-                        'tokenFound' => &$tokenFoundInPlugins];
+            'user'       => &$user,
+            'tokenFound' => &$tokenFoundInPlugins,
+        ];
         $em->processEvent('user_manager_get_user_by_identifier', $params);
 
         if (! $tokenFoundInPlugins) {

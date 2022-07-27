@@ -424,10 +424,11 @@ class BarPlot extends Plot
             */
             // Stroke fill color and fill gradient
             $pts = [
-            $x,$zp,
-            $x,$yscale->Translate($this->coords[0][$i]),
-            $x + $abswidth,$yscale->Translate($this->coords[0][$i]),
-            $x + $abswidth,$zp];
+                $x,$zp,
+                $x,$yscale->Translate($this->coords[0][$i]),
+                $x + $abswidth,$yscale->Translate($this->coords[0][$i]),
+                $x + $abswidth,$zp,
+            ];
             if ($this->grad) {
                 if ($grad === null) {
                     $grad = new Gradient($img);

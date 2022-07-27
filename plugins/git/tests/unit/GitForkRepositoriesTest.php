@@ -102,7 +102,8 @@ final class GitForkRepositoriesTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = new Codendi_Request([
             'repos' => '1001',
             'path'  => 'toto',
-            'repo_access' => $forkPermissions]);
+            'repo_access' => $forkPermissions,
+        ]);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }

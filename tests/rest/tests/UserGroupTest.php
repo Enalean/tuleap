@@ -713,8 +713,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     {
         $post_resource = json_encode(
             [
-            'project_id' => $this->project_private_member_id,
-            'short_name' => 'static_ugroup_rest_1',
+                'project_id' => $this->project_private_member_id,
+                'short_name' => 'static_ugroup_rest_1',
             ]
         );
 

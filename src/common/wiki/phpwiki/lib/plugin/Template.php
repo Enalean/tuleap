@@ -79,12 +79,12 @@ class WikiPlugin_Template extends WikiPlugin
     public function getDefaultArguments()
     {
         return [
-                     'page'    => false, // the page to include
-                     'vars'    => false,
-                     'rev'     => false, // the revision (defaults to most recent)
-                     'section' => false, // just include a named section
-                     'sectionhead' => false, // when including a named section show the heading
-                     ];
+            'page'    => false, // the page to include
+            'vars'    => false,
+            'rev'     => false, // the revision (defaults to most recent)
+            'section' => false, // just include a named section
+            'sectionhead' => false, // when including a named section show the heading
+        ];
     }
 
     public function getWikiPageLinks($argstr, $basepage)

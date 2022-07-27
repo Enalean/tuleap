@@ -269,7 +269,7 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllValues')
             ->once()
             ->andReturn([
-                            44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                     ->shouldReceive('isHidden')
                     ->andReturnFalse()
                     ->getMock(),
@@ -301,15 +301,15 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllValues')
             ->once()
             ->andReturn([
-                            44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnFalse()
                                 ->getMock(),
-                            45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnFalse()
                                 ->getMock(),
-                        ]);
+            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
@@ -333,15 +333,15 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllValues')
             ->once()
             ->andReturn([
-                            44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnFalse()
                                 ->getMock(),
-                            45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnTrue()
                                 ->getMock(),
-                        ]);
+            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
@@ -365,15 +365,15 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllValues')
             ->once()
             ->andReturn([
-                            44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnFalse()
                                 ->getMock(),
-                            45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnTrue()
                                 ->getMock(),
-                        ]);
+            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
@@ -401,12 +401,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllValues')
             ->once()
             ->andReturn([
-                            44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                44 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnFalse()
                                 ->getMock(),
-                            45 => $not_open_value,
-                        ]);
+                45 => $not_open_value,
+            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,
@@ -434,12 +434,12 @@ class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field->shouldReceive('getAllValues')
             ->once()
             ->andReturn([
-                            44 => $open_value,
-                            45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
+                44 => $open_value,
+                45 => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)
                                 ->shouldReceive('isHidden')
                                 ->andReturnFalse()
                                 ->getMock(),
-                        ]);
+            ]);
         $this->semantic_status = new Tracker_Semantic_Status(
             $this->tracker,
             $field,

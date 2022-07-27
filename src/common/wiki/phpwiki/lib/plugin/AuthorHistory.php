@@ -87,13 +87,13 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
     {
         global $request;
         return ['exclude'      => '',
-                     'noheader'     => false,
-                     'includeminor' => false,
-                     'includedeleted' => false,
-                     'author'       => $request->_user->UserName(),
-                     'page'         => '[pagename]',
-                     'info'         => 'version,minor,author,summary,mtime',
-                     ];
+            'noheader'     => false,
+            'includeminor' => false,
+            'includedeleted' => false,
+            'author'       => $request->_user->UserName(),
+            'page'         => '[pagename]',
+            'info'         => 'version,minor,author,summary,mtime',
+        ];
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
@@ -122,7 +122,8 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             $p = $dbi->getPage($page);
 
             $t  = HTML::table(['class' => 'pagelist',
-                                   'style' => 'font-size:smaller']);
+                'style' => 'font-size:smaller',
+            ]);
             $th = HTML::thead();
             $tb = HTML::tbody();
 
@@ -145,7 +146,8 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                 if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                     $difflink = Button(
                         ['action' => 'diff',
-                                             'previous' => 'minor'],
+                            'previous' => 'minor',
+                        ],
                         $rev->getversion(),
                         $rev
                     );
@@ -186,7 +188,8 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             /////////////////////////////////////////////////////////////
 
             $t  = HTML::table(['class' => 'pagelist',
-                                   'style' => 'font-size:smaller']);
+                'style' => 'font-size:smaller',
+            ]);
             $th = HTML::thead();
             $tb = HTML::tbody();
 
@@ -213,7 +216,8 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                     if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                         $difflink = Button(
                             ['action' => 'diff',
-                                                 'previous' => 'minor'],
+                                'previous' => 'minor',
+                            ],
                             $rev->getversion(),
                             $rev
                         );

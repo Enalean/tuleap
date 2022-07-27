@@ -330,8 +330,9 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testProcessMustNotBuildBurndownWhenSrcAidIsNotValid(): void
     {
         $request = new Codendi_Request(['formElement' => 1234,
-                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'src_aid'     => '; DROP DATABASE mouuahahahaha!']);
+            'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+            'src_aid'     => '; DROP DATABASE mouuahahahaha!',
+        ]);
 
 
 
@@ -348,8 +349,9 @@ class Tracker_FormElement_Field_BurndownTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testProcessMustNotBuildBurndownWhenArtifactDoesNotExist(): void
     {
         $request = new Codendi_Request(['formElement' => 1234,
-                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'src_aid'     => 999]);
+            'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+            'src_aid'     => 999,
+        ]);
 
         $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
         $artifactFactory->shouldReceive('getArtifactById')->andReturn(null);

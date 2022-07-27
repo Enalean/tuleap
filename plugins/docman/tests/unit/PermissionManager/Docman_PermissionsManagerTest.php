@@ -697,15 +697,19 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
         $dao     = \Mockery::mock(\Docman_PermissionsManagerDao::class);
         $members = [['email'       => 'john.doe@example.com',
-                               'language_id' => 'en_US'],
-                         ['email'       => 'jane.doe@example.com',
-                               'language_id' => 'fr_FR']];
+            'language_id' => 'en_US',
+        ],
+            ['email'       => 'jane.doe@example.com',
+                'language_id' => 'fr_FR',
+            ],
+        ];
         $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn($members);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
         $userArray = ['john.doe@example.com' => 'en_US',
-                           'jane.doe@example.com' => 'fr_FR'];
+            'jane.doe@example.com' => 'fr_FR',
+        ];
         $this->assertEquals($userArray, $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
@@ -752,15 +756,19 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $dar     = [['ugroup_id' => 101]];
         $dao     = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $members = [['email'       => 'john.doe@example.com',
-                               'language_id' => 'en_US'],
-                         ['email'       => 'jane.doe@example.com',
-                               'language_id' => 'fr_FR']];
+            'language_id' => 'en_US',
+        ],
+            ['email'       => 'jane.doe@example.com',
+                'language_id' => 'fr_FR',
+            ],
+        ];
         $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn($members);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
         $userArray = ['john.doe@example.com' => 'en_US',
-                           'jane.doe@example.com' => 'fr_FR'];
+            'jane.doe@example.com' => 'fr_FR',
+        ];
         $this->assertEquals($userArray, $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
@@ -801,14 +809,18 @@ class Docman_PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $dar = [['email'       => 'john.doe@example.com',
-                           'language_id' => 'en_US'],
-                     ['email'       => 'jane.doe@example.com',
-                           'language_id' => 'fr_FR']];
+            'language_id' => 'en_US',
+        ],
+            ['email'       => 'jane.doe@example.com',
+                'language_id' => 'fr_FR',
+            ],
+        ];
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $dao->shouldReceive('getProjectAdminMembers')->once()->andReturns($dar);
         $userArray = ['john.doe@example.com' => 'en_US',
-                           'jane.doe@example.com' => 'fr_FR'];
+            'jane.doe@example.com' => 'fr_FR',
+        ];
         $this->assertEquals($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
     }
 

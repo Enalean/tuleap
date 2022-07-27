@@ -213,17 +213,18 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
             $nmax++;
         }
         return ['n'     => $n,
-                     'sum'   => $sum,
-                     'min'   => $min,
-                     'max'   => $max,
-                     'mean'  => $sum / $n,
-                     'median' => $median,
-                     'stddev' => stddev($hits, $sum),
-                     'treshold'    => $treshold,
-                     'nmin'        => $nmin,
-                     'mintreshold' => $mintreshold,
-                     'nmax'        => $nmax,
-                     'maxtreshold' => $maxtreshold];
+            'sum'   => $sum,
+            'min'   => $min,
+            'max'   => $max,
+            'mean'  => $sum / $n,
+            'median' => $median,
+            'stddev' => stddev($hits, $sum),
+            'treshold'    => $treshold,
+            'nmin'        => $nmin,
+            'mintreshold' => $mintreshold,
+            'nmax'        => $nmax,
+            'maxtreshold' => $maxtreshold,
+        ];
     }
 
     // only absolute numbers, not for any time interval. see accessstats
@@ -346,56 +347,57 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
              ['appname' => function () {
                 return 'PhpWiki';
              },
-                   'version' => function () {
+                 'version' => function () {
                     return PHPWIKI_VERSION;
-                   },
-                   'LANG'    => function () {
+                 },
+                 'LANG'    => function () {
                     return $GLOBALS['LANG'];
-                   },
-                   'LC_ALL'  => function () {
+                 },
+                 'LC_ALL'  => function () {
                     return setlocale(LC_ALL, 0);
-                   },
-                   'current_language' => function () {
+                 },
+                 'current_language' => function () {
                     return $GLOBALS['LANG'];
-                   },
-                   'system_language' => function () {
+                 },
+                 'system_language' => function () {
                     return DEFAULT_LANGUAGE;
-                   },
-                   'current_theme' => function () {
+                 },
+                 'current_theme' => function () {
                     return $GLOBALS['Theme']->_name;
-                   },
-                   'system_theme'  => function () {
+                 },
+                 'system_theme'  => function () {
                     return THEME;
-                   },
+                 },
                    // more here or as method.
-                   '' => function () {
+                 '' => function () {
                     return 'dummy';
-                   },
-                   ];
+                 },
+             ];
         // split the argument string by any number of commas or space
         // characters, which include " ", \r, \t, \n and \f
         $allargs = preg_split("/[\s,]+/", $argstr, -1, PREG_SPLIT_NO_EMPTY);
         if (in_array('all', $allargs) || in_array('table', $allargs)) {
             $allargs = ['appname'          => _("Application name"),
-                             'version'          => _("PhpWiki engine version"),
-                             'cachestats'       => _("Cache statistics"),
-                             'pagestats'        => _("Page statistics"),
+                'version'          => _("PhpWiki engine version"),
+                'cachestats'       => _("Cache statistics"),
+                'pagestats'        => _("Page statistics"),
                              //'linkstats'        => _("Link statistics"),
-                             'userstats'        => _("User statistics"),
+                'userstats'        => _("User statistics"),
                              //'accessstats'      => _("Access statistics"),
-                             'hitstats'         => _("Hit statistics"),
-                             'expireparams'     => _("Expiry parameters"),
-                             'wikinameregexp'   => _("Wikiname regexp"),
-                             'allowedprotocols' => _("Allowed protocols"),
-                             'inlineimages'     => _("Inline images"),
-                             'available_plugins'   => _("Available plugins"),
-                             'supported_languages' => _("Supported languages"),
-                             'supported_themes'    => _("Supported themes"),
+                'hitstats'         => _("Hit statistics"),
+                'expireparams'     => _("Expiry parameters"),
+                'wikinameregexp'   => _("Wikiname regexp"),
+                'allowedprotocols' => _("Allowed protocols"),
+                'inlineimages'     => _("Inline images"),
+                'available_plugins'   => _("Available plugins"),
+                'supported_languages' => _("Supported languages"),
+                'supported_themes'    => _("Supported themes"),
 //                           '' => _(""),
-                             '' => "",
-                             ];
+                '' => "",
+            ];
             $table   = HTML::table(['border' => 1,'cellspacing' => 3,
-                                       'cellpadding' => 3]);
+                'cellpadding' => 3,
+            ]);
             foreach ($allargs as $arg => $desc) {
                 if (! $arg) {
                     continue;

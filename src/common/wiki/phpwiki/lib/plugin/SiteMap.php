@@ -69,17 +69,17 @@ class WikiPlugin_SiteMap extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['exclude'        => '',
-                     'include_self'   => 0,
-                     'noheader'       => 0,
-                     'page'           => '[pagename]',
-                     'description'    => $this->getDescription(),
-                     'reclimit'       => 4,
-                     'info'           => false,
-                     'direction'      => 'back',
-                     'firstreversed'  => false,
-                     'excludeunknown' => true,
-                     'includepages'   => '', // to be used only from the IncludeSiteMap plugin
-                     ];
+            'include_self'   => 0,
+            'noheader'       => 0,
+            'page'           => '[pagename]',
+            'description'    => $this->getDescription(),
+            'reclimit'       => 4,
+            'info'           => false,
+            'direction'      => 'back',
+            'firstreversed'  => false,
+            'excludeunknown' => true,
+            'includepages'   => '', // to be used only from the IncludeSiteMap plugin
+        ];
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor

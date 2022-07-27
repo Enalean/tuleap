@@ -139,53 +139,62 @@ function undo_save() {
 
         if (ENABLE_EDIT_TOOLBAR) {
             $toolarray = [
-                           [
-                                 "image" => "ed_format_bold.png",
-                                 "open" => "*",
-                                 "close" => "*",
-                                 "sample" => _("Bold text"),
-                                 "tip" => _("Bold text")],
-                           ["image" => "ed_format_italic.png",
-                                 "open" => "_",
-                                 "close" => "_",
-                                 "sample" => _("Italic text"),
-                                 "tip" => _("Italic text")],
-                           ["image" => "ed_pagelink.png",
-                                 "open" => "[",
-                                 "close" => "]",
-                                 "sample" => _("optional label | PageName"),
-                                 "tip" => _("Link to page")],
-                           ["image" => "ed_link.png",
-                                 "open" => "[",
-                                 "close" => "]",
-                                 "sample" => _("optional label | http://www.example.com"),
-                                 "tip" => _("External link (remember http:// prefix)")],
-                           ["image" => "ed_headline.png",
-                                 "open" => "\\n!!! ",
-                                 "close" => "\\n",
-                                 "sample" => _("Headline text"),
-                                 "tip" => _("Level 1 headline")],
-                           ["image" => "ed_image.png",
-                                 "open" => "[ ",
-                                 "close" => " ]",
-                                 "sample" => _("Example.jpg"),
-                                 "tip" => _("Embedded image")],
-                           ["image" => "ed_nowiki.png",
-                                 "open" => "\\n\\<verbatim\\>\\n",
-                                 "close" => "\\n\\</verbatim\\>\\n",
-                                 "sample" => _("Insert non-formatted text here"),
-                                 "tip" => _("Ignore wiki formatting")],
-                           ["image" => "ed_sig.png",
-                                 "open" => " --" . $GLOBALS['request']->_user->UserName(),
-                                 "close" => "",
-                                 "sample" => "",
-                                 "tip" => _("Your signature")],
-                           ["image" => "ed_hr.png",
-                                 "open" => "\\n----\\n",
-                                 "close" => "",
-                                 "sample" => "",
-                                 "tip" => _("Horizontal line")],
-                           ];
+                [
+                    "image" => "ed_format_bold.png",
+                    "open" => "*",
+                    "close" => "*",
+                    "sample" => _("Bold text"),
+                    "tip" => _("Bold text"),
+                ],
+                ["image" => "ed_format_italic.png",
+                    "open" => "_",
+                    "close" => "_",
+                    "sample" => _("Italic text"),
+                    "tip" => _("Italic text"),
+                ],
+                ["image" => "ed_pagelink.png",
+                    "open" => "[",
+                    "close" => "]",
+                    "sample" => _("optional label | PageName"),
+                    "tip" => _("Link to page"),
+                ],
+                ["image" => "ed_link.png",
+                    "open" => "[",
+                    "close" => "]",
+                    "sample" => _("optional label | http://www.example.com"),
+                    "tip" => _("External link (remember http:// prefix)"),
+                ],
+                ["image" => "ed_headline.png",
+                    "open" => "\\n!!! ",
+                    "close" => "\\n",
+                    "sample" => _("Headline text"),
+                    "tip" => _("Level 1 headline"),
+                ],
+                ["image" => "ed_image.png",
+                    "open" => "[ ",
+                    "close" => " ]",
+                    "sample" => _("Example.jpg"),
+                    "tip" => _("Embedded image"),
+                ],
+                ["image" => "ed_nowiki.png",
+                    "open" => "\\n\\<verbatim\\>\\n",
+                    "close" => "\\n\\</verbatim\\>\\n",
+                    "sample" => _("Insert non-formatted text here"),
+                    "tip" => _("Ignore wiki formatting"),
+                ],
+                ["image" => "ed_sig.png",
+                    "open" => " --" . $GLOBALS['request']->_user->UserName(),
+                    "close" => "",
+                    "sample" => "",
+                    "tip" => _("Your signature"),
+                ],
+                ["image" => "ed_hr.png",
+                    "open" => "\\n----\\n",
+                    "close" => "",
+                    "sample" => "",
+                    "tip" => _("Horizontal line"),
+                ],
+            ];
             $btn       = new SubmitImageButton(
                 _("Save"),
                 "edit[save]",
@@ -227,18 +236,20 @@ function undo_save() {
             //TODO: generalize the UNDO button and fix it for Search & Replace
             $sr_html = HTML(
                 HTML::img(['class' => "toolbar",
-                                   'id'   => "sr_undo",
-                                   'src'  => $undo_d_btn,
-                                   'title' => _("Undo Search & Replace"),
-                                   'alt'  => _("Undo Search & Replace"),
+                    'id'   => "sr_undo",
+                    'src'  => $undo_d_btn,
+                    'title' => _("Undo Search & Replace"),
+                    'alt'  => _("Undo Search & Replace"),
                                    //'disabled'=>"disabled",   //non-XHTML conform
                                    //'onfocus' =>"if(this.blur && undo_buffer_index==0) this.blur()",
-                'onclick' => "do_undo()"]),
+                    'onclick' => "do_undo()",
+                ]),
                 HTML::img(['class' => "toolbar",
-                                   'src'  => $sr_btn,
-                                   'alt'  => _("Search & Replace"),
-                                   'title' => _("Search & Replace"),
-                'onclick' => "replace()"])
+                    'src'  => $sr_btn,
+                    'alt'  => _("Search & Replace"),
+                    'title' => _("Search & Replace"),
+                    'onclick' => "replace()",
+                ])
             );
         } else {
             $sr_html = '';
@@ -295,14 +306,15 @@ function undo_save() {
                 return '';
             }
             $more_buttons = HTML::img(['class' => "toolbar",
-                                            'src'  => $WikiTheme->getImageURL("ed_category.png"),
-                                            'title' => _("AddCategory"),
-                                            'alt' => _("AddCategory"),
-                                            'onclick' => "showPulldown('" .
+                'src'  => $WikiTheme->getImageURL("ed_category.png"),
+                'title' => _("AddCategory"),
+                'alt' => _("AddCategory"),
+                'onclick' => "showPulldown('" .
                                             _("Insert Categories (double-click)")
                                             . "',['" . join("','", $categories) . "'],'"
                                             . _("Insert") . "','"
-                                            . _("Close") . "')"]);
+                                            . _("Close") . "')",
+            ]);
             return HTML("\n", $more_buttons);
         }
         return '';
@@ -344,14 +356,15 @@ function undo_save() {
             }
             $plugin_js    = substr($plugin_js, 1);
             $more_buttons = HTML::img(['class' => "toolbar",
-                                            'src'  => $WikiTheme->getImageURL("ed_plugins.png"),
-                                            'title' => _("AddPlugin"),
-                                            'alt' => _("AddPlugin"),
-                                            'onclick' => "showPulldown('" .
+                'src'  => $WikiTheme->getImageURL("ed_plugins.png"),
+                'title' => _("AddPlugin"),
+                'alt' => _("AddPlugin"),
+                'onclick' => "showPulldown('" .
                                             _("Insert Plugin (double-click)")
                                             . "',[" . $plugin_js . "],'"
                                             . _("Insert") . "','"
-                                            . _("Close") . "')"]);
+                                            . _("Close") . "')",
+            ]);
             return HTML("\n", $more_buttons);
         }
         return '';
@@ -369,14 +382,15 @@ function undo_save() {
                 $pages[] = $p->getName();
             }
             return HTML("\n", HTML::img(['class' => "toolbar",
-                                              'src'  => $WikiTheme->getImageURL("ed_pages.png"),
-                                              'title' => _("AddPageLink"),
-                                              'alt' => _("AddPageLink"),
-                                              'onclick' => "showPulldown('" .
+                'src'  => $WikiTheme->getImageURL("ed_pages.png"),
+                'title' => _("AddPageLink"),
+                'alt' => _("AddPageLink"),
+                'onclick' => "showPulldown('" .
                                               _("Insert PageLink (double-click)")
                                               . "',['" . join("','", $pages) . "'],'"
                                               . _("Insert") . "','"
-                                              . _("Close") . "')"]));
+                                              . _("Close") . "')",
+            ]));
         }
         return '';
     }
@@ -402,14 +416,15 @@ function undo_save() {
             $pages_js = substr($pages_js, 1);
             if (! empty($pages_js)) {
                 return HTML("\n", HTML::img(['class' => "toolbar",
-                                   'src'  => $WikiTheme->getImageURL("ed_template.png"),
-                                   'title' => _("AddTemplate"),
-                                   'alt' => _("AddTemplate"),
-                                   'onclick' => "showPulldown('" .
+                    'src'  => $WikiTheme->getImageURL("ed_template.png"),
+                    'title' => _("AddTemplate"),
+                    'alt' => _("AddTemplate"),
+                    'onclick' => "showPulldown('" .
                                    _("Insert Template (double-click)")
                                    . "',[" . $pages_js . "],'"
                                    . _("Insert") . "','"
-                . _("Close") . "')"]));
+                . _("Close") . "')",
+                ]));
             }
         }
         return '';

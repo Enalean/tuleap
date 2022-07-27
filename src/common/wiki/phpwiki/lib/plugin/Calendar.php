@@ -54,14 +54,15 @@ class WikiPlugin_Calendar extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['prefix'           => '[pagename]' . SUBPAGE_SEPARATOR,
-                     'date_format'      => '%Y-%m-%d',
-                     'year'             => '',
-                     'month'            => '',
-                     'month_offset'     => 0,
+            'date_format'      => '%Y-%m-%d',
+            'year'             => '',
+            'month'            => '',
+            'month_offset'     => 0,
 
-                     'month_format'     => '%B, %Y',
-                     'wday_format'      => '%a',
-                     'start_wday'       => '0'];
+            'month_format'     => '%B, %Y',
+            'wday_format'      => '%a',
+            'start_wday'       => '0',
+        ];
     }
 
     /**
@@ -88,11 +89,13 @@ class WikiPlugin_Calendar extends WikiPlugin
 
         $t        = localtime($time - SECONDS_PER_DAY, 1);
         $prev_url = WikiURL($pagename, ['month' => $t['tm_mon'] + 1,
-                                             'year'  => $t['tm_year'] + 1900]);
+            'year'  => $t['tm_year'] + 1900,
+        ]);
 
         $t        = localtime($time + 32 * SECONDS_PER_DAY, 1);
         $next_url = WikiURL($pagename, ['month' => $t['tm_mon'] + 1,
-                                             'year'  => $t['tm_year'] + 1900]);
+            'year'  => $t['tm_year'] + 1900,
+        ]);
 
         $prev = HTML::a(['href'  => $prev_url, 'class' => 'cal-arrow', 'title' => _("Previous Month")], '<');
         $next = HTML::a(['href'  => $next_url, 'class' => 'cal-arrow', 'title' => _("Next Month")], '>');

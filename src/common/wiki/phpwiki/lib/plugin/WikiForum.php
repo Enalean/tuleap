@@ -70,11 +70,11 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
     public function getDefaultArguments()
     {
         return ['pagename'   => '[pagename]',
-                     'order'      => 'normal',   // oldest first
-                     'mode'       => 'show,add', // 'summary',
-                     'info'       => '',
-                     'noheader'   => false,
-                    ];
+            'order'      => 'normal',   // oldest first
+            'mode'       => 'show,add', // 'summary',
+            'info'       => '',
+            'noheader'   => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

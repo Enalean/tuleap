@@ -56,7 +56,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 
 // Display the form
 svn_header_admin(['title' => $GLOBALS['Language']->getText('svn_admin_access_control', 'access_ctrl'),
-                        'help' => 'svn.html#subversion-access-control']);
+    'help' => 'svn.html#subversion-access-control',
+]);
 
 if (svn_utils_svn_repo_exists($project_svnroot)) {
     $select_options = [];

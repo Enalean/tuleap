@@ -53,11 +53,12 @@ function plugin_forumml_new_attach($row)
 {
     if (isset($row['id_attachment']) && $row['id_attachment']) {
         return ['id_attachment' => $row['id_attachment'],
-                     'file_name' => $row['file_name'],
-                     'file_type' => $row['file_type'],
-                     'file_size' => $row['file_size'],
-                     'file_path' => $row['file_path'],
-                     'content_id' => $row['content_id']];
+            'file_name' => $row['file_name'],
+            'file_type' => $row['file_type'],
+            'file_size' => $row['file_size'],
+            'file_path' => $row['file_path'],
+            'content_id' => $row['content_id'],
+        ];
     } else {
         return null;
     }

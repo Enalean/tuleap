@@ -77,7 +77,8 @@ function ugroups_to_soap($ugroups)
 
         if ($ugroup['user_id']) {
             $return[$ugroup_id]['members'][] = ['user_id' => $ugroup['user_id'],
-                                                     'user_name' => $ugroup['user_name']];
+                'user_name' => $ugroup['user_name'],
+            ];
         }
     }
 

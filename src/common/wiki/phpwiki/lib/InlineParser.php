@@ -762,10 +762,10 @@ class Markup_html_entities extends SimpleMarkup
     public function markup($match)
     {
         static $entities = ['...'  => '&#133;',
-                                 '--'   => '&ndash;',
-                                 '---'  => '&mdash;',
-                                 '(C)'  => '&copy;',
-                                 ];
+            '--'   => '&ndash;',
+            '---'  => '&mdash;',
+            '(C)'  => '&copy;',
+        ];
         return HTML::Raw($entities[$match]);
     }
 }
@@ -805,11 +805,11 @@ class InlineTransformer
         if (! $markup_types) {
             $non_default  = false;
             $markup_types = ['escape', 'bracketlink', 'url',
-                                  'interwiki', 'wikiword', 'linebreak',
-                                  'old_emphasis', 'nestled_emphasis',
-                                  'html_emphasis', 'html_abbr', 'plugin',
-                                  'isonumchars', 'isohexchars', /*'html_entities',*/
-                                  ];
+                'interwiki', 'wikiword', 'linebreak',
+                'old_emphasis', 'nestled_emphasis',
+                'html_emphasis', 'html_abbr', 'plugin',
+                'isonumchars', 'isohexchars', /*'html_entities',*/
+            ];
         } else {
             $non_default = true;
         }
@@ -923,7 +923,8 @@ class LinkTransformer extends InlineTransformer
     public function __construct()
     {
         parent::__construct(['escape', 'bracketlink', 'url',
-                                       'interwiki', 'wikiword']);
+            'interwiki', 'wikiword',
+        ]);
     }
 }
 

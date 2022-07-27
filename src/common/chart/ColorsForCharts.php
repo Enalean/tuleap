@@ -585,7 +585,8 @@ class ColorsForCharts
                 "darkred" => [139,0,0],
                 "silver" => [192, 192, 192],
                 "eggplant" => [144,176,168],
-                "lightgreen" => [144,238,144]];
+                "lightgreen" => [144,238,144],
+            ];
 
             $rgb_arr = $rgb_table[$color_name];
             $r       = dechex($rgb_arr[0]);

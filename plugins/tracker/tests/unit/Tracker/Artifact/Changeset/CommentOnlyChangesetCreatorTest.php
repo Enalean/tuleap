@@ -97,7 +97,8 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
             'with No change error'        => [new \Tracker_NoChangeException(
                 self::ARTIFACT_ID,
                 'story #' . self::ARTIFACT_ID
-            )],
+            ),
+            ],
             'with DB error'               => [new \Tracker_ChangesetNotCreatedException()],
             'with field validation error' => [new FieldValidationException([])],
         ];

@@ -67,58 +67,58 @@ function IniConfig($file)
     // booleans). Needs to be categorised, and generally made a lot tidier.
     $_IC_VALID_VALUE =
         ['WIKI_NAME', 'ADMIN_USER', 'ADMIN_PASSWD',
-         'DEFAULT_DUMP_DIR', 'HTML_DUMP_DIR',
-         'HTML_DUMP_SUFFIX', 'MAX_UPLOAD_SIZE', 'MINOR_EDIT_TIMEOUT',
-         'CACHE_CONTROL', 'CACHE_CONTROL_MAX_AGE',
-         'COOKIE_EXPIRATION_DAYS', 'COOKIE_DOMAIN',
-         'PASSWORD_LENGTH_MINIMUM', 'USER_AUTH_POLICY',
-         'GROUP_METHOD',
-         'EDITING_POLICY', 'THEME', 'CHARSET',
-         'WIKI_PGSRC', 'DEFAULT_WIKI_PGSRC',
-         'ALLOWED_PROTOCOLS', 'INLINE_IMAGES', 'SUBPAGE_SEPARATOR', /*'KEYWORDS',*/
+            'DEFAULT_DUMP_DIR', 'HTML_DUMP_DIR',
+            'HTML_DUMP_SUFFIX', 'MAX_UPLOAD_SIZE', 'MINOR_EDIT_TIMEOUT',
+            'CACHE_CONTROL', 'CACHE_CONTROL_MAX_AGE',
+            'COOKIE_EXPIRATION_DAYS', 'COOKIE_DOMAIN',
+            'PASSWORD_LENGTH_MINIMUM', 'USER_AUTH_POLICY',
+            'GROUP_METHOD',
+            'EDITING_POLICY', 'THEME', 'CHARSET',
+            'WIKI_PGSRC', 'DEFAULT_WIKI_PGSRC',
+            'ALLOWED_PROTOCOLS', 'INLINE_IMAGES', 'SUBPAGE_SEPARATOR', /*'KEYWORDS',*/
          // extra logic:
          //'DATABASE_PREFIX', 'DATABASE_DSN', 'DATABASE_TYPE', 'DATABASE_DBHANDLER',
-         'INTERWIKI_MAP_FILE', 'COPYRIGHTPAGE_TITLE', 'COPYRIGHTPAGE_URL',
-         'AUTHORPAGE_TITLE', 'AUTHORPAGE_URL',
-         'WIKI_NAME_REGEXP',
-         'PLUGIN_CACHED_FILENAME_PREFIX',
-         'PLUGIN_CACHED_MAXARGLEN', 'PLUGIN_CACHED_IMGTYPES',
+            'INTERWIKI_MAP_FILE', 'COPYRIGHTPAGE_TITLE', 'COPYRIGHTPAGE_URL',
+            'AUTHORPAGE_TITLE', 'AUTHORPAGE_URL',
+            'WIKI_NAME_REGEXP',
+            'PLUGIN_CACHED_FILENAME_PREFIX',
+            'PLUGIN_CACHED_MAXARGLEN', 'PLUGIN_CACHED_IMGTYPES',
          // extra logic:
-         'SERVER_NAME','SERVER_PORT','SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
-         ];
+            'SERVER_NAME','SERVER_PORT','SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
+        ];
 
     // Optional values which need to be defined.
     // These are not defined in config-default.ini and empty if not defined.
     $_IC_OPTIONAL_VALUE =
         [
-         'DEBUG', 'TEMP_DIR', 'DEFAULT_LANGUAGE',
-         'LDAP_AUTH_HOST','LDAP_SET_OPTION','LDAP_BASE_DN', 'LDAP_AUTH_USER',
-         'LDAP_AUTH_PASSWORD','LDAP_SEARCH_FIELD','LDAP_OU_GROUP','LDAP_OU_USERS',
-         'AUTH_USER_FILE','DBAUTH_AUTH_DSN',
-         'IMAP_AUTH_HOST', 'POP3_AUTH_HOST',
-         'AUTH_USER_FILE', 'AUTH_GROUP_FILE', 'AUTH_SESS_USER', 'AUTH_SESS_LEVEL',
-         'FORTUNE_DIR',
-         'DISABLE_GETIMAGESIZE','DBADMIN_USER','DBADMIN_PASSWD',
-         'SESSION_SAVE_PATH', 'TOOLBAR_PAGELINK_PULLDOWN', 'TOOLBAR_TEMPLATE_PULLDOWN',
-         'EXTERNAL_LINK_TARGET', 'ENABLE_MARKUP_TEMPLATE',
-         ];
+            'DEBUG', 'TEMP_DIR', 'DEFAULT_LANGUAGE',
+            'LDAP_AUTH_HOST','LDAP_SET_OPTION','LDAP_BASE_DN', 'LDAP_AUTH_USER',
+            'LDAP_AUTH_PASSWORD','LDAP_SEARCH_FIELD','LDAP_OU_GROUP','LDAP_OU_USERS',
+            'AUTH_USER_FILE','DBAUTH_AUTH_DSN',
+            'IMAP_AUTH_HOST', 'POP3_AUTH_HOST',
+            'AUTH_USER_FILE', 'AUTH_GROUP_FILE', 'AUTH_SESS_USER', 'AUTH_SESS_LEVEL',
+            'FORTUNE_DIR',
+            'DISABLE_GETIMAGESIZE','DBADMIN_USER','DBADMIN_PASSWD',
+            'SESSION_SAVE_PATH', 'TOOLBAR_PAGELINK_PULLDOWN', 'TOOLBAR_TEMPLATE_PULLDOWN',
+            'EXTERNAL_LINK_TARGET', 'ENABLE_MARKUP_TEMPLATE',
+        ];
 
     // List of all valid config options to be define()d which take booleans.
     $_IC_VALID_BOOL =
         ['ENABLE_USER_NEW', 'ENABLE_PAGEPERM', 'ENABLE_EDIT_TOOLBAR', 'JS_SEARCHREPLACE',
-         'ENABLE_XHTML_XML', 'ENABLE_DOUBLECLICKEDIT', 'ENABLE_LIVESEARCH',
-         'USECACHE', 'WIKIDB_NOCACHE_MARKUP',
-         'ENABLE_REVERSE_DNS', 'ZIPDUMP_AUTH',
-         'ENABLE_RAW_HTML', 'ENABLE_RAW_HTML_LOCKEDONLY', 'ENABLE_RAW_HTML_SAFE',
-         'STRICT_MAILABLE_PAGEDUMPS', 'COMPRESS_OUTPUT',
-         'ALLOW_ANON_USER', 'ALLOW_ANON_EDIT',
-         'ALLOW_BOGO_LOGIN', 'ALLOW_USER_PASSWORDS',
-         'AUTH_USER_FILE_STORABLE', 'ALLOW_HTTP_AUTH_LOGIN',
-         'ALLOW_USER_LOGIN', 'ALLOW_LDAP_LOGIN', 'ALLOW_IMAP_LOGIN',
-         'WARN_NONPUBLIC_INTERWIKIMAP', 'USE_PATH_INFO',
-         'DISABLE_HTTP_REDIRECT',
-         'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK',
-         ];
+            'ENABLE_XHTML_XML', 'ENABLE_DOUBLECLICKEDIT', 'ENABLE_LIVESEARCH',
+            'USECACHE', 'WIKIDB_NOCACHE_MARKUP',
+            'ENABLE_REVERSE_DNS', 'ZIPDUMP_AUTH',
+            'ENABLE_RAW_HTML', 'ENABLE_RAW_HTML_LOCKEDONLY', 'ENABLE_RAW_HTML_SAFE',
+            'STRICT_MAILABLE_PAGEDUMPS', 'COMPRESS_OUTPUT',
+            'ALLOW_ANON_USER', 'ALLOW_ANON_EDIT',
+            'ALLOW_BOGO_LOGIN', 'ALLOW_USER_PASSWORDS',
+            'AUTH_USER_FILE_STORABLE', 'ALLOW_HTTP_AUTH_LOGIN',
+            'ALLOW_USER_LOGIN', 'ALLOW_LDAP_LOGIN', 'ALLOW_IMAP_LOGIN',
+            'WARN_NONPUBLIC_INTERWIKIMAP', 'USE_PATH_INFO',
+            'DISABLE_HTTP_REDIRECT',
+            'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK',
+        ];
 
     $rs    = @parse_ini_file($file);
     $rsdef = @parse_ini_file(dirname(__FILE__) . "/../config/config-default.ini");
@@ -147,9 +147,10 @@ function IniConfig($file)
             in_array(
                 $item,
                 ['DATABASE_PREFIX', 'SERVER_NAME', 'SERVER_PORT',
-                                 'SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
-                                 'LDAP_AUTH_HOST','IMAP_AUTH_HOST','POP3_AUTH_HOST',
-                'PLUGIN_CACHED_CACHE_DIR']
+                    'SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
+                    'LDAP_AUTH_HOST','IMAP_AUTH_HOST','POP3_AUTH_HOST',
+                    'PLUGIN_CACHED_CACHE_DIR',
+                ]
             )
         ) {
         } elseif (! defined("_PHPWIKI_INSTALL_RUNNING")) {
@@ -180,12 +181,12 @@ function IniConfig($file)
         if (
             ! array_key_exists($item, $rs) and
             in_array($item, ['USE_PATH_INFO',
-                                  'ALLOW_HTTP_AUTH_LOGIN', 'ALLOW_LDAP_LOGIN',
-                                  'ALLOW_IMAP_LOGIN', 'ALLOW_USER_LOGIN',
-                                  'REQUIRE_SIGNIN_BEFORE_EDIT',
-                                  'WIKIDB_NOCACHE_MARKUP',
-                                  'COMPRESS_OUTPUT',
-                                  ])
+                'ALLOW_HTTP_AUTH_LOGIN', 'ALLOW_LDAP_LOGIN',
+                'ALLOW_IMAP_LOGIN', 'ALLOW_USER_LOGIN',
+                'REQUIRE_SIGNIN_BEFORE_EDIT',
+                'WIKIDB_NOCACHE_MARKUP',
+                'COMPRESS_OUTPUT',
+            ])
         ) {
         } elseif (! $val) {
             define($item, false);

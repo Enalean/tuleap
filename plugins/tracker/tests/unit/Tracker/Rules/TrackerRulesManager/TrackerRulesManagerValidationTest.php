@@ -88,7 +88,8 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->frozen_fields_dao,
             $this->tracker_rules_list_validator,
             $this->tracker_rules_date_validator,
-            $this->tracker_factory])->makePartial();
+            $this->tracker_factory,
+        ])->makePartial();
 
         $tracker_rule_date  = \Mockery::mock(\Tracker_Rule_Date::class);
         $tracker_rule_date2 = \Mockery::mock(\Tracker_Rule_Date::class);

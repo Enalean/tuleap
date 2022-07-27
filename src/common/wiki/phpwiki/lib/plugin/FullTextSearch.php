@@ -59,13 +59,14 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(), // paging and more.
             ['s'        => false,
-                   'hilight'  => true,
-                   'case_exact' => false,
-                   'regex'    => 'auto',
-                   'noheader' => false,
-                   'exclude'  => false,   //comma-seperated list of glob
-                   'limit'    => false,
-            'quiet'    => false]
+                'hilight'  => true,
+                'case_exact' => false,
+                'regex'    => 'auto',
+                'noheader' => false,
+                'exclude'  => false,   //comma-seperated list of glob
+                'limit'    => false,
+                'quiet'    => false,
+            ]
         );  // be less verbose
     }
 

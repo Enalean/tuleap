@@ -488,17 +488,17 @@ class SystemEventManager
                 $klass        = SystemEventUserActiveStatusChange::class;
                 $user_manager = UserManager::instance();
                 $klass_params = [
-                $user_manager,
-                new UserGroupDao(),
-                new UserRemover(
-                    ProjectManager::instance(),
-                    EventManager::instance(),
-                    new ArtifactTypeFactory(false),
-                    new UserRemoverDao(),
                     $user_manager,
-                    new ProjectHistoryDao(),
-                    new UGroupManager()
-                ),
+                    new UserGroupDao(),
+                    new UserRemover(
+                        ProjectManager::instance(),
+                        EventManager::instance(),
+                        new ArtifactTypeFactory(false),
+                        new UserRemoverDao(),
+                        $user_manager,
+                        new ProjectHistoryDao(),
+                        new UGroupManager()
+                    ),
                 ];
                 break;
             case SystemEvent::TYPE_SYSTEM_CHECK:
@@ -535,15 +535,15 @@ class SystemEventManager
                 $klass          = $this->getClassForType($row['type']);
                 $ugroup_manager = new UGroupManager();
                 $klass_params   = [
-                new UserRemover(
-                    ProjectManager::instance(),
-                    EventManager::instance(),
-                    new ArtifactTypeFactory(false),
-                    new UserRemoverDao(),
-                    UserManager::instance(),
-                    new ProjectHistoryDao(),
-                    $ugroup_manager
-                ),
+                    new UserRemover(
+                        ProjectManager::instance(),
+                        EventManager::instance(),
+                        new ArtifactTypeFactory(false),
+                        new UserRemoverDao(),
+                        UserManager::instance(),
+                        new ProjectHistoryDao(),
+                        $ugroup_manager
+                    ),
                     $ugroup_manager,
                 ];
                 break;

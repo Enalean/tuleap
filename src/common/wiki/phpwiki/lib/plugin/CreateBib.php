@@ -54,7 +54,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
     public function getDefaultArguments()
     {
         return [ 'pagename'  => '[pagename]', // The page from which the BibTex file is generated
-                      ];
+        ];
     }
 
     public function preg_quote($heading)
@@ -152,7 +152,8 @@ class WikiPlugin_CreateBib extends WikiPlugin
         $html = HTML::div(['class' => 'bib', 'align' => 'left']);
         $html->pushContent($dump_button, ' ');
         $list = HTML::pre(['name' => 'biblist','id' => 'biblist',
-        'class' => 'bib']);
+            'class' => 'bib',
+        ]);
 
         // Let's find the subpages
         if ($articles = $this->extractArticles($content)) {

@@ -172,8 +172,9 @@ class WikiDB_backend
         $mtime = time();
         $user  = $GLOBALS['request']->_user;
         $vdata = ['author' => $user->getId(),
-                       'author_id' => $user->getAuthenticatedId(),
-                       'mtime' => $mtime];
+            'author_id' => $user->getAuthenticatedId(),
+            'mtime' => $mtime,
+        ];
 
         $this->lock(); // critical section:
         $version = $this->get_latest_version($pagename);
@@ -365,7 +366,8 @@ class WikiDB_backend
             $search,
             $fulltext,
             ['limit' => $limit,
-            'exclude' => $exclude]
+                'exclude' => $exclude,
+            ]
         );
     }
 

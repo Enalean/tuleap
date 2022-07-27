@@ -170,15 +170,15 @@ class WikiViews extends Views
         $eM         = EventManager::instance();
         $referenced = false;
         $eM->processEvent('isWikiPageReferenced', [
-                          'referenced' => &$referenced,
-                          'wiki_page'  => $pagename,
-                          'group_id' => $this->gid,
-                        ]);
+            'referenced' => &$referenced,
+            'wiki_page'  => $pagename,
+            'group_id' => $this->gid,
+        ]);
         if ($referenced) {
             $label = '';
             $eM->processEvent('getPermsLabelForWiki', [
-                              'label'  => &$label,
-                            ]);
+                'label'  => &$label,
+            ]);
             print '<p align="center"><br><b>' . $label . '</b></p>';
         } else {
             print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');

@@ -1334,7 +1334,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             case self::ACTION_CLEANSESSION:
                 $this->report_session->clean();
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                        'tracker'   => $this->tracker_id,
+                    'tracker'   => $this->tracker_id,
                 ]));
                 break;
             case 'renderer':
@@ -1354,16 +1354,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $this->report_session->setHasChanged();
                 }
                 $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id,
-                                                            ]));
+                    'report'   => $this->id,
+                ]));
                 break;
             case 'delete-renderer':
                 if (! $current_user->isAnonymous() && (int) $request->get('renderer')) {
                     $this->report_session->removeRenderer((int) $request->get('renderer'));
                     $this->report_session->setHasChanged();
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id,
-                                                            ]));
+                        'report'   => $this->id,
+                    ]));
                 }
                 break;
             case 'move-renderer':
@@ -1375,8 +1375,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         if ($request->get('move-renderer-direction')) {
                             $this->moveRenderer((int) $request->get('renderer'), $request->get('move-renderer-direction'));
                             $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                                    'report'   => $this->id,
-                                                                    ]));
+                                'report'   => $this->id,
+                            ]));
                         }
                     }
                 }
@@ -1388,9 +1388,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if (! $current_user->isAnonymous() && $new_name) {
                     $new_renderer_id = $this->addRendererInSession($new_name, $new_description, $new_type);
                     $GLOBALS['Response']->redirect('?' . http_build_query([
-                                                            'report'   => $this->id,
-                                                            'renderer' => $new_renderer_id ? $new_renderer_id : '',
-                                                            ]));
+                        'report'   => $this->id,
+                        'renderer' => $new_renderer_id ? $new_renderer_id : '',
+                    ]));
                 }
                 break;
             case self::ACTION_SAVE:

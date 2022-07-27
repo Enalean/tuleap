@@ -16,7 +16,8 @@ class ImgData_Stars extends ImgData
 
     protected $colors = ['bluegreen', 'lightblue', 'purple', 'blue', 'green', 'pink', 'red', 'yellow'];
     protected $index  = ['bluegreen' => 3,'lightblue' => 4,'purple' => 1,
-    'blue' => 5,'green' => 0,'pink' => 7,'red' => 2,'yellow' => 6];
+        'blue' => 5,'green' => 0,'pink' => 7,'red' => 2,'yellow' => 6,
+    ];
     protected $maxidx = 7;
     protected $imgdata;
 

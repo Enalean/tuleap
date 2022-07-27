@@ -21,7 +21,7 @@ class FieldArrow
     public $iArrowSize = 2;
     private $isizespec = [
         [2,1],[3,2],[4,3],[6,4],[7,4],[8,5],[10,6],[12,7],[16,8],[20,10],
-        ];
+    ];
     public function __construct()
     {
         // Empty

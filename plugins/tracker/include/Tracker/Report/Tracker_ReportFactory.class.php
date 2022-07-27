@@ -270,7 +270,8 @@ class Tracker_ReportFactory
     ) {
         $att                        = $xml->attributes();
         $row                        = ['name' => (string) $xml->name,
-                     'description' => (string) $xml->description];
+            'description' => (string) $xml->description,
+        ];
         $row['is_default']          = isset($att['is_default']) ? (int) $att['is_default'] : 0;
         $row['is_query_displayed']  = isset($att['is_query_displayed']) ? (int) $att['is_query_displayed'] : 1;
         $row['is_in_expert_mode']   = isset($att['is_in_expert_mode']) ? (int) $att['is_in_expert_mode'] : 0;

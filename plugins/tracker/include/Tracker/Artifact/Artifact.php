@@ -1089,8 +1089,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return TRACKER_BASE_URL . '/?' . http_build_query(
             array_merge(
                 [
-                        'aid' => $this->getId(),
-                    ],
+                    'aid' => $this->getId(),
+                ],
                 $parameters
             )
         );
@@ -1113,10 +1113,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         return '<a class="cross-reference" href="/goto?' . http_build_query(
             [
-                    'key'      => $this->getTracker()->getItemName(),
-                    'val'      => $this->getId(),
-                    'group_id' => $this->getTracker()->getGroupId(),
-                ]
+                'key'      => $this->getTracker()->getItemName(),
+                'val'      => $this->getId(),
+                'group_id' => $this->getTracker()->getGroupId(),
+            ]
         ) . '">' . Codendi_HTMLPurifier::instance()->purify($this->getXRef()) . '</a>';
     }
 

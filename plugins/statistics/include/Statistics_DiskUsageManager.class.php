@@ -88,12 +88,13 @@ class Statistics_DiskUsageManager
     {
         if (count($this->services) == 0) {
             $this->services = [self::SVN           => 'Subversion',
-                                     self::CVS           => 'CVS',
-                                     self::FRS           => 'File releases',
-                                     self::FTP           => 'Public FTP',
-                                     self::GRP_HOME      => 'Home page',
-                                     self::WIKI          => 'Wiki',
-                                     self::MAILMAN       => 'Mailman'];
+                self::CVS           => 'CVS',
+                self::FRS           => 'File releases',
+                self::FTP           => 'Public FTP',
+                self::GRP_HOME      => 'Home page',
+                self::WIKI          => 'Wiki',
+                self::MAILMAN       => 'Mailman',
+            ];
             if ($siteAdminView) {
                 $this->services[self::PLUGIN_WEBDAV] = 'SVN/Webdav';
             }
@@ -249,10 +250,11 @@ class Statistics_DiskUsageManager
         $values = [];
         foreach ($this->getProjectServices() as $k => $v) {
             $values[$k] = ['service'        => $k,
-                                'start_size'     => 0,
-                                'end_size'       => 0,
-                                'evolution'      => 0,
-                                'evolution_rate' => 0];
+                'start_size'     => 0,
+                'end_size'       => 0,
+                'evolution'      => 0,
+                'evolution_rate' => 0,
+            ];
         }
 
         // Start values

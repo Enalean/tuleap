@@ -228,7 +228,8 @@ class tracker_date_reminderPlugin extends Plugin
                 }
             }
             $params['ath']->adminHeader(['title' => dgettext('tuleap-tracker_date_reminder', 'Tracker Administration - Date Fields Reminder Settings'),
-            'help' => 'tracker.html#email-notification-settings']);
+                'help' => 'tracker.html#email-notification-settings',
+            ]);
 
             echo '<H2>' . dgettext('tuleap-tracker', 'Tracker') . ' \'<a href="/tracker/admin/?group_id=' . $params['ath']->Group->getID() . '&atid=' . $params['ath']->getID() . '">' . $params['ath']->getName() . '</a>\' - ' . dgettext('tuleap-tracker_date_reminder', 'Notification Settings') . '</h2>';
 

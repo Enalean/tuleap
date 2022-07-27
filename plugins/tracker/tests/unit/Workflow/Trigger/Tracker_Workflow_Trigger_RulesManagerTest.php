@@ -182,21 +182,21 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         $new_field_03->shouldReceive('getTracker')->andReturn($template_tracker);
 
         $new_field_01->shouldReceive('getAllValues')->andReturn([
-                                                                    $this->buildStaticValue(601),
-                                                                    $this->buildStaticValue(602),
-                                                                ]);
+            $this->buildStaticValue(601),
+            $this->buildStaticValue(602),
+        ]);
 
         $new_field_02->shouldReceive('getAllValues')->andReturn([
-                                                                    $this->buildStaticValue(701),
-                                                                    $this->buildStaticValue(702),
-                                                                    $this->buildStaticValue(703),
-                                                                    $this->buildStaticValue(704),
-                                                                ]);
+            $this->buildStaticValue(701),
+            $this->buildStaticValue(702),
+            $this->buildStaticValue(703),
+            $this->buildStaticValue(704),
+        ]);
 
         $new_field_03->shouldReceive('getAllValues')->andReturn([
-                                                                    $this->buildStaticValue(801),
-                                                                    $this->buildStaticValue(802),
-                                                                ]);
+            $this->buildStaticValue(801),
+            $this->buildStaticValue(802),
+        ]);
 
         $this->formelement_factory->shouldReceive('getFieldById')->with(502)->andReturns($new_field_01);
         $this->formelement_factory->shouldReceive('getFieldById')->with(503)->andReturns($new_field_02);
@@ -336,10 +336,10 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         $this->target_field       = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->target_field->shouldReceive('getAllValues')->andReturns([
-                                                                           $this->buildStaticValue(9998),
-                                                                           $this->target_field_value,
-                                                                           $this->buildStaticValue(9999),
-                                                                       ]);
+            $this->buildStaticValue(9998),
+            $this->target_field_value,
+            $this->buildStaticValue(9999),
+        ]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with($this->target_field_id)->andReturns($this->target_field);
 
         $this->trigger_field_id_1    = 369;
@@ -348,8 +348,8 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         $this->trigger_field_1       = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
         $this->trigger_field_1->shouldReceive('getAllValues')->andReturns([
-                                                                              $this->trigger_field_value_1,
-                                                                          ]);
+            $this->trigger_field_value_1,
+        ]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with($this->trigger_field_id_1)->andReturns($this->trigger_field_1);
     }
 
@@ -726,20 +726,20 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 $tracker,
                 new ArrayIterator(
                     [
-                            new Tracker_FormElement_Field_Selectbox(
-                                1,
-                                1,
-                                0,
-                                'name',
-                                "select",
-                                'desc',
-                                true,
-                                'S',
-                                false,
-                                false,
-                                0
-                            ),
-                        ]
+                        new Tracker_FormElement_Field_Selectbox(
+                            1,
+                            1,
+                            0,
+                            'name',
+                            "select",
+                            'desc',
+                            true,
+                            'S',
+                            false,
+                            false,
+                            0
+                        ),
+                    ]
                 )
             ));
 
@@ -760,20 +760,20 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 $tracker,
                 new ArrayIterator(
                     [
-                            new Tracker_FormElement_Field_Selectbox(
-                                1,
-                                1,
-                                0,
-                                'name',
-                                "select",
-                                'desc',
-                                true,
-                                'S',
-                                false,
-                                false,
-                                0
-                            ),
-                        ]
+                        new Tracker_FormElement_Field_Selectbox(
+                            1,
+                            1,
+                            0,
+                            'name',
+                            "select",
+                            'desc',
+                            true,
+                            'S',
+                            false,
+                            false,
+                            0
+                        ),
+                    ]
                 )
             ));
 

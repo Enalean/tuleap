@@ -613,7 +613,8 @@ class _WikiUser
     {
         // Normalize args, and extract.
         $keys = ['userid', 'passwd', 'require_level', 'login', 'logout',
-                      'cancel'];
+            'cancel',
+        ];
         foreach ($keys as $key) {
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
         }
@@ -1045,8 +1046,9 @@ class _PassUser extends _AnonUser
                 $stmt    = str_replace(
                     [" user ", " pref ", " member "],
                     [" " . $prefix . "user ",
-                                          " " . $prefix . "pref ",
-                    " " . $prefix . "member "],
+                        " " . $prefix . "pref ",
+                        " " . $prefix . "member ",
+                    ],
                     $stmt
                 );
                 //Do it automatically for the lazy admin? Esp. on sf.net it's nice to have
@@ -1592,7 +1594,8 @@ class _UserPreference_notify extends _UserPreference
                     // check it dynamically at every page->save?
                     if ($verified) {
                         $data[$page][$userid] = ['email' => $email,
-                                                      'verified' => $verified];
+                            'verified' => $verified,
+                        ];
                     } else {
                         $data[$page][$userid] = ['email' => $email];
                     }
@@ -1787,35 +1790,35 @@ class UserPreferences
         // if some app needs prefs from different users, different from current user.
         $this->_prefs
             = [
-                    'userid'        => new _UserPreference(''),
-                    'passwd'        => new _UserPreference(''),
-                    'autologin'     => new _UserPreference_bool(),
+                'userid'        => new _UserPreference(''),
+                'passwd'        => new _UserPreference(''),
+                'autologin'     => new _UserPreference_bool(),
                     //'emailVerified' => new _UserPreference_emailVerified(),
                     //fixed: store emailVerified as email parameter, 1.3.8
-                    'email'         => new _UserPreference_email(''),
-                    'notifyPages'   => new _UserPreference_notify(''), // 1.3.8
-                    'theme'         => new _UserPreference_theme(THEME),
-                    'lang'          => new _UserPreference_language(DEFAULT_LANGUAGE),
-                    'editWidth'     => new _UserPreference_int(
-                        EDITWIDTH_DEFAULT_COLS,
-                        EDITWIDTH_MIN_COLS,
-                        EDITWIDTH_MAX_COLS
-                    ),
-                    'noLinkIcons'   => new _UserPreference_bool(),    // 1.3.8
-                    'editHeight'    => new _UserPreference_int(
-                        EDITHEIGHT_DEFAULT_ROWS,
-                        EDITHEIGHT_MIN_ROWS,
-                        EDITHEIGHT_MAX_ROWS
-                    ),
-                    'timeOffset'    => new _UserPreference_numeric(
-                        TIMEOFFSET_DEFAULT_HOURS,
-                        TIMEOFFSET_MIN_HOURS,
-                        TIMEOFFSET_MAX_HOURS
-                    ),
-                    'relativeDates' => new _UserPreference_bool(),
-                    'googleLink'    => new _UserPreference_bool(), // 1.3.10
-                    'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
-                    ];
+                'email'         => new _UserPreference_email(''),
+                'notifyPages'   => new _UserPreference_notify(''), // 1.3.8
+                'theme'         => new _UserPreference_theme(THEME),
+                'lang'          => new _UserPreference_language(DEFAULT_LANGUAGE),
+                'editWidth'     => new _UserPreference_int(
+                    EDITWIDTH_DEFAULT_COLS,
+                    EDITWIDTH_MIN_COLS,
+                    EDITWIDTH_MAX_COLS
+                ),
+                'noLinkIcons'   => new _UserPreference_bool(),    // 1.3.8
+                'editHeight'    => new _UserPreference_int(
+                    EDITHEIGHT_DEFAULT_ROWS,
+                    EDITHEIGHT_MIN_ROWS,
+                    EDITHEIGHT_MAX_ROWS
+                ),
+                'timeOffset'    => new _UserPreference_numeric(
+                    TIMEOFFSET_DEFAULT_HOURS,
+                    TIMEOFFSET_MIN_HOURS,
+                    TIMEOFFSET_MAX_HOURS
+                ),
+                'relativeDates' => new _UserPreference_bool(),
+                'googleLink'    => new _UserPreference_bool(), // 1.3.10
+                'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
+            ];
         // add custom theme-specific pref types:
         // FIXME: on theme changes the wiki_user session pref object will fail.
         // We will silently ignore this.

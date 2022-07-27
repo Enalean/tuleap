@@ -225,8 +225,9 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $this->_getEventManager()->processEvent(
                 'frs_update_file',
                 [
-                'group_id' => $file->getGroup()->getGroupId(),
-                'item_id'    => $data_array['file_id']]
+                    'group_id' => $file->getGroup()->getGroupId(),
+                    'item_id'    => $data_array['file_id'],
+                ]
             );
 
             if ($old_file->getFilePath() != $file->getFilePath()) {
@@ -270,7 +271,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $this->_getEventManager()->processEvent(
                 'frs_create_file',
                 ['group_id' => $file->getGroup()->getGroupId(),
-                'item_id'    => $id]
+                    'item_id'    => $id,
+                ]
             );
             return $id;
         }
@@ -479,7 +481,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $this->_getEventManager()->processEvent(
                 'frs_delete_file',
                 ['group_id' => $file->getGroup()->getGroupId(),
-                'item_id'    => $_id]
+                    'item_id'    => $_id,
+                ]
             );
             return true;
         }
@@ -941,7 +944,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
                         $this->_getEventManager()->processEvent(
                             'frs_restore_file',
                             ['group_id' => $file->getGroup()->getGroupId(),
-                            'item_id'  => $file->getFileID()]
+                                'item_id'  => $file->getFileID(),
+                            ]
                         );
                         return true;
                     }

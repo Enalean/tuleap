@@ -280,9 +280,10 @@ class WikiPlugin
     public function getDefaultLinkArguments()
     {
         return ['targetpage'  => $this->getName(),
-                     'linktext'    => $this->getName(),
-                     'description' => $this->getDescription(),
-                     'class'       => 'wikiaction'];
+            'linktext'    => $this->getName(),
+            'description' => $this->getDescription(),
+            'class'       => 'wikiaction',
+        ];
     }
 
     public function makeLink($argstr, $request)
@@ -315,12 +316,13 @@ class WikiPlugin
     public function getDefaultFormArguments()
     {
         return ['targetpage' => $this->getName(),
-                     'buttontext' => $this->getName(),
-                     'class'      => 'wikiaction',
-                     'method'     => 'get',
-                     'textinput'  => 's',
-                     'description' => $this->getDescription(),
-                     'formsize'   => 30];
+            'buttontext' => $this->getName(),
+            'class'      => 'wikiaction',
+            'method'     => 'get',
+            'textinput'  => 's',
+            'description' => $this->getDescription(),
+            'formsize'   => 30,
+        ];
     }
 
     public function makeForm($argstr, $request)
@@ -338,22 +340,26 @@ class WikiPlugin
         assert(! empty($textinput) && isset($args['textinput']));
 
         $form = HTML::form(['action' => WikiURL($args['targetpage']),
-                                 'method' => $args['method'],
-                                 'class'  => $args['class'],
-                                 'accept-charset' => $GLOBALS['charset']]);
+            'method' => $args['method'],
+            'class'  => $args['class'],
+            'accept-charset' => $GLOBALS['charset'],
+        ]);
         $form->pushContent(HTML::input(['type' => 'hidden',
-                                             'name' => 'group_id',
-                                             'value' => GROUP_ID]));
+            'name' => 'group_id',
+            'value' => GROUP_ID,
+        ]));
         if (! USE_PATH_INFO) {
             $pagename = $request->get('pagename');
             $form->pushContent(HTML::input(['type' => 'hidden',
-                                                 'name' => 'pagename',
-                                                 'value' => $args['targetpage']]));
+                'name' => 'pagename',
+                'value' => $args['targetpage'],
+            ]));
         }
         if ($args['targetpage'] != $this->getName()) {
             $form->pushContent(HTML::input(['type' => 'hidden',
-                                                 'name' => 'action',
-                                                 'value' => $this->getName()]));
+                'name' => 'action',
+                'value' => $this->getName(),
+            ]));
         }
         $contents = HTML::div();
         $contents->setAttr('class', $args['class']);
@@ -387,15 +393,17 @@ class WikiPlugin
                 $form->setAttr('enctype', 'multipart/form-data');
                 $form->setAttr('method', 'post');
                 $contents->pushContent(HTML::input(['name' => 'MAX_FILE_SIZE',
-                                                         'value' => MAX_UPLOAD_SIZE,
-                                                         'type' => 'hidden']));
+                    'value' => MAX_UPLOAD_SIZE,
+                    'type' => 'hidden',
+                ]));
             }
         }
 
         if (! empty($args['buttontext'])) {
             $contents->pushContent(HTML::input(['type' => 'submit',
-                                                     'class' => 'button',
-                                                     'value' => $args['buttontext']]));
+                'class' => 'button',
+                'value' => $args['buttontext'],
+            ]));
         }
         $form->pushContent($contents);
         return $form;
@@ -533,8 +541,9 @@ class WikiPluginLoader
 
                     $timestamp = $dbi->getTimestamp();
                     $request->appendValidators(['dbi_timestamp' => $timestamp,
-                                                     '%mtime' => (int) $timestamp,
-                                                     '%weak' => true]);
+                        '%mtime' => (int) $timestamp,
+                        '%weak' => true,
+                    ]);
                 }
                 return $plugin->run($dbi, $plugin_args, $request, $basepage);
             case 'plugin-list':

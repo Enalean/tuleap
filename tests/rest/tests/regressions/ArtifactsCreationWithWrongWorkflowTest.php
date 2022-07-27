@@ -43,8 +43,8 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase
         $tracker  = $this->tracker_test_helper->getTrackerRest('releases');
         $response = $tracker->createArtifact(
             [
-               $tracker->getSubmitTextValue('Version Number', '0.1'),
-               $tracker->getSubmitListValue('Progress', 'Delivered to customer'),
+                $tracker->getSubmitTextValue('Version Number', '0.1'),
+                $tracker->getSubmitListValue('Progress', 'Delivered to customer'),
             ]
         );
 
@@ -56,8 +56,8 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase
         $tracker       = $this->tracker_test_helper->getTrackerRest('releases');
         $artifact_json = $tracker->createArtifact(
             [
-               $tracker->getSubmitTextValue('Version Number', '0.1'),
-               $tracker->getSubmitListValue('Progress', 'To be defined'),
+                $tracker->getSubmitTextValue('Version Number', '0.1'),
+                $tracker->getSubmitListValue('Progress', 'To be defined'),
             ]
         );
 

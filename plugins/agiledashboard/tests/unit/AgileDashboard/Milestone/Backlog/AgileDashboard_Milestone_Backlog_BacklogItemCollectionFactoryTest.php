@@ -87,13 +87,14 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->collection_factory = \Mockery::mock(
             AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class,
             [ $this->dao,
-              $this->artifact_factory,
-              $this->milestone_factory,
-              $this->planning_factory,
-              $this->backlog_item_builder,
-              $this->remaining_effort_value_retriever,
-              $this->artifacts_in_explicit_backlog_dao,
-              $this->artifact_priority_dao]
+                $this->artifact_factory,
+                $this->milestone_factory,
+                $this->planning_factory,
+                $this->backlog_item_builder,
+                $this->remaining_effort_value_retriever,
+                $this->artifacts_in_explicit_backlog_dao,
+                $this->artifact_priority_dao,
+            ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
     }
 

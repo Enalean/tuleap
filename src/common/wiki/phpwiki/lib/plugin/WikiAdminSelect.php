@@ -59,16 +59,17 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
     {
         return ['s'       => '', // preselect pages
                      /* select pages by meta-data: */
-                     'author'   => false,
-                     'owner'    => false,
-                     'creator'  => false,
+            'author'   => false,
+            'owner'    => false,
+            'creator'  => false,
 
-                     'only'    => '',
-                     'exclude' => '',
-                     'info'    => 'most',
-                     'sortby'  => 'pagename',
-                     'limit'    => 150,
-                     'debug'   => false];
+            'only'    => '',
+            'exclude' => '',
+            'info'    => 'most',
+            'sortby'  => 'pagename',
+            'limit'    => 150,
+            'debug'   => false,
+        ];
     }
 
     /**
@@ -155,11 +156,13 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
             ['class' => 'wikitext'],
             _("Select: "),
             HTML::input(['type' => 'text',
-                                                     'name' => 's',
-                                                     'value' => $args['s']]),
+                'name' => 's',
+                'value' => $args['s'],
+            ]),
             HTML::input(['type' => 'submit',
-                                                     'name' => 'WikiAdminSelect',
-            'value' => _("Go")])
+                'name' => 'WikiAdminSelect',
+                'value' => _("Go"),
+            ])
         ));
         if (
             $request->isPost()
@@ -233,8 +236,9 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
         */
         if (! $request->getArg('verify')) {
             $form->pushContent(HTML::input(['type' => 'hidden',
-                                                 'name' => 'action',
-                                                 'value' => 'verify']));
+                'name' => 'action',
+                'value' => 'verify',
+            ]));
             $form->pushContent(
                 Button(
                     'submit:verify',
@@ -246,8 +250,9 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
         } else {
             global $WikiTheme;
             $form->pushContent(HTML::input(['type' => 'hidden',
-                                                 'name' => 'action',
-                                                 'value' => 'WikiAdminSelect']));
+                'name' => 'action',
+                'value' => 'WikiAdminSelect',
+            ]));
             // Add the Buttons for all registered WikiAdmin plugins
             $plugin_dir = 'lib/plugin';
             if (defined('PHPWIKI_DIR')) {

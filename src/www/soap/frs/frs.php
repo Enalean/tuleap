@@ -39,12 +39,12 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'package_id' => ['name' => 'package_id', 'type' => 'xsd:int'],
-        'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
-        'name' => ['name' => 'name', 'type' => 'xsd:string'],
-        'status_id' => ['name' => 'status_id', 'type' => 'xsd:int'],
-        'rank' => ['name' => 'rank', 'type' => 'xsd:int'],
-        'approve_license' => ['name' => 'approve_license', 'type' => 'xsd:boolean'],
+            'package_id' => ['name' => 'package_id', 'type' => 'xsd:int'],
+            'group_id' => ['name' => 'group_id', 'type' => 'xsd:int'],
+            'name' => ['name' => 'name', 'type' => 'xsd:string'],
+            'status_id' => ['name' => 'status_id', 'type' => 'xsd:int'],
+            'rank' => ['name' => 'rank', 'type' => 'xsd:int'],
+            'approve_license' => ['name' => 'approve_license', 'type' => 'xsd:boolean'],
         ]
     );
 
@@ -66,14 +66,14 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'release_id' => ['name' => 'release_id', 'type' => 'xsd:int'],
-        'package_id' => ['name' => 'package_id', 'type' => 'xsd:int'],
-        'name' => ['name' => 'name', 'type' => 'xsd:string'],
-        'notes' => ['name' => 'notes', 'type' => 'xsd:string'],
-        'changes' => ['name' => 'changes', 'type' => 'xsd:string'],
-        'status_id' => ['name' => 'description', 'type' => 'xsd:string'],
-        'release_date' => ['name' => 'release_date', 'type' => 'xsd:int'],
-        'released_by' => ['name' => 'released_by', 'type' => 'xsd:string'],
+            'release_id' => ['name' => 'release_id', 'type' => 'xsd:int'],
+            'package_id' => ['name' => 'package_id', 'type' => 'xsd:int'],
+            'name' => ['name' => 'name', 'type' => 'xsd:string'],
+            'notes' => ['name' => 'notes', 'type' => 'xsd:string'],
+            'changes' => ['name' => 'changes', 'type' => 'xsd:string'],
+            'status_id' => ['name' => 'description', 'type' => 'xsd:string'],
+            'release_date' => ['name' => 'release_date', 'type' => 'xsd:int'],
+            'released_by' => ['name' => 'released_by', 'type' => 'xsd:string'],
         ]
     );
 
@@ -95,18 +95,18 @@ if (defined('NUSOAP')) {
         'sequence',
         '',
         [
-        'file_id'       => ['name' => 'file_id',       'type' => 'xsd:int'],
-        'release_id'    => ['name' => 'release_id',    'type' => 'xsd:int'],
-        'file_name'     => ['name' => 'file_name',     'type' => 'xsd:string'],
-        'file_size'     => ['name' => 'file_size',     'type' => 'xsd:int'],
-        'type_id'       => ['name' => 'type_id',       'type' => 'xsd:int'],
-        'processor_id'  => ['name' => 'processor_id',  'type' => 'xsd:int'],
-        'release_time'  => ['name' => 'release_time',  'type' => 'xsd:int'],
-        'post_date'     => ['name' => 'post_date',     'type' => 'xsd:int'],
-        'computed_md5'  => ['name' => 'computed_md5',  'type' => 'xsd:string'],
-        'reference_md5' => ['name' => 'reference_md5', 'type' => 'xsd:string'],
-        'user_id'       => ['name' => 'user_id',       'type' => 'xsd:int'],
-        'comment'       => ['name' => 'comment',       'type' => 'xsd:string'],
+            'file_id'       => ['name' => 'file_id',       'type' => 'xsd:int'],
+            'release_id'    => ['name' => 'release_id',    'type' => 'xsd:int'],
+            'file_name'     => ['name' => 'file_name',     'type' => 'xsd:string'],
+            'file_size'     => ['name' => 'file_size',     'type' => 'xsd:int'],
+            'type_id'       => ['name' => 'type_id',       'type' => 'xsd:int'],
+            'processor_id'  => ['name' => 'processor_id',  'type' => 'xsd:int'],
+            'release_time'  => ['name' => 'release_time',  'type' => 'xsd:int'],
+            'post_date'     => ['name' => 'post_date',     'type' => 'xsd:int'],
+            'computed_md5'  => ['name' => 'computed_md5',  'type' => 'xsd:string'],
+            'reference_md5' => ['name' => 'reference_md5', 'type' => 'xsd:string'],
+            'user_id'       => ['name' => 'user_id',       'type' => 'xsd:int'],
+            'comment'       => ['name' => 'comment',       'type' => 'xsd:string'],
         ]
     );
 
@@ -129,8 +129,9 @@ if (defined('NUSOAP')) {
     $server->register(
         'getPackages',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+        ],
         ['getPackagesResponse' => 'tns:ArrayOfFRSPackage'],
         $uri,
         $uri . '#getPackages',
@@ -143,12 +144,13 @@ if (defined('NUSOAP')) {
     $server->register(
         'addPackage',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_name' => 'xsd:string',
-        'status_id' => 'xsd:int',
-        'rank' => 'xsd:int',
-        'approve_license' => 'xsd:boolean'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_name' => 'xsd:string',
+            'status_id' => 'xsd:int',
+            'rank' => 'xsd:int',
+            'approve_license' => 'xsd:boolean',
+        ],
         ['addPackageResponse' => 'xsd:int'],
         $uri,
         $uri . '#addPackage',
@@ -163,9 +165,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'getReleases',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+        ],
         ['getReleasesResponse' => 'tns:ArrayOfFRSRelease'],
         $uri,
         $uri . '#getReleases',
@@ -180,13 +183,14 @@ if (defined('NUSOAP')) {
     $server->register(
         'updateRelease',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'release_id' => 'xsd:int',
-        'notes' => 'xsd:string',
-        'changes' => 'xsd:string',
-        'status_id' => 'xsd:int',],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'release_id' => 'xsd:int',
+            'notes' => 'xsd:string',
+            'changes' => 'xsd:string',
+            'status_id' => 'xsd:int',
+        ],
         ['updateRelease' => 'xsd:boolean'],
         $uri,
         $uri . '#updateRelease',
@@ -203,14 +207,15 @@ if (defined('NUSOAP')) {
     $server->register(
         'addRelease',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'name' => 'xsd:string',
-        'notes' => 'xsd:string',
-        'changes' => 'xsd:string',
-        'status_id' => 'xsd:int',
-        'release_date' => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'name' => 'xsd:string',
+            'notes' => 'xsd:string',
+            'changes' => 'xsd:string',
+            'status_id' => 'xsd:int',
+            'release_date' => 'xsd:int',
+        ],
         ['addRelease' => 'xsd:int'],
         $uri,
         $uri . '#addRelease',
@@ -226,10 +231,11 @@ if (defined('NUSOAP')) {
     $server->register(
         'getFiles',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'release_id' => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'release_id' => 'xsd:int',
+        ],
         ['getFilesResponse' => 'tns:ArrayOfFRSFile'],
         $uri,
         $uri . '#getFiles',
@@ -244,11 +250,12 @@ if (defined('NUSOAP')) {
     $server->register(
         'getFileInfo',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'release_id' => 'xsd:int',
-        'file_id' => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'release_id' => 'xsd:int',
+            'file_id' => 'xsd:int',
+        ],
         ['getFileInfoResponse' => 'tns:FRSFile'],
         $uri,
         $uri . '#getFileInfo',
@@ -264,11 +271,12 @@ if (defined('NUSOAP')) {
     $server->register(
         'getFile',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'release_id' => 'xsd:int',
-        'file_id' => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'release_id' => 'xsd:int',
+            'file_id' => 'xsd:int',
+        ],
         ['getFileResponse' => 'xsd:string'],
         $uri,
         $uri . '#getFile',
@@ -284,13 +292,14 @@ if (defined('NUSOAP')) {
     $server->register(
         'getFileChunk',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id'   => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'release_id' => 'xsd:int',
-        'file_id'    => 'xsd:int',
-        'offset'     => 'xsd:int',
-        'size'       => 'xsd:int'],
+            'sessionKey' => 'xsd:string',
+            'group_id'   => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'release_id' => 'xsd:int',
+            'file_id'    => 'xsd:int',
+            'offset'     => 'xsd:int',
+            'size'       => 'xsd:int',
+        ],
         ['getFileChunkResponse' => 'xsd:string'],
         $uri,
         $uri . '#getFileChunk',
@@ -307,16 +316,16 @@ if (defined('NUSOAP')) {
     $server->register(
         'addFile',
         [
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        'package_id'        => 'xsd:int',
-        'release_id'        => 'xsd:int',
-        'filename'          => 'xsd:string',
-        'base64_contents'   => 'xsd:string',
-        'type_id'           => 'xsd:int',
-        'processor_id'      => 'xsd:int',
-        'reference_md5'     => 'xsd:string',
-        'comment'           => 'xsd:string',
+            'sessionKey'        => 'xsd:string',
+            'group_id'          => 'xsd:int',
+            'package_id'        => 'xsd:int',
+            'release_id'        => 'xsd:int',
+            'filename'          => 'xsd:string',
+            'base64_contents'   => 'xsd:string',
+            'type_id'           => 'xsd:int',
+            'processor_id'      => 'xsd:int',
+            'reference_md5'     => 'xsd:string',
+            'comment'           => 'xsd:string',
         ],
         ['addFile' => 'xsd:int'],
         $uri,
@@ -336,10 +345,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'addFileChunk',
         [
-        'sessionKey'     => 'xsd:string',
-        'filename'       => 'xsd:string',
-        'contents'       => 'xsd:string',
-        'first_chunk'    => 'xsd:boolean',
+            'sessionKey'     => 'xsd:string',
+            'filename'       => 'xsd:string',
+            'contents'       => 'xsd:string',
+            'first_chunk'    => 'xsd:boolean',
         ],
         ['addFileChunk' => 'xsd:integer'],
         $uri,
@@ -356,15 +365,15 @@ if (defined('NUSOAP')) {
     $server->register(
         'addUploadedFile',
         [
-        'sessionKey'    => 'xsd:string',
-        'group_id'      => 'xsd:int',
-        'package_id'    => 'xsd:int',
-        'release_id'    => 'xsd:int',
-        'filename'      => 'xsd:string',
-        'type_id'       => 'xsd:int',
-        'processor_id'  => 'xsd:int',
-        'reference_md5' => 'xsd:string',
-        'comment'       => 'xsd:string',
+            'sessionKey'    => 'xsd:string',
+            'group_id'      => 'xsd:int',
+            'package_id'    => 'xsd:int',
+            'release_id'    => 'xsd:int',
+            'filename'      => 'xsd:string',
+            'type_id'       => 'xsd:int',
+            'processor_id'  => 'xsd:int',
+            'reference_md5' => 'xsd:string',
+            'comment'       => 'xsd:string',
         ],
         ['addUploadedFile' => 'xsd:int'],
         $uri,
@@ -384,8 +393,8 @@ if (defined('NUSOAP')) {
     $server->register(
         'getUploadedFiles',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
         ],
         ['getUploadedFilesResponse' => 'tns:ArrayOfstring'],
         $uri,
@@ -398,11 +407,11 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteFile',
         [
-        'sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'package_id' => 'xsd:int',
-        'release_id' => 'xsd:int',
-        'file_id' => 'xsd:int',
+            'sessionKey' => 'xsd:string',
+            'group_id' => 'xsd:int',
+            'package_id' => 'xsd:int',
+            'release_id' => 'xsd:int',
+            'file_id' => 'xsd:int',
         ],
         ['deleteFileResponse' => 'xsd:boolean'],
         $uri,
@@ -416,10 +425,10 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteEmptyPackage',
         [
-        'sessionKey'  => 'xsd:string',
-        'group_id'    => 'xsd:int',
-        'package_id'  => 'xsd:int',
-        'cleanup_all' => 'xsd:boolean',
+            'sessionKey'  => 'xsd:string',
+            'group_id'    => 'xsd:int',
+            'package_id'  => 'xsd:int',
+            'cleanup_all' => 'xsd:boolean',
         ],
         ['deleteEmptyPackageResponse' => 'tns:ArrayOfFRSPackage'],
         $uri,
@@ -433,11 +442,11 @@ if (defined('NUSOAP')) {
     $server->register(
         'deleteEmptyRelease',
         [
-        'sessionKey'  => 'xsd:string',
-        'group_id'    => 'xsd:int',
-        'package_id'  => 'xsd:int',
-        'release_id'  => 'xsd:int',
-        'cleanup_all' => 'xsd:boolean',
+            'sessionKey'  => 'xsd:string',
+            'group_id'    => 'xsd:int',
+            'package_id'  => 'xsd:int',
+            'release_id'  => 'xsd:int',
+            'cleanup_all' => 'xsd:boolean',
         ],
         ['deleteEmptyReleaseResponse' => 'tns:ArrayOfFRSRelease'],
         $uri,
@@ -451,12 +460,12 @@ if (defined('NUSOAP')) {
     $server->register(
         'updateFileComment',
         [
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        'package_id'        => 'xsd:int',
-        'release_id'        => 'xsd:int',
-        'file_id'           => 'xsd:int',
-        'comment'           => 'xsd:string',
+            'sessionKey'        => 'xsd:string',
+            'group_id'          => 'xsd:int',
+            'package_id'        => 'xsd:int',
+            'release_id'        => 'xsd:int',
+            'file_id'           => 'xsd:int',
+            'comment'           => 'xsd:string',
         ],
         ['updateFileCommentResponse' => 'xsd:boolean'],
         $uri,
@@ -513,12 +522,12 @@ if (defined('NUSOAP')) {
         // check if current user is allowed to see this package
         if ($package->userCanRead()) {
             return [
-            'package_id' => $package->getPackageID(),
-            'group_id' => $package->getGroupID(),
-            'name' => util_unconvert_htmlspecialchars($package->getName()),
-            'status_id' => $package->getStatusID(),
-            'rank' => $package->getRank(),
-            'approve_license' => $package->getApproveLicense(),
+                'package_id' => $package->getPackageID(),
+                'group_id' => $package->getGroupID(),
+                'name' => util_unconvert_htmlspecialchars($package->getName()),
+                'status_id' => $package->getStatusID(),
+                'rank' => $package->getRank(),
+                'approve_license' => $package->getApproveLicense(),
             ];
         }
         return null;
@@ -564,10 +573,11 @@ if (defined('NUSOAP')) {
                     return new SoapFault(INVALID_PACKAGE_FAULT, 'Package name already exists in this project', 'addPackage');
                 } else {
                     $pkg_array = ['group_id'        => $group->getID(),
-                                   'name'            => $package_name,
-                                   'status_id'       => $status_id,
-                                   'rank'            => $rank,
-                                   'approve_license' => $approve_license];
+                        'name'            => $package_name,
+                        'status_id'       => $status_id,
+                        'rank'            => $rank,
+                        'approve_license' => $approve_license,
+                    ];
                     $dar       = $pkg_fact->create($pkg_array);
                     if (! $dar) {
                         return new SoapFault(INVALID_PACKAGE_FAULT, $dar->isError(), 'addPackage');
@@ -635,14 +645,14 @@ if (defined('NUSOAP')) {
         // check if the user can view
         if ($release->userCanRead()) {
             return [
-            'release_id' => $release->getReleaseID(),
-            'package_id' => $release->getPackageID(),
-            'name' => $release->getName(),
-            'notes' => $release->getNotes(),
-            'changes' => $release->getChanges(),
-            'status_id' => $release->getStatusID(),
-            'release_date' => $release->getReleaseDate(),
-            'released_by' => $release->getReleasedBy(),
+                'release_id' => $release->getReleaseID(),
+                'package_id' => $release->getPackageID(),
+                'name' => $release->getName(),
+                'notes' => $release->getNotes(),
+                'changes' => $release->getChanges(),
+                'status_id' => $release->getStatusID(),
+                'release_date' => $release->getReleaseDate(),
+                'released_by' => $release->getReleasedBy(),
             ];
         }
         return null;
@@ -701,11 +711,12 @@ if (defined('NUSOAP')) {
                     return new SoapFault(INVALID_RELEASE_FAULT, 'Release name already exists in this package', 'addRelease');
                 } else {
                     $release_array =  ['package_id' => $package_id,
-                                        'name' => $name,
-                                        'notes' => $notes,
-                                        'changes' => $changes,
-                                        'status_id' => $status_id,
-                                        'release_date' => $release_date];
+                        'name' => $name,
+                        'notes' => $notes,
+                        'changes' => $changes,
+                        'status_id' => $status_id,
+                        'release_date' => $release_date,
+                    ];
                     $dar           = $release_fact->create($release_array);
                     if (! $dar) {
                         return new SoapFault(INVALID_RELEASE_FAULT, $dar->isError(), 'addRelease');
@@ -778,11 +789,11 @@ if (defined('NUSOAP')) {
         }
 
         $release_array =  [
-        'package_id'    => $package_id,
-        'notes'         => $notes,
-        'changes'       => $changes,
-        'status_id'     => $status_id,
-        'release_id'    => $release_id,
+            'package_id'    => $package_id,
+            'notes'         => $notes,
+            'changes'       => $changes,
+            'status_id'     => $status_id,
+            'release_id'    => $release_id,
         ];
 
         if (! $release_factory->update($release_array)) {
@@ -908,18 +919,18 @@ if (defined('NUSOAP')) {
         $return = null;
         // for the moment, no permissions on files
         $return = [
-        'file_id'       => $file->getFileID(),
-        'release_id'    => $file->getReleaseID(),
-        'file_name'     => $file->getFileName(),
-        'file_size'     => $file->getFileSize(),
-        'type_id'       => $file->getTypeID(),
-        'processor_id'  => $file->getProcessorID(),
-        'release_time'  => $file->getReleaseTime(),
-        'post_date'     => $file->getPostDate(),
-        'computed_md5'  => $file->getComputedMd5(),
-        'reference_md5' => $file->getReferenceMd5(),
-        'user_id'       => $file->getUserID(),
-        'comment'       => $file->getComment(),
+            'file_id'       => $file->getFileID(),
+            'release_id'    => $file->getReleaseID(),
+            'file_name'     => $file->getFileName(),
+            'file_size'     => $file->getFileSize(),
+            'type_id'       => $file->getTypeID(),
+            'processor_id'  => $file->getProcessorID(),
+            'release_time'  => $file->getReleaseTime(),
+            'post_date'     => $file->getPostDate(),
+            'computed_md5'  => $file->getComputedMd5(),
+            'reference_md5' => $file->getReferenceMd5(),
+            'user_id'       => $file->getUserID(),
+            'comment'       => $file->getComment(),
         ];
         return $return;
     }

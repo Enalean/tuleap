@@ -903,8 +903,9 @@ class PEAR_Error
     {
         $modes  = [];
         $levels = [E_USER_NOTICE  => 'notice',
-                        E_USER_WARNING => 'warning',
-                        E_USER_ERROR   => 'error'];
+            E_USER_WARNING => 'warning',
+            E_USER_ERROR   => 'error',
+        ];
         if ($this->mode & PEAR_ERROR_CALLBACK) {
             if (is_array($this->callback)) {
                 $callback = get_class($this->callback[0]) . '::' .

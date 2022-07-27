@@ -248,7 +248,8 @@ class BaselineRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
             $user
-        )];
+        ),
+        ];
         $this->assertEquals($expected_baselines, $baselines);
     }
 

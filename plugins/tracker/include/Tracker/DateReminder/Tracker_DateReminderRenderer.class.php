@@ -152,7 +152,8 @@ class Tracker_DateReminderRenderer
     {
         /** @psalm-suppress DeprecatedFunction */
         $res             = ugroup_db_get_existing_ugroups($this->tracker->group_id, [$GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']]);
+            $GLOBALS['UGROUP_PROJECT_ADMIN'],
+        ]);
         $selectedUgroups = '';
         $ugroups         = [];
         $roles           = [];
@@ -178,9 +179,9 @@ class Tracker_DateReminderRenderer
         $output             .= '</optgroup>';
          $output            .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_role') . '">';
          $all_possible_roles = [
-            new Tracker_DateReminder_Role_Submitter(),
-            new Tracker_DateReminder_Role_Assignee(),
-            new Tracker_DateReminder_Role_Commenter(),
+             new Tracker_DateReminder_Role_Submitter(),
+             new Tracker_DateReminder_Role_Assignee(),
+             new Tracker_DateReminder_Role_Commenter(),
          ];
          $purifier           = Codendi_HTMLPurifier::instance();
          foreach ($all_possible_roles as $role) {
@@ -391,9 +392,10 @@ class Tracker_DateReminderRenderer
     public function displayAllReminders()
     {
         $titles           = [dgettext('tuleap-tracker', 'Send an email to'),
-                                  dgettext('tuleap-tracker', 'When'),
-                                  dgettext('tuleap-tracker', 'Field'),
-                                  dgettext('tuleap-tracker', 'Actions')];
+            dgettext('tuleap-tracker', 'When'),
+            dgettext('tuleap-tracker', 'Field'),
+            dgettext('tuleap-tracker', 'Actions'),
+        ];
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders(true);
         if (! empty($trackerReminders)) {

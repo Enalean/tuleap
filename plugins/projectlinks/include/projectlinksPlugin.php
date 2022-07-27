@@ -244,11 +244,11 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                     update_database(
                         "plugin_projectlinks_link_type",
                         [
-                        "name" => $q_name,
-                        "reverse_name" => $q_reverse_name,
-                        "description" => $q_description,
-                        "uri_plus" => $q_uri_plus,
-                        "group_id" => $group_id,
+                            "name" => $q_name,
+                            "reverse_name" => $q_reverse_name,
+                            "description" => $q_description,
+                            "uri_plus" => $q_uri_plus,
+                            "group_id" => $group_id,
                         ],
                         ($link_type_id === null ? null : "link_type_id=$link_type_id")
                     )
@@ -894,7 +894,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         if ($links->rowCount() > 0) {
             $html .= html_build_list_table_top(
                 [
-                    dgettext('tuleap-projectlinks', 'Name'), ''],
+                    dgettext('tuleap-projectlinks', 'Name'), '',
+                ],
                 false,
                 false,
                 false

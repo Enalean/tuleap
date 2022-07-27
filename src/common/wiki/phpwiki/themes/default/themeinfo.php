@@ -35,7 +35,8 @@ $WikiTheme = new PHPWikiTheme('default');
 $WikiTheme->setDefaultCSS(
     'PhpWiki',
     [''      => 'phpwiki.css',
-    'print' => 'phpwiki-printer.css']
+        'print' => 'phpwiki-printer.css',
+    ]
 );
 
 // This allows one to manually select "Printer" style (when browsing page)

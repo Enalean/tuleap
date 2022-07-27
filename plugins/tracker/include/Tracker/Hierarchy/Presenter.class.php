@@ -120,8 +120,9 @@ class Tracker_Hierarchy_Presenter
             $selected = $this->getSelectedAttribute($possible_child);
 
             $possible_children[] = ['id'       => $possible_child->getId(),
-                                         'name'     => $possible_child->getName(),
-                                         'selected' => $selected];
+                'name'     => $possible_child->getName(),
+                'selected' => $selected,
+            ];
         }
 
         return $possible_children;

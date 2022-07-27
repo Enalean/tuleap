@@ -669,8 +669,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $GLOBALS['Response']->redirect(
                                 TRACKER_BASE_URL . '/?' . http_build_query(
                                     [
-                                    'tracker' => $this->getId(),
-                                    'func'    => $func,
+                                        'tracker' => $this->getId(),
+                                        'func'    => $func,
                                     ]
                                 )
                             );

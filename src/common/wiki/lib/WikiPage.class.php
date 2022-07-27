@@ -309,10 +309,10 @@ class WikiPage
             $userCanAccess = false;
             $eM            = EventManager::instance();
             $eM->processEvent('userCanAccessWikiDocument', [
-                            'canAccess' => &$userCanAccess,
-                            'wiki_page'  => $this->pagename,
-                            'group_id' => self::$gid,
-                            ]);
+                'canAccess' => &$userCanAccess,
+                'wiki_page'  => $this->pagename,
+                'group_id' => self::$gid,
+            ]);
             if (! $userCanAccess) {
                 return false;
             }
@@ -529,7 +529,7 @@ class WikiPage
     public static function getDefaultPages()
     {
         return [ // Plugin documentation pages
-             "AddCommentPlugin","AppendTextPlugin","AuthorHistoryPlugin"
+            "AddCommentPlugin","AppendTextPlugin","AuthorHistoryPlugin"
              ,"CalendarListPlugin","CommentPlugin","CreatePagePlugin"
              ,"CreateTocPlugin","EditMetaDataPlugin","FrameIncludePlugin"
              ,"HelloWorldPlugin","IncludePagePlugin","ListPagesPlugin"
@@ -597,7 +597,7 @@ class WikiPage
              ,"ProjectSummary","RecentVisitors","ReleaseNotes","SystemInfoPlugin"
              ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin",
 
-             ];
+        ];
     }
 
   /**

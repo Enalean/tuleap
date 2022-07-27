@@ -177,7 +177,7 @@ class WikiServiceAdminActions extends WikiActions
         $event_manager->processEvent(
             "wiki_service_permissions_updated",
             [
-            'group_id' => $this->gid,
+                'group_id' => $this->gid,
             ]
         );
     }
@@ -209,8 +209,8 @@ class WikiServiceAdminActions extends WikiActions
         $event_manager->processEvent(
             "wiki_page_permissions_updated",
             [
-            'group_id'         => $wp->getGid(),
-            'wiki_page'        => $wp->getPagename(),
+                'group_id'         => $wp->getGid(),
+                'wiki_page'        => $wp->getPagename(),
             ]
         );
     }

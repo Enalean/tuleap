@@ -676,7 +676,8 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
 
     return HTML::a(
         ['href'  => WikiURL($pagename, $args),
-                         'class' => $class],
+            'class' => $class,
+        ],
         $text
     );
 }

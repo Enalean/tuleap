@@ -53,8 +53,9 @@ class Docman_View_ItemRanking
 
         $vals  = ['beginning', 'end', '--'];
         $texts = [dgettext('tuleap-docman', 'At the beginning'),
-                       dgettext('tuleap-docman', 'At the end'),
-                       '----'];
+            dgettext('tuleap-docman', 'At the end'),
+            '----',
+        ];
         $i     = 3;
 
         $pm   = Docman_PermissionsManager::instance($parentItem->getGroupId());

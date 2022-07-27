@@ -96,8 +96,8 @@ class RepositoryCrumbBuilder
     {
         return $this->plugin_path . '/?' . http_build_query([
             'action' => 'repo_management',
-                'group_id' => $repository->getProjectId(),
-                'repo_id' => $repository->getId(),
-            ]);
+            'group_id' => $repository->getProjectId(),
+            'repo_id' => $repository->getId(),
+        ]);
     }
 }

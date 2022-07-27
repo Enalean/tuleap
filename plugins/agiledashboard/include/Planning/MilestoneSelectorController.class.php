@@ -44,9 +44,9 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
                 [
-                        'milestone' => $milestone,
-                        'redirect_parameters' => &$redirect_parameters,
-                    ]
+                    'milestone' => $milestone,
+                    'redirect_parameters' => &$redirect_parameters,
+                ]
             );
             $this->redirect($redirect_parameters);
         }

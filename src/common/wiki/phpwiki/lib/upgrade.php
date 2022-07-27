@@ -107,11 +107,11 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
 function isActionPage($filename)
 {
     static $special = ["DebugInfo"     => "_BackendInfo",
-                            "PhpWikiRecentChanges" => "RssFeed",
-                            "ProjectSummary"      => "RssFeed",
-                            "RecentReleases"      => "RssFeed",
-                            "InterWikiMap"      => "InterWikiMap",
-                            ];
+        "PhpWikiRecentChanges" => "RssFeed",
+        "ProjectSummary"      => "RssFeed",
+        "RecentReleases"      => "RssFeed",
+        "InterWikiMap"      => "InterWikiMap",
+    ];
     $base           = preg_replace("/\..{1,4}$/", "", basename($filename));
     if (isset($special[$base])) {
         return $special[$base];

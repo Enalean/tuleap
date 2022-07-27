@@ -402,7 +402,8 @@ class hudsonViews extends Views
                     echo '    <a href="?action=edit_job&group_id=' . $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '">' . $GLOBALS['HTML']->getimage(
                         'ic/edit.png',
                         ['alt' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job')),
-                        'title' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job'))]
+                            'title' => $purifier->purify(dgettext('tuleap-hudson', 'Edit this job')),
+                        ]
                     ) . '</a>';
                     echo '   </span>';
                     // delete job
@@ -412,7 +413,8 @@ class hudsonViews extends Views
                     echo ');">' . $GLOBALS['HTML']->getimage(
                         'ic/cross.png',
                         ['alt' => dgettext('tuleap-hudson', 'Delete this job from this project'),
-                        'title' => dgettext('tuleap-hudson', 'Delete this job from this project')]
+                            'title' => dgettext('tuleap-hudson', 'Delete this job from this project'),
+                        ]
                     ) . '</a>';
                     echo '   </span>';
                     echo '  </td>';

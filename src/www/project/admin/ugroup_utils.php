@@ -622,9 +622,10 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
         }
         // Raise event for ugroup modification
         EventManager::instance()->processEvent('project_admin_ugroup_remove_user', [
-                'group_id' => $group_id,
-                'ugroup_id' => $ugroup_id,
-                'user_id' => $user_id]);
+            'group_id' => $group_id,
+            'ugroup_id' => $ugroup_id,
+            'user_id' => $user_id,
+        ]);
     }
 }
 function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
@@ -644,7 +645,8 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
             EventManager::instance()->processEvent('project_admin_ugroup_add_user', [
                 'group_id' => $group_id,
                 'ugroup_id' => $ugroup_id,
-                'user_id' => $user_id]);
+                'user_id' => $user_id,
+            ]);
         }
     } else {
         $GLOBALS['Response']->addFeedback(

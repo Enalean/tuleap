@@ -367,7 +367,8 @@ final class Tracker_Action_UpdateArtifactTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $from_aid     = 33;
         $request_data = ['from_aid' => $from_aid,
-                              'submit_and_stay' => true];
+            'submit_and_stay' => true,
+        ];
         $redirect_uri = $this->getRedirectUrlFor($request_data);
         $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $this->artifact_id);
         $this->assertUriHasArgument($redirect_uri->toUrl(), "from_aid", $from_aid);

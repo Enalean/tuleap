@@ -266,10 +266,10 @@ class BrowserPlugin extends Sabre\DAV\Browser\Plugin
         $files = $this->server->getPropertiesForPath(
             $path,
             [
-            '{DAV:}resourcetype',
-            '{DAV:}getcontenttype',
-            '{DAV:}getcontentlength',
-            '{DAV:}getlastmodified',
+                '{DAV:}resourcetype',
+                '{DAV:}getcontenttype',
+                '{DAV:}getcontentlength',
+                '{DAV:}getlastmodified',
             ],
             1
         );

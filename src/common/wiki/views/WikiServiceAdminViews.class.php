@@ -213,9 +213,10 @@ class WikiServiceAdminViews extends WikiViews
         print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'browsedoc');
 
         print html_build_list_table_top([$GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_name'),
-                                          $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_page'),
-                                          $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_rank'),
-                                          $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_delete')]);
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_page'),
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_rank'),
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_delete'),
+        ]);
         $i = 0;
         while ($wei->valid()) {
             $we = $wei->current();
@@ -374,18 +375,18 @@ class WikiServiceAdminViews extends WikiViews
             $eM         = EventManager::instance();
             $referenced = false;
             $eM->processEvent('isWikiPageReferenced', [
-                            'referenced' => &$referenced,
-                            'wiki_page'  => $pagename,
-                            'group_id' => $this->gid,
-                            ]);
+                'referenced' => &$referenced,
+                'wiki_page'  => $pagename,
+                'group_id' => $this->gid,
+            ]);
 
             print '<td align="center">';
 
             if ($referenced) {
                 $label = '';
                 $eM->processEvent('getPermsLabelForWiki', [
-                                  'label'  => &$label,
-                                ]);
+                    'label'  => &$label,
+                ]);
                 print $purifier->purify($label);
             } else {
                 print '<a href="' . $this->wikiAdminLink . '&view=pagePerms&id=' . urlencode($page->getId()) . '">[' . $purifier->purify($status) . ']</a>';
@@ -422,9 +423,10 @@ class WikiServiceAdminViews extends WikiViews
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_title', [$purifier->purify($this->wikiname)]);
         print '<form method="post" action="' . $this->wikiAdminLink . '&view=wikiAttachments&action=deleteAttachments">';
         print html_build_list_table_top([$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_name'),
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revisions'),
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . " ?"]);
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revisions'),
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . " ?",
+        ]);
 
         $wai = WikiAttachment::getAttachmentIterator($this->gid);
         $wai->rewind();
@@ -498,9 +500,10 @@ class WikiServiceAdminViews extends WikiViews
 
         // if($wari->exist()) {
         print html_build_list_table_top([$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revision'),
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_date'),
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_author'),
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_size')]);
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_date'),
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_author'),
+            $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_size'),
+        ]);
         $wari = WikiAttachmentRevision::getRevisionIterator($this->gid, $attachmentId);
         $wari->rewind();
         while ($wari->valid()) {

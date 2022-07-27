@@ -459,7 +459,7 @@ final class TrackersTest extends TrackerBase
     {
         $query = json_encode(
             [
-            "Name" => "wwwxxxyyyzzz",
+                "Name" => "wwwxxxyyyzzz",
             ]
         );
 
@@ -475,9 +475,9 @@ final class TrackersTest extends TrackerBase
     {
         $query     = json_encode(
             [
-            "Name" => [
-                "operator" => "contains",
-                "value" => "lease",
+                "Name" => [
+                    "operator" => "contains",
+                    "value" => "lease",
                 ],
             ]
         );

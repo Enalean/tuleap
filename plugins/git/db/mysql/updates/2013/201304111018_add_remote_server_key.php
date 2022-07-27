@@ -79,7 +79,8 @@ EOT;
                 $this->log->info("Import key for server " . $row['id'] . "(" . $key_path . ")");
                 $update_stm->execute([
                     ':ssh_key' => file_get_contents($key_path),
-                    ':id' => $row['id']]);
+                    ':id' => $row['id'],
+                ]);
             }
         }
     }

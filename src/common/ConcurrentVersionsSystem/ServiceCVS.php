@@ -116,7 +116,8 @@ class ServiceCVS extends \Service
                                         'group_id' => $this->project->getID(),
                                     ]
                                 ),
-                            )]
+                            ),
+                        ]
                     )
                 )
             );

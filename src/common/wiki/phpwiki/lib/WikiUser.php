@@ -32,21 +32,21 @@ if (! defined('COOKIE_DOMAIN')) {
 }
 
 $UserPreferences = [
-                         'userid'        => new _UserPreference(''), // really store this also?
-                         'passwd'        => new _UserPreference(''),
-                         'email'         => new _UserPreference(''),
-                         'emailVerified' => new _UserPreference_bool(),
-                         'notifyPages'   => new _UserPreference(''),
-                         'theme'         => new _UserPreference_theme(THEME),
-                         'lang'          => new _UserPreference_language(DEFAULT_LANGUAGE),
-                         'editWidth'     => new _UserPreference_int(80, 30, 150),
-                         'noLinkIcons'   => new _UserPreference_bool(),
-                         'editHeight'    => new _UserPreference_int(22, 5, 80),
-                         'timeOffset'    => new _UserPreference_numeric(0, -26, 26),
-                         'relativeDates' => new _UserPreference_bool(),
-                         'googleLink'    => new _UserPreference_bool(), // 1.3.10
-                         'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
-                         ];
+    'userid'        => new _UserPreference(''), // really store this also?
+    'passwd'        => new _UserPreference(''),
+    'email'         => new _UserPreference(''),
+    'emailVerified' => new _UserPreference_bool(),
+    'notifyPages'   => new _UserPreference(''),
+    'theme'         => new _UserPreference_theme(THEME),
+    'lang'          => new _UserPreference_language(DEFAULT_LANGUAGE),
+    'editWidth'     => new _UserPreference_int(80, 30, 150),
+    'noLinkIcons'   => new _UserPreference_bool(),
+    'editHeight'    => new _UserPreference_int(22, 5, 80),
+    'timeOffset'    => new _UserPreference_numeric(0, -26, 26),
+    'relativeDates' => new _UserPreference_bool(),
+    'googleLink'    => new _UserPreference_bool(), // 1.3.10
+    'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
+];
 
 function WikiUserClassname()
 {
@@ -133,8 +133,9 @@ class WikiUser
     {
         if (
             (in_array($this->_level, [WIKIAUTH_BOGO,
-                                           WIKIAUTH_USER,
-                                           WIKIAUTH_ADMIN])
+                WIKIAUTH_USER,
+                WIKIAUTH_ADMIN,
+            ])
             &&
             (is_string($this->_userid)))
         ) {
@@ -194,7 +195,8 @@ class WikiUser
     {
         // Normalize args, and extract.
         $keys = ['userid', 'passwd', 'require_level', 'login', 'logout',
-                      'cancel'];
+            'cancel',
+        ];
         foreach ($keys as $key) {
             $args[$key] = isset($postargs[$key]) ? $postargs[$key] : false;
         }
@@ -397,9 +399,10 @@ class WikiUser
             // empty page
             include "lib/loadsave.php";
             $pageinfo = ['pagedata' => ['pref' => serialize($pref->_pref)],
-                              'versiondata' => ['author' => $this->_userid],
-                              'pagename' => $this->_userid,
-                              'content' => _('CategoryHomepage')];
+                'versiondata' => ['author' => $this->_userid],
+                'pagename' => $this->_userid,
+                'content' => _('CategoryHomepage'),
+            ];
             SavePage($this->_request, $pageinfo, false, false);
         }
         $this->setPreferences($pref);
@@ -416,18 +419,20 @@ class WikiUser
         $template = Template('homepage.tmpl', $this->_request);
         $text     = $template->getExpansion();
         $pageinfo = ['pagedata' => ['pref' => serialize($pref->_pref)],
-                          'versiondata' => ['author' => $this->_userid],
-                          'pagename' => $pagename,
-                          'content' => $text];
+            'versiondata' => ['author' => $this->_userid],
+            'pagename' => $pagename,
+            'content' => $text,
+        ];
         SavePage($this->_request, $pageinfo, false, false);
 
         // create Calender
         $pagename = $this->_userid . SUBPAGE_SEPARATOR . _('Preferences');
         if (! isWikiPage($pagename)) {
             $pageinfo = ['pagedata' => [],
-                              'versiondata' => ['author' => $this->_userid],
-                              'pagename' => $pagename,
-                              'content' => "<?plugin Calender ?>\n"];
+                'versiondata' => ['author' => $this->_userid],
+                'pagename' => $pagename,
+                'content' => "<?plugin Calender ?>\n",
+            ];
             SavePage($this->_request, $pageinfo, false, false);
         }
 
@@ -435,9 +440,10 @@ class WikiUser
         $pagename = $this->_userid . SUBPAGE_SEPARATOR . _('Preferences');
         if (! isWikiPage($pagename)) {
             $pageinfo = ['pagedata' => [],
-                              'versiondata' => ['author' => $this->_userid],
-                              'pagename' => $pagename,
-                              'content' => "<?plugin UserPreferences ?>\n"];
+                'versiondata' => ['author' => $this->_userid],
+                'pagename' => $pagename,
+                'content' => "<?plugin UserPreferences ?>\n",
+            ];
             SavePage($this->_request, $pageinfo, false, false);
         }
     }
