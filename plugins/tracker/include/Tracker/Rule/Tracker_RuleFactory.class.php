@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
+
 /**
 * Factory of rules
 *
@@ -410,5 +412,23 @@ class Tracker_RuleFactory
         }
 
         return $rules;
+    }
+
+    /**
+     * @return InvolvedFieldsInRule[]
+     */
+    public function getInvolvedFieldsByTrackerIdCollection(int $tracker_id): array
+    {
+        $involved_fields            = $this->getInvolvedFieldsByTrackerId($tracker_id);
+        $involved_fields_collection = [];
+
+        foreach ($involved_fields as $fields) {
+            if (! isset($fields["source_field_id"], $fields["target_field_id"])) {
+                continue;
+            }
+            $involved_fields_collection[] = new InvolvedFieldsInRule((int) $fields["source_field_id"], (int) $fields["target_field_id"]);
+        }
+
+        return $involved_fields_collection;
     }
 }
