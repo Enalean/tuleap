@@ -71,7 +71,7 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
             select.trigger("change");
 
             expect(wrapper.vm.selected_value).toBe("permanent");
-            expect(wrapper.vm.obsolescence_date).toBeNull();
+            expect(wrapper.vm.obsolescence_date).toBe("");
         });
         it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, async () => {
             const wrapper = properties_factory({ value: "" });

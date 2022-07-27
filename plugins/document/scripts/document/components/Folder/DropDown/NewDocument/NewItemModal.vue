@@ -153,6 +153,7 @@ export default {
         emitter.on("update-title-property", this.updateTitleValue);
         emitter.on("update-description-property", this.updateDescriptionValue);
         emitter.on("update-custom-property", this.updateCustomProperty);
+        emitter.on("update-obsolescence-date-property", this.updateObsolescenceDate);
     },
     beforeDestroy() {
         emitter.off("createItem", this.show);
@@ -165,6 +166,7 @@ export default {
         emitter.off("update-title-property", this.updateTitleValue);
         emitter.off("update-description-property", this.updateDescriptionValue);
         emitter.off("update-custom-property", this.updateCustomProperty);
+        emitter.off("update-obsolescence-date-property", this.updateObsolescenceDate);
     },
     methods: {
         getDefaultItem() {
@@ -282,6 +284,9 @@ export default {
                 (property) => property.short_name === event.property_short_name
             );
             item_properties.value = event.value;
+        },
+        updateObsolescenceDate(obsolescence_date) {
+            this.item.obsolescence_date = obsolescence_date;
         },
     },
 };

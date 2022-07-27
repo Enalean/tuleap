@@ -35,23 +35,22 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import TitleProperty from "../../PropertiesForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
 import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 import DescriptionProperty from "../../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
+import type { Folder, Item, Property } from "../../../../../type";
 
-export default {
-    name: "FolderGlobalPropertiesForCreate",
-    components: {
-        DescriptionProperty,
-        TitleProperty,
-        FolderDefaultPropertiesForCreate,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
-        status_value: String,
-        properties: Array,
-    },
-};
+defineProps<{
+    currentlyUpdatedItem: Item;
+    parent: Folder;
+    status_value: string;
+    properties: Array<Property>;
+}>();
+</script>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({});
 </script>
