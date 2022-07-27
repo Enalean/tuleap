@@ -148,6 +148,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(PluginExecuteUpdateHookEvent::NAME);
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook('project_admin_remove_user', 'projectUserMemberRemoved');
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
@@ -216,6 +217,22 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $task = LogUsersOutInstanceTask::logsOutUserOfAProjectFromItsID(
             $params['project_id'],
             ProjectManager::instance()
+        );
+
+        if ($task !== null) {
+            (new EnqueueTask())->enqueue($task);
+        }
+    }
+
+    /**
+     * @param array{group_id: int|string, user_id: int|string} $params
+     */
+    public function projectUserMemberRemoved(array $params): void
+    {
+        $task = LogUsersOutInstanceTask::logsSpecificUserOutOfAProjectFromItsID(
+            (int) $params['group_id'],
+            ProjectManager::instance(),
+            (int) $params['user_id']
         );
 
         if ($task !== null) {
