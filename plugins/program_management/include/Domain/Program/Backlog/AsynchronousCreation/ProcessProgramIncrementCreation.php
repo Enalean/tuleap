@@ -29,5 +29,5 @@ interface ProcessProgramIncrementCreation
 {
     public function processCreation(ProgramIncrementCreation $creation): void;
 
-    public function processCreationForOneTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void;
+    public function synchronizeProgramIncrementAndIterationsForTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void;
 }

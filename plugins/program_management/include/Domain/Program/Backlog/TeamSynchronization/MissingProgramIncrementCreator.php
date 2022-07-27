@@ -113,7 +113,7 @@ final class MissingProgramIncrementCreator
                 $team->getId()
             );
 
-            $this->process_program_increment_creation->processCreationForOneTeam($creation, $team_identifier);
+            $this->process_program_increment_creation->synchronizeProgramIncrementAndIterationsForTeam($creation, $team_identifier);
         }
     }
 }
