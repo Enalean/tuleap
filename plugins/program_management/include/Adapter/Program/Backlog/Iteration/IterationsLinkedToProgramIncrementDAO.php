@@ -32,7 +32,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
 {
     public function searchIterations(ProgramIncrementIdentifier $program_increment): array
     {
-        $sql = "SELECT iteration.id
+        $sql = "SELECT iteration.id AS id, iteration.last_changeset_id AS changeset_id
                     FROM tracker_artifact AS program_increment
                     JOIN tracker AS tpi
                         ON (program_increment.tracker_id = tpi.id AND tpi.deletion_date IS NULL)
@@ -50,7 +50,7 @@ final class IterationsLinkedToProgramIncrementDAO extends DataAccessObject imple
                         ON (iteration.tracker_id = ti.id AND ti.deletion_date IS NULL)
                 WHERE program_increment.id = ? AND artifact_link.nature = ?";
 
-        $rows = $this->getDB()->first(
+        $rows = $this->getDB()->run(
             $sql,
             $program_increment->getId(),
             \Tracker_FormElement_Field_ArtifactLink::TYPE_IS_CHILD

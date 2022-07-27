@@ -88,12 +88,12 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItFiltersIterationsThatAreNotVisible(): void
     {
         $iterations = IterationIdentifier::buildCollectionFromProgramIncrement(
-            SearchIterationsStub::withIterationIds(
-                self::FIRST_NOT_VISIBLE_ARTIFACT_ID,
-                self::SECOND_NOT_VISIBLE_ARTIFACT_ID,
-                self::FIRST_VISIBLE_ARTIFACT_ID,
-                self::SECOND_VISIBLE_ARTIFACT_ID
-            ),
+            SearchIterationsStub::withIterations([
+                [ 'id' => self::FIRST_NOT_VISIBLE_ARTIFACT_ID, 'changeset_id' => 1],
+                [ 'id' => self::SECOND_NOT_VISIBLE_ARTIFACT_ID, 'changeset_id' => 2],
+                [ 'id' => self::FIRST_VISIBLE_ARTIFACT_ID, 'changeset_id' => 3],
+                [ 'id' => self::SECOND_VISIBLE_ARTIFACT_ID, 'changeset_id' => 4],
+            ]),
             VerifyIsVisibleArtifactStub::withVisibleIds(
                 self::FIRST_VISIBLE_ARTIFACT_ID,
                 self::SECOND_VISIBLE_ARTIFACT_ID

@@ -50,12 +50,12 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
         return JustLinkedIterationCollection::fromIterations(
             $this->link_verifier,
             $this->program_increment,
-            IterationIdentifierCollectionBuilder::buildWithIds(
-                self::FIRST_PREVIOUS_ITERATION_ID,
-                self::SECOND_PREVIOUS_ITERATION_ID,
-                self::FIRST_JUST_ADDED_ITERATION_ID,
-                self::SECOND_JUST_ADDED_ITERATION_ID
-            )
+            IterationIdentifierCollectionBuilder::buildWithIterations([
+                ['id' => self::FIRST_PREVIOUS_ITERATION_ID, 'changeset_id' => 1],
+                ['id' => self::SECOND_PREVIOUS_ITERATION_ID, 'changeset_id' => 2],
+                ['id' => self::FIRST_JUST_ADDED_ITERATION_ID, 'changeset_id' => 3],
+                ['id' => self::SECOND_JUST_ADDED_ITERATION_ID, 'changeset_id' => 4],
+            ])
         );
     }
 

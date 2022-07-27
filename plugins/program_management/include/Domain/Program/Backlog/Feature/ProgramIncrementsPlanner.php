@@ -23,15 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Feature;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\CreateProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationCreation;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\RetrieveLastChangeset;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\SearchIterations;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIteration;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\RetrieveChangesetSubmissionDate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\RetrieveFieldValuesGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceTimeboxChangesetValues;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\GatherSynchronizedFields;
+use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Domain\Program\RetrieveProgramOfProgramIncrement;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MirroredProgramIncrementTrackerIdentifierCollection;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\RetrieveMirroredProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifierCollection;
+use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 
 final class ProgramIncrementsPlanner implements PlanProgramIncrements
 {
@@ -42,6 +51,14 @@ final class ProgramIncrementsPlanner implements PlanProgramIncrements
         private GatherSynchronizedFields $fields_gatherer,
         private RetrieveFieldValuesGatherer $values_retriever,
         private RetrieveChangesetSubmissionDate $submission_date_retriever,
+        private ProcessIterationCreation $process_iteration_creation,
+        private RetrieveProgramOfProgramIncrement $program_retriever,
+        private BuildProgram $program_builder,
+        private RetrieveIterationTracker $iteration_tracker_retriever,
+        private VerifyIsIteration $verify_is_iteration,
+        private VerifyIsVisibleArtifact $verify_is_visible_artifact,
+        private SearchIterations $search_iterations,
+        private RetrieveLastChangeset $retrieve_last_changeset,
     ) {
     }
 
@@ -68,6 +85,20 @@ final class ProgramIncrementsPlanner implements PlanProgramIncrements
             $mirrored_trackers,
             $user
         );
+
+        $iterations_to_create = IterationCreation::fromProgramIncrementCreation(
+            $this->program_retriever,
+            $this->program_builder,
+            $this->iteration_tracker_retriever,
+            $this->verify_is_iteration,
+            $this->verify_is_visible_artifact,
+            $this->search_iterations,
+            $this->retrieve_last_changeset,
+            $creation
+        );
+        foreach ($iterations_to_create as $iteration_to_create) {
+            $this->process_iteration_creation->processCreation($iteration_to_create);
+        }
 
         return ProgramIncrementChanged::fromCreation($creation);
     }

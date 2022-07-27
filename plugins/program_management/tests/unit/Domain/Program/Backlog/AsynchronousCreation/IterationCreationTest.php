@@ -22,13 +22,23 @@ namespace Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\Test\TestLogger;
 use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementCreation;
 use Tuleap\ProgramManagement\Tests\Builder\JustLinkedIterationCollectionBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\PendingIterationCreationBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementIdentifierBuilder;
+use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementCreationEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProgramIncrementUpdateEventStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveLastChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramOfProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchIterationsStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsChangesetStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;
 
 final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -63,8 +73,10 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         $program_increment      = ProgramIncrementIdentifierBuilder::buildWithId(self::PROGRAM_INCREMENT_ID);
         $just_linked_iterations = JustLinkedIterationCollectionBuilder::buildWithProgramIncrementAndIterationIds(
             $program_increment,
-            self::FIRST_ITERATION_ID,
-            self::SECOND_ITERATION_ID
+            [
+                ['id' => self::FIRST_ITERATION_ID, 'changeset_id' => 1],
+                ['id' => self::SECOND_ITERATION_ID, 'changeset_id' => 2],
+            ]
         );
         return IterationCreation::buildCollectionFromJustLinkedIterations(
             $this->changeset_retriever,
@@ -161,5 +173,47 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEmpty(
             IterationCreation::buildCollectionFromProgramIncrementUpdateEvent($this->tracker_retriever, $update_event)
         );
+    }
+
+    public function testItBuildsFromProgramIncrement(): void
+    {
+        $program_id   = 1;
+        $changeset_id = 6666666;
+
+        $program_retriever           = RetrieveProgramOfProgramIncrementStub::withProgram($program_id);
+        $program_builder             = BuildProgramStub::stubValidProgram();
+        $iteration_tracker_retriever = RetrieveIterationTrackerStub::withValidTracker(self::ITERATION_TRACKER_ID);
+        $verify_is_iteration         = VerifyIsIterationStub::withValidIteration();
+        $verify_is_visible_artifact  = VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts();
+        $search_iterations           = SearchIterationsStub::withIterations([['id' => self::FIRST_ITERATION_ID, 'chanagset_id' => $changeset_id]]);
+        $retrieve_last_changeset     = RetrieveLastChangesetStub::withLastChangesetIds($changeset_id);
+        $event                       = ProgramIncrementCreation::fromProgramIncrementCreationEvent(
+            VerifyIsProgramIncrementStub::withValidProgramIncrement(),
+            VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
+            VerifyIsChangesetStub::withValidChangeset(),
+            RetrieveProgramIncrementTrackerStub::withValidTracker(4567),
+            ProgramIncrementCreationEventStub::withIds(self::PROGRAM_INCREMENT_ID, self::USER_ID, $changeset_id),
+        );
+
+        if (! $event) {
+            throw new \RuntimeException("Event is null");
+        }
+
+        $creation = IterationCreation::fromProgramIncrementCreation(
+            $program_retriever,
+            $program_builder,
+            $iteration_tracker_retriever,
+            $verify_is_iteration,
+            $verify_is_visible_artifact,
+            $search_iterations,
+            $retrieve_last_changeset,
+            $event
+        );
+
+        $iteration_to_create = $creation[0];
+        self::assertEquals(self::PROGRAM_INCREMENT_ID, $iteration_to_create->getProgramIncrement()->getId());
+        self::assertEquals(self::FIRST_ITERATION_ID, $iteration_to_create->getIteration()->getId());
+        self::assertEquals(self::ITERATION_TRACKER_ID, $iteration_to_create->getTracker()->getId());
+        self::assertEquals($changeset_id, $iteration_to_create->getChangeset()->getId());
     }
 }

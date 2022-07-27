@@ -76,7 +76,10 @@ final class MirroredIterationIdentifierCollectionTest extends \Tuleap\Test\PHPUn
         return MirroredIterationIdentifierCollection::fromIterationCollection(
             $this->mirror_searcher,
             VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
-            IterationIdentifierCollectionBuilder::buildWithIds(516, 541),
+            IterationIdentifierCollectionBuilder::buildWithIterations([
+                ['id' => 516, 'chanegset_id' => 1],
+                ['id' => 541, 'chanegset_id' => 2],
+                ]),
             UserIdentifierStub::buildGenericUser()
         );
     }

@@ -24,9 +24,12 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
+use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\ContentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\SubmissionDateRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueFormatter;
@@ -228,6 +231,8 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $event_manager
         );
 
+        $program_adapter = ProgramAdapter::instance();
+        $iterations_dao  = new IterationsDAO();
         return new ProgramIncrementCreationProcessor(
             MessageLog::buildFromLogger($logger),
             $user_stories_planner,
@@ -239,7 +244,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 new TeamDao()
             ),
             $program_dao,
-            ProgramAdapter::instance(),
+            $program_adapter,
             new ProgramIncrementsPlanner(
                 new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                 $mirror_creator,
@@ -247,6 +252,17 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 $synchronized_fields_gatherer,
                 new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
                 new SubmissionDateRetriever($artifact_retriever),
+                (new IterationCreationProcessorBuilder())->getProcessor(),
+                $program_dao,
+                $program_adapter,
+                $iterations_dao,
+                $iterations_dao,
+                $visibility_verifier,
+                new IterationsLinkedToProgramIncrementDAO(),
+                new LastChangesetRetriever(
+                    $artifact_retriever,
+                    Tracker_Artifact_ChangesetFactoryBuilder::build()
+                )
             )
         );
     }

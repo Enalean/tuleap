@@ -70,7 +70,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
             $this->user_stories_planner,
             $this->feature_remover,
             new IterationCreationDetector(
-                SearchIterationsStub::withIterationIds(101, 102),
+                SearchIterationsStub::withIterations([['id' => 101, 'changeset_id' => 1], ['id' => 102, 'changeset_id' => 2]]),
                 VerifyIsVisibleArtifactStub::withAlwaysVisibleArtifacts(),
                 VerifyIterationHasBeenLinkedBeforeStub::withNoIteration(),
                 MessageLog::buildFromLogger(new NullLogger()),
