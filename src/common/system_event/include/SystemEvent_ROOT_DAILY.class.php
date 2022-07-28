@@ -65,6 +65,9 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         $this->purgeSystemEventsDataOlderThanOneYear();
 
         $this->runComputeAllDailyStats($logger, $warnings);
+        $current_time = new DateTimeImmutable();
+        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->reconnectAfterALongRunningProcess();
+        $this->cleanupDB($current_time);
 
         $this->runWeeklyStats($logger, $warnings);
 
@@ -117,6 +120,12 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     {
         $process = new Process([__DIR__ . '/../../../utils/compute_all_daily_stats.sh']);
         $this->runCommand($process, $logger, $warnings);
+    }
+
+    private function cleanupDB(DateTimeImmutable $current_time): void
+    {
+        (new SessionDao())->deleteExpiredSession($current_time->getTimestamp(), \ForgeConfig::getInt('sys_session_lifetime'));
+        (new UserDao())->updatePendingExpiredUsersToDeleted($current_time->getTimestamp(), 3600 * 24 * \ForgeConfig::getInt('sys_pending_account_lifetime'));
     }
 
     /**

@@ -27,7 +27,7 @@ echo "--- Beginning of $script ---"
 
 
 # NOW RUN THIS SECTION
-# - db_stats_projects_nightly.pl needs db_project_metric.pl 
+# - db_stats_projects_nightly.pl needs db_project_metric.pl
 # to run first
 #
 ## The order these scripts are run in is CRITICAL
@@ -45,17 +45,6 @@ echo "--- Beginning of $script ---"
 ##
 ## END order sensitive section
 ##
-
-
-#################
-# DO SOME CLEAN UP
-#################
-
-#Clean up projects that have status at INCOMPLETE
-# that are older than one hour, user registration PENDING
-# older than a week and user session older than a week
-# 
-./db_project_cleanup.pl
 
 echo "--- End of $script ---"
 
