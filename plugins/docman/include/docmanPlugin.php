@@ -24,6 +24,7 @@
  *
  */
 
+use FastRoute\RouteCollector;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
@@ -55,6 +56,9 @@ use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 use Tuleap\Docman\FilenamePattern\FilenamePatternRetriever;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
+use Tuleap\Docman\Metadata\Owner\AllOwnerRetriever;
+use Tuleap\Docman\Metadata\Owner\OwnerDao;
+use Tuleap\Docman\Metadata\Owner\OwnerRequestHandler;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -70,8 +74,16 @@ use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
 use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder;
+use Tuleap\Docman\Settings\ForbidWritersSettings;
 use Tuleap\Docman\Settings\SettingsDAO;
+use Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider;
+use Tuleap\Docman\Upload\Document\DocumentDataStore;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentUploadCanceler;
+use Tuleap\Docman\Upload\Document\DocumentUploadCleaner;
+use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
@@ -79,6 +91,7 @@ use Tuleap\Docman\Upload\Version\VersionDataStore;
 use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
+use Tuleap\Docman\XML\Export\PermissionsExporter;
 use Tuleap\Docman\XML\Export\PermissionsExporterDao;
 use Tuleap\Docman\XML\Import\ImportPropertiesExtractor;
 use Tuleap\Docman\XML\Import\ItemImporter;
@@ -104,6 +117,7 @@ use Tuleap\Document\Config\Project\SearchCriteriaFilter;
 use Tuleap\Document\Config\Project\SearchView;
 use Tuleap\Document\Config\Project\UpdateSearchView;
 use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
+use Tuleap\Document\DownloadFolderAsZip\FolderSizeIsAllowedChecker;
 use Tuleap\Document\DownloadFolderAsZip\ZipStreamerLoggingHelper;
 use Tuleap\Document\DownloadFolderAsZip\ZipStreamMailNotificationSender;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
@@ -111,15 +125,19 @@ use Tuleap\Document\PermissionDeniedDocumentMailSender;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Document\Tree\ListOfSearchCriterionPresenterBuilder;
+use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
+use Tuleap\Document\Tree\SwitchToOldUi;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
+use Tuleap\Layout\TooltipJSON;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -140,11 +158,16 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
+use Tuleap\ServerHostname;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
+use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Tuleap\Widget\Event\GetUserWidgetList;
+use Tuleap\Widget\Event\GetWidget;
 use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
+use User\XML\Import\IFindUserFromXMLReference;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../document/vendor/autoload.php';
@@ -196,9 +219,9 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook('soap', 'soap', false);
-        $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
+        $this->addHook(GetWidget::NAME);
+        $this->addHook(GetUserWidgetList::NAME);
+        $this->addHook(GetProjectWidgetList::NAME);
         $this->addHook('codendi_daily_start', 'codendiDaily', false);
         $this->addHook('wiki_page_updated', 'wiki_page_updated', false);
         $this->addHook('wiki_before_content', 'wiki_before_content', false);
@@ -447,7 +470,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         require_once('soap.php');
     }
 
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
+    public function widgetInstance(GetWidget $get_widget_event)
     {
         switch ($get_widget_event->getName()) {
             case 'plugin_docman_mydocman':
@@ -467,14 +490,14 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
+    public function getUserWidgetList(GetUserWidgetList $event)
     {
         $event->addWidget('plugin_docman_mydocman');
         $event->addWidget('plugin_docman_mydocman_search');
         $event->addWidget('plugin_docman_my_embedded');
     }
 
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event)
+    public function getProjectWidgetList(GetProjectWidgetList $event)
     {
         $event->addWidget('plugin_docman_project_embedded');
     }
@@ -589,7 +612,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $icon_presenter_builder = new DocumentIconPresenterBuilder();
 
         $renderer     = TemplateRendererFactory::build()->getRenderer(__DIR__);
-        $tooltip_json = new \Tuleap\Layout\TooltipJSON(
+        $tooltip_json = new TooltipJSON(
             $renderer->renderToString('tooltip-title', [
                 'icon'  => $icon_presenter_builder->buildForItem($item),
                 'title' => $item->getTitle(),
@@ -1008,7 +1031,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
-        if ($event->status === \Project::STATUS_DELETED) {
+        if ($event->status === Project::STATUS_DELETED) {
             $docmanItemFactory = new Docman_ItemFactory();
             $docmanItemFactory->deleteProjectTree((int) $event->project->getID());
 
@@ -1306,7 +1329,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                 $this->getPluginPath() . '/?' . http_build_query(
                     [
                         'group_id' => $project->getID(),
-                        'action'   => \Docman_View_Admin_Permissions::IDENTIFIER,
+                        'action'   => Docman_View_Admin_Permissions::IDENTIFIER,
                     ]
                 )
             )
@@ -1358,27 +1381,27 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeUploadsDocmanFile(): FileUploadController
     {
-        $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO();
+        $document_ongoing_upload_dao = new DocumentOngoingUploadDAO();
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator              = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
         $user_manager                = UserManager::instance();
         $event_manager               = EventManager::instance();
 
         return FileUploadController::build(
-            new \Tuleap\Docman\Upload\Document\DocumentDataStore(
-                new \Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider(
+            new DocumentDataStore(
+                new DocumentBeingUploadedInformationProvider(
                     $path_allocator,
                     $document_ongoing_upload_dao,
                     $this->getItemFactory()
                 ),
-                new \Tuleap\Upload\FileBeingUploadedWriter(
+                new FileBeingUploadedWriter(
                     $path_allocator,
                     DBFactory::getMainTuleapDBConnection()
                 ),
                 new FileBeingUploadedLocker(
                     $path_allocator
                 ),
-                new \Tuleap\Docman\Upload\Document\DocumentUploadFinisher(
+                new DocumentUploadFinisher(
                     BackendLogger::getDefaultLogger(),
                     $path_allocator,
                     $this->getItemFactory(),
@@ -1393,7 +1416,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     new DocmanItemsEventAdder($event_manager),
                     ProjectManager::instance()
                 ),
-                new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
+                new DocumentUploadCanceler(
                     $path_allocator,
                     $document_ongoing_upload_dao
                 )
@@ -1499,15 +1522,15 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             ),
             $filename_pattern_retriever,
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
-            new \Docman_ItemDao(),
+            new Docman_ItemDao(),
             new ListOfSearchCriterionPresenterBuilder(
                 new SearchCriteriaDao(),
             ),
-            new \Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder(
-                new \Tuleap\Docman\REST\v1\Search\SearchColumnCollectionBuilder(),
+            new ListOfSearchColumnDefinitionPresenterBuilder(
+                new SearchColumnCollectionBuilder(),
                 new SearchColumnsDao(),
             ),
-            new \Tuleap\Docman\Settings\ForbidWritersSettings($settings_DAO)
+            new ForbidWritersSettings($settings_DAO)
         );
     }
     public function routeDownloadFolderAsZip(): DocumentFolderZipStreamer
@@ -1521,12 +1544,12 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             UserManager::instance(),
             new ZipStreamerLoggingHelper(),
             new ZipStreamMailNotificationSender(),
-            new \Tuleap\Document\DownloadFolderAsZip\FolderSizeIsAllowedChecker(
-                new \Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor(),
+            new FolderSizeIsAllowedChecker(
+                new ComputeFolderSizeVisitor(),
             ),
-            new \Tuleap\Document\Config\FileDownloadLimitsBuilder(),
+            new FileDownloadLimitsBuilder(),
             new SapiEmitter(),
-            new \Tuleap\Http\Server\SessionWriteCloseMiddleware(),
+            new SessionWriteCloseMiddleware(),
             new ServiceInstrumentationMiddleware('document')
         );
     }
@@ -1556,7 +1579,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
     public function routeSendRequestMail(): PermissionDeniedDocumentMailSender
     {
         return new PermissionDeniedDocumentMailSender(
-            new PlaceHolderBuilder(\ProjectManager::instance()),
+            new PlaceHolderBuilder(ProjectManager::instance()),
             new CSRFSynchronizerToken('plugin-document')
         );
     }
@@ -1581,6 +1604,28 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return HistoryEnforcementAdminSaveController::buildSelf();
     }
 
+    public function routeGetOwners(): OwnerRequestHandler
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        return new OwnerRequestHandler(
+            new AllOwnerRetriever(
+                new OwnerDao(),
+                $this->getUserManager()
+            ),
+            new ProjectAccessChecker(
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            $this->getUserManager(),
+            $this->getProjectExtractor(),
+            $response_factory,
+            $stream_factory,
+            new JSONResponseBuilder($response_factory, $stream_factory),
+            new SapiEmitter()
+        );
+    }
+
     private function getProjectExtractor(): DocumentTreeProjectExtractor
     {
         return new DocumentTreeProjectExtractor(ProjectManager::instance());
@@ -1603,7 +1648,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             $r->get('/download/{file_id:\d+}[/{version_id:\d+}]', $this->getRouteHandler('routeFileDownload'));
         });
 
-        $event->getRouteCollector()->addGroup('/plugins/document', function (\FastRoute\RouteCollector $r) {
+        $event->getRouteCollector()->addGroup('/plugins/document', function (RouteCollector $r) {
             $r->post(
                 '/PermissionDeniedRequestMessage/{project_id:\d+}',
                 $this->getRouteHandler('routeSendRequestMail')
@@ -1620,10 +1665,11 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                 '/{project_name:[A-z0-9-]+}/admin-search',
                 $this->getRouteHandler('routeUpdateAdminSearch')
             );
+            $r->get('/{project_name:[A-z0-9-]+}/owners', $this->getRouteHandler('routeGetOwners'));
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
 
-        $event->getRouteCollector()->addGroup(self::ADMIN_BASE_URL, function (\FastRoute\RouteCollector $r) {
+        $event->getRouteCollector()->addGroup(self::ADMIN_BASE_URL, function (RouteCollector $r) {
             $r->get('/files-download-limits', $this->getRouteHandler('routeGetDocumentSettingsNewUI'));
             $r->post('/files-download-limits', $this->getRouteHandler('routePostDocumentSettingsNewUI'));
             $r->get('/history-enforcement', $this->getRouteHandler('routeGetHistoryEnforcementSettingsNewUI'));
@@ -1655,11 +1701,11 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     private function cleanUnusedDocumentResources(): void
     {
-        $cleaner = new \Tuleap\Docman\Upload\Document\DocumentUploadCleaner(
+        $cleaner = new DocumentUploadCleaner(
             (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator(),
-            new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO()
+            new DocumentOngoingUploadDAO()
         );
-        $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());
+        $cleaner->deleteDanglingDocumentToUpload(new DateTimeImmutable());
     }
 
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
@@ -1678,13 +1724,13 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             (new UploadPathAllocatorBuilder())->getVersionUploadPathAllocator(),
             new DocumentOnGoingVersionToUploadDAO()
         );
-        $cleaner->deleteDanglingVersionToUpload(new \DateTimeImmutable());
+        $cleaner->deleteDanglingVersionToUpload(new DateTimeImmutable());
     }
 
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);
-        $event->addConfigClass(\Tuleap\Document\Tree\SwitchToOldUi::class);
+        $event->addConfigClass(SwitchToOldUi::class);
     }
 
     public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event): void
@@ -1703,12 +1749,12 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     private function getDocmanLockFactory(): Docman_LockFactory
     {
-        return new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
+        return new Docman_LockFactory(new Docman_LockDao(), new Docman_Log());
     }
 
     private function getProvider(Project $project): ILinkUrlProvider
     {
-        return new DocumentLinkProvider(\Tuleap\ServerHostname::HTTPSUrl(), $project);
+        return new DocumentLinkProvider(ServerHostname::HTTPSUrl(), $project);
     }
 
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
@@ -1753,7 +1799,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             new Docman_VersionFactory(),
             UserManager::instance(),
             $event->getUserXMLExporter(),
-            new \Tuleap\Docman\XML\Export\PermissionsExporter(
+            new PermissionsExporter(
                 new PermissionsExporterDao(),
                 $project_ugroups_id_indexed_by_name
             )
@@ -1773,7 +1819,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $logger->info('Start import');
 
         $user_finder = $params['user_finder'];
-        assert($user_finder instanceof \User\XML\Import\IFindUserFromXMLReference);
+        assert($user_finder instanceof IFindUserFromXMLReference);
 
         $current_user = UserManager::instance()->getCurrentUser();
         assert($current_user !== null);
