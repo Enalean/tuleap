@@ -75,9 +75,9 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
 
         $criteria_fields = array_filter(
             [
-               $summary_field,
-               $description_field,
-               $priority_field,
+                $summary_field,
+                $description_field,
+                $priority_field,
             ]
         );
 

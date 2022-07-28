@@ -134,11 +134,11 @@ class TokenTest extends \Tuleap\Test\PHPUnit\TestCase
         }
         foreach (
             [
-                     '?action=show',
-                     '?id=1&action=show',
-                     '?action=details',
-                     '?action=details&section=history',
-                 ] as $referer
+                '?action=show',
+                '?id=1&action=show',
+                '?action=details',
+                '?action=details&section=history',
+            ] as $referer
         ) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $t->allows(['_getDao' => $dao]);

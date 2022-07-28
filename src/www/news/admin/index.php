@@ -102,7 +102,8 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
     }
 
     news_header(['title' => $Language->getText('news_admin_index', 'title'),
-              'help' => 'collaboration.html#news-service']);
+        'help' => 'collaboration.html#news-service',
+    ]);
 
     $purifier = Codendi_HTMLPurifier::instance();
 

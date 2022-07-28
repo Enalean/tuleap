@@ -56,10 +56,10 @@ class AccessControlController
     private function getUrl(Repository $repository)
     {
         return SVN_BASE_URL . '/?' . http_build_query([
-                'group_id' => $repository->getProject()->getId(),
-                'repo_id' => $repository->getId(),
-                'action' => 'access-control',
-            ]);
+            'group_id' => $repository->getProject()->getId(),
+            'repo_id' => $repository->getId(),
+            'action' => 'access-control',
+        ]);
     }
 
     public function displayAuthFile(ServiceSvn $service, HTTPRequest $request)

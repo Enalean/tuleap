@@ -655,7 +655,8 @@ class ArtifactTypeFactory
                     }
                     $em          = EventManager::instance();
                     $pref_params = ['atid_source'   => $atid_template,
-                                         'atid_dest'     => $id];
+                        'atid_dest'     => $id,
+                    ];
                     $em->processEvent('artifactType_created', $pref_params);
 
                     // Copy artifact_notification_event and artifact_notification_role

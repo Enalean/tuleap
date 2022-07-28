@@ -283,7 +283,8 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     public function delete($id)
     {
         $row = ['value_id' => $id,
-                     'status'   => 'D'];
+            'status'   => 'D',
+        ];
         return $this->updateFromRow($row);
     }
 

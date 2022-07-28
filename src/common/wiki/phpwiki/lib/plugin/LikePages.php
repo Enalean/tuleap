@@ -53,9 +53,9 @@ class WikiPlugin_LikePages extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             ['page'     => '[pagename]',
-                   'prefix'   => false,
-                   'suffix'   => false,
-                   'noheader' => false,
+                'prefix'   => false,
+                'suffix'   => false,
+                'noheader' => false,
             ]
         );
     }

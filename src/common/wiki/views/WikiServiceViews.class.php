@@ -45,7 +45,8 @@ class WikiServiceViews extends WikiViews
                 'wiki_views_wikiserviceviews',
                 'wiki_page_title',
                 [ $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
-                $pm->getProject($this->gid)->getPublicName()]
+                    $pm->getProject($this->gid)->getPublicName(),
+                ]
             );
             $this->base_url             = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($_REQUEST['pagename']);
         } else {

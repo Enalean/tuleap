@@ -74,7 +74,8 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::THIRD_USER_STORY_ID  => self::THIRD_USER_STORY_ID,
                 self::FOURTH_USER_STORY_ID => self::FOURTH_USER_STORY_ID,
             ],
-        ]], $this->callMethodUnderTest());
+        ],
+        ], $this->callMethodUnderTest());
     }
 
     public function testUserStoriesToAddFromAnotherProjectAreSkipped(): void
@@ -95,7 +96,8 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::THIRD_USER_STORY_ID  => self::THIRD_USER_STORY_ID,
                 self::FOURTH_USER_STORY_ID => self::FOURTH_USER_STORY_ID,
             ],
-        ]], $this->callMethodUnderTest());
+        ],
+        ], $this->callMethodUnderTest());
     }
 
     public function testUserStoriesAddedAreNotAlsoRemoved(): void
@@ -115,7 +117,8 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
             'removed_values' => [
                 self::THIRD_USER_STORY_ID => self::THIRD_USER_STORY_ID,
             ],
-        ]], $this->callMethodUnderTest());
+        ],
+        ], $this->callMethodUnderTest());
     }
 
     public function testItFormatsEmptyArraysForTrackerPlugin(): void
@@ -126,6 +129,7 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame([self::ARTIFACT_LINK_FIELD_ID => [
             'new_values'     => '',
             'removed_values' => [],
-        ]], $this->callMethodUnderTest());
+        ],
+        ], $this->callMethodUnderTest());
     }
 }

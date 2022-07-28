@@ -48,20 +48,24 @@ function svn_header(Project $project, $params)
 
     $toolbar   = [];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_info'),
-                     'url'   => '/svn/?func=info&group_id=' . $group_id];
+        'url'   => '/svn/?func=info&group_id=' . $group_id,
+    ];
 
     if ($project->isPublic() || user_isloggedin()) {
         $toolbar[] = ['title' => $Language->getText('svn_utils', 'browse_tree'),
-                           'url'   => '/svn/viewvc.php/?roottype=svn&root=' . $project->getUnixName(false)];
+            'url'   => '/svn/viewvc.php/?roottype=svn&root=' . $project->getUnixName(false),
+        ];
     }
 
     if (user_ismember($group_id, 'A') || user_ismember($group_id, 'SVN_ADMIN')) {
         $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_admin'),
-                           'url'   => '/svn/admin/?group_id=' . $group_id];
+            'url'   => '/svn/admin/?group_id=' . $group_id,
+        ];
         if (isset($params['path']) && ! empty($params['path'])) {
             // TODO: Validate the path
             $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
-                               'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path']];
+                'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path'],
+            ];
         }
     }
 
@@ -104,15 +108,20 @@ function svn_header_admin($params)
 
     $toolbar   = [];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'admin'),
-                       'url'   => '/svn/admin/?group_id=' . $group_id];
+        'url'   => '/svn/admin/?group_id=' . $group_id,
+    ];
     $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'gen_sett'),
-                       'url'   => '/svn/admin/?func=general_settings&group_id=' . $group_id];
+        'url'   => '/svn/admin/?func=general_settings&group_id=' . $group_id,
+    ];
     $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'immutable_tags'),
-                       'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id];
+        'url'   => '/svn/admin/?func=immutable_tags&group_id=' . $group_id,
+    ];
     $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'access'),
-                       'url'   => '/svn/admin/?func=access_control&group_id=' . $group_id];
+        'url'   => '/svn/admin/?func=access_control&group_id=' . $group_id,
+    ];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
-                       'url'   => '/svn/admin/?func=notification&group_id=' . $group_id];
+        'url'   => '/svn/admin/?func=notification&group_id=' . $group_id,
+    ];
 
     $service->displayHeader($params['title'], [['title' => $params['title'], 'url' => '/svn/?group_id=' . $group_id]], $toolbar);
 
@@ -698,7 +707,8 @@ function svn_utils_get_forbidden_paths($username, $project_svnroot)
 
     $em = EventManager::instance();
     $em->processEvent('svn_check_access_username', ['username'        => &$username,
-                                                         'project_svnroot' => $project_svnroot]);
+        'project_svnroot' => $project_svnroot,
+    ]);
 
     $forbidden = [];
     if (! user_is_super_user()) {   // super user have all the rights (no forbidden paths)
@@ -753,7 +763,8 @@ function svn_utils_check_access($username, $project_svnroot, $svnpath)
 
     $em = EventManager::instance();
     $em->processEvent('svn_check_access_username', ['username'        => &$username,
-                                                       'project_svnroot' => $project_svnroot]);
+        'project_svnroot' => $project_svnroot,
+    ]);
     $username = strtolower($username);
 
     if ($SVNACCESS == "None") {

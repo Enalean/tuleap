@@ -112,7 +112,8 @@ class TrackerFormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->xml_element,
             Mockery::any(),
             $this->user_finder,
-            $this->feedback_collector])->once();
+            $this->feedback_collector,
+        ])->once();
 
         $this->form_element_factory->shouldReceive('getInstanceFromRow')->withArgs([$this->row])->andReturns($this->form_element);
 

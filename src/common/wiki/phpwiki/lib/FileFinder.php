@@ -435,15 +435,15 @@ class PearFileFinder extends FileFinder
         parent::__construct(array_merge(
             $path,
             ['/usr/share/php4',
-                                '/usr/share/php',
-                                '/usr/lib/php4',
-                                '/usr/lib/php',
-                                '/usr/local/share/php4',
-                                '/usr/local/share/php',
-                                '/usr/local/lib/php4',
-                                '/usr/local/lib/php',
-                                '/System/Library/PHP',
-                                '/Apache/pear',        // Windows
+                '/usr/share/php',
+                '/usr/lib/php4',
+                '/usr/lib/php',
+                '/usr/local/share/php4',
+                '/usr/local/share/php',
+                '/usr/local/lib/php4',
+                '/usr/local/lib/php',
+                '/System/Library/PHP',
+                '/Apache/pear',        // Windows
             ]
         ));
     }

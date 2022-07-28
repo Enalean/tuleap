@@ -65,9 +65,9 @@ class GitCommitRepresentation
         $this->commit_status  = $commit_status;
         $this->html_url       = $repository_path . '?' . http_build_query(
             [
-                    'a' => 'commit',
-                    'h' => $id,
-                ]
+                'a' => 'commit',
+                'h' => $id,
+            ]
         );
         $this->author_email   = $author_email;
     }

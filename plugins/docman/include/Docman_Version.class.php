@@ -250,11 +250,11 @@ class Docman_Version implements Version
         $event_adder->addLogEvents();
 
         $event_manager->processEvent('plugin_docman_event_access', [
-                    'group_id' => $item->getGroupId(),
-                    'item'     => $item,
-                    'version'  => $this->getNumber(),
-                    'user'     => $user,
-                ]);
+            'group_id' => $item->getGroupId(),
+            'item'     => $item,
+            'version'  => $this->getNumber(),
+            'user'     => $user,
+        ]);
     }
 
     /**
@@ -272,9 +272,10 @@ class Docman_Version implements Version
             $value .= ' (' . $this->getLabel() . ')';
         }
         $params = ['group_id'   => $item->getGroupId(),
-                        'item'       => $item,
-                        'old_value'  => $value,
-                        'user'       => $user];
+            'item'       => $item,
+            'old_value'  => $value,
+            'user'       => $user,
+        ];
         EventManager::instance()->processEvent('plugin_docman_event_del_version', $params);
     }
 }

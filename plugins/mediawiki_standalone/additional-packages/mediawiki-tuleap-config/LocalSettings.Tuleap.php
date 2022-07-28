@@ -34,16 +34,16 @@ $GLOBALS['wgEmailAuthentication'] = false;
 // Third Party Extensions - START ###
 // ERM27085 - Extensions that were enabled in MediaWiki 1.23
 wfLoadExtensions([
-                     'CategoryTree',
-                     'Cite',
-                     'ImageMap',
-                     'InputBox',
-                     'LabeledSectionTransclusion',
-                     'ParserFunctions',
-                     'SyntaxHighlight_GeSHi',
-                     'WikiEditor',
-                     'PdfBook',
-                 ]);
+    'CategoryTree',
+    'Cite',
+    'ImageMap',
+    'InputBox',
+    'LabeledSectionTransclusion',
+    'ParserFunctions',
+    'SyntaxHighlight_GeSHi',
+    'WikiEditor',
+    'PdfBook',
+]);
 $GLOBALS['wgPFEnableStringFunctions'] = true;
 $GLOBALS['wgPdfBookTab']              = true;
 
@@ -54,17 +54,17 @@ $GLOBALS['wgDefaultUserOptions']['wikieditor-publish'] = 1;
 
 // Additional extensions
 wfLoadExtensions([
-                     'CodeEditor',
-                     'Gadgets',
-                     'MultimediaViewer',
-                     'PageImages',
-                     'PdfHandler',
-                     'ReplaceText',
-                     'Scribunto',
-                     'TemplateData',
-                     'TextExtracts',
-                     'VisualEditor',
-                 ]);
+    'CodeEditor',
+    'Gadgets',
+    'MultimediaViewer',
+    'PageImages',
+    'PdfHandler',
+    'ReplaceText',
+    'Scribunto',
+    'TemplateData',
+    'TextExtracts',
+    'VisualEditor',
+]);
 // Third Party Extensions - END ###
 
 wfLoadExtension('Math');

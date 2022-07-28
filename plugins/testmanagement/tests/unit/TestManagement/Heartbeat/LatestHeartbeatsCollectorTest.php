@@ -82,13 +82,13 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection = new HeartbeatsEntryCollection($project, $user);
 
         $row_artifact = [
-           'id' => 101,
-           'tracker_id' => 1,
-           'submitted_by' => 1001,
-           'submitted_on' => 123456789,
-           'last_update_date' => 123456789,
-           'last_updated_by_id' => 101,
-           'use_artifact_permissions' => 1,
+            'id' => 101,
+            'tracker_id' => 1,
+            'submitted_by' => 1001,
+            'submitted_on' => 123456789,
+            'last_update_date' => 123456789,
+            'last_updated_by_id' => 101,
+            'use_artifact_permissions' => 1,
         ];
 
         $this->dao->shouldReceive('searchLastTestExecUpdate')->once()->andReturn([$row_artifact]);

@@ -56,18 +56,22 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         */
 
         $form     = HTML::form(['action' => $request->getPostURL(),
-                                 'enctype' => 'multipart/form-data',
-                                 'method' => 'post']);
+            'enctype' => 'multipart/form-data',
+            'method' => 'post',
+        ]);
         $contents = HTML::div(['class' => 'wikiaction']);
         $contents->pushContent(HTML::input(['type' => 'hidden',
-                                                 'name' => 'MAX_FILE_SIZE',
-                                                 'value' => MAX_UPLOAD_SIZE]));
+            'name' => 'MAX_FILE_SIZE',
+            'value' => MAX_UPLOAD_SIZE,
+        ]));
         $contents->pushContent(HTML::input(['name' => 'userfile',
-                                                 'type' => 'file',
-                                                 'size' => '50']));
+            'type' => 'file',
+            'size' => '50',
+        ]));
         $contents->pushContent(HTML::raw(" "));
         $contents->pushContent(HTML::input(['value' => _("Upload"),
-                                                 'type' => 'submit']));
+            'type' => 'submit',
+        ]));
         $form->pushContent($contents);
 
         $message  = HTML();
@@ -191,8 +195,9 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 
         $outputArea = HTML::textarea([
             'rows' => '30',
-        'cols' => '80',
-        'wrap' => 'virtual']);
+            'cols' => '80',
+            'wrap' => 'virtual',
+        ]);
 
         $outputArea->pushContent(_($file));
         $result->pushContent($outputArea);

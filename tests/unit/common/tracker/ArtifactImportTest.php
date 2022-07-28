@@ -152,10 +152,11 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $test = new ArtifactImport($at, $atf, 'group');
         $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission']);
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
+            'Assigned To','Original Submission',
+        ]);
         $this->assertFalse($test->isError());
 
       /***************** test checkValues *****************
@@ -164,10 +165,11 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
       // can not check submitted_by values (can not get user_id from here)
         $test = new ArtifactImport($at, $atf, 'group');
         $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission']);
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
+            'Assigned To','Original Submission',
+        ]);
         $test->predefined_values    = [];
         $test->predefined_values[4] = ['schneide' => ''];
         $data                       = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission'];
@@ -213,16 +215,18 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $test = new ArtifactImport($at, $atf, 'group');
         $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission','MB Field','SB Field']);
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
+            'Assigned To','Original Submission','MB Field','SB Field',
+        ]);
         $test->predefined_values    = [];
         $test->predefined_values[4] = ['schneide' => ''];
         $test->predefined_values[6] = ['one' => '', 'two' => '', 'three' => ''];
         $test->predefined_values[7] = ['blue' => '', 'yellow' => '', 'red' => ''];
         $data                       = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission',
-        'one,two,' . $GLOBALS['Language']->getText('global', 'none'),'yellow'];
+            'one,two,' . $GLOBALS['Language']->getText('global', 'none'),'yellow',
+        ];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
@@ -246,10 +250,11 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
       //submitted on is allowed to be void, we set it to current date on insert into DB
         $test = new ArtifactImport($at, $atf, 'group');
         $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission','MB Field','SB Field','Submitted On']);
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+            $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
+            'Assigned To','Original Submission','MB Field','SB Field','Submitted On',
+        ]);
         $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow', ''];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());

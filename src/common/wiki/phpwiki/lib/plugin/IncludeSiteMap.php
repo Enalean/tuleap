@@ -63,17 +63,17 @@ class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
     public function getDefaultArguments()
     {
         return ['exclude'        => '',
-                   'include_self'   => 0,
-                   'noheader'       => 0,
-                   'page'           => '[pagename]',
-                   'description'    => $this->getDescription(),
-                   'reclimit'       => 2,
-                   'info'           => false,
-                   'direction'      => 'back',
-                   'firstreversed'  => false,
-                   'excludeunknown' => true,
-                   'includepages'   => 'words=50',
-                   ];
+            'include_self'   => 0,
+            'noheader'       => 0,
+            'page'           => '[pagename]',
+            'description'    => $this->getDescription(),
+            'reclimit'       => 2,
+            'info'           => false,
+            'direction'      => 'back',
+            'firstreversed'  => false,
+            'excludeunknown' => true,
+            'includepages'   => 'words=50',
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

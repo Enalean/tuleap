@@ -84,23 +84,27 @@ class RSSParser extends XmlParserPHPWiki
                 $GLOBALS['rss_parser_items'] = $this->items;
             }
             $this->items[]     = ["title"       => $this->item['TITLE'],
-                                   "description" => @$this->item['DESCRIPTION'],
-                                   "link"        => $this->item['LINK']];
+                "description" => @$this->item['DESCRIPTION'],
+                "link"        => $this->item['LINK'],
+            ];
             $this->item        = ["TITLE"       => "",
-                                "DESCRIPTION" => "",
-                                "LINK"        => ""];
+                "DESCRIPTION" => "",
+                "LINK"        => "",
+            ];
             $this->inside_item = false;
         } elseif ($tagName == "IMAGE") {
             $this->item        = ["TITLE"       => "",
-                                "DESCRIPTION" => "",
-                                "LINK"        => ""];
+                "DESCRIPTION" => "",
+                "LINK"        => "",
+            ];
             $this->inside_item = false;
         } elseif ($tagName == "CHANNEL") {
             $this->channel                 = ["title" => $this->title,
-                                   "description" => $this->description,
-                                   "link" => $this->link,
-                                   "date" => $this->date,
-                                   "divers" => $this->divers];
+                "description" => $this->description,
+                "link" => $this->link,
+                "date" => $this->date,
+                "divers" => $this->divers,
+            ];
             $GLOBALS['rss_parser_channel'] = $this->channel;
             $this->title                   = "";
             $this->description             = "";
@@ -110,8 +114,9 @@ class RSSParser extends XmlParserPHPWiki
         } elseif ($tagName == "ITEMS") {
             $GLOBALS['rss_parser_items'] = $this->items;
             $this->item                  = ["TITLE"       => "",
-                                "DESCRIPTION" => "",
-                                "LINK"        => ""];
+                "DESCRIPTION" => "",
+                "LINK"        => "",
+            ];
             $this->list_items            = false;
         }
     }
@@ -136,7 +141,8 @@ class RSSParser extends XmlParserPHPWiki
                 // FIXME: avoid duplicates. cdata called back 4x per RDF:LI
                 if ($this->items[count($this->items) - 1]['link'] != @$current_attrs['RDF:RESOURCE']) {
                     $this->items[] = ['link' => @$current_attrs['RDF:RESOURCE'],
-                                           'title' => ''];
+                        'title' => '',
+                    ];
                 }
             }
         } else {

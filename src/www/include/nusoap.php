@@ -133,10 +133,10 @@ class nusoap_base
     * @access   public
     */
     public $namespaces = [
-    'SOAP-ENV' => 'http://schemas.xmlsoap.org/soap/envelope/',
-    'xsd' => 'http://www.w3.org/2001/XMLSchema',
-    'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-    'SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/',
+        'SOAP-ENV' => 'http://schemas.xmlsoap.org/soap/envelope/',
+        'xsd' => 'http://www.w3.org/2001/XMLSchema',
+        'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+        'SOAP-ENC' => 'http://schemas.xmlsoap.org/soap/encoding/',
     ];
 
     /**
@@ -155,28 +155,31 @@ class nusoap_base
     * @access   public
     */
     public $typemap = [
-    'http://www.w3.org/2001/XMLSchema' => [
-    'string' => 'string','boolean' => 'boolean','float' => 'double','double' => 'double','decimal' => 'double',
-    'duration' => '','dateTime' => 'string','time' => 'string','date' => 'string','gYearMonth' => '',
-    'gYear' => '','gMonthDay' => '','gDay' => '','gMonth' => '','hexBinary' => 'string','base64Binary' => 'string',
+        'http://www.w3.org/2001/XMLSchema' => [
+            'string' => 'string','boolean' => 'boolean','float' => 'double','double' => 'double','decimal' => 'double',
+            'duration' => '','dateTime' => 'string','time' => 'string','date' => 'string','gYearMonth' => '',
+            'gYear' => '','gMonthDay' => '','gDay' => '','gMonth' => '','hexBinary' => 'string','base64Binary' => 'string',
         // abstract "any" types
-    'anyType' => 'string','anySimpleType' => 'string',
+            'anyType' => 'string','anySimpleType' => 'string',
         // derived datatypes
-    'normalizedString' => 'string','token' => 'string','language' => '','NMTOKEN' => '','NMTOKENS' => '','Name' => '','NCName' => '','ID' => '',
-    'IDREF' => '','IDREFS' => '','ENTITY' => '','ENTITIES' => '','integer' => 'integer','nonPositiveInteger' => 'integer',
-    'negativeInteger' => 'integer','long' => 'integer','int' => 'integer','short' => 'integer','byte' => 'integer','nonNegativeInteger' => 'integer',
-    'unsignedLong' => '','unsignedInt' => '','unsignedShort' => '','unsignedByte' => '','positiveInteger' => ''],
-    'http://www.w3.org/2000/10/XMLSchema' => [
-    'i4' => '','int' => 'integer','boolean' => 'boolean','string' => 'string','double' => 'double',
-    'float' => 'double','dateTime' => 'string',
-    'timeInstant' => 'string','base64Binary' => 'string','base64' => 'string','ur-type' => 'array'],
-    'http://www.w3.org/1999/XMLSchema' => [
-    'i4' => '','int' => 'integer','boolean' => 'boolean','string' => 'string','double' => 'double',
-    'float' => 'double','dateTime' => 'string',
-    'timeInstant' => 'string','base64Binary' => 'string','base64' => 'string','ur-type' => 'array'],
-    'http://soapinterop.org/xsd' => ['SOAPStruct' => 'struct'],
-    'http://schemas.xmlsoap.org/soap/encoding/' => ['base64' => 'string','array' => 'array','Array' => 'array'],
-    'http://xml.apache.org/xml-soap' => ['Map'],
+            'normalizedString' => 'string','token' => 'string','language' => '','NMTOKEN' => '','NMTOKENS' => '','Name' => '','NCName' => '','ID' => '',
+            'IDREF' => '','IDREFS' => '','ENTITY' => '','ENTITIES' => '','integer' => 'integer','nonPositiveInteger' => 'integer',
+            'negativeInteger' => 'integer','long' => 'integer','int' => 'integer','short' => 'integer','byte' => 'integer','nonNegativeInteger' => 'integer',
+            'unsignedLong' => '','unsignedInt' => '','unsignedShort' => '','unsignedByte' => '','positiveInteger' => '',
+        ],
+        'http://www.w3.org/2000/10/XMLSchema' => [
+            'i4' => '','int' => 'integer','boolean' => 'boolean','string' => 'string','double' => 'double',
+            'float' => 'double','dateTime' => 'string',
+            'timeInstant' => 'string','base64Binary' => 'string','base64' => 'string','ur-type' => 'array',
+        ],
+        'http://www.w3.org/1999/XMLSchema' => [
+            'i4' => '','int' => 'integer','boolean' => 'boolean','string' => 'string','double' => 'double',
+            'float' => 'double','dateTime' => 'string',
+            'timeInstant' => 'string','base64Binary' => 'string','base64' => 'string','ur-type' => 'array',
+        ],
+        'http://soapinterop.org/xsd' => ['SOAPStruct' => 'struct'],
+        'http://schemas.xmlsoap.org/soap/encoding/' => ['base64' => 'string','array' => 'array','Array' => 'array'],
+        'http://xml.apache.org/xml-soap' => ['Map'],
     ];
 
     /**
@@ -188,7 +191,8 @@ class nusoap_base
     * @see    expandEntities
     */
     public $xmlEntities = ['quot' => '"','amp' => '&',
-    'lt' => '<','gt' => '>','apos' => "'"];
+        'lt' => '<','gt' => '>','apos' => "'",
+    ];
 
     public function __construct()
     {
@@ -1833,14 +1837,14 @@ class XMLSchema extends nusoap_base
     public function addComplexType($name, $typeClass = 'complexType', $phpType = 'array', $compositor = '', $restrictionBase = '', $elements = [], $attrs = [], $arrayType = '')
     {
         $this->complexTypes[$name] = [
-        'name'        => $name,
-        'typeClass'    => $typeClass,
-        'phpType'    => $phpType,
-        'compositor' => $compositor,
-        'restrictionBase' => $restrictionBase,
-        'elements'    => $elements,
-        'attrs'        => $attrs,
-        'arrayType'    => $arrayType,
+            'name'        => $name,
+            'typeClass'    => $typeClass,
+            'phpType'    => $phpType,
+            'compositor' => $compositor,
+            'restrictionBase' => $restrictionBase,
+            'elements'    => $elements,
+            'attrs'        => $attrs,
+            'arrayType'    => $arrayType,
         ];
 
         $this->xdebug("addComplexType $name:");
@@ -1862,11 +1866,11 @@ class XMLSchema extends nusoap_base
     public function addSimpleType($name, $restrictionBase = '', $typeClass = 'simpleType', $phpType = 'scalar', $enumeration = [])
     {
         $this->simpleTypes[$name] = [
-        'name'            => $name,
-        'typeClass'        => $typeClass,
-        'phpType'        => $phpType,
-        'type'            => $restrictionBase,
-        'enumeration'    => $enumeration,
+            'name'            => $name,
+            'typeClass'        => $typeClass,
+            'phpType'        => $phpType,
+            'type'            => $restrictionBase,
+            'enumeration'    => $enumeration,
         ];
 
         $this->xdebug("addSimpleType $name:");
@@ -2990,12 +2994,12 @@ class soap_transport_http extends nusoap_base
             $name   = substr($value_str, 0, $sep_pos);
             $value  = substr($value_str, $sep_pos + 1);
             $cookie = [    'name' => $name,
-                            'value' => $value,
-             'domain' => $domain,
-             'path' => $path,
-             'expires' => $expires,
-             'secure' => $secure,
-             ];
+                'value' => $value,
+                'domain' => $domain,
+                'path' => $path,
+                'expires' => $expires,
+                'secure' => $secure,
+            ];
             return $cookie;
         }
         return false;
@@ -3905,12 +3909,13 @@ class soap_server extends nusoap_base
         }
 
         $this->operations[$name] = [
-        'name' => $name,
-        'in' => $in,
-        'out' => $out,
-        'namespace' => $namespace,
-        'soapaction' => $soapaction,
-        'style' => $style];
+            'name' => $name,
+            'in' => $in,
+            'out' => $out,
+            'namespace' => $namespace,
+            'soapaction' => $soapaction,
+            'style' => $style,
+        ];
         if ($this->wsdl) {
             $this->wsdl->addOperation($name, $in, $out, $namespace, $soapaction, $style, $use, $documentation, $encodingStyle);
         }
@@ -3996,11 +4001,13 @@ class soap_server extends nusoap_base
             'name' => $serviceName . 'Binding',
             'style' => $style,
             'transport' => $transport,
-            'portType' => $serviceName . 'PortType'];
+            'portType' => $serviceName . 'PortType',
+        ];
         $this->wsdl->ports[$serviceName . 'Port']                                                                = [
             'binding' => $serviceName . 'Binding',
             'location' => $endpoint,
-            'bindingType' => 'http://schemas.xmlsoap.org/wsdl/soap/'];
+            'bindingType' => 'http://schemas.xmlsoap.org/wsdl/soap/',
+        ];
     }
 }
 
@@ -5701,26 +5708,29 @@ class wsdl extends nusoap_base
      // get binding
         $this->bindings[$this->serviceName . 'Binding']['operations'][$name] =
         [
-        'name' => $name,
-        'binding' => $this->serviceName . 'Binding',
-        'endpoint' => $this->endpoint,
-        'soapAction' => $soapaction,
-        'style' => $style,
-        'input' => [
-        'use' => $use,
-        'namespace' => $namespace,
-        'encodingStyle' => $encodingStyle,
-        'message' => $name . 'Request',
-        'parts' => $in],
-        'output' => [
-        'use' => $use,
-        'namespace' => $namespace,
-        'encodingStyle' => $encodingStyle,
-        'message' => $name . 'Response',
-        'parts' => $out],
-        'namespace' => $namespace,
-        'transport' => 'http://schemas.xmlsoap.org/soap/http',
-        'documentation' => $documentation];
+            'name' => $name,
+            'binding' => $this->serviceName . 'Binding',
+            'endpoint' => $this->endpoint,
+            'soapAction' => $soapaction,
+            'style' => $style,
+            'input' => [
+                'use' => $use,
+                'namespace' => $namespace,
+                'encodingStyle' => $encodingStyle,
+                'message' => $name . 'Request',
+                'parts' => $in,
+            ],
+            'output' => [
+                'use' => $use,
+                'namespace' => $namespace,
+                'encodingStyle' => $encodingStyle,
+                'message' => $name . 'Response',
+                'parts' => $out,
+            ],
+            'namespace' => $namespace,
+            'transport' => 'http://schemas.xmlsoap.org/soap/http',
+            'documentation' => $documentation,
+        ];
      // add portTypes
      // add messages
         if ($in) {

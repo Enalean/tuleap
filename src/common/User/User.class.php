@@ -1087,10 +1087,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function setStatus($status)
     {
         $allowedStatus = ['A' => true,
-                               'R' => true,
-                               'D' => true,
-                               'S' => true,
-                               'P' => true];
+            'R' => true,
+            'D' => true,
+            'S' => true,
+            'P' => true,
+        ];
         if (isset($allowedStatus[$status])) {
             $this->status = $status;
         }
@@ -1148,11 +1149,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function setUnixStatus($unixStatus)
     {
         $allowedStatus = [0 => true,
-                               '0' => true,
-                               'N' => true,
-                               'A' => true,
-                               'S' => true,
-                               'D' => true];
+            '0' => true,
+            'N' => true,
+            'A' => true,
+            'S' => true,
+            'D' => true,
+        ];
         if (isset($allowedStatus[$unixStatus])) {
             $this->unix_status = $unixStatus;
         }

@@ -37,11 +37,15 @@ class NotificationsManager_DeleteTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testStoreEventsDoNotOverrideUsers()
     {
         $listeningUsers = new ArrayIterator([['user_id' => 1,
-                                                        'item_id' => 1],
-                                                  ['user_id' => 2,
-                                                        'item_id' => 1],
-                                                  ['user_id' => 3,
-                                                        'item_id' => 1]]);
+            'item_id' => 1,
+        ],
+            ['user_id' => 2,
+                'item_id' => 1,
+            ],
+            ['user_id' => 3,
+                'item_id' => 1,
+            ],
+        ]);
 
         $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getId')->andReturns(1);

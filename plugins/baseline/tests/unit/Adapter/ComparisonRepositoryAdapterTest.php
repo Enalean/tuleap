@@ -361,7 +361,8 @@ class ComparisonRepositoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $compared_to_baseline,
             $user,
             $creation_date
-        )];
+        ),
+        ];
         $this->assertEquals($expected_baselines, $baselines);
     }
 

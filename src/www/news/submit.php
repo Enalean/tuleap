@@ -76,7 +76,8 @@ if (user_isloggedin()) {
              Show the submit form
         */
         news_header(['title' => $Language->getText('news_index', 'news'),
-              'help' => 'collaboration.html#news-service']);
+            'help' => 'collaboration.html#news-service',
+        ]);
 
         $hp      = Codendi_HTMLPurifier::instance();
         $pm      = ProjectManager::instance();

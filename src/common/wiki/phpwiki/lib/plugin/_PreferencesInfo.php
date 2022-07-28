@@ -51,7 +51,8 @@ class WikiPlugin__PreferencesInfo extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['page' => '[pagename]',
-                     'userid' => '[userid]'];
+            'userid' => '[userid]',
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

@@ -164,16 +164,20 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $proj_members = ["0" =>
                                [
-                                     "user_name" => "user1",
-                                     "user_id"  => "1"],
-                              "1" =>
+                                   "user_name" => "user1",
+                                   "user_id"  => "1",
+                               ],
+            "1" =>
                                [
-                                     "user_name" => "user2",
-                                     "user_id"  => "2"],
-                              "2" =>
+                                   "user_name" => "user2",
+                                   "user_id"  => "2",
+                               ],
+            "2" =>
                                [
-                                     "user_name" => "user3",
-                                     "user_id"  => "3"]];
+                                   "user_name" => "user3",
+                                   "user_id"  => "3",
+                               ],
+        ];
         $project->shouldReceive('getMembersUserNames')->andReturns($proj_members);
         $project->shouldReceive('getMembers')->andReturns([$user1, $user2, $user3]);
 
@@ -182,12 +186,15 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroups = ["0" =>
                           [
-                                "name" => "QA",
-                                "ugroup_id"  => "104"],
-                         "1" =>
+                              "name" => "QA",
+                              "ugroup_id"  => "104",
+                          ],
+            "1" =>
                           [
-                                "name" => "Customers",
-                                "ugroup_id"  => "102"]];
+                              "name" => "Customers",
+                              "ugroup_id"  => "102",
+                          ],
+        ];
         $ugdao   = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns($ugroups);
 
@@ -234,16 +241,20 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
         $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $proj_members = ["0" =>
                                [
-                                     "user_name" => "user1",
-                                     "user_id"  => "1"],
-                              "1" =>
+                                   "user_name" => "user1",
+                                   "user_id"  => "1",
+                               ],
+            "1" =>
                                [
-                                     "user_name" => "user2",
-                                     "user_id"  => "2"],
-                              "2" =>
+                                   "user_name" => "user2",
+                                   "user_id"  => "2",
+                               ],
+            "2" =>
                                [
-                                     "user_name" => "user3",
-                                     "user_id"  => "3"]];
+                                   "user_name" => "user3",
+                                   "user_id"  => "3",
+                               ],
+        ];
         $project->shouldReceive('getMembersUserNames')->andReturns($proj_members);
         $project->shouldReceive('getMembers')->andReturns([$user1, $user2, $user3]);
 
@@ -252,12 +263,15 @@ final class BackendSVNTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroups = ["0" =>
                           [
-                                "name" => "QA",
-                                "ugroup_id"  => "104"],
-                         "1" =>
+                              "name" => "QA",
+                              "ugroup_id"  => "104",
+                          ],
+            "1" =>
                           [
-                                "name" => "Customers",
-                                "ugroup_id"  => "102"]];
+                              "name" => "Customers",
+                              "ugroup_id"  => "102",
+                          ],
+        ];
         $ugdao   = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns($ugroups);
 

@@ -34,7 +34,7 @@ class AdmininistrationBreadcrumbs implements Breadcrumbs
         ]);
 
         $administration_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
-           'group_id' => $project->getID(),
+            'group_id' => $project->getID(),
             'action'  => 'admin',
         ]);
 

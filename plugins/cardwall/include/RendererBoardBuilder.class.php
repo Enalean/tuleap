@@ -52,7 +52,8 @@ class Cardwall_RendererBoardBuilder
         return [new Cardwall_SwimlineTrackerRenderer($this->swimline_factory->getCells(
             $columns,
             $this->getCardsPresenters($artifact_ids)
-        ))];
+        )),
+        ];
     }
 
     protected function getCardsPresenters(array $artifact_ids)

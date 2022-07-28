@@ -57,9 +57,10 @@ class SVN_LogFactory
             list($revision, $commit_id, $description, $date, $whoid) = $raw_revision;
 
             $revisions[] = ['revision' => $revision,
-                                 'author'   => $whoid,
-                                 'date'     => $date,
-                                 'message'  => trim($description)];
+                'author'   => $whoid,
+                'date'     => $date,
+                'message'  => trim($description),
+            ];
         }
 
         return $revisions;

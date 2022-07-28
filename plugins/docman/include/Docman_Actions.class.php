@@ -113,11 +113,12 @@ class Docman_Actions extends Actions
     private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field)
     {
         $logEventParam = ['group_id' => $group_id,
-                               'item'     => &$item,
-                               'user'     => &$user,
-                               'old_value' => $old,
-                               'new_value' => $new,
-                               'field'     => $field];
+            'item'     => &$item,
+            'user'     => &$user,
+            'old_value' => $old,
+            'new_value' => $new,
+            'field'     => $field,
+        ];
 
         $this->event_manager->processEvent(
             'plugin_docman_event_metadata_update',
@@ -265,25 +266,27 @@ class Docman_Actions extends Actions
                 if (is_int($possible_date)) {
                     $date   = $possible_date;
                     $eArray = ['group_id'  => $item->getGroupId(),
-                               'item'      => &$item,
-                               'old_value' => null,
-                               'new_value' => $date,
-                               'user'      => &$user];
+                        'item'      => &$item,
+                        'old_value' => null,
+                        'new_value' => $date,
+                        'user'      => &$user,
+                    ];
 
                     $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
                 }
             }
 
             $vArray = ['item_id'   => $item->getId(),
-                            'number'    => $number,
-                            'user_id'   => $versionAuthor,
-                            'label'     => $_label,
-                            'changelog' => $_changelog,
-                            'filename'  => $final_filename,
-                            'filesize'  => $_filesize ?? 0,
-                            'filetype'  => $_filetype ?? '',
-                            'path'      => $path ?? '',
-                            'date'      => $date];
+                'number'    => $number,
+                'user_id'   => $versionAuthor,
+                'label'     => $_label,
+                'changelog' => $_changelog,
+                'filename'  => $final_filename,
+                'filesize'  => $_filesize ?? 0,
+                'filetype'  => $_filetype ?? '',
+                'path'      => $path ?? '',
+                'date'      => $date,
+            ];
             $vId    = $vFactory->create($vArray);
 
             // Create a new version object
@@ -292,9 +295,10 @@ class Docman_Actions extends Actions
             $newVersion     = new Docman_Version($vArray);
 
             $eArray = ['group_id' => $item->getGroupId(),
-                            'item'     => &$item,
-                            'version'  => $newVersion,
-                            'user'     => &$user];
+                'item'     => &$item,
+                'version'  => $newVersion,
+                'user'     => &$user,
+            ];
             $this->event_manager->processEvent('plugin_docman_event_new_version', $eArray);
             if ($_action_type === 'newversion') {
                 $this->_controler->feedback->log(
@@ -670,7 +674,8 @@ class Docman_Actions extends Actions
                     'group_id' => $request->get('group_id'),
                     'item'     => $item,
                     'new'      => $data,
-                    'user'     => $user]);
+                    'user'     => $user,
+                ]);
             }
 
             // Log the 'edit' event if link_url or wiki_page are set
@@ -678,7 +683,8 @@ class Docman_Actions extends Actions
                 $this->event_manager->processEvent('plugin_docman_event_edit', [
                     'group_id' => $request->get('group_id'),
                     'item'     => &$item,
-                    'user'     => &$user]);
+                    'user'     => &$user,
+                ]);
             }
 
             if ($ownerChanged && isset($_oldowner, $_newowner)) {
@@ -1494,14 +1500,16 @@ class Docman_Actions extends Actions
 
             $this->_controler->view                              = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_MetadataDetails::IDENTIFIER,
-                                                                          'md'     => $md->getLabel()];
+                'md'     => $md->getLabel(),
+            ];
         } else {
             $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Unable to update element.'));
 
             $this->_controler->view                              = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params'] = ['action' => \Docman_View_Admin_MetadataDetailsUpdateLove::IDENTIFIER,
-                                                                          'md'     => $md->getLabel(),
-                                                                          'loveid' => $love->getId()];
+                'md'     => $md->getLabel(),
+                'loveid' => $love->getId(),
+            ];
         }
     }
 
@@ -1587,9 +1595,10 @@ class Docman_Actions extends Actions
     public function _raiseMonitoringListEvent($item, $subscribers, $eventType)
     {
         $p = ['group_id' => $item->getGroupId(),
-                                       'item'     => $item,
-                                       'listeners' => $subscribers,
-                                       'event'    => $eventType];
+            'item'     => $item,
+            'listeners' => $subscribers,
+            'event'    => $eventType,
+        ];
         $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
     }
 

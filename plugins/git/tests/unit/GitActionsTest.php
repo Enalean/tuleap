@@ -168,8 +168,9 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $git->shouldReceive('addInfo')->with('mail_existing john.smith@acme.com')->ordered();
 
         $mails = ['john.doe@acme.com',
-                       'jane.doe@acme.com',
-                       'john.smith@acme.com'];
+            'jane.doe@acme.com',
+            'john.smith@acme.com',
+        ];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -190,8 +191,9 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $git->shouldReceive('addInfo')->never();
 
         $mails = ['john.doe@acme.com',
-                       'jane.doe@acme.com',
-                       'john.smith@acme.com'];
+            'jane.doe@acme.com',
+            'john.smith@acme.com',
+        ];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -210,8 +212,9 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $git->shouldReceive('addInfo')->with('Mail added')->once();
 
         $mails = ['john.doe@acme.com',
-                       'jane.doe@acme.com',
-                       'john.smith@acme.com'];
+            'jane.doe@acme.com',
+            'john.smith@acme.com',
+        ];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 

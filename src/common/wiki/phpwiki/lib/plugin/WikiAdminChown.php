@@ -57,10 +57,10 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         return array_merge(
             PageList::supportedArgs(),
             [
-                   's'         => false,
-                   'user'     => false,
+                's'         => false,
+                'user'     => false,
                    /* Columns to include in listing */
-                   'info'     => 'pagename,owner,mtime',
+                'info'     => 'pagename,owner,mtime',
             ]
         );
     }
@@ -211,7 +211,8 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
@@ -232,7 +233,8 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         $header->pushContent(_("Chown") . " ");
         $header->pushContent(' ' . _("to") . ': ');
         $header->pushContent(HTML::input(['name' => 'admin_chown[user]',
-                                               'value' => $post_args['user']]));
+            'value' => $post_args['user'],
+        ]));
         $header->pushContent(HTML::p());
         return $header;
     }

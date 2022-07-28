@@ -256,7 +256,8 @@ class FRSReleaseFactory
             $this->getEventManager()->processEvent(
                 'frs_update_release',
                 ['group_id' => $release->getGroupID(),
-                'item_id'    => $data_array['release_id']]
+                    'item_id'    => $data_array['release_id'],
+                ]
             );
             return true;
         }
@@ -271,7 +272,8 @@ class FRSReleaseFactory
             $this->getEventManager()->processEvent(
                 'frs_create_release',
                 ['group_id' => $release->getGroupID(),
-                'item_id'    => $id]
+                    'item_id'    => $id,
+                ]
             );
             return $id;
         }
@@ -287,7 +289,8 @@ class FRSReleaseFactory
             $this->getEventManager()->processEvent(
                 'frs_delete_release',
                 ['group_id' => $release->getGroupID(),
-                'item_id' => $_id]
+                    'item_id' => $_id,
+                ]
             );
             return true;
         }

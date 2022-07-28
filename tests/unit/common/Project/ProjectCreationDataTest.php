@@ -142,7 +142,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
             [
                 'project' => [
                     'is_public' => '0',
-                 ],
+                ],
             ]
         );
 

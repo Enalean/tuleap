@@ -62,9 +62,9 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
     public function getDefaultArguments()
     {
         return [ 'lang'      => false,
-                   'pagename'  => '[pagename]',
-                   'translate' => false,
-                 ];
+            'pagename'  => '[pagename]',
+            'translate' => false,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -101,7 +101,8 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
                 } else {
                     $text = '';
                     $meta = ['markup' => 2.0,
-                                  'author' => $user->getId()];
+                        'author' => $user->getId(),
+                    ];
                 }
                 $text           .= $user->getId() . " " . Iso8601DateTime() . "\n" .
                          "* " . sprintf(
@@ -144,15 +145,17 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
         );
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             $header,
             HTML::textarea(
                 ['class' => 'wikiedit',
-                                               'name' => 'translate[content]',
-                                               'id'   => 'translate[content]',
-                                               'rows' => 4,
-                                               'cols' => $request->getPref('editWidth'),
-                                               'wrap' => 'virtual'],
+                    'name' => 'translate[content]',
+                    'id'   => 'translate[content]',
+                    'rows' => 4,
+                    'cols' => $request->getPref('editWidth'),
+                    'wrap' => 'virtual',
+                ],
                 $trans
             ),
             HiddenInputs(
@@ -161,8 +164,8 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
                 ['translate']
             ),
             HiddenInputs(['translate[action]' => $pagename,
-                                             'require_authority_for_post' => WIKIAUTH_BOGO,
-                                             ]),
+                'require_authority_for_post' => WIKIAUTH_BOGO,
+            ]),
             $buttons
         );
     }

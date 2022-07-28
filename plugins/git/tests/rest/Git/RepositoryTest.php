@@ -119,9 +119,9 @@ final class RepositoryTest extends TestBase
     public function testOPTIONSFilesWithReadOnlyAdmin(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-                'path_to_file' => 'file01',
-                'ref'          => 'master',
-            ]);
+            'path_to_file' => 'file01',
+            'ref'          => 'master',
+        ]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $url),
@@ -134,9 +134,9 @@ final class RepositoryTest extends TestBase
     public function testGETFiles(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-                'path_to_file' => 'file01',
-                'ref' => 'master',
-            ]);
+            'path_to_file' => 'file01',
+            'ref' => 'master',
+        ]);
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
@@ -146,9 +146,9 @@ final class RepositoryTest extends TestBase
     public function testGETFilesWithReadOnlyAdmin(): void
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
-                'path_to_file' => 'file01',
-                'ref' => 'master',
-            ]);
+            'path_to_file' => 'file01',
+            'ref' => 'master',
+        ]);
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
@@ -652,8 +652,8 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
-             'path' => '',
-             'ref'  => 'master',
+                'path' => '',
+                'ref'  => 'master',
             ]
         );
 
@@ -666,8 +666,8 @@ final class RepositoryTest extends TestBase
     {
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tree?' . http_build_query(
             [
-             'path' => 'file01',
-             'ref'  => 'master',
+                'path' => 'file01',
+                'ref'  => 'master',
             ]
         );
 
@@ -683,20 +683,20 @@ final class RepositoryTest extends TestBase
         self::assertEqualsCanonicalizing(
             $commit,
             [
-            [
-                'id'   => '459385229609d3c5f847e75ae61b3859cf90f159',
-                'name' => 'README.mkd',
-                'path' => 'README.mkd',
-                'type' => 'blob',
-                'mode' => '100644',
-            ],
-            [
-                'id'   => '8e72e5b6f640d6df27c219b039c6430d4ed96a1a',
-                'name' => 'file01',
-                'path' => 'file01',
-                'type' => 'blob',
-                'mode' => '100644',
-            ],
+                [
+                    'id'   => '459385229609d3c5f847e75ae61b3859cf90f159',
+                    'name' => 'README.mkd',
+                    'path' => 'README.mkd',
+                    'type' => 'blob',
+                    'mode' => '100644',
+                ],
+                [
+                    'id'   => '8e72e5b6f640d6df27c219b039c6430d4ed96a1a',
+                    'name' => 'file01',
+                    'path' => 'file01',
+                    'type' => 'blob',
+                    'mode' => '100644',
+                ],
             ]
         );
     }

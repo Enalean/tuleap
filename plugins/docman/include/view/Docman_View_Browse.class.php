@@ -108,7 +108,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     {
         if ($this->dfltParams === null) {
             $this->dfltParams = ['action' => 'search',
-                                      'id'     => $params['item']->getId()];
+                'id'     => $params['item']->getId(),
+            ];
 
             $this->_initSearchAndSortParams($params);
         }

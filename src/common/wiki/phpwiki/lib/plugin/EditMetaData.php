@@ -68,7 +68,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['page'       => '[pagename]',
-                    ];
+        ];
     }
 
 
@@ -161,8 +161,9 @@ class WikiPlugin_EditMetaData extends WikiPlugin
             $button       = Button('submit:metaedit', _("Submit"), false);
             $form         = HTML::form(
                 ['action' => $action,
-                                     'method' => 'post',
-                                     'accept-charset' => $GLOBALS['charset']],
+                    'method' => 'post',
+                    'accept-charset' => $GLOBALS['charset'],
+                ],
                 $hiddenfield,
                 $instructions,
                 HTML::br(),

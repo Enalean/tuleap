@@ -241,7 +241,8 @@ class FRSPackageFactory
             $this->getEventManager()->processEvent(
                 'frs_update_package',
                 ['group_id' => $data['group_id'],
-                'item_id'    => $data['package_id']]
+                    'item_id'    => $data['package_id'],
+                ]
             );
             return true;
         }
@@ -265,7 +266,8 @@ class FRSPackageFactory
             $this->getEventManager()->processEvent(
                 'frs_create_package',
                 ['group_id' => $data_array['group_id'],
-                'item_id' => $id]
+                    'item_id' => $id,
+                ]
             );
         }
         return $id;
@@ -296,7 +298,8 @@ class FRSPackageFactory
             $this->getEventManager()->processEvent(
                 'frs_delete_package',
                 ['group_id' => $package->getGroupID(),
-                'item_id'    => $_id]
+                    'item_id'    => $_id,
+                ]
             );
             return true;
         }

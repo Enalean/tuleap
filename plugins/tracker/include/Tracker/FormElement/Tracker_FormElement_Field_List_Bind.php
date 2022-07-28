@@ -459,8 +459,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
                 return true;
             }
             $GLOBALS['Response']->redirect('?' . http_build_query([
-                    'tracker'            => $tracker->getId(),
-                    'func'               => 'admin-formElements',
+                'tracker'            => $tracker->getId(),
+                'func'               => 'admin-formElements',
             ]));
         }
         return true;

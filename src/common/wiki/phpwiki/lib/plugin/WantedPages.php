@@ -56,10 +56,11 @@ class WikiPlugin_WantedPages extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             ['page'     => '[pagename]', // just for a single page.
-                   'noheader' => false,
-                   'exclude_from'  => _("PgsrcTranslation") . ',' . _("InterWikiMap"),
-                   'limit'    => '100',
-            'paging'   => 'auto']
+                'noheader' => false,
+                'exclude_from'  => _("PgsrcTranslation") . ',' . _("InterWikiMap"),
+                'limit'    => '100',
+                'paging'   => 'auto',
+            ]
         );
     }
 

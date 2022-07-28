@@ -291,7 +291,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         $pm     = ProjectManager::instance();
         $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
-                      'pv'   => isset($pv) ? $pv : false];
+            'pv'   => isset($pv) ? $pv : false,
+        ];
         forum_header($params);
 
     //private forum check

@@ -43,9 +43,10 @@ class WikiPlugin_JabberPresence extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['scripturl' => "http://edgar.netflint.net/status.php",
-                     'jid'       => MY_JABBER_ID,
-        'type'      => 'image',
-                     'iconset'   => "gabber"];
+            'jid'       => MY_JABBER_ID,
+            'type'      => 'image',
+            'iconset'   => "gabber",
+        ];
     }
 
     public function run($dbi, $argstr, $request)
@@ -59,7 +60,8 @@ class WikiPlugin_JabberPresence extends WikiPlugin
             $html = HTML::img(['src' => urlencode($scripturl) .
             '&jid=' . urlencode($jid) .
             '&type=' . urlencode($type) .
-            '&iconset=' . ($iconset)]);
+            '&iconset=' . ($iconset),
+            ]);
         }
         return $html;
     }

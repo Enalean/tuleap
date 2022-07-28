@@ -155,6 +155,8 @@
     <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
     <!-- Require /* @var type $foo */ and similar simple inline annotations to be replaced by assert() -->
     <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
+    <!-- Force array element indentation with 4 spaces -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
     <!-- Forbid `array(...)` -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">

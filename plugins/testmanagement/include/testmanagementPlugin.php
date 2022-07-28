@@ -915,8 +915,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         }
         $url = '/plugins/testmanagement/?' . http_build_query(
             [
-                    'group_id' => $project->getID(),
-                ]
+                'group_id' => $project->getID(),
+            ]
         ) . '#!/campaigns/' . urlencode((string) $collection->getArtifact()->getId());
 
         $collection->add(

@@ -200,11 +200,11 @@ final class SwaggerJsonPathsAndDefinitions
                 $r[]  = $this->parameter(
                     new ValidationInfo(
                         [
-                           'name'     => $name,
-                           'type'     => $name,
-                           'from'     => 'body',
-                           'required' => $required,
-                           'children' => $children,
+                            'name'     => $name,
+                            'type'     => $name,
+                            'from'     => 'body',
+                            'required' => $required,
+                            'children' => $children,
                         ]
                     ),
                     $description

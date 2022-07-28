@@ -70,8 +70,9 @@ class ArtifactImportHtml extends ArtifactImport
         );
 
         $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
-        'atid' => $this->ath->getID(),
-        'help' => 'tracker-v3.html#tracker-artifact-import']);
+            'atid' => $this->ath->getID(),
+            'help' => 'tracker-v3.html#tracker-artifact-import',
+        ]);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         echo '<h2>' . $Language->getText('tracker_import', 'parse_report') . '</h2>';
@@ -284,8 +285,9 @@ class ArtifactImportHtml extends ArtifactImport
       // project_export_utils is using $at instead of $ath
         $at = $this->ath;
         $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
-        'atid' => $this->ath->getID(),
-        'help' => 'tracker-v3.html#tracker-artifact-import']);
+            'atid' => $this->ath->getID(),
+            'help' => 'tracker-v3.html#tracker-artifact-import',
+        ]);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         $fields = $col_list = $multiple_queries = $all_queries = [];
@@ -350,8 +352,9 @@ class ArtifactImportHtml extends ArtifactImport
         global $Language,$sys_max_size_upload;
 
         $this->ath->header(['title' => $Language->getText('tracker_import', 'art_import') . ' ' . $this->ath->getID() . ' - ' . $this->ath->getName(),'pagename' => 'tracker',
-        'atid' => $this->ath->getID(),
-        'help' => 'tracker-v3.html#tracker-artifact-import']);
+            'atid' => $this->ath->getID(),
+            'help' => 'tracker-v3.html#tracker-artifact-import',
+        ]);
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         echo '<h3>' . $Language->getText('tracker_import', 'import_new_hdr') . '</h3>';

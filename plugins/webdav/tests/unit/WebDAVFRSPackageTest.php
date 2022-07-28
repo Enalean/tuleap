@@ -496,10 +496,11 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // Values we expect for the package to create
         $refPackageToCreate = ['name'       => 'release',
-                                    'package_id' => 42,
-                                    'notes'      => '',
-                                    'changes'    => '',
-                                    'status_id'  => 1];
+            'package_id' => 42,
+            'notes'      => '',
+            'changes'    => '',
+            'status_id'  => 1,
+        ];
         // Values we expect for the package once created
         $refPackage               = $refPackageToCreate;
         $refPackage['release_id'] = 15;

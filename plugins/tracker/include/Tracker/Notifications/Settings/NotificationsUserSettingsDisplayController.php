@@ -84,7 +84,7 @@ class NotificationsUserSettingsDisplayController implements DispatchableWithRequ
             $this->tracker_manager,
             dgettext('tuleap-tracker', 'Email Notifications Settings'),
             [
-               ['title' => dgettext('tuleap-tracker', 'Email Notifications Settings'), 'url' => $current_uri],
+                ['title' => dgettext('tuleap-tracker', 'Email Notifications Settings'), 'url' => $current_uri],
             ],
             []
         );

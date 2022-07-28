@@ -40,15 +40,15 @@ class AuthorizationRequestCreator
         $state = $this->state_manager->initState($provider, $return_to);
 
         $url = $provider->getAuthorizationEndpoint() . '?' . http_build_query([
-                'client_id'             => $provider->getClientId(),
-                'redirect_uri'          => $provider->getRedirectUri(),
-                'response_type'         => 'code',
-                'scope'                 => $this->getScope($provider),
-                'state'                 => $state->getSignedState(),
-                'nonce'                 => $state->getNonce(),
-                'code_challenge'        => sodium_bin2base64(hash('sha256', $state->getPKCECodeVerifier()->getString(), true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-                'code_challenge_method' => 'S256',
-            ]);
+            'client_id'             => $provider->getClientId(),
+            'redirect_uri'          => $provider->getRedirectUri(),
+            'response_type'         => 'code',
+            'scope'                 => $this->getScope($provider),
+            'state'                 => $state->getSignedState(),
+            'nonce'                 => $state->getNonce(),
+            'code_challenge'        => sodium_bin2base64(hash('sha256', $state->getPKCECodeVerifier()->getString(), true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
+            'code_challenge_method' => 'S256',
+        ]);
 
         return new AuthorizationRequest($url);
     }

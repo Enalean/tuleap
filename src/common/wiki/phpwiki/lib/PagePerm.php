@@ -308,14 +308,14 @@ function getAccessDescription($access)
     static $accessDescriptions;
     if (! $accessDescriptions) {
         $accessDescriptions = [
-                                    'list'     => _("List this page and all subpages"),
-                                    'view'     => _("View this page and all subpages"),
-                                    'edit'     => _("Edit this page and all subpages"),
-                                    'create'   => _("Create a new (sub)page"),
-                                    'dump'     => _("Download the page contents"),
-                                    'change'   => _("Change page attributes"),
-                                    'remove'   => _("Remove this page"),
-                                    ];
+            'list'     => _("List this page and all subpages"),
+            'view'     => _("View this page and all subpages"),
+            'edit'     => _("Edit this page and all subpages"),
+            'create'   => _("Create a new (sub)page"),
+            'dump'     => _("Download the page contents"),
+            'change'   => _("Change page attributes"),
+            'remove'   => _("Remove this page"),
+        ];
     }
     if (in_array($access, array_keys($accessDescriptions))) {
         return $accessDescriptions[$access];
@@ -473,16 +473,20 @@ class PagePermission
         //Todo: check for the existance of '.' and take this instead.
         //Todo: honor more config.ini auth settings here
         $perm = ['view'   => [ACL_EVERY => true],
-                      'edit'   => [ACL_EVERY => true],
-                      'create' => [ACL_EVERY => true],
-                      'list'   => [ACL_EVERY => true],
-                      'remove' => [ACL_ADMIN => true,
-                                        ACL_OWNER => true],
-                      'change' => [ACL_ADMIN => true,
-                                        ACL_OWNER => true]];
+            'edit'   => [ACL_EVERY => true],
+            'create' => [ACL_EVERY => true],
+            'list'   => [ACL_EVERY => true],
+            'remove' => [ACL_ADMIN => true,
+                ACL_OWNER => true,
+            ],
+            'change' => [ACL_ADMIN => true,
+                ACL_OWNER => true,
+            ],
+        ];
         if (ZIPDUMP_AUTH) {
             $perm['dump'] = [ACL_ADMIN => true,
-                                  ACL_OWNER => true];
+                ACL_OWNER => true,
+            ];
         } else {
             $perm['dump'] = [ACL_EVERY => true];
         }
@@ -547,7 +551,8 @@ class PagePermission
     public function dotPerms()
     {
         $def  = [ACL_ADMIN => true,
-                     ACL_OWNER => true];
+            ACL_OWNER => true,
+        ];
         $perm = [];
         foreach (self::accessTypes() as $access) {
             $perm[$access] = $def;
@@ -650,17 +655,20 @@ class PagePermission
             //$permlist = HTML::table(array('class' => 'cal','valign' => 'top'));
             $first_only = true;
             $newperm    = HTML::input(['type' => 'checkbox',
-                                         'name' => "acl[_new_perm][$access]",
-                                         'value' => 1]);
+                'name' => "acl[_new_perm][$access]",
+                'value' => 1,
+            ]);
             $addbutton  = HTML::input(['type' => 'checkbox',
-                                           'name' => "acl[_add_group][$access]",
+                'name' => "acl[_add_group][$access]",
                                            //'src'  => $addsrc,
                                            //'alt'   => "Add",
-                                           'title' => _("Add this ACL"),
-                                           'value' => 1]);
+                'title' => _("Add this ACL"),
+                'value' => 1,
+            ]);
             $newgroup   = HTML::select(['name' => "acl[_new_group][$access]",
-                                           'style' => 'text-align: right;',
-                                           'size' => 1]);
+                'style' => 'text-align: right;',
+                'size' => 1,
+            ]);
             foreach ($allGroups as $groupname) {
                 if (! isset($groups[$groupname])) {
                     $newgroup->pushContent(HTML::option(
@@ -685,25 +693,28 @@ class PagePermission
             }
             foreach ($groups as $group => $bool) {
                 $checkbox = HTML::input(['type' => 'checkbox',
-                                              'name' => "acl[$access][$group]",
-                                              'title' => _("Allow / Deny"),
-                                              'value' => 1]);
+                    'name' => "acl[$access][$group]",
+                    'title' => _("Allow / Deny"),
+                    'value' => 1,
+                ]);
                 if ($bool) {
                     $checkbox->setAttr('checked', 'checked');
                 }
                 $checkbox     = HTML(
                     HTML::input(['type' => 'hidden',
-                                                   'name' => "acl[$access][$group]",
-                                                   'value' => 0]),
+                        'name' => "acl[$access][$group]",
+                        'value' => 0,
+                    ]),
                     $checkbox
                 );
                 $deletebutton = HTML::input(['type' => 'checkbox',
-                                                  'name' => "acl[_del_group][$access][$group]",
-                                                  'style' => 'background: #aaa url(' . $deletesrc . ')',
+                    'name' => "acl[_del_group][$access][$group]",
+                    'style' => 'background: #aaa url(' . $deletesrc . ')',
                                                   //'src'  => $deletesrc,
                                                   //'alt'   => "Del",
-                                                  'title' => _("Delete this ACL"),
-                                                  'value' => 1]);
+                    'title' => _("Delete this ACL"),
+                    'value' => 1,
+                ]);
                 if ($first_only) {
                     $table->pushContent(
                         HTML::tr(

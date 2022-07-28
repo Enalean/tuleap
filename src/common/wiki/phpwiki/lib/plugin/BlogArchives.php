@@ -45,11 +45,11 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                //(
                //PageList::supportedArgs(),
              ['user'     => '',
-                   'order'    => 'reverse',        // latest first
-                   'info'     => 'month,numpages', // ignored
-                   'month'    => false,
-                   'noheader' => 0,
-                   ];
+                 'order'    => 'reverse',        // latest first
+                 'info'     => 'month,numpages', // ignored
+                 'month'    => false,
+                 'noheader' => 0,
+             ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -125,12 +125,13 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                 if (empty($months[$mon])) {
                     $months[$mon] =
                         ['title' => $this->_monthTitle($mon),
-                              'num'   => 1,
-                              'month' => $mon,
-                              'link'  => WikiURL(
-                                  $basepage,
-                                  $this->_nonDefaultArgs(['month' => $mon])
-                              )];
+                            'num'   => 1,
+                            'month' => $mon,
+                            'link'  => WikiURL(
+                                $basepage,
+                                $this->_nonDefaultArgs(['month' => $mon])
+                            ),
+                        ];
                 } else {
                     $months[$mon]['num']++;
                 }
@@ -138,7 +139,8 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
             foreach ($months as $m) {
                 $html->pushContent(HTML::li(HTML::a(
                     ['href' => $m['link'],
-                                                          'class' => 'named-wiki'],
+                        'class' => 'named-wiki',
+                    ],
                     $m['title'] . " (" . $m['num'] . ")"
                 )));
             }

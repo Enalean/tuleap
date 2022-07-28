@@ -116,7 +116,8 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
                 self::CHANGESET_ID,
                 new CreatedFileURLMapping()
-            )],
+            ),
+            ],
             'HTML comment'     => [CommentCreation::fromNewComment(
                 NewComment::fromParts(
                     '<p>wane demipomada</p>',
@@ -127,7 +128,8 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
                 self::CHANGESET_ID,
                 new CreatedFileURLMapping()
-            )],
+            ),
+            ],
             'Markdown comment' => [CommentCreation::fromNewComment(
                 NewComment::fromParts(
                     '*appraising* wheedle',
@@ -138,7 +140,8 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ),
                 self::CHANGESET_ID,
                 new CreatedFileURLMapping()
-            )],
+            ),
+            ],
         ];
     }
 

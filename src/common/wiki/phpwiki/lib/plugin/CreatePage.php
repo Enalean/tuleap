@@ -57,13 +57,13 @@ class WikiPlugin_CreatePage extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['s'            => false,
-                     'initial_content' => '',
-                     'template'     => false,
-                     'vars'         => false,
-                     'overwrite'    => false,
+            'initial_content' => '',
+            'template'     => false,
+            'vars'         => false,
+            'overwrite'    => false,
                      //'buttontext' => false,
                      //'method'     => 'POST'
-                     ];
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -103,7 +103,8 @@ class WikiPlugin_CreatePage extends WikiPlugin
             } else {
                 $user = $request->getUser();
                 $meta = ['markup' => 2.0,
-                              'author' => $user->getId()];
+                    'author' => $user->getId(),
+                ];
                 if (! empty($param['template']) and ! $initial_content) {
                     $tmplpage        = $dbi->getPage($template);
                     $currenttmpl     = $tmplpage->getCurrentRevision();

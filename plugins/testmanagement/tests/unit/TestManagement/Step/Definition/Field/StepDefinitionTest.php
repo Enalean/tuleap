@@ -76,7 +76,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ),
                 [
-                'no_steps' => true,
+                    'no_steps' => true,
                 ]
             )
         );
@@ -104,21 +104,21 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
                     ]
                 ),
                 [
-                'description' => [
-                    'step updated',
-                ],
-                'description_format' => [
-                    'html',
-                ],
-                'expected_results' => [
-                    '',
-                ],
-                'expected_results_format' => [
-                    'text',
-                ],
-                'id' => [
-                    1,
-                ],
+                    'description' => [
+                        'step updated',
+                    ],
+                    'description_format' => [
+                        'html',
+                    ],
+                    'expected_results' => [
+                        '',
+                    ],
+                    'expected_results_format' => [
+                        'text',
+                    ],
+                    'id' => [
+                        1,
+                    ],
                 ]
             )
         );

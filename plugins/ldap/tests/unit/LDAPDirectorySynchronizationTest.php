@@ -167,9 +167,9 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUserLdapUidUpdateIfLdapDoesntMatch(): void
     {
         $row  = ['user_id'  => '4321',
-                     'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'oula la',
-                     ];
+            'ldap_id'  => 'ed1234',
+            'ldap_uid' => 'oula la',
+        ];
         $sync = \Mockery::mock(\LDAP_DirectorySynchronization::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $res = \Mockery::spy(\LDAPResult::class);
@@ -244,9 +244,9 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sync->shouldReceive('getLdapUserSync')->andReturns($lus);
 
         $row = ['user_id'  => '4321',
-                     'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'mis_1234',
-                     ];
+            'ldap_id'  => 'ed1234',
+            'ldap_uid' => 'mis_1234',
+        ];
         $sync->ldapSync($row, 1);
     }
 
@@ -284,9 +284,9 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
 
         $row = ['user_id'  => '4321',
-                     'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'mis_1234',
-                     ];
+            'ldap_id'  => 'ed1234',
+            'ldap_uid' => 'mis_1234',
+        ];
         $sync->ldapSync($row, 1);
     }
 
@@ -329,9 +329,9 @@ class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCase
         $sync->shouldReceive('getLdapSyncReminderNotificationManager')->andReturns($syncReminderManager);
 
         $row = ['user_id'  => '4321',
-                     'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'mis_1234',
-                     ];
+            'ldap_id'  => 'ed1234',
+            'ldap_uid' => 'mis_1234',
+        ];
         $sync->ldapSync($row, 1);
     }
 }

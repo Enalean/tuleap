@@ -186,8 +186,8 @@ class SemanticDone extends Tracker_Semantic
     private function getAdminSemanticUrl()
     {
         return TRACKER_BASE_URL . '/?' . http_build_query([
-                'tracker' => $this->tracker->getId(),
-                'func'    => 'admin-semantic',
+            'tracker' => $this->tracker->getId(),
+            'func'    => 'admin-semantic',
         ]);
     }
 

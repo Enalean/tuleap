@@ -62,11 +62,11 @@ class WikiPlugin_PopularNearby extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['pagename' => '[pagename]',
-                     'mode'     => 'nearby', // or 'incoming' or 'outgoing'
+            'mode'     => 'nearby', // or 'incoming' or 'outgoing'
                      //'exclude'  => false,  // not yet
-                     'limit'    => 5,
-                     'noheader' => 0,
-                    ];
+            'limit'    => 5,
+            'noheader' => 0,
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -142,8 +142,9 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                     continue;
                 }
                 $links[] = ['hits' => $hits,
-                                 'pagename' => $page->_pagename,
-                                 'format' => HTML(WikiLink($page->_pagename), ' (' . $hits . ')')];
+                    'pagename' => $page->_pagename,
+                    'format' => HTML(WikiLink($page->_pagename), ' (' . $hits . ')'),
+                ];
             }
         } else {
             while ($page = $pages->next()) {
@@ -156,8 +157,9 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                 }
                 $name    = $page->_pagename;
                 $links[] = ['hits' => $score,
-                                 'pagename' => $name,
-                                 'format' => HTML(WikiLink($name), ' (' . $score . ')')];
+                    'pagename' => $name,
+                    'format' => HTML(WikiLink($name), ' (' . $score . ')'),
+                ];
             }
             $pages->free();
         }

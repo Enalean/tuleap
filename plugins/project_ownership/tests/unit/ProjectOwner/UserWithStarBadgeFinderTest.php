@@ -35,7 +35,7 @@ final class UserWithStarBadgeFinderTest extends TestCase
         $collector = new UserWithStarBadgeCollector(
             $project,
             [
-            UserTestBuilder::aUser()->withId(101)->build(),
+                UserTestBuilder::aUser()->withId(101)->build(),
             ]
         );
 

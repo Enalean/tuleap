@@ -160,8 +160,8 @@ final class PossibleParentsRetrieverTest extends TestCase
                 assert($event instanceof PossibleParentSelector);
                 $event->addPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
                     [
-                                                   ArtifactTestBuilder::anArtifact(124)->build(),
-                                               ],
+                        ArtifactTestBuilder::anArtifact(124)->build(),
+                    ],
                     1
                 ));
                 return $event;

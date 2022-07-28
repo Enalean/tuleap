@@ -81,8 +81,8 @@ final class BacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
             ]),
             VerifyUserStoryIsVisibleStub::withAlwaysVisibleUserStories(),
             SearchIterationsStub::withIterations([
-               [ 'id' => 779, 'chanegset_id' => 1],
-               [ 'id' => 684, 'chanegset_id' => 2],
+                [ 'id' => 779, 'chanegset_id' => 1],
+                [ 'id' => 684, 'chanegset_id' => 2],
             ]),
             SearchMirroredTimeboxesStub::withSuccessiveIds([[223], [722]]),
             SearchUserStoryPlannedInIterationStub::withSuccessiveIds([

@@ -240,9 +240,10 @@ class Tracker_FormElement_Field_List_BindFactory
         User\XML\Import\IFindUserFromXMLReference $user_finder,
     ) {
         $row = ['type' => (string) $xml['type'],
-                     'field' => $field,
-                     'default_values' => null,
-                     'decorators' => null];
+            'field' => $field,
+            'default_values' => null,
+            'decorators' => null,
+        ];
         if (isset($xml->decorators)) {
             $row['decorators'] = [];
             foreach ($xml->decorators->decorator as $deco) {

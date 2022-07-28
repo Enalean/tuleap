@@ -469,7 +469,8 @@ class WikiCloner
         $result = db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id));
         if (db_numrows($result) > 0) {
             $recent = ['latestversion' => (int) db_result($result, 0, 'latestversion'), 'latestmajor' => (int) db_result($result, 0, 'latestmajor')
-                         , 'latestminor' => (int) db_result($result, 0, 'latestminor')];
+                         , 'latestminor' => (int) db_result($result, 0, 'latestminor'),
+            ];
         } else {
             return [];
         }

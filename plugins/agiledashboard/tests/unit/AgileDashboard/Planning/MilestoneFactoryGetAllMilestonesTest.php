@@ -181,16 +181,16 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
         return Mockery::mock(
             Planning_MilestoneFactory::class,
             [
-            $this->planning_factory,
-            $this->artifact_factory,
-            Mockery::spy(Tracker_FormElementFactory::class),
-            Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
-            Mockery::spy(PlanningPermissionsManager::class),
-            Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::spy(ScrumForMonoMilestoneChecker::class),
-            Mockery::mock(SemanticTimeframeBuilder::class),
-            new NullLogger(),
-            Mockery::mock(MilestoneBurndownFieldChecker::class),
+                $this->planning_factory,
+                $this->artifact_factory,
+                Mockery::spy(Tracker_FormElementFactory::class),
+                Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+                Mockery::spy(PlanningPermissionsManager::class),
+                Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
+                Mockery::spy(ScrumForMonoMilestoneChecker::class),
+                Mockery::mock(SemanticTimeframeBuilder::class),
+                new NullLogger(),
+                Mockery::mock(MilestoneBurndownFieldChecker::class),
             ]
         )
             ->makePartial()

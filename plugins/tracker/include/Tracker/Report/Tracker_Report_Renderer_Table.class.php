@@ -111,11 +111,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if ($field = $ff->getFormElementById($field_id)) {
                         if ($field->canBeUsedToSortReport() && $field->userCanRead()) {
                             $this->_sort[$field_id]          = [
-                                   'renderer_id ' => $this->id,
-                                   'field_id'    => $field_id,
-                                   'is_desc'     => $properties['is_desc'],
-                                   'rank'        => $properties['rank'],
-                                ];
+                                'renderer_id ' => $this->id,
+                                'field_id'    => $field_id,
+                                'is_desc'     => $properties['is_desc'],
+                                'rank'        => $properties['rank'],
+                            ];
                             $this->_sort[$field_id]['field'] = $field;
                         }
                     }
@@ -680,11 +680,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $sort[] = '<a id="tracker_report_table_sort_by_' . $purifier->purify($row['field_id']) . '"
                                   href="?' .
                             $purifier->purify(http_build_query([
-                                                   'report'                  => $this->report->id,
-                                                   'renderer'                => $this->id,
-                                                   'func'                    => 'renderer',
-                                                   'renderer_table[sort_by]' => $row['field_id'],
-                                                  ])) . '">' .
+                                'report'                  => $this->report->id,
+                                'renderer'                => $this->id,
+                                'func'                    => 'renderer',
+                                'renderer_table[sort_by]' => $row['field_id'],
+                            ])) . '">' .
                             $purifier->purify($row['field']->getLabel()) .
                             $this->getSortIcon($row['is_desc']) .
                             '</a>';
@@ -908,11 +908,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $ff  = $this->getFieldFactory();
         $url = '?' . http_build_query([
-                                           'report'                  => $this->report->id,
-                                           'renderer'                => $this->id,
-                                           'func'                    => 'renderer',
-                                           'renderer_table[sort_by]' => '',
-                                          ]);
+            'report'                  => $this->report->id,
+            'renderer'                => $this->id,
+            'func'                    => 'renderer',
+            'renderer_table[sort_by]' => '',
+        ]);
         if ($use_data_from_db) {
             $all_columns = $this->reorderColumnsByRank($this->getColumnsFromDb());
         } else {
@@ -925,7 +925,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $columns = [$only_one_column => [
                     'width' => 0,
                     'field' => $ff->getUsedFormElementById($only_one_column),
-                ]];
+                ],
+                ];
             }
         } else {
             $columns = $all_columns;
@@ -1068,7 +1069,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $columns = [$only_one_column => [
                     'width' => 0,
                     'field' => $this->getFieldFactory()->getUsedFormElementFieldById($only_one_column),
-                ]];
+                ],
+                ];
             }
         } else {
             $columns = $all_columns;

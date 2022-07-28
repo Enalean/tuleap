@@ -230,24 +230,24 @@ class Docman_ItemDao extends DataAccessObject
     public function _getItemSearchSelectStmt()
     {
         $sql = 'SELECT i.*, ' . implode(', ', [
-                'v.id as version_id',
-                'v.number as version_number',
-                'v.user_id as version_user_id',
-                'v.label as version_label',
-                'v.changelog as version_changelog',
-                'v.date as version_date',
-                'v.filename as version_filename',
-                'v.filesize as version_filesize',
-                'v.filetype as version_filetype',
-                'v.path as version_path',
-                'lv.id        as link_version_id',
-                'lv.number    as link_version_number',
-                'lv.user_id   as link_version_user_id',
-                'lv.label     as link_version_label',
-                'lv.changelog as link_version_changelog',
-                'lv.date      as link_version_date',
-                'lv.link_url  as link_version_link_url',
-            ]) .
+            'v.id as version_id',
+            'v.number as version_number',
+            'v.user_id as version_user_id',
+            'v.label as version_label',
+            'v.changelog as version_changelog',
+            'v.date as version_date',
+            'v.filename as version_filename',
+            'v.filesize as version_filesize',
+            'v.filetype as version_filetype',
+            'v.path as version_path',
+            'lv.id        as link_version_id',
+            'lv.number    as link_version_number',
+            'lv.user_id   as link_version_user_id',
+            'lv.label     as link_version_label',
+            'lv.changelog as link_version_changelog',
+            'lv.date      as link_version_date',
+            'lv.link_url  as link_version_link_url',
+        ]) .
             ', 1 as folder_nb_of_children ';
         return $sql;
     }

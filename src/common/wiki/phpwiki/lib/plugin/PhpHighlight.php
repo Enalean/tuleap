@@ -82,12 +82,12 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
         // TODO: results of ini_get() should be static for multiple
         // invocations of plugin on one WikiPage
         return ['wrap'    => true,
-                     'string'  => ini_get("highlight.string"),  //'#00CC00',
-                     'comment' => ini_get("highlight.comment"), //'#FF9900',
-                     'keyword' => ini_get("highlight.keyword"), //'#006600',
-                     'default' => ini_get("highlight.default"), //'#0000CC',
-                     'html'    => ini_get("highlight.html"),     //'#000000'
-                     ];
+            'string'  => ini_get("highlight.string"),  //'#00CC00',
+            'comment' => ini_get("highlight.comment"), //'#FF9900',
+            'keyword' => ini_get("highlight.keyword"), //'#006600',
+            'default' => ini_get("highlight.default"), //'#0000CC',
+            'html'    => ini_get("highlight.html"),     //'#000000'
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -145,9 +145,10 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
     public function sanify_colors($string, $comment, $keyword, $bg, $default, $html)
     {
         static $html4colors = ["black", "silver", "gray", "white",
-                                    "maroon", "red", "purple", "fuchsia",
-                                    "green", "lime", "olive", "yellow",
-                                    "navy", "blue", "teal", "aqua"];
+            "maroon", "red", "purple", "fuchsia",
+            "green", "lime", "olive", "yellow",
+            "navy", "blue", "teal", "aqua",
+        ];
         /* max(strlen("fuchsia"), strlen("#00FF00"), ... ) = 7 */
         static $MAXLEN = 7;
         foreach ([$string, $comment, $keyword, $bg, $default, $html] as $color) {

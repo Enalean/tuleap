@@ -76,7 +76,8 @@ class WikiPluginCached extends WikiPlugin
 
         $plugincall     = serialize([
             'pluginname' => $this->getName(),
-            'arguments'  => $argarray ]);
+            'arguments'  => $argarray,
+        ]);
         $id             = $cache->generateId($plugincall);
         $plugincall_arg = rawurlencode($plugincall);
         //$plugincall_arg = md5($plugincall); // will not work if plugin has to recreate content and cache is lost
@@ -291,10 +292,11 @@ class WikiPluginCached extends WikiPlugin
         return HTML(
             HTML::map(['name' => $key], $map),
             HTML::img([
-                   'src'    => $url,
-                   'border' => 0,
+                'src'    => $url,
+                'border' => 0,
                    //  'alt'    => htmlspecialchars($this->getAlt($dbi,$argarray,$request))
-                   'usemap' => '#' . $key ])
+                'usemap' => '#' . $key,
+            ])
         );
     }
 
@@ -319,7 +321,8 @@ class WikiPluginCached extends WikiPlugin
         return HTML::img([
             'src' => $url,
             'border' => 0,
-            'alt' => htmlspecialchars($this->getAlt($dbi, $argarray, $request)) ]);
+            'alt' => htmlspecialchars($this->getAlt($dbi, $argarray, $request)),
+        ]);
     }
 
     /**

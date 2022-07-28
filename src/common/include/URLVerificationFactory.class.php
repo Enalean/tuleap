@@ -50,7 +50,8 @@ class URLVerificationFactory
     {
         $urlVerification = null;
         $this->event_manager->processEvent('url_verification_instance', ['server_param' => $server,
-                                                    'url_verification' => &$urlVerification]);
+            'url_verification' => &$urlVerification,
+        ]);
         if ($urlVerification !== null) {
             return $urlVerification;
         } else {

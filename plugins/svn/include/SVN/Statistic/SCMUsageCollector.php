@@ -136,7 +136,8 @@ class SCMUsageCollector
             $formatter->addLine(
                 [
                     dgettext('tuleap-svn', 'Top project (number of write operations)'),
-                    $top_project['nb_write']]
+                    $top_project['nb_write'],
+                ]
             );
         }
     }

@@ -208,12 +208,12 @@ class ProjectTest extends ProjectBase
     public function testPOSTForRegularUserWithTemplateProjectUserCantAccess()
     {
         $post_resource = json_encode([
-                                         'label'       => 'Test from template without access',
-                                         'shortname'   => 'template-no-access-user',
-                                         'description' => 'Test project template for REST API Project Creation',
-                                         'is_public'   => true,
-                                         'template_id' => $this->project_private_template_id,
-                                     ]);
+            'label'       => 'Test from template without access',
+            'shortname'   => 'template-no-access-user',
+            'description' => 'Test project template for REST API Project Creation',
+            'is_public'   => true,
+            'template_id' => $this->project_private_template_id,
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
@@ -231,12 +231,12 @@ class ProjectTest extends ProjectBase
     public function testPOSTForRegularUserWithPrivateTemplateProjectUserCanAccess()
     {
         $post_resource = json_encode([
-                                         'label'       => 'Test from private template with access',
-                                         'shortname'   => 'template-private-user-access',
-                                         'description' => 'Test project template for REST API Project Creation',
-                                         'is_public'   => true,
-                                         'template_id' => $this->project_private_template_id,
-                                     ]);
+            'label'       => 'Test from private template with access',
+            'shortname'   => 'template-private-user-access',
+            'description' => 'Test project template for REST API Project Creation',
+            'is_public'   => true,
+            'template_id' => $this->project_private_template_id,
+        ]);
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_5_NAME,

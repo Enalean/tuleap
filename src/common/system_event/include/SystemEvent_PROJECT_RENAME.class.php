@@ -146,7 +146,8 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
             $this->getEventManager()->processEvent(
                 self::class,
                 ['project'   => $project,
-                      'new_name'  => $new_name]
+                    'new_name'  => $new_name,
+                ]
             );
         } else {
             $renameState = false;

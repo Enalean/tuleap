@@ -69,7 +69,8 @@ final class Cardwall_SwimLineFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $expected   = [
-                          ['column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => []]];
+            ['column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => []],
+        ];
         $this->assertSame($expected, $swimlines);
     }
 
@@ -91,8 +92,9 @@ final class Cardwall_SwimLineFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $swimlines = $this->factory->getCells($columns, [$cardincell_presenter1, $cardincell_presenter2]);
         $expected  = [
-                        ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter1]],
-                        ['column_id' => 100, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter2]]];
+            ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter1]],
+            ['column_id' => 100, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter2]],
+        ];
         $this->assertSame($expected, $swimlines);
     }
 
@@ -108,7 +110,8 @@ final class Cardwall_SwimLineFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $swimlines = $this->factory->getCells($columns, [$cardincell_presenter]);
         $expected  = [
-                        ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => []]];
+            ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => []],
+        ];
         $this->assertSame($expected, $swimlines);
     }
 }

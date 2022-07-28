@@ -864,7 +864,8 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
             $atid     = $ath->getID();
 
             $ath->adminHeader(['title' => $Language->getText('tracker_include_report', 'report_mgmt'),
-                                'help' => 'tracker-v3.html#tracker-report-management']);
+                'help' => 'tracker-v3.html#tracker-report-management',
+            ]);
             $trackerName = $ath->getName();
 
             echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">';
@@ -942,7 +943,8 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
             $atid     = $ath->getID();
 
             $ath->adminHeader(['title' => $Language->getText('tracker_include_report', 'create_rep'),
-                                'help' => 'tracker-v3.html#tracker-report-setting']);
+                'help' => 'tracker-v3.html#tracker-report-setting',
+            ]);
 
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\'  - ' . $Language->getText('tracker_include_report', 'create_rep') . ' </H2>';
 
@@ -1054,7 +1056,8 @@ class ArtifactReportHtml extends ArtifactReport //phpcs:ignore PSR1.Classes.Clas
             $atid     = $ath->getID();
 
             $ath->adminHeader(['title' => $Language->getText('tracker_include_report', 'modify_report'),
-                                'help' => 'tracker-v3.html#tracker-report-setting']);
+                'help' => 'tracker-v3.html#tracker-report-setting',
+            ]);
 
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\' -  ' . $Language->getText('tracker_include_report', 'modify_report') . ' \'' . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '\'</H2>';
 

@@ -497,14 +497,14 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
 
         //We store permission for the current field
         $ugroups_permissions[$field->getID()] = [
-                                                      'field' => [
-                                                                       'shortname'  => $field->getName(),
-                                                                       'name'       => $field->getLabel() . ($field->isRequired() ? ' *' : ''),
-                                                                       'id'         => $field->getID(),
-                                                                       'field'      => $field,
-                                                                       'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
-                                                                       ],
-                                                      'ugroups' => $ugroups,
+            'field' => [
+                'shortname'  => $field->getName(),
+                'name'       => $field->getLabel() . ($field->isRequired() ? ' *' : ''),
+                'id'         => $field->getID(),
+                'field'      => $field,
+                'link'       => '/tracker/admin/index.php?group_id=' . $group_id . '&atid=' . $atid . '&func=display_field_update&field_id=' . $field->getID(),
+            ],
+            'ugroups' => $ugroups,
         ];
 
         //{{{ We store tracker permissions

@@ -93,9 +93,10 @@ class WikiAttachmentRevision
                     'wiki_lib_attachment_rev',
                     'err_multi_id',
                     [ForgeConfig::get('sys_email_admin'),
-                                                              $this->attachmentId,
-                                                              $this->revision,
-                          ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME)]
+                        $this->attachmentId,
+                        $this->revision,
+                        ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME),
+                    ]
                 ),
                 E_USER_ERROR
             );

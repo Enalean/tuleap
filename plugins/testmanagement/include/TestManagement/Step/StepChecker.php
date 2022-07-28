@@ -54,10 +54,10 @@ final class StepChecker
         return in_array(
             $format,
             [
-                    Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                ],
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+            ],
             true
         );
     }
@@ -67,10 +67,10 @@ final class StepChecker
         return in_array(
             $format,
             [
-                    Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
-                ],
+                Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            ],
             true
         );
     }

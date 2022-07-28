@@ -61,7 +61,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         'CVS' => 'ic/convert.png',
         'Files' => 'ic/save.png',
         'Trackers' => 'ic/tracker20w.png',
-        ];
+    ];
 
     public const INCLUDE_FAT_COMBINED = 'include_fat_combined';
 

@@ -140,7 +140,8 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
             if ($this->comments) {
                 if (count($this->comments) > 2) {
                     usort($this->comments, ["WikiPlugin_WikiBlog",
-                                                 "cmp"]);
+                        "cmp",
+                    ]);
                 }
                 if (isset($this->comments[$this->_current])) {
                     //$this->_current++;

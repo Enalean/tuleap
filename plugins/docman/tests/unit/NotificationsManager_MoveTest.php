@@ -313,6 +313,7 @@ class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
             'group_id' => $group_id,
             'item'    => &$d,
             'parent'  => &$c,
-            'user'    => &$user]);
+            'user'    => &$user,
+        ]);
     }
 }

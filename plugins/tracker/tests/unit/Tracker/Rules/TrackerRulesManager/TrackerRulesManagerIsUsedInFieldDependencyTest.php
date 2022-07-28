@@ -110,7 +110,8 @@ class TrackerRulesManagerIsUsedInFieldDependencyTest extends \Tuleap\Test\PHPUni
             $this->frozen_fields_dao,
             $this->tracker_rules_list_validator,
             $this->tracker_rules_date_validator,
-            $this->tracker_factory])->makePartial();
+            $this->tracker_factory,
+        ])->makePartial();
 
         $this->a_field_not_used_in_rules = \Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $this->source_field_list         = \Mockery::mock(Tracker_FormElement_Field_Selectbox::class);

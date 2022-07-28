@@ -187,7 +187,8 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
             $t_analyzed_rejected,
             $t_accepted_fixed,
             $t_fixed_tested,
-            $t_tested_deployed];
+            $t_tested_deployed,
+        ];
 
         $workflow = new Workflow(
             Mockery::spy(Tracker_RulesManager::class),
@@ -269,10 +270,11 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $array_xml_mapping = ['F32' => 103,
-                                   'values' => [
-                                       'F32-V0' => 806,
-                                       'F32-V1' => 807],
-                                   ];
+            'values' => [
+                'F32-V0' => 806,
+                'F32-V1' => 807,
+            ],
+        ];
         $workflow->exportToXML($root, $array_xml_mapping);
 
         $this->assertEquals((string) $xml->field_id['REF'], (string) $root->field_id['REF']);

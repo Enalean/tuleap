@@ -78,8 +78,9 @@ function codendi_main()
     $request->possiblyDeflowerVirginWiki();
 
     $validators = ['wikiname' => WIKI_NAME,
-                        'args'     => wikihash($request->getArgs()),
-                        'prefs'    => wikihash($request->getPrefs())];
+        'args'     => wikihash($request->getArgs()),
+        'prefs'    => wikihash($request->getPrefs()),
+    ];
     if (CACHE_CONTROL == 'STRICT') {
         $dbi                  = $request->getDbh();
         $timestamp            = $dbi->getTimestamp();

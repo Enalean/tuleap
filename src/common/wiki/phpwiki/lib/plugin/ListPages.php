@@ -59,8 +59,8 @@ class WikiPlugin_ListPages extends WikiPlugin
             PageList::supportedArgs(),
             ['pages'    => false,
                    //'exclude'  => false,
-                   'info'     => 'pagename',
-                   'dimension' => 0,
+                'info'     => 'pagename',
+                'dimension' => 0,
             ]
         );
     }
@@ -113,7 +113,8 @@ class WikiPlugin_ListPages extends WikiPlugin
 
             // find out which users we should show ratings for
             $options = ['dimension' => $dimension,
-                             'users' => []];
+                'users' => [],
+            ];
             $args    = array_merge($options, $args);
         }
         if (empty($pages) and $pages != '0') {

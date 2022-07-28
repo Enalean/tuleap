@@ -267,11 +267,12 @@ class ArtifactImport
             foreach ($val_arr as $name) {
                 if (! array_key_exists($name, $predef_vals) && $name != $GLOBALS['Language']->getText('global', 'none')) {
                            $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', [
-                       $row + 1,
-                       $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
-                       $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) ,
-                       $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                       $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML)]));
+                               $row + 1,
+                               $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
+                               $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) ,
+                               $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+                               $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML),
+                           ]));
                                       return false;
                 }
             }
@@ -296,11 +297,12 @@ class ArtifactImport
                     return true;
                 } else {
                       $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', [
-                      $row + 1,
-                      $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
-                      $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ,
-                      $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                      $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML)]));
+                          $row + 1,
+                          $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
+                          $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ,
+                          $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+                          $hp->purify(implode(",", array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML),
+                      ]));
                       return false;
                 }
             }
@@ -356,11 +358,12 @@ class ArtifactImport
 
                     if ($is_empty) {
                         $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_current', [
-                        $row + 1,
-                        $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
-                        $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                        $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ,
-                        $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ]));
+                            $row + 1,
+                            $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML),
+                            $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+                            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ,
+                            $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML),
+                        ]));
                         return false;
                     }
                 }
@@ -378,9 +381,10 @@ class ArtifactImport
                         list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
                         if (! $ok) {
                              $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'incorrect_date', [
-                               $row + 1,
-                               $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
-                               $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ]));
+                                 $row + 1,
+                                 $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
+                                 $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML),
+                             ]));
                                  return false;
                         }
                         $date     = format_date("Y-m-d", $unix_time);
@@ -415,10 +419,11 @@ class ArtifactImport
                            ! $field->isEmptyOk() && ! in_array($label, $this->parsed_labels)
                     ) {
                                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_line', [
-                                   $row + 1,
-                                   $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
-                                   $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
-                                   $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ]));
+                                       $row + 1,
+                                       $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
+                                       $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+                                       $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML),
+                                   ]));
                                    return false;
                     }
                 }
@@ -461,10 +466,11 @@ class ArtifactImport
             " AND submitted_by=" .  db_ei($sub_user_id) . " AND summary='" .  db_es($summary) . "'");
             if ($res && db_numrows($res) > 0) {
                     $this->setError($Language->getText('tracker_import_utils', 'already_submitted', [
-                  $row + 1,
-                  $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
-                  $sub_user_name,
-                  $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) ]));
+                        $row + 1,
+                        $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
+                        $sub_user_name,
+                        $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML),
+                    ]));
                     return false;
             }
         }
@@ -483,10 +489,11 @@ class ArtifactImport
         $result = db_query($sql);
         if (db_numrows($result) == 0) {
             $this->setError($Language->getText('tracker_import_utils', 'art_not_exists', [
-            $row + 1,
-            $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
-            $aid,
-            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ]));
+                $row + 1,
+                $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
+                $aid,
+                $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML),
+            ]));
             return false;
         }
 
@@ -559,10 +566,11 @@ class ArtifactImport
                     }
                     reset($data);
                     $this->setError($Language->getText('tracker_import_utils', 'column_mismatch', [
-                    $row + 1,
-                    $hp->purify($data_details, CODENDI_PURIFIER_CONVERT_HTML) ,
-                    $num,
-                    $this->num_columns]));
+                        $row + 1,
+                        $hp->purify($data_details, CODENDI_PURIFIER_CONVERT_HTML) ,
+                        $num,
+                        $this->num_columns,
+                    ]));
                     return false;
                 }
 

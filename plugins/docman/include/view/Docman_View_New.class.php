@@ -52,7 +52,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $doc_params = [];
         if (isset($params['force_permissions'])) {
             $doc_params['newItem'] = [
-               'hide_permissions'           => ! $params['display_permissions'],
+                'hide_permissions'           => ! $params['display_permissions'],
                 'hide_news'                  => ! $params['display_news'],
                 'update_permissions_on_init' => false,
                 'default_position'           => $params['force_ordering'],
@@ -81,8 +81,9 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     public function metadataToSkip()
     {
         $labels = ['owner'       => 'owner',
-                        'create_date' => 'create_date',
-                        'update_date' => 'update_date'];
+            'create_date' => 'create_date',
+            'update_date' => 'update_date',
+        ];
         return $labels;
     }
 
@@ -116,7 +117,8 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     {
         $get_fields = new Docman_View_GetFieldsVisitor($this->metadataToSkip());
         $fields     = $this->newItem->accept($get_fields, ['form_name'  => $params['form_name'],
-                                                            'theme_path' => $params['theme_path']]);
+            'theme_path' => $params['theme_path'],
+        ]);
         return $fields;
     }
 

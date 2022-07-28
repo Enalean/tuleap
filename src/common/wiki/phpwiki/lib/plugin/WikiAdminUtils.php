@@ -54,8 +54,8 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['action'           => '',
-                     'label'        => '',
-                     ];
+            'label'        => '',
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -96,11 +96,13 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         $args['return_url'] = $request->getURLtoSelf();
         return HTML::form(
             ['action' => $request->getPostURL(),
-                                'method' => 'post'],
+                'method' => 'post',
+            ],
             HTML::p(Button('submit:', $label, 'wikiadmin')),
             HiddenInputs($args, 'wikiadminutils'),
             HiddenInputs(['require_authority_for_post' =>
-                                             WIKIAUTH_ADMIN]),
+                                             WIKIAUTH_ADMIN,
+            ]),
             HiddenInputs($request->getArgs())
         );
     }
@@ -126,8 +128,9 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     public function _getLabel($action)
     {
         $labels = ['purge-cache' => _("Purge Markup Cache"),
-                        'purge-bad-pagenames' => _("Purge all Pages With Invalid Names"),
-                        'purge-empty-state-pages' => _("Purge all empty, unreferenced Pages")];
+            'purge-bad-pagenames' => _("Purge all Pages With Invalid Names"),
+            'purge-empty-state-pages' => _("Purge all empty, unreferenced Pages"),
+        ];
         return @$labels[$action];
     }
 
@@ -287,10 +290,12 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             $args['return_url'] = $request->getURLtoSelf();
             return HTML::form(
                 ['action' => $request->getPostURL(),
-                                    'method' => 'post'],
+                    'method' => 'post',
+                ],
                 HiddenInputs($args, 'wikiadminutils'),
                 HiddenInputs(['require_authority_for_post' =>
-                                             WIKIAUTH_ADMIN]),
+                                             WIKIAUTH_ADMIN,
+                ]),
                 HiddenInputs($request->getArgs()),
                 $pagelist->_generateTable(false),
                 HTML::p(
@@ -323,8 +328,9 @@ class _PageList_Column_emailVerified extends _PageList_Column
     {
         $name  = $prefs->get('userid');
         $input = HTML::input(['type' => 'checkbox',
-                                   'name' => 'wikiadminutils[verified][' . $name . ']',
-                                   'value' => 1]);
+            'name' => 'wikiadminutils[verified][' . $name . ']',
+            'value' => 1,
+        ]);
         if ($prefs->get('emailVerified')) {
             $input->setAttr('checked', '1');
         }
@@ -332,8 +338,9 @@ class _PageList_Column_emailVerified extends _PageList_Column
             $input->setAttr('disabled', '1');
         }
         return HTML($input, HTML::input(['type' => 'hidden',
-                           'name' => 'wikiadminutils[user][' . $name . ']',
-        'value' => $name]));
+            'name' => 'wikiadminutils[user][' . $name . ']',
+            'value' => $name,
+        ]));
     }
 }
 

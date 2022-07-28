@@ -67,8 +67,8 @@ class WikiPlugin_Transclude extends WikiPlugin
     public function getDefaultArguments()
     {
         return [ 'src'     => false, // the src url to include
-                      'height'  => 450, // height of the iframe
-                    ];
+            'height'  => 450, // height of the iframe
+        ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -95,13 +95,14 @@ class WikiPlugin_Transclude extends WikiPlugin
         $sanitized_src = $uri_sanitizer->sanitizeForHTMLAttribute($src);
 
         $params = ['title' => _("Transcluded page"),
-                        'src' => $sanitized_src,
-                        'width' => "100%",
-                        'height' => $height,
-                        'marginwidth' => 0,
-                        'marginheight' => 0,
-                        'class' => 'transclude',
-                        "onload" => "adjust_iframe_height(this);"];
+            'src' => $sanitized_src,
+            'width' => "100%",
+            'height' => $height,
+            'marginwidth' => 0,
+            'marginheight' => 0,
+            'class' => 'transclude',
+            "onload" => "adjust_iframe_height(this);",
+        ];
 
         $noframe_msg[] = fmt("See: %s", HTML::a(['href' => $sanitized_src], $src));
 

@@ -47,11 +47,11 @@ abstract class WebhookController extends SettingsController
     protected function getWebhookSettingsURL(GitRepository $repository)
     {
         return GIT_BASE_URL . '/?' . http_build_query([
-                'action'   => 'repo_management',
-                'group_id' => $repository->getProjectId(),
-                'repo_id'  => $repository->getId(),
-                'pane'     => Pane\Hooks::ID,
-            ]);
+            'action'   => 'repo_management',
+            'group_id' => $repository->getProjectId(),
+            'repo_id'  => $repository->getId(),
+            'pane'     => Pane\Hooks::ID,
+        ]);
     }
 
     protected function checkCSRF($redirect_url)

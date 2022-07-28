@@ -163,10 +163,11 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
             $html .= '</table>';
 
             $html         .= html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
-                                                     dgettext('tuleap-docman', 'Review'),
-                                                     dgettext('tuleap-docman', 'Comment'),
-                                                     dgettext('tuleap-docman', 'Date'),
-                                                     dgettext('tuleap-docman', 'Version')]);
+                dgettext('tuleap-docman', 'Review'),
+                dgettext('tuleap-docman', 'Comment'),
+                dgettext('tuleap-docman', 'Date'),
+                dgettext('tuleap-docman', 'Version'),
+            ]);
             $userIsInTable = false;
             $rowColorIdx   = 1;
             $rIter->rewind();
@@ -361,15 +362,17 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Review:') . '</td>';
         $vals  = [PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
-                      PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
-                      PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED,
-                      PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
-                      PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED];
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED,
+            PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
+            PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED,
+        ];
         $txts  = [dgettext('tuleap-docman', 'Not Yet'),
-                      dgettext('tuleap-docman', 'Approved'),
-                      dgettext('tuleap-docman', 'Rejected'),
-                      dgettext('tuleap-docman', 'Comment only'),
-                      dgettext('tuleap-docman', 'Will not review')];
+            dgettext('tuleap-docman', 'Approved'),
+            dgettext('tuleap-docman', 'Rejected'),
+            dgettext('tuleap-docman', 'Comment only'),
+            dgettext('tuleap-docman', 'Will not review'),
+        ];
         $html .= '<td>';
         $html .= html_build_select_box_from_arrays($vals, $txts, 'state', $reviewer->getState(), false);
         $html .= '</td>';
@@ -436,10 +439,10 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
             $html       .= '<h3>' . dgettext('tuleap-docman', 'Approval table history') . '</h3>';
             $html       .= html_build_list_table_top([dgettext('tuleap-docman', 'Document version'),
-                                                     dgettext('tuleap-docman', 'Owner'),
-                                                     dgettext('tuleap-docman', 'Status'),
-                                                     dgettext('tuleap-docman', 'Start date'),
-                                                     ]);
+                dgettext('tuleap-docman', 'Owner'),
+                dgettext('tuleap-docman', 'Status'),
+                dgettext('tuleap-docman', 'Start date'),
+            ]);
             $allTables   = $this->atf->getAllApprovalTable();
             $rowColorIdx = 1;
             foreach ($allTables as $table) {

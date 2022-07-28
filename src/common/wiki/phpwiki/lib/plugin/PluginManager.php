@@ -88,7 +88,8 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $colgroup = HTML::colgroup();
         $colgroup->pushContent(HTML::col(['width' => '0*']));
         $colgroup->pushContent(HTML::col(['width' => '0*',
-                                               'align' => 'right']));
+            'align' => 'right',
+        ]));
         $colgroup->pushContent(HTML::col(['width' => '9*']));
         if ($info == 'args') {
             $colgroup->pushContent(HTML::col(['width' => '2*']));
@@ -205,7 +206,8 @@ class WikiPlugin_PluginManager extends WikiPlugin
             if ($info == 'args') {
                 // add Arguments column
                 $style = ['style'
-                               => 'font-family:monospace;font-size:smaller'];
+                               => 'font-family:monospace;font-size:smaller',
+                ];
                 $tr->pushContent(HTML::td($style, $arguments));
             }
             $tbody->pushContent($tr);

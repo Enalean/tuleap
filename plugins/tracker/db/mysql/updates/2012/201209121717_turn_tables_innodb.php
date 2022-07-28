@@ -108,7 +108,8 @@ class b201209121717_turn_tables_innodb extends \Tuleap\ForgeUpgrade\Bucket
             'tracker_perm ',
             'tracker_rule',
             'tracker_hierarchy ',
-            'tracker_reminder'];
+            'tracker_reminder',
+        ];
         foreach ($tables as $table) {
             if (! $this->isTableInnoDB($table)) {
                 $this->log->info("Convert $table");

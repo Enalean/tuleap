@@ -240,10 +240,11 @@ class Docman_VersionFactory
                         $value .= ' (' . $row['label'] . ')';
                     }
                     $this->_getEventManager()->processEvent('plugin_docman_event_restore_version', [
-                          'group_id'   => $item->getGroupId(),
-                          'item'       => $item,
-                          'old_value'  => $value,
-                          'user'       => $user]);
+                        'group_id'   => $item->getGroupId(),
+                        'item'       => $item,
+                        'old_value'  => $value,
+                        'user'       => $user,
+                    ]);
                     return true;
                 }
             }

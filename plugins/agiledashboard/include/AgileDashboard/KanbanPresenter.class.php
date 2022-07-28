@@ -126,10 +126,10 @@ class KanbanPresenter
         $this->nodejs_server                     = ForgeConfig::get('nodejs_server');
         $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [
-                    'group_id' => $this->project_id,
-                    'action'   => 'showKanban',
-                    'id'       => $kanban->getId(),
-                ]
+                'group_id' => $this->project_id,
+                'action'   => 'showKanban',
+                'id'       => $kanban->getId(),
+            ]
         );
         $this->user_accessibility_mode           = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
         $this->is_list_picker_enabled            = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(

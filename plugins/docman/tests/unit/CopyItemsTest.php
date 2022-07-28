@@ -95,6 +95,7 @@ class CopyItemsTest extends \Tuleap\Test\PHPUnit\TestCase
             'user'            => \Mockery::spy(\PFUser::class),
             'metadataMapping' => [],
             'ugroupsMapping'  => [],
-            'data_root'       => '/tmp']);
+            'data_root'       => '/tmp',
+        ]);
     }
 }

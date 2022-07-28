@@ -326,11 +326,13 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $itemFactory = new Docman_ItemFactory(0);
 
         $itemList    = [113 => $fld113,
-                          115 => $fld115,
-                          135 => $fld135];
+            115 => $fld115,
+            135 => $fld135,
+        ];
         $orphans     = [113 => 113,
-                         115 => 115,
-                         135 => 135];
+            115 => 115,
+            135 => 135,
+        ];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([112, 150, 140], $wantedItems);
@@ -366,11 +368,12 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $itemFactory = new Docman_ItemFactory(0);
 
         $itemList = [113 => $fld113,
-                          115 => $fld115,
-                          150 => $fld150,
-                          140 => $fld140,
-                          135 => $fld135,
-                          112 => $fld112];
+            115 => $fld115,
+            150 => $fld150,
+            140 => $fld140,
+            135 => $fld135,
+            112 => $fld112,
+        ];
         // It's not very clean but the orphan order is very important to make
         // the test pass. To avoid the pain to develop a tree comparator, we rely
         // on the array/object comparison of SimpleTest. The bad news comes with
@@ -379,11 +382,12 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         // (items ordered by priority) the internal status of the mapping may
         // differ. And this internal difference will break tests :/
         $orphans     = [140 => 140,
-                         150 => 150,
-                         112 => 112,
-                         113 => 113,
-                         115 => 115,
-                         135 => 135];
+            150 => 150,
+            112 => 112,
+            113 => 113,
+            115 => 115,
+            135 => 135,
+        ];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([], $wantedItems);

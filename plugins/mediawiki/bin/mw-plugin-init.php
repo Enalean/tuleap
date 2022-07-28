@@ -62,13 +62,13 @@ if (! ($dh = opendir($src_path))) {
     echo "Could not open mediawiki source directory $src_path!\n";
 } else {
     $ignore_file = [
-    '.' => true,
-    '..' => true,
-    'config' => true,
-    'skins' => true,
-    'images' => true,
-    'tests' => true,
-    't' => true,
+        '.' => true,
+        '..' => true,
+        'config' => true,
+        'skins' => true,
+        'images' => true,
+        'tests' => true,
+        't' => true,
     ];
     while ($file = readdir($dh)) {
         if (! isset($ignore_file[$file]) || ! $ignore_file[$file]) {
@@ -116,7 +116,7 @@ $dh          = opendir($fromdir);
 $ignore_file = [
     '.' => true,
     '..' => true,
-    ];
+];
 while ($file = readdir($dh)) {
     if (! isset($ignore_file[$file]) || ! $ignore_file[$file]) {
         $from = "$fromdir/$file";

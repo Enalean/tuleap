@@ -212,8 +212,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
         }
 
         $node = new TreeNode(['name'          => $tracker->getName(),
-                                   'id'            => $tracker->getId(),
-                                   'current_class' => $current_class]);
+            'id'            => $tracker->getId(),
+            'current_class' => $current_class,
+        ]);
         $node->setId($tracker->getId());
 
         return $node;

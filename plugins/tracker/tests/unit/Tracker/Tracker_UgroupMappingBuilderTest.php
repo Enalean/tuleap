@@ -48,9 +48,11 @@ final class Tracker_UgroupMappingBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
         $permissions_retriever = \Mockery::spy(\Tracker_UgroupPermissionsGoldenRetriever::class);
 
         $permissions_retriever->shouldReceive('getListOfInvolvedStaticUgroups')->with($template_tracker)->andReturns([$template_ugroup_dev,
-                                                                                                                           $template_ugroup_support, $template_ugroup_staff]);
+            $template_ugroup_support, $template_ugroup_staff,
+        ]);
         $ugroup_manager->shouldReceive('getStaticUGroups')->with($target_project)->andReturns([$target_ugroup_dev,
-                                                                                                    $target_ugroup_support, $target_ugroup_client]);
+            $target_ugroup_support, $target_ugroup_client,
+        ]);
 
         $builder = new Tracker_UgroupMappingBuilder($permissions_retriever, $ugroup_manager);
 

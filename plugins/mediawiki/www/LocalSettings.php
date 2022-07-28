@@ -66,24 +66,24 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $project_manager          = ProjectManager::instance();
 
     $forbidden_permissions = [
-    'editmyusercss',
-    'editmyuserjs',
-    'viewmyprivateinfo',
-    'editmyprivateinfo',
+        'editmyusercss',
+        'editmyuserjs',
+        'viewmyprivateinfo',
+        'editmyprivateinfo',
     ];
 
     $read_permissions = [
-    'read',
-    'viewmywatchlist',
-    'editmywatchlist',
+        'read',
+        'viewmywatchlist',
+        'editmywatchlist',
     ];
 
     $write_permissions = [
-    'edit',
-    'createpage',
-    'move',
-    'createtalk',
-    'writeapi',
+        'edit',
+        'createpage',
+        'move',
+        'createtalk',
+        'writeapi',
     ];
 
 //Trust Mediawiki security

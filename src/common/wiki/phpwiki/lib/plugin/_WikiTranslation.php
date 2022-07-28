@@ -150,21 +150,21 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         return array_merge(
             PageList::supportedArgs(),
             [ 'languages'  => '',  // comma delimited string of de,en,sv,...
-                    'string'     => '',
-                    'page'       => '',  // use a translation service
-                    'what'       => 'pages', // or 'buttons', 'plugins' or 'wikiwords'
+                'string'     => '',
+                'page'       => '',  // use a translation service
+                'what'       => 'pages', // or 'buttons', 'plugins' or 'wikiwords'
 
-                    'match'         => '*',
-                    'from_lang'     => false,
-                    'include_empty' => false,
+                'match'         => '*',
+                'from_lang'     => false,
+                'include_empty' => false,
                     //'exclude'       => '',
                     //'sortby'        => '',
                     //'limit'         => 0,
-                    'nolinks'       => false,  // don't display any links
+                'nolinks'       => false,  // don't display any links
                                        // (for development only)
-                    'noT'           => false,  // don't display the T link
+                'noT'           => false,  // don't display the T link
                                      // (for development only)
-                    'debug'         => false,
+                'debug'         => false,
             ]
         );
     }
@@ -499,7 +499,8 @@ class _PageList_Column_customlang extends _PageList_Column
                 and $this->dbi->isWikiPage($trans)
             ) {
                 $url    = WikiURL($trans, ['action' => 'TranslateText',
-                                             'lang' => $this->_field]);
+                    'lang' => $this->_field,
+                ]);
                 $button = $WikiTheme->makeButton('T', $url);
                 $button->addTooltip(sprintf(
                     _("Define the translation for %s in %s"),

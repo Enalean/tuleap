@@ -78,12 +78,12 @@ $userList = [];
 $pluginAnswered = false;
 $has_more       = false;
 $evParams       = ['searchToken'     => $userName,
-                  'limit'           => $limit,
-                  'codendiUserOnly' => $codendiUserOnly,
-                  'json_format'     => $json_format,
-                  'userList'        => &$userList,
-                  'has_more'        => &$has_more,
-                  'pluginAnswered'  => &$pluginAnswered,
+    'limit'           => $limit,
+    'codendiUserOnly' => $codendiUserOnly,
+    'json_format'     => $json_format,
+    'userList'        => &$userList,
+    'has_more'        => &$has_more,
+    'pluginAnswered'  => &$pluginAnswered,
 ];
 
 $em = EventManager::instance();

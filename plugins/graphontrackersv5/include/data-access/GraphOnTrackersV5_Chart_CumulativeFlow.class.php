@@ -231,10 +231,10 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
             'value'
         );
         $scaleSelect->addMultipleOptions([
-                                              self::SCALE_DAY => dgettext('tuleap-graphontrackersv5', 'Day'),
-                                              self::SCALE_WEEK => dgettext('tuleap-graphontrackersv5', 'Week'),
-                                              self::SCALE_MONTH => dgettext('tuleap-graphontrackersv5', 'Month'),
-                                              ], $this->getScale());
+            self::SCALE_DAY => dgettext('tuleap-graphontrackersv5', 'Day'),
+            self::SCALE_WEEK => dgettext('tuleap-graphontrackersv5', 'Week'),
+            self::SCALE_MONTH => dgettext('tuleap-graphontrackersv5', 'Month'),
+        ], $this->getScale());
         return array_merge(
             parent::getProperties(),
             [
@@ -249,7 +249,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
                     'chart[start_date]',
                     $this->getStartDate()
                 ),
-                    'scale'   => ( $scaleSelect),
+                'scale'   => ( $scaleSelect),
                 'stop_date'   => new HTML_Element_Input_Date(
                     dgettext('tuleap-graphontrackersv5', 'Finish date (optionnal)'),
                     'chart[stop_date]',
@@ -311,9 +311,10 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     public function arrayOfSpecificProperties()
     {
         return ['start_date' => $this->getStartDate(),
-                     'field_id'   => $this->getFieldId(),
-                     'scale'      => $this->getScale(),
-                     'stop_date'  => $this->getStopDate()];
+            'field_id'   => $this->getFieldId(),
+            'scale'      => $this->getScale(),
+            'stop_date'  => $this->getStopDate(),
+        ];
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)

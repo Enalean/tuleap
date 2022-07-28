@@ -237,64 +237,64 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_issue_name = 'Story';
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
-                    'startAt'    => 0,
-                    'maxResults' => 50,
-                    'total'      => 2,
-                    'issues'     => [
-                        [
-                            'id'     => '10042',
-                            'self'   => 'https://jira_instance/rest/api/3/issue/10042',
-                            'key'    => 'key01',
-                            'fields' => [
-                                'summary'   => 'summary01',
-                                'issuetype' =>
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 2,
+            'issues'     => [
+                [
+                    'id'     => '10042',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10042',
+                    'key'    => 'key01',
+                    'fields' => [
+                        'summary'   => 'summary01',
+                        'issuetype' =>
                                     [
                                         'id' => '10004',
                                     ],
-                                'created' => '2020-03-25T14:10:10.823+0100',
-                                'updated' => '2020-04-25T14:10:10.823+0100',
-                                'creator' => [
-                                    'displayName' => 'Mysterio',
-                                    'accountId' => 'e8d453qs8f47d538s',
-                                ],
-                            ],
-                            'renderedFields' => [],
-                        ],
-                        [
-                            'id'     => '10043',
-                            'self'   => 'https://jira_instance/rest/api/3/issue/10043',
-                            'key'    => 'key02',
-                            'fields' => [
-                                'summary'   => 'summary02',
-                                'issuetype' =>
-                                    [
-                                        'id' => '10004',
-                                    ],
-                                'created' => '2020-03-26T14:10:10.823+0100',
-                                'updated' => '2020-04-26T14:10:10.823+0100',
-                                'creator' => [
-                                    'displayName' => 'Mysterio',
-                                    'accountId' => 'e8d453qs8f47d538s',
-                                ],
-                            ],
-                            'renderedFields' => [],
+                        'created' => '2020-03-25T14:10:10.823+0100',
+                        'updated' => '2020-04-25T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'Mysterio',
+                            'accountId' => 'e8d453qs8f47d538s',
                         ],
                     ],
-                ];
+                    'renderedFields' => [],
+                ],
+                [
+                    'id'     => '10043',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10043',
+                    'key'    => 'key02',
+                    'fields' => [
+                        'summary'   => 'summary02',
+                        'issuetype' =>
+                                    [
+                                        'id' => '10004',
+                                    ],
+                        'created' => '2020-03-26T14:10:10.823+0100',
+                        'updated' => '2020-04-26T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'Mysterio',
+                            'accountId' => 'e8d453qs8f47d538s',
+                        ],
+                    ],
+                    'renderedFields' => [],
+                ],
+            ],
+        ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
-                'startAt'    => 0,
-                'maxResults' => 50,
-                'total'      => 0,
-                'comments'   => [],
-                ];
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
-                'startAt'    => 0,
-                'maxResults' => 50,
-                'total'      => 0,
-                'comments'   => [],
-                ];
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
 
         $issue_collection = new IssueAPIRepresentationCollection();
         $this->exporter->exportArtifacts(
@@ -345,32 +345,32 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $jira_issue_name = 'Story';
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=0'] = [
-                    'startAt'    => 0,
-                    'maxResults' => 1,
-                    'total'      => 2,
-                    'issues'     => [
-                        [
-                            'id'     => '10042',
-                            'self'   => 'https://jira_instance/rest/api/3/issue/10042',
-                            'key'    => 'key01',
-                            'fields' => [
-                                'summary'   => 'summary01',
-                                'issuetype' =>
+            'startAt'    => 0,
+            'maxResults' => 1,
+            'total'      => 2,
+            'issues'     => [
+                [
+                    'id'     => '10042',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10042',
+                    'key'    => 'key01',
+                    'fields' => [
+                        'summary'   => 'summary01',
+                        'issuetype' =>
                                     [
                                         'id' => '10004',
                                     ],
-                                'created' => '2020-03-25T14:10:10.823+0100',
-                                'updated' => '2020-04-25T14:10:10.823+0100',
-                                'creator' => [
-                                    'displayName' => 'John Doe',
-                                    'emailAddress' => 'johndoe@example.com',
-                                    'accountId' => 'e8d4s2c53z',
-                                ],
-                            ],
-                            'renderedFields' => [],
+                        'created' => '2020-03-25T14:10:10.823+0100',
+                        'updated' => '2020-04-25T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'John Doe',
+                            'emailAddress' => 'johndoe@example.com',
+                            'accountId' => 'e8d4s2c53z',
                         ],
                     ],
-                ];
+                    'renderedFields' => [],
+                ],
+            ],
+        ];
 
         $john_doe = Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
@@ -383,45 +383,45 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             ->andReturn([$john_doe]);
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/search?jql=project%3D%22project%22+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1'] = [
-                    'startAt'    => 1,
-                    'maxResults' => 1,
-                    'total'      => 2,
-                    'issues'     => [
-                        [
-                            'id'     => '10043',
-                            'self'   => 'https://jira_instance/rest/api/3/issue/10043',
-                            'key'    => 'key02',
-                            'fields' => [
-                                'summary'   => 'summary02',
-                                'issuetype' =>
+            'startAt'    => 1,
+            'maxResults' => 1,
+            'total'      => 2,
+            'issues'     => [
+                [
+                    'id'     => '10043',
+                    'self'   => 'https://jira_instance/rest/api/3/issue/10043',
+                    'key'    => 'key02',
+                    'fields' => [
+                        'summary'   => 'summary02',
+                        'issuetype' =>
                                     [
                                         'id' => '10004',
                                     ],
-                                'created' => '2020-03-26T14:10:10.823+0100',
-                                'updated' => '2020-04-26T14:10:10.823+0100',
-                                'creator' => [
-                                    'displayName' => 'Mysterio',
-                                    'accountId' => 'e8d4s2c53z',
-                                ],
-                            ],
-                            'renderedFields' => [],
+                        'created' => '2020-03-26T14:10:10.823+0100',
+                        'updated' => '2020-04-26T14:10:10.823+0100',
+                        'creator' => [
+                            'displayName' => 'Mysterio',
+                            'accountId' => 'e8d4s2c53z',
                         ],
                     ],
-                ];
+                    'renderedFields' => [],
+                ],
+            ],
+        ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/comment?expand=renderedBody&startAt=0'] = [
-                'startAt'    => 0,
-                'maxResults' => 50,
-                'total'      => 0,
-                'comments'   => [],
-                ];
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
 
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/comment?expand=renderedBody&startAt=0'] = [
-                'startAt'    => 0,
-                'maxResults' => 50,
-                'total'      => 0,
-                'comments'   => [],
-                ];
+            'startAt'    => 0,
+            'maxResults' => 50,
+            'total'      => 0,
+            'comments'   => [],
+        ];
 
         $issue_collection = new IssueAPIRepresentationCollection();
         $this->exporter->exportArtifacts(
@@ -442,23 +442,23 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockChangelogForKey01(): void
     {
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key01/changelog?startAt=0'] = [
-                "maxResults" => 100,
-                "startAt"    => 0,
-                "total"      => 0,
-                "isLast"     => true,
-                "values"     => [],
+            "maxResults" => 100,
+            "startAt"    => 0,
+            "total"      => 0,
+            "isLast"     => true,
+            "values"     => [],
         ];
     }
 
     private function mockChangelogForKey02(): void
     {
         $this->wrapper->urls[ClientWrapper::JIRA_CORE_BASE_URL . '/issue/key02/changelog?startAt=0'] = [
-                "maxResults" => 100,
-                "startAt"    => 0,
-                "total"      => 0,
-                "isLast"     => true,
-                "values"     => [],
-                ];
+            "maxResults" => 100,
+            "startAt"    => 0,
+            "total"      => 0,
+            "isLast"     => true,
+            "values"     => [],
+        ];
     }
 
     private function assertXMLArtifactsContent(SimpleXMLElement $tracker_node): void

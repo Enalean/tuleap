@@ -52,13 +52,13 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
     public function getDefaultArguments()
     {
         return ['noheader'      => false,
-                     'include_empty' => false,
-                     'exclude'       => '',
-                     'info'          => '',
-                     'sortby'        => false,
-                     'limit'         => 0,
-                     'paging'        => 'auto',
-                     ];
+            'include_empty' => false,
+            'exclude'       => '',
+            'info'          => '',
+            'sortby'        => false,
+            'limit'         => 0,
+            'paging'        => 'auto',
+        ];
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
