@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as rest_querier from "./artifacts-retriever";
 import type {
     ArtifactReportResponseUserRepresentation,
@@ -187,7 +188,7 @@ describe("retrieveArtifactsStructure", () => {
             },
         ];
 
-        jest.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
+        vi.spyOn(rest_querier, "getArtifacts").mockResolvedValue(
             new Map([
                 [
                     359,

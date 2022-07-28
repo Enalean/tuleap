@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { memoize } from "./memoize";
 
 describe("memoize", () => {
     it("memoizes result value of function", () => {
-        const fn = jest.fn((a: string, b: string): string => `${a}:${b}`);
+        const fn = vi.fn((a: string, b: string): string => `${a}:${b}`);
         const memoized_fn = memoize(fn);
 
         expect(memoized_fn("A", "B")).toBe("A:B");
@@ -31,7 +32,7 @@ describe("memoize", () => {
     });
 
     it("memoizes errors", () => {
-        const fn = jest.fn((a: string): string => {
+        const fn = vi.fn((a: string): string => {
             throw new Error(a);
         });
         const memoized_fn = memoize(fn);
@@ -43,7 +44,7 @@ describe("memoize", () => {
     });
 
     it("memoizes result value of function without args", () => {
-        const fn = jest.fn((): string => "A");
+        const fn = vi.fn((): string => "A");
         const memoized_fn = memoize(fn);
 
         expect(memoized_fn()).toBe("A");

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect } from "vitest";
 import type { FormattedArtifact } from "../type";
 import { getAnchorToArtifactContent } from "./sections-anchor";
 import type { ArtifactFieldValueStepDefinitionContent } from "../type";

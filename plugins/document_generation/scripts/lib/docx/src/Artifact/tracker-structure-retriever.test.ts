@@ -17,16 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import type { TrackerDefinition } from "../type";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getTrackerDefinition, retrieveTrackerStructure } from "./tracker-structure-retriever";
 
+vi.mock("@tuleap/tlp-fetch");
+
 describe("tracker-structure-retriever", () => {
     describe("retrieveTrackerStructure", () => {
         it("Given a tracrek id, Then it will get the tracker structure", async () => {
             const tracker_id = 101;
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = vi.spyOn(tlp, "get");
 
             const tracker_definition_response: TrackerDefinition = {
                 id: 102,
@@ -64,7 +67,7 @@ describe("tracker-structure-retriever", () => {
     describe("getTrackerDefinition", () => {
         it("Given a tracker id, Then it will get the tracker definition", async () => {
             const tracker_id = 101;
-            const tlpGet = jest.spyOn(tlp, "get");
+            const tlpGet = vi.spyOn(tlp, "get");
 
             const tracker_definition_response: TrackerDefinition = {
                 id: 102,

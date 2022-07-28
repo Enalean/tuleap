@@ -19,6 +19,7 @@
 
 import path from "path";
 import type { UserConfigExport } from "vitest/config";
+import { configDefaults as config_defaults_vitest } from "vitest/config";
 import type { BuildOptions, CSSOptions, ServerOptions, UserConfig } from "vite";
 import { defineConfig as viteDefineConfig } from "vitest/config";
 import type { C8Options } from "vitest";
@@ -115,14 +116,13 @@ function defineBaseConfig(config: UserConfig): UserConfigExport {
             environment: "jsdom",
             include: ["**/?(*.)+(test).{js,ts}"],
             exclude: [
-                "**/node_modules/**",
+                ...config_defaults_vitest.exclude,
                 "**/vendor/**",
                 "**/assets/**",
                 "**/frontend-assets/**",
-                "**/dist/**",
                 "**/tests/**",
                 "**/*.d.ts",
-                "**/scripts/lib/**",
+                "./scripts/lib/**",
                 "**/js-test-results/**",
             ],
             setupFiles: [
