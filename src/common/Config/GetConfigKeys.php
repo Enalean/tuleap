@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -36,6 +36,7 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\Layout\HomePage\NewsCollectionBuilder;
 use Tuleap\Layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Log\LogToGraylog2;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\Export\ProjectExportController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\ServerHostname;
@@ -73,6 +74,7 @@ final class GetConfigKeys implements Dispatchable, ConfigClassProvider
         ServerHostname::class,
         ProjectExportController::class,
         SVNProjectAccessController::class,
+        MailTransportBuilder::class,
     ];
 
     /**

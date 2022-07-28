@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Mail\MailLogger;
 use Laminas\Mail;
 use Laminas\Mime\Message as MimeMessage;
@@ -63,7 +64,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
     private $recipient_list_builder;
 
     /**
-     * @var Mail\Transport\Sendmail
+     * @var Mail\Transport\TransportInterface
      */
     private $transport;
 
@@ -92,7 +93,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $this->message = new Mail\Message();
         $this->message->setEncoding('UTF-8');
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
-        $this->transport              = new Mail\Transport\Sendmail();
+        $this->transport              = MailTransportBuilder::buildMailTransport();
         $this->logger                 = new MailLogger();
     }
 
