@@ -20,94 +20,76 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBConnection;
 use Tuleap\User\UnixUserChecker;
 
 /**
  *  Data Access Object for User
  */
-class UserDao extends DataAccessObject
+class UserDao extends \Tuleap\DB\DataAccessObject
 {
     private const NOT_VALID_UNIX_PASSWORD_HASH = 'no_password';
 
     /** @var PasswordHandler */
     private $password_handler;
 
-    public function __construct($da = null)
+    public function __construct(?DBConnection $db_connection = null)
     {
-        parent::__construct($da);
+        parent::__construct($db_connection);
         $this->password_handler = PasswordHandlerFactory::getPasswordHandler();
     }
 
-    /**
-    * Gets all tables of the db
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchAll()
+    public function searchAll(): array
     {
         $sql = "SELECT * FROM user";
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
     /**
     * Searches User by Status (either one value or array)
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
-    public function searchByStatus($status)
+    public function searchByStatus($status): array
     {
+        $where = \ParagonIE\EasyDB\EasyStatement::open();
         if (is_array($status)) {
-            $where_status = $this->da->quoteSmartImplode(" OR status = ", $status);
+            $where->in('status IN (?*)', $status);
         } else {
-            $where_status = $this->da->quoteSmart($status);
+            $where->with('status = ?', $status);
         }
-        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE status = $where_status";
-        return $this->retrieve($sql);
+        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE $where";
+        return (array) $this->getDB()->safeQuery($sql, $where->values());
     }
 
     /**
     * Searches User by UserId
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
-    public function searchByUserId($userId)
+    public function searchByUserId($userId): ?array
     {
-        $sql = sprintf(
-            "SELECT * FROM user WHERE user_id = %s",
-            $this->da->quoteSmart($userId)
-        );
-        return $this->retrieve($sql);
+        return $this->getDB()->row('SELECT * FROM user WHERE user_id = ?', $userId) ?: null;
     }
 
     /**
     * Searches User by UserName
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
-    public function searchByUserName($userName)
+    public function searchByUserName($userName): ?array
     {
-        $sql = sprintf(
-            "SELECT * FROM user WHERE user_name = %s",
-            $this->da->quoteSmart($userName)
-        );
-        return $this->retrieve($sql);
+        return $this->getDB()->row('SELECT * FROM user WHERE user_name = ?', $userName) ?: null;
     }
 
     /**
     * Searches User by Email
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
     */
-    public function searchByEmail($email)
+    public function searchByEmail($email): array
     {
-        $sql = sprintf(
-            "SELECT * FROM user WHERE email = %s",
-            $this->da->quoteSmart($email)
-        );
-        return $this->retrieve($sql);
+        return $this->getDB()->run('SELECT * FROM user WHERE email = ?', $email);
     }
 
-    public function searchByEmailList(array $emails)
+    public function searchByEmailList(array $emails): array
     {
         if (empty($emails)) {
-            return new DataAccessResultEmpty();
+            return [];
         }
-        $emails_escaped = $this->da->quoteSmartImplode(',', $emails);
+        $email_filter = \ParagonIE\EasyDB\EasyStatement::open()->in('user1.email IN (?*)', $emails);
 
         $sql = "SELECT user1.*
                 FROM user AS user1
@@ -116,61 +98,50 @@ class UserDao extends DataAccessObject
                   user1.user_id > user2.user_id
                 )
                 WHERE
-                  user1.email IN ($emails_escaped) AND
+                  $email_filter AND
                   user2.user_id IS NULL";
 
-        return $this->retrieve($sql);
+        return (array) $this->getDB()->safeQuery($sql, $email_filter->values());
     }
 
     /**
      * Searches User by ldapid
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
-    public function searchByLdapId($ldap_id)
+    public function searchByLdapId($ldap_id): array
     {
-        $sql = sprintf(
-            "SELECT * FROM user WHERE ldap_id = %s",
-            $this->da->quoteSmart($ldap_id)
-        );
-        return $this->retrieve($sql);
+        return $this->getDB()->run('SELECT * FROM user WHERE ldap_id = ?', $ldap_id);
     }
 
-    public function searchSSHKeys()
+    public function searchSSHKeys(): array
     {
         $sql = "SELECT *
                 FROM user
                 WHERE (status= 'A' OR status='R')
                   AND authorized_keys != ''
                   AND authorized_keys IS NOT NULL";
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
     }
 
-    public function searchPaginatedSSHKeys($offset, $limit)
+    public function searchPaginatedSSHKeys($offset, $limit): array
     {
-        $offset = $this->da->escapeInt($offset);
-        $limit  = $this->da->escapeInt($limit);
-
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM user
                 WHERE (status= 'A' OR status='R')
                   AND authorized_keys != ''
                   AND authorized_keys IS NOT NULL
-                LIMIT $limit OFFSET $offset";
+                LIMIT ? OFFSET ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql, $limit, $offset);
     }
 
     /**
      * Search user by confirm hash
      *
      * @param String $hash
-     *
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
-    public function searchByConfirmHash($hash)
+    public function searchByConfirmHash($hash): ?array
     {
-        $sql = 'SELECT * FROM user WHERE confirm_hash=' . $this->da->quoteSmart($hash);
-        return $this->retrieve($sql);
+        return $this->getDB()->row('SELECT * FROM user WHERE confirm_hash = ?', $hash) ?: null;
     }
 
     /**
@@ -195,193 +166,141 @@ class UserDao extends DataAccessObject
      * @param $language_id
      * @param $expiry_date
      * @param $last_pwd_update
-     * @return false|int id(auto_increment) if there is no error
      */
-    public function create($user_name, $email, ?ConcealedString $user_pw, ?string $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
+    public function create($user_name, $email, ?ConcealedString $user_pw, ?string $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update): int
     {
-        $columns = [];
-        $values  = [];
+        $fields = [];
 
         if ($user_name !== null) {
-            $columns[] = 'user_name';
-            $values[]  = $user_name;
+            $fields['user_name'] = $user_name;
         }
         if ($email !== null) {
-            $columns[] = 'email';
-            $values[]  = $email;
+            $fields['email'] = $email;
         }
         if ($user_pw !== null) {
-            $columns[] = 'password';
-            $values[]  = $this->password_handler->computeHashPassword($user_pw);
+            $fields['password'] = $this->password_handler->computeHashPassword($user_pw);
 
             if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user_name)) {
-                $columns[] = 'unix_pw';
-                $values[]  = $this->password_handler->computeUnixPassword($user_pw);
+                $fields['unix_pw'] = $this->password_handler->computeUnixPassword($user_pw);
             } else {
-                $columns[] = 'unix_pw';
-                $values[]  = self::NOT_VALID_UNIX_PASSWORD_HASH;
+                $fields['unix_pw'] = self::NOT_VALID_UNIX_PASSWORD_HASH;
             }
         }
-        $columns[] = 'realname';
-        $values[]  = $realname ?? '';
+        $fields['realname'] = $realname ?? '';
         if ($register_purpose !== null) {
-            $columns[] = 'register_purpose';
-            $values[]  = $register_purpose;
+            $fields['register_purpose'] = $register_purpose;
         }
         if ($status !== null) {
-            $columns[] = 'status';
-            $values[]  = $status;
+            $fields['status'] = $status;
         }
         if ($shell !== null) {
-            $columns[] = 'shell';
-            $values[]  = $shell;
+            $fields['shell'] = $shell;
         }
         if ($unix_status !== null) {
-            $columns[] = 'unix_status';
-            $values[]  = $unix_status;
+            $fields['unix_status'] = $unix_status;
         }
         if ($unix_uid !== null) {
-            $columns[] = 'unix_uid';
-            $values[]  = $unix_uid;
+            $fields['unix_uid'] = $unix_uid;
         }
         if ($unix_box !== null) {
-            $columns[] = 'unix_box';
-            $values[]  = $unix_box;
+            $fields['unix_box'] = $unix_box;
         }
         if ($ldap_id !== null) {
-            $columns[] = 'ldap_id';
-            $values[]  = $ldap_id;
+            $fields['ldap_id'] = $ldap_id;
         }
         if ($add_date !== null) {
-            $columns[] = 'add_date';
-            $values[]  = $add_date;
+            $fields['add_date'] = $add_date;
         }
         if ($confirm_hash !== null) {
-            $columns[] = 'confirm_hash';
-            $values[]  = $confirm_hash;
+            $fields['confirm_hash'] = $confirm_hash;
         }
         if ($mail_siteupdates !== null) {
-            $columns[] = 'mail_siteupdates';
-            $values[]  = $mail_siteupdates;
+            $fields['mail_siteupdates'] = $mail_siteupdates;
         }
         if ($mail_va !== null) {
-            $columns[] = 'mail_va';
-            $values[]  = $mail_va;
+            $fields['mail_va'] = $mail_va;
         }
         if ($sticky_login !== null) {
-            $columns[] = 'sticky_login';
-            $values[]  = $sticky_login;
+            $fields['sticky_login'] = $sticky_login;
         }
         if ($authorized_keys !== null) {
-            $columns[] = 'authorized_keys';
-            $values[]  = $authorized_keys;
+            $fields['authorized_keys'] = $authorized_keys;
         }
         if ($email_new !== null) {
-            $columns[] = 'email_new';
-            $values[]  = $email_new;
+            $fields['email_new'] = $email_new;
         }
         if ($timezone !== null) {
-            $columns[] = 'timezone';
-            $values[]  = $timezone;
+            $fields['timezone'] = $timezone;
         }
         if ($language_id !== null) {
-            $columns[] = 'language_id';
-            $values[]  = $language_id;
+            $fields['language_id'] = $language_id;
         }
         if ($expiry_date !== null) {
-            $columns[] = 'expiry_date';
-            $values[]  = $expiry_date;
+            $fields['expiry_date'] = $expiry_date;
         }
         if ($last_pwd_update !== null) {
-            $columns[] = 'last_pwd_update';
-            $values[]  = $last_pwd_update;
+            $fields['last_pwd_update'] = $last_pwd_update;
         }
 
-        $sql      = 'INSERT INTO user (' . implode(',', $columns) . ') VALUES (' . $this->da->quoteSmartImplode(',', $values) . ')';
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-                $sql      = 'INSERT INTO user_access (user_id) VALUES (' . $this->da->quoteSmart($inserted) . ')';
-                $this->update($sql);
-            } else {
-                $inserted = $dar->isError();
+        return $this->getDB()->tryFlatTransaction(
+            static function (\ParagonIE\EasyDB\EasyDB $db) use ($fields): int {
+                $id = $db->insertReturnId('user', $fields);
+                $db->run('INSERT INTO user_access (user_id) VALUES (?)', $id);
+
+                return (int) $id;
             }
-        }
-        return $inserted;
+        );
     }
 
-    public function updateByRow(array $user)
+    public function updateByRow(array $user): bool
     {
-        $stmt = [];
-        if (isset($user['clear_password'])) {
-            $stmt[] = 'password=' . $this->da->quoteSmart($this->password_handler->computeHashPassword($user['clear_password']));
-            /*
-             * Legacy column that was used to store password hashed with MD5
-             * We need to keep it for old instances with non migrated accounts yet
-             */
-            $stmt[] = 'user_pw=""';
-            if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user["user_name"])) {
-                $stmt[] = 'unix_pw=' . $this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
-            } else {
-                $stmt[] = 'unix_pw=' . $this->da->quoteSmart(self::NOT_VALID_UNIX_PASSWORD_HASH);
-            }
-            $stmt[] = 'last_pwd_update=' . $_SERVER['REQUEST_TIME'];
-            unset($user['clear_password']);
-        }
-        $dar = $this->searchByUserId($user['user_id']);
-        if ($dar && ! $dar->isError()) {
-            $current = $dar->current();
-            foreach ($user as $field => $value) {
-                if ($field != 'user_id' && $value != $current[$field] && $value !== null) {
-                    $stmt[] = $this->da->quoteSmartSchema($field) . ' = ' . $this->da->quoteSmart($value);
+        return $this->getDB()->tryFlatTransaction(
+            function (\ParagonIE\EasyDB\EasyDB $db) use ($user): bool {
+                $user_db_row_current = $this->searchByUserId($user['user_id']);
+                if ($user_db_row_current === null) {
+                    return false;
                 }
+
+                $values = [];
+
+                if (isset($user['clear_password'])) {
+                    $values['password'] = $this->password_handler->computeHashPassword($user['clear_password']);
+                    /*
+                     * Legacy column that was used to store password hashed with MD5
+                     * We need to keep it for old instances with non migrated accounts yet
+                     */
+                    $values['unix_pw'] = self::NOT_VALID_UNIX_PASSWORD_HASH;
+                    if (UnixUserChecker::doesPlatformAllowUnixUserAndIsUserNameValid($user["user_name"])) {
+                        $values['unix_pw'] = $this->password_handler->computeUnixPassword($user['clear_password']);
+                    }
+                    unset($user['clear_password']);
+                    $values['last_pwd_update'] = $_SERVER['REQUEST_TIME'];
+                }
+
+                foreach ($user as $field => $value) {
+                    if ($field !== 'user_id' && $value != $user_db_row_current[$field] && $value !== null) {
+                        $values[$field] = $value;
+                    }
+                }
+
+                $db->update('user', $values, ['user_id' => $user['user_id']]);
+                return true;
             }
-            if (count($stmt) > 0) {
-                $sql = 'UPDATE user SET ' . implode(', ', $stmt) . ' WHERE user_id = ' . db_ei($user['user_id']);
-                return $this->update($sql);
-            }
-        }
-        return false;
+        );
     }
 
     /**
      * Assign to given user the next available unix_uid
      *
      * @param int $userId User ID
-     *
-     * @return bool
      */
-    public function assignNextUnixUid($userId)
+    public function assignNextUnixUid($userId): int
     {
         $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R' .
                ' SET unix_uid = max_uid' .
-               ' WHERE user_id = ' . $this->da->quoteSmart($userId);
-        if ($this->update($sql)) {
-            $sql = 'SELECT unix_uid FROM user WHERE user_id = ' . $this->da->quoteSmart($userId);
-            $dar = $this->retrieve($sql);
-            if ($dar && ! $dar->isError()) {
-                $row = $dar->current();
-                return $row['unix_uid'];
-            }
-        }
-        return false;
-    }
-
-    /**
-    * Searches User status by Email
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function searchStatusByEmail($email)
-    {
-        //ST: with LDAP user_name can be an email
-        $sql = sprintf(
-            "SELECT realname, email, status FROM user WHERE (user_name=%s OR email = %s)",
-            $this->da->quoteSmart($email),
-            $this->da->quoteSmart($email)
-        );
-        return $this->retrieve($sql);
+               ' WHERE user_id = ?';
+        $this->getDB()->run($sql, $userId);
+        return $this->getDB()->single('SELECT unix_uid FROM user WHERE user_id = ?', [$userId]);
     }
 
     /**
@@ -396,34 +315,30 @@ class UserDao extends DataAccessObject
      * @todo: define a global time object that would give the same time to all
      * actions on an execution.
      */
-    public function storeLoginSuccess($user_id, $time)
+    public function storeLoginSuccess($user_id, $time): void
     {
         $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
-                    last_auth_success = ' . $this->da->escapeInt($time) . ',
-                    last_access_date =' . $this->da->escapeInt($time) . '
-                WHERE user_id = ' . $this->da->escapeInt($user_id);
-        $this->update($sql);
+                    last_auth_success = ?,
+                    last_access_date = ?
+                WHERE user_id = ?';
+        $this->getDB()->run($sql, $time, $time, $user_id);
     }
 
      /**
      * Don't log access if already accessed in the past 6 hours (scalability+privacy)
      * @param  $user_id Integer
      * @param  $time    Integer
-     * @return bool
      */
-    public function storeLastAccessDate($user_id, $time)
+    public function storeLastAccessDate($user_id, $time): void
     {
-        $user_id = $this->da->escapeInt($user_id);
-        $time    = $this->da->escapeInt($time);
-
         $sql = "UPDATE user_access
-                SET last_access_date = $time
-                WHERE user_id = $user_id
-                  AND last_access_date < $time";
+                SET last_access_date = ?
+                WHERE user_id = ?
+                  AND last_access_date < ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $time, $user_id, $time);
     }
 
     /**
@@ -433,13 +348,13 @@ class UserDao extends DataAccessObject
      * was no bad attemps since the last successful login (ie. 'last_auth_success'
      * newer than 'last_auth_failure') the counter is reset to 1.
      */
-    public function storeLoginFailure($login, $time)
+    public function storeLoginFailure($login, $time): void
     {
         $sql = "UPDATE user_access
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1),
-                last_auth_failure = " . $this->da->escapeInt($time) . "
-                WHERE user_id = (SELECT user_id from user WHERE user_name = " . $this->da->quoteSmart($login) . ")";
-        $this->update($sql);
+                last_auth_failure = ?
+                WHERE user_id = (SELECT user_id from user WHERE user_name = ?)";
+        $this->getDB()->run($sql, $time, $login);
     }
 
     /**
@@ -448,42 +363,31 @@ class UserDao extends DataAccessObject
      * You can limit the number of results.
      * This is used by "search users as you type"
      */
-    public function searchUserNameLike($name, $limit = 0, int $offset = 0)
+    public function searchUserNameLike($name, $limit = 0, int $offset = 0): array
     {
-        $name = $this->getDa()->quoteLikeValueSurround($name);
+        $name = '%' . $this->getDB()->escapeLikeValue($name) . '%';
 
-        $sql  = "SELECT SQL_CALC_FOUND_ROWS *" .
+        $sql        = "SELECT SQL_CALC_FOUND_ROWS *" .
             " FROM user" .
-            " WHERE (realname LIKE $name" .
-            " OR user_name LIKE $name)" .
+            " WHERE (realname LIKE ?" .
+            " OR user_name LIKE ?)" .
             " AND status IN ('A', 'R')";
-        $sql .= "ORDER BY realname";
+        $sql       .= "ORDER BY realname ";
+        $limit_stmt = null;
         if ($limit > 0) {
-            $sql .= " LIMIT " . db_ei($limit);
-
+            $limit_stmt = \ParagonIE\EasyDB\EasyStatement::open();
             if ($offset > 0) {
-                $sql .= ' OFFSET ' . db_ei($offset);
+                $limit_stmt->with('LIMIT ? OFFSET ?', $limit, $offset);
+            } else {
+                $limit_stmt->with('LIMIT ?', $limit);
             }
         }
 
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * Return the result of  'FOUND_ROWS()' SQL method for the last query.
-     *
-     * @return string|false
-     */
-    public function foundRows()
-    {
-        $sql = "SELECT FOUND_ROWS() as nb;";
-        $dar = $this->retrieve($sql);
-        if ($dar && ! $dar->isError()) {
-            $row = $dar->getRow();
-            return $row['nb'];
-        } else {
-            return false;
+        if ($limit_stmt === null) {
+            return $this->getDB()->run($sql, $name, $name);
         }
+
+        return $this->getDB()->run($sql . $limit_stmt, $name, $name, ...$limit_stmt->values());
     }
 
     /**
@@ -517,34 +421,25 @@ class UserDao extends DataAccessObject
      * @param String $newName
      * @return Boolean
      */
-    public function renameUser($user, $newName)
+    public function renameUser($user, $newName): bool
     {
         if (! TrackerV3::instance()->available()) {
             return true;
         }
 
-        $sqlArtcc = ' UPDATE artifact_cc SET email =' . $this->da->quoteSmart($newName) .
-                     ' WHERE email = ' . $this->da->quoteSmart($user->getUserName());
-        if ($this->update($sqlArtcc)) {
-            $sqlSel = 'SELECT addresses, id FROM artifact_global_notification
-                       WHERE addresses LIKE ' . $this->getDa()->quoteLikeValueSurround($user->getUserName());
+        $sqlArtcc = ' UPDATE artifact_cc SET email = ? WHERE email = ?';
+        $this->getDB()->run($sqlArtcc, $newName, $user->getUserName());
 
-            $dar = $this->retrieve($sqlSel);
-            if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
-                $res = true;
-                foreach ($dar as $row) {
-                    $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
-                    $sqlArtgn         = 'UPDATE artifact_global_notification SET addresses = ' . $this->da->quoteSmart($row['addresses']) . '
-                                 WHERE id = ' . $this->da->escapeInt($row['id']);
-                    $res              = $res & $this->update($sqlArtgn);
-                }
-                return $res;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
+        $sqlSel = 'SELECT addresses, id FROM artifact_global_notification
+                       WHERE addresses LIKE ?';
+
+        foreach ($this->getDB()->run($sqlSel, '%' . $this->getDB()->escapeLikeValue($user->getUserName()) . '%') as $row) {
+            $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
+            $sqlArtgn         = 'UPDATE artifact_global_notification SET addresses = ? WHERE id = ?';
+            $this->getDB()->run($sqlArtgn, $row['addresses'], $row['id']);
         }
+
+        return true;
     }
 
     /**
@@ -561,44 +456,53 @@ class UserDao extends DataAccessObject
      * @psalm-param "ASC"|"DESC" $sort_order
      *
      * @psalm-return array{
-     *      users: DataAccessResult|false,
-     *      numrows: string|false
+     *      users: array,
+     *      numrows: int
      * }
      * @return array
      */
-    public function listAllUsers($group_id, $pattern, $offset, $limit, string $sort_header, string $sort_order, $status_values)
+    public function listAllUsers($group_id, $pattern, $offset, $limit, string $sort_header, string $sort_order, $status_values): array
     {
-        $group_id = $this->da->escapeInt($group_id);
-        $offset   = $this->da->escapeInt($offset);
-        $limit    = $this->da->escapeInt($limit);
-        $stmLimit = "";
+        $stmt_limit = null;
         if ($limit != 0) {
-            $stmLimit .= ' LIMIT ' . $offset . ', ' . $limit;
+            $stmt_limit = \ParagonIE\EasyDB\EasyStatement::open()->with('LIMIT ?, ?', $offset, $limit);
         }
-        $where  = "";
-        $status = "";
-        if (! empty($status_values)) {
-            $status = $this->da->quoteSmartImplode(',', $status_values);
-        }
+        $where_stmt = null;
         if ($pattern) {
-            $pattern = $this->getDa()->quoteLikeValueSurround($pattern);
-            $where   = "WHERE (
-                    user.user_name LIKE $pattern
-                    OR user.user_id LIKE $pattern
-                    OR user.realname LIKE $pattern
-                    OR user.email LIKE $pattern)";
-            if ($status != "") {
-                $where .= ' AND (status IN (' . $status . '))';
+            $pattern    =  '%' . $this->getDB()->escapeLikeValue($pattern) . '%';
+            $where_stmt = \ParagonIE\EasyDB\EasyStatement::open()->with(
+                'WHERE (user.user_name LIKE ? OR user.user_id LIKE ? OR user.realname LIKE ? OR user.email LIKE ?)',
+                $pattern,
+                $pattern,
+                $pattern,
+                $pattern
+            );
+            if (count($status_values) > 0) {
+                $where_stmt->andIn('status IN ?*', $status_values);
             }
-        } elseif ($status != "") {
-            $where .= ' WHERE status IN (' . $status . ')';
+        } elseif (count($status_values) > 0) {
+            $where_stmt = ParagonIE\EasyDB\EasyStatement::open()->in('WHERE status IN ?*', $status_values);
         }
 
-        $from = 'FROM user';
+        $from             = 'FROM user';
+        $from_join_values = [];
         if ($group_id) {
-            $from .= " INNER JOIN user_group ON (user.user_id = user_group.user_id AND user_group.group_id = $group_id)";
+            $from              .= " INNER JOIN user_group ON (user.user_id = user_group.user_id AND user_group.group_id = ?)";
+            $from_join_values[] = $group_id;
         }
 
+        $where        = '';
+        $where_values = [];
+        if ($where_stmt !== null) {
+            $where        = $where_stmt->sql();
+            $where_values = array_values($where_stmt->values());
+        }
+        $limit        = '';
+        $limit_values = [];
+        if ($stmt_limit !== null) {
+            $limit        = $stmt_limit->sql();
+            $limit_values = array_values($stmt_limit->values());
+        }
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of, user_access.last_access_date
                 $from
                 INNER JOIN user_access ON (user_access.user_id = user.user_id)
@@ -617,10 +521,10 @@ class UserDao extends DataAccessObject
                     GROUP BY user_id
                 ) as member_of ON (member_of.user_id = user.user_id)
             $where
-            ORDER BY " . $sort_header . " " . $sort_order . $stmLimit;
+            ORDER BY " . $sort_header . " " . $sort_order . ' ' . $limit;
 
         return [
-            'users'   => $this->retrieve($sql),
+            'users'   => (array) $this->getDB()->safeQuery($sql, [...$from_join_values, ...$where_values, ...$limit_values]),
             'numrows' => $this->foundRows(),
         ];
     }
@@ -629,107 +533,71 @@ class UserDao extends DataAccessObject
      * Return the access information for a given user
      *
      * @param int $userId
-     *
-     * @return Array
      */
-    public function getUserAccessInfo($userId)
+    public function getUserAccessInfo($userId): array
     {
-        $sql = 'SELECT * FROM user_access WHERE user_id = ' . $this->da->escapeInt($userId);
-        $dar = $this->retrieve($sql);
-        if ($dar && ! $dar->isError()) {
-            $row = $dar->getRow();
-            return $row;
-        } else {
-            return false;
-        }
+        $sql = 'SELECT * FROM user_access WHERE user_id = ?';
+
+        return $this->getDB()->row($sql, $userId);
     }
 
-    /**
-     * Get the list of letters with which user names begin (silly isn't it?)
-     *
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-     */
-    public function firstUsernamesLetters()
+    public function searchGlobalPaginated($words, $exact, $offset, $limit): array
     {
-        $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
-                FROM user
-                WHERE status in ('A', 'R')
-                UNION
-                SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
-                FROM user
-                WHERE status in ('A', 'R')
-                UNION
-                SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
-                FROM user
-                WHERE status in ('A', 'R')
-                ORDER BY capital";
-        return $this->retrieve($sql);
-    }
-
-    public function searchGlobalPaginated($words, $exact, $offset, $limit)
-    {
-        $offset = $this->da->escapeInt($offset);
-        $limit  = $this->da->escapeInt($limit);
+        $username_stmt = \ParagonIE\EasyDB\EasyStatement::open();
+        $realname_stmt = \ParagonIE\EasyDB\EasyStatement::open();
         if ($exact === true) {
-            $user_name = $this->searchExactMatch($words);
-            $realname  = $this->searchExactMatch($words);
+            $username_stmt->with('user_name LIKE ?', '%' . $this->getDB()->escapeLikeValue($words) . '%');
+            $realname_stmt->with('realname LIKE ?', '%' . $this->getDB()->escapeLikeValue($words) . '%');
         } else {
-            $user_name = $this->searchExplodeMatch('user_name', $words);
-            $realname  = $this->searchExplodeMatch('realname', $words);
+            foreach (explode(' ', $words) as $word) {
+                $username_stmt->orWith('user_name LIKE ?', '%' . $this->getDB()->escapeLikeValue($word) . '%');
+                $realname_stmt->orWith('realname LIKE ?', '%' . $this->getDB()->escapeLikeValue($word) . '%');
+            }
         }
 
         $sql = "SELECT *
                 FROM user
                 WHERE (
-                    (user_name LIKE $user_name) OR (realname LIKE $realname)
+                    ($username_stmt) OR ($realname_stmt)
                 ) AND status IN ('A', 'R')
                 ORDER BY user_name
-                LIMIT $offset, $limit";
+                LIMIT ?, ?";
 
-        return $this->retrieve($sql);
+        return (array) $this->getDB()->safeQuery(
+            $sql,
+            [...array_values($username_stmt->values()), ...array_values($realname_stmt->values()), $offset, $limit]
+        );
     }
 
-    public function countAllUsers()
+    public function countAllUsers(): int
     {
         $sql = "SELECT count(*) AS nb FROM user";
 
-        $row = $this->retrieve($sql)->getRow();
-
-        return $row['nb'];
+        return $this->getDB()->single($sql);
     }
 
-    public function countAllAliveUsers()
+    public function countAllAliveUsers(): int
     {
         $sql = "SELECT count(*) AS nb FROM user WHERE status IN ('A', 'R')";
 
-        $row = $this->retrieve($sql)->getRow();
-
-        return $row['nb'];
+        return $this->getDB()->single($sql);
     }
 
-    public function countAliveUsersRegisteredBefore($timestamp)
+    public function countAliveUsersRegisteredBefore($timestamp): int
     {
-        $timestamp = $this->da->escapeInt($timestamp);
+        $sql = "SELECT count(*) AS nb FROM user WHERE add_date >= ? AND status IN ('A', 'R')";
 
-        $sql = "SELECT count(*) AS nb FROM user WHERE add_date >= $timestamp AND status IN ('A', 'R')";
-
-        $row = $this->retrieve($sql)->getRow();
-
-        return $row['nb'];
+        return $this->getDB()->single($sql, [$timestamp]);
     }
 
-    public function removeConfirmHash($confirm_hash)
+    public function removeConfirmHash($confirm_hash): void
     {
-        $confirm_hash = $this->da->quoteSmart($confirm_hash);
-        $sql          = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";
-        return $this->update($sql);
+        $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=?";
+        $this->getDB()->run($sql, $confirm_hash);
     }
 
-    /**
-     * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface|false
-     */
-    public function searchUsersWithDefaultAvatar()
+    public function searchUsersWithDefaultAvatar(): array
     {
-        return $this->retrieve('SELECT * FROM user WHERE has_custom_avatar = FALSE');
+        return $this->getDB()->run('SELECT * FROM user WHERE has_custom_avatar = FALSE');
     }
 }

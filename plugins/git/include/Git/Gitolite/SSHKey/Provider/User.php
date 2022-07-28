@@ -26,10 +26,7 @@ use UserManager;
 
 class User implements IProvideKey
 {
-    /**
-     * @var \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-     */
-    private $user_with_ssh_keys;
+    private ArrayIterator $user_with_ssh_keys;
     /**
      * @var ArrayIterator
      */
@@ -45,7 +42,7 @@ class User implements IProvideKey
 
     public function __construct(UserManager $user_manager)
     {
-        $this->user_with_ssh_keys = $user_manager->getUsersWithSshKey();
+        $this->user_with_ssh_keys = new ArrayIterator($user_manager->getUsersWithSshKey());
         $this->rewind();
     }
 

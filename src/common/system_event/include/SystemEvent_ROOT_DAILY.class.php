@@ -94,13 +94,14 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 
     private function userHomeSanityCheck(BackendSystem $backend_system, array &$warnings)
     {
-        $dao   = new UserDao();
-        $users = $dao
-            ->searchByStatus([PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED])
-            ->instanciateWith([UserManager::instance(), 'getUserInstanceFromRow']);
+        $dao       = new UserDao();
+        $user_rows = $dao
+            ->searchByStatus([PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED]);
 
-        foreach ($users as $user) {
-            $backend_system->userHomeSanityCheck($user, $warnings);
+        $user_manager = UserManager::instance();
+
+        foreach ($user_rows as $user_row) {
+            $backend_system->userHomeSanityCheck($user_manager->getUserInstanceFromRow($user_row), $warnings);
         }
     }
 

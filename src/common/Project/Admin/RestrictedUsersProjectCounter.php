@@ -46,6 +46,6 @@ final class RestrictedUsersProjectCounter
 
         $userlist = $this->user_dao->listAllUsers($project->getID(), '', 0, 0, 'user_name', 'ASC', ['R']);
 
-        return (int) ($userlist['numrows'] ?: 0);
+        return $userlist['numrows'];
     }
 }

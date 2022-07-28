@@ -38,7 +38,7 @@ final class ForceRegenerationDefaultAvatarCommandTest extends \Tuleap\Test\PHPUn
         $user_manager = $this->createMock(\UserManager::class);
         $user_dao     = $this->createMock(\UserDao::class);
 
-        $user_dao->method('searchUsersWithDefaultAvatar')->willReturn(\TestHelper::argListToDar([['user_id' => 102], ['user_id' => 103]]));
+        $user_dao->method('searchUsersWithDefaultAvatar')->willReturn([['user_id' => 102], ['user_id' => 103]]);
         $user_102 = UserTestBuilder::aUser()->withId(102)->build();
         $user_manager->method('getUserInstanceFromRow')->willReturn(
             $user_102,

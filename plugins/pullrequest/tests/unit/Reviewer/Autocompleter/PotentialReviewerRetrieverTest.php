@@ -69,11 +69,11 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = Mockery::mock(PullRequest::class);
 
-        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn(\TestHelper::arrayToDar(
+        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn([
             ['user_id' => 101],
             ['user_id' => 102],
             ['user_id' => 103],
-        ));
+        ]);
         $this->user_dao->shouldReceive('foundRows')->andReturn('10');
 
         $user_101 = Mockery::mock(PFUser::class);
@@ -101,10 +101,10 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = Mockery::mock(PullRequest::class);
 
-        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn(\TestHelper::arrayToDar(
+        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn([
             ['user_id' => 101],
             ['user_id' => 102],
-        ));
+        ]);
 
         $this->user_manager->shouldReceive('getUserInstanceFromRow')
             ->andReturn(Mockery::mock(PFUser::class));
@@ -124,7 +124,7 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $pull_request = Mockery::mock(PullRequest::class);
 
-        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn(\TestHelper::emptyDar());
+        $this->user_dao->shouldReceive('searchUserNameLike')->andReturn([]);
         $this->user_dao->shouldReceive('foundRows')->andReturn('0');
 
         $potential_reviewers = $this->retriever->getPotentialReviewers(
