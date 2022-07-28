@@ -19,20 +19,28 @@
  */
 
 import { DocumentAdapter } from "../dom/DocumentAdapter";
-import { synchronizeTeam } from "./synchronize-team";
+import { initSynchronizeTeamButtons, triggerTeamSynchronization } from "./synchronize-team";
 import * as api from "../api/synchronize-team";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe("synchronize-team", () => {
+    let location: Location;
+
+    beforeEach(() => {
+        location = { reload: jest.fn() } as unknown as Location;
+    });
+
     describe("synchronizeTeam", () => {
         it("Do does not launch synchronization", function () {
             const doc = createDocument();
 
-            expect(() => synchronizeTeam(new DocumentAdapter(doc))).not.toThrow();
+            expect(() =>
+                initSynchronizeTeamButtons(new DocumentAdapter(doc), location)
+            ).not.toThrow();
         });
 
-        it("Synchronize team", function () {
+        it("should trigger the team synchronization and reload the page", async () => {
             const doc = createDocument();
             const button = document.createElement("button");
             button.dataset.projectLabel = "my-program";
@@ -40,13 +48,14 @@ describe("synchronize-team", () => {
             button.className = "program-management-admin-action-synchronize-button";
             doc.body.appendChild(button);
 
-            const synchronize_team = jest.spyOn(api, "synchronizeTeamOfProgram");
+            const synchronize_team = jest
+                .spyOn(api, "synchronizeTeamOfProgram")
+                .mockResolvedValue(Promise.resolve({} as Response));
 
-            expect(() => synchronizeTeam(new DocumentAdapter(doc))).not.toThrow();
-
-            button.click();
+            await triggerTeamSynchronization(button, location);
 
             expect(synchronize_team).toHaveBeenCalledWith("my-program", 104);
+            expect(location.reload).toHaveBeenCalled();
         });
     });
 });

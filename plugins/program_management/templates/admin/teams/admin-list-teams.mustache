@@ -21,6 +21,10 @@
                                     class="tlp-button-primary tlp-button-small tlp-button-outline program-management-admin-action-synchronize-button"
                                     data-team-id="{{ id }}"
                                     data-project-label="{{ program_shortname }}"
+                                    {{# has_synchronization_pending }}
+                                        disabled
+                                        title=" {{# dgettext }}tuleap-program_management | This team is being synchronized {{/dgettext}}"
+                                    {{/ has_synchronization_pending }}
                                 >
                                     <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
                                     {{ synchronize_button_label }}
@@ -33,6 +37,10 @@
                             data-target-modal-id="program-management-delete-team-{{ id }}"
                             data-team-id="{{ id }}"
                             data-program-shortname="{{ id }}"
+                            {{# has_synchronization_pending }}
+                                disabled
+                                title=" {{# dgettext }}tuleap-program_management | This team is being synchronized {{/dgettext}}"
+                            {{/ has_synchronization_pending }}
                         >
                             <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
                             {{# dgettext }}tuleap-program_management | Remove team from program {{/ dgettext }}

@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\DispatchSynchronizationCommandStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
+use Tuleap\ProgramManagement\Tests\Stub\StorePendingTeamSynchronizationStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -39,13 +40,15 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_manager;
     private \HTTPRequest $request;
     private array $variables;
+    private StorePendingTeamSynchronizationStub $store_pending_team_synchronization;
 
     private const TEAM_ID = 123;
 
     protected function setUp(): void
     {
-        $this->project_manager = $this->createStub(\ProjectManager::class);
-        $this->variables       = ["project_name" => "my-program", 'team_id' => self::TEAM_ID];
+        $this->project_manager                    = $this->createStub(\ProjectManager::class);
+        $this->variables                          = ["project_name" => "my-program", 'team_id' => self::TEAM_ID];
+        $this->store_pending_team_synchronization = StorePendingTeamSynchronizationStub::withCount();
 
         $user          = UserTestBuilder::buildWithDefaults();
         $this->request = HTTPRequestBuilder::get()->withUser($user)->build();
@@ -60,7 +63,8 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_manager,
             $dispatch_synchronization_command_stub,
             $visible_teams_of_program_stub,
-            $build_program_stub
+            $build_program_stub,
+            $this->store_pending_team_synchronization
         );
     }
 
@@ -144,6 +148,7 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $dispatched_command = $dispatch->getCallParamsAtIndex(0);
 
         self::assertEquals(1, $dispatch->getCallsCount());
+        self::assertSame(1, $this->store_pending_team_synchronization->getCallCount());
         self::assertNotNull($dispatched_command);
         self::assertSame($dispatched_command->getProgramId(), 1);
         self::assertSame($dispatched_command->getTeamId(), self::TEAM_ID);

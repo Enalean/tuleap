@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\CleanPendingSynchronizationDaily;
 
-/**
- * @psalm-immutable
- */
-final class TeamPresenter
+final class CleanPendingSynchronizationDailyStub implements CleanPendingSynchronizationDaily
 {
-    public int $id;
-    public string $public_name;
-    public string $url;
-    public string $project_icon;
-
-    public function __construct(ProjectReference $team, public bool $should_synchronize_team, public bool $has_synchronization_pending)
+    private function __construct(private int $call_count)
     {
-        $this->id           = $team->getId();
-        $this->public_name  = $team->getProjectLabel();
-        $this->url          = $team->getUrl();
-        $this->project_icon = $team->getProjectIcon();
+    }
+
+    public static function withCount(): self
+    {
+        return new self(0);
+    }
+
+    public function dailyClean(int $start_date_purge): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }

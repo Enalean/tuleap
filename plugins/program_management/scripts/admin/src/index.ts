@@ -25,7 +25,7 @@ import { initListPickersMilestoneSection } from "./milestones/init-list-pickers-
 import { submitConfigurationHandler } from "./milestones/submit-configuration-handler";
 import { initPreviewTrackerLabels } from "./helper/init-preview-labels-helper";
 import { DocumentAdapter } from "./dom/DocumentAdapter";
-import { synchronizeTeam } from "./teams/synchronize-team";
+import { initSynchronizeTeamButtons } from "./teams/synchronize-team";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const language = document.body.dataset.userLocale;
@@ -60,5 +60,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     submitConfigurationHandler(document, gettext_provider, program_id);
     const adapter = new DocumentAdapter(document);
     initPreviewTrackerLabels(adapter, gettext_provider);
-    synchronizeTeam(adapter);
+    initSynchronizeTeamButtons(adapter, window.location);
 });
