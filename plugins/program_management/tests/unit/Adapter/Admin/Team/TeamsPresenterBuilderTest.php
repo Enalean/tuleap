@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchOpenProgramIncrementsStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyTeamSynchronizationHasErrorStub;
 
 final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -62,6 +63,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $collection,
             VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization(),
             SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
+            VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             BuildProgramStub::stubValidProgram(),
             [$team->getId()]
         );
@@ -84,6 +86,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $collection,
             VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization(),
             SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
+            VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             BuildProgramStub::stubValidProgram(),
             []
         );
@@ -106,6 +109,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $collection,
             VerifyIsSynchronizationPendingStub::withOnGoingSynchronization(),
             SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
+            VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             BuildProgramStub::stubValidProgram(),
             []
         );

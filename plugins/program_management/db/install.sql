@@ -56,10 +56,12 @@ CREATE TABLE plugin_program_management_workflow_action_add_top_backlog (
     INDEX idx_transition_id (transition_id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE plugin_program_management_team_synchronizations_pending (
+CREATE TABLE plugin_program_management_team_synchronizations_pending
+(
     program_id INT(11) NOT NULL,
-    team_id INT(11) NOT NULL,
-    timestamp INT(11) NOT NULL
+    team_id    INT(11) NOT NULL,
+    timestamp  INT(11) NOT NULL,
+    has_error  BOOL    NOT NULL DEFAULT FALSE
 ) ENGINE = InnoDB;
 
 -- Create service for all projects (but disabled)

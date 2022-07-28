@@ -54,6 +54,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyTeamSynchronizationHasErrorStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -173,7 +174,8 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
             SearchOpenProgramIncrementsStub::withProgramIncrements(ProgramIncrementBuilder::buildWithId(209)),
             SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror(),
             VerifyIsSynchronizationPendingStub::withoutOnGoingSynchronization(),
-            SearchVisibleTeamsOfProgramStub::withTeamIds(self::TEAM_ID)
+            SearchVisibleTeamsOfProgramStub::withTeamIds(self::TEAM_ID),
+            VerifyTeamSynchronizationHasErrorStub::buildWithoutError()
         );
     }
 

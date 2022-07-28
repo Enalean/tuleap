@@ -467,6 +467,16 @@ msgstr "Sync %s ouverts"
 msgid "Sync open Program Increments"
 msgstr "Sync Incréments de Programme ouverts"
 
+msgid "Synchronization error"
+msgstr "Erreur de synchronisation"
+
+msgid ""
+"Synchronization has failed, an error has occurred, please contact your "
+"platform administrator"
+msgstr ""
+"La synchronisation a échoué, une erreur est survenue, veuillez contacter "
+"l'administrateur de votre plateforme"
+
 msgid ""
 "Team project <a href='/plugins/agiledashboard/?group_id=%s&action=admin'>%s</"
 "a> has no root planning or you can't access it"

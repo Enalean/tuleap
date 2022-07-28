@@ -26,6 +26,7 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsSynchronizationPending;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -52,6 +53,7 @@ final class TeamsPresenterBuilder
         TeamProjectsCollection $team_collection,
         VerifyIsSynchronizationPending $verify_is_synchronization_pending,
         SearchVisibleTeamsOfProgram $team_searcher,
+        VerifyTeamSynchronizationHasError $verify_team_synchronization_has_error,
         BuildProgram $build_program,
         array $teams_in_error,
     ): array {
@@ -79,7 +81,8 @@ final class TeamsPresenterBuilder
                 $verify_is_synchronization_pending->hasSynchronizationPending(
                     $program_identifier,
                     TeamIdentifier::buildTeamOfProgramById($team_searcher, $program_identifier, $user_identifier, $team->getId()),
-                )
+                ),
+                $verify_team_synchronization_has_error->hasASynchronizationError($program_identifier, $team)
             );
         }
 

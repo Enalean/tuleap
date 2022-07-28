@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-declare(strict_types=1);
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization;
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
-
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\ProjectReference;
 
-/**
- * @psalm-immutable
- */
-final class TeamPresenter
+interface VerifyTeamSynchronizationHasError
 {
-    public int $id;
-    public string $public_name;
-    public string $url;
-    public string $project_icon;
-
-    public function __construct(ProjectReference $team, public bool $should_synchronize_team, public bool $has_synchronization_pending, public bool $has_synchronization_error)
-    {
-        $this->id           = $team->getId();
-        $this->public_name  = $team->getProjectLabel();
-        $this->url          = $team->getUrl();
-        $this->project_icon = $team->getProjectIcon();
-    }
+    public function hasASynchronizationError(ProgramIdentifier $program_identifier, ProjectReference $team_identifier): bool;
 }

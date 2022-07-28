@@ -89,26 +89,6 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
         self::assertSame(1, $this->plan_program_increment->getCallCount());
     }
 
-    public function testItStopsExecutionIfThereIsAnIssueWhileCreatingAMirroredProgramIncrement(): void
-    {
-        $this->plan_program_increment = PlanProgramIncrementsStub::buildWithError();
-
-        $this->getProcessor()->processCreation($this->creation);
-
-        self::assertSame(0, $this->plan_program_increment->getCallCount());
-        self::assertSame(0, $this->user_stories_planner->getCallCount());
-        self::assertTrue($this->logger->hasError('Error during creation of mirror program increments'));
-    }
-
-    public function testItLogsErrorWhilePlanningUserStoriesInMirrors(): void
-    {
-        $this->user_stories_planner = PlanUserStoriesInMirroredProgramIncrementsStub::withError();
-
-        $this->getProcessor()->processCreation($this->creation);
-
-        self::assertTrue($this->logger->hasError('Error during planning of user stories in mirror program increments'));
-    }
-
     public function testItProcessesProgramIncrementCreationForOneTeam(): void
     {
         $this->getProcessor()->synchronizeProgramIncrementAndIterationsForTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
@@ -125,25 +105,5 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
         );
         self::assertSame(1, $this->user_stories_planner->getCallCount());
         self::assertSame(1, $this->plan_program_increment->getCallCount());
-    }
-
-    public function testItStopsExecutionIfThereIsAnIssueWhileCreatingAMirroredProgramIncrementForOneTeam(): void
-    {
-        $this->plan_program_increment = PlanProgramIncrementsStub::buildWithError();
-
-        $this->getProcessor()->synchronizeProgramIncrementAndIterationsForTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
-
-        self::assertSame(0, $this->plan_program_increment->getCallCount());
-        self::assertSame(0, $this->user_stories_planner->getCallCount());
-        self::assertTrue($this->logger->hasError('Error during creation of mirror program increments for one team'));
-    }
-
-    public function testItLogsErrorWhilePlanningUserStoriesInMirrorsForOneTeam(): void
-    {
-        $this->user_stories_planner = PlanUserStoriesInMirroredProgramIncrementsStub::withError();
-
-        $this->getProcessor()->synchronizeProgramIncrementAndIterationsForTeam($this->creation, TeamIdentifierBuilder::buildWithId(self::FIRST_TEAM_ID));
-
-        self::assertTrue($this->logger->hasError('Error during planning of user stories in mirror program increments for one team'));
     }
 }

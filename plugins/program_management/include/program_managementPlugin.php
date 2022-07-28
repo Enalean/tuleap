@@ -574,7 +574,8 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $team_dao
         );
 
-        $artifact_visible_verifier = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
+        $artifact_visible_verifier   = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
+        $pending_synchronization_dao = new PendingSynchronizationDao();
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager, $user_manager_adapter),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
@@ -650,8 +651,9 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 )
             ),
             new MirroredTimeboxesDao(),
-            new PendingSynchronizationDao(),
-            $visible_searcher
+            $pending_synchronization_dao,
+            $visible_searcher,
+            $pending_synchronization_dao
         );
     }
 
@@ -838,7 +840,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $program_adapter           = ProgramAdapter::instance();
         $project_manager_adapter   = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
 
-        $visible_team_searcher = new VisibleTeamSearcher(
+        $visible_team_searcher       = new VisibleTeamSearcher(
             $program_dao,
             $user_retriever,
             $project_manager_adapter,
@@ -848,6 +850,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             ),
             new TeamDao()
         );
+        $pending_synchronization_dao = new PendingSynchronizationDao();
         (new TeamSynchronizationHandler(
             new SynchronizeTeamProcessor(
                 MessageLog::buildFromLogger($logger),
@@ -891,9 +894,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $visible_team_searcher,
                     $program_adapter
                 ),
-                new PendingSynchronizationDao(),
+                $pending_synchronization_dao,
                 $this->getProgramAdapter(),
-                $visible_team_searcher
+                $visible_team_searcher,
+                $pending_synchronization_dao
             )
         ))->handle(
             TeamSynchronizationEventProxy::fromWorkerEvent(
