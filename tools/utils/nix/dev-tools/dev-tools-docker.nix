@@ -1,5 +1,5 @@
 { pkgs }:
 
 [
-    pkgs.docker-compose
+    pkgs.docker-compose_2
 ]
