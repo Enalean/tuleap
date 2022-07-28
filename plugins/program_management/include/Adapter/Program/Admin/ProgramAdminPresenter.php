@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
-use Tuleap\ProgramManagement\Adapter\FeatureFlagEnableTeamJoinTrain;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamPresenter;
@@ -68,8 +67,6 @@ final class ProgramAdminPresenter
     public ?TrackerErrorPresenter $program_increment_error_presenter;
     public ?TrackerErrorPresenter $iteration_error_presenter;
     public ?TrackerErrorPresenter $plannable_error_presenter;
-    public bool $can_synchronize_program_increments;
-    public bool $can_force_team_synchronization;
     public string $synchronize_button_label;
     public string $program_shortname;
 
@@ -119,8 +116,6 @@ final class ProgramAdminPresenter
         $this->iteration_error_presenter         = $iteration_error_presenter;
         $this->plannable_error_presenter         = $plannable_error_presenter;
 
-        $this->can_synchronize_program_increments = FeatureFlagEnableTeamJoinTrain::isEnabled();
-        $this->can_force_team_synchronization     = $this->can_synchronize_program_increments;
         if ($program_increment_sub_label) {
             $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', "Sync open %s"), $program_increment_sub_label);
         } else {
