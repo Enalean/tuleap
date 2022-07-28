@@ -9,10 +9,10 @@ in
   "pnpm-^7" = nodeEnv.buildNodePackage {
     name = "pnpm";
     packageName = "pnpm";
-    version = "7.0.0";
+    version = "7.6.0";
     src = fetchurl {
-      url = "https://registry.npmjs.org/pnpm/-/pnpm-7.0.0.tgz";
-      sha512 = "5njVSmE/Sz6coyikS6gjwoKWaxxsJ6BY6jL1aqwvnEpNUfFednbHqid3aZ42JszOFaSOz3Qipcfp4ei22G/JEg==";
+      url = "https://registry.npmjs.org/pnpm/-/pnpm-7.6.0.tgz";
+      sha512 = "pCFZ4OSM3M7JUHShnmk4Hlt9A8QDxLx+i+9kkK4g60YuYhhhD3oqBfWrHax0/XMDvr7GwK0fqFjA8iD8HlZ8Kw==";
     };
     buildInputs = globalBuildInputs;
     meta = {

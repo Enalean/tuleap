@@ -18,8 +18,8 @@ let
       buildCommand = ''
         cp -r ${src}/* .
         export HOME=.
-        pnpm config set extend-node-path false
-        pnpm install --frozen-lockfile
+        pnpm install --frozen-lockfile --side-effects-cache-readonly --ignore-scripts
+        find node_modules/ -wholename '*/.bin/*' -type f -exec sed -i 's/  export NODE_PATH=.*/  true/' {} \;
         rm node_modules/.modules.yaml
         mv node_modules $out
       '';
@@ -27,13 +27,13 @@ let
   name = "viewvc-theme-tuleap";
   src = pkgs.fetchgit {
     url = "https://tuleap.net/plugins/git/tuleap/deps/3rdparty/viewvc-theme-tuleap.git";
-    rev = "2d3dc5b627f59153cdaafd04b77a97ed1f2329c0";
-    sha256 = "0zv3b5ajsylm1azf2p28v0lqpmj7111bsvw33q5l5307kb1bjdkm"; # Please also check if the node_modules sha256 does not need to be updated
+    rev = "fe83d432e5c60b6e39fd3fe029a13862af5262af";
+    sha256 = "sha256-7I9+dICCxyj3WQGhpYwUd/XjgAddwitMvvncyM7TNrI="; # Please also check if the node_modules sha256 does not need to be updated
   };
   node_modules = fetchNodeModules {
     inherit src;
     pnpm = jsBuildTool;
-    sha256 = "1j0l66l68caw0rarjinjm8s52mnxw96s6ivwrxncnnk4259jrcvq";
+    sha256 = "sha256-tFHeoAsfoGZc2u31ZeAlqwn3VfJ8XCizzl9yZVWmLmc=";
   };
 in pkgs.stdenvNoCC.mkDerivation {
   inherit name src;
