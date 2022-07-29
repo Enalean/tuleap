@@ -7,41 +7,47 @@
             tuleap-program_management |
             Configuration is incorrect, you won't be able to create new program increments.
         {{/ dgettext }}
-        {{# program_increment_error_presenter }}
-            <ul>
-                {{# dgettext }}tuleap-program_management | Program increment configuration is incorrect:{{/ dgettext }}
+        {{# has_program_increment_error }}
+            {{# program_increment_error_presenter }}
+                <ul>
+                    {{# dgettext }}tuleap-program_management | Program increment configuration is incorrect:{{/ dgettext }}
 
-                {{> configuration-errors/semantic-errors }}
-                {{> configuration-errors/required-errors }}
-                {{> configuration-errors/worflow-errors }}
-                {{> configuration-errors/field-permission-errors }}
-                {{> configuration-errors/team-permission-errors }}
-                {{> configuration-errors/semantic-status-value-errors }}
-                {{> configuration-errors/field-synchronisation-errors }}
-                {{> configuration-errors/team-errors }}
-            </ul>
-        {{/ program_increment_error_presenter }}
-        {{# iteration_error_presenter }}
-            <ul>
-                {{# dgettext }}tuleap-program_management | Iteration configuration is incorrect:{{/ dgettext }}
+                    {{> configuration-errors/semantic-errors }}
+                    {{> configuration-errors/required-errors }}
+                    {{> configuration-errors/worflow-errors }}
+                    {{> configuration-errors/field-permission-errors }}
+                    {{> configuration-errors/team-permission-errors }}
+                    {{> configuration-errors/semantic-status-value-errors }}
+                    {{> configuration-errors/field-synchronisation-errors }}
+                    {{> configuration-errors/team-errors }}
+                </ul>
+            {{/ program_increment_error_presenter }}
+        {{/ has_program_increment_error }}
+        {{# has_iteration_increment_error }}
+            {{# iteration_error_presenter }}
+                <ul>
+                    {{# dgettext }}tuleap-program_management | Iteration configuration is incorrect:{{/ dgettext }}
 
-                {{> configuration-errors/semantic-errors }}
-                {{> configuration-errors/required-errors }}
-                {{> configuration-errors/worflow-errors }}
-                {{> configuration-errors/field-permission-errors }}
-                {{> configuration-errors/team-permission-errors }}
-                {{> configuration-errors/semantic-status-value-errors }}
-                {{> configuration-errors/field-synchronisation-errors }}
-                {{> configuration-errors/team-errors }}
-            </ul>
-        {{/ iteration_error_presenter }}
-        {{# plannable_error_presenter }}
-            <ul>
-                {{# dgettext }}tuleap-program_management | Some plannable tracker have incorrect configuration:{{/ dgettext }}
+                    {{> configuration-errors/semantic-errors }}
+                    {{> configuration-errors/required-errors }}
+                    {{> configuration-errors/worflow-errors }}
+                    {{> configuration-errors/field-permission-errors }}
+                    {{> configuration-errors/team-permission-errors }}
+                    {{> configuration-errors/semantic-status-value-errors }}
+                    {{> configuration-errors/field-synchronisation-errors }}
+                    {{> configuration-errors/team-errors }}
+                </ul>
+            {{/ iteration_error_presenter }}
+        {{/ has_iteration_increment_error }}
+        {{# has_plannable_error }}
+            {{# plannable_error_presenter }}
+                <ul>
+                    {{# dgettext }}tuleap-program_management | Some plannable tracker have incorrect configuration:{{/ dgettext }}
 
-                {{> configuration-errors/semantic-errors }}
-            </ul>
-        {{/ plannable_error_presenter }}
+                    {{> configuration-errors/semantic-errors }}
+                </ul>
+            {{/ plannable_error_presenter }}
+        {{/ has_plannable_error }}
     </div>
 {{/ has_errors }}
 

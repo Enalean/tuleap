@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerError;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
@@ -33,163 +34,143 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
  */
 final class TrackerErrorPresenter
 {
-    /**
-     * @var SemanticErrorPresenter[]
-     */
-    public array $semantic_errors;
-    /**
-     * @var RequiredErrorPresenter[]
-     */
-    public array $required_field_errors;
-    /**
-     * @var WorkFlowErrorPresenter[]
-     */
-    public array $transition_rule_error;
-    /**
-     * @var WorkFlowErrorPresenter[]
-     */
-    public array $transition_rule_date_error;
-    /**
-     * @var WorkFlowErrorPresenter[]
-     */
-    public array $field_dependency_error;
-    /**
-     * @var FieldsPermissionErrorPresenter[]
-     */
-    public array $non_submittable_field_errors;
-    /**
-     * @var FieldsPermissionErrorPresenter[]
-     */
-    public array $non_updatable_field_errors;
-    public bool $has_presenter_errors;
-    /**
-     * @var TrackerReference[]
-     */
-    public array $team_tracker_id_errors;
-    /**
-     * @var TrackerReference[]
-     */
-    public array $status_missing_in_teams;
-    /**
-     * @var SemanticStatusNoFieldPresenter[]
-     */
-    public array $semantic_status_no_field;
-    /**
-     * @var SemanticStatusMissingValuesPresenter[]
-     */
-    public array $semantic_status_missing_values;
     public bool $has_status_field_not_defined;
     public bool $has_status_missing_in_teams;
     public bool $has_status_missing_values;
+    public bool $has_presenter_errors;
+
     /**
-     * @var TitleHasIncorrectTypePresenter[]
+     * @var FieldsPermissionErrorPresenter[]
      */
-    public array $title_has_incorrect_type_error;
+    public array $non_updatable_field_errors = [];
     /**
      * @var MissingArtifactLinkFieldPresenter[]
      */
-    public array $missing_artifact_link_fields_errors;
+    public array $missing_artifact_link_fields_errors = [];
+    /**
+     * @var RequiredErrorPresenter[]
+     */
+    public array $required_field_errors = [];
+    /**
+     * @var SemanticStatusMissingValuesPresenter[]
+     */
+    public array $semantic_status_missing_values = [];
+    /**
+     * @var FieldsPermissionErrorPresenter[]
+     */
+    public array $non_submittable_field_errors = [];
+    /**
+     * @var SemanticStatusNoFieldPresenter[]
+     */
+    public array $semantic_status_no_field = [];
     /**
      * @var TeamHasNoPlanningPresenter[]
      */
-    public array $team_no_milestone_planning;
+    public array $team_no_milestone_planning = [];
     /**
-     * @var TeamHasNoPlanningPresenter[]
+     * @var  TeamHasNoPlanningPresenter[]
      */
-    public array $team_no_sprint_planning;
+    public array $team_no_sprint_planning = [];
+    /**
+     * @var TitleHasIncorrectTypePresenter[]
+     */
+    public array $title_has_incorrect_type_error = [];
+    /**
+     * @var WorkFlowErrorPresenter[]
+     */
+    public array $transition_rule_error = [];
+    /**
+     * @var WorkFlowErrorPresenter[]
+     */
+    public array $transition_rule_date_error = [];
+    /**
+     * @var WorkFlowErrorPresenter[]
+     */
+    public array $field_dependency_error = [];
+    /**
+     * @var SemanticErrorPresenter[]
+     */
+    public array $semantic_errors = [];
     /**
      * @var int[]
      */
     public array $teams_with_error = [];
-
     /**
-     * @param SemanticErrorPresenter[] $semantic_errors
-     * @param RequiredErrorPresenter[] $required_field_errors
-     * @param WorkFlowErrorPresenter[] $transition_rule_error
-     * @param WorkFlowErrorPresenter[] $transition_rule_date_error
-     * @param WorkFlowErrorPresenter[] $field_dependency_error
-     * @param FieldsPermissionErrorPresenter[] $non_submittable_field_errors
-     * @param FieldsPermissionErrorPresenter[] $non_updatable_field_errors
-     * @param TrackerReference[] $team_tracker_id_errors
-     * @param TrackerReference[] $status_missing_in_teams
-     * @param SemanticStatusNoFieldPresenter[] $semantic_status_no_field
-     * @param SemanticStatusMissingValuesPresenter[] $semantic_status_missing_values
-     * @param TitleHasIncorrectTypePresenter[] $title_has_incorrect_type_error
-     * @param MissingArtifactLinkFieldPresenter[] $missing_artifact_link_fields_errors
-     * @param TeamHasNoPlanningPresenter[] $team_no_milestone_planning
-     * @param TeamHasNoPlanningPresenter[] $team_no_sprint_planning
+     * @var TrackerReference[]
      */
-    private function __construct(
-        array $semantic_errors,
-        array $required_field_errors,
-        array $transition_rule_error,
-        array $transition_rule_date_error,
-        array $field_dependency_error,
-        array $non_submittable_field_errors,
-        array $non_updatable_field_errors,
-        array $team_tracker_id_errors,
-        array $status_missing_in_teams,
-        array $semantic_status_no_field,
-        array $semantic_status_missing_values,
-        array $title_has_incorrect_type_error,
-        array $missing_artifact_link_fields_errors,
-        array $team_no_milestone_planning,
-        array $team_no_sprint_planning,
-        array $teams_with_error,
-    ) {
-        $has_semantic_errors   = count($semantic_errors) > 0;
-        $this->semantic_errors = $semantic_errors;
+    public array $team_tracker_id_errors = [];
+    /**
+     * @var TrackerReference[]
+     */
+    public array $status_missing_in_teams = [];
 
-        $has_required_field_errors   = count($required_field_errors) > 0;
-        $this->required_field_errors = $required_field_errors;
+    private function __construct(TrackerError $tracker_error)
+    {
+        $this->has_status_field_not_defined = $tracker_error->has_status_field_not_defined;
+        $this->has_status_missing_in_teams  = $tracker_error->has_status_missing_in_teams;
+        $this->has_status_missing_values    = $tracker_error->has_status_missing_values;
 
-        $this->transition_rule_error      = $transition_rule_error;
-        $this->transition_rule_date_error = $transition_rule_date_error;
-        $this->field_dependency_error     = $field_dependency_error;
-        $has_workflow_error               = count($transition_rule_error) > 0
-            || count($transition_rule_date_error) > 0
-            || count($field_dependency_error) > 0;
+        $this->has_presenter_errors = $tracker_error->has_presenter_errors;
 
-        $this->non_submittable_field_errors = $non_submittable_field_errors;
-        $this->non_updatable_field_errors   = $non_updatable_field_errors;
-        $has_field_permission_errors        = count($non_submittable_field_errors) > 0
-            || count($non_updatable_field_errors) > 0;
+        if (! $tracker_error->collector) {
+            return;
+        }
 
-        $this->team_tracker_id_errors = $team_tracker_id_errors;
-        $user_can_not_submit_in_team  = count($team_tracker_id_errors) > 0;
+        foreach ($tracker_error->collector->getTitleHasIncorrectTypeError() as $error) {
+            $this->title_has_incorrect_type_error[] = new TitleHasIncorrectTypePresenter($error);
+        }
 
-        $this->semantic_status_no_field       = $semantic_status_no_field;
-        $this->has_status_field_not_defined   = count($this->semantic_status_no_field) > 0;
-        $this->status_missing_in_teams        = $status_missing_in_teams;
-        $this->has_status_missing_in_teams    = count($this->status_missing_in_teams) > 0;
-        $this->semantic_status_missing_values = $semantic_status_missing_values;
-        $this->has_status_missing_values      = count($this->semantic_status_missing_values) > 0;
-        $has_semantic_status_errors           = count($status_missing_in_teams) > 0
-            || count($semantic_status_no_field) > 0
-            || count($semantic_status_missing_values) > 0;
+        foreach ($tracker_error->collector->getTransitionRuleError() as $error) {
+            $this->transition_rule_error[] = new WorkFlowErrorPresenter($error);
+        }
 
-        $this->title_has_incorrect_type_error      = $title_has_incorrect_type_error;
-        $this->missing_artifact_link_fields_errors = $missing_artifact_link_fields_errors;
+        foreach ($tracker_error->collector->getTransitionRuleDateError() as $error) {
+            $this->transition_rule_date_error[] = new WorkFlowErrorPresenter($error);
+        }
 
-        $has_synchronization_errors = count($title_has_incorrect_type_error) > 0 ||
-            count($missing_artifact_link_fields_errors) > 0;
+        foreach ($tracker_error->collector->getFieldDependencyError() as $error) {
+            $this->field_dependency_error[] = new WorkFlowErrorPresenter($error);
+        }
 
-        $this->team_no_milestone_planning = $team_no_milestone_planning;
-        $this->team_no_sprint_planning    = $team_no_sprint_planning;
+        foreach ($tracker_error->collector->getNonSubmittableFields() as $non_submittable_field) {
+            $this->non_submittable_field_errors[] = new FieldsPermissionErrorPresenter($non_submittable_field);
+        }
 
-        $has_planning_error = count($this->team_no_milestone_planning) > 0 || count($this->team_no_sprint_planning) > 0;
+        foreach ($tracker_error->collector->getNonUpdatableFields() as $non_submittable_field) {
+            $this->non_updatable_field_errors[] = new FieldsPermissionErrorPresenter($non_submittable_field);
+        }
 
-        $this->has_presenter_errors = $has_semantic_errors
-            || $has_required_field_errors
-            || $has_workflow_error
-            || $has_field_permission_errors
-            || $user_can_not_submit_in_team
-            || $has_semantic_status_errors
-            || $has_synchronization_errors
-            || $has_planning_error;
+        foreach ($tracker_error->collector->getMissingArtifactLinkErrors() as $error) {
+            $this->missing_artifact_link_fields_errors[] = new MissingArtifactLinkFieldPresenter($error);
+        }
 
+        foreach ($tracker_error->collector->getRequiredFieldsErrors() as $error) {
+            $this->required_field_errors[] = new RequiredErrorPresenter($error);
+        }
 
-        $this->teams_with_error = $teams_with_error;
+        foreach ($tracker_error->collector->getSemanticErrors() as $error) {
+            $this->semantic_errors[] = new SemanticErrorPresenter($error);
+        }
+
+        foreach ($tracker_error->collector->getSemanticStatusMissingValues() as $error) {
+            $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($error);
+        }
+
+        foreach ($tracker_error->collector->getSemanticStatusNoField() as $error) {
+            $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($error);
+        }
+
+        foreach ($tracker_error->collector->getNoMilestonePlanning() as $error) {
+            $this->team_no_milestone_planning[] = new TeamHasNoPlanningPresenter($error);
+        }
+
+        foreach ($tracker_error->collector->getNoSprintPlanning() as $error) {
+            $this->team_no_sprint_planning[] = new TeamHasNoPlanningPresenter($error);
+        }
+
+        $this->teams_with_error        = $tracker_error->collector->getTeamsWithError();
+        $this->team_tracker_id_errors  = $tracker_error->collector->getTeamTrackerIdErrors();
+        $this->status_missing_in_teams = $tracker_error->collector->getStatusMissingInTeams();
     }
 
     public static function fromTracker(
@@ -204,97 +185,16 @@ final class TrackerErrorPresenter
             return null;
         }
 
-        return self::fromAlreadyCollectedErrors($errors_collector);
+        return self::fromAlreadyCollectedErrors(TrackerError::fromAlreadyCollectedErrors($errors_collector));
     }
 
-    public static function fromAlreadyCollectedErrors(ConfigurationErrorsCollector $errors_collector): ?self
+    public static function fromAlreadyCollectedErrors(TrackerError $tracker_error): ?self
     {
-        if (! $errors_collector->hasError()) {
-            return null;
-        }
+        return new self($tracker_error);
+    }
 
-        $non_submittable_fields = [];
-        foreach ($errors_collector->getNonSubmittableFields() as $non_submittable_field) {
-            $non_submittable_fields[] = new FieldsPermissionErrorPresenter($non_submittable_field);
-        }
-
-        $non_updatable_fields = [];
-        foreach ($errors_collector->getNonUpdatableFields() as $non_submittable_field) {
-            $non_updatable_fields[] = new FieldsPermissionErrorPresenter($non_submittable_field);
-        }
-
-        $missing_artifact_link_fields = [];
-        foreach ($errors_collector->getMissingArtifactLinkErrors() as $error) {
-            $missing_artifact_link_fields[] = new MissingArtifactLinkFieldPresenter($error);
-        }
-
-        $required_field_error = [];
-        foreach ($errors_collector->getRequiredFieldsErrors() as $error) {
-            $required_field_error[] = new RequiredErrorPresenter($error);
-        }
-
-        $semantic_error = [];
-        foreach ($errors_collector->getSemanticErrors() as $error) {
-            $semantic_error[] = new SemanticErrorPresenter($error);
-        }
-
-        $semantic_missing_values_presenter = [];
-        foreach ($errors_collector->getSemanticStatusMissingValues() as $error) {
-            $semantic_missing_values_presenter[] = new SemanticStatusMissingValuesPresenter($error);
-        }
-
-        $status_no_field = [];
-        foreach ($errors_collector->getSemanticStatusNoField() as $error) {
-            $status_no_field[] = new SemanticStatusNoFieldPresenter($error);
-        }
-
-        $team_no_milestones_planning = [];
-        foreach ($errors_collector->getNoMilestonePlanning() as $error) {
-            $team_no_milestones_planning[] = new TeamHasNoPlanningPresenter($error);
-        }
-
-        $team_no_sprint_planning = [];
-        foreach ($errors_collector->getNoSprintPlanning() as $error) {
-            $team_no_sprint_planning[] = new TeamHasNoPlanningPresenter($error);
-        }
-
-        $title_has_incorrect_title = [];
-        foreach ($errors_collector->getTitleHasIncorrectTypeError() as $error) {
-            $title_has_incorrect_title[] = new TitleHasIncorrectTypePresenter($error);
-        }
-
-        $workflow_transition_rule_error = [];
-        foreach ($errors_collector->getTransitionRuleError() as $error) {
-            $workflow_transition_rule_error[] = new WorkFlowErrorPresenter($error);
-        }
-
-        $workflow_transition_rule_date_error = [];
-        foreach ($errors_collector->getTransitionRuleDateError() as $error) {
-            $workflow_transition_rule_date_error[] = new WorkFlowErrorPresenter($error);
-        }
-
-        $workflow_transition_field_dependency_error = [];
-        foreach ($errors_collector->getFieldDependencyError() as $error) {
-            $workflow_transition_field_dependency_error[] = new WorkFlowErrorPresenter($error);
-        }
-
-        return new self(
-            $semantic_error,
-            $required_field_error,
-            $workflow_transition_rule_error,
-            $workflow_transition_rule_date_error,
-            $workflow_transition_field_dependency_error,
-            $non_submittable_fields,
-            $non_updatable_fields,
-            $errors_collector->getTeamTrackerIdErrors(),
-            $errors_collector->getStatusMissingInTeams(),
-            $status_no_field,
-            $semantic_missing_values_presenter,
-            $title_has_incorrect_title,
-            $missing_artifact_link_fields,
-            $team_no_milestones_planning,
-            $team_no_sprint_planning,
-            $errors_collector->getTeamsWithError()
-        );
+    public static function fromTrackerError(TrackerError $tracker_error): self
+    {
+        return new self($tracker_error);
     }
 }
