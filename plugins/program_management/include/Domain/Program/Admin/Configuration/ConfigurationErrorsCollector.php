@@ -80,11 +80,11 @@ final class ConfigurationErrorsCollector
      */
     private array $missing_artifact_link = [];
     /**
-     * @var TeamHasNoPlanningPresenter[]
+     * @var TeamHasNoPlanning[]
      */
     private array $no_milestone_planning = [];
     /**
-     * @var TeamHasNoPlanningPresenter[]
+     * @var TeamHasNoPlanning[]
      */
     private array $no_sprint_planning = [];
 
@@ -212,13 +212,13 @@ final class ConfigurationErrorsCollector
 
     public function addTeamMilestonePlanningNotFoundOrNotAccessible(ProjectReference $project): void
     {
-        $this->no_milestone_planning[]             = new TeamHasNoPlanningPresenter($project);
+        $this->no_milestone_planning[]             = new TeamHasNoPlanning($project);
         $this->teams_with_error[$project->getId()] = $project->getId();
     }
 
     public function addTeamSprintPlanningNotFoundOrNotAccessible(ProjectReference $project): void
     {
-        $this->no_sprint_planning[]                = new TeamHasNoPlanningPresenter($project);
+        $this->no_sprint_planning[]                = new TeamHasNoPlanning($project);
         $this->teams_with_error[$project->getId()] = $project->getId();
     }
 
@@ -346,7 +346,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return TeamHasNoPlanningPresenter[]
+     * @return TeamHasNoPlanning[]
      */
     public function getNoMilestonePlanning(): array
     {
@@ -354,7 +354,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return TeamHasNoPlanningPresenter[]
+     * @return TeamHasNoPlanning[]
      */
     public function getNoSprintPlanning(): array
     {
