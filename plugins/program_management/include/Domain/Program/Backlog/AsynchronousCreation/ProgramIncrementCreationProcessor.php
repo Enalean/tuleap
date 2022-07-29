@@ -79,6 +79,15 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
         }
     }
 
+    /**
+     * @throws UserStoryPlanException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
+     * @throws FieldSynchronizationException
+     * @throws TeamIsNotVisibleException
+     * @throws MirroredTimeboxReplicationException
+     * @throws ProgramHasNoTeamException
+     */
     public function synchronizeProgramIncrementAndIterationsForTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
     {
         $this->logger->debug(
@@ -89,23 +98,7 @@ final class ProgramIncrementCreationProcessor implements ProcessProgramIncrement
                 $team->getId()
             )
         );
-        try {
-            $this->createForATeam($creation, $team);
-        } catch (
-            FieldSynchronizationException
-            | MirroredTimeboxReplicationException
-            | ProgramAccessException
-            | ProjectIsNotAProgramException
-            | ProgramHasNoTeamException
-            | TeamIsNotVisibleException $exception
-        ) {
-            $this->logger->error('Error during creation of mirror program increments for one team', ['exception' => $exception]);
-        } catch (UserStoryPlanException $exception) {
-            $this->logger->error(
-                'Error during planning of user stories in mirror program increments for one team',
-                ['exception' => $exception]
-            );
-        }
+        $this->createForATeam($creation, $team);
     }
 
     /**

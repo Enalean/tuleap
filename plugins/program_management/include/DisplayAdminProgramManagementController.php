@@ -41,6 +41,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsSynchronizationPending;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
@@ -101,6 +102,7 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private SearchMirrorTimeboxesFromProgram $timebox_searcher,
         private VerifyIsSynchronizationPending $verify_is_synchronization_pending,
         private SearchVisibleTeamsOfProgram $team_searcher,
+        private VerifyTeamSynchronizationHasError $verify_team_synchronization_has_error,
     ) {
     }
 
@@ -263,8 +265,9 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
                     $aggregated_teams,
                     $this->verify_is_synchronization_pending,
                     $this->team_searcher,
+                    $this->verify_team_synchronization_has_error,
                     $this->build_program,
-                    $teams_in_error
+                    $teams_in_error,
                 ),
                 PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
                     $all_potential_trackers,

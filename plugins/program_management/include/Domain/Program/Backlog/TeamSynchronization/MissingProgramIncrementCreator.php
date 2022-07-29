@@ -37,6 +37,8 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\MissingMirroredMileston
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\TeamIdentifier;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotAggregatedByProgramException;
+use Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException;
 use Tuleap\ProgramManagement\Domain\VerifyIsVisibleArtifact;
 use Tuleap\ProgramManagement\Domain\Workspace\LogMessage;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -57,6 +59,17 @@ final class MissingProgramIncrementCreator
     ) {
     }
 
+    /**
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\UserStoryPlanException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException
+     * @throws TeamIsNotVisibleException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MirroredTimeboxReplicationException
+     * @throws \Tuleap\ProgramManagement\Domain\Team\ProgramHasNoTeamException
+     * @throws TeamIsNotAggregatedByProgramException
+     */
     public function detectAndCreateMissingProgramIncrements(
         TeamSynchronizationEvent $event,
         UserIdentifier $user,

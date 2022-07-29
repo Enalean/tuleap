@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Events\TeamSynchronizationEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ClearPendingTeamSynchronization;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessTeamSynchronization;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\StoreTeamSynchronizationErrorHasOccurred;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
@@ -45,6 +46,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
         private ClearPendingTeamSynchronization $clear_pending_team_synchronization,
         private BuildProgram $build_program,
         private SearchVisibleTeamsOfProgram $search_visible_teams_of_program,
+        private StoreTeamSynchronizationErrorHasOccurred $store_error_has_occurred,
     ) {
     }
 
@@ -60,6 +62,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
 
         $user = $this->user_manager->getUserById($event->getUserId());
         if (! $user) {
+            $this->store_error_has_occurred->storeErrorHasOccurred($event->getProgramId(), $event->getTeamId());
             $this->logger->error(
                 sprintf(
                     "User %d not found, exiting...",
@@ -73,10 +76,21 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
         $team       = $this->project_manager->getProject($event->getTeamId());
         $team_proxy = ProjectProxy::buildFromProject($team);
 
-        $this->missing_program_increment_creator->detectAndCreateMissingProgramIncrements($event, $user_identifier, $team_proxy, $this->logger);
-        $this->clearPendingTeamSynchronization($event, $user_identifier);
+        try {
+            $this->missing_program_increment_creator->detectAndCreateMissingProgramIncrements($event, $user_identifier, $team_proxy, $this->logger);
+            $this->clearPendingTeamSynchronization($event, $user_identifier);
+        } catch (\Exception $exception) {
+            $this->store_error_has_occurred->storeErrorHasOccurred($event->getProgramId(), $event->getTeamId());
+            $this->logger->error("Unable to synchronize team an error has occurred : ", ['exception' => $exception]);
+        }
     }
 
+    /**
+     * @throws \Tuleap\ProgramManagement\Domain\Team\TeamIsNotVisibleException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException
+     * @throws \Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException
+     * @throws \Tuleap\ProgramManagement\Domain\Team\TeamIsNotAggregatedByProgramException
+     */
     private function clearPendingTeamSynchronization(TeamSynchronizationEvent $event, UserIdentifier $user_identifier): void
     {
         $program_identifier = ProgramIdentifier::fromId(
