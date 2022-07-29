@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\mail;
+namespace Tuleap\Mail;
 
 class TemplateWithoutFooter extends \Tuleap_Template_Mail
 {

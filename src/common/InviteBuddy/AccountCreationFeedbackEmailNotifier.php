@@ -26,7 +26,7 @@ namespace Tuleap\InviteBuddy;
 use Codendi_Mail;
 use ForgeConfig;
 use TemplateRendererFactory;
-use Tuleap\mail\TemplateWithoutFooter;
+use Tuleap\Mail\TemplateWithoutFooter;
 
 class AccountCreationFeedbackEmailNotifier
 {
