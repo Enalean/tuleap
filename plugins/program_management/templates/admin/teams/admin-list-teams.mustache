@@ -14,28 +14,26 @@
                     {{/ project_icon}}
                     {{ public_name }}
                     <div class="program-management-admin-action-button">
-                        {{# can_force_team_synchronization }}
-                            {{# has_synchronization_error }}
-                                <span class="tlp-badge-danger tlp-badge-outline program-management-synchronization-error-badge" title="{{# dgettext }}tuleap-program_management | Synchronization has failed, an error has occurred, please contact your platform administrator {{/dgettext}}">
-                                    {{# dgettext }}tuleap-program_management | Synchronization error {{/dgettext}}
-                                </span>
-                            {{/ has_synchronization_error }}
-                            {{# should_synchronize_team }}
-                                <button
-                                    type="button"
-                                    class="tlp-button-primary tlp-button-small tlp-button-outline program-management-admin-action-synchronize-button"
-                                    data-team-id="{{ id }}"
-                                    data-project-label="{{ program_shortname }}"
-                                    {{# has_synchronization_pending }}
-                                        disabled
-                                        title="{{# dgettext }}tuleap-program_management | This team is being synchronized {{/dgettext}}"
-                                    {{/ has_synchronization_pending }}
-                                >
-                                    <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
-                                    {{ synchronize_button_label }}
-                                </button>
-                            {{/ should_synchronize_team }}
-                        {{/ can_force_team_synchronization }}
+                        {{# has_synchronization_error }}
+                            <span class="tlp-badge-danger tlp-badge-outline program-management-synchronization-error-badge" title="{{# dgettext }}tuleap-program_management | Synchronization has failed, an error has occurred, please contact your platform administrator {{/dgettext}}">
+                                {{# dgettext }}tuleap-program_management | Synchronization error {{/dgettext}}
+                            </span>
+                        {{/ has_synchronization_error }}
+                        {{# should_synchronize_team }}
+                            <button
+                                type="button"
+                                class="tlp-button-primary tlp-button-small tlp-button-outline program-management-admin-action-synchronize-button"
+                                data-team-id="{{ id }}"
+                                data-project-label="{{ program_shortname }}"
+                                {{# has_synchronization_pending }}
+                                    disabled
+                                    title="{{# dgettext }}tuleap-program_management | This team is being synchronized {{/dgettext}}"
+                                {{/ has_synchronization_pending }}
+                            >
+                                <i class="fa-solid fa-arrows-rotate tlp-button-icon" aria-hidden="true"></i>
+                                {{ synchronize_button_label }}
+                            </button>
+                        {{/ should_synchronize_team }}
                         <button
                             type="button"
                             class="tlp-button-danger tlp-button-small tlp-button-outline program-management-admin-remove-teams-open-modal-button"
