@@ -22,6 +22,7 @@ namespace Tuleap\Mail\Transport;
 
 use Laminas\Mail\Transport\Sendmail;
 use Laminas\Mail\Transport\Smtp;
+use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -33,7 +34,7 @@ class MailTransportBuilderTest extends TestCase
     {
         self::assertInstanceOf(
             Sendmail::class,
-            MailTransportBuilder::buildMailTransport()
+            MailTransportBuilder::buildMailTransport(new NullLogger())
         );
     }
 
@@ -46,7 +47,7 @@ class MailTransportBuilderTest extends TestCase
 
         self::assertInstanceOf(
             Sendmail::class,
-            MailTransportBuilder::buildMailTransport()
+            MailTransportBuilder::buildMailTransport(new NullLogger())
         );
     }
 
@@ -59,7 +60,7 @@ class MailTransportBuilderTest extends TestCase
 
         self::assertInstanceOf(
             Smtp::class,
-            MailTransportBuilder::buildMailTransport()
+            MailTransportBuilder::buildMailTransport(new NullLogger())
         );
     }
 
@@ -71,8 +72,8 @@ class MailTransportBuilderTest extends TestCase
         );
 
         self::assertInstanceOf(
-            Sendmail::class,
-            MailTransportBuilder::buildMailTransport()
+            InvalidDefinedTransport::class,
+            MailTransportBuilder::buildMailTransport(new NullLogger())
         );
     }
 }

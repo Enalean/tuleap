@@ -23,7 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
-class Codendi_MailTest extends TestCase // phpcs:ignore
+final class Codendi_MailTest extends TestCase // phpcs:ignore
 {
     use MockeryPHPUnitIntegration;
 
@@ -44,14 +44,14 @@ class Codendi_MailTest extends TestCase // phpcs:ignore
         parent::tearDown();
     }
 
-    public function testCleanupMailFormat()
+    public function testCleanupMailFormat(): void
     {
         $mail = new Codendi_Mail();
-        $this->assertEquals(['john.doe@example.com', 'Tuleap'], $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
-        $this->assertEquals(['john.doe@example.com', 'Tuleap'], $mail->_cleanupMailFormat('Tuleap <john.doe@example.com>'));
-        $this->assertEquals(['"Tuleap" john.doe@example.com', ''], $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com'));
-        $this->assertEquals(['"Tuleap" <john.doe@example.com', ''], $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com'));
-        $this->assertEquals(['"Tuleap" john.doe@example.com>', ''], $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com>'));
+        $this->assertEquals(['john.doe@example.com', 'Tuleap'], $mail->cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
+        $this->assertEquals(['john.doe@example.com', 'Tuleap'], $mail->cleanupMailFormat('Tuleap <john.doe@example.com>'));
+        $this->assertEquals(['"Tuleap" john.doe@example.com', ''], $mail->cleanupMailFormat('"Tuleap" john.doe@example.com'));
+        $this->assertEquals(['"Tuleap" <john.doe@example.com', ''], $mail->cleanupMailFormat('"Tuleap" <john.doe@example.com'));
+        $this->assertEquals(['"Tuleap" john.doe@example.com>', ''], $mail->cleanupMailFormat('"Tuleap" john.doe@example.com>'));
     }
 
     public function testTemplateLookAndFeel()

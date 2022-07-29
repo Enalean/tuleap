@@ -1,0 +1,49 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Mail\Transport;
+
+use ForgeConfig;
+use Laminas\Mail;
+use Laminas\Mail\Transport\TransportInterface;
+use Psr\Log\LoggerInterface;
+
+class InvalidDefinedTransport implements TransportInterface
+{
+    public function __construct(private LoggerInterface $logger)
+    {
+    }
+
+    public function send(Mail\Message $message): void
+    {
+        // We don't send any mail if the transport if not defined to either "sendmail" or "smtp"
+        // We only log that there is an issue
+
+        $this->logger->error(
+            sprintf(
+                "No mail has been sent. The value '%s' of '%s' is not recognized. It must be either '%s' or '%s'",
+                ForgeConfig::get(MailTransportBuilder::CONFIG_KEY),
+                MailTransportBuilder::CONFIG_KEY,
+                MailTransportBuilder::EMAIL_TRANSPORT_SENDMAIL_VALUE,
+                MailTransportBuilder::EMAIL_TRANSPORT_SMTP_VALUE,
+            )
+        );
+    }
+}
