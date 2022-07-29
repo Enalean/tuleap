@@ -28,15 +28,15 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 final class ConfigurationErrorsCollector
 {
     /**
-     * @var WorkFlowErrorPresenter[]
+     * @var WorkFlowError[]
      */
     private array $transition_rule_error = [];
     /**
-     * @var WorkFlowErrorPresenter[]
+     * @var WorkFlowError[]
      */
     private array $transition_rule_date_error = [];
     /**
-     * @var WorkFlowErrorPresenter[]
+     * @var WorkFlowError[]
      */
     private array $field_dependency_error = [];
     /**
@@ -127,7 +127,7 @@ final class ConfigurationErrorsCollector
 
     public function addWorkflowTransitionRulesError(TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->transition_rule_error[] = new WorkFlowErrorPresenter(
+        $this->transition_rule_error[] = new WorkFlowError(
             $tracker,
             $project,
             '/plugins/tracker/workflow/' . urlencode((string) $tracker->getId()) . '/transitions'
@@ -137,7 +137,7 @@ final class ConfigurationErrorsCollector
 
     public function addWorkflowTransitionDateRulesError(TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->transition_rule_date_error[] = new WorkFlowErrorPresenter(
+        $this->transition_rule_date_error[] = new WorkFlowError(
             $tracker,
             $project,
             '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-workflow'
@@ -147,7 +147,7 @@ final class ConfigurationErrorsCollector
 
     public function addWorkflowDependencyError(TrackerReference $tracker, ProjectReference $project): void
     {
-        $this->field_dependency_error[] = new WorkFlowErrorPresenter(
+        $this->field_dependency_error[] = new WorkFlowError(
             $tracker,
             $project,
             '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=admin-dependencies'
@@ -242,7 +242,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return WorkFlowErrorPresenter[]
+     * @return WorkFlowError[]
      */
     public function getTransitionRuleError(): array
     {
@@ -250,7 +250,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return WorkFlowErrorPresenter[]
+     * @return WorkFlowError[]
      */
     public function getTransitionRuleDateError(): array
     {
@@ -258,7 +258,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return WorkFlowErrorPresenter[]
+     * @return WorkFlowError[]
      */
     public function getFieldDependencyError(): array
     {
