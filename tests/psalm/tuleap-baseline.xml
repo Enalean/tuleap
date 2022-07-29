@@ -71253,7 +71253,7 @@
       <code>push</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/Codendi_Mail.class.php">
+  <file src="src/common/Mail/Codendi_Mail.class.php">
     <InvalidArrayOffset occurrences="6">
       <code>$row['email']</code>
       <code>$row['email']</code>
@@ -71316,7 +71316,7 @@
       <code>getAddressList</code>
     </UndefinedMethod>
   </file>
-  <file src="src/common/mail/Codendi_Mail_Interface.class.php">
+  <file src="src/common/Mail/Codendi_Mail_Interface.class.php">
     <MissingParamType occurrences="8">
       <code>$bcc</code>
       <code>$body</code>
@@ -71343,7 +71343,7 @@
       <code>setTo</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailAccountSuspensionAlertPresenter.php">
+  <file src="src/common/Mail/MailAccountSuspensionAlertPresenter.php">
     <MissingPropertyType occurrences="4">
       <code>$last_access_date</code>
       <code>$organization_name</code>
@@ -71351,7 +71351,7 @@
       <code>$tuleap_server_name</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailAccountSuspensionPresenter.php">
+  <file src="src/common/Mail/MailAccountSuspensionPresenter.php">
     <MissingPropertyType occurrences="4">
       <code>$last_access_date</code>
       <code>$notification_delay</code>
@@ -71359,7 +71359,7 @@
       <code>$tuleap_server_name</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailBuilder.php">
+  <file src="src/common/Mail/MailBuilder.php">
     <MissingParamType occurrences="1">
       <code>$email</code>
     </MissingParamType>
@@ -71368,7 +71368,7 @@
       <code>getMailSender</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailEnhancer.php">
+  <file src="src/common/Mail/MailEnhancer.php">
     <MissingReturnType occurrences="5">
       <code>addHeader</code>
       <code>addPropertiesToLookAndFeel</code>
@@ -71377,18 +71377,18 @@
       <code>setMessageId</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailFilter.php">
+  <file src="src/common/Mail/MailFilter.php">
     <MissingReturnType occurrences="1">
       <code>filter</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailInstrumentation.php">
+  <file src="src/common/Mail/MailInstrumentation.php">
     <MissingReturnType occurrences="2">
       <code>increment</code>
       <code>incrementFailure</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailNotificationBuilder.php">
+  <file src="src/common/Mail/MailNotificationBuilder.php">
     <MissingParamType occurrences="10">
       <code>$html_body</code>
       <code>$html_body</code>
@@ -71402,7 +71402,7 @@
       <code>$truncated_service_name</code>
     </MissingParamType>
   </file>
-  <file src="src/common/mail/MailNotificationPresenter.class.php">
+  <file src="src/common/Mail/MailNotificationPresenter.class.php">
     <MissingParamType occurrences="8">
       <code>$color_button</code>
       <code>$color_logo</code>
@@ -71420,7 +71420,7 @@
       <code>$section_one</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailOutlinePresenter.class.php">
+  <file src="src/common/Mail/MailOutlinePresenter.class.php">
     <MissingParamType occurrences="4">
       <code>$color_logo</code>
       <code>$signature</code>
@@ -71434,14 +71434,14 @@
       <code>$title</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailPresenter.php">
+  <file src="src/common/Mail/MailPresenter.php">
     <MissingParamType occurrences="3">
       <code>$goto_link</code>
       <code>$platform_name</code>
       <code>$service_shortname</code>
     </MissingParamType>
   </file>
-  <file src="src/common/mail/MailPresenterFactory.class.php">
+  <file src="src/common/Mail/MailPresenterFactory.class.php">
     <InvalidReturnStatement occurrences="5">
       <code>$presenter</code>
       <code>$presenter</code>
@@ -71504,7 +71504,7 @@
       <code>$title</code>
     </UndefinedVariable>
   </file>
-  <file src="src/common/mail/MailProjectNotificationMustBeApprovedPresenter.class.php">
+  <file src="src/common/Mail/MailProjectNotificationMustBeApprovedPresenter.class.php">
     <MissingParamType occurrences="2">
       <code>$color_button</code>
       <code>$color_logo</code>
@@ -71522,7 +71522,7 @@
       <code>get_url</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailProjectNotificationPresenter.class.php">
+  <file src="src/common/Mail/MailProjectNotificationPresenter.class.php">
     <MissingParamType occurrences="2">
       <code>$color_button</code>
       <code>$color_logo</code>
@@ -71540,7 +71540,7 @@
       <code>get_url</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailProjectOneStepRegisterPresenter.class.php">
+  <file src="src/common/Mail/MailProjectOneStepRegisterPresenter.class.php">
     <MissingParamType occurrences="1">
       <code>$color_logo</code>
     </MissingParamType>
@@ -71564,7 +71564,7 @@
       <code>get_title</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MailRegisterByAdminApprovalPresenter.class.php">
+  <file src="src/common/Mail/MailRegisterByAdminApprovalPresenter.class.php">
     <MissingParamType occurrences="10">
       <code>$color_logo</code>
       <code>$help</code>
@@ -71581,7 +71581,7 @@
       <code>$section_three</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailRegisterByAdminNotificationPresenter.class.php">
+  <file src="src/common/Mail/MailRegisterByAdminNotificationPresenter.class.php">
     <MissingParamType occurrences="11">
       <code>$color_button</code>
       <code>$color_logo</code>
@@ -71601,7 +71601,7 @@
       <code>$section_two</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailRegisterByAdminPresenter.class.php">
+  <file src="src/common/Mail/MailRegisterByAdminPresenter.class.php">
     <MissingParamType occurrences="10">
       <code>$color_logo</code>
       <code>$help</code>
@@ -71619,7 +71619,7 @@
       <code>$section_three</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailRegisterByUserPresenter.class.php">
+  <file src="src/common/Mail/MailRegisterByUserPresenter.class.php">
     <MissingParamType occurrences="12">
       <code>$color_button</code>
       <code>$color_logo</code>
@@ -71640,7 +71640,7 @@
       <code>$redirect_url</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MailRegisterPresenter.class.php">
+  <file src="src/common/Mail/MailRegisterPresenter.class.php">
     <MissingParamType occurrences="9">
       <code>$color_logo</code>
       <code>$help</code>
@@ -71660,7 +71660,7 @@
       <code>$section_two</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/mail/MassmailFormPresenter.class.php">
+  <file src="src/common/Mail/MassmailFormPresenter.class.php">
     <MissingParamType occurrences="2">
       <code>$action</code>
       <code>$title</code>
@@ -71679,12 +71679,12 @@
       <code>getTemplateDir</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/MassmailSender.class.php">
+  <file src="src/common/Mail/MassmailSender.class.php">
     <MissingReturnType occurrences="1">
       <code>sendMassmail</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/RecipientListBuilder.php">
+  <file src="src/common/Mail/RecipientListBuilder.php">
     <MissingParamType occurrences="3">
       <code>$address</code>
       <code>$address</code>
@@ -71702,7 +71702,7 @@
       <code>hasAllowedStatus</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/mail/TuleapRegisterMail.class.php">
+  <file src="src/common/Mail/TuleapRegisterMail.class.php">
     <MissingParamType occurrences="17">
       <code>$base_url</code>
       <code>$confirm_hash</code>
