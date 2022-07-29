@@ -26,15 +26,13 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 /**
  * @psalm-immutable
  */
-final class SemanticStatusNoFieldPresenter
+final class SemanticStatusNoField
 {
-    public string $tracker_url;
-    public int $tracker_id;
+    public string $semantic_url;
 
-    public function __construct(int $tracker_id)
+    public function __construct(public int $tracker_id)
     {
-        $this->tracker_url = '/plugins/tracker/?' .
+        $this->semantic_url = '/plugins/tracker/?' .
             http_build_query(['tracker' => $tracker_id, 'func' => 'admin-semantic', 'semantic' => "status"]);
-        $this->tracker_id  = $tracker_id;
     }
 }
