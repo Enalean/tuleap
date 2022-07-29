@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusMissingValues;
 
 /**
  * @psalm-immutable
@@ -32,17 +32,13 @@ final class SemanticStatusMissingValuesPresenter
 {
     public string $missing_values;
     /**
-     * @var TrackerReference[]
+     * @var \Tuleap\ProgramManagement\Domain\TrackerReference[]
      */
     public array $trackers;
 
-    /**
-     * @param string[]           $missing_values
-     * @param TrackerReference[] $trackers
-     */
-    public function __construct(array $missing_values, array $trackers)
+    public function __construct(SemanticStatusMissingValues $semantic_status_missing_values)
     {
-        $this->missing_values = implode(', ', $missing_values);
-        $this->trackers       = $trackers;
+        $this->missing_values = $semantic_status_missing_values->missing_values;
+        $this->trackers       = $semantic_status_missing_values->trackers;
     }
 }
