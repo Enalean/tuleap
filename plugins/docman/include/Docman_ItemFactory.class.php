@@ -616,50 +616,140 @@ class Docman_ItemFactory
         }
 
         // Build Document list
-        $itemArray = [];
+        $itemArray    = [];
+        $nbItemsFound = 0;
+
+        //Keep old logical way of retrieving items if legacy param "getall" is provided
+        /** @psalm-suppress DeprecatedMethod */
+        if ((isset($params['getall']) && $params['getall'])) {
+            if (isset($params['obsolete_only']) && $params['obsolete_only']) {
+                $dar = $dao->searchObsoleteByGroupId($this->groupId);
+            } else {
+                $dar = $dao->searchByGroupId($this->groupId, $filter, $searchItemsParams);
+            }
+
+            if ($dar && ! $dar->isError()) {
+                $this->preloadItemPerms($dar, $user, $this->groupId);
+                $dar->rewind();
+                while ($dar->valid()) {
+                    $row = $dar->current();
+                    // The document is not is one of the allowed subfolder so we
+                    // can delete it. As a side effect decrease the number of
+                    // document found.
+                    if ($dPm->userCanRead($user, $row['item_id']) && isset($folderList[$row['parent_id']])) {
+                        $itemArray[$row['item_id']] = $this->buildItemWithAllDetails(
+                            $row,
+                            $pathTitleArray,
+                            $pathIdArray,
+                            $ci,
+                            $mdFactory
+                        );
+                        $nbItemsFound++;
+                    }
+                    $dar->next();
+                }
+            }
+
+            return new ArrayIterator($itemArray);
+        }
+
+        //Get all the items with light information to have an accurate count of total value
+        if (isset($params['obsolete_only']) && $params['obsolete_only']) {
+            $all_dar = $dao->searchObsoleteByGroupId($this->groupId);
+        } else {
+            $all_dar = $dao->searchByGroupId(
+                $this->groupId,
+                $filter,
+                array_merge(
+                    $searchItemsParams,
+                    ['light_search' => true],
+                )
+            );
+        }
+        $item_ids_to_fetch = [];
+        if ($all_dar && ! $all_dar->isError()) {
+            $this->preloadItemPerms($all_dar, $user, $this->groupId);
+            $all_dar->rewind();
+            $i = 0;
+            while ($all_dar->valid()) {
+                $row = $all_dar->current();
+                if ($dPm->userCanRead($user, $row['item_id']) && isset($folderList[$row['parent_id']])) {
+                    $nbItemsFound++;
+                    if ($i >= $start && $i < $end) {
+                        $item_ids_to_fetch[] = (int) $row['item_id'];
+                    }
+                    $i++;
+                }
+                $all_dar->next();
+            }
+        }
+
+        //Free the memory used for this no more used but possibly huge collection
+        $all_dar = null;
+
+        if (empty($item_ids_to_fetch)) {
+            return new ArrayIterator($itemArray);
+        }
+
+        //Get all the information with the sliced items
         if (isset($params['obsolete_only']) && $params['obsolete_only']) {
             $dar = $dao->searchObsoleteByGroupId($this->groupId);
         } else {
-            $dar = $dao->searchByGroupId($this->groupId, $filter, $searchItemsParams);
+            $dar = $dao->searchByGroupId(
+                $this->groupId,
+                $filter,
+                array_merge(
+                    $searchItemsParams,
+                    ['items_ids_to_fetch' => $item_ids_to_fetch],
+                )
+            );
         }
 
-        $nbItemsFound = 0;
+        /** @psalm-suppress DeprecatedMethod */
         if ($dar && ! $dar->isError()) {
-            $this->preloadItemPerms($dar, $user, $this->groupId);
             $dar->rewind();
             while ($dar->valid()) {
-                $row = $dar->current();
-                // The document is not is one of the allowed subfolder so we
-                // can delete it. As a side effect decrease the number of
-                // document found.
-                if ($dPm->userCanRead($user, $row['item_id']) && isset($folderList[$row['parent_id']])) {
-                    if ($nbItemsFound >= $start && $nbItemsFound < $end || (isset($params['getall']) && $params['getall'])) {
-                        $itemArray[$row['item_id']] = $this->getItemFromRow($row);
-
-                        // Append Path
-                        $itemArray[$row['item_id']]->setPathTitle($pathTitleArray[$row['parent_id']]);
-                        $itemArray[$row['item_id']]->setPathId($pathIdArray[$row['parent_id']]);
-
-                        // Append metadata
-                        if ($ci !== null) {
-                            $ci->rewind();
-                            while ($ci->valid()) {
-                                $c = $ci->current();
-                                if ($c->md !== null && Docman_MetadataFactory::isRealMetadata($c->md->getLabel())) {
-                                    $mdFactory->addMetadataValueToItem($itemArray[$row['item_id']], $c->md);
-                                }
-                                $ci->next();
-                            }
-                        }
-                    }
-                    $nbItemsFound++;
-                }
+                $row                        = $dar->current();
+                $itemArray[$row['item_id']] = $this->buildItemWithAllDetails(
+                    $row,
+                    $pathTitleArray,
+                    $pathIdArray,
+                    $ci,
+                    $mdFactory
+                );
                 $dar->next();
             }
         }
 
-        $docIter = new ArrayIterator($itemArray);
-        return $docIter;
+        return new ArrayIterator($itemArray);
+    }
+
+    private function buildItemWithAllDetails(
+        array $row,
+        array $pathTitleArray,
+        array $pathIdArray,
+        ?ArrayIterator $columns_iterator,
+        Docman_MetadataFactory $docman_metadata_factory,
+    ): Docman_Item {
+        $item = $this->getItemFromRow($row);
+
+        // Append Path
+        $item->setPathTitle($pathTitleArray[$row['parent_id']]);
+        $item->setPathId($pathIdArray[$row['parent_id']]);
+
+        // Append metadata
+        if ($columns_iterator !== null) {
+            $columns_iterator->rewind();
+            while ($columns_iterator->valid()) {
+                $c = $columns_iterator->current();
+                if ($c->md !== null && Docman_MetadataFactory::isRealMetadata($c->md->getLabel())) {
+                    $docman_metadata_factory->addMetadataValueToItem($item, $c->md);
+                }
+                $columns_iterator->next();
+            }
+        }
+
+        return $item;
     }
 
     /**
