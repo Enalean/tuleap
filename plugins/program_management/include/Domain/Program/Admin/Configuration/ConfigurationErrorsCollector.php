@@ -68,7 +68,7 @@ final class ConfigurationErrorsCollector
      */
     private array $status_missing_in_teams = [];
     /**
-     * @var SemanticStatusMissingValuesPresenter[]
+     * @var SemanticStatusMissingValues[]
      */
     private array $semantic_status_missing_values = [];
     /**
@@ -193,7 +193,7 @@ final class ConfigurationErrorsCollector
      */
     public function addMissingValueInSemantic(array $missing_values, array $trackers): void
     {
-        $this->semantic_status_missing_values[] = new SemanticStatusMissingValuesPresenter($missing_values, $trackers);
+        $this->semantic_status_missing_values[] = new SemanticStatusMissingValues($missing_values, $trackers);
         $this->addTeamsInErrorIfNeeded($trackers);
     }
 
@@ -322,7 +322,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return SemanticStatusMissingValuesPresenter[]
+     * @return SemanticStatusMissingValues[]
      */
     public function getSemanticStatusMissingValues(): array
     {

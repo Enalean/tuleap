@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusMissingValuesPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusNoFieldPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TeamHasNoPlanningPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TitleHasIncorrectTypePresenter;
@@ -243,6 +242,11 @@ final class TrackerErrorPresenter
             $semantic_error[] = new SemanticErrorPresenter($error);
         }
 
+        $semantic_missing_values_presenter = [];
+        foreach ($errors_collector->getSemanticStatusMissingValues() as $error) {
+            $semantic_missing_values_presenter[] = new SemanticStatusMissingValuesPresenter($error);
+        }
+
         return new self(
             $semantic_error,
             $required_field_error,
@@ -254,7 +258,7 @@ final class TrackerErrorPresenter
             $errors_collector->getTeamTrackerIdErrors(),
             $errors_collector->getStatusMissingInTeams(),
             $errors_collector->getSemanticStatusNoField(),
-            $errors_collector->getSemanticStatusMissingValues(),
+            $semantic_missing_values_presenter,
             $errors_collector->getTitleHasIncorrectTypeError(),
             $missing_artifact_link_fields,
             $errors_collector->getNoMilestonePlanning(),
