@@ -17,17 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, afterEach, vi, it, expect } from "vitest";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getLabeledItems } from "./rest-querier.js";
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
+
+vi.mock("@tuleap/tlp-fetch");
 
 describe("getLabeledItems", () => {
     const project_id = 101;
     const labels_id = [3, 4];
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it("Returns the items", async () => {
@@ -39,7 +42,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
         };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), { headers, return_json });
+        mockFetchSuccess(vi.spyOn(tlp_fetch, "get"), { headers, return_json });
 
         const { labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -55,7 +58,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
         };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), { headers, return_json });
+        mockFetchSuccess(vi.spyOn(tlp_fetch, "get"), { headers, return_json });
 
         const { are_there_items_user_cannot_see } = await getLabeledItems(
             project_id,
@@ -76,7 +79,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
         };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), { headers, return_json });
+        mockFetchSuccess(vi.spyOn(tlp_fetch, "get"), { headers, return_json });
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -92,7 +95,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
         };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), { headers, return_json });
+        mockFetchSuccess(vi.spyOn(tlp_fetch, "get"), { headers, return_json });
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 9, 1);
 
@@ -108,7 +111,7 @@ describe("getLabeledItems", () => {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
         };
-        mockFetchSuccess(jest.spyOn(tlp_fetch, "get"), { headers, return_json });
+        mockFetchSuccess(vi.spyOn(tlp_fetch, "get"), { headers, return_json });
 
         const { offset } = await getLabeledItems(project_id, labels_id, 9, 1);
 
@@ -116,7 +119,7 @@ describe("getLabeledItems", () => {
     });
 
     it("Fetches items recursively until it finds at least one readable", async () => {
-        const tlpGet = jest.spyOn(tlp_fetch, "get");
+        const tlpGet = vi.spyOn(tlp_fetch, "get");
         tlpGet
             .mockReturnValueOnce(
                 Promise.resolve({

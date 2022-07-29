@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { describe, it, beforeEach, expect, vi } from "vitest";
 import Vue from "vue";
 import * as rest_querier from "./rest-querier.js";
 import LabeledItemsList from "./LabeledItemsList.vue";
@@ -28,7 +29,7 @@ describe("LabeledItemsList", () => {
     let LabeledItemsListVueElement;
 
     beforeEach(() => {
-        getLabeledItems = jest.spyOn(rest_querier, "getLabeledItems");
+        getLabeledItems = vi.spyOn(rest_querier, "getLabeledItems");
 
         Vue.use(GetTextPlugin, {
             translations: {},
@@ -114,6 +115,7 @@ describe("LabeledItemsList", () => {
         vm.$mount();
 
         await Vue.nextTick();
+        await Vue.nextTick();
         expect(vm.items).toEqual([{ title: "test 1" }, { title: "test 2" }]);
     });
 
@@ -134,6 +136,7 @@ describe("LabeledItemsList", () => {
 
         vm.$mount();
 
+        await Vue.nextTick();
         await Vue.nextTick();
         expect(vm.has_more_items).toBe(true);
     });
