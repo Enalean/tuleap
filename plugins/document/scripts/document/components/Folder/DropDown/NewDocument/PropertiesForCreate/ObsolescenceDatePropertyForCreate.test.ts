@@ -115,7 +115,12 @@ describe("ObsolescenceDatePropertyForCreate", () => {
             wrapper.find("[data-test=obsolescence-date-input]").vm.$emit("input", "2019-09-07");
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.$data.selected_value).toBe("fixed");
+            expect(
+                (
+                    wrapper.find("[data-test=document-obsolescence-date-select]")
+                        .element as HTMLSelectElement
+                ).value
+            ).toBe("fixed");
         });
     });
     describe(`Obsolescence date validity`, () => {

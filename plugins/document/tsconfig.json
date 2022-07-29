@@ -3,7 +3,6 @@
     "compilerOptions": {
         "module": "esnext", //redefine otherwise vue-jest crashes: https://github.com/vuejs/vue-jest/issues/144
         "types": [
-            "unplugin-vue2-script-setup/types",
             "jest"
         ],
         "incremental": false

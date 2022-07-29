@@ -78,7 +78,7 @@ import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import { isFolder, isWiki } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
@@ -104,7 +104,7 @@ const should_display_update_properties = computed((): boolean => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

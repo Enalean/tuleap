@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import type { SearchCriterionList, SearchListOption } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 
 const props = defineProps<{ criterion: SearchCriterionList; value: string }>();
 
@@ -52,6 +52,6 @@ function isSelected(option: SearchListOption): boolean {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

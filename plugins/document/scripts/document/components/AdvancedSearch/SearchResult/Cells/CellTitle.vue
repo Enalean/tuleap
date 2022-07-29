@@ -58,7 +58,7 @@
 </template>
 <script setup lang="ts">
 import type { Folder, ItemSearchResult } from "../../../../type";
-import { computed, ref } from "@vue/composition-api";
+import { computed, ref } from "vue";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
@@ -159,7 +159,7 @@ function onDropdownHidden(): void {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

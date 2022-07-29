@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
-import { computed, onBeforeMount, onUnmounted, ref } from "@vue/composition-api";
+import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import type { Item } from "../../type";
 import {
     useActions,
@@ -88,7 +88,7 @@ onUnmounted(() => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { isFolder } from "../../../helpers/type-check-helper";
 import type { FakeItem } from "../../../type";
-import { computed, ref } from "@vue/composition-api";
+import { computed, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { useActions } from "vuex-composition-helpers";
 
@@ -80,7 +80,7 @@ function cancel() {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

@@ -28,10 +28,10 @@ export default vite.defineLibConfig({
             name: "Vue2GettextCompositionHelpers",
         },
         rollupOptions: {
-            external: ["@vue/composition-api"],
+            external: ["vue"],
             output: {
                 globals: {
-                    "@vue/composition-api": "VueCompositionAPI",
+                    vue: "Vue",
                 },
             },
         },

@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "@vue/composition-api";
+import { computed, ref } from "vue";
 import { useNamespacedGetters, useNamespacedState } from "vuex-composition-helpers";
 import type { ErrorState } from "../../../store/error/module";
 import type { ErrorGetters } from "../../../store/error/error-getters";
@@ -99,6 +99,6 @@ const error_message = computed((): string | null => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

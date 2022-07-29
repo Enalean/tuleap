@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../store/configuration";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { formatDateUsingPreferredUserFormat } from "../../../../helpers/date-formatter";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 
@@ -59,7 +59,7 @@ const relative_date_placement = computed((): string => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

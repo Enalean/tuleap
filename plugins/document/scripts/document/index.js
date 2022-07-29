@@ -18,7 +18,6 @@
  */
 
 import Vue from "vue";
-import VueCompositionAPI from "@vue/composition-api";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import App from "./components/App.vue";
@@ -33,7 +32,6 @@ import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigatio
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
-    Vue.use(VueCompositionAPI);
 
     let user_locale = document.body.dataset.userLocale;
     Vue.config.language = user_locale;

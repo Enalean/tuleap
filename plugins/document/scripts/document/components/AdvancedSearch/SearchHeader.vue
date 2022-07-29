@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import { ref } from "@vue/composition-api";
+import { ref } from "vue";
 
 const { $gettext } = useGettext();
 
@@ -36,7 +36,7 @@ const title = ref($gettext("Search"));
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

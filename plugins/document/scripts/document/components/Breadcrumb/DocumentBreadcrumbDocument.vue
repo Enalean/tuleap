@@ -39,6 +39,6 @@ defineProps<{ current_document: Item; parent_folder: Folder }>();
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import type { FileHistory, ItemFile } from "../../../../../type";
-import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import FileVersionHistoryContent from "./FileVersionHistoryContent.vue";
 import { Fragment } from "vue-frag";
 import { getVersionHistory } from "../../../../../helpers/version-history-retriever";
@@ -113,7 +113,7 @@ const display_latest_version_text = computed((): boolean => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>
