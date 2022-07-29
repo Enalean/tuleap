@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { describe, it, expect, vi } from "vitest";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import TrackerReportSelector from "./TrackerReportSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
 import type { TrackerReportResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
-import { nextTick } from "vue";
 
 describe("TrackerReportSelector", () => {
     it("displays possible reports", async () => {
-        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             { id: 100, label: "Public", is_public: true },
             { id: 101, label: "Private", is_public: false },
         ] as TrackerReportResponse[]);
@@ -42,7 +42,7 @@ describe("TrackerReportSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 
@@ -65,7 +65,7 @@ describe("TrackerReportSelector", () => {
     });
 
     it("only shows report groups when there is a report to show", async () => {
-        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             { id: 101, label: "Private", is_public: false },
         ] as TrackerReportResponse[]);
 
@@ -80,7 +80,7 @@ describe("TrackerReportSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 
@@ -90,7 +90,7 @@ describe("TrackerReportSelector", () => {
 
     it("returns full report on load", async () => {
         const expected_report = { id: 101, label: "Private", is_public: false };
-        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             { id: 100, label: "Public", is_public: true },
             expected_report,
         ] as TrackerReportResponse[]);
@@ -106,7 +106,7 @@ describe("TrackerReportSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const emitted_input = wrapper.emitted("update:report");
         expect(emitted_input).toBeDefined();
@@ -118,7 +118,7 @@ describe("TrackerReportSelector", () => {
 
     it("selects the default report when the selected report does not match something in the possible reports", async () => {
         const expected_report = { id: 101, label: "Private", is_public: false, is_default: true };
-        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             { id: 100, label: "Public", is_public: true, is_default: false },
             expected_report,
         ] as TrackerReportResponse[]);
@@ -131,7 +131,7 @@ describe("TrackerReportSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const emitted_input = wrapper.emitted("update:report");
         expect(emitted_input).toBeDefined();
@@ -143,7 +143,7 @@ describe("TrackerReportSelector", () => {
 
     it("selects the first public report when no default report is present", async () => {
         const expected_report = { id: 100, label: "Public", is_public: true, is_default: false };
-        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             expected_report,
             { id: 101, label: "Private", is_public: false, is_default: false },
             { id: 102, label: "Public 2", is_public: true, is_default: false },
@@ -157,7 +157,7 @@ describe("TrackerReportSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const emitted_input = wrapper.emitted("update:report");
         expect(emitted_input).toBeDefined();
@@ -169,7 +169,7 @@ describe("TrackerReportSelector", () => {
 
     it("selects the first private report when no default report is present and no public reports exist", async () => {
         const expected_report = { id: 101, label: "Private", is_public: false, is_default: false };
-        jest.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerReports").mockResolvedValue([
             expected_report,
             { id: 102, label: "Private 2", is_public: false, is_default: false },
         ] as TrackerReportResponse[]);
@@ -182,7 +182,7 @@ describe("TrackerReportSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const emitted_input = wrapper.emitted("update:report");
         expect(emitted_input).toBeDefined();

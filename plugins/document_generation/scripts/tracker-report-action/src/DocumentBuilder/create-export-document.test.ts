@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as artifact_retriever from "./artifacts-retriever";
 import { createExportDocument } from "./create-export-document";
 import type {
@@ -682,7 +683,7 @@ describe("Create ArtifactValues Collection", () => {
                 ],
             },
         ];
-        jest.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
+        vi.spyOn(artifact_retriever, "retrieveReportArtifacts").mockResolvedValueOnce(
             report_artifacts
         );
 

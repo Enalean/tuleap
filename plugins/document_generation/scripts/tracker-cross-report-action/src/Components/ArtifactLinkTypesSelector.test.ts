@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { describe, it, expect, vi } from "vitest";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import ArtifactLinkTypesSelector from "./ArtifactLinkTypesSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
 import type { TrackerUsedArtifactLinkResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
-import { nextTick } from "vue";
 
 describe("ArtifactLinkTypesSelector", () => {
     it("displays possible reports and select them all by default", async () => {
-        jest.spyOn(rest_querier, "getTrackerCurrentlyUsedArtifactLinkTypes").mockResolvedValue([
+        vi.spyOn(rest_querier, "getTrackerCurrentlyUsedArtifactLinkTypes").mockResolvedValue([
             { shortname: "shortname_a", forward_label: "A" },
             { shortname: "shortname_b", forward_label: "B" },
         ] as TrackerUsedArtifactLinkResponse[]);
@@ -39,7 +39,7 @@ describe("ArtifactLinkTypesSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const emitted_input = wrapper.emitted("update:artifact_link_types");
         expect(emitted_input).toBeDefined();

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as tlp from "@tuleap/tlp-fetch";
 import type { ProjectResponse } from "./rest-querier";
 import {
@@ -33,12 +34,14 @@ import type {
 } from "@tuleap/plugin-tracker-rest-api-types/src";
 import type { ArtifactForCrossReportDocGen } from "./type";
 
+vi.mock("@tuleap/tlp-fetch");
+
 describe("API querier", () => {
     describe("getReportArtifacts", () => {
         it("Given a report id, Then it will get the artifact matching the report, and the report in session if needed", async () => {
             const report_id = 101;
             const report_has_changed = true;
-            const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+            const tlpRecursiveGet = vi.spyOn(tlp, "recursiveGet");
 
             const artifacts_report_response: ArtifactForCrossReportDocGen[] = [
                 {
@@ -67,7 +70,7 @@ describe("API querier", () => {
         it("Given an artifact id and a link type, Then it will get the linked artifacts with this type", async () => {
             const artifact_id = 101;
             const artifact_link_type = "_is_child";
-            const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
+            const tlpRecursiveGet = vi.spyOn(tlp, "recursiveGet");
 
             const artifacts_report_response: ArtifactForCrossReportDocGen[] = [
                 {
@@ -90,7 +93,7 @@ describe("API querier", () => {
     describe("getTrackerReports", () => {
         it("retrieves tracker reports", async () => {
             const tracker_id = 123;
-            const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
+            const recursive_get_spy = vi.spyOn(tlp, "recursiveGet");
 
             const reports_response: TrackerReportResponse[] = [
                 {
@@ -117,7 +120,7 @@ describe("API querier", () => {
     describe("getTrackerCurrentlyUsedArtifactLinkTypes", () => {
         it("retrieves currently used artifact link types in the tracker", async () => {
             const tracker_id = 123;
-            const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
+            const recursive_get_spy = vi.spyOn(tlp, "recursiveGet");
 
             const used_artifact_link_types_response: TrackerUsedArtifactLinkResponse[] = [
                 {
@@ -141,7 +144,7 @@ describe("API querier", () => {
 
     describe("getProjects", () => {
         it("retrieves projects sorted on the label", async () => {
-            const recursive_get_spy = jest.spyOn(tlp, "recursiveGet");
+            const recursive_get_spy = vi.spyOn(tlp, "recursiveGet");
 
             const project_a = {
                 id: 102,

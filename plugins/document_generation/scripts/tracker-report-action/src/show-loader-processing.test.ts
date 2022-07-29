@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { showLoaderWhileProcessing } from "./show-loader-processing";
 
 describe("show-loader-processing", () => {
     it("displays a loader while processing things in the background", async () => {
-        const processing_fn = jest.fn().mockImplementation(() => {
+        const processing_fn = vi.fn().mockImplementation(() => {
             expect(document.body.getElementsByClassName("tuleap-modal-loading")).toHaveLength(1);
         });
 
