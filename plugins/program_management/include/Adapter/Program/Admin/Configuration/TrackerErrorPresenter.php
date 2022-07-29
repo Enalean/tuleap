@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\RequiredErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusMissingValuesPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\SemanticStatusNoFieldPresenter;
@@ -235,9 +234,14 @@ final class TrackerErrorPresenter
             $missing_artifact_link_fields[] = new MissingArtifactLinkFieldPresenter($error);
         }
 
+        $required_field_error = [];
+        foreach ($errors_collector->getRequiredFieldsErrors() as $error) {
+            $required_field_error[] = new RequiredErrorPresenter($error);
+        }
+
         return new self(
             $errors_collector->getSemanticErrors(),
-            $errors_collector->getRequiredFieldsErrors(),
+            $required_field_error,
             $errors_collector->getTransitionRuleError(),
             $errors_collector->getTransitionRuleDateError(),
             $errors_collector->getFieldDependencyError(),
