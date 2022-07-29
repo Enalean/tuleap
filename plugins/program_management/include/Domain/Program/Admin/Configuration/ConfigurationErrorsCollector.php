@@ -60,7 +60,7 @@ final class ConfigurationErrorsCollector
      */
     private array $team_tracker_id_errors = [];
     /**
-     * @var SemanticStatusNoFieldPresenter[]
+     * @var SemanticStatusNoField[]
      */
     private array $semantic_status_no_field = [];
     /**
@@ -175,7 +175,7 @@ final class ConfigurationErrorsCollector
 
     public function addSemanticNoStatusFieldError(TrackerReference $tracker): void
     {
-        $this->semantic_status_no_field[] = new SemanticStatusNoFieldPresenter($tracker->getId());
+        $this->semantic_status_no_field[] = new SemanticStatusNoField($tracker->getId());
         $this->addTeamInErrorIfNeeded($tracker);
     }
 
@@ -306,7 +306,7 @@ final class ConfigurationErrorsCollector
     }
 
     /**
-     * @return SemanticStatusNoFieldPresenter[]
+     * @return SemanticStatusNoField[]
      */
     public function getSemanticStatusNoField(): array
     {
