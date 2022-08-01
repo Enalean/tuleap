@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { organizeReportsData } from "./organize-reports-data";
 import * as rest_querier from "../rest-querier";
 import type { OrganizedReportsData } from "../type";
@@ -83,7 +84,7 @@ describe("organize-reports-data", () => {
             },
         ];
 
-        const getReportArtifactsMock = jest.spyOn(rest_querier, "getReportArtifacts");
+        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifacts");
         getReportArtifactsMock.mockImplementation(
             (report_id: number): Promise<ArtifactForCrossReportDocGen[]> => {
                 if (report_id === 1) {
@@ -99,7 +100,7 @@ describe("organize-reports-data", () => {
             }
         );
 
-        const getLinkedArtifactsMock = jest.spyOn(rest_querier, "getLinkedArtifacts");
+        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
         getLinkedArtifactsMock.mockImplementation(
             (artifact_id: number): Promise<LinkedArtifactsResponse[]> => {
                 if (artifact_id === 74) {
@@ -217,7 +218,7 @@ describe("organize-reports-data", () => {
             } as ArtifactForCrossReportDocGen,
         ];
 
-        const getReportArtifactsMock = jest.spyOn(rest_querier, "getReportArtifacts");
+        const getReportArtifactsMock = vi.spyOn(rest_querier, "getReportArtifacts");
         getReportArtifactsMock.mockImplementation(
             (report_id: number): Promise<ArtifactForCrossReportDocGen[]> => {
                 if (report_id === 1) {
@@ -230,7 +231,7 @@ describe("organize-reports-data", () => {
             }
         );
 
-        const getLinkedArtifactsMock = jest.spyOn(rest_querier, "getLinkedArtifacts");
+        const getLinkedArtifactsMock = vi.spyOn(rest_querier, "getLinkedArtifacts");
         getLinkedArtifactsMock.mockImplementation(
             (artifact_id: number): Promise<LinkedArtifactsResponse[]> => {
                 if (artifact_id === 74) {
@@ -292,7 +293,7 @@ describe("organize-reports-data", () => {
     });
     it("generates empty organized data if no artifact found", async (): Promise<void> => {
         const artifacts_report_response: ArtifactForCrossReportDocGen[] = [];
-        jest.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
+        vi.spyOn(rest_querier, "getReportArtifacts").mockResolvedValue(artifacts_report_response);
 
         const organized_reports_data: OrganizedReportsData = await organizeReportsData({
             first_level: {

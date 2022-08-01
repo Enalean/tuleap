@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import type { TraceabilityMatrixElement } from "../type";
 import { createTraceabilityMatrix } from "./create-traceability-matrix";
-import * as docgen_docx from "@tuleap/plugin-docgen-docx";
+import docgen_docx from "@tuleap/plugin-docgen-docx";
 import type {
     ArtifactFromReport,
     ArtifactReportResponseUserRepresentation,
@@ -54,7 +55,7 @@ describe("create-traceability-matrix", () => {
                 },
             } as unknown as TestExecutionResponse);
 
-        jest.spyOn(docgen_docx, "getArtifacts").mockResolvedValue(
+        vi.spyOn(docgen_docx, "getArtifacts").mockResolvedValue(
             new Map<number, ArtifactResponse>([
                 [800, { id: 800, title: "Campaign title" } as ArtifactResponse],
             ])
@@ -136,7 +137,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            jest.fn()
+            vi.fn()
         );
 
         expect(matrix).toStrictEqual([]);
@@ -206,7 +207,7 @@ describe("create-traceability-matrix", () => {
                     containers: [],
                 },
             ],
-            jest.fn()
+            vi.fn()
         );
 
         expect(matrix).toStrictEqual([]);
@@ -339,7 +340,7 @@ describe("create-traceability-matrix", () => {
                 },
             } as unknown as TestExecutionResponse);
 
-        jest.spyOn(docgen_docx, "getArtifacts").mockRejectedValue(new Error());
+        vi.spyOn(docgen_docx, "getArtifacts").mockRejectedValue(new Error());
 
         const matrix = await buildMatrix(
             [

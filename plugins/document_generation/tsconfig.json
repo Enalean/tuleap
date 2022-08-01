@@ -2,7 +2,6 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
-        "types": ["jest"],
         "incremental": false,
         "skipLibCheck": true
     },

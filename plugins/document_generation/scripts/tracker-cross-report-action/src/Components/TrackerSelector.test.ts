@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { describe, it, expect, vi } from "vitest";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import TrackerSelector from "./TrackerSelector.vue";
 import { getGlobalTestOptions } from "./global-options-for-test";
 import * as rest_querier from "../rest-querier";
-import { nextTick } from "vue";
 import type { MinimalTrackerResponse } from "@tuleap/plugin-tracker-rest-api-types/src";
 
 const tracker_a = {
@@ -38,7 +38,7 @@ const trackers: MinimalTrackerResponse[] = [
 
 describe("ProjectSelector", () => {
     it("displays possible trackers", async () => {
-        jest.spyOn(rest_querier, "getTrackers").mockResolvedValue(trackers);
+        vi.spyOn(rest_querier, "getTrackers").mockResolvedValue(trackers);
 
         const wrapper = shallowMount(TrackerSelector, {
             global: getGlobalTestOptions(),
@@ -48,7 +48,7 @@ describe("ProjectSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 
@@ -57,7 +57,7 @@ describe("ProjectSelector", () => {
     });
 
     it("disables the selector if no project is provided", async () => {
-        const get_trackers_api_spy = jest.spyOn(rest_querier, "getTrackers");
+        const get_trackers_api_spy = vi.spyOn(rest_querier, "getTrackers");
 
         const wrapper = shallowMount(TrackerSelector, {
             global: getGlobalTestOptions(),
@@ -67,7 +67,7 @@ describe("ProjectSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 
@@ -76,7 +76,7 @@ describe("ProjectSelector", () => {
     });
 
     it("returns selected tracker", async () => {
-        jest.spyOn(rest_querier, "getTrackers").mockResolvedValue(trackers);
+        vi.spyOn(rest_querier, "getTrackers").mockResolvedValue(trackers);
 
         const wrapper = shallowMount(TrackerSelector, {
             global: getGlobalTestOptions(),
@@ -86,7 +86,7 @@ describe("ProjectSelector", () => {
             },
         });
 
-        await nextTick();
+        await flushPromises();
 
         const selector = wrapper.get("select");
 

@@ -17,18 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as rest_querier from "./rest-querier";
 import type {
     ArtifactFromReport,
     ArtifactResponse,
     TrackerStructure,
 } from "@tuleap/plugin-docgen-docx";
-import * as docgen_docx from "@tuleap/plugin-docgen-docx";
+import docgen_docx from "@tuleap/plugin-docgen-docx";
 import { retrieveReportArtifacts } from "./artifacts-retriever";
 
 describe("artifacts-retriever", () => {
     it("retrieves artifacts from a report with additional information from tracker structure", async () => {
-        const get_report_artifacts_spy = jest.spyOn(rest_querier, "getReportArtifacts");
+        const get_report_artifacts_spy = vi.spyOn(rest_querier, "getReportArtifacts");
         const artifacts_report_response: ArtifactResponse[] = [
             {
                 id: 74,
@@ -43,14 +44,12 @@ describe("artifacts-retriever", () => {
             fields: new Map([[2, { field_id: 2, type: "date", is_time_displayed: false }]]),
             disposition: [{ id: 2, content: null }],
         };
-        jest.spyOn(docgen_docx, "retrieveTrackerStructure").mockResolvedValue(tracker_structure);
+        vi.spyOn(docgen_docx, "retrieveTrackerStructure").mockResolvedValue(tracker_structure);
 
         const artifacts_structure = [{ id: 74 } as ArtifactFromReport];
-        jest.spyOn(docgen_docx, "retrieveArtifactsStructure").mockResolvedValue(
-            artifacts_structure
-        );
+        vi.spyOn(docgen_docx, "retrieveArtifactsStructure").mockResolvedValue(artifacts_structure);
 
-        const get_test_exec = jest.fn();
+        const get_test_exec = vi.fn();
 
         await expect(
             retrieveReportArtifacts(123, 852, false, get_test_exec)

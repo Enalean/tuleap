@@ -17,21 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { initModal } from "./init-modal";
 import type { GlobalExportProperties } from "./type";
 import * as vue from "vue";
 import type { App } from "vue";
 
+vi.mock("vue");
+
 describe("init-modal", () => {
     it("initializes the modal multiple times", () => {
         const element = document.createElement("div");
 
-        const spy_create_app = jest.spyOn(vue, "createApp");
-        const spy_unmount = jest.fn();
+        const spy_create_app = vi.spyOn(vue, "createApp");
+        const spy_unmount = vi.fn();
         spy_create_app.mockReturnValue({
-            mount: jest.fn(),
+            mount: vi.fn(),
             unmount: spy_unmount,
-            use: jest.fn(),
+            use: vi.fn(),
         } as unknown as App);
 
         initModal(element, {} as GlobalExportProperties);

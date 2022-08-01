@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import * as document_exporter from "../../tracker-cross-report-action/src/export-document";
 import { startDownloadExportAllReportColumnsSpreadsheet } from "./export-report-columns-spreadsheet";
 
 describe("export-report-columns-spreadsheet", () => {
     it("starts the download of the spreadsheet", async () => {
-        const spy_start_download = jest
+        const spy_start_download = vi
             .spyOn(document_exporter, "downloadXLSXDocument")
             .mockImplementation(async () => {
                 // Do nothing

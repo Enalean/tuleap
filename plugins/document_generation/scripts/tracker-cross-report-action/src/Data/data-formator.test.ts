@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, it, expect, vi } from "vitest";
 import { formatData } from "./data-formator";
 import { TextCell, NumberCell, EmptyCell } from "@tuleap/plugin-docgen-xlsx";
 import * as organized_data from "./organize-reports-data";
@@ -39,7 +40,7 @@ describe("data-formator", () => {
             ],
         } as ArtifactForCrossReportDocGen);
 
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: buildFirstLevelRepresentationsMap(),
@@ -117,7 +118,7 @@ describe("data-formator", () => {
         });
     });
     it("generates the formatted data with all 3 levels that will be used to create the XLSX document", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: buildFirstLevelRepresentationsMap(),
@@ -192,7 +193,7 @@ describe("data-formator", () => {
         });
     });
     it("generates the formatted data with the first 2 levels that will be used to create the XLSX document", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: buildFirstLevelRepresentationsMap(),
@@ -244,7 +245,7 @@ describe("data-formator", () => {
     });
 
     it("generates the formatted data with the first level that will be used to create the XLSX document", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: buildFirstLevelRepresentationsMap(),
@@ -280,7 +281,7 @@ describe("data-formator", () => {
         });
     });
     it("generates empty formatted data if no artifact found", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 artifact_representations: new Map(),
             },
@@ -298,7 +299,7 @@ describe("data-formator", () => {
         expect(formatted_data).toStrictEqual({});
     });
     it("throws an error if second level artifact not found", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: buildFirstLevelRepresentationsMap(),
@@ -334,7 +335,7 @@ describe("data-formator", () => {
         );
     });
     it("throws an error if third level artifact not found", async (): Promise<void> => {
-        jest.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
+        vi.spyOn(organized_data, "organizeReportsData").mockResolvedValue({
             first_level: {
                 tracker_name: "tracker01",
                 artifact_representations: buildFirstLevelRepresentationsMap(),

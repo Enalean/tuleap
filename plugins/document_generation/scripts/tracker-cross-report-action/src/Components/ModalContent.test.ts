@@ -16,42 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { describe, it, vi } from "vitest";
 import type { GlobalExportProperties } from "../type";
-
-const downloadXLSXDocument = jest.fn();
-jest.mock("../export-document", () => {
-    return {
-        downloadXLSXDocument: downloadXLSXDocument,
-    };
-});
-
+import * as export_document from "../export-document";
 import ModalContent from "./ModalContent.vue";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "./global-options-for-test";
 
 describe("ModalContent", () => {
-    beforeEach(() => {
-        downloadXLSXDocument.mockReset();
-    });
+    it("starts document export", () =>
+        new Promise((done) => {
+            vi.spyOn(export_document, "downloadXLSXDocument").mockImplementation(
+                (): Promise<void> => {
+                    return new Promise(done);
+                }
+            );
+            const wrapper = shallowMount(ModalContent, {
+                global: getGlobalTestOptions(),
+                props: {
+                    properties: {
+                        current_project_id: 963,
+                        current_tracker_id: 147,
+                        current_tracker_name: "Name",
+                        current_report_id: 130,
+                        current_tracker_artifact_link_types: [],
+                    } as GlobalExportProperties,
+                },
+            });
 
-    it("starts document export", async () => {
-        const wrapper = shallowMount(ModalContent, {
-            global: getGlobalTestOptions(),
-            props: {
-                properties: {
-                    current_project_id: 963,
-                    current_tracker_id: 147,
-                    current_tracker_name: "Name",
-                    current_report_id: 130,
-                    current_tracker_artifact_link_types: [],
-                } as GlobalExportProperties,
-            },
-        });
+            const download_button = wrapper.find("[data-test=download-button]");
 
-        const download_button = wrapper.find("[data-test=download-button]");
-
-        await download_button.trigger("click");
-
-        expect(downloadXLSXDocument).toHaveBeenCalled();
-    });
+            download_button.trigger("click");
+        }));
 });
