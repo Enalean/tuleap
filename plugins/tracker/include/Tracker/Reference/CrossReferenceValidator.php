@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Reference;
 
 use Tracker_ArtifactFactory;
@@ -34,14 +36,14 @@ class CrossReferenceValidator
     {
         foreach ($event->getCrossReferences() as $key => $cross_reference) {
             if ($cross_reference->getRefSourceType() === Artifact::REFERENCE_NATURE) {
-                $artifact_id = $cross_reference->getRefSourceId();
+                $artifact_id = (int) $cross_reference->getRefSourceId();
                 if ($this->removeReferenceIfNeeded($artifact_id, $event, (int) $key)) {
                     continue;
                 }
             }
 
             if ($cross_reference->getRefTargetType() === Artifact::REFERENCE_NATURE) {
-                $artifact_id = $cross_reference->getRefTargetId();
+                $artifact_id = (int) $cross_reference->getRefTargetId();
                 $this->removeReferenceIfNeeded($artifact_id, $event, (int) $key);
             }
         }
