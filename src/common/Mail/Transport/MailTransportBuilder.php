@@ -30,16 +30,23 @@ class MailTransportBuilder
 {
     #[ConfigKey("Option to define how Tuleap will send emails")]
     #[ConfigKeyString(self::EMAIL_TRANSPORT_SENDMAIL_VALUE)]
-    public const CONFIG_KEY = 'email_transport';
+    public const TRANSPORT_CONFIG_KEY = 'email_transport';
+
+    #[ConfigKey("Option to define the relay host used when email_transport is configured to 'smtp'. The used port must be provided here.")]
+    #[ConfigKeyString('')]
+    public const RELAYHOST_CONFIG_KEY = 'email_relayhost';
 
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
 
     public static function buildMailTransport(LoggerInterface $logger): Mail\Transport\TransportInterface
     {
-        if (ForgeConfig::get(self::CONFIG_KEY, self::EMAIL_TRANSPORT_SENDMAIL_VALUE) === self::EMAIL_TRANSPORT_SENDMAIL_VALUE) {
+        if (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY, self::EMAIL_TRANSPORT_SENDMAIL_VALUE) === self::EMAIL_TRANSPORT_SENDMAIL_VALUE) {
             return new Mail\Transport\Sendmail();
-        } elseif (ForgeConfig::get(self::CONFIG_KEY) === self::EMAIL_TRANSPORT_SMTP_VALUE) {
+        } elseif (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY) === self::EMAIL_TRANSPORT_SMTP_VALUE) {
+            if (ForgeConfig::get(self::RELAYHOST_CONFIG_KEY, '') === '') {
+                return new NotConfiguredSmtpTransport($logger);
+            }
             return new Mail\Transport\Smtp();
         } else {
             return new InvalidDefinedTransport($logger);

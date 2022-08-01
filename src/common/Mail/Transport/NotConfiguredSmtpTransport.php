@@ -20,12 +20,11 @@
 
 namespace Tuleap\Mail\Transport;
 
-use ForgeConfig;
 use Laminas\Mail;
 use Laminas\Mail\Transport\TransportInterface;
 use Psr\Log\LoggerInterface;
 
-class InvalidDefinedTransport implements TransportInterface
+class NotConfiguredSmtpTransport implements TransportInterface
 {
     public function __construct(private LoggerInterface $logger)
     {
@@ -33,15 +32,13 @@ class InvalidDefinedTransport implements TransportInterface
 
     public function send(Mail\Message $message): void
     {
-        // We don't send any mail if the transport if not defined to either "sendmail" or "smtp"
+        // We don't send any mail if the smtp transport if not configured using "email_relayhost"
         // We only log that there is an issue
 
         $this->logger->error(
             sprintf(
-                "No mail has been sent. The value '%s' of '%s' is not recognized. It must be either '%s' or '%s'",
-                ForgeConfig::get(MailTransportBuilder::TRANSPORT_CONFIG_KEY),
-                MailTransportBuilder::TRANSPORT_CONFIG_KEY,
-                MailTransportBuilder::EMAIL_TRANSPORT_SENDMAIL_VALUE,
+                "No mail has been sent. The option '%s' is not configured but is mandatory when using '%s' mail transport method.",
+                MailTransportBuilder::RELAYHOST_CONFIG_KEY,
                 MailTransportBuilder::EMAIL_TRANSPORT_SMTP_VALUE,
             )
         );

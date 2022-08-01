@@ -51,11 +51,29 @@ class MailTransportBuilderTest extends TestCase
         );
     }
 
-    public function testItReturnsSmtpIfOptionIsSetToApp(): void
+    public function testItReturnsNotConfiguredSmtpTransportIfOptionIsSetToSmtpAndNotConfigured(): void
     {
         \ForgeConfig::set(
             "email_transport",
             "smtp",
+        );
+
+        self::assertInstanceOf(
+            NotConfiguredSmtpTransport::class,
+            MailTransportBuilder::buildMailTransport(new NullLogger())
+        );
+    }
+
+    public function testItReturnsSmtpIfOptionIsSetToSmtpAndWellConfigured(): void
+    {
+        \ForgeConfig::set(
+            "email_transport",
+            "smtp",
+        );
+
+        \ForgeConfig::set(
+            "email_relayhost",
+            "https://example.com:443",
         );
 
         self::assertInstanceOf(
@@ -64,7 +82,7 @@ class MailTransportBuilderTest extends TestCase
         );
     }
 
-    public function testItReturnsLegacySendmailIfOptionIsSetToAnyOtherValue(): void
+    public function testItReturnsInvalidTransportIfOptionIsSetToAnyOtherValue(): void
     {
         \ForgeConfig::set(
             "email_transport",
