@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
@@ -225,29 +226,37 @@ class Tracker_RulesManager
         return ! $this->ruleExists($tracker_id, $field_id, $target_id) &&
             (
                 $field_id == $target_id ||
-                $this->isCyclic($tracker_id, $field_id, $target_id) ||
+                $this->checkIfRuleIsCyclic($tracker_id, $field_id, $target_id) ||
                 $this->fieldHasSource($tracker_id, $target_id) ||
                 $this->isFieldUsedInFrozenFieldsTransitionPostAction($field_id)
             );
     }
 
-    public function isCyclic($tracker_id, $source_id, $target_id)
+    public function checkIfRuleIsCyclic($tracker_id, $source_id, $target_id): bool
     {
-        if ($source_id == $target_id) {
+        $involved_fields_collection = $this->getRuleFactory()->getInvolvedFieldsByTrackerIdCollection((int) $tracker_id);
+        return $this->isCyclic((int) $tracker_id, (int) $source_id, (int) $target_id, $involved_fields_collection);
+    }
+
+    /**
+     * @param InvolvedFieldsInRule[] $involved_fields_collection
+     */
+    private function isCyclic(int $tracker_id, int $source_id, int $target_id, array $involved_fields_collection): bool
+    {
+        if ($source_id === $target_id) {
             return true;
-        } else {
-            $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-            $found = false;
-            foreach ($rules as $rule) {
-                if ($found) {
-                    break;
-                }
-                if ($rule->source_field == $target_id) {
-                    $found = $this->isCyclic($tracker_id, $source_id, $rule->target_field);
-                }
-            }
-            return $found;
         }
+
+        $found = false;
+        foreach ($involved_fields_collection as $involved_fields) {
+            if ($found) {
+                break;
+            }
+            if ($involved_fields->getSourceFieldId() === $target_id) {
+                $found = $this->isCyclic($tracker_id, $source_id, $involved_fields->getTargetFieldId(), $involved_fields_collection);
+            }
+        }
+        return $found;
     }
 
     public function fieldIsAForbiddenTarget($tracker_id, $field_id, $source_id)
@@ -255,7 +264,7 @@ class Tracker_RulesManager
         return ! $this->ruleExists($tracker_id, $source_id, $field_id) &&
             (
                 $field_id == $source_id ||
-                $this->isCyclic($tracker_id, $source_id, $field_id) ||
+                $this->checkIfRuleIsCyclic($tracker_id, $source_id, $field_id) ||
                 $this->fieldHasSource($tracker_id, $field_id) ||
                 $this->isFieldUsedInFrozenFieldsTransitionPostAction($field_id)
             );
@@ -386,7 +395,7 @@ class Tracker_RulesManager
                 $tracker_id   = $this->tracker->id;
 
                 if (
-                    $this->isCyclic($tracker_id, $source_field, $target_field) ||
+                    $this->checkIfRuleIsCyclic($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenSource($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {

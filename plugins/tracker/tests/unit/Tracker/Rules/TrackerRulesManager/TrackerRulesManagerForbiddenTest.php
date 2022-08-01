@@ -90,17 +90,23 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_factory,
         ])->makePartial();
 
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['A'])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['B'])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['C'])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['D'])->andReturn(false);
-        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['E'])->andReturn(false);
+        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([1])->andReturn(false);
+        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([2])->andReturn(false);
+        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([3])->andReturn(false);
+        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([4])->andReturn(false);
+        $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([5])->andReturn(false);
 
-        $rule_list_1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
-        $rule_list_2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
-        $rule_list_3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
+        $rule_list_1 = new Tracker_Rule_List(1, 1, 1, 1, 2, 2);
+        $rule_list_2 = new Tracker_Rule_List(2, 1, 2, 3, 3, 4);
+        $rule_list_3 = new Tracker_Rule_List(3, 1, 4, 5, 5, 6);
 
         $this->rule_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([$rule_list_1, $rule_list_2, $rule_list_3]);
+
+        $involved_fields_1 = new InvolvedFieldsInRule(1, 2);
+        $involved_fields_2 = new InvolvedFieldsInRule(2, 3);
+        $involved_fields_3 = new InvolvedFieldsInRule(4, 5);
+
+        $this->rule_factory->shouldReceive('getInvolvedFieldsByTrackerIdCollection')->andReturn([$involved_fields_1, $involved_fields_2, $involved_fields_3]);
 
         $this->tracker_rules_manager->shouldReceive("getRuleFactory")->andReturn($this->rule_factory);
     }
@@ -116,22 +122,22 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public function forbiddenSourceProvider()
     {
         return [
-            ['A', 'A', true, "Field A cannot be the source of field A"],
-            ['B', 'A', true,"Field B cannot be the source of field A because A->B->A is cyclic"],
-            ['C', 'A', true, "Field C cannot be the source of field A because A->B->C->A is cyclic"],
-            ['D', 'A', false, "Field D can be the source of field A"],
-            ['A', 'B', false,  "Field A is the source of field B"],
-            ['B', 'B', true, "Field B cannot be the source of field B"],
-            ['C', 'B', true,"Field C cannot be the source of field B because B is already a target"],
-            ['D', 'B', true,"Field D cannot be the source of field B because B is already a target"],
-            ['A', 'C', true, "Field A cannot be the source of field C because C is already a target"],
-            ['B', 'C', false,  "Field B is the source of field C"],
-            ['C', 'C', true, "Field C cannot be the source of field C"],
-            ['D', 'C', true,"Field D cannot be the source of field C because C is already a target"],
-            ['A', 'D', false, "Field A can be the source of field D"],
-            ['B', 'D', false,  "Field B can be the source of field D"],
-            ['C', 'D', false,  "Field C can be the source of field D"],
-            ['D', 'D', true, "Field D cannot be the source of field D"],
+            [1, 1, true, "Field 1 cannot be the source of field 1"],
+            [2, 1, true,"Field 2 cannot be the source of field 1 because 1->2->1 is cyclic"],
+            [3, 1, true, "Field 3 cannot be the source of field 1 because 1->2->3->1 is cyclic"],
+            [4, 1, false, "Field 4 can be the source of field 1"],
+            [1, 2, false,  "Field 1 is the source of field 2"],
+            [2, 2, true, "Field 2 cannot be the source of field 2"],
+            [3, 2, true,"Field 3 cannot be the source of field 2 because 2 is already a target"],
+            [4, 2, true,"Field 4 cannot be the source of field 2 because 2 is already a target"],
+            [1, 3, true, "Field 1 cannot be the source of field 3 because 3 is already a target"],
+            [2, 3, false,  "Field 2 is the source of field 3"],
+            [3, 3, true, "Field 3 cannot be the source of field 3"],
+            [4, 3, true,"Field 4 cannot be the source of field 3 because 3 is already a target"],
+            [1, 4, false, "Field 1 can be the source of field 4"],
+            [2, 4, false,  "Field 2 can be the source of field 4"],
+            [3, 4, false,  "Field 3 can be the source of field 4"],
+            [4, 4, true, "Field 4 cannot be the source of field 4"],
         ];
     }
 
@@ -146,22 +152,22 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public function forbiddenTargetProvider()
     {
         return [
-            ['A', 'A', true, "Field A cannot be the target of field A"],
-            ['B', 'A', false, "Field B is the target of field A"],
-            ['C', 'A', true, "Field C cannot be the target of field A because C is already a target"],
-            ['D', 'A', false, "Field D can be the target of field A"],
-            ['A', 'B', true, "Field A cannot be the target of field B because A->B->A is cyclic"],
-            ['B', 'B', true, "Field B cannot be the target of field B"],
-            ['C', 'B', false, "Field C is the target of field B"],
-            ['D', 'B', false, "Field D can be the target of field B"],
-            ['A', 'C', true, "Field A cannot be the target of field C because A->B->C->A is cyclic"],
-            ['B', 'C', true, "Field B cannot be the target of field C because B is already a target"],
-            ['C', 'C', true, "Field C cannot be the target of field C"],
-            ['D', 'C', false, "Field D can be the target of field C"],
-            ['A', 'D', false, "Field A can be the target of field D"],
-            ['B', 'D', true, "Field B cannot be the target of field D because B is already a target"],
-            ['C', 'D', true, "Field C cannot be the target of field D because C is already a target"],
-            ['D', 'D', true, "Field D cannot be the target of field D"],
+            [1, 1, true, "Field 1 cannot be the target of field 1"],
+            [2, 1, false, "Field 2 is the target of field 1"],
+            [3, 1, true, "Field 3 cannot be the target of field 1 because 3 is already a target"],
+            [4, 1, false, "Field 4 can be the target of field 1"],
+            [1, 2, true, "Field 1 cannot be the target of field 2 because 1->2->1 is cyclic"],
+            [2, 2, true, "Field 2 cannot be the target of field 2"],
+            [3, 2, false, "Field 3 is the target of field 2"],
+            [4, 2, false, "Field 4 can be the target of field 2"],
+            [1, 3, true, "Field 1 cannot be the target of field 3 because 1->2->3->1 is cyclic"],
+            [2, 3, true, "Field 2 cannot be the target of field 3 because 2 is already a target"],
+            [3, 3, true, "Field 3 cannot be the target of field 3"],
+            [4, 3, false, "Field 4 can be the target of field 3"],
+            [1, 4, false, "Field 1 can be the target of field 4"],
+            [2, 4, true, "Field 2 cannot be the target of field 4 because 2 is already a target"],
+            [3, 4, true, "Field 3 cannot be the target of field 4 because 3 is already a target"],
+            [4, 4, true, "Field 4 cannot be the target of field 4"],
         ];
     }
 
@@ -176,19 +182,19 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public function fieldHasSourceProvider(): array
     {
         return [
-            ['A', false],
-            ['B', true],
-            ['C', true],
-            ['D', false],
-            ['E', true],
-            ['F', false],
+            [1, false],
+            [2, true],
+            [3, true],
+            [4, false],
+            [5, true],
+            [6, false],
         ];
     }
 
     /**
      * @dataProvider fieldHasTargetProvider
      */
-    public function testFieldHasTarget($field_id, $expected)
+    public function test6ieldHasTarget($field_id, $expected)
     {
         $this->assertSame($expected, $this->tracker_rules_manager->fieldHasTarget(1, $field_id));
     }
@@ -196,51 +202,51 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public function fieldHasTargetProvider(): array
     {
         return [
-            ['A', true],
-            ['B', true],
-            ['C', false],
-            ['D', true],
-            ['E', false],
-            ['F', false],
+            [1, true],
+            [2, true],
+            [3, false],
+            [4, true],
+            [5, false],
+            [6, false],
         ];
     }
 
     /**
      * @dataProvider isCyclicProvider
      */
-    public function testIsCyclic($source_id, $target_id, $expected)
+    public function testcheckIfRuleIsCyclic($source_id, $target_id, $expected)
     {
-        $this->assertsame($expected, $this->tracker_rules_manager->isCyclic(1, $source_id, $target_id));
+        $this->assertsame($expected, $this->tracker_rules_manager->checkIfRuleIsCyclic(1, $source_id, $target_id));
     }
 
     public function isCyclicProvider(): array
     {
         return [
-            ['A', 'A', true],
-            ['A', 'B', false],
-            ['A', 'C', false],
-            ['A', 'D', false],
-            ['A', 'E', false],
-            ['B', 'A', true],
-            ['B', 'B', true],
-            ['B', 'C', false],
-            ['B', 'D', false],
-            ['B', 'E', false],
-            ['C', 'A', true],
-            ['C', 'B', true],
-            ['C', 'C', true],
-            ['C', 'D', false],
-            ['C', 'E', false],
-            ['D', 'A', false],
-            ['D', 'B', false],
-            ['D', 'C', false],
-            ['D', 'D', true],
-            ['D', 'E', false],
-            ['E', 'A', false],
-            ['E', 'B', false],
-            ['E', 'C', false],
-            ['E', 'D', true],
-            ['E', 'E', true],
+            [1, 1, true],
+            [1, 2, false],
+            [1, 3, false],
+            [1, 4, false],
+            [1, 5, false],
+            [2, 1, true],
+            [2, 2, true],
+            [2, 3, false],
+            [2, 4, false],
+            [2, 5, false],
+            [3, 1, true],
+            [3, 2, true],
+            [3, 3, true],
+            [3, 4, false],
+            [3, 5, false],
+            [4, 1, false],
+            [4, 2, false],
+            [4, 3, false],
+            [4, 4, true],
+            [4, 5, false],
+            [5, 1, false],
+            [5, 2, false],
+            [5, 3, false],
+            [5, 4, true],
+            [5, 5, true],
         ];
     }
 
@@ -255,42 +261,42 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
     public function ruleExistProvider(): array
     {
         return [
-            ['A', 'A', false],
-            ['A', 'B', true],
-            ['A', 'C', false],
-            ['A', 'D', false],
-            ['A', 'E', false],
-            ['B', 'A', false],
-            ['B', 'B', false],
-            ['B', 'C', true],
-            ['B', 'D', false],
-            ['B', 'E', false],
-            ['C', 'A', false],
-            ['C', 'B', false],
-            ['C', 'C', false],
-            ['C', 'D', false],
-            ['C', 'E', false],
-            ['D', 'A', false],
-            ['D', 'B', false],
-            ['D', 'C', false],
-            ['D', 'D', false],
-            ['D', 'E', true],
-            ['E', 'A', false],
-            ['E', 'B', false],
-            ['E', 'C', false],
-            ['E', 'D', false],
-            ['E', 'E', false],
+            [1, 1, false],
+            [1, 2, true],
+            [1, 3, false],
+            [1, 4, false],
+            [1, 5, false],
+            [2, 1, false],
+            [2, 2, false],
+            [2, 3, true],
+            [2, 4, false],
+            [2, 5, false],
+            [3, 1, false],
+            [3, 2, false],
+            [3, 3, false],
+            [3, 4, false],
+            [3, 5, false],
+            [4, 1, false],
+            [4, 2, false],
+            [4, 3, false],
+            [4, 4, false],
+            [4, 5, true],
+            [5, 1, false],
+            [5, 2, false],
+            [5, 3, false],
+            [5, 4, false],
+            [5, 5, false],
         ];
     }
 
     public function testValueHasSourceTarget()
     {
         //value has source or target
-        $this->assertTrue($this->tracker_rules_manager->valueHasSource(1, 'B', 2, 'A'));
-        $this->assertFalse($this->tracker_rules_manager->valueHasSource(1, 'B', 2, 'C'));
-        $this->assertFalse($this->tracker_rules_manager->valueHasSource(1, 'B', 3, 'C'));
-        $this->assertTrue($this->tracker_rules_manager->valueHasTarget(1, 'B', 3, 'C'));
-        $this->assertFalse($this->tracker_rules_manager->valueHasTarget(1, 'B', 3, 'A'));
-        $this->assertFalse($this->tracker_rules_manager->valueHasTarget(1, 'B', 2, 'A'));
+        $this->assertTrue($this->tracker_rules_manager->valueHasSource(1, 2, 2, 1));
+        $this->assertFalse($this->tracker_rules_manager->valueHasSource(1, 2, 2, 3));
+        $this->assertFalse($this->tracker_rules_manager->valueHasSource(1, 2, 3, 3));
+        $this->assertTrue($this->tracker_rules_manager->valueHasTarget(1, 2, 3, 3));
+        $this->assertFalse($this->tracker_rules_manager->valueHasTarget(1, 2, 3, 1));
+        $this->assertFalse($this->tracker_rules_manager->valueHasTarget(1, 2, 2, 1));
     }
 }
