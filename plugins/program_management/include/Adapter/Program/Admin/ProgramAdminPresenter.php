@@ -56,19 +56,14 @@ final class ProgramAdminPresenter
      * @var ProgramSelectOptionConfigurationPresenter[]
      */
     public array $ugroups_can_prioritize;
-    public ?string $program_increment_label;
-    public ?string $program_increment_sub_label;
     /**
      * @var ProgramSelectOptionConfigurationPresenter[]
      */
     public array $potential_iterations;
-    public ?string $iteration_label;
-    public ?string $iteration_sub_label;
-    public ?TrackerErrorPresenter $program_increment_error_presenter;
-    public ?TrackerErrorPresenter $iteration_error_presenter;
-    public ?TrackerErrorPresenter $plannable_error_presenter;
     public string $synchronize_button_label;
-    public string $program_shortname;
+    public bool $has_program_increment_error;
+    public bool $has_iteration_increment_error;
+    public bool $has_plannable_error;
 
     /**
      * @param PotentialTeamPresenter[] $potential_teams
@@ -80,41 +75,37 @@ final class ProgramAdminPresenter
      */
     public function __construct(
         ProgramForAdministrationIdentifier $program,
-        string $program_shortname,
+        public string $program_shortname,
         array $potential_teams,
         array $aggregated_teams,
         array $potential_program_increments,
         array $potential_plannable_trackers,
         array $ugroups_can_prioritize,
-        ?string $program_increment_label,
-        ?string $program_increment_sub_label,
+        public ?string $program_increment_label,
+        public ?string $program_increment_sub_label,
         array $potential_iterations,
-        ?string $iteration_label,
-        ?string $iteration_sub_label,
-        ?TrackerErrorPresenter $program_increment_error_presenter,
-        ?TrackerErrorPresenter $iteration_error_presenter,
-        ?TrackerErrorPresenter $plannable_error_presenter,
+        public ?string $iteration_label,
+        public ?string $iteration_sub_label,
+        public ?TrackerErrorPresenter $program_increment_error_presenter,
+        public ?TrackerErrorPresenter $iteration_error_presenter,
+        public ?TrackerErrorPresenter $plannable_error_presenter,
     ) {
         $this->program_id                   = $program->id;
-        $this->program_shortname            = $program_shortname;
         $this->potential_teams              = $potential_teams;
         $this->aggregated_teams             = $aggregated_teams;
         $this->has_aggregated_teams         = count($aggregated_teams) > 0;
         $this->potential_program_increments = $potential_program_increments;
         $this->potential_plannable_trackers = $potential_plannable_trackers;
         $this->ugroups_can_prioritize       = $ugroups_can_prioritize;
-        $this->program_increment_label      = $program_increment_label;
-        $this->program_increment_sub_label  = $program_increment_sub_label;
         $this->potential_iterations         = $potential_iterations;
-        $this->iteration_label              = $iteration_label;
-        $this->iteration_sub_label          = $iteration_sub_label;
 
-        $this->has_errors                        = ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors)
+        $this->has_errors = ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors)
             || ($iteration_error_presenter && $iteration_error_presenter->has_presenter_errors)
             || ($plannable_error_presenter && $plannable_error_presenter->has_presenter_errors);
-        $this->program_increment_error_presenter = $program_increment_error_presenter;
-        $this->iteration_error_presenter         = $iteration_error_presenter;
-        $this->plannable_error_presenter         = $plannable_error_presenter;
+
+        $this->has_program_increment_error   = $program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors;
+        $this->has_iteration_increment_error = $iteration_error_presenter && $iteration_error_presenter->has_presenter_errors;
+        $this->has_plannable_error           = $plannable_error_presenter && $plannable_error_presenter->has_presenter_errors;
 
         if ($program_increment_sub_label) {
             $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', "Sync open %s"), $program_increment_sub_label);

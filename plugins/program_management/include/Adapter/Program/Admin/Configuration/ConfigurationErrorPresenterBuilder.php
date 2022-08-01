@@ -25,6 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TrackerError;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -72,11 +73,8 @@ final class ConfigurationErrorPresenterBuilder
         UserReference $user_identifier,
         ConfigurationErrorsCollector $errors_collector,
     ): ?TrackerErrorPresenter {
-        return TrackerErrorPresenter::fromTracker(
-            $this->errors_gatherer,
-            $tracker,
-            $user_identifier,
-            $errors_collector
+        return TrackerErrorPresenter::fromTrackerError(
+            TrackerError::fromTracker($this->errors_gatherer, $tracker, $user_identifier, $errors_collector)
         );
     }
 
@@ -105,6 +103,6 @@ final class ConfigurationErrorPresenterBuilder
             }
         }
 
-        return TrackerErrorPresenter::fromAlreadyCollectedErrors($plannable_error_collector);
+        return TrackerErrorPresenter::fromAlreadyCollectedErrors(TrackerError::fromAlreadyCollectedErrors($plannable_error_collector));
     }
 }
