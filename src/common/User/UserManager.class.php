@@ -31,6 +31,7 @@ use Tuleap\User\InvalidSessionException;
 use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\ProvideCurrentUser;
 use Tuleap\User\ProvideCurrentUserWithLoggedInInformation;
+use Tuleap\User\ProvideUserFromRow;
 use Tuleap\User\RetrieveUserById;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
@@ -38,7 +39,7 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInInformation, ProvideAnonymousUser, RetrieveUserById, ProvideUserFromRow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
@@ -201,7 +202,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         return $this->getUserInstanceFromRow($row);
     }
 
-    public function getUserInstanceFromRow($row)
+    public function getUserInstanceFromRow($row): PFUser
     {
         if (isset($row['user_id']) && $row['user_id'] < self::SPECIAL_USERS_LIMIT) {
             $user = null;
