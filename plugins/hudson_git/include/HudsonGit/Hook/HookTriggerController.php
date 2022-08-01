@@ -88,27 +88,30 @@ class HookTriggerController
         array &$already_called_jenkins_server_urls,
     ): void {
         $date_job = $date_time->getTimestamp();
-        $dar      = $this->dao->searchById($repository->getId());
-        foreach ($dar as $row) {
-            $jenkins_server_url = $row['jenkins_server_url'];
-            $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
-            $commit_reference_to_send             = $row['is_commit_reference_needed'] ? $commit_reference : null;
-            $polling_urls                         = [];
-            $status_code                          = $this->pushGitNotifications(
-                $repository,
-                $jenkins_server_url,
-                $commit_reference_to_send,
-                $polling_urls
-            );
-            $already_called_jenkins_server_urls[] = $jenkins_server_url;
+        $row      = $this->dao->searchById($repository->getId());
 
-            $this->addHudsonGitLog(
-                $repository,
-                implode(',', $polling_urls),
-                $status_code,
-                $date_job
-            );
+        if ($row === null) {
+            return;
         }
+
+        $jenkins_server_url = $row['jenkins_server_url'];
+        $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
+        $commit_reference_to_send             = $row['is_commit_reference_needed'] ? $commit_reference : null;
+        $polling_urls                         = [];
+        $status_code                          = $this->pushGitNotifications(
+            $repository,
+            $jenkins_server_url,
+            $commit_reference_to_send,
+            $polling_urls
+        );
+        $already_called_jenkins_server_urls[] = $jenkins_server_url;
+
+        $this->addHudsonGitLog(
+            $repository,
+            implode(',', $polling_urls),
+            $status_code,
+            $date_job
+        );
     }
 
     private function addHudsonGitLog(GitRepository $repository, string $job_name, ?int $status_code, int $date_job): void
