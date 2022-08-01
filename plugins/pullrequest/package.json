@@ -16,7 +16,7 @@
     "angular-sanitize": "^1.8.2",
     "codemirror": "^5.62.0",
     "sprintf-js": "^1.1.2",
-    "vue": "^2.7.4",
+    "vue": "^2.7.8",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.2"
   },
