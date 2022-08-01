@@ -27,7 +27,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 /**
  * @psalm-immutable
  */
-final class TitleHasIncorrectTypePresenter
+final class TitleHasIncorrectType
 {
     public function __construct(public string $semantic_title_url, public string $tracker_name, public string $project_name, public string $field_name)
     {

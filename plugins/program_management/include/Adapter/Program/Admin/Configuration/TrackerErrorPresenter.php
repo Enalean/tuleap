@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TitleHasIncorrectTypePresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\WorkFlowErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
@@ -260,6 +259,11 @@ final class TrackerErrorPresenter
             $team_no_sprint_planning[] = new TeamHasNoPlanningPresenter($error);
         }
 
+        $title_has_incorrect_title = [];
+        foreach ($errors_collector->getTitleHasIncorrectTypeError() as $error) {
+            $title_has_incorrect_title[] = new TitleHasIncorrectTypePresenter($error);
+        }
+
         return new self(
             $semantic_error,
             $required_field_error,
@@ -272,7 +276,7 @@ final class TrackerErrorPresenter
             $errors_collector->getStatusMissingInTeams(),
             $status_no_field,
             $semantic_missing_values_presenter,
-            $errors_collector->getTitleHasIncorrectTypeError(),
+            $title_has_incorrect_title,
             $missing_artifact_link_fields,
             $team_no_milestones_planning,
             $team_no_sprint_planning,
