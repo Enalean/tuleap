@@ -74,7 +74,7 @@ import { getObsolescenceDateValueInput } from "../../../../../helpers/properties
 import emitter from "../../../../../helpers/emitter";
 import moment from "moment/moment";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-import { ref } from "@vue/composition-api";
+import { ref } from "vue";
 
 const props = defineProps<{ value: string }>();
 
@@ -127,7 +127,7 @@ function updateObsolescenceDate(new_date: string) {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

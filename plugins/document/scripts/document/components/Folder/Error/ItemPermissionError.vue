@@ -76,7 +76,7 @@
 </template>
 <script setup lang="ts">
 import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
-import { computed, ref } from "@vue/composition-api";
+import { computed, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
@@ -111,6 +111,6 @@ const placeholder = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

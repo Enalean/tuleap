@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import CellString from "./CellString.vue";
 import type { ItemSearchResult } from "plugins/document/scripts/document/type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const { $gettext } = useGettext();
@@ -49,7 +49,7 @@ const status = computed((): string => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

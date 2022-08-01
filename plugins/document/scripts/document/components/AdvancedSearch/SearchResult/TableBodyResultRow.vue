@@ -37,7 +37,7 @@ defineProps<{ item: ItemSearchResult; columns: ListOfSearchResultColumnDefinitio
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 import CellId from "./Cells/CellId.vue";
 import CellTitle from "./Cells/CellTitle.vue";
 import CellDescription from "./Cells/CellDescription.vue";

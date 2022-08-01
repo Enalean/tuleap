@@ -93,7 +93,7 @@ import { isFolder } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
 
@@ -117,7 +117,7 @@ const should_display_delete_item = computed((): boolean => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

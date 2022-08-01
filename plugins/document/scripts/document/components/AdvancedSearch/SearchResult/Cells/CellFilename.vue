@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { TYPE_FILE } from "../../../../constants";
 import type { ItemSearchResult } from "../../../../type";
 
@@ -34,10 +34,4 @@ const filename = computed((): string =>
         ? props.item.file_properties.file_name
         : ""
 );
-</script>
-
-<script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
-export default defineComponent({});
 </script>

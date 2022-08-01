@@ -50,7 +50,7 @@ import CustomProperty from "../../PropertiesForCreateOrUpdate/CustomProperties/C
 import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
-import { computed, onMounted } from "@vue/composition-api";
+import { computed, onMounted } from "vue";
 import type { PropertiesActions } from "../../../../../store/properties/properties-actions";
 import type { Item } from "../../../../../type";
 
@@ -82,7 +82,7 @@ const has_properties_to_create = computed((): boolean => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

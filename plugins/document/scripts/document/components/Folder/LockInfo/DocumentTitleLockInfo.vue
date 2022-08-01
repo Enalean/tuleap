@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import type { Item } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const { interpolate, $gettext } = useGettext();
@@ -61,6 +61,6 @@ const get_icon_additional_classes = computed((): string => {
 });
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

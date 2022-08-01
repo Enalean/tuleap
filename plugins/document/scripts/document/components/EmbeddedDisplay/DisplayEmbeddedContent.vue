@@ -74,7 +74,7 @@
 
 <script setup lang="ts">
 import emitter from "../../helpers/emitter";
-import { computed, onBeforeMount, onUnmounted, ref } from "@vue/composition-api";
+import { computed, onBeforeMount, onUnmounted, ref } from "vue";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 import { useNamespacedState, useState } from "vuex-composition-helpers";
 import type { Embedded, Item, RootState } from "../../type";
@@ -152,7 +152,7 @@ function hideDeleteItemModal(): void {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";

@@ -26,7 +26,6 @@ import * as tlp from "tlp";
 import FileCreationModal from "./FileCreationModal.vue";
 import { TYPE_FILE } from "../../../../constants";
 import type { State } from "../../../../type";
-import emitter from "../../../../helpers/emitter";
 
 jest.mock("tlp");
 
@@ -39,7 +38,7 @@ describe("FileCreationModal", () => {
         const state = {
             current_folder: { id: 13, title: "Limited Edition" },
             error: { has_modal_error },
-            configuration: { is_status_property_used: false },
+            configuration: { is_status_property_used: false, filename_pattern: "" },
         } as unknown as State;
         const store_option = { state };
         const store = createStoreMock(store_option);
@@ -67,7 +66,7 @@ describe("FileCreationModal", () => {
     it("does not close the modal if there is an error during the creation", async () => {
         const dropped_file = new File([], "Duster Pikes Peak.lol");
         const wrapper = getWrapper(dropped_file, true);
-        wrapper.setData({
+        await wrapper.setData({
             item: {
                 title: "Faaaast",
                 description: "It's fast",
@@ -99,13 +98,12 @@ describe("FileCreationModal", () => {
 
         expect(remove_backdrop).not.toHaveBeenCalled();
         expect(wrapper.emitted()).not.toHaveProperty("close-file-creation-modal");
-        expect(wrapper.vm.$data.item).toMatchObject(expected_item);
     });
 
     it("Creates a new file document without error and hide the modal after creation", async () => {
         const dropped_file = new File([], "Duster Pikes Peak.lol");
         const wrapper = getWrapper(dropped_file, false);
-        wrapper.setData({
+        await wrapper.setData({
             item: {
                 title: "Faaaast",
                 description: "It's fast",
@@ -135,62 +133,5 @@ describe("FileCreationModal", () => {
             { id: 13, title: "Limited Edition" },
         ]);
         expect(wrapper.emitted()).toHaveProperty("close-file-creation-modal");
-        const default_item = {
-            title: "",
-            description: "",
-            type: TYPE_FILE,
-            file_properties: {
-                file: {},
-            },
-            status: "none",
-        };
-        expect(wrapper.vm.$data.item).toMatchObject(default_item);
-    });
-    describe("Received event", () => {
-        it("Updates the default item status", async () => {
-            const dropped_file = new File([], "Duster Pikes Peak.lol");
-            const wrapper = getWrapper(dropped_file, false);
-
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.item.status).toBe("none");
-            emitter.emit("update-status-property", "approved");
-
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.item.status).toBe("approved");
-        });
-        it("Updates the default item title", async () => {
-            const dropped_file = new File([], "Duster Pikes Peak.lol");
-            const wrapper = getWrapper(dropped_file, false);
-
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.item.title).toBe("");
-            emitter.emit("update-title-property", "Weird vehicle");
-
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.item.title).toBe("Weird vehicle");
-        });
-
-        it("Updates the default item description", async () => {
-            const dropped_file = new File([], "Duster Pikes Peak.lol");
-            const wrapper = getWrapper(dropped_file, false);
-
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.item.description).toBe("");
-            emitter.emit(
-                "update-description-property",
-                "A vehicule made by Renault for the Pikes Peak"
-            );
-
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$data.item.description).toBe(
-                "A vehicule made by Renault for the Pikes Peak"
-            );
-        });
     });
 });

@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { DefaultFileItem } from "../../../type";
-import { ref } from "@vue/composition-api";
+import { ref } from "vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { isFile } from "../../../helpers/type-check-helper";
@@ -54,7 +54,7 @@ const tooltip_text = ref(
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

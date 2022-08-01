@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import type { Popover } from "tlp";
 import { createPopover } from "tlp";
-import { computed, onBeforeUnmount, onMounted, ref } from "@vue/composition-api";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const { $gettext } = useGettext();
@@ -98,7 +98,7 @@ const containing_message_pattern = computed((): string => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

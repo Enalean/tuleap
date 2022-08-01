@@ -68,7 +68,7 @@ import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import type { Property } from "../../../type";
 
 const props = defineProps<{ property: Property }>();
@@ -125,7 +125,7 @@ function isValueString(value: number | string | null): value is string {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

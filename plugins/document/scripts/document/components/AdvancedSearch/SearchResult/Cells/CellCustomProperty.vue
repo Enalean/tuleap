@@ -34,7 +34,7 @@ import type {
 } from "../../../../type";
 import CellString from "./CellString.vue";
 import CellDate from "./CellDate.vue";
-import { ref } from "@vue/composition-api";
+import { ref } from "vue";
 import type { CustomPropertySearchResult, CustomPropertySearchResultDate } from "../../../../type";
 
 const props = defineProps<{ item: ItemSearchResult; column_name: AdditionalFieldNumber }>();
@@ -67,7 +67,7 @@ function isList(
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

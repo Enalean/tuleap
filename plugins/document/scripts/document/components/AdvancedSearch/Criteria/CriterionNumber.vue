@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import type { SearchCriterionText } from "../../../type";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 
 const props = defineProps<{ criterion: SearchCriterionText; value: string }>();
 
@@ -44,6 +44,6 @@ const id = computed((): string => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

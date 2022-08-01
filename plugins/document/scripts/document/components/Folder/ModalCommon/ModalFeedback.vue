@@ -36,6 +36,6 @@ const { modal_error, has_modal_error } = useNamespacedState<
 >("error", ["modal_error", "has_modal_error"]);
 </script>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 export default defineComponent({});
 </script>

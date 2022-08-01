@@ -74,13 +74,7 @@ import type {
     UpdatePropertiesEvent,
 } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
-import {
-    defineAsyncComponent,
-    onMounted,
-    onUnmounted,
-    ref,
-    shallowRef,
-} from "@vue/composition-api";
+import { defineAsyncComponent, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import type { Item } from "../../type";
 import { isFolder } from "../../helpers/type-check-helper";
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
@@ -239,7 +233,7 @@ onUnmounted(() => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 import { Fragment } from "vue-frag";
 
 export default defineComponent({

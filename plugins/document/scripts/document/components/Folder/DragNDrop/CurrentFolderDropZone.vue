@@ -47,7 +47,7 @@ import prettyKibibytes from "pretty-kibibytes";
 import { useGetters, useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import type { RootGetter } from "../../../store/getters";
-import { computed } from "@vue/composition-api";
+import { computed } from "vue";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const props = defineProps({
@@ -91,7 +91,7 @@ const classes = computed((): string => {
 </script>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 export default defineComponent({});
 </script>

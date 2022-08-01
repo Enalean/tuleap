@@ -40,12 +40,6 @@ module.exports = [
         resolve: {
             extensions: [".ts", ".js", ".vue"],
             alias: {
-                "@vue/composition-api": path.resolve(
-                    __dirname,
-                    "node_modules",
-                    "@vue",
-                    "composition-api"
-                ),
                 vue: path.resolve(__dirname, "node_modules", "vue"),
             },
         },
@@ -60,7 +54,6 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            require("unplugin-vue2-script-setup/webpack")(),
             webpack_configurator.getTypescriptCheckerPlugin(true),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
