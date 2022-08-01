@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\ProjectReference;
 /**
  * @psalm-immutable
  */
-final class WorkFlowErrorPresenter
+final class WorkFlowError
 {
     public int $tracker_id;
     public string $tracker_label;

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\WorkFlowErrorPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
@@ -264,12 +263,27 @@ final class TrackerErrorPresenter
             $title_has_incorrect_title[] = new TitleHasIncorrectTypePresenter($error);
         }
 
+        $workflow_transition_rule_error = [];
+        foreach ($errors_collector->getTransitionRuleError() as $error) {
+            $workflow_transition_rule_error[] = new WorkFlowErrorPresenter($error);
+        }
+
+        $workflow_transition_rule_date_error = [];
+        foreach ($errors_collector->getTransitionRuleDateError() as $error) {
+            $workflow_transition_rule_date_error[] = new WorkFlowErrorPresenter($error);
+        }
+
+        $workflow_transition_field_dependency_error = [];
+        foreach ($errors_collector->getFieldDependencyError() as $error) {
+            $workflow_transition_field_dependency_error[] = new WorkFlowErrorPresenter($error);
+        }
+
         return new self(
             $semantic_error,
             $required_field_error,
-            $errors_collector->getTransitionRuleError(),
-            $errors_collector->getTransitionRuleDateError(),
-            $errors_collector->getFieldDependencyError(),
+            $workflow_transition_rule_error,
+            $workflow_transition_rule_date_error,
+            $workflow_transition_field_dependency_error,
             $non_submittable_fields,
             $non_updatable_fields,
             $errors_collector->getTeamTrackerIdErrors(),
