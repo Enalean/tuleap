@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
+namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\TeamHasNoPlanning;
 
 /**
  * @psalm-immutable
@@ -33,9 +34,9 @@ final class TeamHasNoPlanningPresenter
     public string $project_label;
     public int $project_id;
 
-    public function __construct(ProjectReference $project_reference)
+    public function __construct(TeamHasNoPlanning $team_has_no_planning)
     {
-        $this->project_label = $project_reference->getProjectLabel();
-        $this->project_id    = $project_reference->getId();
+        $this->project_label = $team_has_no_planning->project_label;
+        $this->project_id    = $team_has_no_planning->project_id;
     }
 }
