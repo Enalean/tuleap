@@ -20,39 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub;
+namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
 
-/**
- * @psalm-immutable
- */
-final class RetrievePlannableTrackersStub implements RetrievePlannableTrackers
+final class PlannableTrackersRetriever implements RetrievePlannableTrackers
 {
-    /**
-     * @var TrackerReference[]
-     */
-    private array $tracker_references;
-
-    /**
-     * @param TrackerReference[] $tracker_references
-     */
-    public function __construct(array $tracker_references)
+    public function __construct(public RetrievePlannableTrackersIds $plan_dao, public \TrackerFactory $tracker_factory)
     {
-        $this->tracker_references = $tracker_references;
     }
 
-    /**
-     * @return TrackerReference[]
-     */
     public function getPlannableTrackersOfProgram(int $program_id): array
     {
-        return $this->tracker_references;
-    }
+        $tracker_reference_list    = [];
+        $plannable_tracker_id_list = $this->plan_dao->getPlannableTrackersIdOfProgram($program_id);
+        foreach ($plannable_tracker_id_list as $plannable_tracker_id) {
+            $tracker = $this->tracker_factory->getTrackerById($plannable_tracker_id);
+            if (! $tracker) {
+                continue;
+            }
+            $tracker_reference_list[] = TrackerReferenceProxy::fromTracker($tracker);
+        }
 
-    public static function build(TrackerReference ...$tracker_references): self
-    {
-        return new self($tracker_references);
+        return $tracker_reference_list;
     }
 }

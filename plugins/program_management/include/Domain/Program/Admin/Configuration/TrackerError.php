@@ -25,7 +25,10 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\VerifyTrackerSemantics;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
@@ -37,6 +40,10 @@ final class TrackerError
     public bool $has_status_field_not_defined;
     public bool $has_status_missing_in_teams;
     public bool $has_status_missing_values;
+    /**
+     * @var int[]
+     */
+    public array $teams_with_error = [];
 
     private function __construct(public ?ConfigurationErrorsCollector $collector)
     {
@@ -63,6 +70,10 @@ final class TrackerError
 
         $has_planning_error = $collector && (count($collector->getNoMilestonePlanning()) > 0 || count($collector->getNoSprintPlanning()) > 0);
 
+        if ($collector) {
+            $this->teams_with_error = $collector->getTeamsWithError();
+        }
+
         $this->has_presenter_errors = $has_semantic_errors
             || $has_required_field_errors
             || $has_workflow_error
@@ -82,6 +93,58 @@ final class TrackerError
         $errors_gatherer->gatherConfigurationErrors($tracker, $user_identifier, $errors_collector);
 
         return self::fromAlreadyCollectedErrors($errors_collector);
+    }
+
+    public static function buildProgramIncrementError(
+        ConfigurationErrorsGatherer $errors_gatherer,
+        TrackerReference $program_increment_tracker,
+        ?ProgramIdentifier $program,
+        UserReference $user_identifier,
+        ConfigurationErrorsCollector $errors_collector,
+    ): ?TrackerError {
+        if (! $program) {
+            return null;
+        }
+
+        $errors_gatherer->gatherConfigurationErrors($program_increment_tracker, $user_identifier, $errors_collector);
+
+        return self::fromAlreadyCollectedErrors($errors_collector);
+    }
+
+    public static function buildIterationError(
+        ConfigurationErrorsGatherer $errors_gatherer,
+        ?TrackerReference $iteration_tracker,
+        UserReference $user_identifier,
+        ConfigurationErrorsCollector $errors_collector,
+    ): ?TrackerError {
+        if (! $iteration_tracker) {
+            return null;
+        }
+
+        $errors_gatherer->gatherConfigurationErrors($iteration_tracker, $user_identifier, $errors_collector);
+
+        return self::fromAlreadyCollectedErrors($errors_collector);
+    }
+
+
+    public static function buildPlannableError(
+        RetrievePlannableTrackers $plannable_trackers_retriever,
+        VerifyTrackerSemantics $verify_tracker_semantics,
+        ProgramIdentifier $program,
+        ConfigurationErrorsCollector $plannable_error_collector,
+    ): ?TrackerError {
+        $plannable_tracker = $plannable_trackers_retriever->getPlannableTrackersOfProgram($program->getId());
+        foreach ($plannable_tracker as $tracker_reference) {
+            if (! $verify_tracker_semantics->hasTitleSemantic($tracker_reference->getId())) {
+                $plannable_error_collector->addSemanticError('Title', 'title', [$tracker_reference]);
+            }
+
+            if (! $verify_tracker_semantics->hasStatusSemantic($tracker_reference->getId())) {
+                $plannable_error_collector->addSemanticError('Status', 'status', [$tracker_reference]);
+            }
+        }
+
+        return self::fromAlreadyCollectedErrors($plannable_error_collector);
     }
 
     public static function fromAlreadyCollectedErrors(ConfigurationErrorsCollector $errors_collector): self

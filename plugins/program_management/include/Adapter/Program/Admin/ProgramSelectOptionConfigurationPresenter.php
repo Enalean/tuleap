@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProgramSelectOptionConfiguration;
+
 /**
  * @psalm-immutable
  */
@@ -35,13 +37,23 @@ final class ProgramSelectOptionConfigurationPresenter
     public string $label;
     public bool $is_selected;
 
-    /**
-     * @param int|string $id
-     */
-    public function __construct($id, string $label, bool $is_selected)
+    private function __construct(ProgramSelectOptionConfiguration $configuration)
     {
-        $this->id          = $id;
-        $this->label       = $label;
-        $this->is_selected = $is_selected;
+        $this->id          = $configuration->id;
+        $this->label       = $configuration->label;
+        $this->is_selected = $configuration->is_selected;
+    }
+
+    /**
+     * @param ProgramSelectOptionConfiguration[] $configuration_list
+     * @return self[]
+     */
+    public static function build(array $configuration_list): array
+    {
+        $built_configurations = [];
+        foreach ($configuration_list as $configuration) {
+            $built_configurations[] = new self($configuration);
+        }
+        return $built_configurations;
     }
 }

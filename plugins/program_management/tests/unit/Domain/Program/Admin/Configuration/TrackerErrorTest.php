@@ -24,9 +24,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Tests\Builder\ConfigurationErrorsGathererBuilder;
+use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\RetrievePlannableTrackersStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
+use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\ProgramManagement\Tests\Stub\VerifyTrackerSemanticsStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class TrackerErrorTest extends TestCase
@@ -215,5 +220,123 @@ final class TrackerErrorTest extends TestCase
         self::assertFalse($tracker_error->has_status_field_not_defined);
         self::assertFalse($tracker_error->has_status_missing_in_teams);
         self::assertFalse($tracker_error->has_status_missing_values);
+    }
+
+    public function testItBuildsFromProgramIncrement(): void
+    {
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $program_reference = ProjectReferenceStub::withId(1);
+        $team_reference    = ProjectReferenceStub::withId(2);
+        $tracker_error     = TrackerError::buildProgramIncrementError(
+            ConfigurationErrorsGathererBuilder::build($program_reference, $team_reference),
+            TrackerReferenceStub::withId(100),
+            ProgramIdentifierBuilder::build(),
+            UserReferenceStub::withDefaults(),
+            $error_collector
+        );
+
+        self::assertNotNull($tracker_error);
+        self::assertFalse($tracker_error->has_presenter_errors);
+    }
+
+    public function testItReturnsNullWhenNoProgram(): void
+    {
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $program_reference = ProjectReferenceStub::withId(1);
+        $team_reference    = ProjectReferenceStub::withId(2);
+        $tracker_error     = TrackerError::buildProgramIncrementError(
+            ConfigurationErrorsGathererBuilder::build($program_reference, $team_reference),
+            TrackerReferenceStub::withId(100),
+            null,
+            UserReferenceStub::withDefaults(),
+            $error_collector
+        );
+
+        self::assertNull($tracker_error);
+    }
+
+    public function testItBuildsFromIteration(): void
+    {
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $program_reference = ProjectReferenceStub::withId(1);
+        $team_reference    = ProjectReferenceStub::withId(2);
+        $tracker_error     = TrackerError::buildIterationError(
+            ConfigurationErrorsGathererBuilder::build($program_reference, $team_reference),
+            TrackerReferenceStub::withId(100),
+            UserReferenceStub::withDefaults(),
+            $error_collector
+        );
+
+        self::assertNotNull($tracker_error);
+        self::assertFalse($tracker_error->has_presenter_errors);
+    }
+
+    public function testItReturnsNullWhenNoIterationTrackerFound(): void
+    {
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $program_reference = ProjectReferenceStub::withId(1);
+        $team_reference    = ProjectReferenceStub::withId(2);
+        $tracker_error     = TrackerError::buildIterationError(
+            ConfigurationErrorsGathererBuilder::build($program_reference, $team_reference),
+            null,
+            UserReferenceStub::withDefaults(),
+            $error_collector
+        );
+
+        self::assertNull($tracker_error);
+    }
+
+    public function testItCollectTitleSemanticErrorForPlannableTrackers(): void
+    {
+        $verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutTitleSemantic();
+
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $tracker_error = TrackerError::buildPlannableError(
+            RetrievePlannableTrackersStub::build(TrackerReferenceStub::withId(100)),
+            $verify_tracker_semantics,
+            ProgramIdentifierBuilder::build(),
+            $error_collector
+        );
+
+        self::assertNotNull($tracker_error);
+        self::assertTrue($tracker_error->has_presenter_errors);
+    }
+
+    public function testItCollectStatusSemanticErrorForPlannableTrackers(): void
+    {
+        $verify_tracker_semantics = VerifyTrackerSemanticsStub::withoutStatusSemantic();
+
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $tracker_error = TrackerError::buildPlannableError(
+            RetrievePlannableTrackersStub::build(TrackerReferenceStub::withId(100)),
+            $verify_tracker_semantics,
+            ProgramIdentifierBuilder::build(),
+            $error_collector
+        );
+
+        self::assertNotNull($tracker_error);
+        self::assertTrue($tracker_error->has_presenter_errors);
+    }
+
+    public function testPlannableTrackersDoesNotHaveError(): void
+    {
+        $verify_tracker_semantics = VerifyTrackerSemanticsStub::withAllSemantics();
+
+        $error_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
+
+        $tracker_error = TrackerError::buildPlannableError(
+            RetrievePlannableTrackersStub::build(),
+            $verify_tracker_semantics,
+            ProgramIdentifierBuilder::build(),
+            $error_collector
+        );
+
+        self::assertFalse($tracker_error?->has_presenter_errors);
     }
 }

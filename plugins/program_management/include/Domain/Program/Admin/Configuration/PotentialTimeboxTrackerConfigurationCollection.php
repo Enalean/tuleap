@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
@@ -30,15 +29,15 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 /**
  * @psalm-immutable
  */
-final class PotentialTimeboxTrackerConfigurationPresenterCollection
+final class PotentialTimeboxTrackerConfigurationCollection
 {
     /**
-     * @var ProgramSelectOptionConfigurationPresenter[]
+     * @var ProgramSelectOptionConfiguration[]
      */
     public array $presenters;
 
     /**
-     * @param ProgramSelectOptionConfigurationPresenter[] $presenters
+     * @param ProgramSelectOptionConfiguration[] $presenters
      */
     private function __construct(array $presenters)
     {
@@ -53,7 +52,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollection
 
         foreach ($all_potential_trackers->trackers_reference as $potential_tracker) {
             $selected                       = $timebox_tracker && $potential_tracker->getId() === $timebox_tracker->getId();
-            $potential_tracker_presenters[] = new ProgramSelectOptionConfigurationPresenter(
+            $potential_tracker_presenters[] = new ProgramSelectOptionConfiguration(
                 $potential_tracker->getId(),
                 $potential_tracker->getLabel(),
                 $selected

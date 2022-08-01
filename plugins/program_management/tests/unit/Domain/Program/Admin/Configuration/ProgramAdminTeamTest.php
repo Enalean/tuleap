@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Team;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementBuilder;
@@ -33,8 +33,9 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchVisibleTeamsOfProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsSynchronizationPendingStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyTeamSynchronizationHasErrorStub;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProgramAdminTeamTest extends TestCase
 {
     private SearchOpenProgramIncrementsStub $open_program_increment_searcher;
     private \Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier $program_for_admin;
@@ -55,7 +56,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $team,
         );
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter(
+        $teams_presenter = ProgramAdminTeam::build(
             $this->open_program_increment_searcher,
             SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror(),
             $this->program_for_admin,
@@ -65,7 +66,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
             VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             BuildProgramStub::stubValidProgram(),
-            [$team->getId()]
+            null,
+            null,
+            null,
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
         self::assertFalse($teams_presenter[0]->should_synchronize_team);
@@ -78,7 +81,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $team,
         );
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter(
+        $teams_presenter = ProgramAdminTeam::build(
             $this->open_program_increment_searcher,
             SearchMirrorTimeboxesFromProgramStub::buildWithMissingMirror(),
             $this->program_for_admin,
@@ -88,7 +91,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
             VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             BuildProgramStub::stubValidProgram(),
-            []
+            null,
+            null,
+            null,
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
         self::assertTrue($teams_presenter[0]->should_synchronize_team);
@@ -101,7 +106,7 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             $team,
         );
 
-        $teams_presenter = TeamsPresenterBuilder::buildTeamsPresenter(
+        $teams_presenter = ProgramAdminTeam::build(
             $this->open_program_increment_searcher,
             SearchMirrorTimeboxesFromProgramStub::buildWithoutMissingMirror(),
             $this->program_for_admin,
@@ -111,7 +116,9 @@ final class TeamsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             SearchVisibleTeamsOfProgramStub::withTeamIds($team->getId()),
             VerifyTeamSynchronizationHasErrorStub::buildWithoutError(),
             BuildProgramStub::stubValidProgram(),
-            []
+            null,
+            null,
+            null,
         );
         self::assertSame($team->getId(), $teams_presenter[0]->id);
         self::assertFalse($teams_presenter[0]->should_synchronize_team);

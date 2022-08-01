@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean 2021 -  Present. All Rights Reserved.
+ * Copyright (c) Enalean 2021 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramSelectOptionConfigurationPresenter;
 use Tuleap\ProgramManagement\Domain\Program\Admin\CanPrioritizeItems\BuildUGroupRepresentation;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RetrieveProjectUgroupsCanPrioritizeItems;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveUGroups;
 use Tuleap\ProgramManagement\Domain\Workspace\UserGroup;
 
-final class ProjectUGroupCanPrioritizeItemsPresentersBuilder
+final class ProjectUGroupCanPrioritizeItemsBuilder
 {
     private RetrieveProjectUgroupsCanPrioritizeItems $can_prioritize_items_retriever;
     private RetrieveUGroups $retrieve_u_groups;
@@ -47,7 +47,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder
     }
 
     /**
-     * @return ProgramSelectOptionConfigurationPresenter[]
+     * @return ProgramSelectOptionConfiguration[]
      */
     public function buildProjectUgroupCanPrioritizeItemsPresenters(ProgramForAdministrationIdentifier $program): array
     {
@@ -62,7 +62,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilder
             if (! $ugroup->is_created_by_user) {
                 $id = $this->ugroup_representation_builder->getUGroupRepresentation($program->id, $ugroup->id);
             }
-            $presenters[] = new ProgramSelectOptionConfigurationPresenter(
+            $presenters[] = new ProgramSelectOptionConfiguration(
                 $id,
                 $ugroup->translated_name,
                 in_array($ugroup->id, $can_prioritize_features)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
+use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectUgroupsCanPrioritizeItemsStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUGroupsStub;
 
-final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectUGroupCanPrioritizeItemsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramForAdministrationIdentifier $program;
 
@@ -41,7 +42,7 @@ final class ProjectUGroupCanPrioritizeItemsPresentersBuilderTest extends \Tuleap
     {
         $ugroup_manager = RetrieveUGroupsStub::buildWithUGroups();
 
-        $builder = new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
+        $builder = new ProjectUGroupCanPrioritizeItemsBuilder(
             $ugroup_manager,
             RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(3),
             new UGroupRepresentationBuilder()

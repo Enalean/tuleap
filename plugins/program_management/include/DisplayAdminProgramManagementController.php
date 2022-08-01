@@ -27,48 +27,35 @@ use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\ProgramAdminPresenter;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamsPresenterBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration\PotentialTimeboxTrackerConfigurationPresenterCollection;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTracker;
-use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialPlannableTrackersConfigurationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProgramAdmin;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProjectUGroupCanPrioritizeItemsBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\VerifyIsSynchronizationPending;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\ConfigurationErrorsGatherer;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\SearchOpenProgramIncrements;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIterationTrackerNotFoundException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\RetrieveProjectReference;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTeam\PotentialTeamsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveIterationLabels;
 use Tuleap\ProgramManagement\Domain\Program\AllProgramSearcher;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\RetrieveVisibleIterationTracker;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\ProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementLabels;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\SearchTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
 use Tuleap\ProgramManagement\Domain\Team\SearchVisibleTeamsOfProgram;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\SearchProjectsUserIsAdmin;
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\SearchTrackersOfProgram;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\VerifyTrackerSemantics;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -88,21 +75,22 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         private BuildProgram $build_program,
         private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever,
         private RetrieveVisibleIterationTracker $iteration_tracker_retriever,
-        private PotentialPlannableTrackersConfigurationPresentersBuilder $plannable_tracker_presenters_builder,
-        private ProjectUGroupCanPrioritizeItemsPresentersBuilder $ugroups_can_prioritize_builder,
+        private PotentialPlannableTrackersConfigurationBuilder $plannable_tracker_presenters_builder,
+        private ProjectUGroupCanPrioritizeItemsBuilder $ugroups_can_prioritize_builder,
         private VerifyProjectPermission $permission_verifier,
         private RetrieveProgramIncrementLabels $program_increment_labels_retriever,
         private SearchTrackersOfProgram $trackers_searcher,
         private RetrieveIterationLabels $iteration_labels_retriever,
         private AllProgramSearcher $all_program_searcher,
-        private ConfigurationErrorPresenterBuilder $error_presenter_builder,
+        private ConfigurationErrorsGatherer $errors_gatherer,
         private \ProjectManager $project_manager,
-        private RetrieveFullTracker $tracker_retriever,
         private SearchOpenProgramIncrements $search_open_program_increments,
         private SearchMirrorTimeboxesFromProgram $timebox_searcher,
         private VerifyIsSynchronizationPending $verify_is_synchronization_pending,
         private SearchVisibleTeamsOfProgram $team_searcher,
         private VerifyTeamSynchronizationHasError $verify_team_synchronization_has_error,
+        private RetrievePlannableTrackers $plannable_trackers_retriever,
+        private VerifyTrackerSemantics $verify_tracker_semantics,
     ) {
     }
 
@@ -116,14 +104,10 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             );
         }
 
-        $user                      = $request->getCurrentUser();
-        $user_identifier           = UserProxy::buildFromPFUser($user);
-        $project_identifier        = ProjectProxy::buildFromProject($project);
-        $increment_error_presenter = null;
-        $iteration_error_presenter = null;
-        $program_increment_tracker = null;
-        $iteration_tracker         = null;
-        $plannable_error_presenter = null;
+        $user               = $request->getCurrentUser();
+        $user_identifier    = UserProxy::buildFromPFUser($user);
+        $project_identifier = ProjectProxy::buildFromProject($project);
+
         try {
             $admin_program = ProgramForAdministrationIdentifier::fromProject(
                 $this->verify_is_team,
@@ -142,63 +126,6 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
             );
         }
 
-        try {
-            $program = ProgramIdentifier::fromId(
-                $this->build_program,
-                (int) $project->getID(),
-                $user_identifier,
-                null
-            );
-
-            $program_increment_error_collector = new ConfigurationErrorsCollector($this->verify_is_team, true);
-            $iteration_error_collector         = new ConfigurationErrorsCollector($this->verify_is_team, true);
-            $plannable_error_collector         = new ConfigurationErrorsCollector($this->verify_is_team, true);
-
-            $program_increment_tracker = $this->program_increment_tracker_retriever->retrieveVisibleProgramIncrementTracker(
-                $program,
-                $user_identifier
-            );
-
-            $iteration_tracker = IterationTrackerIdentifier::fromProgram(
-                $this->iteration_tracker_retriever,
-                $program,
-                $user_identifier
-            );
-            if (! $iteration_tracker) {
-                throw new ProgramIterationTrackerNotFoundException($program);
-            }
-
-            $increment_error_presenter = $this->error_presenter_builder->buildProgramIncrementErrorPresenter(
-                $program_increment_tracker,
-                $program,
-                $user_identifier,
-                $program_increment_error_collector
-            );
-            $iteration_error_presenter = $this->error_presenter_builder->buildIterationErrorPresenter(
-                TrackerReferenceProxy::fromIterationTracker($this->tracker_retriever, $iteration_tracker),
-                $user_identifier,
-                $iteration_error_collector
-            );
-            $plannable_error_presenter = $this->error_presenter_builder->buildPlannableErrorPresenter(
-                $program,
-                $plannable_error_collector
-            );
-        } catch (ProgramAccessException $e) {
-            throw new ForbiddenException(
-                dgettext(
-                    'tuleap-program_management',
-                    'You need to be project administrator to access to program administration.'
-                )
-            );
-        } catch (
-            ProjectIsNotAProgramException
-            | ProgramHasNoProgramIncrementTrackerException
-            | ProgramTrackerNotFoundException
-            | ProgramIterationTrackerNotFoundException
-        ) {
-            // ignore for not configured program
-        }
-
         \Tuleap\Project\ServiceInstrumentation::increment('program_management');
 
         $assets = $this->getAssets();
@@ -211,85 +138,50 @@ final class DisplayAdminProgramManagementController implements DispatchableWithR
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($assets->getFileURL('program_management_admin.js'));
 
-        $program_increment_labels = ProgramIncrementLabels::fromProgramIncrementTracker(
-            $this->program_increment_labels_retriever,
-            $program_increment_tracker
-        );
+        try {
+            $aggregated_teams = TeamProjectsCollection::fromProgramForAdministration(
+                $this->teams_searcher,
+                $this->project_reference_retriever,
+                $admin_program
+            );
 
-        $iteration_labels = IterationLabels::fromIterationTracker(
-            $this->iteration_labels_retriever,
-            $iteration_tracker
-        );
-
-        $all_potential_trackers = PotentialTrackerCollection::fromProgram(
-            $this->trackers_searcher,
-            $admin_program
-        );
-
-        $teams_in_error = [];
-        if ($plannable_error_presenter) {
-            $teams_in_error = array_unique(array_merge($teams_in_error, $plannable_error_presenter->teams_with_error));
+            $program_admin = ProgramAdmin::build(
+                $this->search_project_user_is_admin,
+                $this->teams_searcher,
+                $this->verify_is_team,
+                $this->build_program,
+                $this->program_increment_tracker_retriever,
+                $this->iteration_tracker_retriever,
+                $this->plannable_tracker_presenters_builder,
+                $this->ugroups_can_prioritize_builder,
+                $this->program_increment_labels_retriever,
+                $this->trackers_searcher,
+                $this->iteration_labels_retriever,
+                $this->all_program_searcher,
+                $this->errors_gatherer,
+                $this->search_open_program_increments,
+                $this->timebox_searcher,
+                $this->verify_is_synchronization_pending,
+                $this->team_searcher,
+                $this->verify_team_synchronization_has_error,
+                $this->plannable_trackers_retriever,
+                $this->verify_tracker_semantics,
+                $admin_program,
+                $user_identifier,
+                $project_identifier,
+                $aggregated_teams
+            );
+        } catch (ProgramAccessException $e) {
+            throw new ForbiddenException(
+                dgettext(
+                    'tuleap-program_management',
+                    'You need to be project administrator to access to program administration.'
+                )
+            );
         }
-        if ($increment_error_presenter) {
-            $teams_in_error = array_unique(array_merge($teams_in_error, $increment_error_presenter->teams_with_error));
-        }
-        if ($iteration_error_presenter) {
-            $teams_in_error = array_unique(array_merge($teams_in_error, $iteration_error_presenter->teams_with_error));
-        }
-
-        $aggregated_teams = TeamProjectsCollection::fromProgramForAdministration(
-            $this->teams_searcher,
-            $this->project_reference_retriever,
-            $admin_program
-        );
-
         $this->template_renderer->renderToPage(
             'admin',
-            new ProgramAdminPresenter(
-                $admin_program,
-                $project->getUnixNameLowerCase(),
-                PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter(
-                    PotentialTeamsCollection::buildPotentialTeams(
-                        $this->teams_searcher,
-                        $this->all_program_searcher,
-                        $this->search_project_user_is_admin,
-                        $admin_program,
-                        $user_identifier
-                    )->getPotentialTeams()
-                ),
-                TeamsPresenterBuilder::buildTeamsPresenter(
-                    $this->search_open_program_increments,
-                    $this->timebox_searcher,
-                    $admin_program,
-                    $user_identifier,
-                    $aggregated_teams,
-                    $this->verify_is_synchronization_pending,
-                    $this->team_searcher,
-                    $this->verify_team_synchronization_has_error,
-                    $this->build_program,
-                    $teams_in_error,
-                ),
-                PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
-                    $all_potential_trackers,
-                    $program_increment_tracker
-                )->presenters,
-                $this->plannable_tracker_presenters_builder->buildPotentialPlannableTrackerPresenters(
-                    $admin_program,
-                    $all_potential_trackers
-                ),
-                $this->ugroups_can_prioritize_builder->buildProjectUgroupCanPrioritizeItemsPresenters($admin_program),
-                $program_increment_labels->label,
-                $program_increment_labels->sub_label,
-                PotentialTimeboxTrackerConfigurationPresenterCollection::fromTimeboxTracker(
-                    $all_potential_trackers,
-                    $iteration_tracker
-                )->presenters,
-                $iteration_labels->label,
-                $iteration_labels->sub_label,
-                $increment_error_presenter,
-                $iteration_error_presenter,
-                $plannable_error_presenter
-            )
+            ProgramAdminPresenter::build($program_admin)
         );
 
         $layout->footer([]);

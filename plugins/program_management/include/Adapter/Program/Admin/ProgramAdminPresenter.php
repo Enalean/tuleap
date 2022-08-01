@@ -25,8 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Admin;
 
 use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\TrackerErrorPresenter;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamPresenter;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\Team\TeamPresenter;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Adapter\Program\Admin\PotentialTeam\PotentialTeamsPresenterBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProgramAdmin;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProgramAdminTeam;
 
 /**
  * @psalm-immutable
@@ -39,7 +40,7 @@ final class ProgramAdminPresenter
      */
     public array $potential_teams;
     /**
-     * @var TeamPresenter[]
+     * @var ProgramAdminTeam[]
      */
     public array $aggregated_teams;
     public bool $has_aggregated_teams;
@@ -64,53 +65,39 @@ final class ProgramAdminPresenter
     public bool $has_program_increment_error;
     public bool $has_iteration_increment_error;
     public bool $has_plannable_error;
+    public string $program_shortname;
+    public ?TrackerErrorPresenter $program_increment_error_presenter;
+    public ?TrackerErrorPresenter $iteration_error_presenter;
+    public ?TrackerErrorPresenter $plannable_error_presenter;
 
-    /**
-     * @param PotentialTeamPresenter[] $potential_teams
-     * @param TeamPresenter[] $aggregated_teams
-     * @param ProgramSelectOptionConfigurationPresenter[] $potential_program_increments
-     * @param ProgramSelectOptionConfigurationPresenter[] $potential_plannable_trackers
-     * @param ProgramSelectOptionConfigurationPresenter[] $ugroups_can_prioritize
-     * @param ProgramSelectOptionConfigurationPresenter[] $potential_iterations
-     */
-    public function __construct(
-        ProgramForAdministrationIdentifier $program,
-        public string $program_shortname,
-        array $potential_teams,
-        array $aggregated_teams,
-        array $potential_program_increments,
-        array $potential_plannable_trackers,
-        array $ugroups_can_prioritize,
-        public ?string $program_increment_label,
-        public ?string $program_increment_sub_label,
-        array $potential_iterations,
-        public ?string $iteration_label,
-        public ?string $iteration_sub_label,
-        public ?TrackerErrorPresenter $program_increment_error_presenter,
-        public ?TrackerErrorPresenter $iteration_error_presenter,
-        public ?TrackerErrorPresenter $plannable_error_presenter,
-    ) {
-        $this->program_id                   = $program->id;
-        $this->potential_teams              = $potential_teams;
-        $this->aggregated_teams             = $aggregated_teams;
-        $this->has_aggregated_teams         = count($aggregated_teams) > 0;
-        $this->potential_program_increments = $potential_program_increments;
-        $this->potential_plannable_trackers = $potential_plannable_trackers;
-        $this->ugroups_can_prioritize       = $ugroups_can_prioritize;
-        $this->potential_iterations         = $potential_iterations;
+    private function __construct(ProgramAdmin $program_admin)
+    {
+        $this->program_id                        = $program_admin->program->id;
+        $this->program_shortname                 = $program_admin->program_shortname;
+        $this->aggregated_teams                  = $program_admin->aggregated_teams;
+        $this->has_aggregated_teams              = count($program_admin->aggregated_teams) > 0;
+        $this->potential_program_increments      = ProgramSelectOptionConfigurationPresenter::build($program_admin->potential_program_increments);
+        $this->potential_plannable_trackers      = ProgramSelectOptionConfigurationPresenter::build($program_admin->potential_plannable_trackers);
+        $this->ugroups_can_prioritize            = ProgramSelectOptionConfigurationPresenter::build($program_admin->ugroups_can_prioritize);
+        $this->potential_iterations              = ProgramSelectOptionConfigurationPresenter::build($program_admin->potential_iterations);
+        $this->program_increment_error_presenter = TrackerErrorPresenter::fromTrackerError($program_admin->program_increment_error);
+        $this->iteration_error_presenter         = TrackerErrorPresenter::fromTrackerError($program_admin->iteration_error);
+        $this->plannable_error_presenter         = TrackerErrorPresenter::fromTrackerError($program_admin->plannable_error);
+        $this->potential_teams                   = PotentialTeamsPresenterBuilder::buildPotentialTeamsPresenter($program_admin->potential_teams);
 
-        $this->has_errors = ($program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors)
-            || ($iteration_error_presenter && $iteration_error_presenter->has_presenter_errors)
-            || ($plannable_error_presenter && $plannable_error_presenter->has_presenter_errors);
-
-        $this->has_program_increment_error   = $program_increment_error_presenter && $program_increment_error_presenter->has_presenter_errors;
-        $this->has_iteration_increment_error = $iteration_error_presenter && $iteration_error_presenter->has_presenter_errors;
-        $this->has_plannable_error           = $plannable_error_presenter && $plannable_error_presenter->has_presenter_errors;
-
-        if ($program_increment_sub_label) {
-            $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', "Sync open %s"), $program_increment_sub_label);
+        $this->has_errors                    = $program_admin->has_presenter_errors;
+        $this->has_program_increment_error   = $program_admin->has_program_increment_error;
+        $this->has_iteration_increment_error = $program_admin->has_iteration_error;
+        $this->has_plannable_error           = $program_admin->has_plannable_error;
+        if ($program_admin->program_increment_sub_label) {
+            $this->synchronize_button_label = sprintf(dgettext('tuleap-program_management', "Sync open %s"), $program_admin->program_increment_sub_label);
         } else {
             $this->synchronize_button_label = dgettext('tuleap-program_management', "Sync open Program Increments");
         }
+    }
+
+    public static function build(ProgramAdmin $program_admin): self
+    {
+        return new self($program_admin);
     }
 }
