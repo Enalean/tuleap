@@ -22,6 +22,7 @@ namespace Tuleap\Mail\Transport;
 
 use ForgeConfig;
 use Laminas\Mail;
+use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyString;
 
@@ -34,15 +35,14 @@ class MailTransportBuilder
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
 
-    public static function buildMailTransport(): Mail\Transport\TransportInterface
+    public static function buildMailTransport(LoggerInterface $logger): Mail\Transport\TransportInterface
     {
-        if (ForgeConfig::get(self::CONFIG_KEY) === self::EMAIL_TRANSPORT_SENDMAIL_VALUE) {
+        if (ForgeConfig::get(self::CONFIG_KEY, self::EMAIL_TRANSPORT_SENDMAIL_VALUE) === self::EMAIL_TRANSPORT_SENDMAIL_VALUE) {
             return new Mail\Transport\Sendmail();
         } elseif (ForgeConfig::get(self::CONFIG_KEY) === self::EMAIL_TRANSPORT_SMTP_VALUE) {
             return new Mail\Transport\Smtp();
         } else {
-            // We don't deal with invalid value yet. We fallback on the legacy Sendmail
-            return new Mail\Transport\Sendmail();
+            return new InvalidDefinedTransport($logger);
         }
     }
 }

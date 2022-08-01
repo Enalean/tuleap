@@ -30,6 +30,8 @@ use Laminas\Mime\Part as MimePart;
  * It allows to send mails in html format
  *
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Codendi_Mail implements Codendi_Mail_Interface
 {
     /**
@@ -93,8 +95,8 @@ class Codendi_Mail implements Codendi_Mail_Interface
         $this->message = new Mail\Message();
         $this->message->setEncoding('UTF-8');
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
-        $this->transport              = MailTransportBuilder::buildMailTransport();
         $this->logger                 = new MailLogger();
+        $this->transport              = MailTransportBuilder::buildMailTransport($this->logger);
     }
 
     public function setMessageId($message_id)
@@ -127,7 +129,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      *
      * @return Array
      */
-    public function _cleanupMailFormat($mail)
+    public function cleanupMailFormat($mail)
     {
         $pattern = '/(.*)<(.*)>/';
         if (preg_match($pattern, $mail, $matches)) {
@@ -178,7 +180,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
 
     public function setFrom($email)
     {
-        list($email, $name) = $this->_cleanupMailFormat($email);
+        list($email, $name) = $this->cleanupMailFormat($email);
         $this->message->setFrom($email, $name);
     }
 
@@ -204,7 +206,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function setTo($to, $raw = false)
     {
-        list($to,) = $this->_cleanupMailFormat($to);
+        list($to,) = $this->cleanupMailFormat($to);
         if (! $raw) {
             $to = $this->validateCommaSeparatedListOfAddresses($to);
             if (! empty($to)) {
