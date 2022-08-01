@@ -80,7 +80,3 @@ const can_go_to_parent = (): boolean => {
     return index_of_parent.value >= -1;
 };
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

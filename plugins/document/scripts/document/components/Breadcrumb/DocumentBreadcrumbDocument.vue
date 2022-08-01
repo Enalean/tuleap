@@ -37,8 +37,3 @@ import type { Folder, Item } from "../../type";
 
 defineProps<{ current_document: Item; parent_folder: Folder }>();
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

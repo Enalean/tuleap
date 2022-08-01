@@ -102,9 +102,3 @@ const should_display_update_properties = computed((): boolean => {
     return canUpdateProperties(forbid_writers_to_update.value, props.item);
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

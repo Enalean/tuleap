@@ -55,8 +55,3 @@ const id = computed((): string => {
     return "document-criterion-text-" + props.criterion.name;
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

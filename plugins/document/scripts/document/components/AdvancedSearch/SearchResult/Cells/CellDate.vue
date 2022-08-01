@@ -57,9 +57,3 @@ const relative_date_placement = computed((): string => {
     return relativeDatePlacement(relative_dates_display.value, "top");
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

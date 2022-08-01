@@ -32,7 +32,3 @@ import LoadingErrorSvg from "../../svg/error/LoadingErrorSvg.vue";
 import ShowErrorDetails from "./ShowErrorDetails.vue";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

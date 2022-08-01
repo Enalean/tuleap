@@ -110,7 +110,3 @@ const placeholder = computed((): string => {
     return $gettext("Please write something meaningful for the admin.");
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

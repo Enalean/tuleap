@@ -80,9 +80,3 @@ const has_properties_to_create = computed((): boolean => {
     );
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

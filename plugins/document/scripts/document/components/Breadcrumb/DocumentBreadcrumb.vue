@@ -188,8 +188,3 @@ function isCurrentDocumentDisplayed(): boolean {
     return currently_previewed_item.value !== null && current_folder.value !== null;
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

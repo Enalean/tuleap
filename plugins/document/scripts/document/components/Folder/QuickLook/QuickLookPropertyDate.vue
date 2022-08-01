@@ -123,9 +123,3 @@ function isValueString(value: number | string | null): value is string {
     return typeof value === "string";
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

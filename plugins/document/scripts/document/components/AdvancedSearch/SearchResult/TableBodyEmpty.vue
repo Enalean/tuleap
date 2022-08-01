@@ -36,9 +36,3 @@
 <script setup lang="ts">
 defineProps<{ nb_columns: number }>();
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

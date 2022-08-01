@@ -30,9 +30,3 @@ import type { ItemSearchResult } from "../../../../type";
 
 defineProps<{ item: ItemSearchResult }>();
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

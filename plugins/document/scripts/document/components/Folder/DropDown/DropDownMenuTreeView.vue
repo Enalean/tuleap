@@ -115,9 +115,3 @@ const should_display_delete_item = computed((): boolean => {
     return canDelete(forbid_writers_to_delete.value, props.item);
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

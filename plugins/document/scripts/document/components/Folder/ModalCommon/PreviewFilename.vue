@@ -51,9 +51,3 @@ const preview = computed((): string => {
     );
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

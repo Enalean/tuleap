@@ -112,8 +112,3 @@ const display_latest_version_text = computed((): boolean => {
     return versions.value.length >= 5;
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

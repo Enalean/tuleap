@@ -65,9 +65,3 @@ function isList(
     return property !== null && property.type === "list";
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

@@ -57,7 +57,3 @@ const { current_folder } = useNamespacedState<Pick<RootState, "current_folder">>
     "current_folder",
 ]);
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

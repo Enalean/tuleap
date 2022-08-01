@@ -157,9 +157,3 @@ function onDropdownHidden(): void {
     is_dropdown_shown.value = false;
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>
