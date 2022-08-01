@@ -54,9 +54,6 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr ""
 
-msgid "Accepted input is the user id or its username."
-msgstr ""
-
 msgid "Actions in Documents service"
 msgstr ""
 
@@ -752,9 +749,6 @@ msgid "You are not allowed to upload files bigger than %s."
 msgstr "Você não está autorizado a carregar arquivos maiores que %s."
 
 msgid "You are not allowed to write in this folder"
-msgstr ""
-
-msgid "You can search documents owned by a user."
 msgstr ""
 
 msgid "You don't have read permission for this item"

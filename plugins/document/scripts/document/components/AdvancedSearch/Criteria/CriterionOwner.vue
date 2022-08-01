@@ -20,72 +20,84 @@
 
 <template>
     <div class="tlp-form-element document-search-criterion document-search-criterion-owner">
-        <div class="document-search-criterion-with-popover">
-            <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
-            <div class="popover-information">
-                <span ref="popover_icon">
-                    <i class="fas fa-question-circle popover-search-icon"></i>
-                </span>
-
-                <section class="tlp-popover" ref="popover_content">
-                    <div class="tlp-popover-arrow"></div>
-                    <div class="tlp-popover-header">
-                        <h1 class="tlp-popover-title" v-translate>Search help</h1>
-                    </div>
-                    <div class="tlp-popover-body">
-                        <p>
-                            <translate>You can search documents owned by a user.</translate>
-                            <translate>Accepted input is the user id or its username.</translate>
-                        </p>
-                    </div>
-                </section>
-            </div>
-        </div>
-
-        <input
-            type="text"
-            class="tlp-input"
-            v-bind:id="id"
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
-            v-bind:data-test="id"
-        />
+        <label class="tlp-label" v-bind:for="id">{{ criterion.label }}</label>
+        <select class="tlp-input" v-bind:id="id" ref="owner_input" v-bind:data-test="id">
+            <option
+                selected
+                v-if="currently_selected_user"
+                v-bind:value="currently_selected_user.id"
+            >
+                {{ currently_selected_user.display_name }}
+            </option>
+            <slot />
+        </select>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { Popover } from "tlp";
-import { createPopover } from "tlp";
+import type { Select2Plugin } from "tlp";
 import type { SearchCriterionOwner } from "../../../type";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
+import type { RestUser } from "../../../api/rest-querier";
+import { retrieveSelectedOwner } from "../../../helpers/owner/retrieve-selected-owner";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
 
 const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
-const popover = ref<Popover | undefined>();
-const popover_icon = ref<InstanceType<typeof HTMLElement>>();
-const popover_content = ref<InstanceType<typeof HTMLElement>>();
+const { project_name } = useState<Pick<ConfigurationState, "project_name">>("configuration", [
+    "project_name",
+]);
 
-onMounted((): void => {
-    const trigger = popover_icon.value;
-    if (!(trigger instanceof HTMLElement)) {
+const owner_input = ref<InstanceType<typeof HTMLElement>>();
+const select2_people_picker = ref<(Select2Plugin & { trigger(event: string): void }) | undefined>();
+const currently_selected_user = ref<RestUser | undefined>();
+
+const emit = defineEmits<{
+    (e: "input", value: string): void;
+}>();
+
+onMounted(async (): Promise<void> => {
+    const people_picker_element = owner_input.value;
+    if (!(people_picker_element instanceof HTMLElement)) {
         return;
     }
 
-    const content = popover_content.value;
-    if (!(content instanceof HTMLElement)) {
-        return;
+    currently_selected_user.value = await retrieveSelectedOwner(props.value);
+
+    if (select2_people_picker.value) {
+        select2_people_picker.value.trigger("change");
     }
 
-    popover.value = createPopover(trigger, content, {
-        anchor: trigger,
-        placement: "bottom-start",
-    });
-});
+    const configuration = {
+        data: currently_selected_user.value,
+        codendiUserOnly: true,
+        use_tuleap_id: true,
+        ajax: {
+            url: `/plugins/document/${encodeURIComponent(project_name.value)}/owners`,
+            dataType: "json",
+            delay: 250,
+            data: (params: Record<string, unknown>) => ({
+                name: params.term,
+                page: 1,
+            }),
+        },
+    };
+    const options = {
+        ...configuration,
+        multiple: false,
+    };
 
-onBeforeUnmount((): void => {
-    if (popover.value) {
-        popover.value.destroy();
-    }
+    select2_people_picker.value = autocomplete_users_for_select2(people_picker_element, options)
+        .trigger("change")
+        .on("select2:select", (e: { params: { data: RestUser } }): void => {
+            const data = e.params.data;
+            emit("input", data.username);
+        })
+        .on("select2:clear", (): void => {
+            emit("input", "");
+        });
 });
 
 const id = computed((): string => {

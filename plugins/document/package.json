@@ -7,6 +7,8 @@
   "dependencies": {
     "@tuleap/autocomplete-for-select2": "link:../../lib/frontend/autocomplete-for-select2",
     "@tuleap/date-helper": "link:../../lib/frontend/date-helper",
+    "@tuleap/fault": "link:../../lib/frontend/fault",
+    "@tuleap/fetch-result": "link:../../lib/frontend/fetch-result",
     "@tuleap/keyboard-shortcuts": "link:../../lib/frontend/keyboard-shortcuts",
     "@tuleap/list-picker": "link:../../lib/frontend/list-picker",
     "@tuleap/project-privacy-helper": "link:../../lib/frontend/project-privacy-helper",
@@ -40,6 +42,7 @@
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.3.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
+    "neverthrow": "4.3.1",
     "vue-class-component": "^7.2.6",
     "vue-frag": "^1.4.0",
     "vue-property-decorator": "^9.1.2",
