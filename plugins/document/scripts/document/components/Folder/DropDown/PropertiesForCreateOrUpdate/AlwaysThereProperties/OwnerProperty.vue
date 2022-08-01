@@ -34,9 +34,3 @@ import type { User } from "../../../../../type";
 
 defineProps<{ value: User }>();
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

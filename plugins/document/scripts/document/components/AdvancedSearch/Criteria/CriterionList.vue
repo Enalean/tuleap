@@ -50,8 +50,3 @@ function isSelected(option: SearchListOption): boolean {
     return option.value === props.value;
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

@@ -60,7 +60,3 @@ const get_icon_additional_classes = computed((): string => {
         : "document-tree-item-toggle-quicklook-lock-icon";
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

@@ -125,9 +125,3 @@ function updateObsolescenceDate(new_date: string) {
     uses_helper_validity.value = false;
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

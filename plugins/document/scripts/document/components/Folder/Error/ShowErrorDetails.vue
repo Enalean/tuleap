@@ -98,7 +98,3 @@ const error_message = computed((): string | null => {
     return document_loading_error.value;
 });
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

@@ -40,7 +40,3 @@ function showNewDocumentModal(): void {
     emitter.emit("createItem", { item: props.item });
 }
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

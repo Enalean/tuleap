@@ -34,9 +34,3 @@ const { $gettext } = useGettext();
 
 const title = ref($gettext("Search"));
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

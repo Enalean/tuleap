@@ -163,9 +163,3 @@ onBeforeUnmount(() => {
     modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, close);
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

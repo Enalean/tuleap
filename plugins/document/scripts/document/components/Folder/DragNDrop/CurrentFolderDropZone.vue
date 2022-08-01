@@ -89,9 +89,3 @@ const classes = computed((): string => {
     return props.is_dropzone_highlighted ? upload_current_folder_class.value : "";
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

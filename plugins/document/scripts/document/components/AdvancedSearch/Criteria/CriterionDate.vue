@@ -80,8 +80,3 @@ function onChange(operator: AllowedSearchDateOperator, date: string): void {
     emit("input", new_value);
 }
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

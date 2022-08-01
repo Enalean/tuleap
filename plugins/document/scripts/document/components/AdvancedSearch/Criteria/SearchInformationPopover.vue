@@ -96,9 +96,3 @@ const containing_message_pattern = computed((): string => {
     return $gettext('*lorem* => contains "lorem"');
 });
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

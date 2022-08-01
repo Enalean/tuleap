@@ -38,7 +38,3 @@
 <script setup lang="ts">
 import PermissionErrorSvg from "../../svg/error/PermissionErrorSvg.vue";
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({});
-</script>

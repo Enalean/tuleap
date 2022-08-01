@@ -30,9 +30,3 @@ import CellString from "./CellString.vue";
 
 defineProps<{ item: ItemSearchResult }>();
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

@@ -36,9 +36,3 @@ const { is_status_property_used } = useNamespacedState<
     Pick<ConfigurationState, "is_status_property_used">
 >("configuration", ["is_status_property_used"]);
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

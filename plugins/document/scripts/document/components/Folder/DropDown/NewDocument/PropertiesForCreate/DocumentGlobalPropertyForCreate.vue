@@ -46,8 +46,3 @@ import type { Folder, Item } from "../../../../../type";
 
 defineProps<{ currentlyUpdatedItem: Item; parent: Folder }>();
 </script>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>

@@ -52,9 +52,3 @@ const tooltip_text = ref(
     $gettext("Filename will follow a pattern enforced by the document manager configuration.")
 );
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>
