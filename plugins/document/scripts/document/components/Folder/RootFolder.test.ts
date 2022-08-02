@@ -18,38 +18,30 @@
  *
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../helpers/local-vue";
-
 import RootFolder from "./RootFolder.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import localVue from "../../helpers/local-vue";
 
 describe("RootFolder", () => {
-    let factory, state, store;
+    let store = {
+        dispatch: jest.fn(),
+        commit: jest.fn(),
+    };
 
-    beforeEach(() => {
-        state = {
-            current_folder: null,
-        };
-
-        const store_options = {
-            state,
-        };
-
+    function createWrapper(): Wrapper<RootFolder> {
+        const store_options = {};
         store = createStoreMock(store_options);
 
-        factory = () => {
-            return shallowMount(RootFolder, {
-                localVue,
-                mocks: { $store: store },
-            });
-        };
-    });
+        return shallowMount(RootFolder, {
+            localVue,
+            mocks: { $store: store },
+        });
+    }
 
-    it(`Should load folder content`, () => {
-        store.state.current_folder = null;
-
-        factory();
+    it(`Should load folder content`, (): void => {
+        createWrapper();
 
         expect(store.dispatch).toHaveBeenCalledWith("loadRootFolder");
         expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");

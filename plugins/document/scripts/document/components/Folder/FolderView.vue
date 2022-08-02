@@ -35,9 +35,7 @@
         </div>
     </div>
 </template>
-<script>
-import { mapState, mapGetters } from "vuex";
-
+<script setup lang="ts">
 import FolderHeader from "./FolderHeader.vue";
 import FolderLoadingScreen from "./FolderLoadingScreen.vue";
 import FolderContent from "./FolderContent.vue";
@@ -46,22 +44,13 @@ import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
 import DragNDropHandler from "./DragNDrop/DragNDropHandler.vue";
 import UnderTheFoldNotification from "./DropDown/NewDocument/UnderTheFoldNotification.vue";
 import ClipboardContentInformation from "./Clipboard/ClipboardContentInformation.vue";
+import { useGetters, useState } from "vuex-composition-helpers";
+import type { State } from "../../type";
+import type { RootGetter } from "../../store/getters";
 
-export default {
-    name: "FolderView",
-    components: {
-        DragNDropHandler,
-        FolderHeader,
-        EmptyFolderForWriters,
-        EmptyFolderForReaders,
-        FolderLoadingScreen,
-        FolderContent,
-        UnderTheFoldNotification,
-        ClipboardContentInformation,
-    },
-    computed: {
-        ...mapState(["is_loading_folder", "current_folder"]),
-        ...mapGetters(["is_folder_empty"]),
-    },
-};
+const { is_loading_folder, current_folder } = useState<
+    Pick<State, "is_loading_folder" | "current_folder">
+>(["is_loading_folder", "current_folder"]);
+
+const { is_folder_empty } = useGetters<Pick<RootGetter, "is_folder_empty">>(["is_folder_empty"]);
 </script>
