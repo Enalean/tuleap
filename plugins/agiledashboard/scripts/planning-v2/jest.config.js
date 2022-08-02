@@ -19,9 +19,13 @@
 
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
+const {
+    jest_base_config,
+    jest_angular_mocks_config,
+} = require("@tuleap/build-system-configurator");
 module.exports = {
     ...jest_base_config,
+    ...jest_angular_mocks_config,
     displayName: "planning-v2",
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
@@ -30,5 +34,4 @@ module.exports = {
         "^angular$": "<rootDir>/node_modules/angular/index.js",
     },
     setupFilesAfterEnv: [...jest_base_config.setupFilesAfterEnv, "./test-load-jquery.js"],
-    testRunner: "jest-jasmine2",
 };

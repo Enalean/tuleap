@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { jest_base_config } from "@tuleap/build-system-configurator";
+import { jest_base_config, jest_angular_mocks_config } from "@tuleap/build-system-configurator";
 export default {
     ...jest_base_config,
+    ...jest_angular_mocks_config,
     displayName: "card-fields",
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^.+\\.html\\?raw$": "identity-obj-proxy",
     },
-    testRunner: "jest-jasmine2",
 };
