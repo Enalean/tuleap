@@ -27,6 +27,7 @@ use Laminas\Mail;
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyString;
+use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
 use Tuleap\Mail\Transport\SmtpOptions\SmtpOptionsBuilder;
 
 class MailTransportBuilder
@@ -42,20 +43,54 @@ class MailTransportBuilder
     public const EMAIL_TRANSPORT_SENDMAIL_VALUE = 'sendmail';
     public const EMAIL_TRANSPORT_SMTP_VALUE     = 'smtp';
 
+    private function __construct()
+    {
+    }
+
     public static function buildMailTransport(LoggerInterface $logger): Mail\Transport\TransportInterface
     {
+        return self::buildFromMailConfiguration(
+            static fn() => new Mail\Transport\Sendmail(),
+            static fn(string $relay_host) => new Mail\Transport\Smtp(SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig($relay_host)),
+            static fn() => new NotConfiguredSmtpTransport($logger),
+            static fn() => new InvalidDefinedTransport($logger),
+        );
+    }
+
+    public static function getPlatformMailConfiguration(): PlatformMailConfiguration
+    {
+        return self::buildFromMailConfiguration(
+            static fn() => PlatformMailConfiguration::allowBackendAliasesGeneration(),
+            static fn() => PlatformMailConfiguration::disallowBackendAliasesGeneration(),
+            static fn() => PlatformMailConfiguration::disallowBackendAliasesGeneration(),
+            static fn() => PlatformMailConfiguration::disallowBackendAliasesGeneration(),
+        );
+    }
+
+    /**
+     * @psalm-template T
+     * @psalm-param callable(): T $build_when_sendmail
+     * @psalm-param callable(non-empty-string): T $build_when_smtp
+     * @psalm-param callable(): T $build_when_smtp_misconfigured
+     * @psalm-param callable(): T $build_when_invalid
+     * @psalm-return T
+     */
+    private static function buildFromMailConfiguration(
+        callable $build_when_sendmail,
+        callable $build_when_smtp,
+        callable $build_when_smtp_misconfigured,
+        callable $build_when_invalid,
+    ): mixed {
         if (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY, self::EMAIL_TRANSPORT_SENDMAIL_VALUE) === self::EMAIL_TRANSPORT_SENDMAIL_VALUE) {
-            return new Mail\Transport\Sendmail();
-        } elseif (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY) === self::EMAIL_TRANSPORT_SMTP_VALUE) {
-            $relay_host_config = ForgeConfig::get(self::RELAYHOST_CONFIG_KEY, '');
-            if ($relay_host_config === '') {
-                return new NotConfiguredSmtpTransport($logger);
-            }
-            return new Mail\Transport\Smtp(
-                SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig($relay_host_config)
-            );
-        } else {
-            return new InvalidDefinedTransport($logger);
+            return $build_when_sendmail();
         }
+        if (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY) === self::EMAIL_TRANSPORT_SMTP_VALUE) {
+            $relay_host_config = (string) ForgeConfig::get(self::RELAYHOST_CONFIG_KEY, '');
+            if ($relay_host_config === '') {
+                return $build_when_smtp_misconfigured();
+            }
+            return $build_when_smtp($relay_host_config);
+        }
+        return $build_when_invalid();
     }
 }

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\Transport\MailTransportBuilder;
+
 class BackendAliases extends Backend
 {
     public const ADMIN_ALIAS        = 'codendi-admin';
@@ -71,6 +73,13 @@ class BackendAliases extends Backend
      */
     public function update()
     {
+        $configuration = MailTransportBuilder::getPlatformMailConfiguration();
+        if (! $configuration->mustGeneratesBackendAliases()) {
+            $this->log("The mail configuration is not compatible with BackendAliases generation. Skipping");
+
+            return true;
+        }
+
         $alias_file     = ForgeConfig::get('alias_file');
         $alias_file_new = $alias_file . ".new";
         $alias_file_old = $alias_file . ".old";
