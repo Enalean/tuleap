@@ -36,11 +36,11 @@ final class OwnerRepresentationForAutocomplete
 
     private function __construct(
         public int $tuleap_user_id,
-        private string $display_name,
+        string $display_name,
         public string $avatar_url,
         public bool $has_avatar,
     ) {
-        $this->text = $this->display_name;
+        $this->text = $display_name;
     }
 
     public static function buildForSelect2AutocompleteFromOwner(PFUser $user): self
