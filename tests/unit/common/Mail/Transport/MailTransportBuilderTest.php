@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Mail\Transport;
 
 use Laminas\Mail\Transport\Sendmail;
@@ -26,7 +28,7 @@ use Psr\Log\NullLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class MailTransportBuilderTest extends TestCase
+final class MailTransportBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
@@ -73,7 +75,7 @@ class MailTransportBuilderTest extends TestCase
 
         \ForgeConfig::set(
             "email_relayhost",
-            "https://example.com:443",
+            "example.com:443",
         );
 
         self::assertInstanceOf(

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Mail\Transport;
 
 use ForgeConfig;
@@ -25,6 +27,7 @@ use Laminas\Mail;
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyString;
+use Tuleap\Mail\Transport\SmtpOptions\SmtpOptionsBuilder;
 
 class MailTransportBuilder
 {
@@ -44,10 +47,13 @@ class MailTransportBuilder
         if (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY, self::EMAIL_TRANSPORT_SENDMAIL_VALUE) === self::EMAIL_TRANSPORT_SENDMAIL_VALUE) {
             return new Mail\Transport\Sendmail();
         } elseif (ForgeConfig::get(self::TRANSPORT_CONFIG_KEY) === self::EMAIL_TRANSPORT_SMTP_VALUE) {
-            if (ForgeConfig::get(self::RELAYHOST_CONFIG_KEY, '') === '') {
+            $relay_host_config = ForgeConfig::get(self::RELAYHOST_CONFIG_KEY, '');
+            if ($relay_host_config === '') {
                 return new NotConfiguredSmtpTransport($logger);
             }
-            return new Mail\Transport\Smtp();
+            return new Mail\Transport\Smtp(
+                SmtpOptionsBuilder::buildSmtpOptionFromForgeConfig($relay_host_config)
+            );
         } else {
             return new InvalidDefinedTransport($logger);
         }
