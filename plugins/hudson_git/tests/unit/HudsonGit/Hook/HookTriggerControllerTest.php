@@ -111,7 +111,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersRepositoryHooks(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => true],
         );
 
         $polling_response = Mockery::mock(PollingResponse::class);
@@ -120,7 +120,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
         $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->with('https://example.com/jenkins', Mockery::any(), 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
+            ->with('https://example.com/jenkins', Mockery::any(), 'token', 'da39a3ee5e6b4b0d3255bfef95601890afd80709')
             ->times(2)
             ->andReturn($polling_response);
 
@@ -151,7 +151,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersRepositoryHooksWithoutCommitReference(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => false],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => 'token', 'is_commit_reference_needed' => false],
         );
 
         $polling_response = Mockery::mock(PollingResponse::class);
@@ -160,7 +160,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
         $polling_response->shouldReceive('getBody')->andReturn('Response body');
         $this->jenkins_client->shouldReceive('pushGitNotifications')
-            ->with('https://example.com/jenkins', Mockery::any(), null)
+            ->with('https://example.com/jenkins', Mockery::any(), 'token', null)
             ->times(2)
             ->andReturn($polling_response);
 
@@ -191,7 +191,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersEachTransportsInRepositoryHooks(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => true],
         );
 
         $polling_response = Mockery::mock(PollingResponse::class);
@@ -202,12 +202,12 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')
             ->once()
-            ->with(Mockery::any(), "https://example.com/repo01", Mockery::any())
+            ->with(Mockery::any(), "https://example.com/repo01", null, Mockery::any())
             ->andThrow(UnableToLaunchBuildException::class);
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')
             ->once()
-            ->with(Mockery::any(), "example.com/repo01", Mockery::any())
+            ->with(Mockery::any(), "example.com/repo01", null, Mockery::any())
             ->andReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
@@ -237,7 +237,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(null);
 
-        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
+        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
             $jenkins_server,
         ]);
@@ -274,7 +274,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(null);
 
-        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
+        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
             $jenkins_server,
         ]);
@@ -287,12 +287,12 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')
             ->once()
-            ->with(Mockery::any(), "https://example.com/repo01", Mockery::any())
+            ->with(Mockery::any(), "https://example.com/repo01", null, Mockery::any())
             ->andThrow(UnableToLaunchBuildException::class);
 
         $this->jenkins_client->shouldReceive('pushGitNotifications')
             ->once()
-            ->with(Mockery::any(), "example.com/repo01", Mockery::any())
+            ->with(Mockery::any(), "example.com/repo01", null, Mockery::any())
             ->andReturn($polling_response);
 
         $hook_response = new JenkinsTuleapPluginHookResponse(
@@ -319,10 +319,10 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotTriggerTheProjectHookIfItHasAlreadyBeenTriggeredByRepository(): void
     {
         $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
-            ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => false],
+            ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => false],
         );
 
-        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
+        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
             $jenkins_server,
         ]);

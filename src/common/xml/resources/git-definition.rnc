@@ -49,6 +49,7 @@ element ugroups-admin {
 element jenkins-servers-admin {
     element jenkins-server {
         attribute url { xsd:string },
+        attribute jenkins_token { xsd:string { minLength = "1" } }?,
         empty
     }+
 }?

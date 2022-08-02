@@ -27,6 +27,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookResponse;
 use Tuleap\HudsonGit\PollingResponse;
@@ -67,6 +69,7 @@ class JenkinsClient
         JenkinsCSRFCrumbRetriever $csrf_crumb_retriever,
         JenkinsTuleapPluginHookPayload $jenkins_tuleap_plugin_payload,
         StreamFactoryInterface $stream_factory,
+        private EncryptionKey $encryption_key,
     ) {
         $this->http_client                   = $http_client;
         $this->request_factory               = $request_factory;
@@ -78,7 +81,7 @@ class JenkinsClient
     /**
      * @throws UnableToLaunchBuildException
      */
-    public function pushGitNotifications($server_url, $repository_url, ?string $commit_reference): PollingResponse
+    public function pushGitNotifications($server_url, $repository_url, ?string $encrypted_token, ?string $commit_reference): PollingResponse
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
 
@@ -90,6 +93,9 @@ class JenkinsClient
         ];
         if ($commit_reference) {
             $parameters['sha1'] = $commit_reference;
+        }
+        if ($encrypted_token !== null) {
+            $parameters['token'] = SymmetricCrypto::decrypt($encrypted_token, $this->encryption_key)->getString();
         }
         $push_url = $server_url . self::NOTIFY_URL . '?' . http_build_query($parameters);
 

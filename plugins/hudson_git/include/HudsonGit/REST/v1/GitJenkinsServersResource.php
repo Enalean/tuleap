@@ -140,8 +140,9 @@ final class GitJenkinsServersResource extends AuthenticatedResource
 
         foreach ($results as $server) {
             $servers[] = new JenkinsServer(
-                (int) $server['id'],
-                (string) $server['jenkins_server_url'],
+                $server['id'],
+                $server['jenkins_server_url'],
+                null,
                 $project
             );
         }

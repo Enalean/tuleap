@@ -44,8 +44,13 @@ class JenkinsServer implements \JsonSerializable
      */
     private $project;
 
-    public function __construct(int $id, string $jenkins_server_url, Project $project)
-    {
+    public function __construct(
+        int $id,
+        string $jenkins_server_url,
+        /** @psalm-readonly */
+        private ?string $encrypted_token,
+        Project $project,
+    ) {
         $this->id                 = $id;
         $this->jenkins_server_url = $jenkins_server_url;
         $this->project            = $project;
@@ -70,12 +75,20 @@ class JenkinsServer implements \JsonSerializable
     /**
      * @psalm-mutation-free
      */
+    public function getEncryptedToken(): ?string
+    {
+        return $this->encrypted_token;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): Project
     {
         return $this->project;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id'  => $this->getId(),
