@@ -193,8 +193,11 @@ final class TrackerErrorPresenter
         return new self($tracker_error);
     }
 
-    public static function fromTrackerError(TrackerError $tracker_error): self
+    public static function fromTrackerError(?TrackerError $tracker_error): ?self
     {
+        if (! $tracker_error) {
+            return null;
+        }
         return new self($tracker_error);
     }
 }

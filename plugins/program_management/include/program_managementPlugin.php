@@ -46,10 +46,7 @@ use Tuleap\ProgramManagement\Adapter\Events\RedirectUserAfterArtifactCreationOrU
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
 use Tuleap\ProgramManagement\Adapter\Events\TeamSynchronizationEventProxy;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\ProjectUGroupCanPrioritizeItemsPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration\ConfigurationErrorPresenterBuilder;
-use Tuleap\ProgramManagement\Adapter\Program\Admin\PlannableTrackersConfiguration\PotentialPlannableTrackersConfigurationPresentersBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationProcessorBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationUpdateDispatcher;
@@ -108,6 +105,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackersRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
@@ -153,6 +151,8 @@ use Tuleap\ProgramManagement\DisplayAdminProgramManagementController;
 use Tuleap\ProgramManagement\DisplayPlanIterationsController;
 use Tuleap\ProgramManagement\DisplayProgramBacklogController;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialPlannableTrackersConfigurationBuilder;
+use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProjectUGroupCanPrioritizeItemsBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactCreatedHandler;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ArtifactUpdatedHandler;
@@ -585,8 +585,8 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $program_adapter,
             $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
             $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
-            new PotentialPlannableTrackersConfigurationPresentersBuilder(new PlanDao()),
-            new ProjectUGroupCanPrioritizeItemsPresentersBuilder(
+            new PotentialPlannableTrackersConfigurationBuilder(new PlannableTrackersRetriever(new PlanDao(), TrackerFactory::instance())),
+            new ProjectUGroupCanPrioritizeItemsBuilder(
                 new UGroupManagerAdapter($project_manager_adapter, new UGroupManager()),
                 new CanPrioritizeFeaturesDAO(),
                 new UGroupRepresentationBuilder()
@@ -596,32 +596,26 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $tracker_retriever,
             new IterationsDAO(),
             $program_dao,
-            new ConfigurationErrorPresenterBuilder(
-                new ConfigurationErrorsGatherer(
-                    $this->getProgramAdapter(),
-                    new ProgramIncrementCreatorChecker(
-                        $checker,
-                        $program_increments_dao,
-                        $planning_adapter,
-                        $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
-                        $logger_message
-                    ),
-                    new IterationCreatorChecker(
-                        $planning_adapter,
-                        $iteration_dao,
-                        $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
-                        $checker,
-                        $logger_message
-                    ),
-                    new ProgramDao(),
-                    new ProjectReferenceRetriever($project_manager_adapter)
+            new ConfigurationErrorsGatherer(
+                $this->getProgramAdapter(),
+                new ProgramIncrementCreatorChecker(
+                    $checker,
+                    $program_increments_dao,
+                    $planning_adapter,
+                    $this->getVisibleProgramIncrementTrackerRetriever($user_manager_adapter),
+                    $logger_message
                 ),
-                new PlanDao(),
-                new TrackerSemantics($tracker_factory),
-                $tracker_factory
+                new IterationCreatorChecker(
+                    $planning_adapter,
+                    $iteration_dao,
+                    $this->getVisibleIterationTrackerRetriever($user_manager_adapter),
+                    $checker,
+                    $logger_message
+                ),
+                new ProgramDao(),
+                new ProjectReferenceRetriever($project_manager_adapter)
             ),
             $project_manager,
-            $tracker_retriever,
             new ProgramIncrementsSearcher(
                 $this->getProgramAdapter(),
                 $program_increments_dao,
@@ -652,7 +646,9 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new MirroredTimeboxesDao(),
             $pending_synchronization_dao,
             $visible_searcher,
-            $pending_synchronization_dao
+            $pending_synchronization_dao,
+            new PlannableTrackersRetriever(new PlanDao(), TrackerFactory::instance()),
+            new TrackerSemantics($tracker_factory)
         );
     }
 

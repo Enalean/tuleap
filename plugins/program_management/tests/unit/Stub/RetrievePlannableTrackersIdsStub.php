@@ -20,14 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
 
-interface RetrievePlannableTrackers
+final class RetrievePlannableTrackersIdsStub implements RetrievePlannableTrackersIds
 {
     /**
-     * @return TrackerReference[]
+     * @var int[]
      */
-    public function getPlannableTrackersOfProgram(int $program_id): array;
+    private array $ids;
+
+    /**
+     * @param int[] $ids
+     */
+    public function __construct(array $ids)
+    {
+        $this->ids = $ids;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getPlannableTrackersIdOfProgram(int $program_id): array
+    {
+        return $this->ids;
+    }
+
+    public static function buildIds(int ...$ids): self
+    {
+        return new self($ids);
+    }
 }

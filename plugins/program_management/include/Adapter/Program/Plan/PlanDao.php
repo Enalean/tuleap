@@ -26,12 +26,12 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
 use Tuleap\ProgramManagement\Domain\Program\Plan\SavePlan;
-use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackers;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, RetrievePlannableTrackers, VerifyIsPlannable, VerifyIsFeature
+final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds
 {
     /**
      * @throws \Throwable
@@ -164,7 +164,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
     /**
      * @return int[]
      */
-    public function getPlannableTrackersOfProgram(int $program_id): array
+    public function getPlannableTrackersIdOfProgram(int $program_id): array
     {
         $sql = 'SELECT plannable_tracker_id FROM plugin_program_management_plan WHERE project_id = ?';
 
