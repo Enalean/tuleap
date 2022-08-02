@@ -23,10 +23,10 @@
         <button
             type="button"
             class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-            v-on:click="downloadFile"
+            v-on:click="redirectUrl"
         >
-            <i class="fa fa-download tlp-button-icon"></i>
-            <translate>Download</translate>
+            <i class="fas fa-external-link-alt tlp-button-icon"></i>
+            <translate>Open link</translate>
         </button>
         <drop-down-quick-look v-bind:item="item" />
         <div class="document-header-spacer"></div>
@@ -34,20 +34,22 @@
     </div>
 </template>
 
-<script>
-import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
-import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+<script setup lang="ts">
+import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
+import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import { useState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../store/configuration";
+import type { Item } from "../../type";
 
-export default {
-    name: "QuickLookFile",
-    components: { QuickLookDeleteButton, DropDownQuickLook },
-    props: {
-        item: Object,
-    },
-    methods: {
-        downloadFile() {
-            window.location.assign(encodeURI(this.item.file_properties.download_href));
-        },
-    },
-};
+const { project_id } = useState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
+
+const props = defineProps<{ item: Item }>();
+
+function redirectUrl(): void {
+    window.location.assign(
+        encodeURI(`/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`)
+    );
+}
 </script>

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickLookLink renders quick look for link document 1`] = `
+<div
+  class="document-quick-look-document-action"
+>
+  <button
+    class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+    type="button"
+  >
+    <i
+      class="fas fa-external-link-alt tlp-button-icon"
+    />
+     
+    <translate-stub
+      tag="span"
+    >
+      Open link
+    </translate-stub>
+  </button>
+   
+  <drop-down-quick-look-stub
+    item="[object Object]"
+  />
+   
+  <div
+    class="document-header-spacer"
+  />
+   
+  <quick-look-delete-button-stub
+    item="[object Object]"
+  />
+</div>
+`;

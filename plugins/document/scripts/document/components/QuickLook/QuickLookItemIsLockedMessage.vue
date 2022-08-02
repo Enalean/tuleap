@@ -24,15 +24,12 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-import UserName from "../../User/UserName.vue";
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../type";
+import UserName from "../User/UserName.vue";
 
-export default {
-    name: "UserBadge",
-    components: { UserName },
-    computed: {
-        ...mapState(["currently_previewed_item"]),
-    },
-};
+const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
+    "currently_previewed_item",
+]);
 </script>

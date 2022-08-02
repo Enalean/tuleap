@@ -63,13 +63,13 @@ import {
     formatDateUsingPreferredUserFormat,
     isDateValid,
     isToday,
-} from "../../../helpers/date-formatter";
-import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants";
+} from "../../helpers/date-formatter";
+import { PROPERTY_OBSOLESCENCE_DATE_SHORT_NAME } from "../../constants";
 import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
-import type { Property } from "../../../type";
+import type { ConfigurationState } from "../../store/configuration";
+import type { Property } from "../../type";
 
 const props = defineProps<{ property: Property }>();
 

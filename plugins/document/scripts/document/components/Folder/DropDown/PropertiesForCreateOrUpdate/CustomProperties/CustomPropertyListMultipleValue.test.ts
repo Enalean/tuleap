@@ -30,9 +30,9 @@ jest.mock("../../../../../helpers/emitter");
 
 describe("CustomPropertyListMultipleValue", () => {
     const allowed_list_values: Array<ListValue> = [
-        { id: 100, value: "None" },
-        { id: 101, value: "abcde" },
-        { id: 102, value: "fghij" },
+        { id: 100, name: "None" },
+        { id: 101, name: "abcde" },
+        { id: 102, name: "fghij" },
     ];
 
     function createWrapper(property: Property): Wrapper<CustomPropertyListMultipleValue> {
@@ -47,7 +47,7 @@ describe("CustomPropertyListMultipleValue", () => {
                         } as Property,
                         {
                             short_name: "an other list",
-                            allowed_list_values: [{ id: 100, value: "None" }],
+                            allowed_list_values: [{ id: 100, name: "None" }],
                         } as Property,
                     ],
                 },

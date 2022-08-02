@@ -29,6 +29,7 @@ export interface State {
     folder_content: Array<Item | FakeItem>;
     current_folder_ascendant_hierarchy: Array<Folder>;
     is_loading_ascendant_hierarchy: boolean;
+    is_loading_currently_previewed_item: boolean;
     root_title: string;
     currently_previewed_item: Item | null;
     files_uploads_list: Array<ItemFile | FakeItem>;
@@ -145,6 +146,7 @@ export interface Property {
     list_value: Array<number> | Array<ListValue> | null | [];
     value: number | string | null;
     allowed_list_values: Array<ListValue> | null;
+    post_processed_value?: string | null;
 }
 
 export interface FolderProperty extends Property {
@@ -153,7 +155,7 @@ export interface FolderProperty extends Property {
 
 export interface ListValue {
     id: number;
-    value: string | number;
+    name: string | number;
 }
 
 export interface FolderStatus {

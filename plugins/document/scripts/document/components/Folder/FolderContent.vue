@@ -70,7 +70,7 @@
 <script>
 import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
-import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
+import QuicklookGlobal from "../QuickLook/QuickLookGlobal.vue";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 

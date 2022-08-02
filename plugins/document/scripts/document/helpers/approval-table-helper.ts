@@ -18,11 +18,28 @@
  */
 
 import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
+import type {
+    ApprovableDocument,
+    DefaultFileItem,
+    Embedded,
+    Empty,
+    FakeItem,
+    Item,
+    ItemFile,
+    Link,
+    Wiki,
+} from "../type";
 
 export interface ApprovalTableBadge {
     icon_badge: string;
     badge_label: string;
     badge_class: string;
+}
+
+export function hasAnApprovalTable(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem | DefaultFileItem
+): item is ApprovableDocument {
+    return "has_approval_table" in item && item.approval_table !== null;
 }
 
 export function extractApprovalTableData(

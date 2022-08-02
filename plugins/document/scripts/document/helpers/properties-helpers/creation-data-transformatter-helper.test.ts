@@ -175,7 +175,7 @@ describe("creation properties transformer", () => {
         const list_value: Array<ListValue> = [
             {
                 id: 110,
-                value: "My value to display",
+                name: "My value to display",
             } as ListValue,
         ];
 
@@ -256,11 +256,11 @@ describe("creation properties transformer", () => {
         const list_value: Array<ListValue> = [
             {
                 id: 110,
-                value: "My value to display",
+                name: "My value to display",
             } as ListValue,
             {
                 id: 120,
-                value: "My other value to display",
+                name: "My other value to display",
             } as ListValue,
         ];
 

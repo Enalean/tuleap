@@ -55,7 +55,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
                 },
                 {
                     short_name: "an other list",
-                    allowed_list_values: [{ id: 100, value: "None" }],
+                    allowed_list_values: [{ id: 100, name: "None" }],
                 },
             ],
         };
@@ -88,7 +88,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
             project_properties: [
                 {
                     short_name: "list",
-                    allowed_list_values: [{ id: 101, value: "abcde" }],
+                    allowed_list_values: [{ id: 101, name: "abcde" }],
                 },
             ],
         };
@@ -117,7 +117,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
             project_properties: [
                 {
                     short_name: "list",
-                    allowed_list_values: [{ id: 101, value: "abcde" }],
+                    allowed_list_values: [{ id: 101, name: "abcde" }],
                 },
             ],
         };
@@ -139,7 +139,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
             project_properties: [
                 {
                     short_name: "list",
-                    allowed_list_values: [{ id: 101, value: "abcde" }],
+                    allowed_list_values: [{ id: 101, name: "abcde" }],
                 },
             ],
         };

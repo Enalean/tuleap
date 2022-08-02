@@ -18,38 +18,38 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { TYPE_EMPTY } from "../../../constants";
+import { TYPE_FILE } from "../../constants";
 import QuickLookGlobal from "./QuickLookGlobal.vue";
+import type { ItemFile, State } from "../../type";
+import localVue from "../../helpers/local-vue";
 
 describe("QuickLookGlobal", () => {
     it(`Displays the description of the item observed in the QuickLook`, () => {
-        const state = {};
-        const store_options = {
-            state,
-        };
-        const store = createStoreMock(store_options);
-
-        const item = {
+        const currently_previewed_item = {
             id: 42,
             lock_info: null,
-            type: TYPE_EMPTY,
+            type: TYPE_FILE,
             description: "description with ref #1",
             post_processed_description:
                 'description with <a href="https://example.com/goto">ref #1</a>',
-        };
-
-        store.state.currently_previewed_item = item;
+        } as ItemFile;
 
         const wrapper = shallowMount(QuickLookGlobal, {
             localVue,
-            mocks: { $store: store },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        currently_previewed_item,
+                    } as unknown as State,
+                }),
+            },
         });
 
         const displayed_description = wrapper.get("[id=item-description]");
-
-        expect(displayed_description.text()).toEqual(item.description);
-        expect(displayed_description.html()).toContain(item.post_processed_description);
+        expect(displayed_description.text()).toStrictEqual(currently_previewed_item.description);
+        expect(displayed_description.html()).toContain(
+            currently_previewed_item.post_processed_description
+        );
     });
 });

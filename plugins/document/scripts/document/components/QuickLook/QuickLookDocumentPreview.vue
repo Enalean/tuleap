@@ -67,9 +67,7 @@
 
     <div
         class="document-quick-look-folder-container"
-        v-else-if="
-            is_item_a_folder(currently_previewed_item) && currently_previewed_item.user_can_write
-        "
+        v-else-if="is_item_a_folder && currently_previewed_item.user_can_write"
     >
         <icon-quicklook-folder />
         <icon-quicklook-drop-into-folder />
@@ -79,9 +77,7 @@
     </div>
     <div
         class="document-quick-look-folder-container"
-        v-else-if="
-            is_item_a_folder(currently_previewed_item) && !currently_previewed_item.user_can_write
-        "
+        v-else-if="is_item_a_folder && !currently_previewed_item.user_can_write"
     >
         <icon-quicklook-folder />
         <i class="fa fa-ban"></i>
@@ -107,46 +103,41 @@
         </span>
     </div>
 </template>
-<script>
-import { mapState } from "vuex";
-import IconQuicklookFolder from "../../svg/svg-icons/IconQuicklookFolder.vue";
-import IconQuicklookDropIntoFolder from "../../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
-import { isEmbedded, isFolder } from "../../../helpers/type-check-helper";
 
-export default {
-    components: {
-        IconQuicklookFolder,
-        IconQuicklookDropIntoFolder,
-    },
-    props: {
-        iconClass: String,
-    },
-    computed: {
-        ...mapState(["currently_previewed_item", "is_loading_currently_previewed_item"]),
-        is_loading_content() {
-            if (!this.is_an_embedded_file) {
-                return false;
-            }
+<script setup lang="ts">
+import IconQuicklookFolder from "../svg/svg-icons/IconQuicklookFolder.vue";
+import IconQuicklookDropIntoFolder from "../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
+import { isEmbedded, isFile, isFolder } from "../../helpers/type-check-helper";
+import { useState } from "vuex-composition-helpers";
+import type { State } from "../../type";
+import { computed } from "vue";
 
-            return this.is_loading_currently_previewed_item === true;
-        },
-        is_an_image() {
-            if (!this.currently_previewed_item.file_properties) {
-                return false;
-            }
-            return (
-                this.currently_previewed_item.file_properties &&
-                this.currently_previewed_item.file_properties.file_type.includes("image")
-            );
-        },
-        is_an_embedded_file() {
-            return isEmbedded(this.currently_previewed_item);
-        },
-    },
-    methods: {
-        is_item_a_folder(item) {
-            return isFolder(item);
-        },
-    },
-};
+const { is_loading_currently_previewed_item, currently_previewed_item } = useState<
+    Pick<State, "is_loading_currently_previewed_item" | "currently_previewed_item">
+>(["is_loading_currently_previewed_item", "currently_previewed_item"]);
+
+defineProps<{ iconClass: string }>();
+
+const is_an_embedded_file = computed((): boolean => {
+    return currently_previewed_item.value !== null && isEmbedded(currently_previewed_item.value);
+});
+
+const is_loading_content = computed((): boolean => {
+    if (!is_an_embedded_file.value) {
+        return false;
+    }
+
+    return is_loading_currently_previewed_item.value === true;
+});
+const is_an_image = computed((): boolean => {
+    const item = currently_previewed_item.value;
+    if (item === null || !isFile(item) || item.file_properties === null) {
+        return false;
+    }
+    return item.file_properties.file_type.includes("image");
+});
+
+const is_item_a_folder = computed((): boolean => {
+    return currently_previewed_item.value !== null && isFolder(currently_previewed_item.value);
+});
 </script>
