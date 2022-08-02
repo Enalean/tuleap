@@ -52,7 +52,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesBranch(): void
     {
-        $this->git_exec->shouldReceive('revList')->with('d8f1e57', '469eaa9')->once()->andReturns(['469eaa9']);
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->with('d8f1e57', '469eaa9')->once()->andReturns(['469eaa9']);
 
         $push_details = $this->log_analyzer->getPushDetails(
             $this->repository,
@@ -100,7 +100,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTakesNewRevHashToIdentifyRevTypeOnUpdate(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns(['469eaa9']);
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->andReturns(['469eaa9']);
         $this->git_exec->shouldReceive('getObjectType')->with('469eaa9')->once()->andReturns(
             PushDetails::OBJECT_TYPE_COMMIT
         );
@@ -150,7 +150,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCommitsOnWorkingBranch(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns([]);
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails(
@@ -165,7 +165,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCommitsAnUnannotatedTag(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns([]);
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails(
@@ -180,7 +180,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCommitsAnAnnotatedTag(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns([]);
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(PushDetails::OBJECT_TYPE_TAG);
 
         $push_details = $this->log_analyzer->getPushDetails(
@@ -195,7 +195,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCommitsOnRemoteTrackingBranch(): void
     {
-        $this->git_exec->shouldReceive('revList')->andReturns([]);
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->andReturns([]);
         $this->git_exec->shouldReceive('getObjectType')->andReturns(PushDetails::OBJECT_TYPE_COMMIT);
 
         $push_details = $this->log_analyzer->getPushDetails(
@@ -210,7 +210,7 @@ final class LogAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItGeneratesAnEmptyPushDetailWhenCannotExtractRevList(): void
     {
-        $this->git_exec->shouldReceive('revList')->andThrows(new \Git_Command_Exception('cmd', ['stuff'], '233'));
+        $this->git_exec->shouldReceive('revListInChronologicalOrder')->andThrows(new \Git_Command_Exception('cmd', ['stuff'], '233'));
 
         $push_details = $this->log_analyzer->getPushDetails(
             $this->repository,
