@@ -100,14 +100,13 @@ class GitWebhooksSettingsEnhancer
 
         $url                        = '';
         $is_commit_reference_needed = true;
-        $dar                        = $this->dao->searchById($repository->getId());
-        $has_already_a_jenkins      = count($dar) > 0;
+        $row                        = $this->dao->searchById($repository->getId());
+        $has_already_a_jenkins      = $row !== null;
         $params['create_buttons'][] = new GitWebhooksSettingsCreateJenkinsButtonPresenter($has_already_a_jenkins);
 
-        if (count($dar)) {
-            $row                        = $dar->getRow();
+        if ($row !== null) {
             $url                        = $row['jenkins_server_url'];
-            $is_commit_reference_needed = $row['is_commit_reference_needed'];
+            $is_commit_reference_needed = $row['is_commit_reference_needed'] === 1;
 
             $triggered_jobs = $this->log_factory->getJobByRepository($repository);
 

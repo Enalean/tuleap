@@ -69,7 +69,7 @@ class HookController
         $this->valid_HTTPURI          = $valid_HTTPURI;
     }
 
-    public function save()
+    public function save(): void
     {
         $repository = $this->getRepository();
         $this->checkCSRFToken($repository);
@@ -86,24 +86,18 @@ class HookController
             $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
         }
 
-        if ($this->dao->save($repository->getId(), $jenkins_server, $is_commit_reference_needed)) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully saved'));
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));
-        }
+        $this->dao->save($repository->getId(), $jenkins_server, $is_commit_reference_needed);
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully saved'));
         $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
     }
 
-    public function remove()
+    public function remove(): void
     {
         $repository = $this->getRepository();
         $this->checkCSRFToken($repository);
 
-        if ($this->dao->delete($repository->getId())) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully removed'));
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));
-        }
+        $this->dao->delete($repository->getId());
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully removed'));
         $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
     }
 

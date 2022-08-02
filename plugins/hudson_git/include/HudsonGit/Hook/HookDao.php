@@ -18,40 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\HudsonGit\Hook;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class HookDao extends DataAccessObject
 {
-    public function delete($repository_id)
+    public function delete(int $repository_id): void
     {
-        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = 'DELETE FROM plugin_hudson_git_server WHERE repository_id = ?';
 
-        $sql = "DELETE FROM plugin_hudson_git_server WHERE repository_id = $repository_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $repository_id);
     }
 
-    public function save($id, $jenkins_server, bool $is_commit_reference_needed)
+    public function save(int $id, string $jenkins_server, bool $is_commit_reference_needed): void
     {
-        $id                         = $this->da->escapeInt($id);
-        $jenkins_server             = $this->da->quoteSmart($jenkins_server);
-        $is_commit_reference_needed = $this->da->escapeInt($is_commit_reference_needed ? 1 : 0);
+        $sql = 'REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, is_commit_reference_needed)
+                VALUES(?, ?, ?)';
 
-        $sql = "REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, is_commit_reference_needed)
-                VALUES($id, $jenkins_server, $is_commit_reference_needed)";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, $id, $jenkins_server, $is_commit_reference_needed ? 1 : 0);
     }
 
-    public function searchById($id)
+    /**
+     * @psalm-return array{jenkins_server_url: string, is_commit_reference_needed:0|1}|null
+     */
+    public function searchById(int $id): ?array
     {
-        $id = $this->da->escapeInt($id);
-
-        $sql = "SELECT jenkins_server_url, is_commit_reference_needed
+        $sql = 'SELECT jenkins_server_url, is_commit_reference_needed
                 FROM plugin_hudson_git_server
-                WHERE repository_id = $id";
-        return $this->retrieve($sql);
+                WHERE repository_id = ?';
+
+        return $this->getDB()->row($sql, $id);
     }
 }

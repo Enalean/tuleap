@@ -34,7 +34,7 @@ use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPlugi
 use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\PollingResponse;
 
-class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -110,9 +110,9 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true],
-        ]);
+        );
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
@@ -150,9 +150,9 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersRepositoryHooksWithoutCommitReference(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => false],
-        ]);
+        );
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
@@ -190,9 +190,9 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersEachTransportsInRepositoryHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => true],
-        ]);
+        );
 
         $polling_response = Mockery::mock(PollingResponse::class);
         $polling_response->shouldReceive('getJobPaths')->andReturn([
@@ -235,7 +235,7 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersProjectHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([]);
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(null);
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
@@ -272,7 +272,7 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItTriggersEachTransportsInProjectHooks(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([]);
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(null);
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([
@@ -318,9 +318,9 @@ class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotTriggerTheProjectHookIfItHasAlreadyBeenTriggeredByRepository(): void
     {
-        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn([
+        $this->dao->shouldReceive('searchById')->once()->with(1)->andReturn(
             ['jenkins_server_url' => 'https://example.com/jenkins', 'is_commit_reference_needed' => false],
-        ]);
+        );
 
         $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')->once()->andReturn([

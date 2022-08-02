@@ -192,9 +192,6 @@ msgstr ""
 "Afin de contourner le fait que Jenkins ne tire pas les dépôts quand le "
 "paramètre sha1 est renseigné."
 
-msgid "Unable to save Jenkins webhook"
-msgstr "Impossible d'enregistrer le webhook Jenkins"
-
 msgid "User is not Git administrator."
 msgstr "L'utilisateur n'est pas administrateur Git."
 

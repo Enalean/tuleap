@@ -174,9 +174,6 @@ msgid ""
 "parameter is given."
 msgstr ""
 
-msgid "Unable to save Jenkins webhook"
-msgstr ""
-
 msgid "User is not Git administrator."
 msgstr ""
 
