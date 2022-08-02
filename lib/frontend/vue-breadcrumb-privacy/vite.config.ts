@@ -18,11 +18,11 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import { createVuePlugin } from "vite-plugin-vue2";
+import vue from "@vitejs/plugin-vue2";
 import * as path from "path";
 
 export default vite.defineLibConfig({
-    plugins: [createVuePlugin()],
+    plugins: [vue()],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),

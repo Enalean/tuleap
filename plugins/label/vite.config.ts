@@ -19,12 +19,12 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
-import { createVuePlugin } from "vite-plugin-vue2";
+import vue from "@vitejs/plugin-vue2";
 import { viteExternalsPlugin } from "vite-plugin-externals";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
 export default vite.defineAppConfig("label", {
-    plugins: [createVuePlugin(), POGettextPlugin.vite(), viteExternalsPlugin({ tlp: "tlp" })],
+    plugins: [vue(), POGettextPlugin.vite(), viteExternalsPlugin({ tlp: "tlp" })],
     build: {
         rollupOptions: {
             input: {
