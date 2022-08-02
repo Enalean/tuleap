@@ -18,7 +18,7 @@
  */
 
 describe("Program management", () => {
-    let program_project_name: string, team_project_name: string;
+    let program_project_name: string, team_project_name: string, other_team_project_name: string;
 
     before(() => {
         cy.clearSessionCookie();
@@ -31,10 +31,11 @@ describe("Program management", () => {
         const now = Date.now();
         program_project_name = "program-" + now;
         team_project_name = "team-" + now;
+        other_team_project_name = "z-other-team-" + now;
     });
 
     it("SAFe usage", () => {
-        createProjects(program_project_name, team_project_name);
+        createProjects(program_project_name, team_project_name, other_team_project_name);
         configureProgram(program_project_name, team_project_name);
         createAndPlanFeature(program_project_name, team_project_name);
         createIteration();
@@ -43,10 +44,15 @@ describe("Program management", () => {
         checkThatMirrorsAreSynchronized(team_project_name);
 
         planUserStory(team_project_name, program_project_name);
+        linkANewTeamToProgram(other_team_project_name, program_project_name);
     });
 });
 
-function createProjects(program_project_name: string, team_project_name: string): void {
+function createProjects(
+    program_project_name: string,
+    team_project_name: string,
+    other_team_project_name: string
+): void {
     cy.log("Create team project");
     cy.visit("/project/new");
     cy.get("[data-test=project-registration-SAFe-templates-tab]").click();
@@ -75,6 +81,23 @@ function createProjects(program_project_name: string, team_project_name: string)
     cy.get("[data-test=new-project-name]").type(program_project_name);
     cy.get("[data-test=project-shortname-slugified-section]").click();
     cy.get("[data-test=new-project-shortname]").type("{selectall}" + program_project_name);
+    cy.get("[data-test=approve_tos]").click();
+    cy.get("[data-test=project-registration-next-button]").click();
+    cy.get("[data-test=start-working]").click({
+        timeout: 20000,
+    });
+
+    cy.log("Create other team project");
+    cy.visit("/project/new");
+    cy.get("[data-test=project-registration-SAFe-templates-tab]").click();
+    cy.get(
+        "[data-test=project-registration-card-label][for=project-registration-tuleap-template-program_management_team]"
+    ).click();
+    cy.get("[data-test=project-registration-next-button]").click();
+
+    cy.get("[data-test=new-project-name]").type(other_team_project_name);
+    cy.get("[data-test=project-shortname-slugified-section]").click();
+    cy.get("[data-test=new-project-shortname]").type("{selectall}" + other_team_project_name);
     cy.get("[data-test=approve_tos]").click();
     cy.get("[data-test=project-registration-next-button]").click();
     cy.get("[data-test=start-working]").click({
@@ -267,7 +290,9 @@ function checkMirrorIterationExistsInSprint(expected_text: string, nb_attempts =
     if (nb_attempts > max_attempts) {
         throw new Error("Timed out while checking if mirror iteration has been created");
     }
-    cy.log(`Check that mirror iteration has been created (attempt ${nb_attempts}/${max_attempts})`);
+    cy.log(
+        `Check that mirror iteration ${expected_text} has been created (attempt ${nb_attempts}/${max_attempts})`
+    );
     cy.get("[data-test=home-sprint-title]").then((subject) => {
         if (!subject.text().includes(expected_text)) {
             // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -305,10 +330,31 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
 function selectLabelInListPickerDropdown(
     label: string
 ): Cypress.Chainable<JQuery<HTMLHtmlElement>> {
-    cy.get("[data-test=list-picker-selection]").click();
+    cy.get("[data-test=list-picker-selection]").first().click();
     return cy.root().within(() => {
         cy.get("[data-test-list-picker-dropdown-open]").within(() => {
             cy.get("[data-test=list-picker-item]").contains(label).click();
         });
     });
+}
+
+function linkANewTeamToProgram(
+    other_team_project_name: string,
+    program_project_name: string
+): void {
+    cy.log("Add new team in program");
+    cy.visit(`program_management/admin/${program_project_name}`);
+
+    selectLabelInListPickerDropdown(other_team_project_name);
+    cy.get("[data-test=program-management-add-team-button]").click({ force: true });
+
+    cy.get("[data-test=synchronize-team-button]").click();
+
+    cy.log("Check sidebar for team");
+    cy.visitProjectService(other_team_project_name, "Agile Dashboard");
+    cy.get("[data-test=nav-bar-linked-projects]", { includeShadowDom: true }).contains(
+        program_project_name
+    );
+
+    checkPIExistsInReleases("My first PI");
 }
