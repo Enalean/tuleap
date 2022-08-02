@@ -16,7 +16,7 @@
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
     "sprintf-js": "^1.1.2",
-    "vue": "^2.7.4",
+    "vue": "^2.7.8",
     "vue-dompurify-html": "^2.5.1",
     "vuex": "^3.6.2"
   },

@@ -11,7 +11,7 @@
   "style": "dist/style.css",
   "dependencies": {
     "@tuleap/tlp-swatch-colors": "link:../../../../../lib/frontend/tlp-swatch-colors",
-    "vue": "^2.7.4",
+    "vue": "^2.7.8",
     "vue-gettext": "^2.1.12"
   },
   "devDependencies": {

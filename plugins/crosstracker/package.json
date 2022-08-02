@@ -11,7 +11,7 @@
     "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
     "extendable-error": "^0.1.7",
     "moment": "^2.29.3",
-    "vue": "^2.7.4",
+    "vue": "^2.7.8",
     "vuex": "^3.6.2",
     "vuex-class": "^0.3.2"
   },
