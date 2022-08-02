@@ -3168,6 +3168,9 @@ msgstr "Descrição resumida"
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "A descrição resumida não deve exceder 255 caracteres."
 
+msgid "Short name must start with an alphanumeric character."
+msgstr ""
+
 msgid "Shortcut"
 msgstr ""
 
