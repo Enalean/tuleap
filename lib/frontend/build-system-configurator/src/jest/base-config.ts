@@ -117,3 +117,7 @@ export const base_config = {
     restoreMocks: true,
     ...config_additional_config,
 };
+
+export const angular_mocks_config = {
+    setupFiles: [...base_config.setupFiles, path.resolve(__dirname, "./fake-jasmine2-env.js")],
+};
