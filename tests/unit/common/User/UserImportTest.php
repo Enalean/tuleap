@@ -160,6 +160,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $user->shouldReceive('isMember')->with($this->project->getID())->andReturns(false);
         $user->shouldReceive('getEmail')->andReturns('zurg@example.com');
         $user->shouldReceive('getUserName')->andReturns('zurg');
+        $user->shouldReceive('getRealname')->andReturns('zorg');
         $user->shouldReceive('hasAvatar')->andReturns('false');
         $user->shouldReceive('getId')->andReturns($id);
         $this->user_helper->shouldReceive('getDisplayName')->andReturns('getDisplayName');

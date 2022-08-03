@@ -34,6 +34,7 @@ use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
 final class OwnerRequestHandlerTest extends TestCase
@@ -194,7 +195,8 @@ final class OwnerRequestHandlerTest extends TestCase
                                 ->withUserName("knopel")
                                 ->withRealName("Leslie Knope")
                                 ->withAvatarUrl("avatar.example.com")
-                                ->build()
+                                ->build(),
+                            BuildDisplayNameStub::build()
                         ),
                         OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner(
                             UserTestBuilder::aUser()
@@ -202,7 +204,8 @@ final class OwnerRequestHandlerTest extends TestCase
                                 ->withUserName("swansonr")
                                 ->withRealName("Ron Swanson")
                                 ->withAvatarUrl("avatar.example.com")
-                                ->build()
+                                ->build(),
+                            BuildDisplayNameStub::build()
                         ),
                     ];
                 }

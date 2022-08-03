@@ -34,6 +34,7 @@ use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use UserManager;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
@@ -93,7 +94,7 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $pull_request = Mockery::mock(PullRequest::class);
         $this->pull_request_factory->shouldReceive('getPullRequestById')->with(123)->andReturn($pull_request);
 
-        $current_user = $this->buildUser(99, 'pr_owner');
+        $current_user = $this->buildUser(99, 'pr_owner', 'pull_request');
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
 
         $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsMergeableByUser')
@@ -101,8 +102,8 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->potential_reviewer_retriever->shouldReceive('getPotentialReviewers')
             ->andReturn([
-                $this->buildUser(78, 'reviewer1'),
-                $this->buildUser(79, 'reviewer2'),
+                $this->buildUser(78, 'reviewer1', 'first'),
+                $this->buildUser(79, 'reviewer2', 'second'),
             ]);
 
         $response = $this->controller->handle($server_request);
@@ -116,9 +117,9 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $this->assertEquals(79, $decoded_response[1]['id']);
     }
 
-    private function buildUser(int $id, string $username): PFUser
+    private function buildUser(int $id, string $username, string $realname): PFUser
     {
-        return new PFUser(['user_id' => $id, 'user_name' => $username]);
+        return UserTestBuilder::aUser()->withId($id)->withUserName($username)->withRealName($realname)->build();
     }
 
     public function testNotFoundIfThePullRequestDoesNotExist(): void
@@ -143,7 +144,7 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $pull_request->shouldReceive('getId')->andReturn(124);
         $this->pull_request_factory->shouldReceive('getPullRequestById')->with(124)->andReturn($pull_request);
 
-        $current_user = $this->buildUser(101, 'random_user_with_no_merge_capability');
+        $current_user = $this->buildUser(101, 'random_user_with_no_merge_capability', 'paysan');
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
 
         $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsMergeableByUser')
@@ -162,7 +163,7 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $pull_request = Mockery::mock(PullRequest::class);
         $this->pull_request_factory->shouldReceive('getPullRequestById')->with(126)->andReturn($pull_request);
 
-        $current_user = $this->buildUser(99, 'pr_owner');
+        $current_user = $this->buildUser(99, 'pr_owner', 'boss');
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
 
         $this->pull_request_permission_checker->shouldReceive('checkPullRequestIsMergeableByUser')
