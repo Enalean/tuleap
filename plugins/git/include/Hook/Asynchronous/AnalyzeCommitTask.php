@@ -27,35 +27,38 @@ use Tuleap\Git\Hook\CommitHash;
 /**
  * @psalm-immutable
  */
-final class CommitAnalysisOrder
+final class AnalyzeCommitTask implements \Tuleap\Queue\QueueTask
 {
+    public const TOPIC = 'tuleap.git.hooks.post-receive';
+
     private function __construct(
         private CommitHash $commit_hash,
-        private \PFUser $pusher,
-        private \GitRepository $repository,
+        private int $git_repository_id,
+        private int $pushing_user_id,
     ) {
     }
 
-    public static function fromComponents(
-        CommitHash $commit_hash,
-        \PFUser $pusher,
-        \GitRepository $repository,
-    ): self {
-        return new self($commit_hash, $pusher, $repository);
+    public static function fromCommit(CommitAnalysisOrder $order): self
+    {
+        return new self($order->getCommitHash(), (int) $order->getRepository()->getId(), (int) $order->getPusher()->getId());
     }
 
-    public function getCommitHash(): CommitHash
+    public function getTopic(): string
     {
-        return $this->commit_hash;
+        return self::TOPIC;
     }
 
-    public function getPusher(): \PFUser
+    public function getPayload(): array
     {
-        return $this->pusher;
+        return [
+            'commit_sha1'       => (string) $this->commit_hash,
+            'git_repository_id' => $this->git_repository_id,
+            'pushing_user_id'   => $this->pushing_user_id,
+        ];
     }
 
-    public function getRepository(): \GitRepository
+    public function getPreEnqueueMessage(): string
     {
-        return $this->repository;
+        return 'Analyze commit pushed in git repository #' . $this->git_repository_id . ' by user #' . $this->pushing_user_id . ' with hash #' . $this->commit_hash;
     }
 }

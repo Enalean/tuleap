@@ -29,9 +29,7 @@ final class CommitAnalysisProcessorBuilder implements BuildCommitAnalysisProcess
     public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor
     {
         return new CommitAnalysisProcessor(
-            \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
             new CommitMessageRetriever(\Git_Exec::buildFromRepository($repository)),
-            \EventManager::instance()
         );
     }
 }

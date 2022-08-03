@@ -20,9 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Stub;
 
-interface DispatchGitPushReception
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+
+final class RetrieveGitRepositoryStub implements \Tuleap\Git\Hook\Asynchronous\RetrieveGitRepository
 {
-    public function dispatchGitPushReception(PushDetails $details): void;
+    /**
+     * @param Ok<\GitRepository> | Err<Fault> $result
+     */
+    private function __construct(private Ok|Err $result)
+    {
+    }
+
+    public static function withGitRepository(\GitRepository $repository): self
+    {
+        return new self(Result::ok($repository));
+    }
+
+    public static function withFault(Fault $fault): self
+    {
+        return new self(Result::err($fault));
+    }
+
+    public function getRepository(int $repository_id, \PFUser $user): Ok|Err
+    {
+        return $this->result;
+    }
 }

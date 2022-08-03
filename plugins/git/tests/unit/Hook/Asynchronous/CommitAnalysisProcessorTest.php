@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
-use Psr\Log\Test\TestLogger;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\Hook\CommitHash;
-use Tuleap\Git\Stub\EventDispatcherStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
@@ -35,66 +37,58 @@ final class CommitAnalysisProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const COMMIT_MESSAGE  = 'closes story #822';
     private const COMMIT_SHA1     = '6c31bec0c';
     private const REPOSITORY_PATH = 'cymogene/homiletics';
-    private TestLogger $logger;
     private RetrieveCommitMessageStub $message_retriever;
-    private EventDispatcherStub $event_dispatcher;
     private \Project $project;
+    private \PFUser $pusher;
 
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(163)->build();
+        $this->pusher  = UserTestBuilder::buildWithDefaults();
 
-        $this->logger            = new TestLogger();
         $this->message_retriever = RetrieveCommitMessageStub::withMessage(self::COMMIT_MESSAGE);
-        $this->event_dispatcher  = EventDispatcherStub::withIdentityCallback();
     }
 
-    private function process(): void
+    /**
+     * @return Ok<PotentialReferencesReceived> | Err<Fault>
+     */
+    private function process(): Ok|Err
     {
         $git_repository = $this->createStub(\GitRepository::class);
         $git_repository->method('getFullName')->willReturn(self::REPOSITORY_PATH);
+        $git_repository->method('getProject')->willReturn($this->project);
 
-        $processor = new CommitAnalysisProcessor(
-            $this->logger,
-            $this->message_retriever,
-            $this->event_dispatcher,
-        );
-        $processor->process(
+        $processor = new CommitAnalysisProcessor($this->message_retriever);
+        return $processor->process(
             CommitAnalysisOrder::fromComponents(
                 CommitHash::fromString(self::COMMIT_SHA1),
-                UserTestBuilder::buildWithDefaults(),
-                $git_repository,
-                $this->project
+                $this->pusher,
+                $git_repository
             )
         );
     }
 
-    public function testItDispatchesAnEventToSearchReferencesOnTheCommitMessageFromTheGivenHash(): void
+    public function testItReturnsAnEventToSearchReferencesOnTheCommitMessageFromTheGivenHash(): void
     {
-        /** @var ?PotentialReferencesReceived $event */
-        $event                  = null;
-        $this->event_dispatcher = EventDispatcherStub::withCallback(
-            static function ($inner) use (&$event) {
-                $event = $inner;
-                return $inner;
-            }
-        );
-        $this->process();
+        $result = $this->process();
 
+        self::assertTrue(Result::isOk($result));
+        $event = $result->value;
         self::assertNotNull($event);
         self::assertSame(self::COMMIT_MESSAGE, $event->text_with_potential_references);
         self::assertSame($this->project, $event->project);
+        self::assertSame($this->pusher, $event->user);
         self::assertSame(
             sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, self::REPOSITORY_PATH, self::COMMIT_SHA1),
             $event->back_reference->getStringReference()
         );
     }
 
-    public function testItLogsErrorWhenItCannotReadCommitMessage(): void
+    public function testItReturnsFaultItCannotReadCommitMessage(): void
     {
         $this->message_retriever = RetrieveCommitMessageStub::withError();
-        $this->process();
 
-        self::assertTrue($this->logger->hasErrorRecords());
+        $result = $this->process();
+        self::assertTrue(Result::isErr($result));
     }
 }

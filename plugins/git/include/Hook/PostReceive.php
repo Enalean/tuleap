@@ -27,9 +27,10 @@ use GitRepository;
 use GitRepositoryFactory;
 use PFUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
+use Tuleap\Git\Hook\Asynchronous\AnalyzeCommitTask;
 use Tuleap\Git\MarkTechnicalReference;
-use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\Git\Webhook\WebhookRequestSender;
+use Tuleap\Queue\EnqueueTaskInterface;
 
 /**
  * Central access point for things that needs to happen when post-receive is
@@ -48,9 +49,8 @@ class PostReceive
         private WebhookRequestSender $webhook_request_sender,
         private PostReceiveMailSender $mail_sender,
         private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
-        private VerifyArtifactClosureIsAllowed $closure_verifier,
-        private DispatchGitPushReception $dispatcher,
-        private VerifyIsDefaultBranch $default_branch_verifier,
+        private PushCommitsAnalyzer $push_analyzer,
+        private EnqueueTaskInterface $enqueuer,
     ) {
     }
 
@@ -117,13 +117,10 @@ class PostReceive
 
     private function dispatchAsynchronousMessageIfNeeded(PushDetails $details): void
     {
-        if (! $this->closure_verifier->isArtifactClosureAllowed((int) $details->getRepository()->getId())) {
-            return;
+        $events = $this->push_analyzer->analyzePushCommits($details);
+        foreach ($events as $event) {
+            $this->enqueuer->enqueue(AnalyzeCommitTask::fromCommit($event));
         }
-        if (! $this->default_branch_verifier->isDefaultBranch($details->getRefname())) {
-            return;
-        }
-        $this->dispatcher->dispatchGitPushReception($details);
     }
 
     private function processGitWebhooks(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void

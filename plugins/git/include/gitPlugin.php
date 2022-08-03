@@ -75,6 +75,10 @@ use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\Hook\Asynchronous\AsynchronousEventHandler;
+use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrderParser;
+use Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessorBuilder;
+use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
@@ -182,6 +186,7 @@ use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -340,6 +345,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(PendingDocumentsRetriever::NAME);
+        $this->addHook(WorkerEvent::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2920,6 +2926,26 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         }
 
         $event->addAction($button_action);
+    }
+
+    public function workerEvent(WorkerEvent $event): void
+    {
+        $logger        = $this->getLogger();
+        $event_manager = \EventManager::instance();
+
+        $handler = new AsynchronousEventHandler(
+            $logger,
+            new CommitAnalysisOrderParser(
+                \UserManager::instance(),
+                new GitRepositoryRetriever(
+                    new \GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
+                    new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager)
+                )
+            ),
+            new CommitAnalysisProcessorBuilder(),
+            $event_manager
+        );
+        $handler->handle($event);
     }
 
     private function getAssets(): IncludeAssets

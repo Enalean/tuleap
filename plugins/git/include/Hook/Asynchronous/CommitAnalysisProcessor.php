@@ -22,35 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerInterface;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\CommitMetadata\GitCommitReferenceString;
 use Tuleap\Git\CommitMetadata\RetrieveCommitMessage;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 final class CommitAnalysisProcessor
 {
-    public function __construct(
-        private LoggerInterface $logger,
-        private RetrieveCommitMessage $message_retriever,
-        private EventDispatcherInterface $event_dispatcher,
-    ) {
+    public function __construct(private RetrieveCommitMessage $message_retriever,)
+    {
     }
 
-    public function process(CommitAnalysisOrder $order): void
+    /**
+     * @return Ok<PotentialReferencesReceived> | Err<Fault>
+     */
+    public function process(CommitAnalysisOrder $order): Ok|Err
     {
         try {
             $commit_message = $this->message_retriever->getCommitMessage((string) $order->getCommitHash());
         } catch (\Git_Command_Exception $e) {
-            $this->logger->error('Could not retrieve commit message', ['exception' => $e]);
-            return;
+            return Result::err(
+                Fault::fromThrowableWithMessage($e, 'Could not retrieve commit message: ' . $e->getMessage())
+            );
         }
         $back_reference = GitCommitReferenceString::fromRepositoryAndCommit(
             $order->getRepository(),
             $order->getCommitHash()
         );
-        $this->event_dispatcher->dispatch(
-            new PotentialReferencesReceived($commit_message, $order->getProject(), $order->getPusher(), $back_reference)
+        $project        = $order->getRepository()->getProject();
+        return Result::ok(
+            new PotentialReferencesReceived($commit_message, $project, $order->getPusher(), $back_reference)
         );
     }
 }

@@ -38,6 +38,7 @@ use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Queue\EnqueueTask;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitPlugin.php';
@@ -130,10 +131,11 @@ $post_receive = new PostReceive(
             new UGroupManager()
         )
     ),
-    new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()),
-    $git_dao,
-    new \Tuleap\Git\Hook\GitPushReceptionDispatcher(new \Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessorBuilder()),
-    new \Tuleap\Git\Hook\DefaultBranchVerifier($git_exec)
+    new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(
+        new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()
+    ),
+    new \Tuleap\Git\Hook\PushCommitsAnalyzer($git_dao, new \Tuleap\Git\Hook\DefaultBranchVerifier($git_exec)),
+    new EnqueueTask()
 );
 
 $post_receive->beforeParsingReferences($repository_path);
