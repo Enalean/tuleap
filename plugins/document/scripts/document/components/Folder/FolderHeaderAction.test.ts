@@ -17,28 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue";
 import FolderHeaderAction from "./FolderHeaderAction.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { Folder } from "../../type";
 
 describe("FolderHeaderAction", () => {
-    let dropdown_factory, state, store, store_options;
-    beforeEach(() => {
-        state = {};
-        store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
-
-        dropdown_factory = (props = {}) => {
-            return shallowMount(FolderHeaderAction, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+    function createWrapper(item: Folder): Wrapper<FolderHeaderAction> {
+        return shallowMount(FolderHeaderAction, {
+            localVue,
+            propsData: { item },
+        });
+    }
 
     it(`Given user does not have write permission on current folder
         When we display the dropdown
@@ -47,9 +38,9 @@ describe("FolderHeaderAction", () => {
             id: 42,
             title: "current folder title",
             user_can_write: false,
-        };
+        } as Folder;
 
-        const wrapper = dropdown_factory({ item });
+        const wrapper = createWrapper(item);
 
         expect(wrapper.find("[data-test=document-item-action-new-button]").exists()).toBeFalsy();
     });
@@ -61,9 +52,9 @@ describe("FolderHeaderAction", () => {
             id: 42,
             title: "current folder title",
             user_can_write: true,
-        };
+        } as Folder;
 
-        const wrapper = dropdown_factory({ item });
+        const wrapper = createWrapper(item);
 
         expect(wrapper.find("[data-test=document-item-action-new-button]").exists()).toBeTruthy();
     });

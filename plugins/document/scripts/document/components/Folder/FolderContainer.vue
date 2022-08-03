@@ -20,24 +20,14 @@
   -->
 
 <template>
-    <folder-view v-bind:class="classes" v-if="!does_folder_have_any_error" />
+    <folder-view v-if="!does_folder_have_any_error" />
 </template>
-<script>
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
 import FolderView from "./FolderView.vue";
+import { useNamespacedGetters } from "vuex-composition-helpers";
+import type { ErrorGetters } from "../../store/error/error-getters";
 
-export default {
-    name: "FolderContainer",
-    components: { FolderView },
-    computed: {
-        ...mapState(["is_loading_folder"]),
-        ...mapGetters(["is_folder_empty"]),
-        ...mapGetters("error", ["does_folder_have_any_error"]),
-        classes() {
-            return {
-                "document-folder-container-empty": !this.is_loading_folder && this.is_folder_empty,
-            };
-        },
-    },
-};
+const { does_folder_have_any_error } = useNamespacedGetters<
+    Pick<ErrorGetters, "does_folder_have_any_error">
+>("error", ["does_folder_have_any_error"]);
 </script>

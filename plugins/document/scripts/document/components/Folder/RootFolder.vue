@@ -23,16 +23,18 @@
     <folder-container />
 </template>
 
-<script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useActions, useMutations } from "vuex-composition-helpers";
 import FolderContainer from "./FolderContainer.vue";
 
-export default {
-    name: "RootFolder",
-    components: { FolderContainer },
-    mounted() {
-        this.$store.dispatch("loadRootFolder");
-        this.$store.commit("resetAscendantHierarchy");
-        this.$store.dispatch("removeQuickLook");
-    },
-};
+const { loadRootFolder, removeQuickLook } = useActions(["loadRootFolder", "removeQuickLook"]);
+
+const { resetAscendantHierarchy } = useMutations(["resetAscendantHierarchy"]);
+
+onMounted((): void => {
+    loadRootFolder();
+    resetAscendantHierarchy();
+    removeQuickLook();
+});
 </script>

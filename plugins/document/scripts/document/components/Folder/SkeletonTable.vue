@@ -38,56 +38,61 @@
     </table>
 </template>
 
-<script>
-export default {
-    name: "SkeletonTable",
-    props: {
-        nb_rows: Number,
-        nb_cols: Number,
-        icons: Array,
-        cell_classes: Array,
-    },
-    computed: {
-        rows() {
-            const rows = [];
-            for (let i = 0; i < this.nb_rows; i++) {
-                const cols = [];
-                for (let j = 0; j < this.nb_cols; j++) {
-                    const width =
-                        j === 0 ? this.getRandomPixelWidth() : this.getRandomPercentageWidth();
-                    let icon = false;
-                    if (j === 0 && this.icons && typeof this.icons[i] === "string") {
-                        icon = this.icons[i];
-                    }
-                    cols.push({ width, icon });
-                }
-                rows.push(cols);
-            }
+<script setup lang="ts">
+import { computed } from "vue";
 
-            return rows;
-        },
-    },
-    methods: {
-        getRandomInt(max) {
-            return Math.floor(Math.random() * Math.floor(max));
-        },
-        getRandomPercentageWidth() {
-            return 100 - this.getRandomInt(5) * 10 + "%";
-        },
-        getRandomPixelWidth() {
-            return 200 - this.getRandomInt(5) * 10 + "px";
-        },
-        getCellClassname(cell_index) {
-            if (!this.cell_classes) {
-                return "";
-            }
+const props = defineProps<{
+    nb_rows: number;
+    nb_cols: number;
+    icons: Array<string>;
+    cell_classes: Array<string>;
+}>();
 
-            if (cell_index >= this.cell_classes.length) {
-                return "";
-            }
+interface Row {
+    width: string;
+    icon: string;
+}
 
-            return this.cell_classes[cell_index];
-        },
-    },
-};
+const rows = computed((): Array<Array<Row>> => {
+    const rows: Array<Array<Row>> = [];
+    for (let i = 0; i < props.nb_rows; i++) {
+        const cols: Array<Row> = [];
+        for (let j = 0; j < props.nb_cols; j++) {
+            const width = j === 0 ? getRandomPixelWidth() : getRandomPercentageWidth();
+            let icon = "";
+            if (j === 0 && props.icons && typeof props.icons[i] === "string") {
+                icon = props.icons[i];
+            }
+            const row: Row = { width, icon };
+            cols.push(row);
+        }
+        rows.push(cols);
+    }
+
+    return rows;
+});
+
+function getRandomInt(max: number): number {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+function getRandomPercentageWidth(): string {
+    return 100 - getRandomInt(5) * 10 + "%";
+}
+
+function getRandomPixelWidth(): string {
+    return 200 - getRandomInt(5) * 10 + "px";
+}
+
+function getCellClassname(cell_index: number): string {
+    if (!props.cell_classes) {
+        return "";
+    }
+
+    if (cell_index >= props.cell_classes.length) {
+        return "";
+    }
+
+    return props.cell_classes[cell_index];
+}
 </script>
