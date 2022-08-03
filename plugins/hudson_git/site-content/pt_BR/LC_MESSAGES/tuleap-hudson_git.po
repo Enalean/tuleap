@@ -81,10 +81,16 @@ msgstr ""
 msgid "Jenkins URL"
 msgstr ""
 
+msgid "Jenkins access token is missing."
+msgstr ""
+
 msgid "Jenkins documentation"
 msgstr ""
 
 msgid "Jenkins hook"
+msgstr ""
+
+msgid "Jenkins notifyCommit access token"
 msgstr ""
 
 msgid "Jenkins server"
@@ -104,6 +110,9 @@ msgstr ""
 msgid ""
 "Jenkins server will be notified about git activity on this repository and "
 "will trigger git polling. More details on"
+msgstr ""
+
+msgid "Jenkins token is missing."
 msgstr ""
 
 msgid "Jenkins webhook successfully removed"

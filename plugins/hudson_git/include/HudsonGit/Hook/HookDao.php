@@ -33,20 +33,20 @@ class HookDao extends DataAccessObject
         $this->getDB()->run($sql, $repository_id);
     }
 
-    public function save(int $id, string $jenkins_server, bool $is_commit_reference_needed): void
+    public function save(int $id, string $jenkins_server, ?string $encrypted_token, bool $is_commit_reference_needed): void
     {
-        $sql = 'REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, is_commit_reference_needed)
-                VALUES(?, ?, ?)';
+        $sql = 'REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, encrypted_token, is_commit_reference_needed)
+                VALUES(?, ?, ?, ?)';
 
-        $this->getDB()->run($sql, $id, $jenkins_server, $is_commit_reference_needed ? 1 : 0);
+        $this->getDB()->run($sql, $id, $jenkins_server, $encrypted_token, $is_commit_reference_needed ? 1 : 0);
     }
 
     /**
-     * @psalm-return array{jenkins_server_url: string, is_commit_reference_needed:0|1}|null
+     * @psalm-return array{jenkins_server_url: string, is_commit_reference_needed:0|1, encrypted_token:string|null}|null
      */
     public function searchById(int $id): ?array
     {
-        $sql = 'SELECT jenkins_server_url, is_commit_reference_needed
+        $sql = 'SELECT jenkins_server_url, is_commit_reference_needed, encrypted_token
                 FROM plugin_hudson_git_server
                 WHERE repository_id = ?';
 

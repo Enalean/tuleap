@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS plugin_hudson_git_server(
     `repository_id` int(10) unsigned NOT NULL,
     `jenkins_server_url` varchar(255) default '',
+    encrypted_token BLOB DEFAULT NULL,
     is_commit_reference_needed BOOL NOT NULL DEFAULT TRUE,
     PRIMARY KEY `repository_id` (`repository_id`)
 );
@@ -25,7 +26,8 @@ CREATE TABLE plugin_hudson_git_job_branch_source (
 CREATE TABLE IF NOT EXISTS plugin_hudson_git_project_server(
    id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
    project_id int(11) NOT NULL,
-   jenkins_server_url varchar(255) default ''
+   jenkins_server_url varchar(255) default '',
+   encrypted_token BLOB DEFAULT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_hudson_git_project_server_job (

@@ -93,11 +93,17 @@ msgstr "Dépôt invalide"
 msgid "Jenkins URL"
 msgstr "URL Jenkins"
 
+msgid "Jenkins access token is missing."
+msgstr "Le token d'accès Jenkins est manquant."
+
 msgid "Jenkins documentation"
 msgstr "documentation Jenkins"
 
 msgid "Jenkins hook"
 msgstr "Hook Jenkins"
+
+msgid "Jenkins notifyCommit access token"
+msgstr "Token d'accès Jenkins notifyCommit"
 
 msgid "Jenkins server"
 msgstr "Serveur Jenkins"
@@ -121,6 +127,9 @@ msgid ""
 msgstr ""
 "Le serveur Jenkins sera notifié à propos de l'activité git sur ce dépôt et "
 "déclenchera une opération de 'polling'. Plus de détails dans la"
+
+msgid "Jenkins token is missing."
+msgstr ""
 
 msgid "Jenkins webhook successfully removed"
 msgstr "Le webhook Jenkins a été enlevé avec succès"

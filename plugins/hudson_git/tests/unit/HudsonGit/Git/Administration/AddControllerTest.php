@@ -32,11 +32,12 @@ use PFUser;
 use Project;
 use ProjectManager;
 use RuntimeException;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -213,6 +214,7 @@ class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->request->shouldReceive('get')->with('project_id')->once()->andReturn('101');
         $this->request->shouldReceive('get')->with('url')->once()->andReturn('https://example.com/jenkins');
+        $this->request->shouldReceive('get')->with('token')->once()->andReturn('my_secret_token');
 
         $this->project_manager->shouldReceive('getProject')
             ->with(101)
@@ -239,7 +241,8 @@ class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once()
             ->with(
                 $this->project,
-                'https://example.com/jenkins'
+                'https://example.com/jenkins',
+                Mockery::type(ConcealedString::class),
             );
 
         $this->layout->shouldReceive('redirect');

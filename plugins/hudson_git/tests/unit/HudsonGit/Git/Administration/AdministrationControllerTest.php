@@ -239,7 +239,7 @@ class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturn([]);
 
-        $jenkins_server = new JenkinsServer(1, 'url', $this->project);
+        $jenkins_server = new JenkinsServer(1, 'url', 'encrypted_token', $this->project);
         $this->jenkins_server_factory->shouldReceive('getJenkinsServerOfProject')
             ->once()
             ->with($this->project)

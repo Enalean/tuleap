@@ -11,10 +11,15 @@
 
     <div class="modal-body">
 
-        <p>{{ jenkins_notification_desc }} <a href="https://github.com/jenkinsci/git-plugin/blob/git-4.2.0/README.adoc#push-notification-from-repository">{{ jenkins_documentation_link_label }}</a>.</p>
+        <p>{{ jenkins_notification_desc }} <a href="https://github.com/jenkinsci/git-plugin/blob/git-4.11.4/README.adoc#push-notification-from-repository">{{ jenkins_documentation_link_label }}</a>.</p>
         <p>
             <label for="repo_jenkins">{{ jenkins_notification_label }} <i class="fas fa-asterisk" aria-hidden="true"></i></label>
             <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="https://example.com/jenkins" required pattern="https?://.+" />
+        </p>
+
+        <p>
+            <label for="jenkins-token">{{# dgettext }}tuleap-hudson_git | Jenkins notifyCommit access token{{/ dgettext }} <i class="fas fa-asterisk" aria-hidden="true"></i></label>
+            <input type="password" id="jenkins-token" name="token" class="input-xxlarge" required />
         </p>
 
         <label class="checkbox">

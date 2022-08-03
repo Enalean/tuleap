@@ -53,8 +53,9 @@ class JenkinsServerFactory
         $servers = [];
         foreach ($this->jenkins_server_dao->getJenkinsServerOfProject((int) $project->getID()) as $jenkins_server) {
             $servers[] = new JenkinsServer(
-                (int) $jenkins_server['id'],
-                (string) $jenkins_server['jenkins_server_url'],
+                $jenkins_server['id'],
+                $jenkins_server['jenkins_server_url'],
+                $jenkins_server['encrypted_token'],
                 $project
             );
         }
@@ -80,6 +81,7 @@ class JenkinsServerFactory
         return new JenkinsServer(
             $jenkins_server_id,
             $jenkins_server_url,
+            $row['encrypted_token'],
             $project
         );
     }

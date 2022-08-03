@@ -68,6 +68,7 @@ class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->jenkins_server = new JenkinsServer(
             1,
             'url',
+            null,
             Mockery::mock(Project::class)
         );
     }

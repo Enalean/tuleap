@@ -209,7 +209,8 @@ class hudson_gitPlugin extends Plugin
             self::getGitPermissionsManager(),
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
-                new Valid_HTTPURI()
+                new Valid_HTTPURI(),
+                (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
             ),
             new CSRFSynchronizerToken(URLBuilder::buildAddUrl())
         );
@@ -293,7 +294,8 @@ class hudson_gitPlugin extends Plugin
                     $request_factory,
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory),
                     new JenkinsTuleapPluginHookPayload($repository, $event->getRefname()),
-                    $stream_factory
+                    $stream_factory,
+                    (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
                 ),
                 $this->getLogger(),
                 new LogCreator(
@@ -327,7 +329,8 @@ class hudson_gitPlugin extends Plugin
             ),
             new Hook\HookDao(),
             $this->getCSRF(),
-            new Valid_HTTPURI()
+            new Valid_HTTPURI(),
+            (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
         );
     }
 
@@ -369,7 +372,8 @@ class hudson_gitPlugin extends Plugin
         $xml_importer = new XMLImporter(
             new JenkinsServerAdder(
                 new JenkinsServerDao(),
-                new Valid_HTTPURI()
+                new Valid_HTTPURI(),
+                (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
             ),
             $event->getLogger()
         );
@@ -389,7 +393,8 @@ class hudson_gitPlugin extends Plugin
 
         $xml_importer = new XMLExporter(
             self::getJenkinsServerFactory(),
-            $event->getLogger()
+            $event->getLogger(),
+            (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
         );
 
         $xml_importer->export(
