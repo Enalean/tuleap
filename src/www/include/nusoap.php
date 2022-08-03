@@ -1124,7 +1124,7 @@ class XMLSchema extends nusoap_base
                 $errstr = sprintf(
                     'XML error parsing XML schema on line %d: %s',
                     xml_get_current_line_number($this->parser),
-                    xml_error_string(xml_get_error_code($this->parser))
+                    xml_error_string(xml_get_error_code($this->parser)) ?? ''
                 );
                 $this->debug($errstr);
                 $this->debug("XML payload:\n" . $xml);
@@ -3521,6 +3521,7 @@ class soap_server extends nusoap_base
             }
         } else {
             $method_to_compare = (substr(phpversion(), 0, 2) == '4.') ? strtolower($method) : $method;
+            /** @psalm-var class-string $class */
             if (! in_array($method_to_compare, get_class_methods($class))) {
                 $this->debug("in invoke_method, method '$this->methodname' not found in class '$class'!");
                 $this->result = 'fault: method not found';
@@ -4274,7 +4275,7 @@ class wsdl extends nusoap_base
                 'XML error parsing WSDL from %s on line %d: %s',
                 $wsdl,
                 xml_get_current_line_number($this->parser),
-                xml_error_string(xml_get_error_code($this->parser))
+                xml_error_string(xml_get_error_code($this->parser)) ?? ''
             );
             $this->debug($errstr);
             $this->debug("XML payload:\n" . $wsdl_string);
@@ -5863,7 +5864,7 @@ class soap_parser extends nusoap_base
                 $err = sprintf(
                     'XML error parsing SOAP payload on line %d: %s',
                     xml_get_current_line_number($this->parser),
-                    xml_error_string(xml_get_error_code($this->parser))
+                    xml_error_string(xml_get_error_code($this->parser)) ?? ''
                 );
                 $this->debug($err);
                 $this->debug("XML payload:\n" . $xml);
