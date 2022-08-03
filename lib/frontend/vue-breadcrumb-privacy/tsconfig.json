@@ -6,7 +6,7 @@
         "incremental": false
     },
     "vueCompilerOptions": {
-        "target": 2
+        "target": 2.7
     },
     "include": ["src/**/*"]
 }
