@@ -27,15 +27,14 @@
     </error-modal>
 </template>
 
-<script>
+<script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
 
-export default {
-    components: { ErrorModal },
-    methods: {
-        bubbleErrorModalHidden() {
-            this.$emit("error-modal-hidden");
-        },
-    },
-};
+const emit = defineEmits<{
+    (e: "error-modal-hidden"): void;
+}>();
+
+function bubbleErrorModalHidden(): void {
+    emit("error-modal-hidden");
+}
 </script>

@@ -45,25 +45,27 @@
     </error-modal>
 </template>
 
-<script>
+<script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
+import type { Reason } from "../../../type";
+import { computed } from "vue";
 
-export default {
-    components: { ErrorModal },
-    props: {
-        reasons: Array,
-    },
-    computed: {
-        sorted_reasons() {
-            return [...this.reasons].sort((a, b) =>
-                a.filename.localeCompare(b.filename, undefined, { numeric: true })
-            );
-        },
-    },
-    methods: {
-        bubbleErrorModalHidden() {
-            this.$emit("error-modal-hidden");
-        },
-    },
-};
+const props = defineProps<{ reasons: Array<Reason> }>();
+
+const sorted_reasons = computed(() => {
+    return [...props.reasons].sort((a: Reason, b: Reason): number => {
+        if (!a.filename || !b.filename) {
+            return 0;
+        }
+        return a.filename.localeCompare(b.filename, undefined, { numeric: true });
+    });
+});
+
+const emit = defineEmits<{
+    (e: "error-modal-hidden"): void;
+}>();
+
+function bubbleErrorModalHidden(): void {
+    emit("error-modal-hidden");
+}
 </script>
