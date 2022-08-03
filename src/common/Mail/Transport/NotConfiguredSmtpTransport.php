@@ -24,7 +24,7 @@ use Laminas\Mail;
 use Laminas\Mail\Transport\TransportInterface;
 use Psr\Log\LoggerInterface;
 
-class NotConfiguredSmtpTransport implements TransportInterface
+final class NotConfiguredSmtpTransport implements TransportInterface
 {
     public function __construct(private LoggerInterface $logger)
     {

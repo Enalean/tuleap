@@ -32,15 +32,19 @@ final class MailTransportBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testItReturnsLegacySendmailIfNoOptionSet(): void
+    public function testItReturnsSendmailIfNoOptionSet(): void
     {
         self::assertInstanceOf(
             Sendmail::class,
             MailTransportBuilder::buildMailTransport(new NullLogger())
         );
+
+        self::assertTrue(
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+        );
     }
 
-    public function testItReturnsLegacySendmailIfOptionIsSetToSystem(): void
+    public function testItReturnsSendmailIfOptionIsSetToSendmail(): void
     {
         \ForgeConfig::set(
             "email_transport",
@@ -51,9 +55,13 @@ final class MailTransportBuilderTest extends TestCase
             Sendmail::class,
             MailTransportBuilder::buildMailTransport(new NullLogger())
         );
+
+        self::assertTrue(
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+        );
     }
 
-    public function testItReturnsNotConfiguredSmtpTransportIfOptionIsSetToSmtpAndNotConfigured(): void
+    public function testItReturnsNotConfiguredSmtpIfOptionIsSetToSmtpAndNotConfigured(): void
     {
         \ForgeConfig::set(
             "email_transport",
@@ -63,6 +71,10 @@ final class MailTransportBuilderTest extends TestCase
         self::assertInstanceOf(
             NotConfiguredSmtpTransport::class,
             MailTransportBuilder::buildMailTransport(new NullLogger())
+        );
+
+        self::assertFalse(
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
         );
     }
 
@@ -82,6 +94,10 @@ final class MailTransportBuilderTest extends TestCase
             Smtp::class,
             MailTransportBuilder::buildMailTransport(new NullLogger())
         );
+
+        self::assertFalse(
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+        );
     }
 
     public function testItReturnsInvalidTransportIfOptionIsSetToAnyOtherValue(): void
@@ -94,6 +110,10 @@ final class MailTransportBuilderTest extends TestCase
         self::assertInstanceOf(
             InvalidDefinedTransport::class,
             MailTransportBuilder::buildMailTransport(new NullLogger())
+        );
+
+        self::assertFalse(
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
         );
     }
 }
