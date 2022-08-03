@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAssetCollection;
@@ -410,11 +411,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $store_in_session = true;
 
         $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
-        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+
+        $limited_matching_ids = $this->getLimitedResult($store_in_session, $matching_ids, $offset, $aggregates);
+        $queries              = $this->buildOrderedQuery(
+            $limited_matching_ids,
+            $columns,
+            $aggregates,
+            $store_in_session,
+        );
 
         $html .= $this->fetchHeader($report_can_be_modified, $user, $total_rows, $queries);
         $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links);
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $extracolumn);
 
         //Display next/previous
         $html .= $this->fetchNextPrevious($total_rows, $offset, $report_can_be_modified, (int) $request->get('link-artifact-id'));
@@ -476,7 +484,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $extracolumn      = $read_only ? self::NO_EXTRACOLUMN : self::EXTRACOLUMN_UNLINK;
         $with_sort_links  = false;
         $only_one_column  = null;
-        $pagination       = false;
         $store_in_session = true;
         $head             = '';
 
@@ -501,11 +508,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $total_rows,
             $queries,
             $columns,
-            $offset,
             $extracolumn,
             $only_one_column,
             $use_data_from_db,
-            $pagination,
             $field_id,
             $prefill_removed_values,
             $prefill_types,
@@ -613,7 +618,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $extracolumn            = self::NO_EXTRACOLUMN;
         $with_sort_links        = false;
         $only_one_column        = null;
-        $pagination             = true;
         $artifactlink_field_id  = null;
         $prefill_removed_values = null;
         $prefill_types          = [];
@@ -627,19 +631,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         //Display the body of the table
         $aggregates = false;
 
-        $columns = $this->getTableColumns($only_one_column, $use_data_from_db);
-        $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+        $columns              = $this->getTableColumns($only_one_column, $use_data_from_db);
+        $limited_matching_ids = $this->getLimitedResult($store_in_session, $matching_ids, $offset, $aggregates);
+        $queries              = $this->buildOrderedQuery($limited_matching_ids, $columns, $aggregates, $store_in_session);
 
         $html .= $this->fetchTBody(
             $matching_ids,
             $total_rows,
             $queries,
             $columns,
-            $offset,
             $extracolumn,
             $only_one_column,
             $use_data_from_db,
-            $pagination,
             $artifactlink_field_id,
             $prefill_removed_values,
             $prefill_types,
@@ -1083,11 +1086,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param array $matching_ids           The matching ids to display array('id' => '"1,4,8,10", 'last_matching_ids' => "123,145,178,190")
      * @param int   $total_rows             The number of total rows (pagination powwwa)
-     * @param int   $offset                 The offset of the pagination
      * @param int   $extracolumn            Need for an extracolumn? NO_EXTRACOLUMN | EXTRACOLUMN_MASSCHANGE | EXTRACOLUMN_LINK | EXTRACOLUMN_UNLINK. Default is EXTRACOLUMN_MASSCHANGE.
      * @param int   $only_one_column        The column (field_id) to display. null if all columns are needed. Default is null
      * @param bool  $use_data_from_db       true if we need to retrieve data from the db instead of the session. Default is false.
-     * @param bool  $pagination             true if we display the pagination. Default is true.
      * @param int   $artifactlink_field_id  The artifactlink field id. Needed to display report in ArtifactLink field. Default is null
      * @param array $prefill_removed_values Array of artifact_id to pre-check. array(123 => X, 345 => X, ...). Default is null
      * @param bool  $only_rows              Display only rows, no aggregates or stuff like that. Default is false.
@@ -1100,11 +1101,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $total_rows,
         array $queries,
         array $columns,
-        $offset,
         $extracolumn = 1,
         $only_one_column = null,
         $use_data_from_db = false,
-        $pagination = true,
         $artifactlink_field_id = null,
         $prefill_removed_values = null,
         $prefill_types = [],
@@ -1124,10 +1123,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $dao     = new DataAccessObject();
             $results = [];
             foreach ($queries as $sql) {
-                //Limit
-                if ($total_rows > $this->chunksz && $pagination) {
-                    $sql .= " LIMIT " . (int) $offset . ", " . (int) $this->chunksz;
-                }
                 $results[] = $dao->retrieve($sql);
             }
             // test if first result is valid (if yes, we consider that others are valid too)
@@ -1624,16 +1619,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      */
     public function buildOrderedQuery($matching_ids, $columns, $aggregates = false, $store_in_session = true)
     {
-        if ($aggregates) {
-            $select = " SELECT 1 ";
-        } else {
-            $select = " SELECT a.id AS id, c.id AS changeset_id ";
-        }
-        $da = CodendiDataAccess::instance();
+        $select = $this->getBaseQuerySelect($aggregates);
+        $from   = $this->getBaseQueryFrom();
 
-        $changeset_ids = $da->escapeIntImplode(explode(',', $matching_ids['last_changeset_id']));
+        $changeset_ids = $this->getLegacyDataAccess()->escapeIntImplode(explode(',', $matching_ids['last_changeset_id']));
 
-        $from  = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ";
         $where = " WHERE c.id IN (" . $changeset_ids . ") ";
         if ($aggregates) {
             $group_by = '';
@@ -1679,10 +1669,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         //build an array of queries (due to mysql max join limit
         $queries         = [];
-        $sys_server_join = ((int) ForgeConfig::get('sys_server_join')) - 3;
-        if ($sys_server_join <= 0) { //make sure that the admin is not dumb
-            $sys_server_join = 20; //default mysql 60 / 3 (max of 3 joins per field)
-        }
+        $sys_server_join = $this->getNumberServerJoin();
 
         $additionnal_select_chunked = array_chunk($additionnal_select, $sys_server_join);
         $additionnal_from_chunked   = array_chunk($additionnal_from, $sys_server_join);
@@ -1744,6 +1731,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
         }
+
         if (empty($queries)) {
             $queries[] = $select . $from . $where . $group_by;
         }
@@ -1971,9 +1959,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 $store_in_session = true;
 
                                 $columns = $this->getTableColumns($key, $use_data_from_db);
-                                $queries = $this->buildOrderedQuery($matching_ids, $columns, $aggregates, $store_in_session);
+                                $queries = $this->buildOrderedQuery(
+                                    $matching_ids,
+                                    $columns,
+                                    $aggregates,
+                                    $store_in_session,
+                                );
 
-                                echo $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $offset, $extracolumn, $key);
+                                echo $this->fetchTBody(
+                                    $matching_ids,
+                                    $total_rows,
+                                    $queries,
+                                    $columns,
+                                    $extracolumn,
+                                    $key
+                                );
                             }
                         }
                     }
@@ -2650,5 +2650,110 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             '/assets/trackers'
         );
         return new CssAssetCollection([new \Tuleap\Layout\CssAssetWithoutVariantDeclinaisons($assets, 'tracker-bp')]);
+    }
+
+    /**
+     * @param bool|array $aggregates
+     */
+    private function getLimitedResult(bool $store_in_session, array $matching_ids, int $offset, $aggregates): array
+    {
+        $select = $this->getBaseQuerySelect($aggregates);
+
+        if ($aggregates) {
+            $ordering = false;
+        } else {
+            $ordering = true;
+        }
+
+        $from = $this->getBaseQueryFrom();
+
+        $dao               = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
+        $sorts             = $this->getSort($store_in_session);
+        $additional_select = [];
+        $additional_from   = [];
+        if ($ordering && $this->sortHasUsedField($store_in_session)) {
+            $order = [];
+            foreach ($sorts as $sort_field) {
+                if (! empty($sort_field['field']) && $sort_field['field']->isUsed()) {
+                    $additional_select[] = $sort_field['field']->getQuerySelect();
+                    $additional_from[]   = $sort_field['field']->getQueryFrom();
+                    $order[]             = $sort_field['field']->getQueryOrderby(
+                    ) . ' ' . ($sort_field['is_desc'] ? 'DESC' : 'ASC');
+                }
+            }
+        }
+
+        $where_statement = EasyStatement::open()
+            ->in('c.id IN (?*)', explode(',', $matching_ids['last_changeset_id']));
+
+        $where = "WHERE $where_statement";
+
+        $sys_server_join = $this->getNumberServerJoin();
+
+        $can_be_sorted = $this->columnsCanBeTechnicallySorted(array_chunk($additional_select, $sys_server_join))
+            && $this->columnsCanBeTechnicallySorted(array_chunk($additional_from, $sys_server_join));
+
+
+        if (! empty($additional_select) && $can_be_sorted) {
+            $select .= ', ' . implode(',', $additional_select);
+            $from   .= implode("", $additional_from);
+        }
+
+        $query = $select . $from . $where;
+        $limit = " LIMIT ?, ?";
+
+
+        if (! empty($order)) {
+            $query .= " ORDER BY " . implode(', ', $order);
+        }
+
+        $query .= $limit;
+
+        $results = $dao->safeQuery($query, array_merge($where_statement->values(), [$offset, $this->chunksz]));
+
+        $matching_ids_from_result                      = [];
+        $matching_ids_from_result["last_changeset_id"] = "";
+        $matching_ids_from_result["id"]                = "";
+
+        if ($results && is_array($results)) {
+            $matching_ids_from_result["last_changeset_id"] = implode(',', array_column($results, 'changeset_id'));
+            $matching_ids_from_result["id"]                = implode(',', array_column($results, 'id'));
+        }
+
+        return $matching_ids_from_result;
+    }
+
+
+    private function getBaseQueryFrom(): string
+    {
+        return " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ";
+    }
+
+    /**
+     * @param bool|array $aggregates
+     */
+    private function getBaseQuerySelect($aggregates): string
+    {
+        if ($aggregates) {
+            $select = " SELECT 1 ";
+        } else {
+            $select = " SELECT a.id AS id, c.id AS changeset_id ";
+        }
+        return $select;
+    }
+
+    private function getNumberServerJoin(): int
+    {
+        $sys_server_join = (ForgeConfig::getInt('sys_server_join')) - 3;
+        if ($sys_server_join <= 0) { //make sure that the admin is not dumb
+            return 20; //default mysql 60 / 3 (max of 3 joins per field)
+        }
+
+        return $sys_server_join;
+    }
+
+    private function getLegacyDataAccess(): \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface
+    {
+        return CodendiDataAccess::instance();
     }
 }
