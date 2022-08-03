@@ -70,7 +70,7 @@
                 data-test="docman-item-approval-table-status-badge"
             >
                 <label for="document-approval-table-status" class="tlp-label">
-                    {{ approval_badge_title }}
+                    {{ $gettext("Approval table status") }}
                 </label>
                 <approval-badge
                     id="document-approval-table-status"
@@ -79,7 +79,9 @@
                 />
             </div>
             <div v-if="is_file" class="tlp-property">
-                <label for="document-file-size" class="tlp-label">{{ file_size_title }}</label>
+                <label for="document-file-size" class="tlp-label">
+                    {{ $gettext("File size") }}
+                </label>
                 <p id="document-file-size" data-test="docman-file-size">
                     {{ file_size_in_mega_bytes }}
                 </p>
@@ -109,12 +111,6 @@ import type { ConfigurationState } from "../../store/configuration";
 import type { Item, Property } from "../../type";
 import { computed } from "vue";
 import { hasAnApprovalTable } from "../../helpers/approval-table-helper";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
-
-const { $gettext } = useGettext();
-
-const approval_badge_title = $gettext("Approval table status");
-const file_size_title = $gettext("File size");
 
 const { date_time_format, relative_dates_display, user_locale } = useState<
     Pick<ConfigurationState, "date_time_format" | "relative_dates_display" | "user_locale">
