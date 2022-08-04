@@ -21,22 +21,25 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-class MailGatewayConfigDao extends \DataAccessObject
-{
-    public function searchEmailgatewayConfiguration()
-    {
-        $sql = "SELECT * FROM plugin_tracker_config WHERE name = 'emailgateway_mode'";
+use Tuleap\DB\DataAccessObject;
 
-        return $this->retrieve($sql);
+class MailGatewayConfigDao extends DataAccessObject
+{
+    /**
+     * @psalm-return array{value: string}
+     */
+    public function searchEmailgatewayConfiguration(): array
+    {
+        return $this->getDB()->row(
+            "SELECT value FROM plugin_tracker_config WHERE name = 'emailgateway_mode'"
+        );
     }
 
-    public function save($emailgateway_mode)
+    public function save(string $emailgateway_mode): void
     {
-        $emailgateway_mode = $this->da->quoteSmart($emailgateway_mode);
-
-        $sql = "REPLACE INTO plugin_tracker_config (name, value)
-                VALUES ('emailgateway_mode', $emailgateway_mode)";
-
-        return $this->update($sql);
+        $this->getDB()->run(
+            "REPLACE INTO plugin_tracker_config (name, value) VALUES ('emailgateway_mode', ?)",
+            $emailgateway_mode
+        );
     }
 }
