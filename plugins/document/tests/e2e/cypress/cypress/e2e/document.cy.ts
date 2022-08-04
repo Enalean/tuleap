@@ -214,9 +214,7 @@ describe("Document new UI", () => {
 
                 cy.get("[data-test=document-quick-look]").contains("My new folder");
 
-                // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
-                // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
+                cy.get("[data-test=delete-folder-button]").click();
                 cy.get("[data-test=document-confirm-deletion-button]").click();
 
                 cy.get("[data-test=document-tree-content]").should("not.exist");
@@ -343,9 +341,9 @@ describe("Document new UI", () => {
                 });
 
                 // Go to the folder
-                cy.get("[data-test=document-tree-content]")
-                    .contains("a", "Folder download")
-                    .click();
+                cy.get("[data-test=document-tree-content]").contains("a", "Folder download").click({
+                    force: true,
+                });
 
                 // Create an embedded file in this folder
                 cy.get("[data-test=document-header-actions]").within(() => {
@@ -403,7 +401,7 @@ describe("Document new UI", () => {
 
                 // force: true is mandatory because on small screen button might be displayed with only an icon + ellipsis and cause following error:
                 // This element '...' is not visible because it has an effective width and height of: '0 x 0' pixels.
-                cy.get("[data-test=document-quick-look-delete-button]").click({ force: true });
+                cy.get("[data-test=delete-folder-button]").click({ force: true });
                 cy.get("[data-test=document-confirm-deletion-button]").click();
             });
 
