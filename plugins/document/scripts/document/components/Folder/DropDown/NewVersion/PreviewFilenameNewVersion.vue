@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <preview-filename-property v-bind:item="item">
+    <preview-filename-property v-if="is_file" v-bind:item="item">
         {{ preview }}
     </preview-filename-property>
 </template>
@@ -32,12 +32,17 @@ import type { ConfigurationState } from "../../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../../helpers/add-original-filename-extension";
 import type { DefaultFileNewVersionItem } from "../../../../type";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
+import { isFile } from "../../../../helpers/type-check-helper";
 
 const props = defineProps<{ version: NewVersion; item: DefaultFileNewVersionItem }>();
 
 const { filename_pattern } = useNamespacedState<ConfigurationState>("configuration", [
     "filename_pattern",
 ]);
+
+const is_file = computed((): boolean => {
+    return isFile(props.item);
+});
 
 const preview = computed((): string => {
     return addOriginalFilenameExtension(
