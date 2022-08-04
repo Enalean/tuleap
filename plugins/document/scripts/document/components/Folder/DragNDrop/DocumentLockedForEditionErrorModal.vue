@@ -25,6 +25,7 @@
 
 <script>
 import ErrorModal from "./ErrorModal.vue";
+
 export default {
     components: { ErrorModal },
     props: {

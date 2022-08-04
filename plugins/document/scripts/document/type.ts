@@ -261,6 +261,7 @@ export interface User {
     display_name: string;
     has_avatar: boolean;
     avatar_url: string;
+    user_url: string;
 }
 
 export interface Permissions {
@@ -473,4 +474,10 @@ export interface DocumentJsonError {
 export interface JsonError {
     message: string;
     i18n_error_message: string;
+}
+
+export interface Reason {
+    nb_dropped_files?: number;
+    lock_owner?: User;
+    filename?: string;
 }
