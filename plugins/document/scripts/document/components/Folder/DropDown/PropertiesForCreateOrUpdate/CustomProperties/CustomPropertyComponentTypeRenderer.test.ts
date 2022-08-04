@@ -18,27 +18,26 @@
  */
 
 import localVue from "../../../../../helpers/local-vue";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyComponentTypeRenderer from "./CustomPropertyComponentTypeRenderer.vue";
+import type { Property } from "../../../../../type";
 
 describe("CustomPropertyComponentTypeRenderer", () => {
-    let factory;
-    beforeEach(() => {
-        factory = (props = {}) => {
-            return shallowMount(CustomPropertyComponentTypeRenderer, {
-                localVue,
-                propsData: { ...props },
-            });
-        };
-    });
+    function createWrapper(item_property: Property): Wrapper<CustomPropertyComponentTypeRenderer> {
+        return shallowMount(CustomPropertyComponentTypeRenderer, {
+            localVue,
+            propsData: { itemProperty: item_property },
+        });
+    }
 
     it(`Given custom string property
         Then it renders the corresponding component`, () => {
         const itemProperty = {
             short_name: "string",
             type: "string",
-        };
-        const wrapper = factory({ itemProperty });
+        } as Property;
+        const wrapper = createWrapper(itemProperty);
 
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeTruthy();
@@ -55,8 +54,8 @@ describe("CustomPropertyComponentTypeRenderer", () => {
         const itemProperty = {
             short_name: "text",
             type: "text",
-        };
-        const wrapper = factory({ itemProperty });
+        } as Property;
+        const wrapper = createWrapper(itemProperty);
 
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
@@ -74,8 +73,8 @@ describe("CustomPropertyComponentTypeRenderer", () => {
             short_name: "list",
             type: "list",
             is_multiple_value_allowed: false,
-        };
-        const wrapper = factory({ itemProperty });
+        } as Property;
+        const wrapper = createWrapper(itemProperty);
 
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
@@ -94,8 +93,8 @@ describe("CustomPropertyComponentTypeRenderer", () => {
             short_name: "list",
             type: "list",
             is_multiple_value_allowed: true,
-        };
-        const wrapper = factory({ itemProperty });
+        } as Property;
+        const wrapper = createWrapper(itemProperty);
 
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();
@@ -115,8 +114,8 @@ describe("CustomPropertyComponentTypeRenderer", () => {
             type: "date",
             is_multiple_value_allowed: false,
             value: "",
-        };
-        const wrapper = factory({ itemProperty });
+        } as Property;
+        const wrapper = createWrapper(itemProperty);
 
         expect(wrapper.find("[data-test=document-custom-property-text]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=document-custom-property-string]").exists()).toBeFalsy();

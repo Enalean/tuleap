@@ -31,20 +31,15 @@
     </button>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Item } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 
-@Component
-export default class UpdateProperties extends Vue {
-    @Prop({ required: true })
-    readonly item!: Item;
+const props = defineProps<{ item: Item }>();
 
-    showUpdateModal(): void {
-        emitter.emit("show-update-item-properties-modal", {
-            detail: { current_item: this.item },
-        });
-    }
+function showUpdateModal(): void {
+    emitter.emit("show-update-item-properties-modal", {
+        detail: { current_item: props.item },
+    });
 }
 </script>

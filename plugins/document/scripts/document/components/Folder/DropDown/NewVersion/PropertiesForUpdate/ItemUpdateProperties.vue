@@ -24,7 +24,11 @@
             v-bind:value="version.title"
             data-test="update-property-version-title"
         />
-        <preview-filename-new-version v-bind:version="version" v-bind:item="item" />
+        <preview-filename-new-version
+            v-bind:version="version"
+            v-bind:item="item"
+            v-if="isItemAFile"
+        />
         <lock-property
             v-if="!isOpenAfterDnd"
             v-bind:item="item"
@@ -43,34 +47,26 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import VersionTitleProperty from "../../PropertiesForCreateOrUpdate/VersionTitleProperty.vue";
 import ChangelogProperty from "../../PropertiesForCreateOrUpdate/ChangelogProperty.vue";
 import LockProperty from "../../Lock/LockProperty.vue";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
 import PreviewFilenameNewVersion from "../PreviewFilenameNewVersion.vue";
+import type { Item, NewVersion } from "../../../../../type";
+import { isFile } from "../../../../../helpers/type-check-helper";
 
-export default {
-    name: "ItemUpdateProperties",
-    components: {
-        PreviewFilenameNewVersion,
-        LockProperty,
-        ChangelogProperty,
-        VersionTitleProperty,
-        ApprovalUpdateProperties,
-    },
-    props: {
-        version: Object,
-        item: Object,
-        isOpenAfterDnd: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    methods: {
-        emitApprovalUpdateAction(action) {
-            this.$emit("approval-table-action-change", action);
-        },
-    },
-};
+const props = defineProps<{ item: Item; isOpenAfterDnd: boolean; version: NewVersion }>();
+
+const emit = defineEmits<{
+    (e: "approval-table-action-change", action: string): void;
+}>();
+
+function emitApprovalUpdateAction(action: string) {
+    emit("approval-table-action-change", action);
+}
+
+function isItemAFile(): boolean {
+    return isFile(props.item);
+}
 </script>

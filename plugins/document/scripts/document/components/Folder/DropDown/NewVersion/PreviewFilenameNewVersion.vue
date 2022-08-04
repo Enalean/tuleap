@@ -32,6 +32,7 @@ import type { ConfigurationState } from "../../../../store/configuration";
 import { addOriginalFilenameExtension } from "../../../../helpers/add-original-filename-extension";
 import type { DefaultFileNewVersionItem } from "../../../../type";
 import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
+import { isFile } from "../../../../helpers/type-check-helper";
 
 const props = defineProps<{ version: NewVersion; item: DefaultFileNewVersionItem }>();
 
@@ -40,6 +41,9 @@ const { filename_pattern } = useNamespacedState<ConfigurationState>("configurati
 ]);
 
 const preview = computed((): string => {
+    if (!isFile(props.item)) {
+        return "";
+    }
     return addOriginalFilenameExtension(
         filename_pattern.value
             // eslint-disable-next-line no-template-curly-in-string

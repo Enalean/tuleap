@@ -17,38 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import localVue from "../../../../helpers/local-vue";
 import StatusPropertyWithCustomBindingForFolderUpdate from "./StatusPropertyWithCustomBindingForFolderUpdate.vue";
+import type { ConfigurationState } from "../../../../store/configuration";
 
 describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
-    let status_property, state, store;
-    beforeEach(() => {
-        state = {
-            configuration: { is_status_property_used: false },
-        };
-
-        const store_options = { state };
-
-        store = createStoreMock(store_options);
-
-        status_property = (props = {}) => {
-            return shallowMount(StatusPropertyWithCustomBindingForFolderUpdate, {
-                localVue,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
-
-    it(`display status selectbox only when status property is enabled for project`, async () => {
-        const wrapper = status_property({
-            status_value: "none",
+    function createWrapper(
+        is_status_property_used: boolean
+    ): Wrapper<StatusPropertyWithCustomBindingForFolderUpdate> {
+        return shallowMount(StatusPropertyWithCustomBindingForFolderUpdate, {
+            localVue,
+            propsData: { status_value: "none" },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: { is_status_property_used } as ConfigurationState,
+                    },
+                }),
+            },
         });
+    }
 
-        store.state.configuration.is_status_property_used = true;
-        await wrapper.vm.$nextTick();
+    it(`display status selectbox only when status property is enabled for project`, () => {
+        const wrapper = createWrapper(true);
 
         expect(
             wrapper.find("[data-test=document-status-property-for-folder-update]").exists()
@@ -56,11 +50,7 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
     });
 
     it(`does not display status if property is not available`, () => {
-        const wrapper = status_property({
-            status_value: "none",
-        });
-
-        store.state.configuration.is_status_property_used = false;
+        const wrapper = createWrapper(false);
 
         expect(
             wrapper.find("[data-test=document-status-property-for-folder-update]").exists()
