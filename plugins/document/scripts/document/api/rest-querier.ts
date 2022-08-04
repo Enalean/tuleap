@@ -44,6 +44,9 @@ import {
     convertArrayOfItems,
     convertRestItemToItem,
 } from "../helpers/properties-helpers/metadata-to-properties";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { getJSON } from "@tuleap/fetch-result";
 
 export {
     getDocumentManagerServiceInformation,
@@ -74,6 +77,7 @@ export {
     postNewFileVersionFromEmpty,
     getItemWithSize,
     searchInFolder,
+    getUserByName,
 };
 
 export interface RestItem extends Omit<Item, "properties"> {
@@ -122,6 +126,22 @@ interface DeleteWikiPageOptions {
     delete_associated_wiki_page: boolean;
 }
 
+export interface RestUser {
+    readonly id: string;
+    readonly display_name: string;
+    readonly username: string;
+    readonly realname: string;
+}
+
+function getUserByName(username: string): ResultAsync<RestUser[], Fault> {
+    return getJSON<RestUser[]>(`/api/v1/users`, {
+        params: {
+            query: JSON.stringify({ username }),
+            limit: 1,
+            offset: 0,
+        },
+    });
+}
 async function getDocumentManagerServiceInformation(project_id: number): Promise<ProjectService> {
     const response = await get(
         "/api/projects/" + encodeURIComponent(project_id) + "/docman_service"

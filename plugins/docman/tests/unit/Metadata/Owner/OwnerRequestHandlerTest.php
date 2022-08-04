@@ -237,8 +237,8 @@ final class OwnerRequestHandlerTest extends TestCase
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals(
             '{"results":' .
-            '[{"text":"Leslie Knope (knopel)","tuleap_user_id":101,"avatar_url":"avatar.example.com","has_avatar":true},' .
-            '{"text":"Ron Swanson (swansonr)","tuleap_user_id":102,"avatar_url":"avatar.example.com","has_avatar":true}' .
+            '[{"text":"Leslie Knope (knopel)","tuleap_user_id":101,"username":"knopel","avatar_url":"avatar.example.com","has_avatar":true},' .
+            '{"text":"Ron Swanson (swansonr)","tuleap_user_id":102,"username":"swansonr","avatar_url":"avatar.example.com","has_avatar":true}' .
             ']}',
             $response->getBody()->getContents()
         );

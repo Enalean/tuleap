@@ -66,9 +66,6 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
-msgid "Accepted input is the user id or its username."
-msgstr "Les entrées acceptées sont l'id ou son nom d'utilisateur."
-
 msgid "Actions in Documents service"
 msgstr "Actions dans le service Documents"
 
@@ -833,9 +830,6 @@ msgstr ""
 
 msgid "You are not allowed to write in this folder"
 msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
-
-msgid "You can search documents owned by a user."
-msgstr "Vous pouvez rechercher des documents possédés par un utilisateur."
 
 msgid "You don't have read permission for this item"
 msgstr "Vous n'avez pas le droit de lecture sur cet élément"

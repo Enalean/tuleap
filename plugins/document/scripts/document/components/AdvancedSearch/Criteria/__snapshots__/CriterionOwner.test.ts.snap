@@ -1,73 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CriterionOwner should render the component 1`] = `
+exports[`CriterionOwner should render the component with an already selected user 1`] = `
 <div
   class="tlp-form-element document-search-criterion document-search-criterion-owner"
 >
-  <div
-    class="document-search-criterion-with-popover"
+  <label
+    class="tlp-label"
+    for="document-criterion-owner-owner"
   >
-    <label
-      class="tlp-label"
-      for="document-criterion-owner-owner"
-    >
-      Owner
-    </label>
-     
-    <div
-      class="popover-information"
-    >
-      <span>
-        <i
-          class="fas fa-question-circle popover-search-icon"
-        />
-      </span>
-       
-      <section
-        class="tlp-popover"
-      >
-        <div
-          class="tlp-popover-arrow"
-        />
-         
-        <div
-          class="tlp-popover-header"
-        >
-          <h1
-            class="tlp-popover-title"
-            data-current-language="en_US"
-            data-msgid="Search help"
-          >
-            Search help
-          </h1>
-        </div>
-         
-        <div
-          class="tlp-popover-body"
-        >
-          <p>
-            <translate-stub
-              tag="span"
-            >
-              You can search documents owned by a user.
-            </translate-stub>
-             
-            <translate-stub
-              tag="span"
-            >
-              Accepted input is the user id or its username.
-            </translate-stub>
-          </p>
-        </div>
-      </section>
-    </div>
-  </div>
+    Owner
+  </label>
    
-  <input
+  <select
     class="tlp-input"
     data-test="document-criterion-owner-owner"
     id="document-criterion-owner-owner"
-    type="text"
-  />
+  >
+    <option
+      selected="selected"
+      value=""
+    >
+      
+            John Doe
+        
+    </option>
+     
+  </select>
 </div>
 `;

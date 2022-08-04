@@ -36,6 +36,7 @@ final class OwnerRepresentationForAutocomplete
 
     private function __construct(
         public int $tuleap_user_id,
+        public string $username,
         string $display_name,
         public string $avatar_url,
         public bool $has_avatar,
@@ -46,6 +47,6 @@ final class OwnerRepresentationForAutocomplete
     public static function buildForSelect2AutocompleteFromOwner(PFUser $user): self
     {
         $owner_display_name = $user->getRealName() . ' (' . $user->getUserName() . ')';
-        return new OwnerRepresentationForAutocomplete((int) $user->getId(), $owner_display_name, $user->getAvatarUrl(), $user->hasAvatar());
+        return new OwnerRepresentationForAutocomplete((int) $user->getId(), $user->getUserName(), $owner_display_name, $user->getAvatarUrl(), $user->hasAvatar());
     }
 }
