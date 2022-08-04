@@ -31,7 +31,7 @@ final class PlatformMailConfiguration
     {
     }
 
-    public function mustGeneratesBackendAliases(): bool
+    public function mustGeneratesSelfHostedConfigurationAndFeatures(): bool
     {
         return $this->allow_backend_aliases_generation;
     }
