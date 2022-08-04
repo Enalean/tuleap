@@ -453,16 +453,10 @@ class Tracker_DateReminderRenderer
         return $output;
     }
 
-    /**
-     * Display date reminders
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Void
-     */
-    public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
+    public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token): void
     {
         $output  = '<h2 class="almost-tlp-title">' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_title') . '</h2>';
+        $output .= '<p>' . dgettext('tuleap-tracker', 'Please note that date reminders does not take tracker notifications settings into account and will always be sent even if notifications are disabled.') . '</p>';
         $output .= '<fieldset>';
         if ($request->get('action') == 'delete_reminder') {
             $output .= $this->displayConfirmDelete($request->get('reminder_id'), $csrf_token);
