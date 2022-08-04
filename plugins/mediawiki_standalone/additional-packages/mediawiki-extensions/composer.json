@@ -71,9 +71,9 @@
     "mediawiki/labeled-section-transclusion": "^1.35.6",
     "mediawiki/math": "^1.35.6",
     "mediawiki/pdf-book": "^2.0.5",
-    "mediawiki/tuleap-integration": "dev-master#48b33e02401d9dfca981eba1b0af023c391fc5bb",
-    "mediawiki/tuleap-skin": "dev-master#b3f3a23781ca299c1fa59d44986b70d7f64f7b3f",
-    "mediawiki/tuleap-wiki-farm": "dev-master#7e83f9793d60e8fa8dc185ef98d506ebf5b37e7d"
+    "mediawiki/tuleap-integration": "dev-master#5fb4d50edc153d9cc9f30c1a783f364830043ee7",
+    "mediawiki/tuleap-skin": "dev-master#495010c37a23e1e199dc4e99382d82d8849f21fe",
+    "mediawiki/tuleap-wiki-farm": "dev-master#a69cc31265d0797be82a635581b190604a3d5e75"
   },
   "replace": {
     "guzzlehttp/guzzle": "^6.0 || ^7.0",
