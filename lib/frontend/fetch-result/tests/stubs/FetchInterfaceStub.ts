@@ -20,7 +20,7 @@
 import type { FetchInterface } from "../../src/FetchInterface";
 
 export interface FetchInterfaceStub extends FetchInterface {
-    getRequestInfo(call: number): RequestInfo | undefined;
+    getRequestInfo(call: number): RequestInfo | URL | undefined;
     getRequestInit(call: number): RequestInit | undefined;
 }
 
@@ -30,10 +30,10 @@ export const FetchInterfaceStub = {
         ...other_responses: Response[]
     ): FetchInterfaceStub => {
         const all_responses = [first_response, ...other_responses];
-        const recorded_arguments = new Map<number, [RequestInfo, RequestInit | undefined]>();
+        const recorded_arguments = new Map<number, [RequestInfo | URL, RequestInit | undefined]>();
         let calls = 0;
         return {
-            fetch(info: RequestInfo, init: RequestInit | undefined): Promise<Response> {
+            fetch(info: RequestInfo | URL, init: RequestInit | undefined): Promise<Response> {
                 recorded_arguments.set(calls, [info, init]);
                 calls++;
                 const response = all_responses.shift();
@@ -43,7 +43,7 @@ export const FetchInterfaceStub = {
                 throw new Error("No response configured");
             },
 
-            getRequestInfo(call: number): RequestInfo | undefined {
+            getRequestInfo(call: number): RequestInfo | URL | undefined {
                 const call_arguments = recorded_arguments.get(call);
                 return call_arguments ? call_arguments[0] : undefined;
             },
