@@ -45,13 +45,13 @@ final class ArtifactClosingCommentInCommonMarkFormat
             return new self('');
         }
         $action_word = $closing_keyword->match(
-            'solved',
-            'closed',
+            'Solved',
+            'Closed',
             "{$tracker->getItemName()} fixed",
-            'implemented',
+            'Implemented',
         );
 
-        return new self("$action_word by $user_name with {$origin_reference->getStringReference()}");
+        return new self("$action_word by $user_name with {$origin_reference->getStringReference()}.");
     }
 
     public function getBody(): string

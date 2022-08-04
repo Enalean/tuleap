@@ -103,7 +103,7 @@ final class ArtifactCloserTest extends TestCase
         $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
         $this->success_message             = sprintf(
-            'solved by %s with %s',
+            'Solved by %s with %s.',
             self::CLOSER_USERNAME,
             self::ORIGIN_REFERENCE
         );
