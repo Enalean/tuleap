@@ -85,7 +85,8 @@ class MailGatewayConfigController
     private function updateEmailGatewayMode(Codendi_Request $request, Response $response)
     {
         $emailgateway_mode = $request->get('emailgateway_mode');
-        if ($emailgateway_mode && $this->config->setEmailgatewayMode($emailgateway_mode)) {
+        if ($emailgateway_mode) {
+            $this->config->setEmailgatewayMode($emailgateway_mode);
             $response->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Successfully updated, the modification will be active in a few minutes.'));
         }
         $this->event_manager->processEvent(Event::UPDATE_ALIASES, null);
