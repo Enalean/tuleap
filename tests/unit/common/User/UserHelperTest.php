@@ -136,8 +136,7 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInternalCachingById(): void
     {
         $dao = \Mockery::spy(\UserDao::class);
-        $dar = TestHelper::arrayToDar(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
-        $dao->shouldReceive('searchByUserId')->andReturns($dar);
+        $dao->shouldReceive('searchByUserId')->andReturns(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
 
         $dao->shouldReceive('searchByUserName')->never();
 
@@ -161,8 +160,7 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInternalCachingByUserName(): void
     {
         $dao = \Mockery::spy(\UserDao::class);
-        $dar = TestHelper::arrayToDar(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
-        $dao->shouldReceive('searchByUserName')->andReturns($dar);
+        $dao->shouldReceive('searchByUserName')->andReturns(['user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123]);
 
         $dao->shouldReceive('searchByUserId')->never();
 
@@ -188,7 +186,7 @@ final class UserHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $name = "L'équipe de développement de PhpWiki";
 
         $dao = \Mockery::spy(\UserDao::class);
-        $dao->shouldReceive('searchByUserName')->with($name)->andReturns(\TestHelper::emptyDar());
+        $dao->shouldReceive('searchByUserName')->with($name)->andReturns(null);
 
         $um = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('isUserLoadedByUserName')->with($name)->andReturns(false);

@@ -143,9 +143,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
 
     private function getUserByIdWithoutCache($id)
     {
-        $dar = $this->getDao()->searchByUserId($id);
-        if (count($dar)) {
-            return $this->getUserInstanceFromRow($dar->getRow());
+        $row = $this->getDao()->searchByUserId($id);
+        if ($row !== null) {
+            return $this->getUserInstanceFromRow($row);
         }
         return null;
     }
@@ -180,8 +180,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function getUserByUserName($user_name)
     {
         if (! isset($this->_userid_bynames[$user_name])) {
-            $dar = $this->getDao()->searchByUserName($user_name);
-            if ($row = $dar->getRow()) {
+            $row = $this->getDao()->searchByUserName($user_name);
+            if ($row !== null) {
                 $u                                 = $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()]         = $u;
                 $this->_userid_bynames[$user_name] = $u->getId();
@@ -224,8 +224,9 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             return null;
         }
         if (! isset($this->_userid_byldapid[$ldapId])) {
-            $dar = $this->getDao()->searchByLdapId($ldapId);
-            if ($row = $dar->getRow()) {
+            $rows = $this->getDao()->searchByLdapId($ldapId);
+            $row  = array_shift($rows);
+            if ($row !== null) {
                 $u                               = $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()]       = $u;
                 $this->_userid_byldapid[$ldapId] = $u->getId();
@@ -434,12 +435,11 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
      */
     public function getUserByConfirmHash($hash)
     {
-        $dar = $this->getDao()->searchByConfirmHash($hash);
-        if ($dar->rowCount() !== 1) {
+        $row = $this->getDao()->searchByConfirmHash($hash);
+        if ($row === null) {
             return null;
-        } else {
-            return $this->_getUserInstanceFromRow($dar->getRow());
         }
+        return $this->_getUserInstanceFromRow($row);
     }
 
     public function setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation $current_user): void
@@ -503,11 +503,15 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     }
 
     /**
-     * @return Array of User
+     * @return PFUser[]
      */
-    public function getUsersWithSshKey()
+    public function getUsersWithSshKey(): array
     {
-        return $this->getDao()->searchSSHKeys()->instanciateWith([$this, 'getUserInstanceFromRow']);
+        $users = [];
+        foreach ($this->getDao()->searchSSHKeys() as $user_row) {
+            $users[] = $this->getUserInstanceFromRow($user_row);
+        }
+        return $users;
     }
 
     /**
@@ -780,7 +784,7 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
         }
 
         //If nobody answer success, look for the user into the db
-        if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
+        if ($row = $this->getDao()->searchByUserName($name)) {
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromLoggedInUser($this->getUserInstanceFromRow($row)));
         } else {
             $this->setCurrentUser(\Tuleap\User\CurrentUserWithLoggedInInformation::fromAnonymous($this));
@@ -957,11 +961,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     public function assignNextUnixUid($user)
     {
         $newUid = $this->getDao()->assignNextUnixUid($user->getId());
-        if ($newUid !== false) {
-            $user->setUnixUid($newUid);
-            return true;
-        }
-        return false;
+        $user->setUnixUid($newUid);
+        return true;
     }
 
     /**

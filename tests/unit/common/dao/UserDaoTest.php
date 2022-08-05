@@ -20,15 +20,14 @@
 
 declare(strict_types=1);
 
+use Tuleap\DB\DBConnection;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class UserDaoTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testReplaceStringInList(): void
     {
-        $da  = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        $dao = new UserDao($da);
+        $dao = new UserDao($this->createStub(DBConnection::class));
 
         $this->assertEquals('tutu', $dao->replaceStringInList('foo', 'foo', 'tutu'));
         $this->assertEquals('   tutu', $dao->replaceStringInList('   foo', 'foo', 'tutu'));

@@ -127,7 +127,7 @@ if ($request->exist('export')) {
     exit;
 }
 
-$dao    = new UserDao(CodendiDataAccess::instance());
+$dao    = new UserDao();
 $offset = $request->getValidated('offset', 'uint', 0);
 if (! $offset || $offset < 0) {
     $offset = 0;
@@ -193,7 +193,7 @@ if (isset($user_name_search) && $user_name_search) {
         $status_values
     );
     if ($result['numrows'] == 1) {
-        $row = $result['users']->getRow();
+        $row = array_shift($result['users']);
         $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $row['user_id']);
     }
 } else {

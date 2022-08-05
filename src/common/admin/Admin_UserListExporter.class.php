@@ -66,7 +66,7 @@ class Admin_UserListExporter
             'last_access_date' => $Language->getText('admin_userlist', 'last_access_date'),
         ];
         echo build_csv_header($this->col_list, $documents_title) . $eol;
-        $dao    = new UserDao(CodendiDataAccess::instance());
+        $dao    = new UserDao();
         $result = $dao->listAllUsers($group_id, $user_name_search, 0, 0, $current_sort_header, $sort_order, $status_values);
         $users  = $result['users'];
         echo $this->buildCsvBody($users);

@@ -91,12 +91,11 @@ $em->processEvent("ajax_search_user", $evParams);
 
 if (count($userList) < $limit) {
     // search user dao
-    $userDao   = new UserDao(CodendiDataAccess::instance());
+    $userDao   = new UserDao();
     $sql_limit = (int) ($limit - count($userList));
 
-    $dar = $userDao->searchUserNameLike($userName, $sql_limit);
-    while ($dar->valid()) {
-        $row  = $dar->current();
+    $rows = $userDao->searchUserNameLike($userName, $sql_limit);
+    foreach ($rows as $row) {
         $user = new PFUser($row);
 
         $is_user_restricted = $user->isRestricted();
@@ -109,8 +108,6 @@ if (count($userList) < $limit) {
                 'user_id'      => $row['user_id'],
             ];
         }
-
-        $dar->next();
     }
 
     $has_more = $has_more || ($userDao->foundRows() > $limit);

@@ -234,8 +234,8 @@ class UserHelper
         } else {
             if (! isset($this->_cache_by_id[$user_id])) {
                 $this->_cache_by_id[$user_id] = $GLOBALS['Language']->getText('global', 'none');
-                $dar                          = $this->_userdao->searchByUserId($user_id);
-                if ($row = $dar->getRow()) {
+                $row                          = $this->_userdao->searchByUserId($user_id);
+                if ($row !== null) {
                     $this->_cache_by_id[$user_id]                = $this->getDisplayName($row['user_name'], $row['realname']);
                     $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$user_id];
                 }
@@ -264,8 +264,8 @@ class UserHelper
                 $display = $this->getDisplayNameFromUser($user);
             } else {
                 if (! isset($this->_cache_by_username[$user_name])) {
-                    $dar = $this->_userdao->searchByUserName($user_name);
-                    if ($row = $dar->getRow()) {
+                    $row = $this->_userdao->searchByUserName($user_name);
+                    if ($row !== null) {
                         $this->_cache_by_id[$row['user_id']]         = $this->getDisplayName($row['user_name'], $row['realname']);
                         $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$row['user_id']];
                     } else {
@@ -333,7 +333,6 @@ class UserHelper
      */
     public function _getUserDao()
     {
-        $dao = new UserDao(CodendiDataAccess::instance());
-        return $dao;
+        return new UserDao();
     }
 }

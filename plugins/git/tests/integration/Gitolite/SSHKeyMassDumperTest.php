@@ -25,7 +25,6 @@ namespace Tuleap\Git\Gitolite;
 
 use Git_Gitolite_SSHKeyMassDumper;
 use PFUser;
-use TestHelper;
 use Tuleap\GlobalLanguageMock;
 
 final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
@@ -48,7 +47,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
     public function testItDumpsSshKeysForOneUser(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->andReturns(\TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
 
         $this->git_exec->shouldReceive('push')->once();
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
@@ -64,10 +63,10 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->times(2);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::emptyDar());
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
@@ -77,10 +76,10 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
@@ -93,10 +92,10 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'do_john'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'do_john'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
@@ -111,7 +110,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         touch($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub');
@@ -119,7 +118,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->git_exec->commit("Admin key");
         $this->assertEmptyGitStatus();
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::emptyDar());
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
@@ -130,7 +129,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::arrayToDar(new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])));
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $keyfile = 'forge__gerrit_1@0.pub';
@@ -139,7 +138,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->git_exec->commit("Gerrit key");
         $this->assertEmptyGitStatus();
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns(TestHelper::emptyDar());
+        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
