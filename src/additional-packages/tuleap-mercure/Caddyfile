@@ -1,0 +1,19 @@
+# This file is deployed and managed by Tuleap.
+# DO NOT EDIT.
+{
+	auto_https off
+	admin off
+	default_bind localhost
+}
+:3000
+log
+route {
+	mercure {
+		transport_url bolt:///var/lib/tuleap-mercure/mercure.db
+		publisher_jwt {env.MERCURE_KEY}
+		subscriber_jwt {env.MERCURE_KEY}
+		subscriptions
+	}
+	respond /healthz 200
+	respond "Not Found" 404
+}
