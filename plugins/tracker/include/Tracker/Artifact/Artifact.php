@@ -566,7 +566,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));
         foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {
-            $GLOBALS['HTML']->includeFooterJavascriptFile($additional_action->getAssetLink());
+            $GLOBALS['HTML']->addJavascriptAsset($additional_action->asset);
         }
 
         return $renderer->renderToString(

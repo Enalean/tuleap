@@ -22,6 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
+use Tuleap\Layout\JavascriptAssetGeneric;
+
+/**
+ * @psalm-immutable
+ */
 class AdditionalButtonAction
 {
     /**
@@ -29,24 +34,13 @@ class AdditionalButtonAction
      */
     private $link_presenter;
 
-    /**
-     * @var string
-     */
-    private $asset_link;
-
-    public function __construct(AdditionalButtonLinkPresenter $link_presenter, string $asset_link)
+    public function __construct(AdditionalButtonLinkPresenter $link_presenter, public JavascriptAssetGeneric $asset)
     {
         $this->link_presenter = $link_presenter;
-        $this->asset_link     = $asset_link;
     }
 
     public function getLinkPresenter(): AdditionalButtonLinkPresenter
     {
         return $this->link_presenter;
-    }
-
-    public function getAssetLink(): string
-    {
-        return $this->asset_link;
     }
 }

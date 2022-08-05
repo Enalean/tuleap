@@ -4,6 +4,7 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "link:../../lib/frontend/concurrency-limit-pool",
     "@tuleap/fault": "link:../../lib/frontend/fault",
@@ -23,8 +24,8 @@
     "vue-loader": "^17.0.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.mjs",
-    "watch": "webpack --config webpack.dev.mjs --watch",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
     "test": "jest",
     "typecheck": "vue-tsc --noEmit"
   }
