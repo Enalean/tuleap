@@ -24,6 +24,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { DefaultFileNewVersionItem, NewVersion } from "../../../../type";
 import PreviewFilenameNewVersion from "./PreviewFilenameNewVersion.vue";
+import PreviewFilenameProperty from "../../ModalCommon/PreviewFilenameProperty.vue";
 
 describe("PreviewFilenameNewVersion", () => {
     function getWrapper(
@@ -74,5 +75,39 @@ describe("PreviewFilenameNewVersion", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.text()).toBe("42-toto-Lorem ipsum-rejected-nope.json");
+    });
+    it("does not display the filename preview if the current item is not a file", () => {
+        const item = {
+            id: 42,
+            type: "link",
+            title: "Lorem ipsum",
+            status: "approved",
+            description: "",
+        } as unknown as DefaultFileNewVersionItem;
+
+        const wrapper = getWrapper(item, {} as NewVersion, {} as ConfigurationState);
+        expect(wrapper.findComponent(PreviewFilenameProperty).exists()).toBe(false);
+    });
+
+    it("displays the filename preview if the current item is a file", () => {
+        const item = {
+            id: 42,
+            type: "file",
+            title: "Lorem ipsum",
+            status: "approved",
+            description: "",
+            file_properties: {
+                file: new File([], "values.json"),
+            },
+        } as DefaultFileNewVersionItem;
+
+        const version = { title: "wololo", changelog: "" } as NewVersion;
+
+        const wrapper = getWrapper(item, version, {
+            is_filename_pattern_enforced: false,
+            // eslint-disable-next-line no-template-curly-in-string
+            filename_pattern: "${ID}-toto-${TITLE}-${STATUS}-${VERSION_NAME}",
+        } as ConfigurationState);
+        expect(wrapper.findComponent(PreviewFilenameProperty).exists()).toBe(true);
     });
 });
