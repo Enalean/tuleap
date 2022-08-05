@@ -4,18 +4,18 @@ specifiers:
   '@tuleap/build-system-configurator': link:../build-system-configurator
   '@tuleap/concurrency-limit-pool': link:../concurrency-limit-pool
   '@tuleap/fault': link:../fault
-  neverthrow: ^4.3.1
+  neverthrow: ^5.0.0
 
 dependencies:
   '@tuleap/concurrency-limit-pool': link:../concurrency-limit-pool
   '@tuleap/fault': link:../fault
-  neverthrow: 4.3.1
+  neverthrow: 5.0.0
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../build-system-configurator
 
 packages:
 
-  /neverthrow/4.3.1:
-    resolution: {integrity: sha512-+vxjSaiDWjAj6kR6KKW0YDuV6O4UCNWGAO8m8ITjFKPWcTmU1GVnL+J5TAUTKpPnUAHCKDxXpOHVaERid223Ww==}
+  /neverthrow/5.0.0:
+    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
     dev: false

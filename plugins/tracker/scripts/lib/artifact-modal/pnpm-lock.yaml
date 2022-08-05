@@ -27,7 +27,7 @@ specifiers:
   hybrids: ^8.0.2
   lodash: 2.4.0
   moment: ^2.29.3
-  neverthrow: ^4.2.1
+  neverthrow: ^5.0.0
   pretty-kibibytes: ^4.0.4
   process: ^0.11.10
   pump: ^3.0.0
@@ -57,7 +57,7 @@ dependencies:
   hybrids: 8.0.2
   lodash: 2.4.0
   moment: 2.29.3
-  neverthrow: 4.3.1
+  neverthrow: 5.0.0
   pretty-kibibytes: 4.0.4
   process: 0.11.10
   pump: 3.0.0
@@ -148,8 +148,8 @@ packages:
     resolution: {integrity: sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==}
     dev: false
 
-  /neverthrow/4.3.1:
-    resolution: {integrity: sha512-+vxjSaiDWjAj6kR6KKW0YDuV6O4UCNWGAO8m8ITjFKPWcTmU1GVnL+J5TAUTKpPnUAHCKDxXpOHVaERid223Ww==}
+  /neverthrow/5.0.0:
+    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
     dev: false
 
   /once/1.4.0:
