@@ -30,6 +30,7 @@
             <item-update-properties
                 v-bind:version="version"
                 v-bind:item="embedded_item"
+                v-bind:is-open-after-dnd="false"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <embedded-properties

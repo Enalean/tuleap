@@ -32,6 +32,7 @@
                 v-bind:version="version"
                 v-bind:item="item"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
+                v-bind:is-open-after-dnd="false"
             >
                 <link-properties
                     v-if="link_model"

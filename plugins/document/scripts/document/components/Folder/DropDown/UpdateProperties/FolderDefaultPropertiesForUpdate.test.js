@@ -78,6 +78,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     title: "title",
                 },
                 itemProperty: [],
+                status_value: "none",
             });
 
             store.state = {
@@ -130,6 +131,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     },
                 },
                 itemProperty: [],
+                status_value: "none",
             });
 
             expect(
@@ -164,6 +166,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     ],
                 },
                 itemProperty: [{ id: 100 }],
+                status_value: "none",
             });
 
             expect(
@@ -189,6 +192,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     properties: null,
                 },
                 itemProperty: [],
+                status_value: "none",
             });
 
             expect(
@@ -231,6 +235,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         list_value: [103],
                     },
                 ],
+                status_value: "none",
             });
 
             store.state.configuration.is_status_property_used = true;
@@ -306,6 +311,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         list_value: [100],
                     },
                 ],
+                status_value: "none",
             });
 
             const input = wrapper.get("[data-test=document-custom-property-recursion-option]");
@@ -383,6 +389,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         list_value: [100],
                     },
                 ],
+                status_value: "none",
             });
 
             const input = wrapper.get("[data-test=document-custom-property-recursion-option]");
@@ -442,6 +449,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     },
                 },
                 itemProperty: [],
+                status_value: "none",
             });
 
             wrapper.vm.properties_to_update = ["field_1", "field_3"];

@@ -25,20 +25,14 @@
     />
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import StatusProperty from "../PropertiesForCreateOrUpdate/StatusProperty.vue";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
 
-export default {
-    name: "StatusPropertyWithCustomBindingForFolderUpdate",
-    components: {
-        StatusProperty,
-    },
-    props: {
-        status_value: String,
-    },
-    computed: {
-        ...mapState("configuration", ["is_status_property_used"]),
-    },
-};
+defineProps<{ status_value: string }>();
+
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
 </script>

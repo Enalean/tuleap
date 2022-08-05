@@ -142,7 +142,7 @@ describe("FolderHeader", () => {
                 false
             );
 
-            const event = { detail: { current_item: { type: TYPE_EMPTY } } };
+            const event = { detail: { current_item: { type: TYPE_EMPTY, status: "" } } };
             wrapper.vm.showUpdateItemPropertiesModal(event);
             await wrapper.vm.$nextTick();
             await wrapper.vm.shown_update_properties_modal();

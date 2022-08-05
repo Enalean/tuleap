@@ -34,24 +34,12 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import StatusPropertyWithCustomBindingForDocumentUpdate from "./StatusPropertyWithCustomBindingForDocumentUpdate.vue";
 import TitleProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/TitleProperty.vue";
 import DescriptionProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/DescriptionProperty.vue";
 import OwnerProperty from "../PropertiesForCreateOrUpdate/AlwaysThereProperties/OwnerProperty.vue";
+import type { Folder, Item } from "../../../../type";
 
-export default {
-    name: "DocumentGlobalPropertyForUpdate",
-    components: {
-        OwnerProperty,
-        DescriptionProperty,
-        TitleProperty,
-        StatusPropertyWithCustomBindingForDocumentUpdate,
-    },
-    props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
-        status_value: String,
-    },
-};
+defineProps<{ currentlyUpdatedItem: Item; parent: Folder; status_value: string }>();
 </script>

@@ -45,6 +45,9 @@ const is_file = computed((): boolean => {
 });
 
 const preview = computed((): string => {
+    if (!isFile(props.item)) {
+        return "";
+    }
     return addOriginalFilenameExtension(
         filename_pattern.value
             // eslint-disable-next-line no-template-curly-in-string
