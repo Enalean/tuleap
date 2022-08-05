@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\FormElement\Field\File\Upload\Tus;
 
 use PFUser;
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\PathAllocator;
+use Tuleap\User\ProvideCurrentRequestUser;
 
 class FileBeingUploadedInformationProvider implements TusFileInformationProvider
 {
@@ -45,6 +45,7 @@ class FileBeingUploadedInformationProvider implements TusFileInformationProvider
     public function __construct(
         PathAllocator $path_allocator,
         FileOngoingUploadDao $dao,
+        private ProvideCurrentRequestUser $current_request_user_provider,
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;
@@ -59,8 +60,10 @@ class FileBeingUploadedInformationProvider implements TusFileInformationProvider
         }
 
         $id           = (int) $id;
-        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
-        \assert($current_user instanceof PFUser);
+        $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);
+        if ($current_user === null) {
+            return null;
+        }
 
         return $this->getFileInformationByIdForUser($id, $current_user);
     }

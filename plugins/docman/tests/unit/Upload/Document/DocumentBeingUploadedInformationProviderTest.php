@@ -25,11 +25,12 @@ namespace Tuleap\Docman\Upload\Document;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use Tuleap\Upload\UploadPathAllocator;
-use UserManager;
 
-class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -38,10 +39,8 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $user_manager   = \Mockery::mock(UserManager::class);
-        $current_user   = \Mockery::mock(\PFUser::class);
-        $user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
-        $data_store = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
+        $current_user   = UserTestBuilder::buildWithId(102);
+        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory, new CurrentRequestUserProviderStub($current_user));
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
@@ -49,11 +48,8 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $item_id      = 12;
-        $current_user = \Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive('getID')->andReturn('102');
-        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id)
-            ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
+        $item_id        = 12;
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id);
 
         $file_information = $data_store->getFileInformation($server_request);
 
@@ -67,7 +63,12 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
+        $data_store     = new DocumentBeingUploadedInformationProvider(
+            $path_allocator,
+            $dao,
+            $item_factory,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithId(102))
+        );
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
@@ -78,8 +79,7 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
         $item_id      = 12;
         $current_user = \Mockery::mock(\PFUser::class);
         $current_user->shouldReceive('getID')->andReturn('102');
-        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id)
-            ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id);
 
         $file_information = $data_store->getFileInformation($server_request);
 
@@ -93,13 +93,27 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
         $data_store = new DocumentBeingUploadedInformationProvider(
             new UploadPathAllocator('/var/tmp'),
             \Mockery::mock(DocumentOngoingUploadDAO::class),
-            \Mockery::mock(\Docman_ItemFactory::class)
+            \Mockery::mock(\Docman_ItemFactory::class),
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
         );
 
         $request = \Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->andReturns(null);
 
         $this->assertNull($data_store->getFileInformation($request));
+    }
+
+    public function testFileInformationCannotBeFoundIfCurrentUserIsMissing(): void
+    {
+        $data_store = new DocumentBeingUploadedInformationProvider(
+            new UploadPathAllocator('/var/tmp'),
+            \Mockery::mock(DocumentOngoingUploadDAO::class),
+            \Mockery::mock(\Docman_ItemFactory::class),
+            new CurrentRequestUserProviderStub(null),
+        );
+
+        $this->expectException(NotFoundException::class);
+        $data_store->getFileInformation((new NullServerRequest())->withAttribute('id', '11'));
     }
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
@@ -109,16 +123,14 @@ class DocumentBeingUploadedInformationProviderTest extends \Tuleap\Test\PHPUnit\
         $data_store   = new DocumentBeingUploadedInformationProvider(
             new UploadPathAllocator('/var/tmp'),
             $dao,
-            $item_factory
+            $item_factory,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithId(102)),
         );
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $current_user = \Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive('getID')->andReturn('102');
-        $server_request = (new NullServerRequest())->withAttribute('id', '12')
-            ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
+        $server_request = (new NullServerRequest())->withAttribute('id', '12');
 
         $this->assertNull($data_store->getFileInformation($server_request));
     }

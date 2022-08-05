@@ -31,9 +31,10 @@ use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\OAuth2\OAuth2Exception;
+use Tuleap\User\ProvideCurrentRequestUser;
 use User_StatusInvalidException;
 
-final class RESTCurrentUserMiddleware implements MiddlewareInterface
+final class RESTCurrentUserMiddleware implements MiddlewareInterface, ProvideCurrentRequestUser
 {
     /**
      * @var UserManager
@@ -60,5 +61,16 @@ final class RESTCurrentUserMiddleware implements MiddlewareInterface
         }
 
         return $handler->handle($request->withAttribute(self::class, $current_user));
+    }
+
+    public function getCurrentRequestUser(ServerRequestInterface $request): ?\PFUser
+    {
+        $user = $request->getAttribute(self::class);
+        if ($user === null) {
+            return null;
+        }
+        assert($user instanceof \PFUser);
+
+        return $user;
     }
 }

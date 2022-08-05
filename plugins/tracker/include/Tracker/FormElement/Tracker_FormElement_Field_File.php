@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForRestCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTraditionalUploadCreator;
@@ -1094,7 +1096,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                     $ongoing_upload_dao,
                     Tracker_FormElementFactory::instance()
                 ),
-                $ongoing_upload_dao
+                $ongoing_upload_dao,
+                new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
             ),
             $ongoing_upload_dao
         );

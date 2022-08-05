@@ -33,7 +33,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Request\NotFoundException;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use URLVerification;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
@@ -58,19 +59,19 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFileCanBeDownloaded(): void
     {
+        $current_user = Mockery::mock(PFUser::class);
+
         $controller = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class)
+            Mockery::mock(EmitterInterface::class),
+            new CurrentRequestUserProviderStub($current_user),
         );
 
         $server_request = Mockery::mock(ServerRequestInterface::class);
         $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user = Mockery::mock(PFUser::class);
         $current_user->shouldReceive('getId')->andReturn(102);
-        $server_request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($current_user);
         $server_request->shouldReceive('getHeaderLine')->with('Range')->andReturn('');
 
         $frs_file = Mockery::mock(FRSFile::class);
@@ -101,7 +102,8 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class)
+            Mockery::mock(EmitterInterface::class),
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
         );
 
         $server_request = Mockery::mock(ServerRequestInterface::class);
@@ -115,19 +117,19 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestIsRejectedWhenTheUserCanNotAccessTheProject(): void
     {
-        $controller = new FRSFileDownloadController(
+        $current_user = Mockery::mock(PFUser::class);
+        $controller   = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class)
+            Mockery::mock(EmitterInterface::class),
+            new CurrentRequestUserProviderStub($current_user),
         );
 
         $server_request = Mockery::mock(ServerRequestInterface::class);
         $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
         $current_user = Mockery::mock(PFUser::class);
         $current_user->shouldReceive('getId')->andReturn(102);
-        $server_request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($current_user);
 
         $frs_file = Mockery::mock(FRSFile::class);
         $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
@@ -142,19 +144,18 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestIsRejectedWhenTheFileIsNotActive(): void
     {
-        $controller = new FRSFileDownloadController(
+        $current_user = Mockery::mock(PFUser::class);
+        $controller   = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class)
+            Mockery::mock(EmitterInterface::class),
+            new CurrentRequestUserProviderStub($current_user),
         );
 
         $server_request = Mockery::mock(ServerRequestInterface::class);
         $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user = Mockery::mock(PFUser::class);
         $current_user->shouldReceive('getId')->andReturn(102);
-        $server_request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($current_user);
 
         $frs_file = Mockery::mock(FRSFile::class);
         $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
@@ -170,19 +171,18 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRequestIsRejectedWhenTheFileIsNotReadableByTheUser(): void
     {
-        $controller = new FRSFileDownloadController(
+        $current_user = Mockery::mock(PFUser::class);
+        $controller   = new FRSFileDownloadController(
             $this->url_verification,
             $this->file_factory,
             new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class)
+            Mockery::mock(EmitterInterface::class),
+            new CurrentRequestUserProviderStub($current_user),
         );
 
         $server_request = Mockery::mock(ServerRequestInterface::class);
         $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
-        $current_user = Mockery::mock(PFUser::class);
         $current_user->shouldReceive('getId')->andReturn(102);
-        $server_request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($current_user);
 
         $frs_file = Mockery::mock(FRSFile::class);
         $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
@@ -195,6 +195,26 @@ final class FRSFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->url_verification->shouldReceive('userCanAccessProject');
 
         $this->expectException(FRSFileNotPresentInStorage::class);
+        $controller->handle($server_request);
+    }
+
+    public function testRequestIsRejectedWhenCurrentUserIsFoundWithTheRequest(): void
+    {
+        $controller = new FRSFileDownloadController(
+            $this->url_verification,
+            $this->file_factory,
+            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            Mockery::mock(EmitterInterface::class),
+            new CurrentRequestUserProviderStub(null),
+        );
+
+        $server_request = Mockery::mock(ServerRequestInterface::class);
+        $server_request->shouldReceive('getAttribute')->with('file_id')->andReturn('12');
+
+        $frs_file = $this->createStub(FRSFile::class);
+        $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn($frs_file);
+
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 }

@@ -29,9 +29,7 @@ use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
-use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusCORSMiddleware;
 use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusRequestMethodOverride;
@@ -68,7 +66,7 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
         $this->stream_factory = $stream_factory;
     }
 
-    public static function build(TusDataStore $data_store): self
+    public static function build(TusDataStore $data_store, MiddlewareInterface $current_user_provider): self
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new self(
@@ -77,7 +75,7 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
             HTTPFactoryBuilder::streamFactory(),
             new SapiEmitter(),
             new SessionWriteCloseMiddleware(),
-            new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
+            $current_user_provider,
             new TuleapRESTCORSMiddleware(),
             new TusCORSMiddleware(),
             new TusRequestMethodOverride($response_factory)
