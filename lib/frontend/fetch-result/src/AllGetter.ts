@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Result } from "neverthrow";
-import { combine, ResultAsync } from "neverthrow";
+import { Result } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import type { AutoEncodedParameters } from "./auto-encoder";
@@ -63,7 +63,7 @@ const flatten = <TypeOfArrayItem>(
 ): ResultAsync<ReadonlyArray<TypeOfArrayItem>, Fault> =>
     all_responses_result
         // flatten the Result[] into a single Result
-        .andThen((results) => combine(results))
+        .andThen((results) => Result.combine(results))
         .map((nested_array) =>
             // flatten the ArrayItem[][] into ArrayItem[] and concat after first_results
             nested_array.reduce(
