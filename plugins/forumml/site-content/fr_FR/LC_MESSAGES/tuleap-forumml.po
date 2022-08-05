@@ -130,6 +130,12 @@ msgstr "Vous n'êtes pas autorisé à accéder aux archives de cette liste"
 msgid "You must specify the mailing-list id."
 msgstr "Vous devez spécifier l'identificateur (id) de la mailing-liste."
 
+msgid ""
+"Your current mail transport configuration is not compatible with this plugin."
+msgstr ""
+"La configuration actuelle du transport des emails n'est pas compatible avec "
+"ce plugin."
+
 #, php-format
 msgid "on %1$s"
 msgstr "le %1$s"

@@ -60,10 +60,10 @@ class MailTransportBuilder
     public static function getPlatformMailConfiguration(): PlatformMailConfiguration
     {
         return self::buildFromMailConfiguration(
-            static fn() => PlatformMailConfiguration::allowBackendAliasesGeneration(),
-            static fn() => PlatformMailConfiguration::disallowBackendAliasesGeneration(),
-            static fn() => PlatformMailConfiguration::disallowBackendAliasesGeneration(),
-            static fn() => PlatformMailConfiguration::disallowBackendAliasesGeneration(),
+            static fn() => PlatformMailConfiguration::allowSelfHostedConfigurationAndFeatures(),
+            static fn() => PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
+            static fn() => PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
+            static fn() => PlatformMailConfiguration::disallowSelfHostedConfigurationAndFeatures(),
         );
     }
 
