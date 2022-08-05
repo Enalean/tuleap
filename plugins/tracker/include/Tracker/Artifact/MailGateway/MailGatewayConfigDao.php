@@ -26,9 +26,9 @@ use Tuleap\DB\DataAccessObject;
 class MailGatewayConfigDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{value: string}
+     * @psalm-return null|array{value: string}
      */
-    public function searchEmailgatewayConfiguration(): array
+    public function searchEmailgatewayConfiguration(): ?array
     {
         return $this->getDB()->row(
             "SELECT value FROM plugin_tracker_config WHERE name = 'emailgateway_mode'"
