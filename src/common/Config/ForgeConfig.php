@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox, 2009. All Rights Reserved.
  *
@@ -30,6 +30,7 @@ use Tuleap\Config\GetConfigKeys;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\ServerHostname;
 
 class ForgeConfig
@@ -82,7 +83,7 @@ class ForgeConfig
         self::loadCoreDefaultsFromAttributes();
         self::loadLocalInc();
         self::initDefaultValues($fqdn);
-        self::load(new ConfigValueEnvironmentProvider(ServerHostname::class, ConfigurationVariables::class));
+        self::load(new ConfigValueEnvironmentProvider(ServerHostname::class, ConfigurationVariables::class, MailTransportBuilder::class));
         self::loadDatabaseConfig();
     }
 

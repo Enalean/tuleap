@@ -74,7 +74,7 @@ class BackendAliases extends Backend
     public function update()
     {
         $configuration = MailTransportBuilder::getPlatformMailConfiguration();
-        if (! $configuration->mustGeneratesBackendAliases()) {
+        if (! $configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
             $this->log("The mail configuration is not compatible with BackendAliases generation. Skipping");
 
             return true;

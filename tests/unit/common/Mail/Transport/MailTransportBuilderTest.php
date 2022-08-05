@@ -40,7 +40,7 @@ final class MailTransportBuilderTest extends TestCase
         );
 
         self::assertTrue(
-            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesSelfHostedConfigurationAndFeatures()
         );
     }
 
@@ -57,7 +57,7 @@ final class MailTransportBuilderTest extends TestCase
         );
 
         self::assertTrue(
-            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesSelfHostedConfigurationAndFeatures()
         );
     }
 
@@ -74,7 +74,7 @@ final class MailTransportBuilderTest extends TestCase
         );
 
         self::assertFalse(
-            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesSelfHostedConfigurationAndFeatures()
         );
     }
 
@@ -96,7 +96,7 @@ final class MailTransportBuilderTest extends TestCase
         );
 
         self::assertFalse(
-            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesSelfHostedConfigurationAndFeatures()
         );
     }
 
@@ -113,7 +113,7 @@ final class MailTransportBuilderTest extends TestCase
         );
 
         self::assertFalse(
-            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesBackendAliases()
+            MailTransportBuilder::getPlatformMailConfiguration()->mustGeneratesSelfHostedConfigurationAndFeatures()
         );
     }
 }
