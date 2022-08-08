@@ -232,7 +232,7 @@ export interface Link extends Item, ApprovableDocument {
 
 export interface Embedded extends Item, ApprovableDocument {
     parent_id: number;
-    embedded_file_properties: EmbeddedProperties;
+    embedded_file_properties: EmbeddedProperties | null;
     type: "embedded";
     status: string;
 }

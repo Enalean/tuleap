@@ -20,7 +20,7 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="ICON_EMBEDDED"></i>
         <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
             {{ item.title }}
         </a>
@@ -30,37 +30,34 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import { ICON_EMBEDDED } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
+import type { Embedded, Folder } from "../../../type";
+import { useState } from "vuex-composition-helpers";
+import { computed } from "vue";
+import { useRouter } from "../../../helpers/use-router";
 
-export default {
-    name: "EmbeddedCellTitle",
-    components: { FakeCaret },
-    props: {
-        item: Object,
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-        ...mapState("configuration", ["project_id"]),
-        icon_class() {
-            return ICON_EMBEDDED;
-        },
-        is_corrupted() {
-            return !this.item.embedded_file_properties;
-        },
-        document_link_url() {
-            const { href } = this.$router.resolve({
-                name: "item",
-                params: {
-                    folder_id: this.current_folder.id,
-                    item_id: this.item.id,
-                },
-            });
+const router = useRouter();
 
-            return href;
+const props = defineProps<{ item: Embedded }>();
+
+const { current_folder } = useState<{ current_folder: Folder }>(["current_folder"]);
+
+const is_corrupted = computed((): boolean => {
+    return (
+        !("embedded_file_properties" in props.item) || props.item.embedded_file_properties === null
+    );
+});
+const document_link_url = computed((): string => {
+    const { href } = router.resolve({
+        name: "item",
+        params: {
+            folder_id: String(current_folder.value.id),
+            item_id: String(props.item.id),
         },
-    },
-};
+    });
+
+    return href;
+});
 </script>

@@ -32,34 +32,31 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type";
 import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
+import type { ItemFile } from "../../../type";
+import { computed } from "vue";
 
-export default {
-    name: "FileCellTitle",
-    components: { FakeCaret },
-    props: {
-        item: Object,
-    },
-    computed: {
-        icon_class() {
-            if (!this.item.file_properties) {
-                return ICON_EMPTY;
-            }
+const props = defineProps<{ item: ItemFile }>();
 
-            return iconForMimeType(this.item.file_properties.file_type);
-        },
-        file_url() {
-            if (!this.item.file_properties) {
-                return;
-            }
-            return this.item.file_properties.download_href;
-        },
-        is_corrupted() {
-            return !this.item.file_properties;
-        },
-    },
-};
+const is_corrupted = computed((): boolean => {
+    return !("file_properties" in props.item) || props.item.file_properties === null;
+});
+
+const icon_class = computed((): string => {
+    if (is_corrupted.value || !props.item.file_properties) {
+        return ICON_EMPTY;
+    }
+
+    return iconForMimeType(props.item.file_properties.file_type);
+});
+
+const file_url = computed((): string => {
+    if (is_corrupted.value || !props.item.file_properties) {
+        return "";
+    }
+    return props.item.file_properties.download_href;
+});
 </script>

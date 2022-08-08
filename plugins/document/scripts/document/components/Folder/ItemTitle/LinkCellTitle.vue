@@ -22,36 +22,28 @@
 <template>
     <div>
         <fake-caret v-bind:item="item" />
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon()"></i>
-        <a v-bind:href="document_link_url()" class="document-folder-subitem-link" draggable="false">
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="ICON_LINK"></i>
+        <a v-bind:href="document_link_url" class="document-folder-subitem-link" draggable="false">
             {{ item.title }}
         </a>
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_LINK } from "../../../constants";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import type { Link } from "../../../type";
-import { namespace } from "vuex-class";
+import type { Item } from "../../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "vue";
 
-const configuration = namespace("configuration");
+const props = defineProps<{ item: Item }>();
 
-@Component({ components: { FakeCaret } })
-export default class LinkCellTitle extends Vue {
-    @Prop({ required: true })
-    readonly item!: Link;
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
 
-    @configuration.State
-    readonly project_id!: number;
-
-    document_link_url(): string {
-        return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
-    }
-
-    icon(): string {
-        return ICON_LINK;
-    }
-}
+const document_link_url = computed((): string => {
+    return `/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`;
+});
 </script>

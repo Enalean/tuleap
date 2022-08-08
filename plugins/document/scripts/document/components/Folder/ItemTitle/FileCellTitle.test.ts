@@ -18,13 +18,47 @@
  *
  */
 
-import Vuex from "vuex";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FileCellTitle from "./FileCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_FILE } from "../../../constants";
+import type { FileProperties, Folder, ItemFile, RootState } from "../../../type";
+import VueRouter from "vue-router";
+import type { Location, Route } from "vue-router/types/router";
+import * as route from "../../../helpers/use-router";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("FileCellTitle", () => {
+    function getWrapper(item: ItemFile): Wrapper<FileCellTitle> {
+        const router = new VueRouter();
+        jest.spyOn(router, "resolve").mockImplementation(() => ({
+            location: {} as Location,
+            route: {} as Route,
+            href: "/patch/to/embedded",
+            normalizedTo: {} as Location,
+            resolved: {} as Route,
+        }));
+        const mocked_router = jest.spyOn(route, "useRouter");
+        mocked_router.mockReturnValue(router);
+
+        return shallowMount(FileCellTitle, {
+            localVue,
+            propsData: { item },
+            mocks: {
+                localVue,
+                $store: createStoreMock({
+                    state: {
+                        current_folder: {
+                            id: 1,
+                            title: "My current folder",
+                        } as Folder,
+                    } as RootState,
+                }),
+            },
+        });
+    }
+
     it(`Given file_properties is not set
         When we display item title
         Then we should display corrupted badge`, () => {
@@ -33,17 +67,9 @@ describe("FileCellTitle", () => {
             title: "my corrupted embedded document",
             file_properties: null,
             type: TYPE_FILE,
-        };
+        } as ItemFile;
 
-        const component_options = {
-            localVue,
-            propsData: {
-                item,
-            },
-        };
-
-        const store = new Vuex.Store();
-        const wrapper = shallowMount(FileCellTitle, { store, ...component_options });
+        const wrapper = getWrapper(item);
 
         expect(wrapper.find(".document-badge-corrupted").exists()).toBeTruthy();
     });
@@ -55,22 +81,15 @@ describe("FileCellTitle", () => {
             id: 42,
             title: "my corrupted embedded document",
             file_properties: {
+                file_name: "my file",
                 file_type: "image/png",
                 download_href: "/plugins/docman/download/119/42",
-                file_size: "109768",
-            },
+                file_size: 109768,
+            } as FileProperties,
             type: TYPE_FILE,
-        };
+        } as ItemFile;
 
-        const component_options = {
-            localVue,
-            propsData: {
-                item,
-            },
-        };
-
-        const store = new Vuex.Store();
-        const wrapper = shallowMount(FileCellTitle, { store, ...component_options });
+        const wrapper = getWrapper(item);
 
         expect(wrapper.find(".document-badge-corrupted").exists()).toBeFalsy();
     });

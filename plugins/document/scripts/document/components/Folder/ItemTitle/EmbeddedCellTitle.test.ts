@@ -18,44 +18,46 @@
  *
  */
 
-import Vuex from "vuex";
 import VueRouter from "vue-router";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedCellTitle from "./EmbeddedCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../../constants";
+import type { Embedded, Folder, RootState } from "../../../type";
+import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import * as route from "../../../helpers/use-router";
+import type { Location, Route } from "vue-router/types/router";
 
 describe("EmbeddedCellTitle", () => {
-    let embedded_cell_title_factory, store;
+    function getWrapper(item: Embedded): Wrapper<EmbeddedCellTitle> {
+        const router = new VueRouter();
+        jest.spyOn(router, "resolve").mockImplementation(() => ({
+            location: {} as Location,
+            route: {} as Route,
+            href: "/patch/to/embedded",
+            normalizedTo: {} as Location,
+            resolved: {} as Route,
+        }));
+        const mocked_router = jest.spyOn(route, "useRouter");
+        mocked_router.mockReturnValue(router);
 
-    beforeEach(() => {
-        const router = new VueRouter({
-            routes: [
-                {
-                    path: "/folder/1/42",
-                    name: "item",
-                },
-            ],
-        });
-
-        store = new Vuex.Store();
-        store.state.current_folder = {
-            id: 1,
-            title: "My current folder",
-        };
-        store.state.configuration = {};
-
-        store.getters.current_folder_title = "My folder";
-
-        embedded_cell_title_factory = (props = {}) => {
-            return shallowMount(EmbeddedCellTitle, {
+        return shallowMount(EmbeddedCellTitle, {
+            localVue,
+            propsData: { item },
+            mocks: {
                 localVue,
-                router,
-                propsData: { ...props },
-                mocks: { $store: store },
-            });
-        };
-    });
+                $store: createStoreMock({
+                    state: {
+                        current_folder: {
+                            id: 1,
+                            title: "My current folder",
+                        } as Folder,
+                    } as RootState,
+                }),
+            },
+        });
+    }
 
     it(`Given embedded_file_properties is not set
         When we display item title
@@ -65,11 +67,9 @@ describe("EmbeddedCellTitle", () => {
             title: "my corrupted embedded document",
             embedded_file_properties: null,
             type: TYPE_EMBEDDED,
-        };
+        } as Embedded;
 
-        const wrapper = embedded_cell_title_factory({
-            item,
-        });
+        const wrapper = getWrapper(item);
 
         expect(wrapper.find(".document-badge-corrupted").exists()).toBeTruthy();
     });
@@ -83,13 +83,11 @@ describe("EmbeddedCellTitle", () => {
             embedded_file_properties: {
                 file_type: "text/html",
                 content: "<p>this is my custom embedded content</p>",
-                type: TYPE_EMBEDDED,
             },
-        };
+            type: TYPE_EMBEDDED,
+        } as Embedded;
 
-        const wrapper = embedded_cell_title_factory({
-            item,
-        });
+        const wrapper = getWrapper(item);
 
         expect(wrapper.find(".document-badge-corrupted").exists()).toBeFalsy();
     });
