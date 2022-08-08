@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,29 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Mail\Transport\Configuration;
+namespace Tuleap\ForumML\Plugin;
 
-/**
- * @psalm-immutable
- */
-final class PlatformMailConfiguration
+use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
+use Tuleap\Plugin\PluginInstallRequirement;
+
+final class MailTransportConfigurationPluginInstallRequirement implements PluginInstallRequirement
 {
-    private function __construct(private bool $allow_backend_aliases_generation)
+    public function __construct(private PlatformMailConfiguration $configuration)
     {
     }
 
-    public function mustGeneratesSelfHostedConfigurationAndFeatures(): bool
+    public function getDescriptionOfMissingInstallRequirement(): ?string
     {
-        return $this->allow_backend_aliases_generation;
-    }
+        if ($this->configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
+            return null;
+        }
 
-    public static function disallowSelfHostedConfigurationAndFeatures(): self
-    {
-        return new self(false);
-    }
-
-    public static function allowSelfHostedConfigurationAndFeatures(): self
-    {
-        return new self(true);
+        return dgettext('tuleap-forumml', 'Your current mail transport configuration is not compatible with this plugin.');
     }
 }
