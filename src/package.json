@@ -28,6 +28,7 @@
     "@tuleap/tlp-relative-date": "link:../lib/frontend/tlp-relative-date",
     "@tuleap/tlp-swatch-colors": "link:../lib/frontend/tlp-swatch-colors",
     "@tuleap/tooltip": "link:../lib/frontend/tooltip",
+    "@tuleap/vue-permissions-per-group-badge": "link:../lib/frontend/vue-permissions-per-group-badge",
     "@tuleap/vue2-gettext-init": "link:../lib/frontend/vue2-gettext-init",
     "ckeditor4": "^4.18.0",
     "dompurify": "^2.3.6",

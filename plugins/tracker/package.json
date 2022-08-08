@@ -21,6 +21,7 @@
     "@tuleap/tlp-relative-date": "link:../../lib/frontend/tlp-relative-date",
     "@tuleap/tlp-swatch-colors": "link:../../lib/frontend/tlp-swatch-colors",
     "@tuleap/tooltip": "link:../../lib/frontend/tooltip",
+    "@tuleap/vue-permissions-per-group-badge": "link:../../lib/frontend/vue-permissions-per-group-badge",
     "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",
