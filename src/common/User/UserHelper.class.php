@@ -19,20 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * UserHelper
- */
-class UserHelper
+use Tuleap\User\BuildDisplayName;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class UserHelper implements BuildDisplayName
 {
     public const PREFERENCES_NAME_AND_LOGIN = 0;
     public const PREFERENCES_LOGIN_AND_NAME = 1;
     public const PREFERENCES_LOGIN          = 2;
     public const PREFERENCES_REAL_NAME      = 3;
 
-    public $_username_display;
-    public $_cache_by_id;
-    public $_cache_by_username;
-    public $_userdao;
+    public $_username_display; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_cache_by_id; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_cache_by_username; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_userdao; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * Constructor
@@ -46,7 +46,7 @@ class UserHelper
         $this->_userdao           = $this->_getuserDao();
     }
 
-    protected static $_instance;
+    protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     /**
      *
      * @return UserHelper
@@ -70,11 +70,11 @@ class UserHelper
         self::$_instance = null;
     }
 
-    public function _getCurrentUserUsernameDisplayPreference()
+    public function _getCurrentUserUsernameDisplayPreference() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
     }
-    public function _getUserManager()
+    public function _getUserManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return UserManager::instance();
     }
@@ -89,10 +89,8 @@ class UserHelper
      *  3: realname
      *  4: realname (user_name)
      *
-     * @param  user_name  string
-     * @param  realname  string
      */
-    public function getDisplayName($user_name, $realname)
+    public function getDisplayName(string $user_name, string $realname): string
     {
         $name = '';
         switch ($this->_username_display) {
@@ -323,7 +321,7 @@ class UserHelper
      *
      * @param string  $user_name
      */
-    public function _isUserNameNone($user_name)
+    public function _isUserNameNone($user_name) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $user_name == $GLOBALS['Language']->getText('global', 'none');
     }
@@ -331,7 +329,7 @@ class UserHelper
     /**
      * Returns the user dao
      */
-    public function _getUserDao()
+    public function _getUserDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return new UserDao();
     }

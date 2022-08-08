@@ -1611,7 +1611,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         return new OwnerRequestHandler(
             new AllOwnerRetriever(
                 new OwnerDao(),
-                $this->getUserManager()
+                $this->getUserManager(),
+                UserHelper::instance()
             ),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),

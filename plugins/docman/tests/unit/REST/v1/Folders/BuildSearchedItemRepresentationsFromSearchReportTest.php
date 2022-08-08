@@ -135,7 +135,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
 
         $current_user = UserTestBuilder::aUser()->build();
         $this->user_manager->method('getCurrentUser')->willReturn($current_user);
-        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::buildWithId(101));
+        $this->user_manager->method('getUserById')->willReturn(UserTestBuilder::aUser()->withUserName("John")->withRealName("jsmith")->withId(101)->build());
 
         $this->item_factory
             ->method('getItemList')

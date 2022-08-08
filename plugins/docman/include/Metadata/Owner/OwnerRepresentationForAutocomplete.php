@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata\Owner;
 
 use PFUser;
+use Tuleap\User\BuildDisplayName;
 
 /**
  * @psalm-immutable
@@ -44,9 +45,9 @@ final class OwnerRepresentationForAutocomplete
         $this->text = $display_name;
     }
 
-    public static function buildForSelect2AutocompleteFromOwner(PFUser $user): self
+    public static function buildForSelect2AutocompleteFromOwner(PFUser $user, BuildDisplayName $user_helper): self
     {
-        $owner_display_name = $user->getRealName() . ' (' . $user->getUserName() . ')';
+        $owner_display_name = $user_helper->getDisplayName($user->getUserName(), $user->getRealName());
         return new OwnerRepresentationForAutocomplete((int) $user->getId(), $user->getUserName(), $owner_display_name, $user->getAvatarUrl(), $user->hasAvatar());
     }
 }
