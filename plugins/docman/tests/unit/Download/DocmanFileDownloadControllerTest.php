@@ -26,12 +26,12 @@ use Docman_File;
 use Docman_Item;
 use Docman_ItemFactory;
 use Mockery;
-use PFUser;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Request\NotFoundException;
-use Tuleap\REST\RESTCurrentUserMiddleware;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 
 final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -63,6 +63,7 @@ final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
             new \Psr\Log\NullLogger()
         );
 
@@ -81,6 +82,7 @@ final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
             new \Psr\Log\NullLogger()
         );
 
@@ -99,6 +101,7 @@ final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
             new \Psr\Log\NullLogger()
         );
 
@@ -107,8 +110,6 @@ final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
 
         $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
         $request->shouldReceive('getAttribute')->with('version_id')->andReturn('1');
 
@@ -119,20 +120,41 @@ final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         $controller->handle($request);
     }
 
+    public function testDownloadFailsWhenNoCurrentUserCanBeFoundWithTheRequest(): void
+    {
+        $controller = new DocmanFileDownloadController(
+            $this->emitter,
+            $this->item_factory,
+            $this->response_generator,
+            new CurrentRequestUserProviderStub(null),
+            new \Psr\Log\NullLogger()
+        );
+
+        $docman_file = Mockery::mock(Docman_File::class);
+        $docman_file->shouldReceive('getId')->andReturn('1');
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
+
+        $request = Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
+        $request->shouldReceive('getAttribute')->with('version_id')->andReturn('1');
+
+        $this->expectException(NotFoundException::class);
+        $controller->handle($request);
+    }
+
     public function testDownloadFailsWhenResponseCannotBeGenerated(): void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
             new \Psr\Log\NullLogger()
         );
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
 
         $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
         $request->shouldReceive('getAttribute')->with('version_id')->andReturn(null);
 
@@ -150,14 +172,13 @@ final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->emitter,
             $this->item_factory,
             $this->response_generator,
+            new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
             new \Psr\Log\NullLogger()
         );
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
 
         $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
-            ->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
         $request->shouldReceive('getAttribute')->with('version_id')->andReturn(null);
 

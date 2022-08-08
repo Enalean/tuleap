@@ -22,14 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload\Tus;
 
-use PFUser;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\UploadPathAllocator;
-use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\User\ProvideCurrentRequestUser;
 
 final class FileBeingUploadedInformationProvider implements TusFileInformationProvider
 {
@@ -45,6 +44,7 @@ final class FileBeingUploadedInformationProvider implements TusFileInformationPr
     public function __construct(
         UploadPathAllocator $path_allocator,
         FileOngoingUploadDao $dao,
+        private ProvideCurrentRequestUser $current_request_user_provider,
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;
@@ -59,8 +59,10 @@ final class FileBeingUploadedInformationProvider implements TusFileInformationPr
         }
 
         $id           = (int) $id;
-        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
-        \assert($current_user instanceof PFUser);
+        $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);
+        if ($current_user === null) {
+            return null;
+        }
 
         $row = $this->dao->searchFileOngoingUploadByIDUserIDAndExpirationDate(
             $id,

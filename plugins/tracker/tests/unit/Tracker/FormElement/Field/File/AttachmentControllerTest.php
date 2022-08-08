@@ -37,15 +37,17 @@ use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Upload\PathAllocator;
 use URLVerification;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
-class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -62,21 +64,9 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $form_element_factory;
     /**
-     * @var Mockery\MockInterface|FileBeingUploadedInformationProvider
-     */
-    private $file_information_provider;
-    /**
      * @var Mockery\MockInterface|PathAllocator
      */
     private $path_allocator;
-    /**
-     * @var AttachmentController
-     */
-    private $controller;
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $current_user;
     /**
      * @var Mockery\MockInterface|Tracker_FormElement_Field_File
      */
@@ -96,31 +86,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->current_user = Mockery::mock(PFUser::class);
-        $this->current_user->shouldReceive('getId')->andReturn(102);
-
-        $this->field                     = Mockery::mock(Tracker_FormElement_Field_File::class);
-        $this->tracker                   = Mockery::mock(Tracker::class);
-        $this->project                   = Mockery::mock(Project::class);
-        $this->url_verification          = Mockery::mock(URLVerification::class);
-        $this->ongoing_upload_dao        = Mockery::mock(FileOngoingUploadDao::class);
-        $this->form_element_factory      = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->path_allocator            = Mockery::mock(PathAllocator::class);
-        $this->file_info_factory         = Mockery::mock(\Tracker_FileInfoFactory::class);
-        $this->file_information_provider = new FileBeingUploadedInformationProvider(
-            $this->path_allocator,
-            $this->ongoing_upload_dao
-        );
-
-        $this->controller = new AttachmentController(
-            $this->url_verification,
-            $this->ongoing_upload_dao,
-            $this->form_element_factory,
-            $this->file_information_provider,
-            $this->file_info_factory,
-            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            Mockery::mock(EmitterInterface::class)
-        );
+        $this->field                = Mockery::mock(Tracker_FormElement_Field_File::class);
+        $this->tracker              = Mockery::mock(Tracker::class);
+        $this->project              = Mockery::mock(Project::class);
+        $this->url_verification     = Mockery::mock(URLVerification::class);
+        $this->ongoing_upload_dao   = Mockery::mock(FileOngoingUploadDao::class);
+        $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->path_allocator       = Mockery::mock(PathAllocator::class);
+        $this->file_info_factory    = Mockery::mock(\Tracker_FileInfoFactory::class);
     }
 
     public function testFileCanBeDownloaded(): void
@@ -140,10 +113,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
         $server_request
             ->shouldReceive('getHeaderLine')
             ->with('Range')
@@ -193,7 +162,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
-        $response = $this->controller->handle($server_request);
+        $response = $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($file_data, $response->getBody()->getContents());
@@ -216,10 +185,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('toto.png');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
         $server_request
             ->shouldReceive('getHeaderLine')
             ->with('Range')
@@ -270,7 +235,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
-        $response = $this->controller->handle($server_request);
+        $response = $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($file_data, $response->getBody()->getContents());
@@ -287,10 +252,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $this->ongoing_upload_dao->shouldReceive(
             [
@@ -301,7 +262,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFileIsBeingUploadedButIsExpired(): void
@@ -315,10 +276,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $this->ongoing_upload_dao->shouldReceive(
             [
@@ -329,7 +286,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFileIsBeingUploadedButBelongsToSomeoneElse(): void
@@ -343,10 +300,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $this->ongoing_upload_dao->shouldReceive(
             [
@@ -357,7 +310,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFileIsNotAlreadyUploaded(): void
@@ -373,10 +326,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -401,7 +350,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFilenameInURLDoesNotMatchTheOneInDB(): void
@@ -417,10 +366,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -445,7 +390,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFieldCannotBeFound(): void
@@ -461,10 +406,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -495,7 +436,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFieldIsNotAFileField(): void
@@ -511,10 +452,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -546,7 +483,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTrackerCannotBeFound(): void
@@ -562,10 +499,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -603,7 +536,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTheUserCanNotAccessTheProject(): void
@@ -619,10 +552,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -668,7 +597,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenTheUserCanReadTheField(): void
@@ -684,10 +613,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $row = [
             'id'           => 42,
@@ -732,7 +657,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedIfFileDoesNotHavePreview(): void
@@ -752,10 +677,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
         $server_request
             ->shouldReceive('getHeaderLine')
             ->with('Range')
@@ -806,7 +727,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->andReturn(null);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenFilenameInURLDoesNotMatchTheOneInDBForAlreadyLinkedAttachment(): void
@@ -822,10 +743,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $path = vfsStream::setup()->url() . '/file';
         $this->path_allocator->shouldReceive(['getPathForItemBeingUploaded' => $path]);
@@ -837,7 +754,7 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->file_info_factory->shouldReceive('getById')->with(42)->andReturn($fileinfo);
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController(UserTestBuilder::buildWithId(102))->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenArtifactIsNotReachableByCurrentUser(): void
@@ -853,10 +770,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $path = vfsStream::setup()->url() . '/file';
         $this->path_allocator->shouldReceive(['getPathForItemBeingUploaded' => $path]);
@@ -874,13 +787,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getById')
             ->with(42)
             ->andReturn($fileinfo);
+        $current_user = UserTestBuilder::buildWithId(102);
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdAndUser')
-            ->with($this->current_user, 42)
+            ->with($current_user, 42)
             ->andThrow(Mockery::mock(Tracker_FileInfo_UnauthorisedException::class));
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController($current_user)->handle($server_request);
     }
 
     public function testRequestIsRejectedWhenAttachmentIsNotLinkedInLatestChangeset(): void
@@ -896,10 +810,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
 
         $path = vfsStream::setup()->url() . '/file';
         $this->path_allocator->shouldReceive(['getPathForItemBeingUploaded' => $path]);
@@ -917,13 +827,14 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getById')
             ->with(42)
             ->andReturn($fileinfo);
+        $current_user = UserTestBuilder::buildWithId(102);
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdAndUser')
-            ->with($this->current_user, 42)
+            ->with($current_user, 42)
             ->andThrow(Mockery::mock(Tracker_FileInfo_InvalidFileInfoException::class));
 
         $this->expectException(NotFoundException::class);
-        $this->controller->handle($server_request);
+        $this->buildController($current_user)->handle($server_request);
     }
 
     public function testFileCanBeDownloadedForAlreadyLinkedAttachment(): void
@@ -943,10 +854,6 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
-        $server_request
-            ->shouldReceive('getAttribute')
-            ->with(RESTCurrentUserMiddleware::class)
-            ->andReturn($this->current_user);
         $server_request
             ->shouldReceive('getHeaderLine')
             ->with('Range')
@@ -984,13 +891,39 @@ class AttachmentControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->shouldReceive('getById')
             ->with(42)
             ->andReturn($fileinfo);
+        $current_user = UserTestBuilder::buildWithId(102);
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdAndUser')
-            ->with($this->current_user, 42);
+            ->with($current_user, 42);
 
-        $response = $this->controller->handle($server_request);
+        $response = $this->buildController($current_user)->handle($server_request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($file_data, $response->getBody()->getContents());
+    }
+
+    public function testFileCannotBeDownloadedWhenNoCurrentUserIsFoundWithTheRequest(): void
+    {
+        $this->expectException(NotFoundException::class);
+        $this->buildController(null)->handle(new NullServerRequest());
+    }
+
+    private function buildController(?PFUser $current_user): AttachmentController
+    {
+        $current_request_user_provider = new CurrentRequestUserProviderStub($current_user);
+        return new AttachmentController(
+            $this->url_verification,
+            $this->ongoing_upload_dao,
+            $this->form_element_factory,
+            new FileBeingUploadedInformationProvider(
+                $this->path_allocator,
+                $this->ongoing_upload_dao,
+                $current_request_user_provider
+            ),
+            $this->file_info_factory,
+            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            Mockery::mock(EmitterInterface::class),
+            $current_request_user_provider,
+        );
     }
 }

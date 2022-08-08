@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
-use PFUser;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Request\NotFoundException;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
+use Tuleap\User\ProvideCurrentRequestUser;
 
-class VersionBeingUploadedInformationProvider implements TusFileInformationProvider
+final class VersionBeingUploadedInformationProvider implements TusFileInformationProvider
 {
     /**
      * @var DocumentOnGoingVersionToUploadDAO
@@ -48,6 +48,7 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
         DocumentOnGoingVersionToUploadDAO $dao,
         \Docman_ItemFactory $item_factory,
         UploadPathAllocator $path_allocator,
+        private ProvideCurrentRequestUser $current_request_user_provider,
     ) {
         $this->dao            = $dao;
         $this->item_factory   = $item_factory;
@@ -63,8 +64,10 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
         }
 
         $version_id   = (int) $version_id;
-        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
-        \assert($current_user instanceof PFUser);
+        $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);
+        if ($current_user === null) {
+            throw new NotFoundException();
+        }
 
         $document_row = $this->dao->searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate(
             $version_id,

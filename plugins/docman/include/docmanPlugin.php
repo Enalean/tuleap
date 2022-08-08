@@ -1386,13 +1386,15 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $path_allocator              = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
         $user_manager                = UserManager::instance();
         $event_manager               = EventManager::instance();
+        $current_user_provider       = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
 
         return FileUploadController::build(
             new DocumentDataStore(
                 new DocumentBeingUploadedInformationProvider(
                     $path_allocator,
                     $document_ongoing_upload_dao,
-                    $this->getItemFactory()
+                    $this->getItemFactory(),
+                    $current_user_provider,
                 ),
                 new FileBeingUploadedWriter(
                     $path_allocator,
@@ -1420,7 +1422,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                     $path_allocator,
                     $document_ongoing_upload_dao
                 )
-            )
+            ),
+            $current_user_provider,
         );
     }
 
@@ -1434,12 +1437,14 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             new Docman_ApprovalTableFactoriesFactory(),
             new Docman_VersionFactory()
         );
+        $current_user_provider    = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
         return FileUploadController::build(
             new VersionDataStore(
                 new VersionBeingUploadedInformationProvider(
                     $version_to_upload_dao,
                     $this->getItemFactory(),
-                    $path_allocator
+                    $path_allocator,
+                    $current_user_provider,
                 ),
                 new FileBeingUploadedWriter(
                     $path_allocator,
@@ -1465,7 +1470,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                 ),
                 new VersionUploadCanceler($path_allocator, $version_to_upload_dao),
                 new FileBeingUploadedLocker($path_allocator)
-            )
+            ),
+            $current_user_provider,
         );
     }
 
@@ -1490,7 +1496,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeFileDownload(): DocmanFileDownloadController
     {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $response_factory             = HTTPFactoryBuilder::responseFactory();
+        $rest_current_user_middleware = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
         return new DocmanFileDownloadController(
             new SapiStreamEmitter(),
             new Docman_ItemFactory(),
@@ -1498,9 +1505,10 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                 new Docman_VersionFactory(),
                 new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory())
             ),
+            $rest_current_user_middleware,
             BackendLogger::getDefaultLogger(),
             new SessionWriteCloseMiddleware(),
-            new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
+            $rest_current_user_middleware,
             new TuleapRESTCORSMiddleware(),
             new DocmanFileDownloadCORS($response_factory)
         );

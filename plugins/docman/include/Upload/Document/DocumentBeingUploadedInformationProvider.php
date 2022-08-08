@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
-use PFUser;
-use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Request\NotFoundException;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
+use Tuleap\User\ProvideCurrentRequestUser;
 
 final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
 {
@@ -49,6 +49,7 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
         UploadPathAllocator $path_allocator,
         DocumentOngoingUploadDAO $dao,
         \Docman_ItemFactory $item_factory,
+        private ProvideCurrentRequestUser $current_request_user_provider,
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;
@@ -64,8 +65,10 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
         }
 
         $item_id      = (int) $item_id;
-        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
-        \assert($current_user instanceof PFUser);
+        $current_user = $this->current_request_user_provider->getCurrentRequestUser($request);
+        if ($current_user === null) {
+            throw new NotFoundException();
+        }
 
         $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
             $item_id,

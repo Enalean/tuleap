@@ -2188,15 +2188,17 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $file_ongoing_upload_dao,
             $formelement_factory
         );
+        $current_user_provider   = new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication());
 
         return FileUploadController::build(
             new FileDataStore(
-                new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
+                new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao, $current_user_provider),
                 new FileBeingUploadedWriter($path_allocator, $db_connection),
                 new FileBeingUploadedLocker($path_allocator),
                 new FileUploadFinisher($file_ongoing_upload_dao, $formelement_factory),
                 new FileUploadCanceler($path_allocator, $file_ongoing_upload_dao)
-            )
+            ),
+            $current_user_provider,
         );
     }
 
@@ -2218,16 +2220,19 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             Tracker_ArtifactFactory::instance()
         );
 
+        $current_user_provider = new RESTCurrentUserMiddleware(RESTUserManager::build(), new BasicAuthentication());
+
         return new AttachmentController(
             $url_verification,
             $file_ongoing_upload_dao,
             $form_element_factory,
-            new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
+            new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao, $current_user_provider),
             $file_info_factory,
             $binary_file_response_builder,
             new SapiStreamEmitter(),
+            $current_user_provider,
             new SessionWriteCloseMiddleware(),
-            new RESTCurrentUserMiddleware(RESTUserManager::build(), new BasicAuthentication()),
+            $current_user_provider,
             new TuleapRESTCORSMiddleware()
         );
     }
