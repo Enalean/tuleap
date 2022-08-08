@@ -227,7 +227,10 @@ describe("actions-create", () => {
                 upload_error: null,
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: false,
-            };
+                approval_table: null,
+                has_approval_table: false,
+                is_approval_table_enabled: false,
+            } as FakeItem;
 
             await createNewItem(context, [item, folder_of_created_item, current_folder]);
 
@@ -282,7 +285,10 @@ describe("actions-create", () => {
                 upload_error: null,
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: false,
-            };
+                approval_table: null,
+                has_approval_table: false,
+                is_approval_table_enabled: false,
+            } as FakeItem;
 
             await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
 
@@ -302,7 +308,7 @@ describe("actions-create", () => {
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "toggleCollapsedFolderHasUploadingContent",
-                [collapsed_folder_of_created_item, true]
+                { collapsed_folder: collapsed_folder_of_created_item, toggle: true }
             );
         });
         it("displays the created file when it is created in a extanded sub folder and not displays the progress bar along the folder", async () => {
@@ -341,7 +347,10 @@ describe("actions-create", () => {
                 upload_error: null,
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: false,
-            };
+                approval_table: null,
+                has_approval_table: false,
+                is_approval_table_enabled: false,
+            } as FakeItem;
 
             await createNewItem(context, [item, extended_folder_of_created_item, current_folder]);
 
@@ -361,7 +370,7 @@ describe("actions-create", () => {
             );
             expect(context.commit).toHaveBeenCalledWith(
                 "toggleCollapsedFolderHasUploadingContent",
-                [extended_folder_of_created_item, false]
+                { collapsed_folder: extended_folder_of_created_item, toggle: false }
             );
         });
     });
@@ -393,6 +402,9 @@ describe("actions-create", () => {
                 upload_error: null,
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: false,
+                approval_table: null,
+                has_approval_table: false,
+                is_approval_table_enabled: false,
             };
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
@@ -425,6 +437,9 @@ describe("actions-create", () => {
                 upload_error: null,
                 is_uploading_in_collapsed_folder: false,
                 is_uploading_new_version: false,
+                approval_table: null,
+                has_approval_table: false,
+                is_approval_table_enabled: false,
             };
             expect(uploadFile).toHaveBeenCalledWith(
                 context,

@@ -35,7 +35,7 @@
             data-test="document-folder-icon-open"
             v-bind:class="{
                 'fa-folder': is_closed,
-                'fa-folder-open': is_folder_open,
+                'fa-folder-open': is_folder_loaded_and_open,
                 'fa-circle-o-notch fa-spin': is_loading,
             }"
         ></i>
@@ -51,99 +51,132 @@
     </div>
 </template>
 
-<script>
-import { mapState, mapGetters } from "vuex";
+<script setup lang="ts">
+import type { Folder, State } from "../../../type";
+import {
+    useActions,
+    useGetters,
+    useMutations,
+    useNamespacedActions,
+    useState,
+    useStore,
+} from "vuex-composition-helpers";
+import { useRouter } from "../../../helpers/use-router";
+import { computed, onMounted, ref } from "vue";
+import type { PreferenciesActions } from "../../../store/preferencies/preferencies-actions";
 import { abortCurrentUploads } from "../../../helpers/abort-current-uploads";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { RootGetter } from "../../../store/getters";
 
-export default {
-    name: "FolderCellTitle",
-    props: {
-        item: Object,
-    },
-    data() {
-        return {
-            is_closed: true,
-            is_loading: false,
-            have_children_been_loaded: false,
-        };
-    },
-    computed: {
-        ...mapState(["folder_content", "files_uploads_list"]),
-        ...mapGetters(["is_uploading"]),
-        folder_href() {
-            const { href } = this.$router.resolve({
-                name: "folder",
-                params: { item_id: this.item.id },
-            });
+const router = useRouter();
+const { $gettext } = useGettext();
+const store = useStore();
 
-            return href;
-        },
-        is_folder_open() {
-            return !this.is_loading && !this.is_closed;
-        },
-        is_folded() {
-            return this.folded_items_ids.includes(this.item.id);
-        },
-        has_uploading_content() {
-            const uploading_content = this.files_uploads_list.find(
-                (file) => file.parent_id === this.item.id && file.progress > 0
-            );
+const props = defineProps<{ item: Folder }>();
 
-            return uploading_content;
-        },
-    },
-    mounted() {
-        this.$store.commit("initializeFolderProperties", this.item);
-        if (this.item.is_expanded !== false) {
-            this.open();
-        }
-    },
-    methods: {
-        async goToFolder() {
-            if (!this.is_uploading || abortCurrentUploads(this.$gettext, this.$store)) {
-                await this.doGoToFolder();
-            }
-        },
-        async doGoToFolder() {
-            this.$store.commit("appendFolderToAscendantHierarchy", this.item);
-            await this.$router.push({ name: "folder", params: { item_id: this.item.id } });
-        },
-        async loadChildren() {
-            this.is_loading = true;
+const { files_uploads_list } = useState<Pick<State, "files_uploads_list">>(["files_uploads_list"]);
 
-            await this.$store.dispatch("getSubfolderContent", this.item.id);
+const {
+    initializeFolderProperties,
+    appendFolderToAscendantHierarchy,
+    unfoldFolderContent,
+    toggleCollapsedFolderHasUploadingContent,
+    foldFolderContent,
+} = useMutations([
+    "initializeFolderProperties",
+    "appendFolderToAscendantHierarchy",
+    "unfoldFolderContent",
+    "toggleCollapsedFolderHasUploadingContent",
+    "foldFolderContent",
+]);
 
-            this.is_loading = false;
-            this.have_children_been_loaded = true;
-        },
-        open() {
-            if (!this.have_children_been_loaded) {
-                this.loadChildren();
-            }
+const { getSubfolderContent } = useActions(["getSubfolderContent"]);
 
-            this.is_closed = false;
+const { setUserPreferenciesForFolder } = useNamespacedActions<PreferenciesActions>("preferencies", [
+    "setUserPreferenciesForFolder",
+]);
 
-            this.$store.commit("unfoldFolderContent", this.item.id);
-        },
-        toggle() {
-            if (this.is_closed) {
-                this.$store.commit("toggleCollapsedFolderHasUploadingContent", [this.item, false]);
-                this.open();
-            } else {
-                this.$store.commit("foldFolderContent", this.item.id);
-                this.$store.commit("toggleCollapsedFolderHasUploadingContent", [
-                    this.item,
-                    this.has_uploading_content,
-                ]);
+const { is_uploading } = useGetters<Pick<RootGetter, "is_uploading">>(["is_uploading"]);
 
-                this.is_closed = true;
-            }
+let is_closed = ref(true);
+let is_loading = ref(false);
+let have_children_been_loaded = ref(false);
 
-            this.$store.dispatch("preferencies/setUserPreferenciesForFolder", {
-                folder_id: this.item.id,
-                should_be_closed: this.is_closed,
-            });
-        },
-    },
-};
+const folder_href = computed((): string => {
+    const { href } = router.resolve({
+        name: "folder",
+        params: { item_id: String(props.item.id) },
+    });
+
+    return href;
+});
+
+const is_folder_loaded_and_open = computed((): boolean => {
+    return !is_loading.value && !is_closed.value;
+});
+
+const has_uploading_content = computed((): boolean => {
+    const uploading_content = files_uploads_list.value.find(
+        (file) => file.parent_id === props.item.id && file.progress && file.progress > 0
+    );
+
+    return uploading_content !== null;
+});
+
+onMounted((): void => {
+    initializeFolderProperties(props.item);
+    if (props.item.is_expanded) {
+        open();
+    }
+});
+
+async function goToFolder(): Promise<void> {
+    if (!is_uploading.value || abortCurrentUploads($gettext, store)) {
+        await doGoToFolder();
+    }
+}
+
+async function doGoToFolder() {
+    appendFolderToAscendantHierarchy(props.item);
+    await router.push({ name: "folder", params: { item_id: String(props.item.id) } });
+}
+
+async function loadChildren(): Promise<void> {
+    is_loading.value = true;
+
+    await getSubfolderContent(props.item.id);
+
+    is_loading.value = false;
+    have_children_been_loaded.value = true;
+}
+
+function open(): void {
+    if (!have_children_been_loaded.value) {
+        loadChildren();
+    }
+
+    is_closed.value = false;
+
+    unfoldFolderContent(props.item.id);
+}
+
+function toggle(): void {
+    if (is_closed.value) {
+        toggleCollapsedFolderHasUploadingContent({ collapsed_folder: props.item, toggle: false });
+        open();
+    } else {
+        foldFolderContent(props.item.id);
+        toggleCollapsedFolderHasUploadingContent({
+            collapsed_folder: props.item,
+            has_uploading_content,
+        });
+
+        is_closed.value = true;
+    }
+
+    setUserPreferenciesForFolder({
+        folder_id: props.item.id,
+        should_be_closed: is_closed.value,
+    });
+}
 </script>

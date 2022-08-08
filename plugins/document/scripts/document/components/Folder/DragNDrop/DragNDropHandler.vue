@@ -257,10 +257,10 @@ export default {
             }
 
             if (is_uploading_in_subfolder && !dropzone_item.is_expanded) {
-                this.$store.commit("toggleCollapsedFolderHasUploadingContent", [
-                    dropzone_item,
-                    true,
-                ]);
+                this.$store.commit("toggleCollapsedFolderHasUploadingContent", {
+                    collapsed_folder: dropzone_item,
+                    toggle: true,
+                });
             }
 
             for (const file of files) {
