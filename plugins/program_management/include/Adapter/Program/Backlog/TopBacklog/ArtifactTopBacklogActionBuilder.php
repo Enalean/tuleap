@@ -128,7 +128,7 @@ final class ArtifactTopBacklogActionBuilder
 
         return new AdditionalButtonAction(
             $link,
-            $this->asset->getFileURL()
+            $this->asset
         );
     }
 }

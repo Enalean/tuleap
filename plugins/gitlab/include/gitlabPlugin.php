@@ -91,8 +91,6 @@ use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
@@ -876,9 +874,9 @@ class gitlabPlugin extends Plugin
                 new \Cocur\Slugify\Slugify(),
                 new CreateBranchPrefixDao()
             ),
-            new JavascriptAsset(
-                $this->getAssets(),
-                "artifact-create-branch.js"
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/gitlab'),
+                'scripts/artifact-create-branch-action/src/index.ts'
             )
         );
 
@@ -892,13 +890,5 @@ class gitlabPlugin extends Plugin
         }
 
         $event->addAction($button_action);
-    }
-
-    private function getAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/gitlab'
-        );
     }
 }

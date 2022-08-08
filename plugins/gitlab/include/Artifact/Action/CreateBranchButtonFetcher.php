@@ -27,7 +27,7 @@ use PFUser;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -35,7 +35,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 final class CreateBranchButtonFetcher
 {
     private GitlabIntegrationAvailabilityChecker $availability_checker;
-    private JavascriptAsset $javascript_asset;
     private GitlabRepositoryRepresentationFactory $representation_factory;
     private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact;
 
@@ -43,10 +42,9 @@ final class CreateBranchButtonFetcher
         GitlabIntegrationAvailabilityChecker $availability_checker,
         GitlabRepositoryRepresentationFactory $representation_factory,
         BranchNameCreatorFromArtifact $branch_name_creator_from_artifact,
-        JavascriptAsset $javascript_asset,
+        private JavascriptAssetGeneric $javascript_asset,
     ) {
         $this->availability_checker              = $availability_checker;
-        $this->javascript_asset                  = $javascript_asset;
         $this->representation_factory            = $representation_factory;
         $this->branch_name_creator_from_artifact = $branch_name_creator_from_artifact;
     }
@@ -102,7 +100,7 @@ final class CreateBranchButtonFetcher
 
         return new AdditionalButtonAction(
             $link,
-            $this->javascript_asset->getFileURL()
+            $this->javascript_asset
         );
     }
 }

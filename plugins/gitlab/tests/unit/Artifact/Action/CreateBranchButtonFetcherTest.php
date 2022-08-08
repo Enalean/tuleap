@@ -158,7 +158,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ],
             $button_action->getLinkPresenter()->data[2]
         );
-        self::assertSame('action.js', $button_action->getAssetLink());
+        self::assertSame($this->javascript_asset, $button_action->asset);
     }
 
     public function testItReturnsTheActionLinkButtonWithoutArtifactTitle(): void
@@ -252,7 +252,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
             ],
             $button_action->getLinkPresenter()->data[2]
         );
-        self::assertSame('action.js', $button_action->getAssetLink());
+        self::assertSame($this->javascript_asset, $button_action->asset);
     }
 
     public function testItReturnsNullIfProjectCannotUseGitlabIntegration(): void
