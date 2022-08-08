@@ -3030,6 +3030,14 @@ msgstr "Le commentaire n'a pas pu être sauvegardé."
 msgid "The computation of the progression will be"
 msgstr "Le calcul de la progression sera"
 
+msgid ""
+"The configured mail transport of the platform does not allow the usage of "
+"the tracker email gateway."
+msgstr ""
+"Le transport d'email configuré pour la plateforme ne permet pas "
+"l'utilisation de la fonctionnalité de passerelle courriel pour les outils de "
+"suivi."
+
 #, php-format
 msgid "The contributor/assignee is now: %1$s"
 msgstr "Le contributeur est maintenant lié au champ : %1$s"

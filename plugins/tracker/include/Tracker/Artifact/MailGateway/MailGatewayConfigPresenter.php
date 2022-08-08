@@ -21,6 +21,7 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
+use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
 use Tuleap\Tracker\Config\EmailGateWayPresenter;
 use CSRFSynchronizerToken;
 
@@ -42,18 +43,23 @@ class MailGatewayConfigPresenter
     public $is_emailgateway_disabled;
     public $sections;
 
+    public bool $is_emailgateway_available;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
-        $title,
-        $localinc_path,
+        string $title,
+        string $localinc_path,
         MailGatewayConfig $config,
+        PlatformMailConfiguration $configuration,
     ) {
         $this->title      = $title;
         $this->csrf_token = $csrf->fetchHTMLInput();
 
-        $this->is_insecure_emailgateway_enabled    = $config->isInsecureEmailgatewayEnabled();
-        $this->is_token_based_emailgateway_enabled = $config->isTokenBasedEmailgatewayEnabled();
-        $this->is_emailgateway_disabled            = $config->isEmailgatewayDisabled();
+        $this->is_emailgateway_available = $configuration->mustGeneratesSelfHostedConfigurationAndFeatures();
+
+        $this->is_insecure_emailgateway_enabled    = $config->getEmailgatewayRowMode() === MailGatewayConfig::DISABLED;
+        $this->is_token_based_emailgateway_enabled = $config->getEmailgatewayRowMode() === MailGatewayConfig::TOKEN;
+        $this->is_emailgateway_disabled            = $config->getEmailgatewayRowMode() === MailGatewayConfig::INSECURE;
 
         $this->email_gateway            = dgettext('tuleap-tracker', 'Email Gateway');
         $this->email_gateway_pane_title = dgettext('tuleap-tracker', 'Email Gateway configuration');
@@ -71,7 +77,7 @@ class MailGatewayConfigPresenter
         $this->localinc_obsolete_message = sprintf(dgettext('tuleap-tracker', '<h4><i class="fa fa-exclamation-triangle"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>%1$s</code> and remove the following variable: <code>$sys_enable_reply_by_mail</code>.</p>'), $localinc_path);
     }
 
-    private function isLocalIncObsolete($localinc_path)
+    private function isLocalIncObsolete($localinc_path): bool
     {
         include($localinc_path);
         $variables_in_local_inc = get_defined_vars();
