@@ -27,13 +27,13 @@ namespace Tuleap\Mail\Transport\Configuration;
  */
 final class PlatformMailConfiguration
 {
-    private function __construct(private bool $allow_backend_aliases_generation)
+    private function __construct(private bool $must_generate_self_hosted_configuration_and_features)
     {
     }
 
     public function mustGeneratesSelfHostedConfigurationAndFeatures(): bool
     {
-        return $this->allow_backend_aliases_generation;
+        return $this->must_generate_self_hosted_configuration_and_features;
     }
 
     public static function disallowSelfHostedConfigurationAndFeatures(): self

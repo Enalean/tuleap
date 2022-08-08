@@ -19,13 +19,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\MailGateway;
+
+use Tuleap\Mail\Transport\MailTransportBuilder;
 
 class MailGatewayConfig
 {
-    private static $DISABLED = 'disabled';
-    private static $TOKEN    = 'token';
-    private static $INSECURE = 'insecure';
+    public const DISABLED = 'disabled';
+    public const TOKEN    = 'token';
+    public const INSECURE = 'insecure';
 
     private string $cache_emailgateway_mode;
 
@@ -41,25 +45,30 @@ class MailGatewayConfig
         }
     }
 
-    public function isEmailgatewayDisabled()
+    public function isInsecureEmailgatewayEnabled(): bool
     {
-        return $this->getEmailgatewayMode() === self::$DISABLED;
+        return $this->getEmailgatewayMode() === self::INSECURE;
     }
 
-    public function isInsecureEmailgatewayEnabled()
+    public function isTokenBasedEmailgatewayEnabled(): bool
     {
-        return $this->getEmailgatewayMode() === self::$INSECURE;
-    }
-
-    public function isTokenBasedEmailgatewayEnabled()
-    {
-        return $this->getEmailgatewayMode() === self::$TOKEN;
+        return $this->getEmailgatewayMode() === self::TOKEN;
     }
 
     private function getEmailgatewayMode(): string
     {
+        $mail_transport_configuration = MailTransportBuilder::getPlatformMailConfiguration();
+        if (! $mail_transport_configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
+            return self::DISABLED;
+        }
+
+        return $this->getEmailgatewayRowMode();
+    }
+
+    public function getEmailgatewayRowMode(): string
+    {
         if (! isset($this->cache_emailgateway_mode)) {
-            $this->cache_emailgateway_mode = self::$DISABLED;
+            $this->cache_emailgateway_mode = self::DISABLED;
             $row                           = $this->dao->searchEmailgatewayConfiguration();
             if ($row && $this->isAllowedEmailgatewayMode($row['value'])) {
                 $this->cache_emailgateway_mode = $row['value'];
@@ -71,6 +80,6 @@ class MailGatewayConfig
 
     private function isAllowedEmailgatewayMode(string $emailgateway_mode): bool
     {
-        return in_array($emailgateway_mode, [self::$DISABLED, self::$TOKEN, self::$INSECURE]);
+        return in_array($emailgateway_mode, [self::DISABLED, self::TOKEN, self::INSECURE]);
     }
 }

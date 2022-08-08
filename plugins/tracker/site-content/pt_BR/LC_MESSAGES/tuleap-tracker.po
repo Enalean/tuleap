@@ -2715,6 +2715,11 @@ msgstr ""
 msgid "The computation of the progression will be"
 msgstr ""
 
+msgid ""
+"The configured mail transport of the platform does not allow the usage of "
+"the tracker email gateway."
+msgstr ""
+
 #, php-format
 msgid "The contributor/assignee is now: %1$s"
 msgstr ""
