@@ -600,4 +600,17 @@ class UserDao extends \Tuleap\DB\DataAccessObject
     {
         return $this->getDB()->run('SELECT * FROM user WHERE has_custom_avatar = FALSE');
     }
+
+    public function updatePendingExpiredUsersToDeleted(int $current_time, int $pending_account_lifetime): void
+    {
+        if ($pending_account_lifetime <= 0) {
+            return;
+        }
+
+        $this->getDB()->run(
+            'UPDATE user SET status="D" WHERE status="P" AND add_date + ? < ?',
+            $pending_account_lifetime,
+            $current_time,
+        );
+    }
 }
