@@ -85,24 +85,29 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      */
     public function getContent()
     {
-        $hp      = Codendi_HTMLPurifier::instance();
-        $content = '';
-        if ($this->plugin_docman_widget_embedded_item_id) {
-            if ($item = $this->getItem($this->plugin_docman_widget_embedded_item_id)) {
-                $project = ProjectManager::instance()->getProject((int) $item->getGroupId());
-                $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
-                assert($service instanceof \Tuleap\Docman\ServiceDocman);
+        if (! $this->plugin_docman_widget_embedded_item_id) {
+            return '';
+        }
+
+        $item = $this->getItem($this->plugin_docman_widget_embedded_item_id);
+        if ($item) {
+            $project = ProjectManager::instance()->getProject((int) $item->getGroupId());
+            $service = $project->getService(DocmanPlugin::SERVICE_SHORTNAME);
+            if ($service instanceof \Tuleap\Docman\ServiceDocman) {
                 $item_url = $service->getUrl();
                 if ($item->getParentId()) {
                     $item_url .= 'preview/' . urlencode((string) $item->getId());
                 }
+
+                $content  = '';
                 $content .= $item->accept($this);
                 $content .= '<div style="text-align:center"><a href="' . $item_url . '">[Go to document]</a></div>';
-            } else {
-                $content .= 'Document doesn\'t exist or you don\'t have permissions to see it';
+
+                return $content;
             }
         }
-        return $content;
+
+        return 'Document doesn\'t exist or you don\'t have permissions to see it';
     }
 
     /**
