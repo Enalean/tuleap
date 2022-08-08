@@ -126,6 +126,8 @@
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.UselessAnnotation"/>
     <!-- Forbid useless @return annotations -->
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.UselessAnnotation"/>
+    <!-- Forbid useless @var annotations on properties -->
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.UselessAnnotation"/>
     <!-- Require use of short versions of scalar types (i.e. int instead of integer) -->
     <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
     <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->

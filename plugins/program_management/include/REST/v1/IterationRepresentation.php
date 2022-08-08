@@ -31,25 +31,10 @@ use Tuleap\REST\JsonCast;
  */
 final class IterationRepresentation
 {
-    /**
-     * @var int
-     */
     public int $id;
-    /**
-     * @var string
-     */
     public string $uri;
-    /**
-     * @var string
-     */
     public string $xref;
-    /**
-     * @var ?string
-     */
     public ?string $title;
-    /**
-     * @var string | null
-     */
     public ?string $status;
     /**
      * @var string | null {@type date}{@required false}

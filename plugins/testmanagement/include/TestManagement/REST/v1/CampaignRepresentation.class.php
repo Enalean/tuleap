@@ -90,13 +90,7 @@ class CampaignRepresentation
      * @var bool
      */
     public $is_open;
-    /**
-     * @var bool
-     */
     public bool $user_can_close;
-    /**
-     * @var bool
-     */
     public bool $user_can_open;
 
     public function __construct(

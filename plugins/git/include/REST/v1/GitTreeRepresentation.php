@@ -28,25 +28,10 @@ namespace Tuleap\Git\REST\v1;
  */
 final class GitTreeRepresentation
 {
-    /**
-     * @var string
-     */
     public string $id;
-    /**
-     * @var string
-     */
     public string $name;
-    /**
-     * @var string
-     */
     public string $path;
-    /**
-     * @var string
-     */
     public string $type;
-    /**
-     * @var string
-     */
     public string $mode;
 
 
