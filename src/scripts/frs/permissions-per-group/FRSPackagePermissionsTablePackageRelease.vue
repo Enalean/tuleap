@@ -36,7 +36,7 @@
     </tr>
 </template>
 <script lang="ts">
-import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import UgroupBadge from "@tuleap/vue-permissions-per-group-badge";
 import Component from "vue-class-component";
 import Vue from "vue";
 import type { PackagePermissionPerGroupReleaseRepresentation } from "./type";

@@ -47,7 +47,7 @@
     </tbody>
 </template>
 <script lang="ts">
-import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import UgroupBadge from "@tuleap/vue-permissions-per-group-badge";
 import EmptyState from "./FRSPackagePermissionsTablePackageEmptyState.vue";
 import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
 import Component from "vue-class-component";

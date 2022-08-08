@@ -11,6 +11,7 @@
     "@tuleap/project-privacy-helper": "link:../../lib/frontend/project-privacy-helper",
     "@tuleap/tlp-fetch": "link:../../lib/frontend/tlp-fetch",
     "@tuleap/vue-breadcrumb-privacy": "link:../../lib/frontend/vue-breadcrumb-privacy",
+    "@tuleap/vue-permissions-per-group-badge": "link:../../lib/frontend/vue-permissions-per-group-badge",
     "@tuleap/vue2-gettext-init": "link:../../lib/frontend/vue2-gettext-init",
     "javascript-time-ago": "^2.3.4",
     "node-gettext": "^3.0.0",

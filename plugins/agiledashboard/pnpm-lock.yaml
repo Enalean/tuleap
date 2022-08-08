@@ -10,6 +10,7 @@ specifiers:
   '@tuleap/plugin-tracker-color-picker': link:../tracker/scripts/lib/colorpicker
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   '@types/node': ^14.14.31
   d3: ^7.0.0
   d3-array: ^3.0.1
@@ -29,6 +30,7 @@ dependencies:
   '@tuleap/plugin-tracker-color-picker': link:../tracker/scripts/lib/colorpicker
   '@tuleap/tlp-fetch': link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors': link:../../lib/frontend/tlp-swatch-colors
+  '@tuleap/vue-permissions-per-group-badge': link:../../lib/frontend/vue-permissions-per-group-badge
   d3: 7.0.0
   d3-array: 3.0.1
   d3-selection: 3.0.0

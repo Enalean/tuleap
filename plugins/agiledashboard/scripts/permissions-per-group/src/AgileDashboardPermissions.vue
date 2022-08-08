@@ -87,7 +87,7 @@
 
 <script>
 import { getAgiledashboardPermissions } from "./rest-querier.js";
-import AgileDashboardPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import AgileDashboardPermissionsBadge from "@tuleap/vue-permissions-per-group-badge";
 
 export default {
     name: "AgileDashboardPermissions",
