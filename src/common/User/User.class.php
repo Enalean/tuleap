@@ -604,35 +604,29 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
     /**
      * alias of getUserName()
-     * @return string the name of the user (aka login)
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getUserName();
     }
     /**
-     * @return string the name of the user (aka login)
-     *
      * @psalm-taint-escape file
      */
-    public function getUserName()
+    public function getUserName(): string
     {
-        return $this->user_name;
+        return $this->user_name ?? '';
     }
     /**
      * alias of getUserName()
-     * @return string the name of the user (aka login)
      */
-    public function getUnixName()
+    public function getUnixName(): string
     {
         return $this->getUserName();
     }
-    /**
-     * @return string the real name of the user
-     */
-    public function getRealName()
+
+    public function getRealName(): string
     {
-        return $this->realname;
+        return $this->realname ?? 'User #' . $this->getId();
     }
     /**
      * @return string the email adress of the user
