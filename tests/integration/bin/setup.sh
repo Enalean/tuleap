@@ -66,7 +66,8 @@ seed_data() {
         git \
         pullrequest \
         oauth2_server \
-        program_management
+        program_management \
+        onlyoffice
 }
 
 setup_tuleap

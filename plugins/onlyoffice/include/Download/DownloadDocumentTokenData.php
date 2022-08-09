@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,35 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Authentication\SplitToken;
+declare(strict_types=1);
+
+namespace Tuleap\OnlyOffice\Download;
 
 /**
  * @psalm-immutable
  */
-class SplitToken
+final class DownloadDocumentTokenData
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var SplitTokenVerificationString
-     */
-    private $verification_string;
-
-    public function __construct(int $id, SplitTokenVerificationString $verification_string)
+    public function __construct(public int $user_id, public int $document_id)
     {
-        $this->id                  = $id;
-        $this->verification_string = $verification_string;
-    }
-
-    public function getID(): int
-    {
-        return $this->id;
-    }
-
-    public function getVerificationString(): SplitTokenVerificationString
-    {
-        return $this->verification_string;
     }
 }

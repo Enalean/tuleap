@@ -20,6 +20,21 @@
 
 declare(strict_types=1);
 
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Download\DocmanFileDownloadController;
+use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
+use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
+use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
+use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
+use Tuleap\Request\CollectRoutesEvent;
+
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -52,5 +67,49 @@ final class onlyofficePlugin extends Plugin
     public function getDependencies(): array
     {
         return ['docman'];
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(CollectRoutesEvent::NAME);
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $routes): void
+    {
+        $routes->getRouteCollector()->addGroup(
+            '/onlyoffice',
+            function (FastRoute\RouteCollector $r): void {
+                $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
+            }
+        );
+    }
+
+    public function routeGetDocumentDownload(): DocmanFileDownloadController
+    {
+        $logger           = BackendLogger::getDefaultLogger();
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $token_middleware = new DownloadDocumentWithTokenMiddleware(
+            new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentDownload()),
+            new OnlyOfficeDownloadDocumentTokenVerifier(
+                new OnlyOfficeDownloadDocumentTokenDAO(),
+                new DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
+                new SplitTokenVerificationStringHasher(),
+                $logger,
+            ),
+            UserManager::instance()
+        );
+        return new DocmanFileDownloadController(
+            new SapiStreamEmitter(),
+            new Docman_ItemFactory(),
+            new DocmanFileDownloadResponseGenerator(
+                new Docman_VersionFactory(),
+                new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory())
+            ),
+            $token_middleware,
+            $logger,
+            new SessionWriteCloseMiddleware(),
+            $token_middleware,
+        );
     }
 }
