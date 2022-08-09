@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { createModal } from "tlp";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
@@ -109,6 +109,7 @@ export default {
         emitter.off("update-lock", this.updateLock);
     },
     methods: {
+        ...mapActions(["loadDocument"]),
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;
         },
@@ -117,12 +118,19 @@ export default {
 
             this.show();
         },
-        show() {
+        async show() {
             this.version = {
                 title: "",
                 changelog: "",
                 is_file_locked: this.item.lock_info !== null,
             };
+
+            if (this.embedded_item.embedded_file_properties.content === undefined) {
+                this.embedded_item = await this.$store.dispatch(
+                    "loadDocument",
+                    this.embedded_item.id
+                );
+            }
 
             this.embedded_file_model = this.embedded_item.embedded_file_properties;
 
