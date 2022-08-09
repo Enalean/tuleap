@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-use Tuleap\Mail\Transport\MailTransportBuilder;
+use Tuleap\Mail\Transport\Configuration\PlatformMailConfiguration;
 
 class MailGatewayConfig
 {
@@ -33,8 +33,10 @@ class MailGatewayConfig
 
     private string $cache_emailgateway_mode;
 
-    public function __construct(private MailGatewayConfigDao $dao)
-    {
+    public function __construct(
+        private MailGatewayConfigDao $dao,
+        private PlatformMailConfiguration $mail_transport_configuration,
+    ) {
     }
 
     public function setEmailgatewayMode(string $emailgateway_mode): void
@@ -57,8 +59,7 @@ class MailGatewayConfig
 
     private function getEmailgatewayMode(): string
     {
-        $mail_transport_configuration = MailTransportBuilder::getPlatformMailConfiguration();
-        if (! $mail_transport_configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
+        if (! $this->mail_transport_configuration->mustGeneratesSelfHostedConfigurationAndFeatures()) {
             return self::DISABLED;
         }
 

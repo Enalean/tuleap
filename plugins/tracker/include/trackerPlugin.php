@@ -45,6 +45,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownProjectLinksCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -1363,7 +1364,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function backend_alias_get_aliases($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $config = new MailGatewayConfig(
-            new MailGatewayConfigDao()
+            new MailGatewayConfigDao(),
+            MailTransportBuilder::getPlatformMailConfiguration(),
         );
 
         $src_dir = ForgeConfig::get('codendi_dir');
@@ -1957,7 +1959,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new CSRFSynchronizerToken(TRACKER_BASE_URL . '/config.php'),
             new MailGatewayConfigController(
                 new MailGatewayConfig(
-                    new MailGatewayConfigDao()
+                    new MailGatewayConfigDao(),
+                    MailTransportBuilder::getPlatformMailConfiguration(),
                 ),
                 new Config_LocalIncFinder(),
                 EventManager::instance(),
