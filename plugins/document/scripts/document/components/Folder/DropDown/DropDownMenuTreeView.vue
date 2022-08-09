@@ -46,6 +46,13 @@
             />
         </template>
 
+        <download-file
+            v-if="is_item_a_file"
+            v-bind:item="item"
+            slot="download"
+            data-test="document-dropdown-menu-download-file"
+        />
+
         <template v-if="item.user_can_write && !is_item_a_folder">
             <create-new-item-version-button
                 v-bind:item="item"
@@ -89,13 +96,14 @@ import UnlockItem from "./Lock/UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties/UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
-import { isFolder } from "../../../helpers/type-check-helper";
+import { isFile, isFolder } from "../../../helpers/type-check-helper";
 import type { Item } from "../../../type";
 import { useState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
 import { canUpdateProperties } from "../../../helpers/can-update-properties-helper";
 import { canDelete } from "../../../helpers/can-delete-helper";
+import DownloadFile from "./DownloadFile.vue";
 
 const props = defineProps<{ item: Item }>();
 
@@ -105,6 +113,10 @@ const { forbid_writers_to_update, forbid_writers_to_delete } = useState<
 
 const is_item_a_folder = computed((): boolean => {
     return isFolder(props.item);
+});
+
+const is_item_a_file = computed((): boolean => {
+    return isFile(props.item);
 });
 
 const should_display_update_properties = computed((): boolean => {
