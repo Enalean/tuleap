@@ -64,6 +64,7 @@ class Presenter
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
         bool $can_buddies_be_invited,
+        public bool $in_project_without_sidebar,
     ) {
         $this->user_nav_presenter        = $user_nav_presenter;
         $this->new_dropdown              = $new_dropdown;

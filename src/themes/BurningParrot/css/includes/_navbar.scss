@@ -23,7 +23,7 @@
 
 $dropdown-width: 250px;
 
-header.pinned > .header-container {
+header.pinned:not(.in-project-without-sidebar) > .header-container {
     .tlp-button-outline {
         padding: 0 var(--tlp-small-spacing);
         transition: opacity ease-in-out 75ms;
@@ -37,6 +37,17 @@ header.pinned > .header-container {
             background: none;
             box-shadow: none;
         }
+    }
+
+    .tlp-avatar {
+        padding: 0;
+    }
+}
+
+header.in-project-without-sidebar > .header-container {
+    .tlp-button-outline {
+        padding: 0 var(--tlp-small-spacing);
+        transition: opacity ease-in-out 75ms;
     }
 
     .tlp-avatar {

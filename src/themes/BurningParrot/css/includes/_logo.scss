@@ -70,8 +70,11 @@ header.pinned .logo-svg-link {
     > .logo-svg-small > svg {
         max-height: none;
     }
+}
 
-    .logo-svg-fill-default-text-color {
+.sidebar,
+.in-project-without-sidebar > .header-container {
+    > .logo-svg-link .logo-svg-fill-default-text-color {
         fill: var(--tlp-white-color);
     }
 }

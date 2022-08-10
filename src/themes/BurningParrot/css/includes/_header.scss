@@ -19,6 +19,8 @@
 
 @use "global-variables";
 
+$button-height: 40px;
+
 /* stylelint-disable selector-no-qualifying-type */
 body.has-visible-project-banner > .platform-banner:not(.platform-banner-hidden) {
     padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing)
@@ -59,6 +61,28 @@ header {
             padding: 0 var(--tlp-medium-spacing) 0 0;
         }
     }
+
+    &.in-project-without-sidebar {
+        $custom-padding-for-header-to-gain-some-vertical-space: 6px;
+
+        display: flex;
+        align-items: center;
+        padding: $custom-padding-for-header-to-gain-some-vertical-space 0;
+        background: var(--tlp-dark-color);
+
+        > .header-container {
+            width: 100%;
+
+            > .logo-svg-link {
+                height: $button-height;
+                min-height: $button-height;
+            }
+        }
+
+        + #main-container {
+            margin-top: $button-height + 2 * $custom-padding-for-header-to-gain-some-vertical-space;
+        }
+    }
 }
 
 .theme-condensed header.full-width + #main-container {
@@ -75,7 +99,7 @@ header {
 
     a[class*="tlp-button"],
     button[class*="tlp-button"] {
-        height: 40px;
+        height: $button-height;
         margin: 0 0 0 var(--tlp-small-spacing);
         transition: padding ease-in-out 100ms, box-shadow ease-in-out 100ms;
         border-radius: 30px;
@@ -85,7 +109,7 @@ header {
         }
 
         @media screen and (max-width: 1100px) {
-            width: 40px;
+            width: $button-height;
 
             > .tlp-button-icon {
                 margin: 0;

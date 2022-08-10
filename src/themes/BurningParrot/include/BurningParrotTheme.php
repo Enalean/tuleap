@@ -209,6 +209,8 @@ class BurningParrotTheme extends BaseLayout
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
 
+        $in_project_without_sidebar = $params['in_project_without_sidebar'] ?? false;
+
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
             $this->current_user,
@@ -236,7 +238,8 @@ class BurningParrotTheme extends BaseLayout
             $this->detected_browser,
             $this->theme_variant_color,
             $this->theme_variation,
-            $this->javascript_assets
+            $this->javascript_assets,
+            $in_project_without_sidebar,
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
