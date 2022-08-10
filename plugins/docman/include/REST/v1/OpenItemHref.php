@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,34 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Docman\REST\v1;
 
-final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherInterface
+class OpenItemHref implements \Tuleap\Event\Dispatchable
 {
-    private int $call_count = 0;
+    public const NAME = 'openItemHref';
 
-    private function __construct(private \Closure $callback)
+    public function __construct(private \Docman_File $item, private \Docman_Version $version, private string $href)
     {
     }
 
-    public static function withCallback(\Closure $callback): self
+    public function getHref(): string
     {
-        return new self($callback);
+        return $this->href;
     }
 
-    public static function withIdentityCallback(): self
+    public function setHref(string $href): void
     {
-        return new self(static fn($event) => $event);
+        $this->href = $href;
     }
 
-    public function dispatch(object $event): object
+    public function getItem(): \Docman_File
     {
-        $this->call_count++;
-        return ($this->callback)($event);
+        return $this->item;
     }
 
-    public function getCallCount(): int
+    public function getVersion(): \Docman_Version
     {
-        return $this->call_count;
+        return $this->version;
     }
 }

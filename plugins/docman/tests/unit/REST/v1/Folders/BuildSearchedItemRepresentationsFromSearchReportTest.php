@@ -33,6 +33,7 @@ use Tuleap\Docman\REST\v1\Search\SearchColumn;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
 use Tuleap\Docman\Version\VersionDao;
+use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -76,7 +77,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             ),
             $this->item_factory,
             new SearchRepresentationTypeVisitor(),
-            new FilePropertiesVisitor($this->version_factory),
+            new FilePropertiesVisitor($this->version_factory, EventDispatcherStub::withIdentityCallback()),
             new ListOfCustomPropertyRepresentationBuilder(),
         );
 

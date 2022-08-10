@@ -36,6 +36,7 @@ describe("CellTitle", () => {
                     file_properties: {
                         file_type: "text/html",
                         download_href: "/path/to/file",
+                        open_href: "/path/to/open/file",
                     } as FileProperties,
                 } as unknown as ItemSearchResult,
             },
@@ -51,7 +52,7 @@ describe("CellTitle", () => {
         });
 
         const link = wrapper.find("[data-test=link]");
-        expect(link.attributes().href).toBe("/path/to/file");
+        expect(link.attributes().href).toBe("/path/to/open/file");
         expect(link.attributes().title).toBe("Lorem");
     });
 

@@ -26,7 +26,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\Stub\BuildCommitAnalysisProcessorStub;
-use Tuleap\Git\Stub\EventDispatcherStub;
+use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Stub\RetrieveGitRepositoryStub;
 use Tuleap\NeverThrow\Fault;

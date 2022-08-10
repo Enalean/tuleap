@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-use Tuleap\Git\Stub\EventDispatcherStub;
+use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PullRequestEndpointsAvailableCheckerTest extends TestCase
