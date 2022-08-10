@@ -41,8 +41,8 @@ class GitNotificationBuilder
         $this->logger->debug('git repository: #' . $repository->getId() . ' ' . $repository->getName());
         $link = $this->makeLinkReview($repository, $newrev);
 
-        return $user->getName() . " " .
-        dgettext('tuleap-botmattermost_git', 'pushed a new commit to') .
+        return $user->getUserName() . " " .
+               dgettext('tuleap-botmattermost_git', 'pushed a new commit to') .
         " : $link " . $refname;
     }
 

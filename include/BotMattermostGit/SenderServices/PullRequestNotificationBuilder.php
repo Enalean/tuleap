@@ -88,9 +88,9 @@ class PullRequestNotificationBuilder
     {
         return ServerHostname::HTTPSUrl() . GIT_BASE_URL . '/?' . http_build_query(
             [
-                    'action'   => 'pull-requests',
-                    'repo_id'  => $pull_request->getRepositoryId(),
-                    'group_id' => $project->getID(),
+                'action'   => 'pull-requests',
+                'repo_id'  => $pull_request->getRepositoryId(),
+                'group_id' => $project->getID(),
             ]
         ) . '#/pull-requests/' . $pull_request->getId() . '/overview';
     }

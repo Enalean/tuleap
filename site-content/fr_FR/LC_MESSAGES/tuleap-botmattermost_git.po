@@ -75,7 +75,6 @@ msgstr ""
 msgid "Invalid post argument(s)"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "No bots are defined for the project (either system or project bots). The "
 "notification configuration is not available."
