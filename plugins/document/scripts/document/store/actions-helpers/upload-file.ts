@@ -85,7 +85,10 @@ export function uploadFile(
                 fake_item.is_uploading = false;
                 context.commit("removeItemFromFolderContent", fake_item);
             } finally {
-                context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+                context.commit("toggleCollapsedFolderHasUploadingContent", {
+                    collapsed_folder: parent,
+                    toggle: false,
+                });
             }
         },
         onError: (error: Error | DetailedError): void => {
@@ -133,7 +136,10 @@ export function uploadVersion(
                 new_item_version.level = updated_file.level;
             }
 
-            context.commit("replaceFileWithNewVersion", [updated_file, new_item_version]);
+            context.commit("replaceFileWithNewVersion", {
+                existing_item: updated_file,
+                new_version: new_item_version,
+            });
             context.commit("replaceUploadingFileWithActualFile", [updated_file, new_item_version]);
             emitter.emit("item-has-just-been-updated");
         },
@@ -197,7 +203,6 @@ export function uploadVersionFromEmpty(
 function getMessageFromError(error: Error | DetailedError): string {
     if ("causingError" in error) {
         return error.causingError.message;
-    } else {
-        return error.message;
     }
+    return error.message;
 }

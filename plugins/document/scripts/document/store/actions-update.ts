@@ -46,7 +46,10 @@ export async function createNewFileVersion(
         await uploadNewVersion(context, [item, dropped_file, item.title, "", false, null]);
         Vue.set(item, "updated", true);
     } catch (exception) {
-        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+        context.commit("toggleCollapsedFolderHasUploadingContent", {
+            collapsed_folder: parent,
+            toggle: false,
+        });
         if (exception instanceof FetchWrapperError) {
             const error_json = await exception.response.json();
             throw getErrorMessage(error_json);

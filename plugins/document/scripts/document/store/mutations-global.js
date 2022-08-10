@@ -124,6 +124,6 @@ function hidePostDeletionNotification(state) {
     state.show_post_deletion_notification = false;
 }
 
-function toggleQuickLook(state, toogle) {
-    state.toggle_quick_look = toogle;
+function toggleQuickLook(state, toggle) {
+    state.toggle_quick_look = toggle;
 }

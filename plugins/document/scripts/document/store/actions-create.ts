@@ -112,7 +112,10 @@ export const addNewUploadFile = async (
         };
         await createNewFile(context, item, parent, should_display_fake_item);
     } catch (exception) {
-        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+        context.commit("toggleCollapsedFolderHasUploadingContent", {
+            collapsed_folder: parent,
+            toggle: false,
+        });
         if (exception instanceof FetchWrapperError) {
             const error_json = await exception.response.json();
             throw getErrorMessage(error_json);

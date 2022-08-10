@@ -19,122 +19,109 @@
 
 import Vue from "vue";
 import VueRouter from "vue-router";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as abort_current_uploads from "../../../helpers/abort-current-uploads";
+import type { Folder, RootState } from "../../../type";
+import type { Location, Route } from "vue-router/types/router";
+import * as route from "../../../helpers/use-router";
 
 describe("FolderCellTitle", () => {
-    let router, item, component_options, store_options, store;
-    beforeEach(() => {
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "/folder/42",
-                    name: "folder",
-                },
-            ],
+    let store = {
+        dispatch: jest.fn(),
+        commit: jest.fn(),
+    };
+
+    const item = { id: 10 } as Folder;
+
+    function getWrapper(is_expanded: boolean, is_uploading: boolean): Wrapper<FolderCellTitle> {
+        const router = new VueRouter();
+        jest.spyOn(router, "resolve").mockImplementation(() => ({
+            location: {} as Location,
+            route: {
+                path: "/folder/42",
+                name: "folder",
+            } as Route,
+            href: "/patch/to/embedded",
+            normalizedTo: {} as Location,
+            resolved: {} as Route,
+        }));
+        jest.spyOn(router, "push").mockImplementation(() => ({
+            location: {} as Location,
+            route: {
+                path: "/folder/42",
+                name: "folder",
+            } as Route,
+            href: "/patch/to/embedded",
+            normalizedTo: {} as Location,
+            resolved: {} as Route,
+        }));
+        const mocked_router = jest.spyOn(route, "useRouter");
+        mocked_router.mockReturnValue(router);
+        store = createStoreMock({
+            state: {
+                current_folder: {
+                    id: 1,
+                    title: "My current folder",
+                } as Folder,
+                files_uploads_list: [{ parent_id: 42, progress: 34 }],
+            } as RootState,
+            getters: {
+                is_uploading,
+            },
         });
 
-        item = {
-            id: 42,
-            title: "my folder name",
-        };
+        item.is_expanded = is_expanded;
 
-        store_options = {
-            state: {
-                files_uploads_list: [],
-            },
-        };
-        store = createStoreMock(store_options);
-
-        component_options = {
+        return shallowMount(FolderCellTitle, {
             localVue,
-            router,
-            propsData: {
-                item,
+            propsData: { item },
+            mocks: {
+                localVue,
+                $store: store,
             },
-            mocks: { $store: store },
-        };
-    });
+        });
+    }
+
     it(`Given folder is open
         When we display the folder
         Then we should dynamically load its content`, async () => {
-        item.is_expanded = true;
-        const wrapper = shallowMount(FolderCellTitle, component_options);
-        wrapper.setData({ is_closed: false });
+        const wrapper = await getWrapper(true, false);
+
         await Vue.nextTick();
 
         expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
-        expect(store.dispatch).toHaveBeenCalledWith("getSubfolderContent", item.id);
         expect(store.commit).toHaveBeenCalledWith("unfoldFolderContent", item.id);
-        await Vue.nextTick();
+
         const toggle = wrapper.get("[data-test=toggle]");
         expect(toggle.classes()).toContain("fa-caret-down");
         expect(wrapper.get("[data-test=document-folder-icon-open]").classes()).toContain(
             "fa-folder-open"
         );
-
-        expect(wrapper.vm.is_loading).toBeFalsy();
-        expect(wrapper.vm.have_children_been_loaded).toBeTruthy();
     });
 
     it(`Given folder is collapsed
         When we display the folder
         Then we don't load anything and render directly it`, async () => {
-        item.is_expanded = false;
-        const wrapper = shallowMount(FolderCellTitle, component_options);
+        const wrapper = getWrapper(false, false);
+
+        await Vue.nextTick();
 
         expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
-        await Vue.nextTick();
         const toggle = wrapper.get("[data-test=toggle]");
         expect(toggle.classes()).toContain("fa-caret-right");
 
-        expect(wrapper.vm.is_loading).toBeFalsy();
         expect(store.dispatch).not.toHaveBeenCalledWith("getSubfolderContent", expect.anything());
     });
 
     describe("toggle expanded folders", () => {
-        let router, item, component_options, store_options;
-        beforeEach(() => {
-            router = new VueRouter({
-                routes: [
-                    {
-                        path: "/folder/42",
-                        name: "folder",
-                    },
-                ],
-            });
-
-            item = {
-                id: 42,
-                title: "my folder name",
-            };
-
-            store_options = {
-                state: {
-                    files_uploads_list: [],
-                },
-            };
-
-            store = createStoreMock(store_options);
-
-            component_options = {
-                localVue,
-                router,
-                propsData: {
-                    item,
-                },
-                mocks: { $store: store },
-            };
-        });
-
         it(`Given folder is expanded
         When we close it and reopened it
         Then its should open it and load its children, the user preferences is stored in backend`, async () => {
-            item.is_expanded = true;
-            const wrapper = shallowMount(FolderCellTitle, component_options);
+            const wrapper = getWrapper(true, false);
             wrapper.get("[data-test=toggle]").trigger("click");
 
             expect(store.commit).toHaveBeenCalledWith("initializeFolderProperties", item);
@@ -144,14 +131,11 @@ describe("FolderCellTitle", () => {
             await Vue.nextTick();
             expect(toggle.classes()).toContain("fa-caret-down");
 
-            expect(wrapper.vm.is_loading).toBeFalsy();
-            expect(wrapper.vm.have_children_been_loaded).toBeTruthy();
-
             expect(store.commit).toHaveBeenCalledWith("unfoldFolderContent", item.id);
-            expect(store.commit).toHaveBeenCalledWith("toggleCollapsedFolderHasUploadingContent", [
-                item,
-                false,
-            ]);
+            expect(store.commit).toHaveBeenCalledWith(
+                "toggleCollapsedFolderHasUploadingContent",
+                expect.anything()
+            );
             expect(store.dispatch).toHaveBeenCalledWith(
                 "preferencies/setUserPreferenciesForFolder",
                 { folder_id: item.id, should_be_closed: false }
@@ -161,8 +145,7 @@ describe("FolderCellTitle", () => {
         it(`Given folder is expanded
         When we toggle it
         Then it should close it and store the new user preferences in backend`, async () => {
-            item.is_expanded = true;
-            const wrapper = shallowMount(FolderCellTitle, component_options);
+            const wrapper = getWrapper(true, false);
             wrapper.get("[data-test=toggle]").trigger("click");
 
             await Vue.nextTick();
@@ -170,10 +153,10 @@ describe("FolderCellTitle", () => {
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-right");
             expect(store.commit).toHaveBeenCalledWith("foldFolderContent", item.id);
-            expect(store.commit).toHaveBeenCalledWith("toggleCollapsedFolderHasUploadingContent", [
-                item,
-                undefined,
-            ]);
+            expect(store.commit).toHaveBeenCalledWith(
+                "toggleCollapsedFolderHasUploadingContent",
+                expect.anything()
+            );
             expect(store.dispatch).toHaveBeenCalledWith(
                 "preferencies/setUserPreferenciesForFolder",
                 { folder_id: item.id, should_be_closed: true }
@@ -181,63 +164,31 @@ describe("FolderCellTitle", () => {
         });
 
         it(`Given folder is closed and given its children have been loaded
-        When we toogle it multiples times
+        When we toggle it multiples times
         Then it save baby bears and load its content only once`, async () => {
-            item.is_expanded = false;
-            const wrapper = shallowMount(FolderCellTitle, component_options);
-            wrapper.setData({ have_children_been_loaded: true });
+            const wrapper = getWrapper(false, false);
             wrapper.get("[data-test=toggle]").trigger("click");
-
             await Vue.nextTick();
+
+            wrapper.get("[data-test=toggle]").trigger("click");
+            await Vue.nextTick();
+
+            wrapper.get("[data-test=toggle]").trigger("click");
+            await Vue.nextTick();
+
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-down");
-            expect(store.dispatch).not.toHaveBeenCalledWith(
-                "getSubfolderContent",
-                expect.anything()
-            );
+
+            // 1 call for getSubfolderContent and 3 calls for setUserPreferenciesForFolder
+            expect(store.dispatch.mock.calls).toHaveLength(4);
         });
     });
 
     describe("toggle folder with uploading content", () => {
-        let router, item, component_options, store_options;
-        beforeEach(() => {
-            router = new VueRouter({
-                routes: [
-                    {
-                        path: "/folder/42",
-                        name: "folder",
-                    },
-                ],
-            });
-
-            item = {
-                id: 42,
-                title: "my folder name",
-                is_expanded: true,
-            };
-
-            store_options = {
-                state: {
-                    files_uploads_list: [{ parent_id: 42, progress: 34 }],
-                },
-            };
-
-            store = createStoreMock(store_options);
-
-            component_options = {
-                localVue,
-                router,
-                propsData: {
-                    item,
-                },
-                mocks: { $store: store },
-            };
-        });
-
         it(`Given folder is expanded and given folder has uploading content
         When we toggle it
         Then we should store that folder is collapsed with uploading content`, async () => {
-            const wrapper = shallowMount(FolderCellTitle, component_options);
+            const wrapper = await getWrapper(true, false);
             wrapper.get("[data-test=toggle]").trigger("click");
 
             await Vue.nextTick();
@@ -245,10 +196,10 @@ describe("FolderCellTitle", () => {
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-right");
             expect(store.commit).toHaveBeenCalledWith("foldFolderContent", item.id);
-            expect(store.commit).toHaveBeenCalledWith("toggleCollapsedFolderHasUploadingContent", [
-                item,
-                { parent_id: 42, progress: 34 },
-            ]);
+            expect(store.commit).toHaveBeenCalledWith(
+                "toggleCollapsedFolderHasUploadingContent",
+                expect.anything()
+            );
             expect(store.dispatch).toHaveBeenCalledWith(
                 "preferencies/setUserPreferenciesForFolder",
                 { folder_id: item.id, should_be_closed: true }
@@ -257,46 +208,16 @@ describe("FolderCellTitle", () => {
     });
 
     describe("go to folder", () => {
-        let router, item, component_options, store_options, abortCurrentUploads;
+        let abortCurrentUploads: jest.SpyInstance;
         beforeEach(() => {
-            router = new VueRouter({
-                routes: [
-                    {
-                        path: "/folder/42",
-                        name: "folder",
-                    },
-                ],
-            });
-
-            item = {
-                id: 42,
-                title: "my folder name",
-                is_expanded: true,
-            };
-
-            store_options = {
-                state: {},
-            };
-
-            store = createStoreMock(store_options);
-
-            component_options = {
-                localVue,
-                router,
-                propsData: {
-                    item,
-                },
-                mocks: { $store: store },
-            };
-
             abortCurrentUploads = jest.spyOn(abort_current_uploads, "abortCurrentUploads");
         });
 
         it(`Given there is an on going upload and user refuse confirmation
             Then user won't be redirected`, () => {
-            store.getters.is_uploading = true;
             abortCurrentUploads.mockReturnValue(false);
-            const wrapper = shallowMount(FolderCellTitle, component_options);
+            const wrapper = getWrapper(true, true);
+
             wrapper.get("[data-test=document-go-to-folder-link]").trigger("click");
 
             expect(store.commit).not.toHaveBeenCalledWith("appendFolderToAscendantHierarchy");
@@ -304,12 +225,14 @@ describe("FolderCellTitle", () => {
 
         it(`Given there no upload
             Then the user is redirect to parent folder`, () => {
-            store.getters.is_uploading = false;
             abortCurrentUploads.mockReturnValue(false);
-            const wrapper = shallowMount(FolderCellTitle, component_options);
+            const wrapper = getWrapper(true, false);
             wrapper.get("[data-test=document-go-to-folder-link]").trigger("click");
 
-            expect(store.commit).toHaveBeenCalledWith("appendFolderToAscendantHierarchy", item);
+            expect(store.commit).toHaveBeenCalledWith(
+                "appendFolderToAscendantHierarchy",
+                expect.anything()
+            );
         });
     });
 });

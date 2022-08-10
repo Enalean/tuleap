@@ -197,9 +197,14 @@ export interface Uploadable {
 export interface FakeItem extends MinimalItem, Uploadable {
     last_update_date?: Date;
     file_type?: string;
+    has_approval_table: boolean;
+    is_approval_table_enabled: boolean;
+    approval_table: ApprovalTable | null;
+    upload_error: string | null;
+    is_uploading_new_version: boolean;
 }
 
-export interface Folder extends Item {
+export interface Folder extends Item, Uploadable {
     is_expanded: boolean;
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;

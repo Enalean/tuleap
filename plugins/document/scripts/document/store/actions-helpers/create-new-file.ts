@@ -74,6 +74,9 @@ export async function createNewFile(
         upload_error: null,
         is_uploading_in_collapsed_folder: false,
         is_uploading_new_version: false,
+        is_approval_table_enabled: false,
+        has_approval_table: false,
+        approval_table: null,
     };
 
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);
@@ -87,8 +90,8 @@ export async function createNewFile(
     if (parent.is_expanded) {
         display_progress_bar_on_folder = false;
     }
-    context.commit("toggleCollapsedFolderHasUploadingContent", [
-        parent,
-        display_progress_bar_on_folder,
-    ]);
+    context.commit("toggleCollapsedFolderHasUploadingContent", {
+        collapsed_folder: parent,
+        toggle: display_progress_bar_on_folder,
+    });
 }
