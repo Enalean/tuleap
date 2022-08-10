@@ -32,6 +32,7 @@
             v-bind:currently-updated-item="currentlyUpdatedItem"
             v-bind:item-property="itemProperty"
             v-bind:status_value="status_value"
+            v-bind:recursion_option="`none`"
         />
     </div>
 </template>

@@ -85,6 +85,7 @@ export type Events = {
     "update-custom-property": UpdateCustomEvent;
     "properties-recursion-option": { recursion_option: string };
     "update-obsolescence-date-property": string;
+    "properties-recursion-list": { detail: { property_list: Array<string> } };
 };
 
 export default mitt<Events>();

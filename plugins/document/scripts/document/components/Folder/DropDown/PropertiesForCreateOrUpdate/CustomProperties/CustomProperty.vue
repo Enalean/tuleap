@@ -29,16 +29,9 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import CustomPropertyComponentTypeRenderer from "./CustomPropertyComponentTypeRenderer.vue";
+import type { Property } from "../../../../../type";
 
-export default {
-    name: "CustomProperty",
-    components: {
-        CustomPropertyComponentTypeRenderer,
-    },
-    props: {
-        itemProperty: Array,
-    },
-};
+defineProps<{ itemProperty: Array<Property> }>();
 </script>

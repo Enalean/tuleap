@@ -64,55 +64,56 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup lang="ts">
 import { getObsolescenceDateValueInput } from "../../../../helpers/properties-helpers/obsolescence-date-value";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import emitter from "../../../../helpers/emitter";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { onMounted, ref } from "vue";
 
-export default {
-    name: "ObsolescenceDatePropertyForUpdate",
-    components: { DateFlatPicker },
-    props: {
-        value: String,
-    },
-    data() {
-        return {
-            date_value: this.value,
-            selected_value: "",
-            error_message: "",
-            uses_helper_validity: false,
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["is_obsolescence_date_property_used"]),
-    },
-    mounted() {
-        if (this.value !== "") {
-            this.selected_value = "fixed";
-        } else {
-            this.selected_value = "permanent";
-        }
-    },
-    methods: {
-        updateDatePickerValue(event) {
-            const input_date_value = getObsolescenceDateValueInput(event.target.value);
+const props = defineProps<{
+    value: string;
+}>();
 
-            this.uses_helper_validity = true;
+let date_value = ref(props.value);
+let selected_value = ref("");
+let error_message = ref("");
+let uses_helper_validity = ref(false);
 
-            this.selected_value = event.target.value;
-            this.date_value = input_date_value;
-            emitter.emit("update-obsolescence-date-property", input_date_value);
-        },
-        updateObsolescenceDateValue(event) {
-            if (!this.uses_helper_validity) {
-                this.selected_value = "fixed";
-            }
+const { is_obsolescence_date_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_obsolescence_date_property_used">
+>("configuration", ["is_obsolescence_date_property_used"]);
 
-            emitter.emit("update-obsolescence-date-property", event);
+onMounted((): void => {
+    if (props.value !== "") {
+        selected_value.value = "fixed";
+    } else {
+        selected_value.value = "permanent";
+    }
+});
 
-            this.uses_helper_validity = false;
-        },
-    },
-};
+function updateDatePickerValue(event: Event): void {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    const input_date_value = getObsolescenceDateValueInput(event.target.value);
+
+    uses_helper_validity.value = true;
+
+    selected_value.value = event.target.value;
+    date_value.value = input_date_value;
+    emitter.emit("update-obsolescence-date-property", input_date_value);
+}
+
+function updateObsolescenceDateValue(event: string): void {
+    if (!uses_helper_validity.value) {
+        selected_value.value = "fixed";
+    }
+
+    emitter.emit("update-obsolescence-date-property", event);
+
+    uses_helper_validity.value = false;
+}
 </script>
