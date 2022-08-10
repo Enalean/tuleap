@@ -21,23 +21,73 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
+use Project;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReferenceSplitValuesBuilder;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReferenceSplitValuesBuilder;
+
 final class GitlabReferenceExtractor
 {
-    public static function splitRepositoryNameAndReferencedItemId(string $value): GitlabReferenceSplittedValues
-    {
-        $regexp = "#(?P<repository_name>.+?/.+?)/(?P<reference>.+)#";
-        preg_match($regexp, $value, $matches);
+    public function __construct(
+        private GitlabReferenceValueWithoutSeparatorSplitValuesBuilder $commit_reference_split_value_builder,
+        private GitlabReferenceValueWithoutSeparatorSplitValuesBuilder $merge_request_reference_split_value_builder,
+        private GitlabBranchReferenceSplitValuesBuilder $branch_reference_split_value_builder,
+        private GitlabTagReferenceSplitValuesBuilder $tag_reference_split_value_builder,
+    ) {
+    }
 
-        if (isset($matches['repository_name']) && isset($matches['reference'])) {
-            $repository_name = $matches['repository_name'];
-            $reference       = $matches['reference'];
+    public function extractReferenceSplitValuesByReferenceKeywordAndValue(
+        Project $project,
+        string $keyword,
+        string $value,
+    ): GitlabReferenceSplittedValues {
+        return match ($keyword) {
+            GitlabCommitReference::REFERENCE_NAME => $this->commit_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            GitlabMergeRequestReference::REFERENCE_NAME => $this->merge_request_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            GitlabBranchReference::REFERENCE_NAME => $this->branch_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            GitlabTagReference::REFERENCE_NAME => $this->tag_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            default => GitlabReferenceSplittedValues::buildNotFoundReference(),
+        };
+    }
 
-            return GitlabReferenceSplittedValues::buildFromReference(
-                $repository_name,
-                $reference
-            );
-        }
-
-        return GitlabReferenceSplittedValues::buildNotFoundReference();
+    public function extractReferenceSplitValuesByReferenceTypeAndValue(
+        Project $project,
+        string $type,
+        string $value,
+    ): GitlabReferenceSplittedValues {
+        return match ($type) {
+            GitlabCommitReference::NATURE_NAME => $this->commit_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            GitlabMergeRequestReference::NATURE_NAME => $this->merge_request_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            GitlabBranchReference::NATURE_NAME => $this->branch_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            GitlabTagReference::NATURE_NAME => $this->tag_reference_split_value_builder->splitRepositoryNameAndReferencedItemId(
+                $value,
+                (int) $project->getID(),
+            ),
+            default => GitlabReferenceSplittedValues::buildNotFoundReference(),
+        };
     }
 }

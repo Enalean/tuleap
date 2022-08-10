@@ -31,15 +31,11 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 
 class GitlabReferenceBuilder
 {
-    private ReferenceDao $reference_dao;
-    private GitlabRepositoryIntegrationFactory $repository_integration_factory;
-
     public function __construct(
-        ReferenceDao $reference_dao,
-        GitlabRepositoryIntegrationFactory $repository_integration_factory,
+        private ReferenceDao $reference_dao,
+        private GitlabRepositoryIntegrationFactory $repository_integration_factory,
+        private GitlabReferenceExtractor $gitlab_reference_extractor,
     ) {
-        $this->reference_dao                  = $reference_dao;
-        $this->repository_integration_factory = $repository_integration_factory;
     }
 
     public function buildGitlabReference(Project $project, string $keyword, string $value): ?Reference
@@ -57,9 +53,10 @@ class GitlabReferenceBuilder
             //Keep the behaviour of the already existing project reference
             return null;
         }
-
-        $reference_splitted_values = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
-            $value
+        $reference_splitted_values = $this->gitlab_reference_extractor->extractReferenceSplitValuesByReferenceKeywordAndValue(
+            $project,
+            $keyword,
+            $value,
         );
 
         $repository_name = $reference_splitted_values->getRepositoryName();

@@ -97,6 +97,7 @@ class GitlabCrossReferenceOrganizer
         TlpRelativeDatePresenterBuilder $relative_date_builder,
         \UserManager $user_manager,
         \UserHelper $user_helper,
+        private GitlabReferenceExtractor $gitlab_reference_extractor,
     ) {
         $this->repository_integration_factory           = $repository_integration_factory;
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
@@ -131,8 +132,10 @@ class GitlabCrossReferenceOrganizer
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
-        $reference_splitted_values = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
-            $cross_reference_presenter->target_value
+        $reference_splitted_values = $this->gitlab_reference_extractor->extractReferenceSplitValuesByReferenceTypeAndValue(
+            $project,
+            $cross_reference_presenter->type,
+            $cross_reference_presenter->target_value,
         );
 
         $repository_name = $reference_splitted_values->getRepositoryName();
