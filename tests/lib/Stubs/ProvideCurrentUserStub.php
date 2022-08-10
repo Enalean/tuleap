@@ -41,4 +41,9 @@ final class ProvideCurrentUserStub implements ProvideCurrentUser
     {
         return new ProvideCurrentUserStub(UserTestBuilder::buildWithDefaults());
     }
+
+    public static function buildWithUser(PFUser $user): self
+    {
+        return new self($user);
+    }
 }

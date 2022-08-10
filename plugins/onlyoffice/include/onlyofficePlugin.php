@@ -21,8 +21,12 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
@@ -31,6 +35,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
@@ -76,19 +82,21 @@ final class onlyofficePlugin extends Plugin
     {
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(OpenItemHref::NAME);
-
+        $this->addHook(SiteAdministrationAddOption::NAME);
         return parent::getHooksAndCallbacks();
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
-        $routes->getRouteCollector()->addGroup(
+        $route_collector = $routes->getRouteCollector();
+        $route_collector->addGroup(
             '/onlyoffice',
             function (FastRoute\RouteCollector $r): void {
                 $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
                 $r->get('/open/{id:\d+}', $this->getRouteHandler('routeGetOpenOnlyOffice'));
             }
         );
+        $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
     }
 
     public function routeGetDocumentDownload(): DocmanFileDownloadController
@@ -136,5 +144,27 @@ final class onlyofficePlugin extends Plugin
                 echo "Opening documents in OnlyOffice is not implemented yet";
             }
         };
+    }
+
+    public function routeGetAdminSettings(): OnlyOfficeAdminSettingsController
+    {
+        return new OnlyOfficeAdminSettingsController(
+            new AdminPageRenderer(),
+            UserManager::instance(),
+            new OnlyOfficeAdminSettingsPresenter(
+                '',
+                CSRFSynchronizerTokenPresenter::fromToken(new CSRFSynchronizerToken(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL)),
+            )
+        );
+    }
+
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
+    {
+        $site_administration_add_option->addPluginOption(
+            SiteAdministrationPluginOption::build(
+                dgettext('tuleap-onlyoffice', 'ONLYOFFICE'),
+                OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL
+            )
+        );
     }
 }
