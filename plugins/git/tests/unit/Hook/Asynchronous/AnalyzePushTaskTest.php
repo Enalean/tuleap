@@ -23,14 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\Asynchronous;
 
 use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AnalyzeCommitTaskTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AnalyzePushTaskTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const COMMIT_SHA1       = '98126434';
-    private const PUSHING_USER_ID   = 183;
-    private const GIT_REPOSITORY_ID = 555;
+    private const FIRST_COMMIT_SHA1  = '98126434';
+    private const SECOND_COMMIT_SHA1 = '93b34c74';
+    private const PUSHING_USER_ID    = 183;
+    private const GIT_REPOSITORY_ID  = 555;
     private \PFUser $pusher;
     /**
      * @var \GitRepository & \PHPUnit\Framework\MockObject\Stub
@@ -45,21 +47,21 @@ final class AnalyzeCommitTaskTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->git_repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
     }
 
-    public function testItBuildsFromCommitAnalysisOrder(): void
+    public function testItBuildsFromDefaultBranchPush(): void
     {
-        $order = CommitAnalysisOrder::fromComponents(
-            CommitHash::fromString(self::COMMIT_SHA1),
+        $push = new DefaultBranchPushReceived(
+            $this->git_repository,
             $this->pusher,
-            $this->git_repository
+            [CommitHash::fromString(self::FIRST_COMMIT_SHA1), CommitHash::fromString(self::SECOND_COMMIT_SHA1)]
         );
 
-        $task = AnalyzeCommitTask::fromCommit($order);
+        $task = AnalyzePushTask::fromDefaultBranchPush($push);
 
-        self::assertEqualsCanonicalizing([
-            'commit_sha1'       => self::COMMIT_SHA1,
+        self::assertSame([
+            'commit_hashes'     => [self::FIRST_COMMIT_SHA1, self::SECOND_COMMIT_SHA1],
             'git_repository_id' => self::GIT_REPOSITORY_ID,
             'pushing_user_id'   => self::PUSHING_USER_ID,
         ], $task->getPayload());
-        self::assertSame(AnalyzeCommitTask::TOPIC, $task->getTopic());
+        self::assertSame(AnalyzePushTask::TOPIC, $task->getTopic());
     }
 }

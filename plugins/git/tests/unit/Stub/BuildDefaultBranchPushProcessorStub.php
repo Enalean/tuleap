@@ -20,9 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\Stub;
 
-interface BuildCommitAnalysisProcessor
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
+
+final class BuildDefaultBranchPushProcessorStub implements \Tuleap\Git\Hook\Asynchronous\BuildDefaultBranchPushProcessor
 {
-    public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor;
+    private function __construct(private DefaultBranchPushProcessor $processor)
+    {
+    }
+
+    public static function withProcessor(DefaultBranchPushProcessor $processor): self
+    {
+        return new self($processor);
+    }
+
+    public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor
+    {
+        return $this->processor;
+    }
 }

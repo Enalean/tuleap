@@ -20,36 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
+use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
 use Tuleap\Git\Hook\CommitHash;
 
 /**
+ * A push on the default branch of a Git repository was received
  * @psalm-immutable
  */
-final class CommitAnalysisOrder
+final class DefaultBranchPushReceived
 {
-    private function __construct(
-        private CommitHash $commit_hash,
-        private \PFUser $pusher,
+    public function __construct(
         private \GitRepository $repository,
+        private \PFUser $pusher,
+        /**
+         * @var list<CommitHash>
+         */
+        private array $commit_hashes,
     ) {
     }
 
-    /**
-     * @psalm-pure
-     */
-    public static function fromComponents(
-        CommitHash $commit_hash,
-        \PFUser $pusher,
-        \GitRepository $repository,
-    ): self {
-        return new self($commit_hash, $pusher, $repository);
-    }
-
-    public function getCommitHash(): CommitHash
+    public function getRepository(): \GitRepository
     {
-        return $this->commit_hash;
+        return $this->repository;
     }
 
     public function getPusher(): \PFUser
@@ -57,8 +51,23 @@ final class CommitAnalysisOrder
         return $this->pusher;
     }
 
-    public function getRepository(): \GitRepository
+    /**
+     * @return list<CommitHash>
+     */
+    public function getCommitHashes(): array
     {
-        return $this->repository;
+        return $this->commit_hashes;
+    }
+
+    /**
+     * @return list<CommitAnalysisOrder>
+     */
+    public function analyzeCommits(): array
+    {
+        $orders = [];
+        foreach ($this->commit_hashes as $commit_hash) {
+            $orders[] = CommitAnalysisOrder::fromComponents($commit_hash, $this->pusher, $this->repository);
+        }
+        return $orders;
     }
 }

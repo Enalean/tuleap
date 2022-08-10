@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\Asynchronous;
 
 use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -30,7 +31,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\User\RetrieveUserById;
 
-final class CommitAnalysisOrderParser
+final class DefaultBranchPushParser
 {
     public function __construct(
         private RetrieveUserById $user_retriever,
@@ -39,11 +40,11 @@ final class CommitAnalysisOrderParser
     }
 
     /**
-     * @return Ok<CommitAnalysisOrder> | Err<Fault>
+     * @return Ok<DefaultBranchPushReceived> | Err<Fault>
      */
     public function parse(WorkerEvent $worker_event): Ok|Err
     {
-        if ($worker_event->getEventName() !== AnalyzeCommitTask::TOPIC) {
+        if ($worker_event->getEventName() !== AnalyzePushTask::TOPIC) {
             return Result::err(UnhandledTopicFault::build());
         }
         $payload = $worker_event->getPayload();
@@ -52,16 +53,6 @@ final class CommitAnalysisOrderParser
                 Fault::fromMessage(
                     sprintf(
                         'Payload is missing git_repository_id or git_repository_id is not an integer: %s',
-                        var_export($payload, true)
-                    )
-                )
-            );
-        }
-        if (! isset($payload['commit_sha1']) || ! is_string($payload['commit_sha1'])) {
-            return Result::err(
-                Fault::fromMessage(
-                    sprintf(
-                        'Payload is missing commit_sha1 or commit_sha1 is not a string: %s',
                         var_export($payload, true)
                     )
                 )
@@ -77,6 +68,16 @@ final class CommitAnalysisOrderParser
                 )
             );
         }
+        if (! isset($payload['commit_hashes']) || ! is_array($payload['commit_hashes'])) {
+            return Result::err(
+                Fault::fromMessage(
+                    sprintf(
+                        'Payload is missing commit_hashes or commit_hashes is not an array: %s',
+                        var_export($payload, true)
+                    )
+                )
+            );
+        }
         $user_id = $payload['pushing_user_id'];
         $pusher  = $this->user_retriever->getUserById($user_id);
         if (! $pusher) {
@@ -84,13 +85,19 @@ final class CommitAnalysisOrderParser
                 Fault::fromMessage(sprintf('Could not retrieve user with id #%d', $user_id))
             );
         }
+
+        $commit_hashes = [];
+        foreach ($payload['commit_hashes'] as $commit_hash) {
+            $commit_hashes[] = CommitHash::fromString((string) $commit_hash);
+        }
+
         $git_repository_id = $payload['git_repository_id'];
         return $this->git_repository_retriever->getRepository($git_repository_id, $pusher)
             ->map(
-                fn(\GitRepository $git_repository) => CommitAnalysisOrder::fromComponents(
-                    CommitHash::fromString($payload['commit_sha1']),
+                static fn(\GitRepository $git_repository) => new DefaultBranchPushReceived(
+                    $git_repository,
                     $pusher,
-                    $git_repository
+                    $commit_hashes
                 )
             );
     }

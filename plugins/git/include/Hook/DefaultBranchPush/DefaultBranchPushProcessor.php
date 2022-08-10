@@ -20,26 +20,42 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\CommitMetadata\GitCommitReferenceString;
 use Tuleap\Git\CommitMetadata\RetrieveCommitMessage;
+use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
+use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final class CommitAnalysisProcessor
+final class DefaultBranchPushProcessor
 {
-    public function __construct(private RetrieveCommitMessage $message_retriever,)
+    public function __construct(
+        private VerifyArtifactClosureIsAllowed $closure_verifier,
+        private RetrieveCommitMessage $message_retriever,
+    ) {
+    }
+
+    /**
+     * @return list<Ok<PotentialReferencesReceived> | Err<Fault>>
+     */
+    public function process(DefaultBranchPushReceived $push): array
     {
+        if (! $this->closure_verifier->isArtifactClosureAllowed((int) $push->getRepository()->getId())) {
+            return [Result::err(ArtifactClosureNotAllowedFault::build($push->getRepository()))];
+        }
+        return array_map([$this, 'processSingleCommit'], $push->analyzeCommits());
     }
 
     /**
      * @return Ok<PotentialReferencesReceived> | Err<Fault>
      */
-    public function process(CommitAnalysisOrder $order): Ok|Err
+    private function processSingleCommit(CommitAnalysisOrder $order): Ok|Err
     {
         try {
             $commit_message = $this->message_retriever->getCommitMessage((string) $order->getCommitHash());

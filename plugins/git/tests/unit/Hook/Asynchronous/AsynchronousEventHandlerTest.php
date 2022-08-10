@@ -25,42 +25,46 @@ namespace Tuleap\Git\Hook\Asynchronous;
 use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Event\Events\PotentialReferencesReceived;
-use Tuleap\Git\Stub\BuildCommitAnalysisProcessorStub;
-use Tuleap\Test\Stub\EventDispatcherStub;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
+use Tuleap\Git\Stub\BuildDefaultBranchPushProcessorStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Stub\RetrieveGitRepositoryStub;
+use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const COMMIT_MESSAGE      = 'Closes story #973';
-    private const GIT_REPOSITORY_NAME = 'palpiform/bureau';
-    private const PUSHING_USER_ID     = 136;
-    private const COMMIT_SHA1         = '84d3a987';
+    private const PUSHING_USER_ID = 136;
     private string $topic;
     private TestLogger $logger;
-    private \PFUser $user;
-    private \Project $project;
     private RetrieveGitRepositoryStub $git_repository_retriever;
+    private VerifyArtifactClosureIsAllowedStub $closure_verifier;
     private EventDispatcherStub $event_dispatcher;
+    private RetrieveCommitMessageStub $commit_message_retriever;
 
     protected function setUp(): void
     {
-        $this->user    = UserTestBuilder::aUser()->withId(self::PUSHING_USER_ID)->build();
-        $this->project = ProjectTestBuilder::aProject()->withId(198)->build();
-        $this->topic   = AnalyzeCommitTask::TOPIC;
+        $project     = ProjectTestBuilder::aProject()->withId(198)->build();
+        $this->topic = AnalyzePushTask::TOPIC;
 
         $git_repository = $this->createStub(\GitRepository::class);
-        $git_repository->method('getFullName')->willReturn(self::GIT_REPOSITORY_NAME);
-        $git_repository->method('getProject')->willReturn($this->project);
+        $git_repository->method('getId')->willReturn(54);
+        $git_repository->method('getFullName')->willReturn('palpiform/bureau');
+        $git_repository->method('getProject')->willReturn($project);
 
         $this->logger                   = new TestLogger();
         $this->git_repository_retriever = RetrieveGitRepositoryStub::withGitRepository($git_repository);
+        $this->closure_verifier         = VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed();
         $this->event_dispatcher         = EventDispatcherStub::withIdentityCallback();
+        $this->commit_message_retriever = RetrieveCommitMessageStub::withSuccessiveMessages(
+            'Closes story #973',
+            'Implement story #147'
+        );
     }
 
     private function handle(): void
@@ -69,42 +73,42 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             'event_name' => $this->topic,
             'payload'    => [
                 'git_repository_id' => 232,
-                'commit_sha1'       => self::COMMIT_SHA1,
+                'commit_hashes'     => ['84d3a987', 'ec35bde4'],
                 'pushing_user_id'   => self::PUSHING_USER_ID,
             ],
         ]);
 
+        $user = UserTestBuilder::aUser()->withId(self::PUSHING_USER_ID)->build();
+
         $handler = new AsynchronousEventHandler(
             $this->logger,
-            new CommitAnalysisOrderParser(RetrieveUserByIdStub::withUser($this->user), $this->git_repository_retriever),
-            BuildCommitAnalysisProcessorStub::withProcessor(
-                new CommitAnalysisProcessor(RetrieveCommitMessageStub::withMessage(self::COMMIT_MESSAGE))
+            new DefaultBranchPushParser(RetrieveUserByIdStub::withUser($user), $this->git_repository_retriever),
+            BuildDefaultBranchPushProcessorStub::withProcessor(
+                new DefaultBranchPushProcessor(
+                    $this->closure_verifier,
+                    $this->commit_message_retriever
+                )
             ),
             $this->event_dispatcher
         );
         $handler->handle($worker_event);
     }
 
-    public function testItDispatchesAnEventToSearchReferencesInTheCommitMessageOfTheWorkerEvent(): void
+    public function testItDispatchesEventsToSearchForReferencesInEachCommitMessageOfTheWorkerEvent(): void
     {
-        /** @var ?PotentialReferencesReceived $event */
-        $event                  = null;
+        /** @var list<PotentialReferencesReceived> $events */
+        $events                 = [];
         $this->event_dispatcher = EventDispatcherStub::withCallback(
-            static function (PotentialReferencesReceived $received) use (&$event) {
-                $event = $received;
+            static function (PotentialReferencesReceived $received) use (&$events) {
+                $events[] = $received;
                 return $received;
             }
         );
 
         $this->handle();
 
-        self::assertNotNull($event);
-        self::assertSame($this->project, $event->project);
-        self::assertSame($this->user, $event->user);
-        self::assertSame(self::COMMIT_MESSAGE, $event->text_with_potential_references);
-        self::assertStringContainsString(self::COMMIT_SHA1, $event->back_reference->getStringReference());
-        self::assertStringContainsString(self::GIT_REPOSITORY_NAME, $event->back_reference->getStringReference());
         self::assertTrue($this->logger->hasDebugRecords());
+        self::assertCount(2, $events);
     }
 
     public function testItIgnoresWorkerEventWithAnotherTopic(): void
@@ -118,7 +122,7 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse($this->logger->hasErrorRecords());
     }
 
-    public function testItLogsFaults(): void
+    public function testItLogsFaultsWhenParsingPush(): void
     {
         $error_message                  = 'Could not retrieve git repository';
         $this->git_repository_retriever = RetrieveGitRepositoryStub::withFault(Fault::fromMessage($error_message));
@@ -127,5 +131,25 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertSame(0, $this->event_dispatcher->getCallCount());
         self::assertTrue($this->logger->hasError($error_message));
+    }
+
+    public function testItDoesNotLogFaultWhenArtifactClosureIsDisabledInPushRepository(): void
+    {
+        $this->closure_verifier = VerifyArtifactClosureIsAllowedStub::withNeverAllowed();
+
+        $this->handle();
+
+        self::assertSame(0, $this->event_dispatcher->getCallCount());
+        self::assertFalse($this->logger->hasErrorRecords());
+    }
+
+    public function testItLogsFaultsWhenProcessingPush(): void
+    {
+        $this->commit_message_retriever = RetrieveCommitMessageStub::withError();
+
+        $this->handle();
+
+        self::assertSame(0, $this->event_dispatcher->getCallCount());
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 }

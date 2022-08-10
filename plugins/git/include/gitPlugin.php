@@ -76,8 +76,8 @@ use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Hook\Asynchronous\AsynchronousEventHandler;
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrderParser;
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessorBuilder;
+use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushParser;
+use Tuleap\Git\Hook\Asynchronous\DefaultBranchPushProcessorBuilder;
 use Tuleap\Git\Hook\Asynchronous\GitRepositoryRetriever;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
@@ -2935,14 +2935,14 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
 
         $handler = new AsynchronousEventHandler(
             $logger,
-            new CommitAnalysisOrderParser(
+            new DefaultBranchPushParser(
                 \UserManager::instance(),
                 new GitRepositoryRetriever(
                     new \GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
                     new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager)
                 )
             ),
-            new CommitAnalysisProcessorBuilder(),
+            new DefaultBranchPushProcessorBuilder(),
             $event_manager
         );
         $handler->handle($event);

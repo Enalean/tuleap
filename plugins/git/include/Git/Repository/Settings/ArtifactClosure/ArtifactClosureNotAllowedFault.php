@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\Repository\Settings\ArtifactClosure;
 
-use Tuleap\Git\CommitMetadata\CommitMessageRetriever;
-
-final class CommitAnalysisProcessorBuilder implements BuildCommitAnalysisProcessor
+/**
+ * @psalm-immutable
+ */
+final class ArtifactClosureNotAllowedFault extends \Tuleap\NeverThrow\Fault
 {
-    public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor
+    public static function build(\GitRepository $git_repository): \Tuleap\NeverThrow\Fault
     {
-        return new CommitAnalysisProcessor(
-            new CommitMessageRetriever(\Git_Exec::buildFromRepository($repository)),
-        );
+        return new self(sprintf('Closing artifacts is not allowed in repository with id #%s', $git_repository->getId()));
     }
 }
