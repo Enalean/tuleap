@@ -9,5 +9,23 @@ msgstr ""
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr "Permet d'ouvrir des documents dans ONLYOFFICE"
 
+msgid "Document server URL"
+msgstr "URL du serveur de document"
+
+msgid "JWT secret"
+msgstr "Secret JWT"
+
+msgid "ONLYOFFICE"
+msgstr "ONLYOFFICE"
+
+msgid "ONLYOFFICE document server settings"
+msgstr "Paramètres du serveur de document ONLYOFFICE"
+
 msgid "ONLYOFFICE integration"
 msgstr "Intégration avec ONLYOFFICE"
+
+msgid "ONLYOFFICE settings"
+msgstr "Paramètres de ONLYOFFICE"
+
+msgid "Save"
+msgstr "Sauvegarder"
