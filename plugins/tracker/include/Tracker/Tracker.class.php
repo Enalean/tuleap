@@ -27,6 +27,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\Mail\Transport\MailTransportBuilder;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
@@ -1754,7 +1755,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function getMailGatewayConfig()
     {
         return new MailGatewayConfig(
-            new MailGatewayConfigDao()
+            new MailGatewayConfigDao(),
+            MailTransportBuilder::getPlatformMailConfiguration(),
         );
     }
 
