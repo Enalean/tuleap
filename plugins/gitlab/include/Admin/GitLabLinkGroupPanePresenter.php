@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit\Git\Administration;
+namespace Tuleap\Gitlab\Admin;
 
-use Project;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use GitPresenters_AdminPresenter;
 
-class AdministrationPaneBuilder
+final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
 {
-    public const PANE_NAME = "hudson";
-
-    public static function buildPane(Project $project): AdminExternalPanePresenter
+    public function __construct(int $project_id, bool $are_mirrors_defined, array $external_pane_presenters)
     {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            URLBuilder::buildUrl($project),
-            false
-        );
+        parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
     }
 
-    public static function buildActivePane(Project $project): AdminExternalPanePresenter
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function form_action(): string
     {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            URLBuilder::buildUrl($project),
-            true
-        );
+        return '';
     }
 }

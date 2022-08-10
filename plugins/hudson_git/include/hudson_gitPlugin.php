@@ -244,7 +244,8 @@ class hudson_gitPlugin extends Plugin
             ),
             $git_plugin->getHeaderRenderer(),
             TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates/git-administration'),
-            $this->getIncludeAssets()
+            $this->getIncludeAssets(),
+            EventManager::instance()
         );
     }
 
@@ -351,6 +352,11 @@ class hudson_gitPlugin extends Plugin
 
     public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
     {
+        if ($event->getCurrentTabName() === AdministrationPaneBuilder::PANE_NAME) {
+            $event->addExternalPanePresenter(AdministrationPaneBuilder::buildActivePane($event->getProject()));
+            return;
+        }
+
         $event->addExternalPanePresenter(AdministrationPaneBuilder::buildPane($event->getProject()));
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,41 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit\Git\Administration;
+namespace Tuleap\Gitlab\Admin;
 
-use CSRFSynchronizerToken;
 use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPlugin;
 use HTTPRequest;
 use Project;
-use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\ProjectByUnixNameFactory;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class AdministrationController implements DispatchableWithRequest, DispatchableWithProject
+final class GitLabLinkGroupController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     public function __construct(
-        private ProjectManager $project_manager,
-        private GitPermissionsManager $git_permissions_manager,
-        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        private JenkinsServerFactory $jenkins_server_factory,
-        private LogFactory $log_factory,
-        private HeaderRenderer $header_renderer,
-        private TemplateRenderer $renderer,
-        private IncludeAssets $include_assets,
+        private ProjectByUnixNameFactory $project_manager,
         private EventDispatcherInterface $event_manager,
+        private HeaderRenderer $header_renderer,
+        private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        private GitPermissionsManager $git_permissions_manager,
+        private TemplateRenderer $renderer,
     ) {
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
@@ -69,38 +68,27 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
             throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
         }
 
-        $layout->includeFooterJavascriptFile(
-            $this->include_assets->getFileURL('git-administration.js')
-        );
-
         $this->header_renderer->renderServiceAdministrationHeader(
             $request,
             $user,
             $project
         );
 
-        $event = new GitAdminGetExternalPanePresenters($project, AdministrationPaneBuilder::PANE_NAME);
+        $event = new GitAdminGetExternalPanePresenters($project, GitLabLinkGroupTabPresenter::PANE_NAME);
         $this->event_manager->dispatch($event);
 
         $this->renderer->renderToPage(
-            'git-administration-jenkins',
-            new AdministrationPresenter(
+            'git-administration-gitlab-link-group',
+            new GitLabLinkGroupPanePresenter(
                 (int) $project->getID(),
-                count($this->mirror_data_mapper->fetchAllForProject($project)) > 0,
-                $event->getExternalPanePresenters(),
-                $this->buildServerPresenters($project),
-                new CSRFSynchronizerToken(
-                    URLBuilder::buildAddUrl()
-                )
+                ! empty($this->mirror_data_mapper->fetchAllForProject($project)),
+                $event->getExternalPanePresenters()
             )
         );
 
         $layout->footer([]);
     }
 
-    /**
-     * @throws NotFoundException
-     */
     public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
@@ -109,28 +97,5 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
         }
 
         return $project;
-    }
-
-    private function buildServerPresenters(Project $project): array
-    {
-        $presenters = [];
-        foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
-            $presenters[] = new JenkinsServerPresenter(
-                $jenkins_server,
-                $this->buildServerLogsPresenters($jenkins_server)
-            );
-        }
-
-        return $presenters;
-    }
-
-    private function buildServerLogsPresenters(JenkinsServer $jenkins_server): array
-    {
-        $presenters = [];
-        foreach ($this->log_factory->getLastJobLogsByProjectServer($jenkins_server) as $log) {
-            $presenters[] = JenkinsServerLogsPresenter::buildFromLog($log);
-        }
-
-        return $presenters;
     }
 }

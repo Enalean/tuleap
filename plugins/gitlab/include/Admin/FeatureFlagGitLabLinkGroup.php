@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit\Git\Administration;
+namespace Tuleap\Gitlab\Admin;
 
-use Project;
-use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
+use Tuleap\Config\FeatureFlagConfigKey;
 
-class AdministrationPaneBuilder
+final class FeatureFlagGitLabLinkGroup
 {
-    public const PANE_NAME = "hudson";
-
-    public static function buildPane(Project $project): AdminExternalPanePresenter
+    #[FeatureFlagConfigKey("Feature flag to enable the GitLab Link Group feature")]
+    public const FORGE_CONFIG_KEY = "gitlab_link_group";
+    public static function isEnabled(): bool
     {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            URLBuilder::buildUrl($project),
-            false
-        );
-    }
-
-    public static function buildActivePane(Project $project): AdminExternalPanePresenter
-    {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            URLBuilder::buildUrl($project),
-            true
-        );
+        return \ForgeConfig::getFeatureFlag(self::FORGE_CONFIG_KEY) === '1';
     }
 }

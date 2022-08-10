@@ -109,7 +109,7 @@ class IndexController
 
         $panes = $this->getPanes($project, $request, $are_mirrors_defined);
 
-        $event = new GitAdminGetExternalPanePresenters($project);
+        $event = new GitAdminGetExternalPanePresenters($project, '');
         $this->event_manager->processEvent($event);
 
         $presenter = new GitPresenters_AdminDefaultSettingsPresenter(

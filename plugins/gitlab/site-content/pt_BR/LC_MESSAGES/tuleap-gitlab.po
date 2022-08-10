@@ -30,6 +30,9 @@ msgstr ""
 msgid "GitLab Branch"
 msgstr ""
 
+msgid "GitLab Group Link"
+msgstr ""
+
 msgid "GitLab Tag"
 msgstr ""
 
