@@ -79,10 +79,8 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
 
     /**
      * Fake username for replication
-     *
-     * @return String
      */
-    public function getUserName()
+    public function getUserName(): string
     {
         return Rule_UserName::RESERVED_PREFIX . self::KEYNAME_PREFIX . $this->getGerritHostId();
     }

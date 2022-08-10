@@ -36,13 +36,9 @@ final class UserProxy implements UserReference
     {
     }
 
-    /**
-     * PFUser can return no name for workflow users
-     */
     public static function buildFromPFUser(\PFUser $user): self
     {
-        $name =  $user->getName() ?? "";
-        return new self((int) $user->getId(), $name);
+        return new self((int) $user->getId(), $user->getUserName());
     }
 
     public function getId(): int

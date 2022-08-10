@@ -30,7 +30,7 @@ interface IHaveAnSSHKey
     /**
      * Identifier associated to the key
      */
-    public function getUserName();
+    public function getUserName(): string;
 
     /**
      * All SSH key for given identifier
