@@ -603,13 +603,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->id;
     }
     /**
-     * alias of getUserName()
-     */
-    public function getName(): string
-    {
-        return $this->getUserName();
-    }
-    /**
      * @psalm-taint-escape file
      */
     public function getUserName(): string

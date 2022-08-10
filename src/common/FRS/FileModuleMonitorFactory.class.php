@@ -159,15 +159,15 @@ class FileModuleMonitorFactory
                         $historyDao = new ProjectHistoryDao();
                         $historyDao->groupAddHistory("frs_add_monitor_package", $fileModuleId . "_" . $user->getId(), $groupId);
                         $this->notifyAfterAdd($package, $user);
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', [$userHelper->getDisplayName($user->getName(), $user->getRealName())]));
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'already_monitoring', [$userHelper->getDisplayName($user->getName(), $user->getRealName())]));
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'already_monitoring', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'user_no_permission', [$userHelper->getDisplayName($user->getName(), $user->getRealName())]));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'user_no_permission', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_user', [$userName]));
@@ -212,7 +212,7 @@ class FileModuleMonitorFactory
                     if ($this->isMonitoring($fileModuleId, $user, $publicly)) {
                         $this->stopMonitoringForUser($fileModuleId, $user, $groupId, $package, $userHelper);
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', [$userHelper->getDisplayName($user->getName(), $user->getRealName())]));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
                     }
                 }
             }
@@ -238,9 +238,9 @@ class FileModuleMonitorFactory
             $historyDao = new ProjectHistoryDao();
             $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId . "_" . $user->getId(), $groupId);
             $this->notifyAfterDelete($package, $user);
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', [$userHelper->getDisplayName($user->getName(), $user->getRealName())]));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', [$userHelper->getDisplayName($user->getName(), $user->getRealName())]));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', [$userHelper->getDisplayName($user->getUserName(), $user->getRealName())]));
         }
     }
 
@@ -372,8 +372,10 @@ class FileModuleMonitorFactory
             $editContent .= html_build_list_table_top([$GLOBALS['Language']->getText('file_filemodule_monitor', 'user'), $GLOBALS['Language']->getText('global', 'delete') . '?'], false, false, false);
             $rowBgColor   = 0;
             foreach ($list as $entry) {
-                $user         = $um->getUserById($entry['user_id']);
-                $editContent .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '"><td>' . $purifier->purify($userHelper->getDisplayName($user->getName(), $user->getRealName())) . '</td><td><input type="checkbox" name="delete_user[]" value="' . $purifier->purify($entry['user_id']) . '" /></td></tr>';
+                $user = $um->getUserById($entry['user_id']);
+                if ($user !== null) {
+                    $editContent .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '"><td>' . $purifier->purify($userHelper->getDisplayName($user->getUserName(), $user->getRealName())) . '</td><td><input type="checkbox" name="delete_user[]" value="' . $purifier->purify($entry['user_id']) . '" /></td></tr>';
+                }
             }
             $editContent .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '"><td>' . $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count) . '</td><td></td></tr>';
             $editContent .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '"><td>' . $GLOBALS['Language']->getText('global', 'total') . ': ' . $totalCount . '</td><td><input id="filemodule_monitor_submit" type="submit" value="' . $GLOBALS['Language']->getText('global', 'delete') . '" /></td></tr>';

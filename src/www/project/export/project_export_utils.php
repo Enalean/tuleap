@@ -249,7 +249,7 @@ function prepare_access_logs_record($group_id, &$record)
     $um   = UserManager::instance();
     $user = $um->getUserByUserName($record['user_name']);
     if ($user) {
-        $record['user'] = $user->getRealName() . "(" . $user->getName() . ")";
+        $record['user'] = $user->getRealName() . "(" . $user->getUserName() . ")";
     } else {
         $record['user'] = 'N/A';
     }

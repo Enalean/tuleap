@@ -58,7 +58,7 @@ class GitViews extends PluginViews
         $this->groupId        = (int) $this->request->get('group_id');
         $this->project        = ProjectManager::instance()->getProject($this->groupId);
         $this->projectName    = $this->project->getUnixName();
-        $this->userName       = $this->user->getName();
+        $this->userName       = $this->user->getUserName();
         $this->ugroup_manager = new UGroupManager();
         $this->event_manager  = EventManager::instance();
     }
@@ -219,7 +219,7 @@ class GitViews extends PluginViews
             echo '<td>';
             $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
             echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" id="fork_repositories_path" name="path" />';
-            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getName()) . '" />';
+            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getUserName()) . '" />';
             echo '</td>';
 
             echo '<td class="last">';
@@ -405,7 +405,7 @@ class GitViews extends PluginViews
                 $this->regexp_retriever
             );
 
-            $userName = $this->user->getName();
+            $userName = $this->user->getUserName();
             echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
     }

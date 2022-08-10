@@ -106,7 +106,7 @@ class SVN_LogFactory
      */
     protected function getForbiddenPaths(PFUser $user)
     {
-        $forbidden       = svn_utils_get_forbidden_paths($user->getName(), $this->project->getSVNRootPath());
+        $forbidden       = svn_utils_get_forbidden_paths($user->getUserName(), $this->project->getSVNRootPath());
         $where_forbidden = "";
         foreach ($forbidden as $no_access => $v) {
             $where_forbidden .= " AND svn_dirs.dir not like '" . db_es(substr($no_access, 1)) . "%'";

@@ -669,7 +669,7 @@ class GitActions extends PluginActions
                 );
                 $this->history_dao->groupAddHistory(
                     "git_repo_update",
-                    $repository->getName() . ': add notification user ' . $user->getName(),
+                    $repository->getName() . ': add notification user ' . $user->getUserName(),
                     $repository->getProjectId()
                 );
             } else {
@@ -776,7 +776,7 @@ class GitActions extends PluginActions
                 $controller->addInfo($feedback);
                 $this->history_dao->groupAddHistory(
                     "git_repo_update",
-                    $repository->getName() . ': remove user ' . $user->getName() . ' from notifications',
+                    $repository->getName() . ': remove user ' . $user->getUserName() . ' from notifications',
                     $repository->getProjectId()
                 );
             } else {

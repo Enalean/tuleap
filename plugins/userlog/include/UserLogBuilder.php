@@ -125,7 +125,7 @@ class UserLogBuilder
             'timestamp'           => $log['time'],
             'hour'                => date('H:i:s', $log['time']),
             'group_id'            => $log['group_id'],
-            'user_id'             => $user->getName(),
+            'user_id'             => $user !== null ? $user->getUserName() : '',
             'http_request_method' => $log['http_request_method'],
             'http_request_uri'    => $log['http_request_uri'],
             'http_remote_addr'    => $log['http_remote_addr'],

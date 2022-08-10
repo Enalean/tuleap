@@ -252,7 +252,7 @@ class Docman_Actions extends Actions
                     $eArray        = [
                         'group_id'  => $item->getGroupId(),
                         'item'      => &$item,
-                        'new_value' => $author->getName(),
+                        'new_value' => $author->getUserName(),
                         'user'      => &$user,
                     ];
                     $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
@@ -601,8 +601,8 @@ class Docman_Actions extends Actions
                 if ($_owner_id != $item->getOwnerId()) {
                     $ownerChanged    = true;
                     $um              = $this->_getUserManagerInstance();
-                    $_oldowner       = $um->getUserById($item->getOwnerId())->getName();
-                    $_newowner       = $um->getUserById($_owner_id)->getName();
+                    $_oldowner       = $um->getUserById($item->getOwnerId())->getUserName();
+                    $_newowner       = $um->getUserById($_owner_id)->getUserName();
                     $data['user_id'] = $_owner_id;
                 }
                 unset($data['owner']);
@@ -2144,6 +2144,9 @@ class Docman_Actions extends Actions
         $updater_feedback->getFilenamePatternUpdateFeedback($project_id, $filename_pattern);
     }
 
+    /**
+     * @param PFUser[] $users_to_delete
+     */
     private function removeNotificationUsersByItem(Docman_Item $item, array $users_to_delete)
     {
         $users = [];
@@ -2163,7 +2166,7 @@ class Docman_Actions extends Actions
                         Feedback::ERROR,
                         sprintf(
                             dgettext('tuleap-docman', 'Unable to remove monitoring for user "%s"'),
-                            $user->getName()
+                            $user->getUserName()
                         )
                     );
                 }
@@ -2172,7 +2175,7 @@ class Docman_Actions extends Actions
                     Feedback::WARN,
                     sprintf(
                         dgettext('tuleap-docman', 'Monitoring was not active for user "%s"'),
-                        $user->getName()
+                        $user->getUserName()
                     )
                 );
             }
@@ -2181,7 +2184,7 @@ class Docman_Actions extends Actions
         if (! empty($users)) {
             $removed_users = [];
             foreach ($users as $user) {
-                $removed_users[] = $user->getName();
+                $removed_users[] = $user->getUserName();
             }
             $this->_controler->feedback->log(
                 Feedback::INFO,
@@ -2222,6 +2225,9 @@ class Docman_Actions extends Actions
         }
     }
 
+    /**
+     * @param PFUser[] $users_to_add
+     */
     private function addMonitoringUsers($cascade, Docman_Item $item, array $users_to_add)
     {
         $users = [];
@@ -2230,14 +2236,14 @@ class Docman_Actions extends Actions
             if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
                 $this->_controler->feedback->log(
                     Feedback::WARN,
-                    sprintf(dgettext('tuleap-docman', 'Monitoring for user(s) "%s" already exists'), $user->getName())
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for user(s) "%s" already exists'), $user->getUserName())
                 );
                 continue;
             }
             if (! $dpm->userCanRead($user, $item->getId())) {
                 $this->_controler->feedback->log(
                     Feedback::WARN,
-                    sprintf(dgettext('tuleap-docman', 'Insufficient permissions for user(s) "%s"'), $user->getName())
+                    sprintf(dgettext('tuleap-docman', 'Insufficient permissions for user(s) "%s"'), $user->getUserName())
                 );
                 continue;
             }
@@ -2246,7 +2252,7 @@ class Docman_Actions extends Actions
                     Feedback::ERROR,
                     sprintf(
                         dgettext('tuleap-docman', 'Monitoring for user(s) "%s" has not been added'),
-                        $user->getName()
+                        $user->getUserName()
                     )
                 );
                 continue;
@@ -2260,10 +2266,10 @@ class Docman_Actions extends Actions
             ) {
                 $this->_controler->feedback->log(
                     'error',
-                    sprintf(dgettext('tuleap-docman', 'Monitoring for the whole sub-hierarchy for user(s) \'%1$s\' has not been added'), $user->getName())
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for the whole sub-hierarchy for user(s) \'%1$s\' has not been added'), $user->getUserName())
                 );
             }
-            $users[] = $user->getName();
+            $users[] = $user->getUserName();
         }
 
         if (! empty($users)) {
