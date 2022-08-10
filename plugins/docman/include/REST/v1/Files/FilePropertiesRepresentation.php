@@ -36,6 +36,11 @@ class FilePropertiesRepresentation
     public $download_href;
 
     /**
+     * @var string
+     */
+    public $open_href;
+
+    /**
      * @var int
      */
     public $file_size;
@@ -45,19 +50,21 @@ class FilePropertiesRepresentation
      */
     public $file_name;
 
-    private function __construct(string $file_type, string $download_href, int $file_size, string $file_name)
+    private function __construct(string $file_type, string $download_href, string $open_href, int $file_size, string $file_name)
     {
         $this->file_type     = $file_type;
         $this->download_href = $download_href;
+        $this->open_href     = $open_href;
         $this->file_size     = $file_size;
         $this->file_name     = $file_name;
     }
 
-    public static function build(\Docman_Version $docman_version, string $download_href): self
+    public static function build(\Docman_Version $docman_version, string $download_href, string $open_href): self
     {
         return new self(
             $docman_version->getFiletype(),
             $download_href,
+            $open_href,
             $docman_version->getFilesize(),
             $docman_version->getFilename(),
         );

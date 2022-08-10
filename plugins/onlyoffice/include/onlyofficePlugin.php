@@ -26,13 +26,16 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
+use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
+use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -72,6 +75,8 @@ final class onlyofficePlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(OpenItemHref::NAME);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -81,6 +86,7 @@ final class onlyofficePlugin extends Plugin
             '/onlyoffice',
             function (FastRoute\RouteCollector $r): void {
                 $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
+                $r->get('/open/{id:\d+}', $this->getRouteHandler('routeGetOpenOnlyOffice'));
             }
         );
     }
@@ -111,5 +117,24 @@ final class onlyofficePlugin extends Plugin
             new SessionWriteCloseMiddleware(),
             $token_middleware,
         );
+    }
+
+    public function openItemHref(OpenItemHref $open_item_href): void
+    {
+        if (AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($open_item_href->getVersion()->getFilename())) {
+            $open_item_href->setHref(
+                '/onlyoffice/open/' . urlencode((string) $open_item_href->getItem()->getId())
+            );
+        }
+    }
+
+    public function routeGetOpenOnlyOffice(): \Tuleap\Request\DispatchableWithRequest
+    {
+        return new class implements \Tuleap\Request\DispatchableWithRequest {
+            public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+            {
+                echo "Opening documents in OnlyOffice is not implemented yet";
+            }
+        };
     }
 }

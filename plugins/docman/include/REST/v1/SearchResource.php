@@ -309,7 +309,7 @@ final class SearchResource extends AuthenticatedResource
             ),
             $item_factory,
             new SearchRepresentationTypeVisitor(),
-            new FilePropertiesVisitor($version_factory),
+            new FilePropertiesVisitor($version_factory, $event_manager),
             new ListOfCustomPropertyRepresentationBuilder(),
         );
 

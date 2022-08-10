@@ -57,6 +57,6 @@ const file_url = computed((): string => {
     if (is_corrupted.value || !props.item.file_properties) {
         return "";
     }
-    return props.item.file_properties.download_href;
+    return props.item.file_properties.open_href;
 });
 </script>
