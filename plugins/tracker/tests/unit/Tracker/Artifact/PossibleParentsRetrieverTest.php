@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Artifact;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use function PHPUnit\Framework\assertEquals;
@@ -73,25 +74,15 @@ final class PossibleParentsRetrieverTest extends TestCase
 
     public function testPluginsHaveThePaginationInfo(): void
     {
-        $event_manager = new class implements EventDispatcherInterface {
-            public int $limit  = 0;
-            public int $offset = 0;
-            public function dispatch(object $event)
-            {
-                assert($event instanceof PossibleParentSelector);
-                $this->limit  = $event->limit;
-                $this->offset = $event->offset;
-                $event->addPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
-                    [
-                        ArtifactTestBuilder::anArtifact(123)->build(),
-                    ],
-                    1
-                ));
-                return $event;
+        $event         = null;
+        $event_manager = EventDispatcherStub::withCallback(
+            static function (PossibleParentSelector $received) use (&$event): PossibleParentSelector {
+                $event = $received;
+                return $received;
             }
-        };
+        );
 
-        $this->tracker->setParent(null);
+        $this->tracker->setParent();
 
         $possible_parents_retriever = new PossibleParentsRetriever(
             $this->createStub(\Tracker_ArtifactFactory::class),
@@ -100,18 +91,22 @@ final class PossibleParentsRetrieverTest extends TestCase
 
         $possible_parents_retriever->getPossibleArtifactParents($this->tracker, $this->user, 50, 100, true);
 
-        assertEquals(50, $event_manager->limit);
-        assertEquals(100, $event_manager->offset);
+        assertEquals(50, $event->limit);
+        assertEquals(100, $event->offset);
     }
 
     public function testNoParentTrackerMeansNoNeedToDisplayTheSelector(): void
     {
         $possible_parents_retriever = new PossibleParentsRetriever(
             $this->createStub(\Tracker_ArtifactFactory::class),
-            new \EventManager(),
+            EventDispatcherStub::withCallback(
+                static function (PossibleParentSelector $event): PossibleParentSelector {
+                    return $event;
+                }
+            ),
         );
 
-        $this->tracker->setParent(null);
+        $this->tracker->setParent();
 
         $possible_parent_selector = $possible_parents_retriever->getPossibleArtifactParents($this->tracker, $this->user, 0, 0, true);
 
@@ -154,10 +149,8 @@ final class PossibleParentsRetrieverTest extends TestCase
 
     public function testDisplayPossibleParentsFromEventAndHierarchy(): void
     {
-        $event_manager = new class implements EventDispatcherInterface {
-            public function dispatch(object $event)
-            {
-                assert($event instanceof PossibleParentSelector);
+        $event_manager = EventDispatcherStub::withCallback(
+            static function (PossibleParentSelector $event): PossibleParentSelector {
                 $event->addPossibleParents(new \Tracker_Artifact_PaginatedArtifacts(
                     [
                         ArtifactTestBuilder::anArtifact(124)->build(),
@@ -166,7 +159,7 @@ final class PossibleParentsRetrieverTest extends TestCase
                 ));
                 return $event;
             }
-        };
+        );
 
         $artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
         $artifact_factory
@@ -198,5 +191,27 @@ final class PossibleParentsRetrieverTest extends TestCase
         assertTrue($possible_parent_selector->isSelectorDisplayed());
         assertEquals([ArtifactTestBuilder::anArtifact(124)->build(), ArtifactTestBuilder::anArtifact(123)->build()], $possible_parent_selector->getPossibleParents()->getArtifacts());
         assertEquals($possible_parent_selector->getParentLabel(), 'epic');
+    }
+
+    public function testDoesNotDisplaySelectorWhenPluginExplicitlyForbidIt(): void
+    {
+        $event_manager = EventDispatcherStub::withCallback(
+            static function (PossibleParentSelector $event): PossibleParentSelector {
+                $event->disableSelector();
+                return $event;
+            }
+        );
+
+        $artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);
+
+
+        $possible_parents_retriever = new PossibleParentsRetriever(
+            $artifact_factory,
+            $event_manager,
+        );
+
+        $possible_parent_selector = $possible_parents_retriever->getPossibleArtifactParents($this->tracker, $this->user, 0, 0, true);
+
+        assertFalse($possible_parent_selector->isSelectorDisplayed());
     }
 }

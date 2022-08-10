@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveOpenFeatureCount;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchOpenFeatures;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\VerifyFeatureIsVisibleByProgram;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\VerifyIsIterationTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
@@ -40,11 +41,17 @@ final class PossibleParentHandler
         private SearchProgramsOfTeam $programs_searcher,
         private SearchOpenFeatures $search_open_features,
         private RetrieveOpenFeatureCount $retrieve_open_feature_count,
+        private VerifyIsIterationTracker $is_iteration_tracker,
     ) {
     }
 
     public function handle(PossibleParentSelectorEvent $possible_parent_selector): void
     {
+        if ($this->is_iteration_tracker->isIterationTracker($possible_parent_selector->getTrackerId())) {
+            $possible_parent_selector->disableSelector();
+            return;
+        }
+
         if (! $possible_parent_selector->trackerIsInRootPlanning()) {
             return;
         }

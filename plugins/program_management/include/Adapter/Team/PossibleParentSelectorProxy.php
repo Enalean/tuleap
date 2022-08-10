@@ -100,4 +100,14 @@ final class PossibleParentSelectorProxy implements PossibleParentSelectorEvent
     {
         return $this->inner_event->offset;
     }
+
+    public function getTrackerId(): int
+    {
+        return $this->inner_event->tracker->getId();
+    }
+
+    public function disableSelector(): void
+    {
+        $this->inner_event->disableSelector();
+    }
 }
