@@ -19,6 +19,7 @@
 
 <template>
     <fragment>
+        <slot name="download" />
         <slot name="new-folder-secondary-action" />
 
         <slot name="new-item-version" />
