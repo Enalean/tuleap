@@ -20,19 +20,43 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-final class DefaultBranchVerifier implements VerifyIsDefaultBranch
+/**
+ * @psalm-immutable
+ */
+final class CommitAnalysisOrder
 {
-    private const BRANCH_REF = 'refs/heads/';
-
-    public function __construct(private \Git_Exec $git_exec)
-    {
+    private function __construct(
+        private CommitHash $commit_hash,
+        private \PFUser $pusher,
+        private \GitRepository $repository,
+    ) {
     }
 
-    public function isDefaultBranch(string $refname): bool
+    /**
+     * @psalm-pure
+     */
+    public static function fromComponents(
+        CommitHash $commit_hash,
+        \PFUser $pusher,
+        \GitRepository $repository,
+    ): self {
+        return new self($commit_hash, $pusher, $repository);
+    }
+
+    public function getCommitHash(): CommitHash
     {
-        $default_branch = $this->git_exec->getDefaultBranch();
-        return $refname === self::BRANCH_REF . $default_branch;
+        return $this->commit_hash;
+    }
+
+    public function getPusher(): \PFUser
+    {
+        return $this->pusher;
+    }
+
+    public function getRepository(): \GitRepository
+    {
+        return $this->repository;
     }
 }

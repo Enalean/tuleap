@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Stub;
 
-use Tuleap\Git\Hook\VerifyIsDefaultBranch;
+use Tuleap\Git\Hook\DefaultBranchPush\VerifyIsDefaultBranch;
 
 final class VerifyIsDefaultBranchStub implements VerifyIsDefaultBranch
 {

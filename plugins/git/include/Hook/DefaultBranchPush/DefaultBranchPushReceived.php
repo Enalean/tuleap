@@ -22,9 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
-use Tuleap\Git\Hook\CommitHash;
-
 /**
  * A push on the default branch of a Git repository was received
  * @psalm-immutable

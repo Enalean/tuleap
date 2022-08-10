@@ -22,20 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-use Tuleap\Git\Hook\PushDetails;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PushAnalyzer
+final class CommitAnalysisOrderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function __construct(private VerifyIsDefaultBranch $default_branch_verifier)
-    {
-    }
+    private const COMMIT_SHA1 = 'bb7870508a';
 
-    public function analyzePush(PushDetails $details): ?DefaultBranchPushReceived
+    public function testItBuildsFromComponents(): void
     {
-        if (! $this->default_branch_verifier->isDefaultBranch($details->getRefname())) {
-            return null;
-        }
-        $hashes = array_map(static fn(string $sha1) => CommitHash::fromString($sha1), $details->getRevisionList());
-        return new DefaultBranchPushReceived($details->getRepository(), $details->getUser(), $hashes);
+        $hash       = CommitHash::fromString(self::COMMIT_SHA1);
+        $user       = UserTestBuilder::buildWithDefaults();
+        $repository = $this->createStub(\GitRepository::class);
+
+        $order = CommitAnalysisOrder::fromComponents($hash, $user, $repository);
+
+        self::assertSame($hash, $order->getCommitHash());
+        self::assertSame($user, $order->getPusher());
+        self::assertSame($repository, $order->getRepository());
     }
 }

@@ -20,25 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\Asynchronous;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-use Tuleap\Git\Hook\CommitHash;
-use Tuleap\Test\Builders\UserTestBuilder;
-
-final class CommitAnalysisOrderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommitHashTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const COMMIT_SHA1 = 'bb7870508a';
+    private const COMMIT_SHA1 = '021edd5653';
 
-    public function testItBuildsFromComponents(): void
+    public function testItBuildsFromSha1String(): void
     {
-        $hash       = CommitHash::fromString(self::COMMIT_SHA1);
-        $user       = UserTestBuilder::buildWithDefaults();
-        $repository = $this->createStub(\GitRepository::class);
-
-        $order = CommitAnalysisOrder::fromComponents($hash, $user, $repository);
-
-        self::assertSame($hash, $order->getCommitHash());
-        self::assertSame($user, $order->getPusher());
-        self::assertSame($repository, $order->getRepository());
+        $hash = CommitHash::fromString(self::COMMIT_SHA1);
+        self::assertSame(self::COMMIT_SHA1, (string) $hash);
     }
 }
