@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
@@ -17,6 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_onlyoffice_download_document_token;
-DELETE FROM forgeconfig WHERE name = 'onlyoffice_document_server_url';
-DELETE FROM forgeconfig WHERE name = 'onlyoffice_document_server_secret';
+declare(strict_types=1);
+
+namespace Tuleap\OnlyOffice\Administration;
+
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeySecret;
+use Tuleap\Config\ConfigKeyString;
+
+#[ConfigKeyCategory('ONLYOFFICE')]
+final class OnlyOfficeDocumentServerSettings
+{
+    #[ConfigKey('URL of the ONLYOFFICE document server')]
+    #[ConfigKeyString]
+    public const URL = 'onlyoffice_document_server_url';
+
+    #[ConfigKey('JWT secret of the ONLYOFFICE document server')]
+    #[ConfigKeySecret]
+    public const SECRET = 'onlyoffice_document_server_secret';
+
+    private function __construct()
+    {
+    }
+}

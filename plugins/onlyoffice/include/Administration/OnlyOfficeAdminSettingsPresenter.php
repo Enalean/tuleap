@@ -29,7 +29,10 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
  */
 final class OnlyOfficeAdminSettingsPresenter
 {
-    public function __construct(public string $server_url, public CSRFSynchronizerTokenPresenter $csrf_token)
-    {
+    public function __construct(
+        public string $server_url,
+        public bool $has_existing_secret,
+        public CSRFSynchronizerTokenPresenter $csrf_token,
+    ) {
     }
 }

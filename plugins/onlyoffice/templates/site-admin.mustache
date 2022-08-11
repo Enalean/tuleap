@@ -15,13 +15,21 @@
                 </div>
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="server-key">{{# dgettext }} tuleap-onlyoffice | JWT secret {{/ dgettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label>
-                    <input type="password" size="50" class="tlp-input" id="server-key" name="server_key" required>
+                    <input
+                        type="password"
+                        size="50"
+                        class="tlp-input"
+                        id="server-key"
+                        name="server_key"
+                        required
+                        {{# has_existing_secret }}placeholder="{{# dgettext }} tuleap-onlyoffice | Current secret not displayed {{/ dgettext }}"{{/ has_existing_secret }}
+                    >
                 </div>
                 <section class="tlp-pane-section-submit">
                     {{# csrf_token }}
                         {{> csrf_token_input }}
                     {{/csrf_token}}
-                    <button class="tlp-button-primary" type="submit" disabled>
+                    <button class="tlp-button-primary" type="submit">
                         <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
                         {{# dgettext }} tuleap-onlyoffice | Save {{/ dgettext }}
                     </button>

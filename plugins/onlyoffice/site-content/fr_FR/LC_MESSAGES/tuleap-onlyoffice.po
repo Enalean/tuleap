@@ -9,8 +9,14 @@ msgstr ""
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr "Permet d'ouvrir des documents dans ONLYOFFICE"
 
+msgid "Current secret not displayed"
+msgstr "Le secret actuel n'est pas affiché"
+
 msgid "Document server URL"
 msgstr "URL du serveur de document"
+
+msgid "Document server settings have been saved"
+msgstr "Les paramètres du serveur de document ont été sauvegardés"
 
 msgid "JWT secret"
 msgstr "Secret JWT"

@@ -56,7 +56,7 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
         return new OnlyOfficeAdminSettingsController(
             $admin_page_renderer,
             ProvideCurrentUserStub::buildWithUser($current_user),
-            new OnlyOfficeAdminSettingsPresenter('https://onlyoffice.example.com/', CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store)))
+            new OnlyOfficeAdminSettingsPresenter('https://onlyoffice.example.com/', true, CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store)))
         );
     }
 }
