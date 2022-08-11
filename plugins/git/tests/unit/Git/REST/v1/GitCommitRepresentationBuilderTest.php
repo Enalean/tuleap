@@ -44,16 +44,22 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $metadata_retriever;
 
-    private GitCommitRepresentationBuilder $gitCommitRepresentationBuilder;
+    /**
+     * @var GitCommitRepresentationBuilder|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private GitCommitRepresentationBuilder $git_commit_representation_builder;
 
     protected function setUp(): void
     {
-        $this->metadata_retriever             = $this->createMock(CommitMetadataRetriever::class);
-        $this->url_manager                    = $this->createMock(\Git_GitRepositoryUrlManager::class);
-        $this->gitCommitRepresentationBuilder = new GitCommitRepresentationBuilder(
-            $this->metadata_retriever,
-            $this->url_manager
-        );
+        $this->metadata_retriever = $this->createMock(CommitMetadataRetriever::class);
+        $this->url_manager        = $this->createMock(\Git_GitRepositoryUrlManager::class);
+
+        $this->git_commit_representation_builder = $this
+            ->getMockBuilder(GitCommitRepresentationBuilder::class)
+            ->onlyMethods(["getCommitReferences"])
+            ->setConstructorArgs([$this->metadata_retriever, $this->url_manager])
+            ->getMock();
+        $this->git_commit_representation_builder->method("getCommitReferences")->willReturn([]);
 
         $user_helper_mock = $this->createMock(UserHelper::class);
         $user_helper_mock->method('getUserUrl')->willReturn("https://user.example.com");
@@ -96,7 +102,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("https://legend.example.git.com");
 
-        $representation = $this->gitCommitRepresentationBuilder->build($repository, $commit);
+        $representation = $this->git_commit_representation_builder->build($repository, $commit);
 
         self::assertEquals("jh4sh", $representation->id);
         self::assertEquals("Arthur", $representation->author_name);
@@ -138,7 +144,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("https://legend.example.git.com");
 
-        $representation = $this->gitCommitRepresentationBuilder->build($repository, $commit);
+        $representation = $this->git_commit_representation_builder->build($repository, $commit);
 
         self::assertEquals("jh4sh", $representation->id);
         self::assertEquals("Arthur", $representation->author_name);
@@ -182,7 +188,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->url_manager->method('getRepositoryBaseUrl')->with($repository)->willReturn("https://legend.example.git.com");
 
-        $representation = $this->gitCommitRepresentationBuilder->build($repository, $commit);
+        $representation = $this->git_commit_representation_builder->build($repository, $commit);
 
         self::assertEquals("jh4sh", $representation->id);
         self::assertEquals("Arthur", $representation->author_name);

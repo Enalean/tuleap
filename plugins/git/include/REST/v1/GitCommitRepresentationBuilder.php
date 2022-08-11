@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\REST\v1;
 
+use CrossReferenceFactory;
+use Git;
 use Git_GitRepositoryUrlManager;
 use GitRepository;
 use Tuleap\Git\CommitMetadata\CommitMetadata;
@@ -93,6 +95,23 @@ class GitCommitRepresentationBuilder
         );
     }
 
+    /**
+     * @return ReferenceRepresentation[]
+     * protected for testing purpose
+     */
+    protected function getCommitReferences(Commit $commit, GitRepository $repository): array
+    {
+        $cross_reference_factory = new CrossReferenceFactory(
+            $repository->getName() . "/" . $commit->GetHash(),
+            Git::REFERENCE_NATURE,
+            $repository->getProjectId()
+        );
+
+        $reference_builder = new ReferenceRepresentationBuilder($cross_reference_factory);
+
+        return $reference_builder->buildReferenceRepresentationList();
+    }
+
     private function buildGitCommitRepresentation(
         Commit $commit,
         string $message,
@@ -111,7 +130,8 @@ class GitCommitRepresentationBuilder
             $verification,
             $this->buildAuthorMetadata($metadata),
             $this->buildCommitStatusMetadata($metadata),
-            $this->url_manager->getRepositoryBaseUrl($repository)
+            $this->url_manager->getRepositoryBaseUrl($repository),
+            $this->getCommitReferences($commit, $repository),
         );
     }
 
