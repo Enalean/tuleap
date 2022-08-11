@@ -89,8 +89,8 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     ConfigGetCommand::NAME,
-    static function (): ConfigGetCommand {
-        return new ConfigGetCommand();
+    static function () use ($event_manager): ConfigGetCommand {
+        return new ConfigGetCommand($event_manager);
     }
 );
 $CLI_command_collector->addCommand(
