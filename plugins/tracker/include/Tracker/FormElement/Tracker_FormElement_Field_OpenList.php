@@ -1109,7 +1109,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $user = $user_manager->getUserById($key);
                 if ($user) {
                     $html .= '<li value="' . $user->getId() . '">';
-                    $html .= $hp->purify($user->getName());
+                    $html .= $hp->purify($user->getUserName());
                     $html .= '</li>';
                 }
             }

@@ -107,7 +107,7 @@ class JiraRunner
         try {
             $this->dao->deleteById($pending_import->getId());
 
-            $user = $this->user_manager->forceLogin($pending_import->getUser()->getName());
+            $user = $this->user_manager->forceLogin($pending_import->getUser()->getUserName());
             if (! $user->isAlive()) {
                 $this->logger->error('Unable to log in as the user who originated the event');
                 return;

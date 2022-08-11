@@ -59,6 +59,6 @@ class InvitationEmailLoginPresenter
 
         $this->current_user_real_name = $current_user->getRealName();
         $this->instance_name          = (string) ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
-        $this->recipient_name         = $recipient->getName();
+        $this->recipient_name         = $recipient->getUserName();
     }
 }

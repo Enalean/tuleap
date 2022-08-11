@@ -101,7 +101,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
             'user_notification_update',
             $notification_label,
             $tracker->getGroupId(),
-            [$user->getName(), $user->getId(), $tracker->getName()]
+            [$user->getUserName(), $user->getId(), $tracker->getName()]
         );
 
         $layout->addFeedback(

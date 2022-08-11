@@ -140,7 +140,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
 
         // Forbid access to other user's page (Developer Profile)
         if ((strpos($req_uri, '/users/') === 0) && (! $allow_user_browsing)) {
-            if ($req_uri != '/users/' . $user->getName()) {
+            if ($req_uri != '/users/' . $user->getUserName()) {
                 return false;
             }
         }

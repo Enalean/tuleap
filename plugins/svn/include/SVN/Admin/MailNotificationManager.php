@@ -322,7 +322,7 @@ class MailNotificationManager
         $users_not_added = [];
         foreach ($users as $user) {
             if (! $this->user_to_notify_dao->insert($notification->getId(), $user->getId())) {
-                $users_not_added[] = $user->getName();
+                $users_not_added[] = $user->getUserName();
             }
         }
 

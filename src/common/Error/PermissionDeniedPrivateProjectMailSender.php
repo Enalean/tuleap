@@ -37,7 +37,7 @@ final class PermissionDeniedPrivateProjectMailSender extends PermissionDeniedMai
             'mail_content_private_project',
             [
                 $user->getRealName(),
-                $user->getName(),
+                $user->getUserName(),
                 $link,
                 $project->getPublicName(),
                 $href_approval,

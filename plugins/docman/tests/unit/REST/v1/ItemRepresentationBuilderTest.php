@@ -127,7 +127,7 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $docman_item_id = 666;
         $current_user   = Mockery::mock(\PFUser::class);
         $current_user->shouldReceive('getId')->andReturns($owner_id);
-        $current_user->shouldReceive('getName')->andReturns('toto');
+        $current_user->shouldReceive('getUserName')->andReturns('toto');
         $current_user->shouldReceive('getUserName')->andReturns('toto');
         $current_user->shouldReceive('getRealName')->andReturns('toto');
         $current_user->shouldReceive('isAnonymous')->andReturns(false);

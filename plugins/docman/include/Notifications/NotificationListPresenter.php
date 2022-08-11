@@ -70,7 +70,7 @@ class NotificationListPresenter
                 'item_title'     => $item->getTitle(),
                 'user'           => new UserInvolvedInNotificationPresenter(
                     $user->getId(),
-                    $user->getName(),
+                    $user->getUserName(),
                     $user->getRealName(),
                     $user->getAvatarUrl()
                 ),

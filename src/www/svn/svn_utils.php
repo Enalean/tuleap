@@ -818,7 +818,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     $um = UserManager::instance();
 
     //check user access rights
-    $forbidden = svn_utils_get_forbidden_paths($um->getCurrentUser()->getName(), $project->getSVNRootPath());
+    $forbidden = svn_utils_get_forbidden_paths($um->getCurrentUser()->getUserName(), $project->getSVNRootPath());
 
     $select   = 'SELECT';
     $group_by = '';
