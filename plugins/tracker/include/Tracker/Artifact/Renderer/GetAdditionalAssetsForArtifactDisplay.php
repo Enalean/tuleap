@@ -24,26 +24,27 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Renderer;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
-class GetAdditionalJavascriptFilesForArtifactDisplay implements Dispatchable
+final class GetAdditionalAssetsForArtifactDisplay implements Dispatchable
 {
-    public const NAME = 'getAdditionalJavascriptFilesForArtifactDisplay';
+    public const NAME = 'getAdditionalAssetsForArtifactDisplay';
 
     /**
-     * @var string[]
+     * @var list<JavascriptAssetGeneric>
      */
-    private $file_urls = [];
+    private array $assets = [];
 
     /**
-     * @return string[]
+     * @return list<JavascriptAssetGeneric>
      */
-    public function getFileUrls(): array
+    public function getAssets(): array
     {
-        return $this->file_urls;
+        return $this->assets;
     }
 
-    public function add(string $file_url): void
+    public function add(JavascriptAssetGeneric $asset): void
     {
-        $this->file_urls[] = $file_url;
+        $this->assets[] = $asset;
     }
 }
