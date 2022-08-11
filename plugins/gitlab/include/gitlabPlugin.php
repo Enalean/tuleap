@@ -19,11 +19,19 @@
  */
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
+use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Gitlab\Admin\FeatureFlagGitLabLinkGroup;
+use Tuleap\Gitlab\Admin\GitLabLinkGroupController;
+use Tuleap\Gitlab\Admin\GitLabLinkGroupTabPresenter;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
@@ -143,7 +151,7 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class gitlabPlugin extends Plugin
+class gitlabPlugin extends Plugin implements PluginWithConfigKeys
 {
     public const SERVICE_NAME          = "gitlab";
     public const LOG_IDENTIFIER        = "gitlab_syslog";
@@ -183,6 +191,9 @@ class gitlabPlugin extends Plugin
         $this->addHook(ExternalSystemReferencePresentersCollector::NAME);
         $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
+
+        $this->addHook(GitAdminGetExternalPanePresenters::NAME);
+        $this->addHook(CollectGitRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -228,6 +239,14 @@ class gitlabPlugin extends Plugin
             $r->post('/repository/webhook', $this->getRouteHandler('routePostGitlabRepositoryWebhook'));
             $r->post('/integration/{integration_id:\d+}/webhook', $this->getRouteHandler('routePostIntegrationWebhook'));
         });
+    }
+
+    public function collectGitRoutesEvent(CollectGitRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->get(
+            '/{project_name}/administration/gitlab',
+            $this->getRouteHandler('routeGetGitlabLinkGroupsController')
+        );
     }
 
     public function routePostGitlabRepositoryWebhook(): GitlabRepositoryWebhookController
@@ -890,5 +909,51 @@ class gitlabPlugin extends Plugin
         }
 
         $event->addAction($button_action);
+    }
+
+    public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
+    {
+        if (! FeatureFlagGitLabLinkGroup::isEnabled()) {
+            return;
+        }
+
+        if ($event->getCurrentTabName() === GitLabLinkGroupTabPresenter::PANE_NAME) {
+            $event->addExternalPanePresenter(GitLabLinkGroupTabPresenter::withActiveState($event->getProject()));
+            return;
+        }
+        $event->addExternalPanePresenter(GitLabLinkGroupTabPresenter::withInactiveState($event->getProject()));
+    }
+
+    public function routeGetGitlabLinkGroupsController(): GitLabLinkGroupController
+    {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+        assert($git_plugin instanceof GitPlugin);
+
+        $fine_grained_dao = new FineGrainedDao();
+
+        return new GitLabLinkGroupController(
+            ProjectManager::instance(),
+            EventManager::instance(),
+            $git_plugin->getHeaderRenderer(),
+            $git_plugin->getMirrorDataMapper(),
+            new GitPermissionsManager(
+                new Git_PermissionsDao(),
+                new Git_SystemEventManager(
+                    SystemEventManager::instance(),
+                    new GitRepositoryFactory(
+                        new GitDao(),
+                        ProjectManager::instance()
+                    )
+                ),
+                $fine_grained_dao,
+                new FineGrainedRetriever($fine_grained_dao)
+            ),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
+        );
+    }
+
+    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(FeatureFlagGitLabLinkGroup::class);
     }
 }

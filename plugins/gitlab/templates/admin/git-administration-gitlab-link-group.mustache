@@ -1,0 +1,19 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally" data-test="git-administration-page">{{ git_admin }}</h1>
+
+    <nav class="tlp-tabs">
+        <a class="tlp-tab" href="/plugins/git/?action=admin-gerrit-templates&group_id={{ project_id }}">{{ tab_gerrit_templates }}</a>
+        <a class="tlp-tab" href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
+        {{# are_mirrors_defined }}
+            <a class="tlp-tab" href="/plugins/git/?action=admin-mass-update&group_id={{ project_id }}">{{ tab_mass_update }}</a>
+        {{/ are_mirrors_defined }}
+        <a class="tlp-tab" href="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}">{{ tab_template_settings }}</a>
+        {{# external_pane_presenters }}
+            <a class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}" href="{{ getUrl }}">{{ getPaneName }}</a>
+        {{/ external_pane_presenters }}
+    </nav>
+
+    <section class="tlp-pane-section">
+        <h2>{{# dgettext }} tuleap-gitlab | GitLab Group Link {{/dgettext}}</h2>
+    </section>
+</div>

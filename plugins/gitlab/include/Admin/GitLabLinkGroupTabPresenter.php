@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit\Git\Administration;
+namespace Tuleap\Gitlab\Admin;
 
 use Project;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 
-class AdministrationPaneBuilder
+final class GitLabLinkGroupTabPresenter
 {
-    public const PANE_NAME = "hudson";
+    public const PANE_NAME = "gitlab";
 
-    public static function buildPane(Project $project): AdminExternalPanePresenter
+    public static function withInactiveState(Project $project): AdminExternalPanePresenter
     {
-        return new AdminExternalPanePresenter(
-            'Jenkins',
-            URLBuilder::buildUrl($project),
-            false
-        );
+        return self::buildWithState($project, false);
     }
 
-    public static function buildActivePane(Project $project): AdminExternalPanePresenter
+    public static function withActiveState(Project $project): AdminExternalPanePresenter
+    {
+        return self::buildWithState($project, true);
+    }
+
+    private static function buildWithState(Project $project, bool $is_active): AdminExternalPanePresenter
     {
         return new AdminExternalPanePresenter(
-            'Jenkins',
-            URLBuilder::buildUrl($project),
-            true
+            dgettext('tuleap-gitlab', 'GitLab Group Link'),
+            GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/gitlab',
+            $is_active
         );
     }
 }

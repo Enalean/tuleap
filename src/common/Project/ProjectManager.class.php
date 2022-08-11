@@ -27,6 +27,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipProjectVisibilityToggler;
@@ -37,7 +38,7 @@ use Tuleap\Project\Webhook\WebhookDao;
 use Tuleap\Project\Webhook\Retriever;
 use Tuleap\Webhook\Emitter;
 
-class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ProjectManager implements ProjectByIDFactory, ProjectByUnixNameFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[ConfigKey("Is project creation allowed to regular users (1) or not (0)")]
     public const CONFIG_PROJECTS_CAN_BE_CREATED = 'sys_use_project_registration';
@@ -393,7 +394,7 @@ class ProjectManager implements ProjectByIDFactory // phpcs:ignore PSR1.Classes.
         return $p;
     }
 
-    public function getProjectByCaseInsensitiveUnixName($name)
+    public function getProjectByCaseInsensitiveUnixName($name): ?Project
     {
         $dar = $this->_getDao()->searchByCaseInsensitiveUnixGroupName($name);
         if ($dar && ! $dar->isError() && $dar->rowCount() === 1) {
