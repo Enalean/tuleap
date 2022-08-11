@@ -27,11 +27,6 @@ import { getGitlabRepositoriesWithDefaultBranches } from "./fetch-gitlab-reposit
 let app: App<Element> | null = null;
 
 export async function init(create_branch_link: HTMLElement, mount_point: Element): Promise<void> {
-    const user_locale = document.body.dataset.userLocale;
-    if (!user_locale) {
-        return;
-    }
-
     if (!create_branch_link.dataset.integrations) {
         throw new Error("Missing integrations representations dataset");
     }
