@@ -76,7 +76,8 @@ onMounted((): void => {
 
 const has_properties_to_create = computed((): boolean => {
     return (
-        is_obsolescence_date_property_used.value || props.currentlyUpdatedItem.properties.length > 0
+        is_obsolescence_date_property_used.value ||
+        (props.currentlyUpdatedItem.properties && props.currentlyUpdatedItem.properties.length > 0)
     );
 });
 </script>
