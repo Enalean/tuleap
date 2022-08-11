@@ -25,6 +25,8 @@ namespace Tuleap\Test\Builders;
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfiguration;
 use Widget_Static;
 
 final class TestLayout extends BaseLayout
@@ -42,7 +44,7 @@ final class TestLayout extends BaseLayout
         $this->inspector  = $inspector;
     }
 
-    public function header(array $params)
+    public function header(HeaderConfiguration|array $params): void
     {
         $this->header_has_been_written = true;
     }
@@ -52,7 +54,7 @@ final class TestLayout extends BaseLayout
         return $this->header_has_been_written;
     }
 
-    public function footer(array $params)
+    public function footer(FooterConfiguration|array $params): void
     {
     }
 

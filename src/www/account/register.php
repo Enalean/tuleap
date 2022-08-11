@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\User\Account\RegistrationGuardEvent;
 
@@ -413,4 +414,4 @@ if (! $confirmation_register || ! isset($presenter, $template)) {
     $renderer->renderToPage($template, $presenter);
 }
 
-$GLOBALS['Response']->footer(['without_content' => true]);
+$GLOBALS['Response']->footer(FooterConfiguration::withoutContent());

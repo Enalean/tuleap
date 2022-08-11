@@ -136,9 +136,9 @@ abstract class BaseLayout extends Response
         $this->addJavascriptAsset(new JavascriptAsset(new \Tuleap\Layout\IncludeCoreAssets(), 'collect-frontend-errors.js'));
     }
 
-    abstract public function header(array $params);
+    abstract public function header(HeaderConfiguration|array $params): void;
     abstract protected function hasHeaderBeenWritten(): bool;
-    abstract public function footer(array $params);
+    abstract public function footer(FooterConfiguration|array $params): void;
     abstract public function displayStaticWidget(Widget_Static $widget);
     abstract public function includeCalendarScripts();
     abstract protected function getUser();

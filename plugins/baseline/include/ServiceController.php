@@ -28,6 +28,7 @@ use Project;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -141,7 +142,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                 'project_icon'        => EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
             ]
         );
-        $layout->footer(["without_content" => true]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 
     /**

@@ -14,7 +14,7 @@ function exit_error($title, $text = '')
     if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
         site_header(['title' => $Language->getText('include_exit', 'exit_error')]);
         echo '<p data-test="feedback">' . Codendi_HTMLPurifier::instance()->purify($text) . '</p>';
-        $HTML->footer(['showfeedback' => false]);
+        $HTML->footer([]);
     } else {
         exit_display_soap_error();
     }

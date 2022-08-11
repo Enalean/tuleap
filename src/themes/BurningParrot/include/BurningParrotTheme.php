@@ -40,6 +40,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
@@ -133,11 +135,20 @@ class BurningParrotTheme extends BaseLayout
     {
     }
 
-    public function header(array $params): void
+    public function header(HeaderConfiguration|array $params): void
     {
         $this->header_has_been_written = true;
         $project                       = null;
         $project_context               = null;
+        $in_project_without_sidebar    = false;
+
+        if ($params instanceof HeaderConfiguration) {
+            $in_project_without_sidebar = $params->in_project_without_sidebar;
+            $params                     = [
+                'title' => $params->title,
+            ];
+        }
+
         if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
 
@@ -208,8 +219,6 @@ class BurningParrotTheme extends BaseLayout
         );
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
-
-        $in_project_without_sidebar = $params['in_project_without_sidebar'] ?? false;
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
@@ -311,7 +320,7 @@ class BurningParrotTheme extends BaseLayout
         return $body_classes;
     }
 
-    public function footer(array $params)
+    public function footer(FooterConfiguration|array $params): void
     {
         $javascript_files = [];
         EventManager::instance()->processEvent(
@@ -351,13 +360,12 @@ class BurningParrotTheme extends BaseLayout
      * Note: there is an ugly dependency on the page content being rendered first.
      * Although this is the case, it's worth bearing in mind when refactoring.
      *
-     * @param array $params
-     * @return bool
+     * @param FooterConfiguration|array $params
      */
-    private function canShowFooter($params)
+    private function canShowFooter($params): bool
     {
-        if (! empty($params['without_content'])) {
-            return false;
+        if ($params instanceof FooterConfiguration) {
+            return $params->without_content === false;
         }
 
         if (empty($params['group']) && ! $this->show_sidebar) {

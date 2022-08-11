@@ -24,6 +24,8 @@ namespace Tuleap\OnlyOffice\Open;
 
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\ProjectAccessChecker;
@@ -64,16 +66,13 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
         }
 
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/open-in-onlyoffice.ts'));
-        $layout->header([
-            'title'                      => dgettext('tuleap-onlyoffice', 'ONLYOFFICE'),
-            'in_project_without_sidebar' => true,
-        ]);
+        $layout->header(
+            HeaderConfiguration::inProjectWithoutSidebar(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
+        );
 
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
         $renderer->renderToPage('open-in-onlyoffice', []);
 
-        $layout->footer([
-            'without_content' => true,
-        ]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 }

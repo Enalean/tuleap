@@ -35,6 +35,7 @@ use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\Search\ListOfSearchColumnDefinitionPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -107,7 +108,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             )
         );
 
-        $layout->footer(["without_content" => true]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 
     /**
