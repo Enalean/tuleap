@@ -26,6 +26,8 @@ use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Config\ConfigClassProvider;
+use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
@@ -36,6 +38,7 @@ use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
+use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
@@ -48,7 +51,7 @@ require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class onlyofficePlugin extends Plugin
+final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 {
     public function __construct(?int $id)
     {
@@ -86,6 +89,11 @@ final class onlyofficePlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
+    public function getConfigKeys(ConfigClassProvider $event): void
+    {
+        $event->addConfigClass(OnlyOfficeDocumentServerSettings::class);
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $routes): void
     {
         $route_collector = $routes->getRouteCollector();
@@ -97,6 +105,7 @@ final class onlyofficePlugin extends Plugin
             }
         );
         $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
+        $route_collector->post(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
     }
 
     public function routeGetDocumentDownload(): DocmanFileDownloadController
@@ -152,10 +161,28 @@ final class onlyofficePlugin extends Plugin
             new AdminPageRenderer(),
             UserManager::instance(),
             new OnlyOfficeAdminSettingsPresenter(
-                '',
-                CSRFSynchronizerTokenPresenter::fromToken(new CSRFSynchronizerToken(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL)),
+                ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, ''),
+                ForgeConfig::exists(OnlyOfficeDocumentServerSettings::SECRET),
+                CSRFSynchronizerTokenPresenter::fromToken(self::buildCSRFTokenAdmin()),
             )
         );
+    }
+
+    public function routePostAdminSettings(): \Tuleap\OnlyOffice\Administration\OnlyOfficeSaveAdminSettingsController
+    {
+        return new \Tuleap\OnlyOffice\Administration\OnlyOfficeSaveAdminSettingsController(
+            self::buildCSRFTokenAdmin(),
+            new \Tuleap\Config\ConfigSet(EventManager::instance(), new \Tuleap\Config\ConfigDao()),
+            new Valid_HTTPSURI(),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),
+        );
+    }
+
+    private static function buildCSRFTokenAdmin(): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL);
     }
 
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
