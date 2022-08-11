@@ -25,10 +25,12 @@ use Project;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 
-class GitlabRepositoryCreator
+class GitlabRepositoryCreator implements CreateGitlabRepositories
 {
     /**
      * @var DBTransactionExecutor
@@ -85,16 +87,6 @@ class GitlabRepositoryCreator
                 $gitlab_name_with_path = $gitlab_project->getPathWithNamespace();
                 $project_id            = (int) $project->getID();
 
-                if (
-                    $this->gitlab_repository_dao->isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(
-                        $gitlab_name_with_path,
-                        $gitlab_web_url,
-                        (int) $project->getID()
-                    )
-                ) {
-                    throw new GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException($gitlab_name_with_path);
-                }
-
                 $already_existing_gitlab_repository = $this->gitlab_repository_dao->isTheGitlabRepositoryAlreadyIntegratedInProject(
                     $project_id,
                     $gitlab_repository_id,
@@ -108,6 +100,17 @@ class GitlabRepositoryCreator
                     );
                 }
 
+
+                if (
+                    $this->gitlab_repository_dao->isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(
+                        $gitlab_name_with_path,
+                        $gitlab_web_url,
+                        (int) $project->getID()
+                    )
+                ) {
+                    throw new GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException($gitlab_name_with_path);
+                }
+
                 return $this->createGitlabRepositoryIntegration(
                     $credentials,
                     $gitlab_project,
@@ -118,6 +121,33 @@ class GitlabRepositoryCreator
         );
     }
 
+    /**
+     * @param GitlabProject[] $gitlab_projects
+     * @return GitlabRepositoryIntegration[]
+     *
+     * @throws GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException
+     */
+    public function integrateGitlabRepositoriesInProject(
+        Credentials $credentials,
+        array $gitlab_projects,
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration,
+    ): array {
+        $integrated_repositories = [];
+        foreach ($gitlab_projects as $gitlab_project) {
+            try {
+                $integrated_repositories[] = $this->integrateGitlabRepositoryInProject($credentials, $gitlab_project, $project, $configuration);
+            } catch (GitlabRepositoryAlreadyIntegratedInProjectException $exception) {
+                // do nothing, already integrated
+            }
+        }
+        return $integrated_repositories;
+    }
+
+    /**
+     * @throws GitlabResponseAPIException
+     * @throws GitlabRequestException
+     */
     private function createGitlabRepositoryIntegration(
         Credentials $credentials,
         GitlabProject $gitlab_project,
