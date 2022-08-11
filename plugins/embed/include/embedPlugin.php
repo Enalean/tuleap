@@ -20,8 +20,7 @@
 
 declare(strict_types=1);
 
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
+use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class embedPlugin extends Plugin
@@ -36,7 +35,7 @@ final class embedPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         if (defined('TRACKER_BASE_DIR')) {
-            $this->addHook(GetAdditionalJavascriptFilesForArtifactDisplay::NAME);
+            $this->addHook(GetAdditionalAssetsForArtifactDisplay::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -58,10 +57,14 @@ final class embedPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getAdditionalJavascriptFilesForArtifactDisplay(
-        GetAdditionalJavascriptFilesForArtifactDisplay $event,
+    public function getAdditionalAssetsForArtifactDisplay(
+        GetAdditionalAssetsForArtifactDisplay $event,
     ): void {
-        $include_assets = new IncludeAssets(__DIR__ . '/../frontend-assets', '/assets/embed');
-        $event->add($include_assets->getFileURL('embed.js'));
+        $event->add(
+            new \Tuleap\Layout\JavascriptViteAsset(
+                new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/embed'),
+                'scripts/index.ts'
+            )
+        );
     }
 }
