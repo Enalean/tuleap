@@ -22,13 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
-/**
- * @psalm-immutable
- */
-final class UnhandledTopicFault extends \Tuleap\NeverThrow\Fault
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
+
+interface BuildDefaultBranchPushProcessor
 {
-    public static function build(): \Tuleap\NeverThrow\Fault
-    {
-        return new self(sprintf('WorkerEvent topic did not match %s', AnalyzePushTask::TOPIC));
-    }
+    public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor;
 }

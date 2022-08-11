@@ -22,7 +22,7 @@ namespace Tuleap\Git\Hook;
 
 use Mockery;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
-use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
+use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
 use Tuleap\Git\Stub\VerifyIsDefaultBranchStub;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -112,10 +112,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             \Mockery::spy(WebhookRequestSender::class),
             \Mockery::spy(PostReceiveMailSender::class),
             $this->createStub(DefaultBranchPostReceiveUpdater::class),
-            new PushCommitsAnalyzer(
-                VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed(),
-                VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()
-            ),
+            new PushAnalyzer(VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()),
             $this->enqueuer
         );
         $post_receive->execute(
@@ -244,10 +241,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(WebhookRequestSender::class),
             $this->createStub(PostReceiveMailSender::class),
             $this->default_branch_post_receive_updater,
-            new PushCommitsAnalyzer(
-                VerifyArtifactClosureIsAllowedStub::withAlwaysAllowed(),
-                VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()
-            ),
+            new PushAnalyzer(VerifyIsDefaultBranchStub::withAlwaysDefaultBranch()),
             $this->enqueuer
         );
         $post_receive->beforeParsingReferences(self::REPOSITORY_PATH);

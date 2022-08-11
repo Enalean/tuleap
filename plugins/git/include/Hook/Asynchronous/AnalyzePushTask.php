@@ -23,24 +23,32 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\Asynchronous;
 
 use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
 
 /**
  * @psalm-immutable
  */
-final class AnalyzeCommitTask implements \Tuleap\Queue\QueueTask
+final class AnalyzePushTask implements \Tuleap\Queue\QueueTask
 {
     public const TOPIC = 'tuleap.git.hooks.post-receive';
 
     private function __construct(
-        private CommitHash $commit_hash,
+        /**
+         * @var list<string>
+         */
+        private array $commit_hashes,
         private int $git_repository_id,
         private int $pushing_user_id,
     ) {
     }
 
-    public static function fromCommit(CommitAnalysisOrder $order): self
+    public static function fromDefaultBranchPush(DefaultBranchPushReceived $push): self
     {
-        return new self($order->getCommitHash(), (int) $order->getRepository()->getId(), (int) $order->getPusher()->getId());
+        $commit_hashes = array_map(
+            static fn(CommitHash $commit_hash) => (string) $commit_hash,
+            $push->getCommitHashes()
+        );
+        return new self($commit_hashes, (int) $push->getRepository()->getId(), (int) $push->getPusher()->getId());
     }
 
     public function getTopic(): string
@@ -51,7 +59,7 @@ final class AnalyzeCommitTask implements \Tuleap\Queue\QueueTask
     public function getPayload(): array
     {
         return [
-            'commit_sha1'       => (string) $this->commit_hash,
+            'commit_hashes'     => $this->commit_hashes,
             'git_repository_id' => $this->git_repository_id,
             'pushing_user_id'   => $this->pushing_user_id,
         ];
@@ -59,6 +67,6 @@ final class AnalyzeCommitTask implements \Tuleap\Queue\QueueTask
 
     public function getPreEnqueueMessage(): string
     {
-        return 'Analyze commit pushed in git repository #' . $this->git_repository_id . ' by user #' . $this->pushing_user_id . ' with hash #' . $this->commit_hash;
+        return 'Analyze push in git repository #' . $this->git_repository_id . ' by user #' . $this->pushing_user_id;
     }
 }

@@ -20,23 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Stub;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisProcessor;
+use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Git\Hook\PushDetails;
+use Tuleap\Git\Hook\VerifyIsDefaultBranch;
 
-final class BuildCommitAnalysisProcessorStub implements \Tuleap\Git\Hook\Asynchronous\BuildCommitAnalysisProcessor
+final class PushAnalyzer
 {
-    private function __construct(private CommitAnalysisProcessor $processor)
+    public function __construct(private VerifyIsDefaultBranch $default_branch_verifier)
     {
     }
 
-    public static function withProcessor(CommitAnalysisProcessor $processor): self
+    public function analyzePush(PushDetails $details): ?DefaultBranchPushReceived
     {
-        return new self($processor);
-    }
-
-    public function getProcessor(\GitRepository $repository): CommitAnalysisProcessor
-    {
-        return $this->processor;
+        if (! $this->default_branch_verifier->isDefaultBranch($details->getRefname())) {
+            return null;
+        }
+        $hashes = array_map(static fn(string $sha1) => CommitHash::fromString($sha1), $details->getRevisionList());
+        return new DefaultBranchPushReceived($details->getRepository(), $details->getUser(), $hashes);
     }
 }

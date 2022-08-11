@@ -27,7 +27,8 @@ use GitRepository;
 use GitRepositoryFactory;
 use PFUser;
 use Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater;
-use Tuleap\Git\Hook\Asynchronous\AnalyzeCommitTask;
+use Tuleap\Git\Hook\Asynchronous\AnalyzePushTask;
+use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Webhook\WebhookRequestSender;
 use Tuleap\Queue\EnqueueTaskInterface;
@@ -49,7 +50,7 @@ class PostReceive
         private WebhookRequestSender $webhook_request_sender,
         private PostReceiveMailSender $mail_sender,
         private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater,
-        private PushCommitsAnalyzer $push_analyzer,
+        private PushAnalyzer $push_analyzer,
         private EnqueueTaskInterface $enqueuer,
     ) {
     }
@@ -117,10 +118,11 @@ class PostReceive
 
     private function dispatchAsynchronousMessageIfNeeded(PushDetails $details): void
     {
-        $events = $this->push_analyzer->analyzePushCommits($details);
-        foreach ($events as $event) {
-            $this->enqueuer->enqueue(AnalyzeCommitTask::fromCommit($event));
+        $default_branch_push = $this->push_analyzer->analyzePush($details);
+        if (! $default_branch_push) {
+            return;
         }
+        $this->enqueuer->enqueue(AnalyzePushTask::fromDefaultBranchPush($default_branch_push));
     }
 
     private function processGitWebhooks(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): void

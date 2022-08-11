@@ -26,6 +26,8 @@
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
 use Tuleap\Git\Hook\CrossReferencesExtractor;
+use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
+use Tuleap\Git\Hook\DefaultBranchVerifier;
 use Tuleap\Git\Hook\PostReceive;
 use Tuleap\Git\Hook\LogPushes;
 use Tuleap\Git\Hook\ParseLog;
@@ -134,7 +136,7 @@ $post_receive = new PostReceive(
     new \Tuleap\Git\DefaultBranch\DefaultBranchPostReceiveUpdater(
         new \Tuleap\Git\DefaultBranch\DefaultBranchUpdateExecutorAsGitoliteUser()
     ),
-    new \Tuleap\Git\Hook\PushCommitsAnalyzer($git_dao, new \Tuleap\Git\Hook\DefaultBranchVerifier($git_exec)),
+    new PushAnalyzer(new DefaultBranchVerifier($git_exec)),
     new EnqueueTask()
 );
 
