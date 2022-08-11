@@ -33,7 +33,7 @@
                 v-bind:currently-updated-item="item"
                 v-bind:parent="parent"
                 v-bind:properties="item.properties"
-                v-bind:status_value="item.status"
+                v-bind:status_value="item.status ? item.status : ''"
             />
             <creation-modal-permissions-section
                 v-if="item.permissions_for_groups"

@@ -27,7 +27,10 @@ export const refreshLink = async (
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
-    context.commit("replaceLinkWithNewVersion", { item_to_refresh, up_to_date_item });
+    context.commit("replaceLinkWithNewVersion", {
+        existing_item: item_to_refresh,
+        new_version: up_to_date_item,
+    });
 };
 
 export const refreshWiki = async (
@@ -36,7 +39,10 @@ export const refreshWiki = async (
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
-    context.commit("replaceWikiWithNewVersion", { item_to_refresh, up_to_date_item });
+    context.commit("replaceWikiWithNewVersion", {
+        existing_item: item_to_refresh,
+        new_version: up_to_date_item,
+    });
 };
 
 export const refreshEmbeddedFile = async (
@@ -45,5 +51,8 @@ export const refreshEmbeddedFile = async (
 ): Promise<void> => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
-    context.commit("replaceEmbeddedFilesWithNewVersion", { item_to_refresh, up_to_date_item });
+    context.commit("replaceEmbeddedFilesWithNewVersion", {
+        existing_item: item_to_refresh,
+        new_version: up_to_date_item,
+    });
 };
