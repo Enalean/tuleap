@@ -103,6 +103,7 @@ class HeaderPresenterBuilder
         ThemeVariantColor $theme_color,
         ThemeVariation $theme_variation,
         array $javascript_assets,
+        bool $in_project_without_sidebar,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->imgroot                  = $imgroot;
@@ -129,6 +130,7 @@ class HeaderPresenterBuilder
                 $this->shouldLogoBeDisplayed(),
                 $is_legacy_logo_customized,
                 $is_svg_logo_customized,
+                $in_project_without_sidebar,
                 $platform_banner,
             ),
             $theme_color,

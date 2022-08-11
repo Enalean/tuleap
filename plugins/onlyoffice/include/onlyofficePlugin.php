@@ -34,7 +34,6 @@ use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
 use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
@@ -42,6 +41,7 @@ use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
 use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
+use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -136,14 +136,14 @@ final class onlyofficePlugin extends Plugin
         }
     }
 
-    public function routeGetOpenOnlyOffice(): \Tuleap\Request\DispatchableWithRequest
+    public function routeGetOpenOnlyOffice(): OpenInOnlyOfficeController
     {
-        return new class implements \Tuleap\Request\DispatchableWithRequest {
-            public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
-            {
-                echo "Opening documents in OnlyOffice is not implemented yet";
-            }
-        };
+        return new OpenInOnlyOfficeController(
+            new \Tuleap\Layout\IncludeViteAssets(
+                __DIR__ . '/../frontend-assets/',
+                '/assets/onlyoffice'
+            )
+        );
     }
 
     public function routeGetAdminSettings(): OnlyOfficeAdminSettingsController

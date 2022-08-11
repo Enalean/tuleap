@@ -22,6 +22,9 @@ export function init(): void {
     if (!header) {
         return;
     }
+    if (header.classList.contains("in-project-without-sidebar")) {
+        return;
+    }
 
     const has_sidebar = document.body.classList.contains("has-sidebar");
     const has_sidebar_with_pinned_header = document.body.classList.contains(

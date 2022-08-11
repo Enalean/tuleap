@@ -43,6 +43,7 @@ class PresenterBuilder
         bool $should_logo_be_displayed,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
+        bool $in_project_without_sidebar,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner,
     ) {
         $event_manager = EventManager::instance();
@@ -68,6 +69,7 @@ class PresenterBuilder
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
             (new InviteBuddyConfiguration($event_manager))->canBuddiesBeInvited($current_user->user),
+            $in_project_without_sidebar,
         );
     }
 
