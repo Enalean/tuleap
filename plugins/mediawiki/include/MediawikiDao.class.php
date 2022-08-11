@@ -108,7 +108,7 @@ class MediawikiDao extends DataAccessObject
 
     public function getMediawikiGroupsForUser(PFUser $user, Project $project)
     {
-        $user_name = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
+        $user_name = $this->da->quoteSmart($this->getMediawikiUserName($user->getUserName()));
 
         $sql = "SELECT ug_group
                 FROM " . $this->getTableName($project, 'user_groups') . "
@@ -188,7 +188,7 @@ class MediawikiDao extends DataAccessObject
 
     private function getMediawikiUserId(PFUser $user, Project $project)
     {
-        $user_name = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
+        $user_name = $this->da->quoteSmart($this->getMediawikiUserName($user->getUserName()));
 
         $sql = "SELECT user_id
                 FROM " . $this->getTableName($project, 'user') . "
@@ -288,7 +288,7 @@ class MediawikiDao extends DataAccessObject
     {
         $group_id      = $this->da->escapeInt($project->getID());
         $forge_user_id = $this->da->escapeInt($user->getId());
-        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
+        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user->getUserName()));
 
         $this->deleteUserGroupsForUser($project, $user_name);
         $this->feedMediawikiUserGroupsWithTuleapMapping($project, $group_id, $forge_user_id);

@@ -77,7 +77,7 @@ class LDAP_SearchPeople extends Search_SearchPeople
         $directory_uri = $this->buildLinkToDirectory($ldap_result, $ldap_result->getCommonName());
         $user          = $this->manager->getUserByLdapId($ldap_result->getEdUid());
         if ($user) {
-            return new LDAP_SearchPeopleResultPresenter($user->getRealName(), $user->getAvatarUrl(), $directory_uri, $user->getUnixName());
+            return new LDAP_SearchPeopleResultPresenter($user->getRealName(), $user->getAvatarUrl(), $directory_uri, $user->getUserName());
         }
         return new LDAP_SearchPeopleResultPresenter($ldap_result->getCommonName(), PFUser::DEFAULT_AVATAR_URL, $directory_uri);
     }

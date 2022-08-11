@@ -95,7 +95,7 @@ class UserDetailsPresenter
     ) {
         $this->id    = $user->getId();
         $this->name  = $user->getRealName();
-        $this->login = $user->getUnixName();
+        $this->login = $user->getUserName();
         $this->email = $user->getEmail();
 
         if ((int) $user->getExpiryDate() !== 0) {

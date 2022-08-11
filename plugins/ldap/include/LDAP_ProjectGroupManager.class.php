@@ -187,7 +187,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         if ($user->isAdmin($project_id)) {
             $project_log_dao->groupAddHistory(
                 'project_admins_daily_synchronization_user_not_removed',
-                $user->getUnixName(),
+                $user->getUserName(),
                 $this->id,
                 []
             );

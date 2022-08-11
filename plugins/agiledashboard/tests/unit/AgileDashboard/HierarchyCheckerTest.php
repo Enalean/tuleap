@@ -50,7 +50,7 @@ class AgileDashboard_HierarchyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $project       = \Mockery::spy(\Project::class, ['getID' => 34, 'getUnixName' => false, 'isPublic' => false]);
+        $project       = \Mockery::spy(\Project::class, ['getID' => 34, 'getUserName' => false, 'isPublic' => false]);
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(12);
         $this->tracker->shouldReceive('getProject')->andReturn($project);

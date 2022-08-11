@@ -66,7 +66,7 @@ class NotificationsManager_DeleteTest extends \Tuleap\Test\PHPUnit\TestCase
         $item->shouldReceive('getId')->andReturns(1);
         $params = ['item' => $item];
 
-        $project                   = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $project                   = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
         $feedback                  = \Mockery::spy(\Feedback::class);
         $mail_builder              = \Mockery::spy(\MailBuilder::class);
         $notifications_dao         = \Mockery::spy(\Tuleap\Docman\Notifications\UsersToNotifyDao::class);

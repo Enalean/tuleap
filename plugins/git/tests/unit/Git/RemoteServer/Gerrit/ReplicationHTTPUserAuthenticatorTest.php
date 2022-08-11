@@ -77,7 +77,7 @@ class ReplicationHTTPUserAuthenticatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_validator->shouldReceive('isLoginAnHTTPUserLogin')->andReturns(true);
 
         $replication_http_user = $replication_user_authenticator->authenticate($repository, $user_login, new ConcealedString('password'));
-        $this->assertEquals($user_login, $replication_http_user->getUnixName());
+        $this->assertEquals($user_login, $replication_http_user->getUserName());
     }
 
     public function testItRejectsInvalidPassword(): void

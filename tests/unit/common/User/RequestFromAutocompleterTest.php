@@ -57,7 +57,7 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->developers      = new ProjectUGroup(['ugroup_id' => 103]);
         $this->secret          = new ProjectUGroup(['ugroup_id' => 104]);
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
         $this->current_user->shouldReceive('isMemberOfUGroup')->with($this->developers->getId(), $this->project->getId())->andReturns(true);
         $this->current_user->shouldReceive('isMemberOfUGroup')->with($this->secret->getId(), $this->project->getId())->andReturns(false);
 

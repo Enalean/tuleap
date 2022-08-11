@@ -185,7 +185,7 @@ class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $d->shouldReceive('getParentId')->andReturns('b');
 
         $group_id = 101;
-        $project  = \Mockery::spy(\Project::class, ['getID' => $group_id, 'getUnixName' => false, 'isPublic' => false]);
+        $project  = \Mockery::spy(\Project::class, ['getID' => $group_id, 'getUserName' => false, 'isPublic' => false]);
 
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns('user');

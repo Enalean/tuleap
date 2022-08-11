@@ -50,8 +50,8 @@ final class ArtifactLinksUsageDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->dao        = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->duplicator = new ArtifactLinksUsageDuplicator($this->dao);
 
-        $this->template = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-        $this->project  = \Mockery::spy(\Project::class, ['getID' => 102, 'getUnixName' => false, 'isPublic' => false]);
+        $this->template = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
+        $this->project  = \Mockery::spy(\Project::class, ['getID' => 102, 'getUserName' => false, 'isPublic' => false]);
     }
 
     public function testItActivatesTheArtifactLinkTypesIfTemplateAlreadyUseThem(): void

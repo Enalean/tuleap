@@ -80,7 +80,7 @@ class KanbanXmlImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry();
 
         $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
-        $this->project             = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project             = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
         $this->kanban_xml_importer = new KanbanXmlImporter(
             \Mockery::spy(\Psr\Log\LoggerInterface::class),
             $this->kanban_manager,

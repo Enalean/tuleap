@@ -64,7 +64,7 @@ class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
 
         $pfo_user = \Mockery::mock(\PFO_User::class);
-        $pfo_user->shouldReceive('getUnixName')->andReturns('username');
+        $pfo_user->shouldReceive('getUserName')->andReturns('username');
         $this->http_access_control->shouldReceive('getUser')->andReturns($pfo_user);
 
         $user = \Mockery::mock(\PFUser::class);
@@ -88,7 +88,7 @@ class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
 
         $pfo_user = \Mockery::mock(\PFO_User::class);
-        $pfo_user->shouldReceive('getUnixName')->andReturns('username');
+        $pfo_user->shouldReceive('getUserName')->andReturns('username');
         $this->http_access_control->shouldReceive('getUser')->andReturns($pfo_user);
 
         $user = \Mockery::mock(\PFUser::class);
@@ -133,7 +133,7 @@ class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
 
         $pfo_user = \Mockery::mock(\PFO_User::class);
-        $pfo_user->shouldReceive('getUnixName')->andReturns('username');
+        $pfo_user->shouldReceive('getUserName')->andReturns('username');
         $this->http_access_control->shouldReceive('getUser')->andReturns($pfo_user);
 
         $user = \Mockery::mock(\PFUser::class);

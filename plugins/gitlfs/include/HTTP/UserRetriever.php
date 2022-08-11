@@ -81,7 +81,7 @@ class UserRetriever
         if ($pfo_user === null) {
             return null;
         }
-        $user = $this->user_manager->getUserByUserName($pfo_user->getUnixName());
+        $user = $this->user_manager->getUserByUserName($pfo_user->getUserName());
         if ($user === null) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }

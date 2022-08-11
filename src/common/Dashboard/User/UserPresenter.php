@@ -32,7 +32,7 @@ class UserPresenter
     public function __construct(PFUser $user)
     {
         $this->real_name  = $user->getRealName();
-        $this->login      = $user->getUnixName();
+        $this->login      = $user->getUserName();
         $this->has_avatar = $user->hasAvatar();
         $this->avatar_url = $user->getAvatarUrl();
         $this->avatar_alt = _('User avatar');

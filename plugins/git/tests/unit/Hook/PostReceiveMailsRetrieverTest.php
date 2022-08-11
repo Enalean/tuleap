@@ -38,7 +38,7 @@ final class PostReceiveMailsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $project = \Mockery::spy(\Project::class, ['getID' => 42, 'getUnixName' => false, 'isPublic' => false]);
+        $project = \Mockery::spy(\Project::class, ['getID' => 42, 'getUserName' => false, 'isPublic' => false]);
 
         $this->repository = Mockery::mock(GitRepository::class);
         $this->repository->shouldReceive('getId')->andReturn(101);

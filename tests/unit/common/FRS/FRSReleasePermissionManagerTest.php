@@ -67,7 +67,7 @@ class FRSReleasePermissionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->release_factory
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 100, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 100, 'getUserName' => false, 'isPublic' => false]);
         $this->user    = \Mockery::spy(\PFUser::class);
         $this->release = \Mockery::spy(\FRSRelease::class);
     }
