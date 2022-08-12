@@ -20,25 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-/**
- * I hold the SHA-1 hash of a git commit
- * @psalm-immutable
- */
-final class CommitHash
+interface VerifyIsDefaultBranch
 {
-    private function __construct(private string $sha1)
-    {
-    }
-
-    public static function fromString(string $sha1): self
-    {
-        return new self($sha1);
-    }
-
-    public function __toString(): string
-    {
-        return $this->sha1;
-    }
+    public function isDefaultBranch(string $refname): bool;
 }

@@ -20,15 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook;
+namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-final class CommitHashTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DefaultBranchVerifier implements VerifyIsDefaultBranch
 {
-    private const COMMIT_SHA1 = '021edd5653';
+    private const BRANCH_REF = 'refs/heads/';
 
-    public function testItBuildsFromSha1String(): void
+    public function __construct(private \Git_Exec $git_exec)
     {
-        $hash = CommitHash::fromString(self::COMMIT_SHA1);
-        self::assertSame(self::COMMIT_SHA1, (string) $hash);
+    }
+
+    public function isDefaultBranch(string $refname): bool
+    {
+        $default_branch = $this->git_exec->getDefaultBranch();
+        return $refname === self::BRANCH_REF . $default_branch;
     }
 }

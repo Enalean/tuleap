@@ -26,8 +26,8 @@
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
 use Tuleap\Git\Hook\CrossReferencesExtractor;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchVerifier;
 use Tuleap\Git\Hook\DefaultBranchPush\PushAnalyzer;
-use Tuleap\Git\Hook\DefaultBranchVerifier;
 use Tuleap\Git\Hook\PostReceive;
 use Tuleap\Git\Hook\LogPushes;
 use Tuleap\Git\Hook\ParseLog;

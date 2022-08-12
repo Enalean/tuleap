@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
-use Tuleap\Git\Hook\CommitHash;
+use Tuleap\Git\Hook\DefaultBranchPush\CommitHash;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;

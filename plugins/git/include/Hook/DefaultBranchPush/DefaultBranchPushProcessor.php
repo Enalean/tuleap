@@ -25,7 +25,6 @@ namespace Tuleap\Git\Hook\DefaultBranchPush;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\CommitMetadata\GitCommitReferenceString;
 use Tuleap\Git\CommitMetadata\RetrieveCommitMessage;
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\NeverThrow\Err;

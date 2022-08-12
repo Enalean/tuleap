@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 use Tuleap\Event\Events\PotentialReferencesReceived;
-use Tuleap\Git\Hook\CommitHash;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;

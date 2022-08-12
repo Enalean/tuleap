@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\Git\Hook\Asynchronous\CommitAnalysisOrder;
-use Tuleap\Git\Hook\CommitHash;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DefaultBranchPushReceivedTest extends \Tuleap\Test\PHPUnit\TestCase
