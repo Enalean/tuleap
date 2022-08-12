@@ -45,6 +45,8 @@ use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
 use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -148,6 +150,14 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function routeGetOpenOnlyOffice(): OpenInOnlyOfficeController
     {
         return new OpenInOnlyOfficeController(
+            UserManager::instance(),
+            ProjectManager::instance(),
+            new ProjectAccessChecker(
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            new \Docman_ItemFactory(),
+            new \Docman_VersionFactory(),
             new \Tuleap\Layout\IncludeViteAssets(
                 __DIR__ . '/../frontend-assets/',
                 '/assets/onlyoffice'

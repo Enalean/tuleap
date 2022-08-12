@@ -26,15 +26,43 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Request\NotFoundException;
 
 final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWithBurningParrot, \Tuleap\Request\DispatchableWithRequest
 {
-    public function __construct(private IncludeViteAssets $assets)
-    {
+    public function __construct(
+        private \UserManager $user_manager,
+        private \ProjectManager $project_manager,
+        private ProjectAccessChecker $project_access_checker,
+        private \Docman_ItemFactory $item_factory,
+        private \Docman_VersionFactory $version_factory,
+        private IncludeViteAssets $assets,
+    ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        $item = $this->item_factory->getItemFromDb((int) $variables['id']);
+        if (! $item instanceof \Docman_File) {
+            throw new NotFoundException();
+        }
+
+        $user = $this->user_manager->getCurrentUser();
+
+        $docman_permissions_manager = \Docman_PermissionsManager::instance($item->getGroupId());
+        if (! $docman_permissions_manager->userCanAccess($user, $item->getId())) {
+            throw new NotFoundException();
+        }
+
+        $version = $this->version_factory->getCurrentVersionForItem($item);
+        if ($version === null) {
+            throw new NotFoundException();
+        }
+        if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($version->getFilename())) {
+            throw new NotFoundException();
+        }
+
         $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/open-in-onlyoffice.ts'));
         $layout->header([
             'title'                      => dgettext('tuleap-onlyoffice', 'ONLYOFFICE'),
