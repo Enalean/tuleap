@@ -39,7 +39,6 @@ use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\OAuth2Server\Administration\OAuth2AppProjectVerifier;
 use Tuleap\OAuth2Server\Administration\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\Administration\SiteAdmin\SiteAdminListAppsController;
@@ -216,7 +215,7 @@ final class oauth2_serverPlugin extends Plugin
             new AdminPageRenderer(),
             UserManager::instance(),
             \Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder::buildSelf(),
-            new IncludeAssets(__DIR__ . '/../frontend-assets', '/assets/oauth2_server'),
+            new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/oauth2_server'),
             new CSRFSynchronizerToken(self::CSRF_TOKEN_APP_EDITION)
         );
     }

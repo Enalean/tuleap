@@ -39,6 +39,15 @@ final class CssViteAsset implements CssAssetGeneric
         );
     }
 
+    /**
+     * @throws IncludeAssetsManifestException
+     * @throws IncludeAssetsException
+     */
+    public static function fromFileName(IncludeViteAssets $include_assets, string $file_name): self
+    {
+        return new self($include_assets->getFileURL($file_name));
+    }
+
     public function getFileURL(ThemeVariation $variant): string
     {
         return $this->file_url;

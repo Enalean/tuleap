@@ -27,8 +27,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssViteAsset;
+use Tuleap\Layout\IncludeViteAssets;
 
 class AuthorizationFormRenderer
 {
@@ -67,9 +67,9 @@ class AuthorizationFormRenderer
     ): ResponseInterface {
         $presenter = $this->presenter_builder->build($data);
         $layout->addCssAsset(
-            new CssAssetWithoutVariantDeclinaisons(
-                new IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/oauth2_server'),
-                'authorization-form-style'
+            CssViteAsset::fromFileName(
+                new IncludeViteAssets(__DIR__ . '/../../frontend-assets', '/assets/oauth2_server'),
+                'themes/authorization-form.scss'
             )
         );
 

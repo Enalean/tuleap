@@ -5,19 +5,19 @@ specifiers:
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
   '@tuleap/gettext': link:../../lib/frontend/gettext
-  '@tuleap/tlp': link:../../src/themes/tlp
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   '@types/sprintf-js': ^1.1.2
   sprintf-js: ^1.1.2
 
 dependencies:
   '@tuleap/copy-to-clipboard': link:../../lib/frontend/copy-to-clipboard
   '@tuleap/gettext': link:../../lib/frontend/gettext
+  '@tuleap/tlp-modal': link:../../lib/frontend/tlp-modal
   sprintf-js: 1.1.2
 
 devDependencies:
   '@tuleap/build-system-configurator': link:../../lib/frontend/build-system-configurator
   '@tuleap/cypress-utilities-support': link:../../lib/test-utils/cypress-utilities-support
-  '@tuleap/tlp': link:../../src/themes/tlp
   '@types/sprintf-js': 1.1.2
 
 packages:

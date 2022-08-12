@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Administration\ProjectAdmin;
 
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenter;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -41,8 +41,6 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $renderer;
     /** @var \PHPUnit\Framework\MockObject\MockObject&AdminOAuth2AppsPresenterBuilder */
     private $presenter_builder;
-    /** @var \PHPUnit\Framework\MockObject\MockObject&IncludeAssets */
-    private $include_assets;
     /** @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject */
     private $csrf_token;
 
@@ -51,13 +49,13 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->layout_helper     = new LayoutHelperPassthrough();
         $this->renderer          = $this->createMock(\TemplateRenderer::class);
         $this->presenter_builder = $this->createMock(AdminOAuth2AppsPresenterBuilder::class);
-        $this->include_assets    = $this->createMock(IncludeAssets::class);
+        $include_assets          = new IncludeViteAssets(__DIR__, 'tests');
         $this->csrf_token        = $this->createMock(\CSRFSynchronizerToken::class);
         $this->controller        = new ListAppsController(
             $this->layout_helper,
             $this->renderer,
             $this->presenter_builder,
-            $this->include_assets,
+            $include_assets,
             $this->csrf_token
         );
     }
@@ -68,10 +66,8 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $current_user = UserTestBuilder::aUser()->build();
         $this->layout_helper->setCallbackParams($project, $current_user);
 
-        $request = HTTPRequestBuilder::get()->build();
-        $layout  = LayoutBuilder::build();
-        $this->include_assets->expects(self::once())->method('getFileURL')->with('administration.js');
-        $this->include_assets->method('getPath')->with('administration-style');
+        $request   = HTTPRequestBuilder::get()->build();
+        $layout    = LayoutBuilder::build();
         $presenter = AdminOAuth2AppsPresenter::forProjectAdministration($project, [], $this->csrf_token, null);
         $this->presenter_builder->expects(self::once())->method('buildProjectAdministration')
             ->with($this->csrf_token, $project)
