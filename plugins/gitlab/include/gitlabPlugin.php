@@ -77,6 +77,8 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferencePa
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
@@ -893,8 +895,8 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 new \Cocur\Slugify\Slugify(),
                 new CreateBranchPrefixDao()
             ),
-            new \Tuleap\Layout\JavascriptViteAsset(
-                new \Tuleap\Layout\IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/gitlab'),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/gitlab'),
                 'scripts/artifact-create-branch-action/src/index.ts'
             )
         );
@@ -934,6 +936,10 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
         return new GitLabLinkGroupController(
             ProjectManager::instance(),
             EventManager::instance(),
+            new JavascriptViteAsset(
+                new IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/gitlab'),
+                'scripts/gitlab-group-link/src/index.ts'
+            ),
             $git_plugin->getHeaderRenderer(),
             $git_plugin->getMirrorDataMapper(),
             new GitPermissionsManager(

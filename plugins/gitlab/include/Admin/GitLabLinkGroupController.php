@@ -32,6 +32,7 @@ use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -44,6 +45,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
     public function __construct(
         private ProjectByUnixNameFactory $project_manager,
         private EventDispatcherInterface $event_manager,
+        private JavascriptAssetGeneric $assets,
         private HeaderRenderer $header_renderer,
         private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private GitPermissionsManager $git_permissions_manager,
@@ -68,6 +70,8 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
             throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
         }
 
+        $layout->addJavascriptAsset($this->assets);
+
         $this->header_renderer->renderServiceAdministrationHeader(
             $request,
             $user,
@@ -80,9 +84,9 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         $this->renderer->renderToPage(
             'git-administration-gitlab-link-group',
             new GitLabLinkGroupPanePresenter(
-                (int) $project->getID(),
+                $project,
                 ! empty($this->mirror_data_mapper->fetchAllForProject($project)),
-                $event->getExternalPanePresenters()
+                $event->getExternalPanePresenters(),
             )
         );
 

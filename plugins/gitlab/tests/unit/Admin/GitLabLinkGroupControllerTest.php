@@ -29,11 +29,15 @@ use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\ProjectByUnixNameFactory;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\JavascriptAssetGenericBuilder;
+use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Test\Stubs\ProjectByUnixUnixNameFactory;
 
 class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -57,12 +61,11 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&TemplateRenderer
      */
     private $template_renderer;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BaseLayout
-     */
-    private $layout;
+
+    private BaseLayout $layout;
     private \HTTPRequest $request;
     private \Project $project;
+    private JavascriptAssetGeneric $assets;
 
     protected function setUp(): void
     {
@@ -72,7 +75,8 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mirror_data_mapper     = $this->createStub(Git_Mirror_MirrorDataMapper::class);
         $this->git_permission_manager = $this->createStub(GitPermissionsManager::class);
         $this->template_renderer      = $this->createMock(TemplateRenderer::class);
-        $this->layout                 = $this->createMock(BaseLayout::class);
+        $this->layout                 = LayoutBuilder::build();
+        $this->assets                 = JavascriptAssetGenericBuilder::build();
         $this->request                = new \HTTPRequest();
         $this->request->setCurrentUser($current_user);
 
@@ -87,12 +91,7 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $controller = $this->getController(
             ProjectByUnixUnixNameFactory::buildWithoutProject(),
-            new class implements EventDispatcherInterface {
-                public function dispatch(object $event)
-                {
-                    return $event;
-                }
-            }
+            EventDispatcherStub::withIdentityCallback()
         );
 
         $this->expectException(NotFoundException::class);
@@ -116,12 +115,7 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $controller = $this->getController(
             ProjectByUnixUnixNameFactory::buildWith($project),
-            new class implements EventDispatcherInterface {
-                public function dispatch(object $event)
-                {
-                    return $event;
-                }
-            }
+            EventDispatcherStub::withIdentityCallback()
         );
 
         $this->expectException(NotFoundException::class);
@@ -141,12 +135,7 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $controller = $this->getController(
             ProjectByUnixUnixNameFactory::buildWith($this->project),
-            new class implements EventDispatcherInterface {
-                public function dispatch(object $event)
-                {
-                    return $event;
-                }
-            }
+            EventDispatcherStub::withIdentityCallback()
         );
 
         $this->expectException(ForbiddenException::class);
@@ -165,16 +154,18 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $gitlab_tab  = GitLabLinkGroupTabPresenter::withActiveState($this->project);
         $another_tab = new AdminExternalPanePresenter('Another pane', 'url/to/another/pane', false);
 
+        $external_tabs = [$gitlab_tab, $another_tab];
+
         $this->git_permission_manager->method('userIsGitAdmin')->willReturn(true);
         $this->mirror_data_mapper->method('fetchAllForProject')->willReturn([]);
 
         $this->header_renderer->expects(self::once())->method('renderServiceAdministrationHeader');
-        $this->layout->expects(self::once())->method("footer");
+
         $this->template_renderer->expects(self::once())
             ->method('renderToPage')
             ->with(
                 'git-administration-gitlab-link-group',
-                new GitLabLinkGroupPanePresenter(self::PROJECT_ID, false, [
+                new GitLabLinkGroupPanePresenter($this->project, false, [
                     $gitlab_tab,
                     $another_tab,
                 ])
@@ -182,27 +173,14 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->getController(
             ProjectByUnixUnixNameFactory::buildWith($this->project),
-            new class ([$gitlab_tab, $another_tab]) implements EventDispatcherInterface {
-                /**
-                 * @param AdminExternalPanePresenter[] $tabs
-                 */
-                public function __construct(private array $tabs)
-                {
-                }
-
-                public function dispatch(object $event)
-                {
-                    if (! ($event instanceof GitAdminGetExternalPanePresenters)) {
-                        return $event;
-                    }
-
-                    foreach ($this->tabs as $tab) {
+            EventDispatcherStub::withCallback(
+                static function (GitAdminGetExternalPanePresenters $event) use ($external_tabs) {
+                    foreach ($external_tabs as $tab) {
                         $event->addExternalPanePresenter($tab);
                     }
-
                     return $event;
                 }
-            }
+            )
         )->process(
             $this->request,
             $this->layout,
@@ -219,6 +197,7 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         return new GitLabLinkGroupController(
             $project_by_id_factory,
             $event_dispatcher,
+            $this->assets,
             $this->header_renderer,
             $this->mirror_data_mapper,
             $this->git_permission_manager,

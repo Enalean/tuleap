@@ -41,7 +41,7 @@ msgid "GitLab Branch"
 msgstr "Branche GitLab"
 
 msgid "GitLab Group Link"
-msgstr "Lien vers un group GitLab"
+msgstr "Lien vers un groupe GitLab"
 
 msgid "GitLab Tag"
 msgstr "Étiquette GitLab"

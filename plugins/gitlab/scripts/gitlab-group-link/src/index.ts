@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,29 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { init } from "./gitlab-group-link";
 
-namespace Tuleap\Gitlab\Admin;
-
-use GitPresenters_AdminPresenter;
-
-final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
-{
-    public string $current_project_name;
-
-    public function __construct(
-        \Project $project,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-    ) {
-        parent::__construct((int) $project->getID(), $are_mirrors_defined, $external_pane_presenters);
-
-        $this->current_project_name = $project->getPublicName();
+document.addEventListener("DOMContentLoaded", async () => {
+    const mount_point = document.getElementById("gitlab-group-link-app");
+    if (!(mount_point instanceof HTMLElement)) {
+        throw new Error("Cannot find the mount point for the GitLab Group Link app.");
     }
 
-    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function form_action(): string
-    {
-        return '';
-    }
-}
+    await init(mount_point);
+});

@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%{ current_project_name } is currently not linked to a GitLab group"
+msgstr ""
+"%{ current_project_name } n'est actuellement pas lié avec un groupe GitLab"
+
+msgid "Link a GitLab group to import the GitLab projects of the group."
+msgstr "Liez un groupe GitLab pour importer les projets GitLab du groupe."
