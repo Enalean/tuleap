@@ -117,6 +117,7 @@ use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingReferencesHandler;
+use Tuleap\Tracker\Artifact\Closure\ArtifactWasClosedCache;
 use Tuleap\Tracker\Artifact\CrossReference\CrossReferenceArtifactOrganizer;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
 use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
@@ -2590,6 +2591,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $reference_manager,
             $artifact_factory,
             $user_manager,
+            new ArtifactWasClosedCache(),
             new ArtifactCloser(
                 new StatusFieldRetriever($status_semantic_factory),
                 new StatusValueRetriever($status_semantic_factory, $first_possible_value_retriever),

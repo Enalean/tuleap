@@ -39,6 +39,7 @@ final class ArtifactClosingReferencesHandler
         private ExtractReferences $reference_extractor,
         private RetrieveViewableArtifact $artifact_retriever,
         private RetrieveUserById $user_retriever,
+        private ArtifactWasClosedCache $closed_cache,
         private ArtifactCloser $artifact_closer,
     ) {
     }
@@ -83,6 +84,9 @@ final class ArtifactClosingReferencesHandler
         if (! $artifact) {
             return;
         }
+        if ($this->closed_cache->isClosed($artifact)) {
+            return;
+        }
 
         $closing_comment = ArtifactClosingCommentInCommonMarkFormat::fromParts(
             '@' . $event->user->getUserName(),
@@ -98,6 +102,7 @@ final class ArtifactClosingReferencesHandler
             BadSemanticComment::fromUser($event->user)
         )->match(function () use ($artifact) {
             $this->logger->debug(sprintf('Closed artifact #%d', $artifact->getId()));
+            $this->closed_cache->addClosedArtifact($artifact);
         }, function (Fault $fault) use ($artifact) {
             $this->logger->error(sprintf('Could not close artifact #%d: %s', $artifact->getId(), (string) $fault));
         });
