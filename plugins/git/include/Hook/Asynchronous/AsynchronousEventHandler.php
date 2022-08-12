@@ -24,12 +24,10 @@ namespace Tuleap\Git\Hook\Asynchronous;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Tuleap\Event\Events\PotentialReferencesReceived;
+use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessed;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushReceived;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 use Tuleap\Queue\WorkerEvent;
 
 final class AsynchronousEventHandler
@@ -45,41 +43,28 @@ final class AsynchronousEventHandler
     public function handle(WorkerEvent $event): void
     {
         $this->push_parser->parse($event)
-            ->match(function (DefaultBranchPushReceived $push) {
+            ->andThen(function (DefaultBranchPushReceived $push) {
+                $this->logger->debug(
+                    sprintf(
+                        'Processing push on default branch of git repository #%d in project #%d by user #%d',
+                        (int) $push->getRepository()->getId(),
+                        (int) $push->getRepository()->getProject()->getID(),
+                        (int) $push->getPusher()->getId(),
+                    )
+                );
                 $processor = $this->analysis_processor_builder->getProcessor($push->getRepository());
-                // We intentionally do not combine the list of results.
-                // We want to continue processing other commits in case of fault.
-                foreach ($processor->process($push) as $result) {
-                    $this->handleSingleResult($result);
+                return $processor->process($push);
+            })
+            ->match(function (DefaultBranchPushProcessed $result) {
+                $this->event_dispatcher->dispatch($result->event);
+                foreach ($result->faults as $fault) {
+                    $this->logger->error((string) $fault);
                 }
             }, function (Fault $fault) {
-                if ($fault instanceof UnhandledTopicFault) {
+                if ($fault instanceof UnhandledTopicFault || $fault instanceof ArtifactClosureNotAllowedFault) {
                     return;
                 }
                 $this->logger->error((string) $fault);
             });
-    }
-
-    /**
-     * @param Ok<PotentialReferencesReceived> | Err<Fault> $result
-     */
-    private function handleSingleResult(Ok|Err $result): void
-    {
-        $result->match(function (PotentialReferencesReceived $event) {
-            $this->logger->debug(
-                sprintf(
-                    'Searching for references in commit message of %s in project #%d by user #%d',
-                    $event->back_reference->getStringReference(),
-                    (int) $event->project->getID(),
-                    (int) $event->user->getId(),
-                )
-            );
-            $this->event_dispatcher->dispatch($event);
-        }, function (Fault $fault) {
-            if ($fault instanceof ArtifactClosureNotAllowedFault) {
-                return;
-            }
-            $this->logger->error((string) $fault);
-        });
     }
 }

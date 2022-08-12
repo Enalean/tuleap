@@ -22,22 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Event\Events;
 
-use Tuleap\Reference\ReferenceString;
+use Tuleap\Reference\TextWithPotentialReferences;
 
 /**
- * Some text has been received, and maybe it contains references to some Tuleap-managed objects.
- * It has a reference string pattern back to the origin of the text.
+ * A bunch of text blocks has been received. Maybe there are references to some Tuleap-managed objects
+ * among the text blocks.
  * @psalm-immutable
  */
 final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
 {
     public const NAME = 'receivePotentialReferences';
 
+    /**
+     * @param TextWithPotentialReferences[] $text_with_potential_references
+     */
     public function __construct(
-        public string $text_with_potential_references,
+        public array $text_with_potential_references,
         public \Project $project,
         public \PFUser $user,
-        public ReferenceString $back_reference,
     ) {
     }
 }

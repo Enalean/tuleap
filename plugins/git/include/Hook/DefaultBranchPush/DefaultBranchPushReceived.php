@@ -55,16 +55,4 @@ final class DefaultBranchPushReceived
     {
         return $this->commit_hashes;
     }
-
-    /**
-     * @return list<CommitAnalysisOrder>
-     */
-    public function analyzeCommits(): array
-    {
-        $orders = [];
-        foreach ($this->commit_hashes as $commit_hash) {
-            $orders[] = CommitAnalysisOrder::fromComponents($commit_hash, $this->pusher, $this->repository);
-        }
-        return $orders;
-    }
 }

@@ -20,24 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\Hook\DefaultBranchPush;
+namespace Tuleap\Reference;
 
-use Tuleap\Test\Builders\UserTestBuilder;
-
-final class CommitAnalysisOrderTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * I hold some text that maybe contains references to some Tuleap-managed objects.
+ * I also hold a reference string pattern back to the origin of the text.
+ * @psalm-immutable
+ */
+final class TextWithPotentialReferences
 {
-    private const COMMIT_SHA1 = 'bb7870508a';
-
-    public function testItBuildsFromComponents(): void
-    {
-        $hash       = CommitHash::fromString(self::COMMIT_SHA1);
-        $user       = UserTestBuilder::buildWithDefaults();
-        $repository = $this->createStub(\GitRepository::class);
-
-        $order = CommitAnalysisOrder::fromComponents($hash, $user, $repository);
-
-        self::assertSame($hash, $order->getCommitHash());
-        self::assertSame($user, $order->getPusher());
-        self::assertSame($repository, $order->getRepository());
+    public function __construct(
+        public string $text,
+        public ReferenceString $back_reference,
+    ) {
     }
 }

@@ -27,6 +27,7 @@ use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\ReferenceInstance;
+use Tuleap\Reference\ReferenceString;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
 use Tuleap\User\RetrieveUserById;
@@ -51,17 +52,20 @@ final class ArtifactClosingReferencesHandler
         if (! $workflow_user) {
             throw new \UserNotExistException('Tracker Workflow Manager does not exist, unable to close artifacts');
         }
-        $reference_instances = $this->reference_extractor->extractReferences(
-            $event->text_with_potential_references,
-            (int) $event->project->getID()
-        );
-        foreach ($reference_instances as $instance) {
-            $this->handleSingleReference($event, $workflow_user, $instance);
+        foreach ($event->text_with_potential_references as $text_with_potential_reference) {
+            $reference_instances = $this->reference_extractor->extractReferences(
+                $text_with_potential_reference->text,
+                (int) $event->project->getID()
+            );
+            foreach ($reference_instances as $instance) {
+                $this->handleSingleReference($event, $text_with_potential_reference->back_reference, $workflow_user, $instance);
+            }
         }
     }
 
     private function handleSingleReference(
         PotentialReferencesReceived $event,
+        ReferenceString $back_reference,
         \PFUser $workflow_user,
         ReferenceInstance $reference_instance,
     ): void {
@@ -84,7 +88,7 @@ final class ArtifactClosingReferencesHandler
             '@' . $event->user->getUserName(),
             $closing_keyword,
             $artifact->getTracker(),
-            $event->back_reference
+            $back_reference
         );
 
         $this->artifact_closer->closeArtifact(

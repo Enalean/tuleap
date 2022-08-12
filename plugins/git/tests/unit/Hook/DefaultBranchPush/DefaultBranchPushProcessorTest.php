@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
-use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
@@ -58,9 +57,9 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     /**
-     * @return list<Ok<PotentialReferencesReceived> | Err<Fault>>
+     * @return Ok<DefaultBranchPushProcessed> | Err<Fault>
      */
-    private function process(): array
+    private function process(): Ok|Err
     {
         $git_repository = $this->createStub(\GitRepository::class);
         $git_repository->method('getId')->willReturn(98);
@@ -79,29 +78,27 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsAnEventToSearchForReferencesOnTheCommitMessageFromEachCommitOfThePush(): void
     {
-        $results = $this->process();
+        $result = $this->process();
 
-        self::assertCount(2, $results);
-        self::assertTrue(Result::isOk($results[0]));
-        $first_event = $results[0]->value;
+        self::assertTrue(Result::isOk($result));
+        $processed = $result->value;
+        self::assertSame($this->project, $processed->event->project);
+        self::assertSame($this->pusher, $processed->event->user);
+        self::assertEmpty($processed->faults);
 
-        self::assertSame(self::FIRST_COMMIT_MESSAGE, $first_event->text_with_potential_references);
-        self::assertSame($this->project, $first_event->project);
-        self::assertSame($this->pusher, $first_event->user);
+        self::assertCount(2, $processed->event->text_with_potential_references);
+        [$first_text, $second_text] = $processed->event->text_with_potential_references;
+
+        self::assertSame(self::FIRST_COMMIT_MESSAGE, $first_text->text);
         self::assertSame(
             sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, self::REPOSITORY_PATH, self::FIRST_COMMIT_SHA1),
-            $first_event->back_reference->getStringReference()
+            $first_text->back_reference->getStringReference()
         );
 
-        self::assertTrue(Result::isOk($results[1]));
-        $second_event = $results[1]->value;
-
-        self::assertSame(self::SECOND_COMMIT_MESSAGE, $second_event->text_with_potential_references);
-        self::assertSame($this->project, $second_event->project);
-        self::assertSame($this->pusher, $second_event->user);
+        self::assertSame(self::SECOND_COMMIT_MESSAGE, $second_text->text);
         self::assertSame(
             sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, self::REPOSITORY_PATH, self::SECOND_COMMIT_SHA1),
-            $second_event->back_reference->getStringReference()
+            $second_text->back_reference->getStringReference()
         );
     }
 
@@ -109,21 +106,21 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->closure_verifier = VerifyArtifactClosureIsAllowedStub::withNeverAllowed();
 
-        $results = $this->process();
+        $result = $this->process();
 
-        self::assertCount(1, $results);
-        self::assertTrue(Result::isErr($results[0]));
-        self::assertInstanceOf(ArtifactClosureNotAllowedFault::class, $results[0]->error);
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(ArtifactClosureNotAllowedFault::class, $result->error);
     }
 
-    public function testItReturnsFaultsWhenItCannotReadCommitMessages(): void
+    public function testItReturnsProcessedContainingFaultsWhenItCannotReadCommitMessages(): void
     {
+        // Do not stop execution because we cannot read one commit message. We process all commits.
         $this->message_retriever = RetrieveCommitMessageStub::withError();
 
-        $results = $this->process();
+        $result = $this->process();
 
-        self::assertCount(2, $results);
-        self::assertTrue(Result::isErr($results[0]));
-        self::assertTrue(Result::isErr($results[1]));
+        self::assertTrue(Result::isOk($result));
+        self::assertCount(2, $result->value->faults);
+        self::assertEmpty($result->value->event->text_with_potential_references);
     }
 }

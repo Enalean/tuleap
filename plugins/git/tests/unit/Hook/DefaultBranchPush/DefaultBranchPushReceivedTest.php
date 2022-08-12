@@ -40,13 +40,9 @@ final class DefaultBranchPushReceivedTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->user       = UserTestBuilder::buildWithDefaults();
         $this->repository = $this->createStub(\GitRepository::class);
-        $this->repository->method('getId')->willReturn(43);
     }
 
-    /**
-     * @return list<CommitAnalysisOrder>
-     */
-    private function analyzeCommits(): array
+    public function testItBuildsFromItsComponents(): void
     {
         $hashes = [
             CommitHash::fromString(self::FIRST_COMMIT_SHA1),
@@ -55,21 +51,8 @@ final class DefaultBranchPushReceivedTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $push = new DefaultBranchPushReceived($this->repository, $this->user, $hashes);
 
-        return $push->analyzeCommits();
-    }
-
-    public function testItReturnsACommitAnalysisOrderForEachCommitHashOfThePush(): void
-    {
-        $orders = $this->analyzeCommits();
-
-        self::assertCount(2, $orders);
-        [$first_order, $second_order] = $orders;
-        self::assertSame(self::FIRST_COMMIT_SHA1, (string) $first_order->getCommitHash());
-        self::assertSame($this->user, $first_order->getPusher());
-        self::assertSame($this->repository, $first_order->getRepository());
-
-        self::assertSame(self::SECOND_COMMIT_SHA1, (string) $second_order->getCommitHash());
-        self::assertSame($this->user, $second_order->getPusher());
-        self::assertSame($this->repository, $second_order->getRepository());
+        self::assertSame($this->repository, $push->getRepository());
+        self::assertSame($this->user, $push->getPusher());
+        self::assertSame($hashes, $push->getCommitHashes());
     }
 }
