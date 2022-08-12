@@ -31,6 +31,10 @@ export default vite.defineAppConfig("gitlab", {
                     __dirname,
                     "scripts/artifact-create-branch-action/src/index.ts"
                 ),
+                "gitlab-group-link": path.resolve(
+                    __dirname,
+                    "scripts/gitlab-group-link/src/index.ts"
+                ),
             },
         },
     },

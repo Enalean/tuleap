@@ -20,27 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Admin;
+namespace Tuleap\Test\Builders;
 
-use GitPresenters_AdminPresenter;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\JavascriptAssetGeneric;
 
-final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
+final class JavascriptAssetGenericBuilder
 {
-    public string $current_project_name;
-
-    public function __construct(
-        \Project $project,
-        bool $are_mirrors_defined,
-        array $external_pane_presenters,
-    ) {
-        parent::__construct((int) $project->getID(), $are_mirrors_defined, $external_pane_presenters);
-
-        $this->current_project_name = $project->getPublicName();
-    }
-
-    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public function form_action(): string
+    public static function build(): JavascriptAssetGeneric
     {
-        return '';
+        return new class extends JavascriptAssetGeneric {
+            public function __construct()
+            {
+                parent::__construct(
+                    IncludeAssetsBuilder::build(),
+                    'script.js'
+                );
+            }
+
+            public function getType(): string
+            {
+                return '';
+            }
+
+            public function getAssociatedCSSAssets(): CssAssetCollection
+            {
+                return new CssAssetCollection([]);
+            }
+        };
     }
 }
