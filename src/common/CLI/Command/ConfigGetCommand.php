@@ -22,18 +22,20 @@
 namespace Tuleap\CLI\Command;
 
 use ForgeConfig;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\Config\GetConfigKeys;
 
 class ConfigGetCommand extends Command
 {
     public const NAME = 'config-get';
 
-    public function __construct()
+    public function __construct(private EventDispatcherInterface $event_dispatcher)
     {
         parent::__construct(self::NAME);
     }
@@ -51,9 +53,19 @@ class ConfigGetCommand extends Command
         if (! ForgeConfig::exists($key)) {
             throw new InvalidArgumentException("Invalid key $key");
         }
+
+        $config_keys  = $this->event_dispatcher->dispatch(new GetConfigKeys());
+        $key_metadata = $config_keys->getKeyMetadata($key);
+
         if ($input->getOption('reveal-secret')) {
+            if (! $key_metadata->is_secret) {
+                 throw new InvalidArgumentException("Misusage of --reveal-secret: $key is not a secret.");
+            }
             $value = ForgeConfig::getSecretAsClearText($key);
         } else {
+            if ($key_metadata->is_secret) {
+                 throw new InvalidArgumentException("Unable to display secret $key. Please use --reveal-secret option to decrypt it.");
+            }
             $value = ForgeConfig::get($key);
         }
         $output->write($value);
