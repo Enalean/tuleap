@@ -1,23 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`QuickLookFile renders quick look for link document 1`] = `
+exports[`QuickLookFile renders quick look for file document with a CTA to download the file 1`] = `
 <div
   class="document-quick-look-document-action"
 >
-  <button
+  <download-button-stub
     class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-    type="button"
-  >
-    <i
-      class="fa fa-download tlp-button-icon"
-    />
-     
-    <translate-stub
-      tag="span"
-    >
-      Download
-    </translate-stub>
-  </button>
+    item="[object Object]"
+  />
    
   <drop-down-quick-look-stub
     item="[object Object]"

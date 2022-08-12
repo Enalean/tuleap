@@ -20,14 +20,20 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <button
-            type="button"
+        <a
+            v-if="should_display_open_button"
             class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-            v-on:click="downloadFile"
+            v-bind:href="open_href"
+            data-test="document-quick-look-document-cta-open"
         >
-            <i class="fa fa-download tlp-button-icon"></i>
-            <translate>Download</translate>
-        </button>
+            <i class="fa-solid fa-right-long tlp-button-icon"></i>
+            <translate>Open</translate>
+        </a>
+        <download-button
+            class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
+            v-bind:item="item"
+            v-else
+        />
         <drop-down-quick-look v-bind:item="item" />
         <div class="document-header-spacer"></div>
         <quick-look-delete-button v-bind:item="item" />
@@ -37,16 +43,15 @@
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import QuickLookDeleteButton from "../Folder/ActionsQuickLookButton/QuickLookDeleteButton.vue";
-import type { Item } from "../../type";
-import { isFile } from "../../helpers/type-check-helper";
+import type { ItemFile } from "../../type";
+import { computed } from "vue";
+import DownloadButton from "./DownloadButton.vue";
 
-const props = defineProps<{ item: Item }>();
+const props = defineProps<{ item: ItemFile }>();
 
-function downloadFile(): void {
-    const item = props.item;
-    if (!item || !isFile(item) || !item.file_properties) {
-        return;
-    }
-    window.location.assign(encodeURI(item.file_properties.download_href));
-}
+const should_display_open_button = computed(
+    (): boolean => props.item.file_properties && (props.item.file_properties.open_href || "") !== ""
+);
+
+const open_href = computed((): string | undefined => props.item.file_properties?.open_href);
 </script>

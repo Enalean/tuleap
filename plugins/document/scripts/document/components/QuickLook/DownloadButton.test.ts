@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { FileProperties, ItemFile } from "../../type";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import DownloadFile from "./DownloadFile.vue";
-import localVue from "../../../helpers/local-vue";
-import { TYPE_FILE } from "../../../constants";
-import type { FileProperties, ItemFile } from "../../../type";
+import DownloadButton from "./DownloadButton.vue";
+import localVue from "../../helpers/local-vue";
+import { TYPE_FILE } from "../../constants";
 
-describe("DownloadFile", () => {
-    function getWrapper(item: ItemFile): Wrapper<DownloadFile> {
-        return shallowMount(DownloadFile, {
+describe("DownloadButton", () => {
+    function getWrapper(item: ItemFile): Wrapper<DownloadButton> {
+        return shallowMount(DownloadButton, {
             localVue,
             propsData: { item },
         });
@@ -47,11 +47,10 @@ describe("DownloadFile", () => {
     });
 
     it(`Given file_properties is set
-        When we display download link
-        Then href contains link to the file`, () => {
+        Then component is not empty`, () => {
         const item = {
             id: 42,
-            title: "my document",
+            title: "my corrupted embedded document",
             file_properties: {
                 file_name: "my file",
                 file_type: "image/png",
@@ -63,6 +62,6 @@ describe("DownloadFile", () => {
 
         const wrapper = getWrapper(item);
 
-        expect(wrapper.attributes("href")).toBe("/plugins/docman/download/119/42");
+        expect(wrapper.text()).toBe("Download");
     });
 });
