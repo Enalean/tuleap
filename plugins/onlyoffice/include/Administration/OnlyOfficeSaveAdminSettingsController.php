@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -52,9 +53,9 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
 
         $body       = $request->getParsedBody();
         $server_url = (string) ($body['server_url'] ?? '');
-        $server_key = (string) ($body['server_key'] ?? '');
+        $server_key = new ConcealedString((string) ($body['server_key'] ?? ''));
 
-        if ($server_url === '' || $server_key === '' || ! $this->valid_https_uri->validate($server_url)) {
+        if ($server_url === '' || $server_key->isIdenticalTo(new ConcealedString('')) || ! $this->valid_https_uri->validate($server_url)) {
             throw new ForbiddenException();
         }
 
