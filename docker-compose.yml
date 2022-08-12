@@ -95,6 +95,13 @@ services:
         aliases:
           - gitlab.local
 
+  onlyoffice:
+    image: onlyoffice/documentserver:7.1.1.23
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=DO_NOT_USE_THIS_IN_PRODUCTION
+      - USE_UNAUTHORIZED_STORAGE=true
+
   db55:
     image: mysql:5.5
     env_file:
