@@ -39,7 +39,7 @@ final class ConfigSet
      * @throws UnknownConfigKeyException
      * @throws \Tuleap\Cryptography\Exception\CannotPerformIOOperationException
      */
-    public function set(string $key, string $value): void
+    public function set(string $key, string|ConcealedString $value): void
     {
         $config_keys = $this->event_dispatcher->dispatch(new GetConfigKeys());
 
@@ -49,9 +49,9 @@ final class ConfigSet
         }
 
         if ($key_metadata->is_secret) {
-            $value = \ForgeConfig::encryptValue(new ConcealedString($value));
+            $value = \ForgeConfig::encryptValue(new ConcealedString((string) $value));
         }
 
-        $this->config_dao->save($key, $value);
+        $this->config_dao->save($key, (string) $value);
     }
 }
