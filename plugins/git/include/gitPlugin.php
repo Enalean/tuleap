@@ -2238,7 +2238,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 $tab_content  .= '<tr>';
                 $tab_content  .= '<td>' . $html_purifier->purify($archived_repository->getName()) . '</td>';
                 $tab_content  .= '<td>' . DateHelper::relativeDateInlineContext((int) $creation_date->getTimestamp(), $user) . '</td>';
-                $tab_content  .= '<td>' . $html_purifier->purify($archived_repository->getCreator()->getName()) . '</td>';
+                $tab_content  .= '<td>' . $html_purifier->purify($archived_repository->getCreator()->getUserName()) . '</td>';
                 $tab_content  .= '<td>' . DateHelper::relativeDateInlineContext((int) $deletion_date->getTimestamp(), $user)  . '</td>';
                 $tab_content  .= '<td class="tlp-table-cell-actions">
                                     <form method="post" action="/plugins/git/"
