@@ -25,6 +25,8 @@ use Git_GitRepositoryUrlManager;
 use PFUser;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\BotMattermost\SenderServices\Attachment;
+use Tuleap\BotMattermostGit\Presenter\AttachmentPreTextPresenter;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\ServerHostname;
 
