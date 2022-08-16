@@ -44,7 +44,7 @@ class GitRepository
     private $description;
     private $isInitialized;
     private $creationDate;
-    private $creator;
+    private ?PFUser $creator = null;
     private $deletionDate;
     private $access;
     private $mailPrefix;
@@ -76,7 +76,6 @@ class GitRepository
         $this->name          = '';
         $this->description   = '';
         $this->creationDate  = '';
-        $this->creator       = null;
         $this->deletionDate  = '';
         $this->isInitialized = 0;
         $this->access        = 'private';
@@ -439,22 +438,19 @@ class GitRepository
         return $this->creationDate;
     }
 
-    public function setCreator($user)
+    public function setCreator(?PFUser $user): void
     {
         $this->creator = $user;
     }
 
-    public function getCreator()
+    public function getCreator(): PFUser
     {
-        return $this->creator;
+        return $this->creator ?? $this->_getUserManager()->getUserAnonymous();
     }
 
     public function getCreatorId()
     {
-        if (! empty($this->creator)) {
-            return $this->creator->getId();
-        }
-        return 0;
+        return $this->getCreator()->getId();
     }
 
     public function setDeletionDate($date)
