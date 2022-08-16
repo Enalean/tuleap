@@ -30,6 +30,7 @@ use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -81,7 +82,13 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
             $template_renderer_factory,
         );
 
-        $user = Mockery::mock(\PFUser::class);
+        $user = UserTestBuilder::aUser()
+            ->withId(164)
+            ->withEmail('cystiferous@example.com')
+            ->withAvatarUrl('/avatar/fc0c1a.png')
+            ->withUserName('jvis')
+            ->withRealName('Jacklyn Vis')
+            ->build();
 
         $current_user = Mockery::mock(\PFUser::class);
         $current_user->shouldReceive(['isAnonymous' => false]);
@@ -92,11 +99,11 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
             ->andReturn($renderer);
         $renderer
             ->shouldReceive('renderToString')
-            ->with('tooltip-title', $user)
+            ->with('tooltip-title', Mockery::type(UserTooltipTitlePresenter::class))
             ->andReturn('title');
         $renderer
             ->shouldReceive('renderToString')
-            ->with('tooltip-body', $user)
+            ->with('tooltip-body', Mockery::type(UserTooltipBodyPresenter::class))
             ->andReturn('body');
 
         $emitter->shouldReceive('emit')

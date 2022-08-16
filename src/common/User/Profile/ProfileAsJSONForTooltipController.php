@@ -70,8 +70,8 @@ class ProfileAsJSONForTooltipController
 
         $renderer = $this->template_renderer_factory->getRenderer(__DIR__);
         $output   = new TooltipJSON(
-            $renderer->renderToString('tooltip-title', $user),
-            $renderer->renderToString('tooltip-body', $user),
+            $renderer->renderToString('tooltip-title', UserTooltipTitlePresenter::fromUser($user)),
+            $renderer->renderToString('tooltip-body', UserTooltipBodyPresenter::fromUser($user)),
         );
 
         $response = $this->json_response_builder->fromData($output);
