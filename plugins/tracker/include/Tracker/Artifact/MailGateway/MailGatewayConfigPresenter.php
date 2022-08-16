@@ -57,9 +57,9 @@ class MailGatewayConfigPresenter
 
         $this->is_emailgateway_available = $configuration->mustGeneratesSelfHostedConfigurationAndFeatures();
 
-        $this->is_insecure_emailgateway_enabled    = $config->getEmailgatewayRowMode() === MailGatewayConfig::DISABLED;
+        $this->is_insecure_emailgateway_enabled    = $config->getEmailgatewayRowMode() === MailGatewayConfig::INSECURE;
         $this->is_token_based_emailgateway_enabled = $config->getEmailgatewayRowMode() === MailGatewayConfig::TOKEN;
-        $this->is_emailgateway_disabled            = $config->getEmailgatewayRowMode() === MailGatewayConfig::INSECURE;
+        $this->is_emailgateway_disabled            = $config->getEmailgatewayRowMode() === MailGatewayConfig::DISABLED;
 
         $this->email_gateway            = dgettext('tuleap-tracker', 'Email Gateway');
         $this->email_gateway_pane_title = dgettext('tuleap-tracker', 'Email Gateway configuration');
