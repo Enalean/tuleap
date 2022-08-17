@@ -32,6 +32,7 @@ final class AdminTabPresenter
         public string $description,
         public string $url,
         public bool $is_active,
+        public string $identifier,
     ) {
     }
 }
