@@ -124,7 +124,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $file_properties = null;
         if ($item_version) {
             $download_href   = $this->buildFileDirectAccessURL($item);
-            $open_item_href  = $this->event_manager->dispatch(new OpenItemHref($item, $item_version, $download_href));
+            $open_item_href  = $this->event_manager->dispatch(new OpenItemHref($item, $item_version));
             $file_properties = FilePropertiesRepresentation::build($item_version, $download_href, $open_item_href->getHref());
         }
 

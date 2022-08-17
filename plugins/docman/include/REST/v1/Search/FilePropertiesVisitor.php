@@ -62,7 +62,7 @@ final class FilePropertiesVisitor implements ItemVisitor
         }
 
         $download_href  = $this->buildFileDirectAccessURL($item, $version);
-        $open_item_href = $this->event_dispatcher->dispatch(new OpenItemHref($item, $version, $download_href));
+        $open_item_href = $this->event_dispatcher->dispatch(new OpenItemHref($item, $version));
         return FilePropertiesRepresentation::build($version, $download_href, $open_item_href->getHref());
     }
 

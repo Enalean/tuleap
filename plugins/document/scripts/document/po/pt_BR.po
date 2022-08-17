@@ -437,6 +437,9 @@ msgid_plural "Oops… Unable to upload files"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Open"
+msgstr ""
+
 msgid "Open approval tables"
 msgstr ""
 

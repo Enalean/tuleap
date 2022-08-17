@@ -22,13 +22,23 @@ import { shallowMount } from "@vue/test-utils";
 import QuickLookFile from "./QuickLookFile.vue";
 import localVue from "../../helpers/local-vue";
 import { TYPE_FILE } from "../../constants";
-import type { Item } from "../../type";
+import type { ItemFile } from "../../type";
+import type { FileProperties } from "../../type";
 
 describe("QuickLookFile", () => {
-    it("renders quick look for link document", () => {
+    it("renders quick look for file document with a CTA to download the file", () => {
         const item = {
+            id: 42,
+            title: "my document",
+            file_properties: {
+                file_name: "my file",
+                file_type: "image/png",
+                download_href: "/plugins/docman/download/119/42",
+                open_href: "",
+                file_size: 109768,
+            } as FileProperties,
             type: TYPE_FILE,
-        } as Item;
+        } as ItemFile;
 
         const wrapper = shallowMount(QuickLookFile, {
             localVue,
@@ -36,5 +46,29 @@ describe("QuickLookFile", () => {
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+    it("renders quick look for file document with a CTA to open the file", () => {
+        const item = {
+            id: 42,
+            title: "my document",
+            file_properties: {
+                file_name: "my file",
+                file_type: "image/png",
+                download_href: "/plugins/docman/download/119/42",
+                open_href: "/path/to/open/119",
+                file_size: 109768,
+            } as FileProperties,
+            type: TYPE_FILE,
+        } as ItemFile;
+
+        const wrapper = shallowMount(QuickLookFile, {
+            localVue,
+            propsData: { item: item },
+        });
+
+        const cta = wrapper.find<HTMLAnchorElement>(
+            "[data-test=document-quick-look-document-cta-open]"
+        ).element;
+        expect(cta.href).toContain("/path/to/open/119");
     });
 });
