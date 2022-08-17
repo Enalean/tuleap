@@ -35,6 +35,8 @@ use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\FooterConfiguration;
+use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
@@ -125,10 +127,16 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         return $array[$theme];
     }
 
-    public function header(array $params): void
+    public function header(HeaderConfiguration|array $params): void
     {
         $this->header_has_been_written = true;
-        $title                         = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
+
+        if ($params instanceof HeaderConfiguration) {
+            $params = [
+                'title' => $params->title,
+            ];
+        }
+        $title = ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME);
         if (! empty($params['title'])) {
             $title = $params['title'] . ' - ' . $title;
         }
@@ -431,7 +439,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ));
     }
 
-    public function footer(array $params)
+    public function footer(FooterConfiguration|array $params): void
     {
         $this->displayBrowserDeprecationMessage();
         if ($this->canShowFooter($params)) {
@@ -460,13 +468,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
      * Note: there is an ugly dependency on the page content being rendered first.
      * Although this is the case, it's worth bearing in mind when refactoring.
      *
-     * @param array $params
-     * @return bool
+     * @param FooterConfiguration|array $params
      */
-    private function canShowFooter($params)
+    private function canShowFooter($params): bool
     {
-        if (! empty($params['without_content'])) {
-            return false;
+        if ($params instanceof FooterConfiguration) {
+            return $params->without_content === false;
         }
 
         if (empty($params['group'])) {

@@ -60,7 +60,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
               <br><input name="Submit" type="submit" value="' . $purifier->purify($GLOBALS['Language']->getText('include_exit', 'send_mail')) . '"/></br>
           </form>';
 
-        $GLOBALS['HTML']->footer(['showfeedback' => false]);
+        $GLOBALS['HTML']->footer([]);
     }
 
     /**

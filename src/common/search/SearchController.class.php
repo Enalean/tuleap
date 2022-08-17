@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\FooterConfiguration;
+
 class Search_SearchController
 {
     public const DEFAULT_SEARCH = Search_SearchProject::NAME;
@@ -66,7 +68,7 @@ class Search_SearchController
 
         $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => ['search-page']]);
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $empty_result->getResultsHtml()));
-        $GLOBALS['HTML']->footer(['without_content' => true]);
+        $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }
 
     public function ajaxResults(Codendi_Request $request)
@@ -113,7 +115,7 @@ class Search_SearchController
     {
         $GLOBALS['HTML']->header(['title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => ['search-page']]);
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
-        $GLOBALS['HTML']->footer(['without_content' => true]);
+        $GLOBALS['HTML']->footer(FooterConfiguration::withoutContent());
     }
 
     private function getSearchPresenter(Search_SearchQuery $query, $results)
