@@ -43,7 +43,7 @@ $sample_generic_user = $generic_user_factory->getGenericUser($sample_project, $f
 
 $name_css              = '';
 $valid_username_format = new Valid_GenericUserNameSuffix('');
-if (! $valid_username_format->validate($sample_generic_user->getUnixName())) {
+if (! $valid_username_format->validate($sample_generic_user->getUserName())) {
     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_generic_user', 'invalid_suffix', [GenericUserFactory::CONFIG_KEY_SUFFIX]));
     $name_css = 'highlight';
 }
@@ -58,8 +58,8 @@ echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
       </p>
       <p>
         <label class="' . $name_css . '"><b>' . $Language->getOverridableText('account_login', 'name') . '</b>:<br />
-        ' . $fake_generic_user->getUnixName() . '
-        <div class="help">e.g. ' . $sample_generic_user->getUnixName() . '</div>
+        ' . $fake_generic_user->getUserName() . '
+        <div class="help">e.g. ' . $sample_generic_user->getUserName() . '</div>
       </p>
       <p>
         <label><b>' . $Language->getText('admin_generic_user', 'email') . '</b>:</label><br />

@@ -230,7 +230,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     private function addGenericUserInProject(PFUser $user, $session_key, $group_id)
     {
         if (! $user->isMember($group_id)) {
-            $this->addProjectMember($session_key, $group_id, $user->getUnixName());
+            $this->addProjectMember($session_key, $group_id, $user->getUserName());
         }
     }
     /**

@@ -592,7 +592,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     // Getter
     public function getPublicProfileUrl()
     {
-        return '/users/' . urlencode($this->getUnixName());
+        return '/users/' . urlencode($this->getUserName());
     }
 
     /**
@@ -608,13 +608,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getUserName(): string
     {
         return $this->user_name ?? '';
-    }
-    /**
-     * alias of getUserName()
-     */
-    public function getUnixName(): string
-    {
-        return $this->getUserName();
     }
 
     public function getRealName(): string

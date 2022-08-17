@@ -25,10 +25,8 @@ interface PFO_User
 {
     /**
      * User login on underlying unix system
-     *
-     * @return String
      */
-    public function getUnixName();
+    public function getUserName(): string;
 
     /**
      * Return all projects a user belongs to

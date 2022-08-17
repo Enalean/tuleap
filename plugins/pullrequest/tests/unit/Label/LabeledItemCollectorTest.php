@@ -200,7 +200,7 @@ class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_id = 174;
         $limit            = 50;
         $offset           = 0;
-        $project          = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUnixName' => false, 'isPublic' => false]);
+        $project          = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUserName' => false, 'isPublic' => false]);
         $user             = Mockery::mock(\PFUser::class)->shouldReceive('getId')->andReturn(265)->getMock();
 
         $collection->shouldReceive('getLabelIds')->andReturns($this->label_ids);

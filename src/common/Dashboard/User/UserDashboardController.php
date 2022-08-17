@@ -432,7 +432,7 @@ class UserDashboardController
         $title .= $GLOBALS['Language']->getText(
             'my_index',
             'title',
-            $current_user->getRealName() . ' (' . $current_user->getUnixName() . ')'
+            $current_user->getRealName() . ' (' . $current_user->getUserName() . ')'
         );
 
         return $title;

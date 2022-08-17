@@ -237,7 +237,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
         if ($current_tuleap_user->is_logged_in) {
             $group          = group_get_object_by_name($fusionforgeproject);
-            $madiawiki_name = ucfirst($tuleap_user->getUnixName());
+            $madiawiki_name = ucfirst($tuleap_user->getUserName());
             $mediawiki_user = User::newFromName($madiawiki_name);
 
             if ($mediawiki_user->getID() == 0) {

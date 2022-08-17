@@ -38,7 +38,7 @@ class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUnit\Test
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
         $this->user    = \Mockery::spy(\PFUser::class);
 
         $this->user->shouldReceive('getId')->andReturns(107);

@@ -46,7 +46,7 @@ class Tracker_SystemEventManager extends SystemEventManager
             $short_name . SystemEvent::PARAMETER_SEPARATOR .
             $name . SystemEvent::PARAMETER_SEPARATOR .
             $description . SystemEvent::PARAMETER_SEPARATOR .
-            $user->getUnixName() . SystemEvent::PARAMETER_SEPARATOR .
+            $user->getUserName() . SystemEvent::PARAMETER_SEPARATOR .
             $project->getGroupId() . SystemEvent::PARAMETER_SEPARATOR .
             $tracker_id . SystemEvent::PARAMETER_SEPARATOR .
             (int) $keep_original_ids,

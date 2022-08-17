@@ -82,7 +82,7 @@ class ArtifactLinkValueSaverTest extends \Tuleap\Test\PHPUnit\TestCase
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao::class
         );
 
-        $project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
 
         $this->tracker       = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(102)->getMock();
         $this->tracker_child = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(101)->getMock();

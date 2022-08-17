@@ -156,7 +156,7 @@ class HTTPAccessControl
                 new ConcealedString($_SERVER['PHP_AUTH_PW'])
             );
 
-            $this->logger->debug('LOGGED AS ' . $user->getUnixName());
+            $this->logger->debug('LOGGED AS ' . $user->getUserName());
             return $user;
         } catch (\User_InvalidPasswordException $exception) {
             $this->logger->debug('Replication user not recognized ' . $exception->getMessage());
@@ -175,13 +175,13 @@ class HTTPAccessControl
             $this->basicAuthenticationChallenge();
         }
         if ($user !== null) {
-            $this->logger->debug('LOGGED AS ' . $user->getUnixName());
+            $this->logger->debug('LOGGED AS ' . $user->getUserName());
             return $user;
         }
 
         try {
             $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], new ConcealedString($_SERVER['PHP_AUTH_PW']));
-            $this->logger->debug('LOGGED AS ' . $user->getUnixName());
+            $this->logger->debug('LOGGED AS ' . $user->getUserName());
             $this->updateLastAccessDateForUser($user);
             return $user;
         } catch (\User_LoginException $exception) {

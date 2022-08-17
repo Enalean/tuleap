@@ -44,7 +44,7 @@ class GerritCanMigrateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->gerrit_server_factory
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
     }
 
     protected function tearDown(): void

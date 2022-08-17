@@ -47,7 +47,7 @@ class XmlUgroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $ugroup_manager
         );
 
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUserName' => false, 'isPublic' => false]);
 
         $this->ugroup_01 = new ProjectUGroup([
             'ugroup_id' => 101,

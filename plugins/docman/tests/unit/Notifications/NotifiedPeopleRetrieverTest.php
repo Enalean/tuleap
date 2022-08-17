@@ -56,7 +56,7 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->project = \Mockery::spy(
             \Project::class,
-            ['getID' => false, 'getUnixName' => false, 'isPublic' => false]
+            ['getID' => false, 'getUserName' => false, 'isPublic' => false]
         );
 
         $this->notified_users_dao   = \Mockery::spy(\Tuleap\Docman\Notifications\UsersToNotifyDao::class);

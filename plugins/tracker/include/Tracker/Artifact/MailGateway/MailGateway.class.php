@@ -170,7 +170,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         $this->logger->debug("Receiving new follow-up comment from " . $user->getUserName());
 
         if (! $artifact->userCanUpdate($user)) {
-            $this->logger->info("User " . $user->getUnixName() . " has no right to update the artifact #" . $artifact->getId());
+            $this->logger->info("User " . $user->getUserName() . " has no right to update the artifact #" . $artifact->getId());
             $this->notifier->sendErrorMailInsufficientPermissionUpdate($user->getEmail(), $artifact->getId());
             return;
         }
@@ -190,7 +190,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway
         $this->logger->debug("Receiving new artifact from " . $user->getUserName());
 
         if (! $tracker->userCanSubmitArtifact($user)) {
-            $this->logger->info("User " . $user->getUnixName() . " has no right to create an artifact in tracker #" . $tracker->getId());
+            $this->logger->info("User " . $user->getUserName() . " has no right to create an artifact in tracker #" . $tracker->getId());
             $this->notifier->sendErrorMailInsufficientPermissionCreation($user->getEmail(), $title);
             return false;
         }
