@@ -64,6 +64,6 @@ class AllowedFileExtensions
 
     public static function isFilenameAllowedToBeOpenInOnlyOffice(string $filename): bool
     {
-        return in_array(pathinfo($filename, PATHINFO_EXTENSION), self::EXTENSIONS, true);
+        return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::EXTENSIONS, true);
     }
 }
