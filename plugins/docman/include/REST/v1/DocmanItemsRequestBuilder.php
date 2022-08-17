@@ -71,7 +71,7 @@ class DocmanItemsRequestBuilder
      */
     public function buildFromItemId($id)
     {
-        $item_factory = Docman_ItemFactory::instance($id);
+        $item_factory = new Docman_ItemFactory();
 
         $item = $item_factory->getItemFromDb($id);
         if ($item === null) {
