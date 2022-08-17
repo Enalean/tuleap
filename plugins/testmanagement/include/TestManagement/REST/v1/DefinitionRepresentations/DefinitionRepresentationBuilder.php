@@ -76,7 +76,6 @@ class DefinitionRepresentationBuilder
     /**
      * @throws StepDefinitionFormatNotFoundException
      * @throws DefinitionDescriptionFormatNotFoundException
-     * @throws DescriptionTextFieldNotFoundException
      */
     public function getDefinitionRepresentation(PFUser $user, Artifact $definition_artifact, ?Tracker_Artifact_Changeset $changeset): DefinitionRepresentation
     {
@@ -103,7 +102,16 @@ class DefinitionRepresentationBuilder
         );
 
         if (! $description_text_field) {
-            throw new DescriptionTextFieldNotFoundException();
+            return new DefinitionTextOrHTMLRepresentation(
+                $this->purifier,
+                $this->interpreter,
+                $definition_artifact,
+                $this->tracker_form_element_factory,
+                $user,
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                $all_requirements,
+                $changeset,
+            );
         }
 
         switch ($description_text_field->getFormat()) {

@@ -205,13 +205,7 @@ function ExecutionListCtrl(
                 ExecutionService.executions_loaded = true;
                 ExecutionService.displayPresencesForAllExecutions();
             },
-            (error) =>
-                setError(
-                    gettextCatalog.getString(
-                        "An error occurred while loading the tests. {{ error }}",
-                        { error: error.data.error.message }
-                    )
-                )
+            () => setError(gettextCatalog.getString("An error occurred while loading the tests."))
         );
     }
 
