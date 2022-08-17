@@ -29,15 +29,12 @@ use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Request\NotFoundException;
 
 final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWithBurningParrot, \Tuleap\Request\DispatchableWithRequest
 {
     public function __construct(
         private \UserManager $user_manager,
-        private \ProjectManager $project_manager,
-        private ProjectAccessChecker $project_access_checker,
         private \Docman_ItemFactory $item_factory,
         private \Docman_VersionFactory $version_factory,
         private IncludeViteAssets $assets,
