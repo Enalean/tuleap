@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Open;
 
 use HTTPRequest;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
@@ -40,11 +41,17 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
         private \Docman_ItemFactory $item_factory,
         private \Docman_VersionFactory $version_factory,
         private IncludeViteAssets $assets,
+        private Prometheus $prometheus,
     ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        $this->prometheus->increment(
+            'plugin_onlyoffice_open_document_total',
+            'Total number of open of document in ONLYOFFICE',
+        );
+
         $item = $this->item_factory->getItemFromDb((int) $variables['id']);
         if (! $item instanceof \Docman_File) {
             throw new NotFoundException();

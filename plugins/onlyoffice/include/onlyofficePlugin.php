@@ -36,6 +36,7 @@ use Tuleap\Docman\REST\v1\OpenItemHref;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
@@ -161,7 +162,8 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             new \Tuleap\Layout\IncludeViteAssets(
                 __DIR__ . '/../frontend-assets/',
                 '/assets/onlyoffice'
-            )
+            ),
+            Prometheus::instance(),
         );
     }
 
