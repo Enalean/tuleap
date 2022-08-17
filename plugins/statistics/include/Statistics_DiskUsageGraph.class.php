@@ -55,13 +55,17 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $lineplots = [];
             $dates     = [];
             foreach ($data as $service => $values) {
-                $color = $this->_dum->getServiceColor($service);
                 $ydata = [];
                 foreach ($values as $date => $size) {
                     $dates[] = $date;
                     $ydata[] = $size;
                 }
                 $lineplot = new LinePlot($ydata);
+
+                if (count(array_unique($dates)) <= 1) {
+                    $this->displayError(dgettext('tuleap-statistics', 'No data to display'));
+                    return;
+                }
 
                 $color = $this->_dum->getServiceColor($service);
                 $lineplot->SetColor($color);
