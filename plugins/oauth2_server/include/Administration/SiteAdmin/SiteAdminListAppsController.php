@@ -25,8 +25,8 @@ namespace Tuleap\OAuth2Server\Administration\SiteAdmin;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\OAuth2Server\Administration\AdminOAuth2AppsPresenterBuilder;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -51,7 +51,7 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
      */
     private $presenter_builder;
     /**
-     * @var IncludeAssets
+     * @var IncludeViteAssets
      */
     private $assets;
     /**
@@ -63,7 +63,7 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
         AdminPageRenderer $admin_page_renderer,
         UserManager $user_manager,
         AdminOAuth2AppsPresenterBuilder $presenter_builder,
-        IncludeAssets $assets,
+        IncludeViteAssets $assets,
         \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->admin_page_renderer = $admin_page_renderer;
@@ -82,8 +82,7 @@ final class SiteAdminListAppsController implements DispatchableWithRequest, Disp
             throw new ForbiddenException();
         }
 
-        $layout->includeFooterJavascriptFile($this->assets->getFileURL('administration.js'));
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'administration-style'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/src/administration.ts'));
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-oauth2_server', 'OAuth2 Server'),

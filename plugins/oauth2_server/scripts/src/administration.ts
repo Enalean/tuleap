@@ -22,13 +22,14 @@ import {
     openModalAndReplacePlaceholders,
     openTargetModalIdOnClick,
     openAllTargetModalsOnClick,
-} from "tlp";
+} from "@tuleap/tlp-modal";
 import {
     buildDeletionReplaceCallback,
     buildRegenerationReplaceBallback,
     hiddenInputReplaceCallback,
 } from "./replacers";
 import "@tuleap/copy-to-clipboard";
+import "../../themes/administration.scss";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
 

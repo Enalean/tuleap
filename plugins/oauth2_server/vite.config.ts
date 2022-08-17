@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
 
-module.exports = webpack_configurator.extendDevConfiguration(common);
+export default vite.defineAppConfig("oauth2_server", {
+    build: {
+        rollupOptions: {
+            input: {
+                administration: path.resolve(__dirname, "scripts/src/administration.ts"),
+                "user-preferences": path.resolve(__dirname, "scripts/src/user-preferences.ts"),
+                "authorization-form-style": path.resolve(
+                    __dirname,
+                    "themes/authorization-form.scss"
+                ),
+            },
+        },
+    },
+});
