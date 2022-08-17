@@ -26,6 +26,7 @@ use Psr\Log\Test\TestLogger;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\ReferenceInstance;
+use Tuleap\Reference\TextWithPotentialReferences;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ExtractReferencesStub;
@@ -60,9 +61,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $this->project = ProjectTestBuilder::aProject()->withId(151)->build();
 
         $this->logger              = new TestLogger();
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $this->project),
-            $this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $this->project),
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $this->project)]
         );
 
         $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
@@ -82,12 +83,6 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function handlePotentialReferencesReceived(): void
     {
-        $text_with_potential_references = sprintf(
-            "closes art#%d\nimplements art#%d",
-            self::FIRST_ARTIFACT_ID,
-            self::SECOND_ARTIFACT_ID,
-        );
-
         $first_done_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(402, 'Closed', 'Irrelevant', 1, false);
         $second_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(940, 'Done', 'Irrelevant', 1, false);
 
@@ -106,7 +101,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
             new ArtifactCloser(
                 RetrieveStatusFieldStub::withSuccessiveFields(
                     $this->getStatusField(564, $first_done_value),
-                    $this->getStatusField(618, $second_done_value)
+                    $this->getStatusField(618, $second_done_value),
                 ),
                 $status_value_retriever,
                 $done_value_retriever,
@@ -117,10 +112,18 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         );
         $handler->handlePotentialReferencesReceived(
             new PotentialReferencesReceived(
-                $text_with_potential_references,
+                [
+                    new TextWithPotentialReferences(
+                        sprintf('closes art #%d', self::FIRST_ARTIFACT_ID),
+                        ReferenceStringStub::fromString('git #linkable/b9ead7cb')
+                    ),
+                    new TextWithPotentialReferences(
+                        sprintf('implements art #%d', self::SECOND_ARTIFACT_ID),
+                        ReferenceStringStub::fromString('git #linkable/e43c62bb')
+                    ),
+                ],
                 $this->project,
                 UserTestBuilder::aUser()->withUserName('meisinger')->build(),
-                ReferenceStringStub::fromString('git #linkable/b9ead7cb')
             )
         );
     }
@@ -151,9 +154,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItSkipsNonArtifactReferences(): void
     {
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getNonArtifactReferenceInstance('doc', 309),
-            $this->getNonArtifactReferenceInstance('custom', 95)
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getNonArtifactReferenceInstance('doc', 309)],
+            [$this->getNonArtifactReferenceInstance('custom', 95)]
         );
 
         $this->handlePotentialReferencesReceived();
@@ -162,9 +165,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItSkipsReferencesWhoseContextKeywordIsNotAClosingKeyword(): void
     {
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getArtifactReferenceInstance('not_closing', 'art', self::FIRST_ARTIFACT_ID, $this->project),
-            $this->getArtifactReferenceInstance('not_closing', 'story', self::SECOND_ARTIFACT_ID, $this->project)
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('not_closing', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('not_closing', 'story', self::SECOND_ARTIFACT_ID, $this->project)]
         );
 
         $this->handlePotentialReferencesReceived();
@@ -174,9 +177,9 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     public function testItSkipsReferencesToArtifactsFromADifferentProjectThanTheEvent(): void
     {
         $other_project             = ProjectTestBuilder::aProject()->withId(113)->build();
-        $this->reference_extractor = ExtractReferencesStub::withReferenceInstances(
-            $this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $other_project),
-            $this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $other_project),
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('closes', 'art', self::FIRST_ARTIFACT_ID, $other_project)],
+            [$this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $other_project)]
         );
 
         $this->handlePotentialReferencesReceived();

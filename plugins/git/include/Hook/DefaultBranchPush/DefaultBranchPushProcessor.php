@@ -31,6 +31,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Reference\TextWithPotentialReferences;
 
 final class DefaultBranchPushProcessor
 {
@@ -41,35 +42,50 @@ final class DefaultBranchPushProcessor
     }
 
     /**
-     * @return list<Ok<PotentialReferencesReceived> | Err<Fault>>
+     * @return Ok<DefaultBranchPushProcessed> | Err<Fault>
      */
-    public function process(DefaultBranchPushReceived $push): array
+    public function process(DefaultBranchPushReceived $push): Ok|Err
     {
         if (! $this->closure_verifier->isArtifactClosureAllowed((int) $push->getRepository()->getId())) {
-            return [Result::err(ArtifactClosureNotAllowedFault::build($push->getRepository()))];
+            return Result::err(ArtifactClosureNotAllowedFault::build($push->getRepository()));
         }
-        return array_map([$this, 'processSingleCommit'], $push->analyzeCommits());
+        // We intentionally do not combine the list of results.
+        // We want to continue processing other commits in case of fault and then log all faults.
+        $texts  = [];
+        $faults = [];
+        foreach ($push->getCommitHashes() as $commit_hash) {
+            $result = $this->processSingleCommit($push->getRepository(), $commit_hash);
+            if (Result::isOk($result)) {
+                $texts[] = $result->value;
+            } else {
+                $faults[] = $result->error;
+            }
+        }
+        return Result::ok(
+            new DefaultBranchPushProcessed(
+                new PotentialReferencesReceived(
+                    $texts,
+                    $push->getRepository()->getProject(),
+                    $push->getPusher(),
+                ),
+                $faults
+            )
+        );
     }
 
     /**
-     * @return Ok<PotentialReferencesReceived> | Err<Fault>
+     * @return Ok<TextWithPotentialReferences> | Err<Fault>
      */
-    private function processSingleCommit(CommitAnalysisOrder $order): Ok|Err
+    private function processSingleCommit(\GitRepository $git_repository, CommitHash $commit_hash): Ok|Err
     {
         try {
-            $commit_message = $this->message_retriever->getCommitMessage((string) $order->getCommitHash());
+            $commit_message = $this->message_retriever->getCommitMessage((string) $commit_hash);
         } catch (\Git_Command_Exception $e) {
             return Result::err(
                 Fault::fromThrowableWithMessage($e, 'Could not retrieve commit message: ' . $e->getMessage())
             );
         }
-        $back_reference = GitCommitReferenceString::fromRepositoryAndCommit(
-            $order->getRepository(),
-            $order->getCommitHash()
-        );
-        $project        = $order->getRepository()->getProject();
-        return Result::ok(
-            new PotentialReferencesReceived($commit_message, $project, $order->getPusher(), $back_reference)
-        );
+        $back_reference = GitCommitReferenceString::fromRepositoryAndCommit($git_repository, $commit_hash);
+        return Result::ok(new TextWithPotentialReferences($commit_message, $back_reference));
     }
 }

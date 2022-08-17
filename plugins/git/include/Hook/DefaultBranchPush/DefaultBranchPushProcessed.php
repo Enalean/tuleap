@@ -22,41 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
+use Tuleap\Event\Events\PotentialReferencesReceived;
+use Tuleap\NeverThrow\Fault;
+
 /**
  * @psalm-immutable
  */
-final class CommitAnalysisOrder
+final class DefaultBranchPushProcessed
 {
-    private function __construct(
-        private CommitHash $commit_hash,
-        private \PFUser $pusher,
-        private \GitRepository $repository,
+    public function __construct(
+        public PotentialReferencesReceived $event,
+        /**
+         * @var Fault[]
+         */
+        public array $faults,
     ) {
-    }
-
-    /**
-     * @psalm-pure
-     */
-    public static function fromComponents(
-        CommitHash $commit_hash,
-        \PFUser $pusher,
-        \GitRepository $repository,
-    ): self {
-        return new self($commit_hash, $pusher, $repository);
-    }
-
-    public function getCommitHash(): CommitHash
-    {
-        return $this->commit_hash;
-    }
-
-    public function getPusher(): \PFUser
-    {
-        return $this->pusher;
-    }
-
-    public function getRepository(): \GitRepository
-    {
-        return $this->repository;
     }
 }

@@ -24,7 +24,6 @@ namespace Tuleap\Git\Hook\Asynchronous;
 
 use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
-use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 use Tuleap\Git\Stub\BuildDefaultBranchPushProcessorStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
@@ -94,21 +93,12 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $handler->handle($worker_event);
     }
 
-    public function testItDispatchesEventsToSearchForReferencesInEachCommitMessageOfTheWorkerEvent(): void
+    public function testItDispatchesAnEventToSearchForReferencesInEachCommitMessageOfTheWorkerEvent(): void
     {
-        /** @var list<PotentialReferencesReceived> $events */
-        $events                 = [];
-        $this->event_dispatcher = EventDispatcherStub::withCallback(
-            static function (PotentialReferencesReceived $received) use (&$events) {
-                $events[] = $received;
-                return $received;
-            }
-        );
-
         $this->handle();
 
         self::assertTrue($this->logger->hasDebugRecords());
-        self::assertCount(2, $events);
+        self::assertSame(1, $this->event_dispatcher->getCallCount());
     }
 
     public function testItIgnoresWorkerEventWithAnotherTopic(): void
@@ -149,7 +139,8 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->handle();
 
-        self::assertSame(0, $this->event_dispatcher->getCallCount());
+        // It still dispatches the event when there are some faults there
+        self::assertSame(1, $this->event_dispatcher->getCallCount());
         self::assertTrue($this->logger->hasErrorRecords());
     }
 }
