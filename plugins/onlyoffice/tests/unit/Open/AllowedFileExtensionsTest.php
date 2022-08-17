@@ -42,6 +42,7 @@ final class AllowedFileExtensionsTest extends TestCase
     {
         return [
             ['csv', true],
+            ['CSV', true],
             ['doc', true],
             ['docm', true],
             ['docx', true],
