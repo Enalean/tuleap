@@ -83,7 +83,8 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function handlePotentialReferencesReceived(): void
     {
-        $first_done_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(402, 'Closed', 'Irrelevant', 1, false);
+        $first_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(402, 'Closed', 'Irrelevant', 1, false);
+
         $second_done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(940, 'Done', 'Irrelevant', 1, false);
 
         $status_value_retriever = $this->createStub(StatusValueRetriever::class);
@@ -98,6 +99,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
             $this->reference_extractor,
             $this->artifact_retriever,
             $this->user_retriever,
+            new ArtifactWasClosedCache(),
             new ArtifactCloser(
                 RetrieveStatusFieldStub::withSuccessiveFields(
                     $this->getStatusField(564, $first_done_value),
@@ -200,6 +202,23 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->handlePotentialReferencesReceived();
         self::assertTrue($this->logger->hasErrorRecords());
+    }
+
+    public function testItSkipsArtifactsThatItHasAlreadyClosedBefore(): void
+    {
+        $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances(
+            [$this->getArtifactReferenceInstance('close', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+            [$this->getArtifactReferenceInstance('fix', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
+        );
+
+        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+            $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
+            $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
+        );
+
+        $this->handlePotentialReferencesReceived();
+
+        self::assertSame(1, $this->changeset_creator->getCallsCount());
     }
 
     private function getArtifactReferenceInstance(
