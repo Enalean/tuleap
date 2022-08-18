@@ -434,7 +434,7 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
                        AND  service IN (' . $this->da->quoteSmartImplode(',', $service) . ') group by group_id) as start' .
                ' LEFT JOIN (SELECT group_id, service, sum(size) as end_size
                        FROM plugin_statistics_diskusage_group
-                       WHERE ' . $this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group') . '
+                       WHERE ' . ($this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group') ?: 1) . '
                        AND service IN (' . $this->da->quoteSmartImplode(',', $service) . ') group by group_id) as end' .
                 ' USING (group_id)' .
                 ' LEFT JOIN `groups` USING (group_id)' .
