@@ -633,6 +633,13 @@ final class RepositoryTest extends TestBase
         $this->assertGETCommits($response);
     }
 
+    public function testGETCommitsWithAnInvalidReference(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/commits/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
+
+        self::assertEquals(404, $response->getStatusCode());
+    }
+
     private function assertGetCommits(\Psr\Http\Message\ResponseInterface $response): void
     {
         $commit = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
