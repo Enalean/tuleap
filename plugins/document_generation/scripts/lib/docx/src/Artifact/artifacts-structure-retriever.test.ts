@@ -102,7 +102,7 @@ describe("retrieveArtifactsStructure", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 4,
+                                id: "4",
                                 label: "Value01",
                                 color: null,
                                 tlp_color: null,
@@ -130,13 +130,13 @@ describe("retrieveArtifactsStructure", () => {
                         label: "Checkbox List",
                         values: [
                             {
-                                id: 15,
+                                id: "15",
                                 label: "MulitValue01",
                                 color: null,
                                 tlp_color: null,
                             },
                             {
-                                id: 16,
+                                id: "16",
                                 label: "MulitValue02",
                                 color: null,
                                 tlp_color: null,
@@ -149,11 +149,11 @@ describe("retrieveArtifactsStructure", () => {
                         label: "Open List",
                         bind_value_objects: [
                             {
-                                id: 1,
+                                id: "1",
                                 label: "azerty",
                             },
                             {
-                                id: 12548,
+                                id: "12548",
                                 label: "OpenValue01",
                                 color: null,
                                 tlp_color: null,
@@ -227,7 +227,16 @@ describe("retrieveArtifactsStructure", () => {
                 [6, { field_id: 6, type: "sb" }],
                 [7, { field_id: 7, type: "rb" }],
                 [8, { field_id: 8, type: "cb" }],
-                [9, { field_id: 9, type: "tbl" }],
+                [
+                    9,
+                    {
+                        field_id: 9,
+                        type: "tbl",
+                        bindings: { type: "static" },
+                        default_value: [],
+                        permissions: ["read", "update", "create"],
+                    },
+                ],
                 [
                     10,
                     {
@@ -407,7 +416,7 @@ describe("retrieveArtifactsStructure", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 4,
+                                id: "4",
                                 label: "Value01",
                                 color: null,
                                 tlp_color: null,
@@ -437,13 +446,13 @@ describe("retrieveArtifactsStructure", () => {
                         label: "Checkbox List",
                         values: [
                             {
-                                id: 15,
+                                id: "15",
                                 label: "MulitValue01",
                                 color: null,
                                 tlp_color: null,
                             },
                             {
-                                id: 16,
+                                id: "16",
                                 label: "MulitValue02",
                                 color: null,
                                 tlp_color: null,
@@ -457,11 +466,11 @@ describe("retrieveArtifactsStructure", () => {
                         label: "Open List",
                         bind_value_objects: [
                             {
-                                id: 1,
+                                id: "1",
                                 label: "azerty",
                             },
                             {
-                                id: 12548,
+                                id: "12548",
                                 label: "OpenValue01",
                                 color: null,
                                 tlp_color: null,

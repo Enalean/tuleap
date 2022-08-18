@@ -25,7 +25,6 @@ import type {
     FieldSetIdentifier,
     LastUpdateDateFieldIdentifier,
     MultiSelectBoxFieldIdentifier,
-    OpenListFieldIdentifier,
     PermissionFieldIdentifier,
     RadioButtonFieldIdentifier,
     SelectBoxFieldIdentifier,
@@ -34,6 +33,9 @@ import type {
 } from "@tuleap/plugin-tracker-constants";
 
 import type { UserGroupRepresentation } from "./artifacts";
+import type { OpenListFieldStructure } from "./open-list-field";
+
+export * from "./open-list-field";
 
 export interface BaseFieldStructure {
     readonly field_id: number;
@@ -61,8 +63,7 @@ interface ListFieldStructure extends BaseFieldStructure {
         | SelectBoxFieldIdentifier
         | RadioButtonFieldIdentifier
         | MultiSelectBoxFieldIdentifier
-        | CheckBoxFieldIdentifier
-        | OpenListFieldIdentifier;
+        | CheckBoxFieldIdentifier;
 }
 
 interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure {
@@ -90,6 +91,7 @@ export type StructureFields =
     | DateFieldStructure
     | ContainerFieldStructure
     | ListFieldStructure
+    | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
     | ArtifactLinkFieldStructure;
 
