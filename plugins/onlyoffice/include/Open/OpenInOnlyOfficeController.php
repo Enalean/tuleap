@@ -23,20 +23,27 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Open;
 
 use HTTPRequest;
+use Psr\Log\LoggerInterface;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\ProvideCurrentUser;
 
 final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWithBurningParrot, \Tuleap\Request\DispatchableWithRequest
 {
     public function __construct(
-        private \UserManager $user_manager,
-        private \Docman_ItemFactory $item_factory,
-        private \Docman_VersionFactory $version_factory,
+        private ProvideCurrentUser $current_user_provider,
+        private ProvideDocmanFileLastVersion $docman_file_last_version_provider,
+        private \TemplateRenderer $template_renderer,
+        private LoggerInterface $logger,
         private IncludeViteAssets $assets,
         private Prometheus $prometheus,
     ) {
@@ -49,34 +56,32 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
             'Total number of open of document in ONLYOFFICE',
         );
 
-        $item = $this->item_factory->getItemFromDb((int) $variables['id']);
-        if (! $item instanceof \Docman_File) {
-            throw new NotFoundException();
-        }
+        $user = $this->current_user_provider->getCurrentUser();
 
-        $user = $this->user_manager->getCurrentUser();
+        $this->docman_file_last_version_provider->getLastVersionOfAFileUserCanAccess($user, (int) $variables['id'])
+            ->andThen(
+                /** @psalm-return Ok<\Docman_Version>|Err<Fault> */
+                function (\Docman_Version $version): Ok|Err {
+                    if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($version->getFilename())) {
+                        return Result::err(Fault::fromMessage(sprintf('Item #%d cannot be opened with ONLYOFFICE', $version->getItemId())));
+                    }
+                    return Result::ok($version);
+                }
+            )->match(
+                function (\Docman_Version $version) use ($layout): void {
+                    $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/open-in-onlyoffice.ts'));
+                    $layout->header(
+                        HeaderConfiguration::inProjectWithoutSidebar(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
+                    );
 
-        $docman_permissions_manager = \Docman_PermissionsManager::instance($item->getGroupId());
-        if (! $docman_permissions_manager->userCanAccess($user, $item->getId())) {
-            throw new NotFoundException();
-        }
+                    $this->template_renderer->renderToPage('open-in-onlyoffice', OpenInOnlyOfficePresenter::fromDocmanVersion($version));
 
-        $version = $this->version_factory->getCurrentVersionForItem($item);
-        if ($version === null) {
-            throw new NotFoundException();
-        }
-        if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($version->getFilename())) {
-            throw new NotFoundException();
-        }
-
-        $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/open-in-onlyoffice.ts'));
-        $layout->header(
-            HeaderConfiguration::inProjectWithoutSidebar(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
-        );
-
-        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
-        $renderer->renderToPage('open-in-onlyoffice', OpenInOnlyOfficePresenter::fromDocmanFile($item));
-
-        $layout->footer(FooterConfiguration::withoutContent());
+                    $layout->footer(FooterConfiguration::withoutContent());
+                },
+                function (Fault $fault): void {
+                    $this->logger->debug((string) $fault);
+                    throw new NotFoundException();
+                }
+            );
     }
 }

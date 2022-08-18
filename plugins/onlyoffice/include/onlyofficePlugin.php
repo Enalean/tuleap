@@ -154,8 +154,9 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     {
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
-            new \Docman_ItemFactory(),
-            new \Docman_VersionFactory(),
+            new \Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+            BackendLogger::getDefaultLogger(),
             self::getAssets(),
             Prometheus::instance(),
         );

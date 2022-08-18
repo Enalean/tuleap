@@ -22,17 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
-/**
- * @psalm-immutable
- */
-final class OpenInOnlyOfficePresenter
-{
-    private function __construct(public int $file_id)
-    {
-    }
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-    public static function fromDocmanVersion(\Docman_Version $docman_version): self
-    {
-        return new self((int) $docman_version->getItemId());
-    }
+interface ProvideDocmanFileLastVersion
+{
+    /**
+     * @psalm-return Ok<\Docman_Version>|Err<Fault>
+     */
+    public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err;
 }
