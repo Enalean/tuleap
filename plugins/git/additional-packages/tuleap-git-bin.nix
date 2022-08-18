@@ -26,6 +26,8 @@ let
     # deploy additional helpers like shell completions files. It is not something we need for our context and it cannot
     # work without modification because it expects to find files under $out and not under $out/$tuleapGitBinBasePath.
     postInstall = "";
+
+    doInstallCheck = false;
   }));
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-git-bin";
