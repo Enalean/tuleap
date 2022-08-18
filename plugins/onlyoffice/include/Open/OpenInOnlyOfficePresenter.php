@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+declare(strict_types=1);
 
-export default vite.defineAppConfig("onlyoffice", {
-    build: {
-        rollupOptions: {
-            input: {
-                "open-in-onlyoffice": path.resolve(__dirname, "scripts/open-in-onlyoffice.ts"),
-                "onlyoffice-editor": path.resolve(__dirname, "scripts/onlyoffice-editor.ts"),
-            },
-        },
-    },
-});
+namespace Tuleap\OnlyOffice\Open;
+
+/**
+ * @psalm-immutable
+ */
+final class OpenInOnlyOfficePresenter
+{
+    private function __construct(public int $file_id)
+    {
+    }
+
+    public static function fromDocmanFile(\Docman_File $docman_file): self
+    {
+        return new self((int) $docman_file->getId());
+    }
+}

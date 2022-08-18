@@ -42,7 +42,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
     ) {
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->prometheus->increment(
             'plugin_onlyoffice_open_document_total',
@@ -75,7 +75,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
         );
 
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates');
-        $renderer->renderToPage('open-in-onlyoffice', []);
+        $renderer->renderToPage('open-in-onlyoffice', OpenInOnlyOfficePresenter::fromDocmanFile($item));
 
         $layout->footer(FooterConfiguration::withoutContent());
     }

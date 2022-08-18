@@ -37,6 +37,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
@@ -45,6 +46,7 @@ use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
 use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
+use Tuleap\OnlyOffice\Open\OnlyOfficeEditorController;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -103,8 +105,10 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             function (FastRoute\RouteCollector $r): void {
                 $r->get('/document_download', $this->getRouteHandler('routeGetDocumentDownload'));
                 $r->get('/open/{id:\d+}', $this->getRouteHandler('routeGetOpenOnlyOffice'));
+                $r->get('/editor/{id:\d+}', $this->getRouteHandler('routeGetEditorOnlyOffice'));
             }
         );
+        $route_collector->get(OnlyOfficeEditorController::EDITOR_ASSET_ENDPOINT, $this->getRouteHandler('routeGetEditorAssetsOnlyOffice'));
         $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
         $route_collector->post(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
     }
@@ -152,11 +156,37 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             UserManager::instance(),
             new \Docman_ItemFactory(),
             new \Docman_VersionFactory(),
-            new \Tuleap\Layout\IncludeViteAssets(
-                __DIR__ . '/../frontend-assets/',
-                '/assets/onlyoffice'
-            ),
+            self::getAssets(),
             Prometheus::instance(),
+        );
+    }
+
+    public function routeGetEditorOnlyOffice(): OnlyOfficeEditorController
+    {
+        return new OnlyOfficeEditorController(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+            self::getAssets(),
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter()
+        );
+    }
+
+    public function routeGetEditorAssetsOnlyOffice(): \Tuleap\OnlyOffice\Open\OnlyOfficeEditorCrossOriginAssetsController
+    {
+        return new \Tuleap\OnlyOffice\Open\OnlyOfficeEditorCrossOriginAssetsController(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            __DIR__ . '/../frontend-assets/assets/',
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+        );
+    }
+
+    private static function getAssets(): IncludeViteAssets
+    {
+        return new IncludeViteAssets(
+            __DIR__ . '/../frontend-assets/',
+            '/assets/onlyoffice'
         );
     }
 
