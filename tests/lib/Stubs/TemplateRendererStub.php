@@ -20,19 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\Test\Stubs;
 
-/**
- * @psalm-immutable
- */
-final class OpenInOnlyOfficePresenter
+final class TemplateRendererStub extends \TemplateRenderer
 {
-    private function __construct(public int $file_id)
+    /**
+     * @psalm-readonly
+     * @psalm-allow-private-mutation
+     */
+    public bool $has_rendered_something = false;
+
+    /**
+     * @param string $template_name
+     */
+    public function renderToString($template_name, mixed $presenter): string
     {
+        $this->has_rendered_something = true;
+        return '';
     }
 
-    public static function fromDocmanVersion(\Docman_Version $docman_version): self
+    /**
+     * @param string $template_name
+     */
+    public function renderToPage($template_name, mixed $presenter): void
     {
-        return new self((int) $docman_version->getItemId());
+        $this->has_rendered_something = true;
     }
 }

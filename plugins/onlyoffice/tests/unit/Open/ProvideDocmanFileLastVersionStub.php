@@ -22,17 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
+
 /**
  * @psalm-immutable
  */
-final class OpenInOnlyOfficePresenter
+final class ProvideDocmanFileLastVersionStub implements ProvideDocmanFileLastVersion
 {
-    private function __construct(public int $file_id)
+    /**
+     * @param Ok<\Docman_Version>|Err<Fault> $result
+     */
+    private function __construct(private Ok|Err $result)
     {
     }
 
-    public static function fromDocmanVersion(\Docman_Version $docman_version): self
+    public static function buildWithError(): self
     {
-        return new self((int) $docman_version->getItemId());
+        return new self(Result::err(Fault::fromMessage('Something bad')));
+    }
+
+    public static function buildWithDocmanVersion(\Docman_Version $version): self
+    {
+        return new self(Result::ok($version));
+    }
+
+    public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
+    {
+        return $this->result;
     }
 }
