@@ -25,16 +25,15 @@ namespace Tuleap\OnlyOffice\Open;
 use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Request\NotFoundException;
 use Tuleap\User\ProvideCurrentUser;
 
@@ -42,11 +41,12 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
 {
     public function __construct(
         private ProvideCurrentUser $current_user_provider,
-        private ProvideDocmanFileLastVersion $docman_file_last_version_provider,
+        private ProvideOnlyOfficeDocument $only_office_document_provider,
         private \TemplateRenderer $template_renderer,
         private LoggerInterface $logger,
         private IncludeViteAssets $assets,
         private Prometheus $prometheus,
+        private string $base_url,
     ) {
     }
 
@@ -59,23 +59,30 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
 
         $user = $this->current_user_provider->getCurrentUser();
 
-        $this->docman_file_last_version_provider->getLastVersionOfAFileUserCanAccess($user, (int) $variables['id'])
-            ->andThen(
-                /** @psalm-return Ok<\Docman_Version>|Err<Fault> */
-                function (\Docman_Version $version): Ok|Err {
-                    if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($version->getFilename())) {
-                        return Result::err(Fault::fromMessage(sprintf('Item #%d cannot be opened with ONLYOFFICE', $version->getItemId())));
-                    }
-                    return Result::ok($version);
-                }
-            )->match(
-                function (\Docman_Version $version) use ($layout): void {
+        $this->only_office_document_provider->getDocument($user, (int) $variables['id'])
+            ->match(
+                function (OnlyOfficeDocument $document) use ($layout): void {
+                    $link_provider = new DocumentLinkProvider($this->base_url, $document->project);
+
+                    $icon_and_name_of_project = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
+                        $document->project->getIconUnicodeCodepoint()
+                    ) . ' ' . $document->project->getPublicName();
+
                     $layout->addJavascriptAsset(new JavascriptViteAsset($this->assets, 'scripts/open-in-onlyoffice.ts'));
                     $layout->header(
-                        HeaderConfiguration::inProjectWithoutSidebar(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
+                        HeaderConfiguration::inProjectWithoutSidebar(
+                            dgettext('tuleap-onlyoffice', 'ONLYOFFICE'),
+                            new HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter(
+                                sprintf(
+                                    dgettext('tuleap-onlyoffice', 'Back to %s documents'),
+                                    $icon_and_name_of_project,
+                                ),
+                                $link_provider->getShowLinkUrl($document->item),
+                            )
+                        )
                     );
 
-                    $this->template_renderer->renderToPage('open-in-onlyoffice', OpenInOnlyOfficePresenter::fromDocmanVersion($version));
+                    $this->template_renderer->renderToPage('open-in-onlyoffice', OpenInOnlyOfficePresenter::fromOnlyOfficeDocument($document));
 
                     $layout->footer(FooterConfiguration::withoutContent());
                 },

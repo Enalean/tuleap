@@ -140,7 +140,7 @@ class BurningParrotTheme extends BaseLayout
         $this->header_has_been_written = true;
         $project                       = null;
         $project_context               = null;
-        $in_project_without_sidebar    = false;
+        $in_project_without_sidebar    = null;
 
         if ($params instanceof HeaderConfiguration) {
             $in_project_without_sidebar = $params->in_project_without_sidebar;

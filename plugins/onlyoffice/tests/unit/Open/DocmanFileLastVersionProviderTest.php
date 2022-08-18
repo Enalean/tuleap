@@ -65,7 +65,8 @@ final class DocmanFileLastVersionProviderTest extends TestCase
 
     public function testCanRetrieveTheLastVersionOfADocmanFile(): void
     {
-        $this->item_factory->method('getItemFromDb')->willReturn(new \Docman_File(['group_id' => self::PROJECT_ID]));
+        $item = new \Docman_File(['group_id' => self::PROJECT_ID]);
+        $this->item_factory->method('getItemFromDb')->willReturn($item);
         $this->permissions_manager->method('userCanAccess')->willReturn(true);
         $expected_version = new \Docman_Version();
         $this->version_factory->method('getCurrentVersionForItem')->willReturn($expected_version);
@@ -73,7 +74,8 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         $result = $this->provider->getLastVersionOfAFileUserCanAccess(UserTestBuilder::buildWithDefaults(), 741);
 
         self::assertTrue(Result::isOk($result));
-        self::assertSame($expected_version, $result->unwrapOr(null));
+        self::assertSame($item, $result->unwrapOr(null)->item);
+        self::assertSame($expected_version, $result->unwrapOr(null)->version);
     }
 
     public function testCannotRetrieveANonExistingFile(): void

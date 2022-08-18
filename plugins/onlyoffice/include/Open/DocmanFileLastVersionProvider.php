@@ -37,7 +37,7 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
     }
 
     /**
-     * @psalm-return Ok<\Docman_Version>|Err<Fault>
+     * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
      */
     public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
     {
@@ -62,6 +62,8 @@ final class DocmanFileLastVersionProvider implements ProvideDocmanFileLastVersio
             return Result::err(Fault::fromMessage(sprintf('Cannot find current version of file #%d', $item_id)));
         }
 
-        return Result::ok($version);
+        return Result::ok(
+            new DocmanFileLastVersion($item, $version)
+        );
     }
 }

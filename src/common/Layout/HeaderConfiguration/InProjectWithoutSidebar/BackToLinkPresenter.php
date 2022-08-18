@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface ProvideDocmanFileLastVersion
+/**
+ * @psalm-immutable
+ */
+final class BackToLinkPresenter
 {
-    /**
-     * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
-     */
-    public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err;
+    public function __construct(public string $label, public string $href)
+    {
+    }
 }

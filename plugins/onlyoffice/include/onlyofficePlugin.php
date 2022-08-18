@@ -46,6 +46,7 @@ use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
 use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
+use Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider;
 use Tuleap\OnlyOffice\Open\OnlyOfficeEditorController;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
 use Tuleap\Request\CollectRoutesEvent;
@@ -154,11 +155,15 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     {
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
-            new \Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+            new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
+                new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+                ProjectManager::instance(),
+            ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             BackendLogger::getDefaultLogger(),
             self::getAssets(),
             Prometheus::instance(),
+            \Tuleap\ServerHostname::HTTPSUrl(),
         );
     }
 

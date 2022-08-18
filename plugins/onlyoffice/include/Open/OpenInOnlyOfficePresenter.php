@@ -31,8 +31,8 @@ final class OpenInOnlyOfficePresenter
     {
     }
 
-    public static function fromDocmanVersion(\Docman_Version $docman_version): self
+    public static function fromOnlyOfficeDocument(OnlyOfficeDocument $document): self
     {
-        return new self((int) $docman_version->getItemId());
+        return new self((int) $document->item->getId());
     }
 }

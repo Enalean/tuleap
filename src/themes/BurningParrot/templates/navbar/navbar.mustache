@@ -1,9 +1,18 @@
 {{# navbar_presenter }}
-<header class="{{# should_logo_be_displayed }}full-width{{/ should_logo_be_displayed }} {{# in_project_without_sidebar}}in-project-without-sidebar pinned{{/ in_project_without_sidebar }}">
+<header class="{{# should_logo_be_displayed }}full-width{{/ should_logo_be_displayed }} {{# in_project_without_sidebar }}in-project-without-sidebar pinned{{/ in_project_without_sidebar }}">
     <div class="header-container">
         {{# should_logo_be_displayed }}
             {{> logo }}
         {{/ should_logo_be_displayed }}
+
+        {{# in_project_without_sidebar }}
+            {{# back_to_link }}
+                <a href="{{ href }}" class="header-container-back-to-link">
+                    <i class="fa-solid fa-arrow-left tlp-button-icon" aria-hidden="true"></i>
+                    {{ label }}
+                </a>
+            {{/ back_to_link }}
+        {{/ in_project_without_sidebar }}
 
         <div class="header-container-spacer"></div>
 

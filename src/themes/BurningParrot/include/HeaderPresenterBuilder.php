@@ -29,6 +29,7 @@ use Tuleap\InviteBuddy\InviteBuddiesPresenter;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithDensityVariants;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\Logo\IDetectIfLogoIsCustomized;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenter;
@@ -103,7 +104,7 @@ class HeaderPresenterBuilder
         ThemeVariantColor $theme_color,
         ThemeVariation $theme_variation,
         array $javascript_assets,
-        bool $in_project_without_sidebar,
+        ?InProjectWithoutSidebar $in_project_without_sidebar,
     ) {
         $this->navbar_presenter_builder = $navbar_presenter_builder;
         $this->imgroot                  = $imgroot;
