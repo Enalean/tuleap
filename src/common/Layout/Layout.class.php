@@ -45,8 +45,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     private $javascript;
 
-    private $version;
-
     //Define all the icons for this theme
     public $icons = ['Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
