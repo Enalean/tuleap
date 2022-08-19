@@ -2776,43 +2776,6 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
     return $(element).getAttribute(name);
   }
 
-  function readAttribute_IE(element, name) {
-    element = $(element);
-
-    var table = ATTRIBUTE_TRANSLATIONS.read;
-    if (table.values[name])
-      return table.values[name](element, name);
-
-    if (table.names[name]) name = table.names[name];
-
-    if (name.include(':')) {
-      if (!element.attributes || !element.attributes[name]) return null;
-      return element.attributes[name].value;
-    }
-
-    return element.getAttribute(name);
-  }
-
-  function readAttribute_Opera(element, name) {
-    if (name === 'title') return element.title;
-    return element.getAttribute(name);
-  }
-
-  var PROBLEMATIC_ATTRIBUTE_READING = (function() {
-    DIV.setAttribute('onclick', []);
-    var value = DIV.getAttribute('onclick');
-    var isFunction = Object.isArray(value);
-    DIV.removeAttribute('onclick');
-    return isFunction;
-  })();
-
-  if (PROBLEMATIC_ATTRIBUTE_READING) {
-    readAttribute = readAttribute_IE;
-  } else if (Prototype.Browser.Opera) {
-    readAttribute = readAttribute_Opera;
-  }
-
-
   function writeAttribute(element, name, value) {
     element = $(element);
     var attributes = {}, table = ATTRIBUTE_TRANSLATIONS.write;
