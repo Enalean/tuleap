@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Open;
 
 use HTTPRequest;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
@@ -79,7 +80,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
                     $layout->footer(FooterConfiguration::withoutContent());
                 },
                 function (Fault $fault): void {
-                    $this->logger->debug((string) $fault);
+                    Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
                     throw new NotFoundException();
                 }
             );
