@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\NeverThrow;
 
+use Psr\Log\LogLevel;
 use Psr\Log\Test\TestLogger;
 
 final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -98,6 +99,16 @@ final class FaultTest extends \Tuleap\Test\PHPUnit\TestCase
         Fault::writeToLogger($fault, $logger);
 
         self::assertTrue($logger->hasErrorRecords());
+    }
+
+    public function testCanWritesToLoggerAtASpecificLogLevel(): void
+    {
+        $logger = new TestLogger();
+        $fault  = Fault::fromMessage('Message');
+
+        Fault::writeToLogger($fault, $logger, LogLevel::INFO);
+
+        self::assertTrue($logger->hasInfoRecords());
     }
 
     public function testCanWritesToLoggerEvenWhenThrowableIsNotAnException(): void
