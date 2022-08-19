@@ -37,7 +37,7 @@
         <template v-if="has_loaded_properties">
             <obsolescence-date-property-for-update
                 v-if="is_obsolescence_date_property_used"
-                v-model="date_value"
+                v-bind:value="value"
             />
             <custom-property v-bind:item-property="propertyToUpdate" />
         </template>
@@ -68,14 +68,6 @@ export default {
         ...mapState("properties", ["has_loaded_properties"]),
         should_display_other_information() {
             return this.is_obsolescence_date_property_used || this.propertyToUpdate.length > 0;
-        },
-        date_value: {
-            get() {
-                return this.value;
-            },
-            set(value) {
-                this.$emit("input", value);
-            },
         },
     },
     mounted() {

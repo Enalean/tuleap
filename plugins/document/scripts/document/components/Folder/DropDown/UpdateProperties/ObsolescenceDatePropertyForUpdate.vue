@@ -32,7 +32,7 @@
             <select
                 class="tlp-select tlp-select-adjusted"
                 id="document-obsolescence-date-select-update"
-                v-model="selected_date_value"
+                v-bind:value="selected_value"
                 v-on:change="updateDatePickerValue"
                 ref="selectDateValue"
                 data-test="document-obsolescence-date-select-update"
@@ -49,8 +49,8 @@
                 <date-flat-picker
                     v-bind:id="'document-obsolescence-date-update'"
                     v-bind:required="selected_value === 'fixed'"
-                    v-model="obsolescence_date"
-                    ref="input"
+                    v-on:input="updateObsolescenceDateValue"
+                    v-bind:value="date_value"
                 />
             </div>
         </div>
@@ -68,6 +68,7 @@
 import { mapState } from "vuex";
 import { getObsolescenceDateValueInput } from "../../../../helpers/properties-helpers/obsolescence-date-value";
 import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
+import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "ObsolescenceDatePropertyForUpdate",
@@ -85,28 +86,6 @@ export default {
     },
     computed: {
         ...mapState("configuration", ["is_obsolescence_date_property_used"]),
-        obsolescence_date: {
-            get() {
-                return this.date_value;
-            },
-            set(value) {
-                if (!this.uses_helper_validity) {
-                    this.selected_value = "fixed";
-                }
-                this.date_value = value;
-                this.$emit("input", value);
-
-                this.uses_helper_validity = false;
-            },
-        },
-        selected_date_value: {
-            get() {
-                return this.selected_value;
-            },
-            set(value) {
-                this.selected_value = value;
-            },
-        },
     },
     mounted() {
         if (this.value !== "") {
@@ -122,7 +101,17 @@ export default {
             this.uses_helper_validity = true;
 
             this.selected_value = event.target.value;
-            this.obsolescence_date = input_date_value;
+            this.date_value = input_date_value;
+            emitter.emit("update-obsolescence-date-property", input_date_value);
+        },
+        updateObsolescenceDateValue(event) {
+            if (!this.uses_helper_validity) {
+                this.selected_value = "fixed";
+            }
+
+            emitter.emit("update-obsolescence-date-property", event);
+
+            this.uses_helper_validity = false;
         },
     },
 };
