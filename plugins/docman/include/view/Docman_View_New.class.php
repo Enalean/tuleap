@@ -240,7 +240,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $this->setupNewItem($params);
 
         $html  = '';
-        $html .= '<form name="' . $params['form_name'] . '" data-test="docman_new_form" id="docman_new_form" action="' . $params['default_url'] . '" method="POST" ' . $this->_getEnctype() . ' class="docman_form">';
+        $html .= '<form name="' . $params['form_name'] . '" data-test="docman_new_form" action="' . $params['default_url'] . '" method="POST" ' . $this->_getEnctype() . ' class="docman_form">';
 
         $html .= '<div class="docman_new_item" data-test="docman_new_item">' . "\n";
 
