@@ -478,7 +478,7 @@ class UserDao extends \Tuleap\DB\DataAccessObject
                 $pattern
             );
             if (count($status_values) > 0) {
-                $where_stmt->andIn('status IN ?*', $status_values);
+                $where_stmt->andIn('status IN (?*)', $status_values);
             }
         } elseif (count($status_values) > 0) {
             $where_stmt = ParagonIE\EasyDB\EasyStatement::open()->in('WHERE status IN (?*)', $status_values);
