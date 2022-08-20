@@ -20,41 +20,26 @@
 
 namespace Tuleap\ReferenceAliasTracker;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\NullLogger;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 include __DIR__ . '/bootstrap.php';
 
 final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private ReferencesImporter $importer;
+    private ImportConfig $configuration;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao
+     * @var \PHPUnit\Framework\MockObject\MockObject&Dao
      */
     private $dao;
-
-    /**
-     * @var \Logger|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $logger;
-
-    /**
-     * @var ReferencesImporter
-     */
-    private $importer;
-
-    /**
-     * @var ImportConfig
-     */
-    private $configuration;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao           = \Mockery::spy(\Tuleap\ReferenceAliasTracker\Dao::class);
-        $this->logger        = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->importer      = new ReferencesImporter($this->dao, $this->logger);
+        $this->dao           = $this->createMock(\Tuleap\ReferenceAliasTracker\Dao::class);
+        $this->importer      = new ReferencesImporter($this->dao, new NullLogger());
         $this->configuration = new ImportConfig();
     }
 
@@ -70,11 +55,10 @@ XML;
         $simple_xml         = new \SimpleXMLElement($xml);
         $created_references = ['tracker' => ['T2' => '12'], 'artifact' => ['1' => '2', '5' => '6']];
 
-        $this->dao->shouldReceive('getRef')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::exactly(3))->method('insertRef');
 
-        $this->dao->shouldReceive('insertRef')->times(3);
-
-        $this->importer->importCompatRefXML($this->configuration, \Mockery::spy(\Project::class), $simple_xml, $created_references);
+        $this->importer->importCompatRefXML($this->configuration, ProjectTestBuilder::aProject()->build(), $simple_xml, $created_references);
     }
 
     public function testItShouldNotAddIfTargetIsUnknown(): void
@@ -88,11 +72,10 @@ XML;
         $simple_xml         = new \SimpleXMLElement($xml);
         $created_references = [];
 
-        $this->dao->shouldReceive('getRef')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('insertRef')->never();
-
-        $this->importer->importCompatRefXML($this->configuration, \Mockery::spy(\Project::class), $simple_xml, $created_references);
+        $this->importer->importCompatRefXML($this->configuration, ProjectTestBuilder::aProject()->build(), $simple_xml, $created_references);
     }
 
     public function testItShouldNotAddUnknownReferences(): void
@@ -105,10 +88,9 @@ XML;
         $simple_xml         = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337']];
 
-        $this->dao->shouldReceive('getRef')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('insertRef')->never();
-
-        $this->importer->importCompatRefXML($this->configuration, \Mockery::spy(\Project::class), $simple_xml, $created_references);
+        $this->importer->importCompatRefXML($this->configuration, ProjectTestBuilder::aProject()->build(), $simple_xml, $created_references);
     }
 }

@@ -20,28 +20,19 @@
 
 namespace Tuleap\ReferenceAliasCore;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use ProjectManager;
 use Reference;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private ReferencesBuilder $builder;
     /**
-     * @var ReferencesBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
+     * @var ProjectManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $project_manager;
 
@@ -49,8 +40,8 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->dao             = Mockery::mock(Dao::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->dao             = $this->createMock(Dao::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
 
         $this->builder = new ReferencesBuilder(
             $this->dao,
@@ -60,63 +51,57 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesAPkgReference(): void
     {
-        $project = Project::buildForTest();
-
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('pkg123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => '01',
             ]);
 
         $reference = $this->builder->getReference(
-            $project,
+            ProjectTestBuilder::aProject()->build(),
             'pkg',
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('frs', $reference->getServiceShortName());
-        $this->assertSame("/file/showfiles.php?group_id=101#p_01", $reference->getLink());
+        self::assertSame('frs', $reference->getServiceShortName());
+        self::assertSame("/file/showfiles.php?group_id=101#p_01", $reference->getLink());
     }
 
     public function testItRetrievesARelReference(): void
     {
-        $project = Project::buildForTest();
-
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('rel123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => '01',
             ]);
 
         $reference = $this->builder->getReference(
-            $project,
+            ProjectTestBuilder::aProject()->build(),
             'rel',
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('frs', $reference->getServiceShortName());
-        $this->assertSame("/file/shownotes.php?release_id=01", $reference->getLink());
+        self::assertSame('frs', $reference->getServiceShortName());
+        self::assertSame("/file/shownotes.php?release_id=01", $reference->getLink());
     }
 
     public function testItReturnsNullIfNoEntryFoundInDB(): void
     {
-        $project = Project::buildForTest();
+        $this->dao->expects(self::once())
+            ->method('getRef')
+            ->willReturn([]);
 
-        $this->dao->shouldReceive('getRef')
-            ->once()
-            ->andReturn([]);
-
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
-                $project,
+                ProjectTestBuilder::aProject()->build(),
                 'rel',
                 123
             )
@@ -125,19 +110,17 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
-        $project = Project::buildForTest();
-
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('whatever123')
-            ->andReturn([
+            ->willReturn([
                 'project_id' => 101,
                 'target' => '01',
             ]);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
-                $project,
+                ProjectTestBuilder::aProject()->build(),
                 'whatever',
                 123
             )
