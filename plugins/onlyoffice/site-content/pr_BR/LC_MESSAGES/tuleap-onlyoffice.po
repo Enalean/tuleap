@@ -9,6 +9,10 @@ msgstr ""
 msgid "Allow to open documents into ONLYOFFICE"
 msgstr ""
 
+#, php-format
+msgid "Back to %s documents"
+msgstr ""
+
 msgid "Current secret not displayed"
 msgstr ""
 

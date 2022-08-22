@@ -22,17 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
+
 /**
  * @psalm-immutable
  */
 final class HeaderConfiguration
 {
-    private function __construct(public string $title, public bool $in_project_without_sidebar)
+    private function __construct(public string $title, public InProjectWithoutSidebar $in_project_without_sidebar)
     {
     }
 
-    public static function inProjectWithoutSidebar(string $title): self
+    public static function inProjectWithoutSidebar(string $title, InProjectWithoutSidebar\BackToLinkPresenter $back_to_link): self
     {
-        return new self($title, true);
+        return new self($title, new InProjectWithoutSidebar($back_to_link));
     }
 }

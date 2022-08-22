@@ -25,11 +25,32 @@ namespace Tuleap\OnlyOffice\Open;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-interface ProvideDocmanFileLastVersion
+/**
+ * @psalm-immutable
+ */
+final class ProvideOnlyOfficeDocumentStub implements ProvideOnlyOfficeDocument
 {
     /**
-     * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
+     * @param Ok<OnlyOfficeDocument>|Err<Fault> $result
      */
-    public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err;
+    private function __construct(private Ok|Err $result)
+    {
+    }
+
+    public static function buildWithError(): self
+    {
+        return new self(Result::err(Fault::fromMessage('Something bad')));
+    }
+
+    public static function buildWithDocmanFile(\Project $project, \Docman_File $item): self
+    {
+        return new self(Result::ok(new OnlyOfficeDocument($project, $item)));
+    }
+
+    public function getDocument(\PFUser $user, int $item_id): Ok|Err
+    {
+        return $this->result;
+    }
 }

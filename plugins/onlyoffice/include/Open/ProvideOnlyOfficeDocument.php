@@ -26,10 +26,10 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-interface ProvideDocmanFileLastVersion
+interface ProvideOnlyOfficeDocument
 {
     /**
-     * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
+     * @psalm-return Ok<OnlyOfficeDocument>|Err<Fault>
      */
-    public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err;
+    public function getDocument(\PFUser $user, int $item_id): Ok|Err;
 }

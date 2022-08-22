@@ -127,3 +127,21 @@ header {
 .header-container-spacer {
     flex: 1 1 auto;
 }
+
+.header-container-back-to-link {
+    margin: 0 0 0 var(--tlp-x-large-spacing);
+    padding: var(--tlp-small-spacing);
+    border-radius: var(--tlp-large-radius);
+    color: var(--tlp-typo-default-text-color-on-dark-background);
+
+    &:visited {
+        color: var(--tlp-typo-default-text-color-on-dark-background);
+    }
+
+    &:hover,
+    &:focus {
+        background: rgb(0 0 0 / 20%);
+        color: var(--tlp-white-color);
+        text-decoration: none;
+    }
+}

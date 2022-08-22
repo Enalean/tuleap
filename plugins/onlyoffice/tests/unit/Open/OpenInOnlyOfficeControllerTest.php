@@ -30,6 +30,7 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Test\Stubs\TemplateRendererStub;
@@ -41,7 +42,12 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
         $template_renderer = new TemplateRendererStub();
         $controller        = self::buildController(
             $template_renderer,
-            ProvideDocmanFileLastVersionStub::buildWithDocmanVersion(new \Docman_Version(['filename' => 'something.docx'])),
+            ProvideOnlyOfficeDocumentStub::buildWithDocmanFile(
+                ProjectTestBuilder::aProject()
+                    ->withPublicName('ACME')
+                    ->build(),
+                new \Docman_File(['item_id' => 147])
+            ),
         );
 
         $controller->process(
@@ -53,11 +59,11 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
         self::assertTrue($template_renderer->has_rendered_something);
     }
 
-    public function testRejectsRequestWhenDocmanVersionCannotBeRetrieved(): void
+    public function testRejectsRequestWhenDocumentCannotBeRetrieved(): void
     {
         $controller = self::buildController(
             new TemplateRendererStub(),
-            ProvideDocmanFileLastVersionStub::buildWithError(),
+            ProvideOnlyOfficeDocumentStub::buildWithError(),
         );
 
         $this->expectException(NotFoundException::class);
@@ -68,30 +74,16 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
         );
     }
 
-    public function testRejectsRequestWhenDocmanVersionCannotBeOpenedWithOnlyOffice(): void
-    {
-        $controller = self::buildController(
-            new TemplateRendererStub(),
-            ProvideDocmanFileLastVersionStub::buildWithDocmanVersion(new \Docman_Version(['filename' => 'not_something_onlyoffice_can_open'])),
-        );
-
-        $this->expectException(NotFoundException::class);
-        $controller->process(
-            HTTPRequestBuilder::get()->build(),
-            LayoutBuilder::build(),
-            ['id' => '999']
-        );
-    }
-
-    private static function buildController(\TemplateRenderer $template_renderer, ProvideDocmanFileLastVersion $docman_file_last_version_provider): OpenInOnlyOfficeController
+    private static function buildController(\TemplateRenderer $template_renderer, ProvideOnlyOfficeDocument $document_provider): OpenInOnlyOfficeController
     {
         return new OpenInOnlyOfficeController(
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
-            $docman_file_last_version_provider,
+            $document_provider,
             $template_renderer,
             new NullLogger(),
             new IncludeViteAssets('/', '/'),
-            new Prometheus(new CollectorRegistry(new NullStore()))
+            new Prometheus(new CollectorRegistry(new NullStore())),
+            '',
         );
     }
 }

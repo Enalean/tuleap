@@ -22,14 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-interface ProvideDocmanFileLastVersion
+/**
+ * @psalm-immutable
+ */
+final class OnlyOfficeDocument
 {
-    /**
-     * @psalm-return Ok<DocmanFileLastVersion>|Err<Fault>
-     */
-    public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err;
+    public function __construct(public \Project $project, public \Docman_Item $item)
+    {
+    }
 }

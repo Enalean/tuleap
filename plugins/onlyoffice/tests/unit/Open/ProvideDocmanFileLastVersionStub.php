@@ -33,7 +33,7 @@ use Tuleap\NeverThrow\Result;
 final class ProvideDocmanFileLastVersionStub implements ProvideDocmanFileLastVersion
 {
     /**
-     * @param Ok<\Docman_Version>|Err<Fault> $result
+     * @param Ok<DocmanFileLastVersion>|Err<Fault> $result
      */
     private function __construct(private Ok|Err $result)
     {
@@ -44,9 +44,9 @@ final class ProvideDocmanFileLastVersionStub implements ProvideDocmanFileLastVer
         return new self(Result::err(Fault::fromMessage('Something bad')));
     }
 
-    public static function buildWithDocmanVersion(\Docman_Version $version): self
+    public static function buildWithDocmanVersion(\Docman_File $item, \Docman_Version $version): self
     {
-        return new self(Result::ok($version));
+        return new self(Result::ok(new DocmanFileLastVersion($item, $version)));
     }
 
     public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
