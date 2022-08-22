@@ -46,25 +46,26 @@ class State
     /**
      * @var string
      */
-    private $secret_key;
-    /**
-     * @var string
-     */
     private $nonce;
     /**
      * @var ConcealedString
      */
     private $pkce_code_verifier;
 
-    public function __construct(int $provider_id, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier)
+    /**
+     * @psalm-param non-empty-string $secret_key
+     */
+    public function __construct(int $provider_id, ?string $return_to, private string $secret_key, string $nonce, ConcealedString $pkce_code_verifier)
     {
         $this->provider_id        = $provider_id;
         $this->return_to          = $return_to;
-        $this->secret_key         = $secret_key;
         $this->nonce              = $nonce;
         $this->pkce_code_verifier = $pkce_code_verifier;
     }
 
+    /**
+     * @psalm-param non-empty-string $secret_key
+     */
     public static function createFromSignature(string $signed_state, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier): self
     {
         $token = (new Parser(new JoseEncoder()))->parse($signed_state);
@@ -91,6 +92,9 @@ class State
         return $this->return_to;
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getSecretKey(): string
     {
         return $this->secret_key;

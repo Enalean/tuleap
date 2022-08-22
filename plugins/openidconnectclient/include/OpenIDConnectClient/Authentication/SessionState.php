@@ -27,10 +27,6 @@ use Tuleap\Cryptography\ConcealedString;
 class SessionState
 {
     /**
-     * @var string
-     */
-    private $secret_key;
-    /**
      * @var string|null
      */
     private $return_to;
@@ -43,14 +39,19 @@ class SessionState
      */
     private $pkce_code_verifier;
 
-    public function __construct(string $secret_key, ?string $return_to, string $nonce, ConcealedString $pkce_code_verifier)
+    /**
+     * @param non-empty-string $secret_key
+     */
+    public function __construct(private string $secret_key, ?string $return_to, string $nonce, ConcealedString $pkce_code_verifier)
     {
-        $this->secret_key         = $secret_key;
         $this->return_to          = $return_to;
         $this->nonce              = $nonce;
         $this->pkce_code_verifier = $pkce_code_verifier;
     }
 
+    /**
+     * @psalm-return non-empty-string
+     */
     public function getSecretKey(): string
     {
         return $this->secret_key;
@@ -83,7 +84,9 @@ class SessionState
 
     public static function buildFromMinimalRepresentation(\stdClass $representation): self
     {
-        if (! isset($representation->secret_key, $representation->nonce, $representation->pkce_code_verifier) || ! property_exists($representation, 'return_to')) {
+        if (
+            ! isset($representation->secret_key, $representation->nonce, $representation->pkce_code_verifier) || ! property_exists($representation, 'return_to')
+        ) {
             throw new \InvalidArgumentException('Given $representation is incorrectly formatted');
         }
         $pkce_code_verifier = new ConcealedString($representation->pkce_code_verifier);

@@ -201,7 +201,7 @@ final class IDTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $id_token_builder->withClaim('nonce', $nonce);
         $id_token_builder->permittedFor('client_id_2');
         $id_token_builder->relatedTo('123');
-        $id_token = $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), InMemory::plainText('HMAC'))->toString();
+        $id_token = $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), InMemory::plainText(str_repeat('a', 32)))->toString();
 
         $key_details = openssl_pkey_get_details(self::$rsa_key);
         $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn([$key_details['key']]);

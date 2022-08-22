@@ -29,6 +29,7 @@ class StateFactory
 {
     /**
      * @var string
+     * @psalm-var non-empty-string
      */
     private static $key;
 
