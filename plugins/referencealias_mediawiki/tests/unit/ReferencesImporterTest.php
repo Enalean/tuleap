@@ -22,39 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ReferenceAliasMediawiki;
 
-use Logger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 include __DIR__ . '/bootstrap.php';
 
-class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CompatibilityDao
+     * @var CompatibilityDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Logger
-     */
-    private $logger;
-
-    /**
-     * @var ReferencesImporter
-     */
-    private $importer;
+    private ReferencesImporter $importer;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao      = \Mockery::spy(CompatibilityDao::class);
-        $this->logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->importer = new ReferencesImporter($this->dao, $this->logger);
+        $this->dao      = $this->createMock(CompatibilityDao::class);
+        $this->importer = new ReferencesImporter($this->dao, new NullLogger());
     }
 
     public function testItShouldAddMediaWikiLinks(): void
@@ -66,13 +53,10 @@ class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $simple_xml = new SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::once())->method('insertRef')->with(101, "wiki76532", "HomePage");
 
-        $project = Project::buildForTest();
-
-        $this->dao->shouldReceive('insertRef')->with(101, "wiki76532", "HomePage")->once();
-
-        $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, []);
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $simple_xml, []);
     }
 
     public function testItShouldNotAddUnknownReferences(): void
@@ -84,10 +68,9 @@ XML;
 XML;
         $simple_xml = new SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('insertRef')->never();
-
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, []);
+        $this->importer->importCompatRefXML(new ImportConfig(), ProjectTestBuilder::aProject()->build(), $simple_xml, []);
     }
 }

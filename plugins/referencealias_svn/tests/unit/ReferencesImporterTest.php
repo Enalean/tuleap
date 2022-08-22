@@ -22,42 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\ReferenceAliasSVN;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
+use Psr\Log\NullLogger;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 include __DIR__ . '/bootstrap.php';
 
 final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
 
-    /**
-     * @var \Logger|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $logger;
-
-    /**
-     * @var ReferencesImporter
-     */
-    private $importer;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $repository;
+    private ReferencesImporter $importer;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao        = \Mockery::spy(\Tuleap\ReferenceAliasSVN\Dao::class);
-        $this->logger     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->importer   = new ReferencesImporter($this->dao, $this->logger);
-        $this->repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class)->shouldReceive('getId')->andReturns(123)->getMock();
+        $this->dao      = $this->createMock(\Tuleap\ReferenceAliasSVN\Dao::class);
+        $this->importer = new ReferencesImporter($this->dao, new NullLogger());
     }
 
     public function testItShouldAddSVNLinks(): void
@@ -69,11 +55,12 @@ final class ReferencesImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $simple_xml = new \SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns([]);
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::once())->method('insertRef')->with('cmmt12', 123, 2);
 
-        $this->dao->shouldReceive('insertRef')->with('cmmt12', 123, 2)->once();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, $this->repository);
+        $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, $this->buildRepository($project));
     }
 
     public function testItShouldNotAddUnknownReferences(): void
@@ -85,10 +72,119 @@ XML;
 XML;
         $simple_xml = new \SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->method('getRef')->willReturn([]);
+        $this->dao->expects(self::never())->method('insertRef');
 
-        $this->dao->shouldReceive('insertRef')->never();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, $this->repository);
+        $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, $this->buildRepository($project));
+    }
+
+    private function buildRepository(Project $project): Repository
+    {
+        return new class ($project) implements Repository
+        {
+            private Project $project;
+
+            public function __construct(Project $project)
+            {
+                $this->project = $project;
+            }
+
+            public function getSettingUrl(): string
+            {
+                return '';
+            }
+
+            public function setId(int $id): void
+            {
+                // TODO: Implement setId() method.
+            }
+
+            public function getId(): int
+            {
+                return 123;
+            }
+
+            public function getName(): string
+            {
+                return '';
+            }
+
+            public function getProject(): \Project
+            {
+                return $this->project;
+            }
+
+            public function getPublicPath(): string
+            {
+                return '';
+            }
+
+            public function getFullName(): string
+            {
+                return '';
+            }
+
+            public function getSystemPath(): string
+            {
+                return '';
+            }
+
+            public function isRepositoryCreated(): bool
+            {
+                return true;
+            }
+
+            public function getSvnUrl(): string
+            {
+                return '';
+            }
+
+            public function getSvnDomain(): string
+            {
+                return '';
+            }
+
+            public function getHtmlPath(): string
+            {
+                return '';
+            }
+
+            public function canBeDeleted(): bool
+            {
+                return true;
+            }
+
+            public function getBackupPath(): ?string
+            {
+                return '';
+            }
+
+            public function getSystemBackupPath(): string
+            {
+                return '';
+            }
+
+            public function getBackupFileName(): string
+            {
+                return '';
+            }
+
+            public function getDeletionDate(): ?int
+            {
+                return 0;
+            }
+
+            public function setDeletionDate(int $deletion_date): void
+            {
+                // TODO: Implement setDeletionDate() method.
+            }
+
+            public function isDeleted(): bool
+            {
+                return false;
+            }
+        };
     }
 }

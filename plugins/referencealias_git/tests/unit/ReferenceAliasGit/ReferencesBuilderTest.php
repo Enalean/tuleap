@@ -22,26 +22,18 @@ namespace Tuleap\ReferenceAliasGit;
 
 use GitRepository;
 use GitRepositoryFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Reference;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
+    private ReferencesBuilder $builder;
     /**
-     * @var ReferencesBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Dao
+     * @var Dao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
-
     /**
-     * @var GitRepositoryFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     * @var GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository_factory;
 
@@ -49,8 +41,8 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $this->dao                = Mockery::mock(Dao::class);
-        $this->repository_factory = Mockery::mock(GitRepositoryFactory::class);
+        $this->dao                = $this->createMock(Dao::class);
+        $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
 
         $this->builder = new ReferencesBuilder(
             $this->dao,
@@ -60,37 +52,37 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRetrievesAReference(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('cmmt123')
-            ->andReturn([
+            ->willReturn([
                 'repository_id' => 1,
                 'sha1' => 'commitsha1',
             ]);
 
-        $repository = Mockery::mock(GitRepository::class);
-        $repository->shouldReceive('getProjectId')->andReturn(101);
-        $repository->shouldReceive('getId')->andReturn(1);
+        $repository = new GitRepository();
+        $repository->setProject(ProjectTestBuilder::aProject()->build());
+        $repository->setId(1);
 
-        $this->repository_factory->shouldReceive('getRepositoryById')
-            ->once()
+        $this->repository_factory->expects(self::once())
+            ->method('getRepositoryById')
             ->with(1)
-            ->andReturn($repository);
+            ->willReturn($repository);
 
         $reference = $this->builder->getReference(
             'cmmt',
             123
         );
 
-        $this->assertInstanceOf(Reference::class, $reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertSame('plugin_git', $reference->getServiceShortName());
-        $this->assertSame("/plugins/git/index.php/101/view/1/?a=commit&h=commitsha1", $reference->getLink());
+        self::assertSame('plugin_git', $reference->getServiceShortName());
+        self::assertSame("/plugins/git/index.php/101/view/1/?a=commit&h=commitsha1", $reference->getLink());
     }
 
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'whatever',
                 123
@@ -100,12 +92,12 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfNoEntryFoundInDB(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('cmmt123')
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'cmmt',
                 123
@@ -115,20 +107,20 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfTargetRepositoryNotFound(): void
     {
-        $this->dao->shouldReceive('getRef')
-            ->once()
+        $this->dao->expects(self::once())
+            ->method('getRef')
             ->with('cmmt123')
-            ->andReturn([
+            ->willReturn([
                 'repository_id' => 1,
                 'sha1' => 'commitsha1',
             ]);
 
-        $this->repository_factory->shouldReceive('getRepositoryById')
-            ->once()
+        $this->repository_factory->expects(self::once())
+            ->method('getRepositoryById')
             ->with(1)
-            ->andReturnNull();
+            ->willReturn(null);
 
-        $this->assertNull(
+        self::assertNull(
             $this->builder->getReference(
                 'cmmt',
                 123
