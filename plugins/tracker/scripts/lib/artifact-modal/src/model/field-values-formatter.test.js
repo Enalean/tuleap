@@ -1034,21 +1034,15 @@ describe("TuleapArtifactFieldValues", () => {
     });
 
     describe("Given a tracker containing an openlist field,", () => {
-        it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's bind_value_objects will be returned", () => {
+        it(`and given a map of artifact field values containing that field,
+            when I get the fields' selected values,
+            then a map of objects containing the artifact's bind_value_objects will be returned`, () => {
             const artifact_values = {
                 319: {
                     field_id: 319,
                     bind_value_objects: [
-                        {
-                            id: 689,
-                            label: "periscopism",
-                            is_hidden: false,
-                        },
-                        {
-                            id: 145,
-                            label: "distinguisher",
-                            is_hidden: false,
-                        },
+                        { id: "689", label: "periscopism", color: null, tlp_color: null },
+                        { id: "145", label: "distinguisher" },
                     ],
                     bind_value_ids: ["periscopism", "distinguisher"],
                 },
@@ -1064,15 +1058,12 @@ describe("TuleapArtifactFieldValues", () => {
                         name: "developoid",
                         permissions: ["read", "update", "create"],
                         type: "tbl",
-                        values: [
-                            { id: 689, label: "periscopism", is_hidden: false },
-                            { id: 145, label: "distinguisher", is_hidden: false },
-                        ],
+                        values: [{ id: 689, label: "periscopism", is_hidden: false }],
                     },
                 ],
             };
             const output = getSelectedValues(artifact_values, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 319: {
                     field_id: 319,
                     type: "tbl",
@@ -1080,15 +1071,93 @@ describe("TuleapArtifactFieldValues", () => {
                     bindings: { type: "static" },
                     value: {
                         bind_value_objects: [
+                            { id: "689", label: "periscopism", color: null, tlp_color: null },
+                            { id: "145", label: "distinguisher" },
+                        ],
+                    },
+                },
+            });
+        });
+
+        it(`and artifact value containing users,
+            then it will default user id to 0 for anonymous users`, () => {
+            const artifact_values = {
+                319: {
+                    field_id: 319,
+                    bind_value_objects: [
+                        {
+                            avatar_url: "/avatar-e4977a.png",
+                            display_name: "Chanda Muta (cmuta)",
+                            email: "cmuta@example.com",
+                            id: 762,
+                            is_anonymous: false,
+                            ldap_id: "762",
+                            real_name: "Chanda Muta",
+                            status: "A",
+                            uri: "/users/cmuta",
+                            username: "cmuta",
+                        },
+                        {
+                            avatar_url: "/avatar_default.png",
+                            display_name: "anon-user@example.com",
+                            email: "anon-user@example.com",
+                            id: null,
+                            is_anonymous: true,
+                            ldap_id: null,
+                            real_name: null,
+                            status: null,
+                            uri: null,
+                            username: null,
+                        },
+                    ],
+                },
+            };
+
+            const tracker = {
+                fields: [
+                    {
+                        field_id: 319,
+                        bindings: { type: "users" },
+                        label: "Anas",
+                        name: "preceptive",
+                        permissions: ["read", "update", "create"],
+                        type: "tbl",
+                        values: [],
+                    },
+                ],
+            };
+            const output = getSelectedValues(artifact_values, tracker);
+            expect(output).toStrictEqual({
+                319: {
+                    field_id: 319,
+                    type: "tbl",
+                    permissions: ["read", "update", "create"],
+                    bindings: { type: "users" },
+                    value: {
+                        bind_value_objects: [
                             {
-                                id: 689,
-                                label: "periscopism",
-                                is_hidden: false,
+                                avatar_url: "/avatar-e4977a.png",
+                                display_name: "Chanda Muta (cmuta)",
+                                email: "cmuta@example.com",
+                                id: 762,
+                                is_anonymous: false,
+                                ldap_id: "762",
+                                real_name: "Chanda Muta",
+                                status: "A",
+                                uri: "/users/cmuta",
+                                username: "cmuta",
                             },
                             {
-                                id: 145,
-                                label: "distinguisher",
-                                is_hidden: false,
+                                avatar_url: "/avatar_default.png",
+                                display_name: "anon-user@example.com",
+                                email: "anon-user@example.com",
+                                id: 0,
+                                is_anonymous: true,
+                                ldap_id: null,
+                                real_name: null,
+                                status: null,
+                                uri: null,
+                                username: null,
                             },
                         ],
                     },
@@ -1096,7 +1165,9 @@ describe("TuleapArtifactFieldValues", () => {
             });
         });
 
-        it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field will be returned", () => {
+        it(`and that it didn't have a default value,
+            when I get the fields' selected values,
+            then a map of objects containing the field will be returned`, () => {
             const tracker = {
                 fields: [
                     {
@@ -1108,6 +1179,7 @@ describe("TuleapArtifactFieldValues", () => {
                         name: "ablactation",
                         permissions: ["read", "update", "create"],
                         type: "tbl",
+                        default_value: [],
                         values: [
                             { id: 216, label: "phenaceturic", is_hidden: false },
                             { id: 801, label: "undershrieve", is_hidden: false },
@@ -1116,7 +1188,7 @@ describe("TuleapArtifactFieldValues", () => {
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 378: {
                     field_id: 378,
                     type: "tbl",
@@ -1129,7 +1201,9 @@ describe("TuleapArtifactFieldValues", () => {
             });
         });
 
-        it("and that it had 2 default values, when I get the fields' selected values, then a map of objects containing the field's id and bind_value_objects array filled with the 2 default values will be returned", () => {
+        it(`and that it had 2 default values,
+            when I get the fields' selected values,
+            then a map of objects containing the field's id and bind_value_objects array filled with the 2 default values will be returned`, () => {
             const tracker = {
                 fields: [
                     {
@@ -1146,14 +1220,14 @@ describe("TuleapArtifactFieldValues", () => {
                             { id: 544, label: "squamosomaxillary", is_hidden: false },
                         ],
                         default_value: [
-                            { id: 378, label: "Linda", is_hidden: false },
-                            { id: 544, label: "squamosomaxillary", is_hidden: false },
+                            { id: 378, label: "Linda" },
+                            { id: 544, label: "squamosomaxillary" },
                         ],
                     },
                 ],
             };
             const output = getSelectedValues({}, tracker);
-            expect(output).toEqual({
+            expect(output).toStrictEqual({
                 667: {
                     field_id: 667,
                     type: "tbl",
@@ -1161,8 +1235,8 @@ describe("TuleapArtifactFieldValues", () => {
                     bindings: { type: "static" },
                     value: {
                         bind_value_objects: [
-                            { id: 378, label: "Linda", is_hidden: false },
-                            { id: 544, label: "squamosomaxillary", is_hidden: false },
+                            { id: "378", label: "Linda" },
+                            { id: "544", label: "squamosomaxillary" },
                         ],
                     },
                 },

@@ -207,7 +207,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 4,
+                                id: "4",
                                 label: "Value01",
                                 color: null,
                                 tlp_color: null,
@@ -237,13 +237,13 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Checkbox List",
                         values: [
                             {
-                                id: 15,
+                                id: "15",
                                 label: "MulitValue01",
                                 color: null,
                                 tlp_color: null,
                             },
                             {
-                                id: 16,
+                                id: "16",
                                 label: "MulitValue02",
                                 color: null,
                                 tlp_color: null,
@@ -257,7 +257,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Open List",
                         bind_value_objects: [
                             {
-                                id: 12549,
+                                id: "12549",
                                 label: "OpenValue02",
                                 color: null,
                                 tlp_color: null,
@@ -571,7 +571,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Static List",
                         values: [
                             {
-                                id: 4,
+                                id: "4",
                                 label: "Value01",
                                 color: null,
                                 tlp_color: null,
@@ -601,7 +601,7 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Checkbox List",
                         values: [
                             {
-                                id: 17,
+                                id: "17",
                                 label: "MulitValue03",
                                 color: null,
                                 tlp_color: null,
@@ -615,11 +615,11 @@ describe("Create ArtifactValues Collection", () => {
                         label: "Open List",
                         bind_value_objects: [
                             {
-                                id: 1,
+                                id: "1",
                                 label: "azerty",
                             },
                             {
-                                id: 12548,
+                                id: "12548",
                                 label: "OpenValue01",
                                 color: null,
                                 tlp_color: null,
