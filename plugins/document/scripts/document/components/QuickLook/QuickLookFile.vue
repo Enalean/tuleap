@@ -50,8 +50,8 @@ import DownloadButton from "./DownloadButton.vue";
 const props = defineProps<{ item: ItemFile }>();
 
 const should_display_open_button = computed(
-    (): boolean => props.item.file_properties && (props.item.file_properties.open_href || "") !== ""
+    (): boolean => props.item.file_properties && Boolean(props.item.file_properties.open_href)
 );
 
-const open_href = computed((): string | undefined => props.item.file_properties?.open_href);
+const open_href = computed((): string | undefined | null => props.item.file_properties?.open_href);
 </script>

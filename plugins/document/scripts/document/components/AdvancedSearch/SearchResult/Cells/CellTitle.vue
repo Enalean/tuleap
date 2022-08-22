@@ -108,7 +108,7 @@ const icon_classes = computed((): string => {
 
 const href = computed((): string | null => {
     if (props.item.type === TYPE_FILE && props.item.file_properties) {
-        return props.item.file_properties.open_href;
+        return props.item.file_properties.open_href ?? props.item.file_properties.download_href;
     }
 
     if (props.item.type === TYPE_LINK || props.item.type === TYPE_WIKI) {

@@ -23,7 +23,12 @@
     <div>
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        <a v-bind:href="file_url" class="document-folder-subitem-link" draggable="false">
+        <a
+            v-bind:href="file_url"
+            class="document-folder-subitem-link"
+            data-test="document-folder-subitem-link"
+            draggable="false"
+        >
             {{ item.title }}
         </a>
         <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
@@ -57,6 +62,6 @@ const file_url = computed((): string => {
     if (is_corrupted.value || !props.item.file_properties) {
         return "";
     }
-    return props.item.file_properties.open_href;
+    return props.item.file_properties.open_href ?? props.item.file_properties.download_href;
 });
 </script>

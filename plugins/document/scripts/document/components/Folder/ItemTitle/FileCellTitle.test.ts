@@ -79,11 +79,12 @@ describe("FileCellTitle", () => {
         Then we should not display corrupted badge`, () => {
         const item = {
             id: 42,
-            title: "my corrupted embedded document",
+            title: "my embedded document",
             file_properties: {
                 file_name: "my file",
                 file_type: "image/png",
                 download_href: "/plugins/docman/download/119/42",
+                open_href: null,
                 file_size: 109768,
             } as FileProperties,
             type: TYPE_FILE,
@@ -92,5 +93,52 @@ describe("FileCellTitle", () => {
         const wrapper = getWrapper(item);
 
         expect(wrapper.find(".document-badge-corrupted").exists()).toBeFalsy();
+    });
+
+    it(`Given file_properties is set
+        When we display item title
+        Then we should have a link to download the file`, () => {
+        const item = {
+            id: 42,
+            title: "my embedded document",
+            file_properties: {
+                file_name: "my file",
+                file_type: "image/png",
+                download_href: "/plugins/docman/download/119/42",
+                open_href: null,
+                file_size: 109768,
+            } as FileProperties,
+            type: TYPE_FILE,
+        } as ItemFile;
+
+        const wrapper = getWrapper(item);
+
+        expect(
+            wrapper.find<HTMLAnchorElement>("[data-test=document-folder-subitem-link]").element.href
+        ).toContain("/plugins/docman/download/119/42");
+    });
+
+    it(`Given file_properties is set
+        And item has an open_href
+        When we display item title
+        Then we should have a link to open the file`, () => {
+        const item = {
+            id: 42,
+            title: "my embedded document",
+            file_properties: {
+                file_name: "my file",
+                file_type: "image/png",
+                download_href: "/plugins/docman/download/119/42",
+                open_href: "/path/to/open/42",
+                file_size: 109768,
+            } as FileProperties,
+            type: TYPE_FILE,
+        } as ItemFile;
+
+        const wrapper = getWrapper(item);
+
+        expect(
+            wrapper.find<HTMLAnchorElement>("[data-test=document-folder-subitem-link]").element.href
+        ).toContain("/path/to/open/42");
     });
 });

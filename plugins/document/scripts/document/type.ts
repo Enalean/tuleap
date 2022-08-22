@@ -307,7 +307,7 @@ export interface FileProperties {
     file_name: string;
     file_size: number;
     download_href: string;
-    open_href: string;
+    open_href: string | null;
     level?: number;
 }
 
