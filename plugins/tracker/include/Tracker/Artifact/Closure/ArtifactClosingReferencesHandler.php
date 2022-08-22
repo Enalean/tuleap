@@ -34,6 +34,8 @@ use Tuleap\User\RetrieveUserById;
 
 final class ArtifactClosingReferencesHandler
 {
+    private const REFERENCE_HANDLING_LIMIT = 50;
+
     public function __construct(
         private LoggerInterface $logger,
         private ExtractReferences $reference_extractor,
@@ -53,13 +55,29 @@ final class ArtifactClosingReferencesHandler
         if (! $workflow_user) {
             throw new \UserNotExistException('Tracker Workflow Manager does not exist, unable to close artifacts');
         }
+        $counter = 0;
         foreach ($event->text_with_potential_references as $text_with_potential_reference) {
             $reference_instances = $this->reference_extractor->extractReferences(
                 $text_with_potential_reference->text,
                 (int) $event->project->getID()
             );
             foreach ($reference_instances as $instance) {
-                $this->handleSingleReference($event, $text_with_potential_reference->back_reference, $workflow_user, $instance);
+                if ($counter >= self::REFERENCE_HANDLING_LIMIT) {
+                    $this->logger->info(
+                        sprintf(
+                            'Found more than %d references, the rest will be skipped.',
+                            self::REFERENCE_HANDLING_LIMIT
+                        )
+                    );
+                    return;
+                }
+                $this->handleSingleReference(
+                    $event,
+                    $text_with_potential_reference->back_reference,
+                    $workflow_user,
+                    $instance
+                );
+                $counter++;
             }
         }
     }
@@ -80,7 +98,10 @@ final class ArtifactClosingReferencesHandler
         if (! $closing_keyword) {
             return;
         }
-        $artifact = $this->artifact_retriever->getArtifactByIdUserCanView($event->user, (int) $reference_instance->getValue());
+        $artifact = $this->artifact_retriever->getArtifactByIdUserCanView(
+            $event->user,
+            (int) $reference_instance->getValue()
+        );
         if (! $artifact) {
             return;
         }
