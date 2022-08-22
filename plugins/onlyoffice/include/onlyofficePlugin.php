@@ -144,11 +144,19 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function openItemHref(OpenItemHref $open_item_href): void
     {
-        if (AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($open_item_href->getVersion()->getFilename())) {
-            $open_item_href->setHref(
-                '/onlyoffice/open/' . urlencode((string) $open_item_href->getItem()->getId())
-            );
+        if (! ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, '')) {
+            return;
         }
+        if (! ForgeConfig::exists(OnlyOfficeDocumentServerSettings::SECRET)) {
+            return;
+        }
+        if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($open_item_href->getVersion()->getFilename())) {
+            return;
+        }
+
+        $open_item_href->setHref(
+            '/onlyoffice/open/' . urlencode((string) $open_item_href->getItem()->getId())
+        );
     }
 
     public function routeGetOpenOnlyOffice(): OpenInOnlyOfficeController
