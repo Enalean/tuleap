@@ -122,7 +122,7 @@ class AgileDashboard_KanbanColumnFactory
     {
         $semantic = $this->getSemanticStatus($kanban);
 
-        if (! $semantic) {
+        if (! $semantic || ! $semantic->getField()) {
             return;
         }
 
@@ -136,7 +136,11 @@ class AgileDashboard_KanbanColumnFactory
 
     private function getFieldValues(Tracker_Semantic_Status $semantic)
     {
-        return $semantic->getField()->getAllValues();
+        $field = $semantic->getField();
+        if (! $field) {
+            return [];
+        }
+        return $field->getAllValues();
     }
 
     private function getSemanticStatus(AgileDashboard_Kanban $kanban)

@@ -1260,7 +1260,7 @@ class KanbanResource extends AuthenticatedResource
             $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch (Kanban_SemanticStatusNotDefinedException $exception) {
+        } catch (Kanban_SemanticStatusNotDefinedException | SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());

@@ -188,12 +188,6 @@ msgstr ""
 
 #, php-format
 msgid ""
-"<p>An artifact is considered to be <strong>open</strong> when its field "
-"<strong>%1$s</strong> will have one of the following values:</p>"
-msgstr ""
-
-#, php-format
-msgid ""
 "<p>One will be considered as a contributor/assignee of this artifact if her "
 "name appears in the field <strong>%1$s</strong>.</p>"
 msgstr ""
@@ -428,6 +422,12 @@ msgstr ""
 msgid ""
 "An artifact is considered to be <strong>done</strong> when its field %s will "
 "have one of the following closed values:"
+msgstr ""
+
+#, php-format
+msgid ""
+"An artifact is considered to be open when its field %s will have one of the "
+"following values:"
 msgstr ""
 
 msgid ""
@@ -2338,6 +2338,9 @@ msgstr "Salvar configuração"
 msgid "Save new report"
 msgstr ""
 
+msgid "Save open values"
+msgstr ""
+
 msgid "Save report as"
 msgstr ""
 
@@ -2532,12 +2535,19 @@ msgstr ""
 msgid "Status"
 msgstr "Estado"
 
+msgid "Status cannot be unset, because this tracker uses Done semantic"
+msgstr ""
+
 msgid "Status change notifications"
 msgstr ""
 
 msgid ""
 "Status change notifications (people will get notified when they are "
 "submitter, assignee, commenter or CC and artifact status is updated)"
+msgstr ""
+
+msgid ""
+"Status semantic allows to define how an artifact is considered to be open."
 msgstr ""
 
 msgid "Std deviation"
@@ -3740,6 +3750,9 @@ msgstr ""
 msgid "Values added by users"
 msgstr ""
 
+msgid "Values that make an artifact open"
+msgstr ""
+
 msgid "Wait a minute..."
 msgstr ""
 
@@ -3924,11 +3937,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"You cannot define the <em>status</em> semantic since there isn't any list "
-"field in the tracker"
-msgstr ""
-
-msgid ""
 "You cannot define the <em>title</em> semantic since there isn't any text "
 "field in the tracker"
 msgstr ""
@@ -3936,6 +3944,11 @@ msgstr ""
 msgid ""
 "You cannot define the description semantic since there isn't any text field "
 "in the tracker"
+msgstr ""
+
+msgid ""
+"You cannot define the status semantic since there isn't any list field in "
+"the tracker"
 msgstr ""
 
 msgid ""

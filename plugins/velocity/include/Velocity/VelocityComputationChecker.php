@@ -33,7 +33,7 @@ class VelocityComputationChecker
         SemanticVelocity $semantic_velocity,
         BeforeEvent $before_event,
     ) {
-        if (! $semantic_status->getFieldId() || $semantic_status->getField()->isMultiple()) {
+        if (! $semantic_status->getFieldId() || $semantic_status->getField()?->isMultiple()) {
             return false;
         }
 
@@ -58,10 +58,11 @@ class VelocityComputationChecker
 
     private function getLastChangesetValues(Tracker_Semantic_Status $semantic_status, BeforeEvent $before_event)
     {
-        $last_changeset = $before_event->getArtifact()->getLastChangeset();
-        $values         = [];
-        if ($last_changeset) {
-            $last_semantic_status_value = $last_changeset->getValue($semantic_status->getField());
+        $last_changeset        = $before_event->getArtifact()->getLastChangeset();
+        $values                = [];
+        $semantic_status_field = $semantic_status->getField();
+        if ($last_changeset && $semantic_status_field) {
+            $last_semantic_status_value = $last_changeset->getValue($semantic_status_field);
             if ($last_semantic_status_value) {
                 $values = $last_semantic_status_value->getValue();
             }
@@ -72,10 +73,11 @@ class VelocityComputationChecker
 
     private function getNewChangesetValues(Tracker_Semantic_Status $semantic_status, BeforeEvent $before_event)
     {
-        $new_values = $before_event->getFieldsData();
-        $values     = [];
-        if (isset($new_values[$semantic_status->getField()->getId()])) {
-            $values = (array) $new_values[$semantic_status->getField()->getId()];
+        $new_values           = $before_event->getFieldsData();
+        $values               = [];
+        $smantic_status_field = $semantic_status->getField();
+        if ($smantic_status_field && isset($new_values[$smantic_status_field->getId()])) {
+            $values = (array) $new_values[$smantic_status_field->getId()];
         }
 
         return $values;

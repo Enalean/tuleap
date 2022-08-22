@@ -481,7 +481,14 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         parse_str($_SERVER['QUERY_STRING'], $query_string);
 
         if (array_keys($query_string) !== ['tracker', 'func']) {
-            if (! isset($query_string['semantic']) || ($query_string['semantic'] !== "title" && $query_string['semantic'] !== "description")) {
+            if (
+                ! isset($query_string['semantic']) ||
+                (
+                    $query_string['semantic'] !== "title" &&
+                    $query_string['semantic'] !== "description" &&
+                    $query_string['semantic'] !== "status"
+                )
+            ) {
                 return false;
             }
         }

@@ -18,6 +18,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 
 class AgileDashboard_KanbanColumnManager
 {
@@ -40,7 +41,10 @@ class AgileDashboard_KanbanColumnManager
         $this->kanban_actions_checker                       = $kanban_actions_checker;
     }
 
-    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, $label)
+    /**
+     * @throws SemanticStatusNotDefinedException
+     */
+    public function createColumn(PFUser $user, AgileDashboard_Kanban $kanban, string $label): ?int
     {
         $this->kanban_actions_checker->checkUserCanAddColumns($user, $kanban);
 
@@ -59,7 +63,7 @@ class AgileDashboard_KanbanColumnManager
 
         $this->checkAllColumnsAreProvided($semantic, $column_ids);
 
-        return $semantic->getField()->getBind()->getValueDao()->reorder($column_ids);
+        return $semantic->getField()?->getBind()->getValueDao()->reorder($column_ids);
     }
 
     /**

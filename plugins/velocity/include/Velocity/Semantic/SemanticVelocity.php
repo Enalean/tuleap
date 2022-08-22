@@ -192,7 +192,7 @@ class SemanticVelocity extends Tracker_Semantic
         }
 
         $status_field = $this->semantic_done->getSemanticStatus()->getField();
-        if (in_array($status_field->getId(), $xml_mapping) && $this->getFieldId() > 0) {
+        if ($status_field && in_array($status_field->getId(), $xml_mapping) && $this->getFieldId() > 0) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
             $cdata = new \XML_SimpleXMLCDATAFactory();
