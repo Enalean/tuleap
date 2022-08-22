@@ -24,14 +24,14 @@ namespace Tuleap\Docman\REST\v1;
 
 class OpenItemHref implements \Tuleap\Event\Dispatchable
 {
-    public const NAME    = 'openItemHref';
-    private string $href = '';
+    public const NAME     = 'openItemHref';
+    private ?string $href = null;
 
     public function __construct(private \Docman_File $item, private \Docman_Version $version)
     {
     }
 
-    public function getHref(): string
+    public function getHref(): ?string
     {
         return $this->href;
     }
