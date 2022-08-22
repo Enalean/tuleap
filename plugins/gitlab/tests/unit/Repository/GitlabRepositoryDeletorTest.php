@@ -35,9 +35,10 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\TagPush\TagInfoDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var GitlabRepositoryDeletor
@@ -130,7 +131,7 @@ class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->branch_prefix_dao
         );
 
-        $this->project = Project::buildForTest();
+        $this->project = ProjectTestBuilder::aProject()->build();
         $this->user    = $this->createMock(PFUser::class);
 
         $this->gitlab_repository_integration = new GitlabRepositoryIntegration(

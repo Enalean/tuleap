@@ -28,9 +28,10 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var GitlabRepositoryCreator
@@ -93,7 +94,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             "main"
         );
 
-        $this->project = Project::buildForTest();
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItThrowsAnExceptionIfARepositoryWithSameNameAlreadyIntegratedInProject(): void
@@ -195,7 +196,7 @@ class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Desc',
             'https://example.com/root/project01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
     }

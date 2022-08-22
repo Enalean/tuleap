@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
 final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -58,7 +59,7 @@ final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ['shortname' => 'some_shortname', 'forward_label' => 'Label', 'reverse_label' => 'Label R']
         );
 
-        $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(\Project::buildForTest(), 'some_shortname');
+        $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(ProjectTestBuilder::aProject()->build(), 'some_shortname');
 
         $this->assertEquals(new TypePresenter('some_shortname', 'Label', 'Label R', true), $type);
     }
@@ -68,7 +69,7 @@ final class TypePresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->andReturn(true);
 
         $type = $this->type_presenter_factory->getTypeEnabledInProjectFromShortname(
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             'some_disabled_shortname'
         );
 

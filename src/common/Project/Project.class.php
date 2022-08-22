@@ -85,11 +85,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         $this->project_data_array = $this->data_array;
     }
 
-    public static function buildForTest(): self
-    {
-        return new self(['group_id' => '101']);
-    }
-
     private function cacheServiceClassnames()
     {
         if ($this->serviceClassnames !== null) {

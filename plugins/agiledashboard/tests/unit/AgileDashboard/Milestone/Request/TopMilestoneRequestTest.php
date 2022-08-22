@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Request;
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TopMilestoneRequestTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -30,7 +31,7 @@ final class TopMilestoneRequestTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueIfItsFilteringQueryIsFuture(): void
     {
         $user            = UserTestBuilder::aUser()->build();
-        $project         = \Project::buildForTest();
+        $project         = ProjectTestBuilder::aProject()->build();
         $limit           = 50;
         $offset          = 50;
         $order           = 'asc';
@@ -44,7 +45,7 @@ final class TopMilestoneRequestTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueIfItsFilteringQueryIsCurrent(): void
     {
         $user            = UserTestBuilder::aUser()->build();
-        $project         = \Project::buildForTest();
+        $project         = ProjectTestBuilder::aProject()->build();
         $limit           = 50;
         $offset          = 50;
         $order           = 'asc';
@@ -58,7 +59,7 @@ final class TopMilestoneRequestTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsItsComponents(): void
     {
         $user            = UserTestBuilder::aUser()->build();
-        $project         = \Project::buildForTest();
+        $project         = ProjectTestBuilder::aProject()->build();
         $limit           = 50;
         $offset          = 50;
         $order           = 'desc';

@@ -23,11 +23,12 @@ declare(strict_types=1);
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -317,7 +318,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->andReturn($all_possible_artifacts);
 
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->once()->andReturn($project);
@@ -387,7 +388,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->andReturn($all_possible_artifacts);
 
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->once()->andReturn($project);
 

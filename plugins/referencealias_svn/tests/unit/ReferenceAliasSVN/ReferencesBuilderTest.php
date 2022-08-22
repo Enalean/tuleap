@@ -20,14 +20,14 @@
 
 namespace Tuleap\ReferenceAliasSVN;
 
-use Project;
 use Project_NotFoundException;
 use ProjectManager;
 use Reference;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ReferencesBuilder $builder;
 
@@ -71,7 +71,7 @@ class ReferencesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'revision_id' => 14,
             ]);
 
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $this->project_manager->expects(self::once())
             ->method('getValidProject')
             ->with(101)

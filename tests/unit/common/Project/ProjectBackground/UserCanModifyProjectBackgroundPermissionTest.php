@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\ProjectBackground;
 
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class UserCanModifyProjectBackgroundPermissionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testPermissionHoldsAnInstanceOfTheAuthorizedProject(): void
     {
-        $expected_project = \Project::buildForTest();
+        $expected_project = ProjectTestBuilder::aProject()->build();
         $permission       = new UserCanModifyProjectBackgroundPermission($expected_project);
 
         self::assertSame($expected_project, $permission->getProject());

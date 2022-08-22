@@ -24,9 +24,10 @@ namespace Tuleap\Gitlab\Reference\Branch;
 use DateTimeImmutable;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class GitlabBranchFactoryTest extends TestCase
+final class GitlabBranchFactoryTest extends TestCase
 {
     private GitlabBranchFactory $factory;
     /**
@@ -121,7 +122,7 @@ class GitlabBranchFactoryTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             true
         );
     }

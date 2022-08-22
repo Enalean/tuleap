@@ -22,11 +22,11 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference;
 
 use DateTimeImmutable;
-use Project;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var GitlabReferenceBuilder
@@ -58,7 +58,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertNull(
             $this->builder->buildGitlabReference(
-                Project::buildForTest(),
+                ProjectTestBuilder::aProject()->build(),
                 'whatever',
                 'root/project01/10ee559cb0'
             )
@@ -75,7 +75,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertNull(
             $this->builder->buildGitlabReference(
-                Project::buildForTest(),
+                ProjectTestBuilder::aProject()->build(),
                 'gitlab_commit',
                 'root/project01/10ee559cb0'
             )
@@ -92,7 +92,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertNull(
             $this->builder->buildGitlabReference(
-                Project::buildForTest(),
+                ProjectTestBuilder::aProject()->build(),
                 'gitlab_commit',
                 'root10ee559cb0'
             )
@@ -101,7 +101,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullIfTheRepositoryIsNotIntegratedIntoProject(): void
     {
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
             ->expects(self::once())
@@ -129,7 +129,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheCommitReference(): void
     {
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
             ->expects(self::once())
@@ -172,7 +172,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheMergeRequestReference(): void
     {
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
             ->expects(self::once())
@@ -215,7 +215,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheTagReference(): void
     {
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
             ->expects(self::once())
@@ -258,7 +258,7 @@ class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheBranchReference(): void
     {
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $this->reference_dao
             ->expects(self::once())

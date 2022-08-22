@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\ProjectMilestones\Widget;
 
 use Codendi_Request;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Widget\Event\ConfigureAtXMLImport as ConfigureAtXMLImportEvent;
 use Tuleap\XML\MappingsRegistry;
 
@@ -51,7 +52,7 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $widget,
                 new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />'),
                 new MappingsRegistry(),
-                \Project::buildForTest()
+                ProjectTestBuilder::aProject()->build()
             )
         );
 
@@ -82,11 +83,11 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $widget,
                 new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />'),
                 new MappingsRegistry(),
-                \Project::buildForTest()
+                ProjectTestBuilder::aProject()->build()
             )
         );
 
         $this->assertSame(ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF, $widget->param);
-        $this->assertEquals(\Project::buildForTest(), $widget->project);
+        $this->assertEquals(ProjectTestBuilder::aProject()->build(), $widget->project);
     }
 }

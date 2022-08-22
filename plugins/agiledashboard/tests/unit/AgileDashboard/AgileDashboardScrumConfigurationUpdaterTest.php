@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class AgileDashboardScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,7 +43,7 @@ final class AgileDashboardScrumConfigurationUpdaterTest extends \Tuleap\Test\PHP
             }
         };
         $request          = Mockery::mock(Codendi_Request::class);
-        $project          = Project::buildForTest();
+        $project          = ProjectTestBuilder::aProject()->build();
         $request->shouldReceive('get')->with('group_id')->andReturn($project->getID());
         $request->shouldReceive('getProject')->andReturn($project);
 

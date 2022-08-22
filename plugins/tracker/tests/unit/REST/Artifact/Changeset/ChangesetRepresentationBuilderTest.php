@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -429,7 +430,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
     ): \Tracker_Artifact_Changeset {
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(110);
-        $tracker->shouldReceive('getProject')->andReturn(\Project::buildForTest());
+        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
         $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = new \Tracker_Artifact_Changeset(24, $artifact, $submitted_by, 1234567890, null);

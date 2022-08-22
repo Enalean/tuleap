@@ -24,12 +24,12 @@ namespace Tuleap\Gitlab\Repository\Webhook\TagPush;
 
 use CrossReferenceManager;
 use DateTimeImmutable;
-use Project;
 use Psr\Log\NullLogger;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&TagInfoDao
@@ -65,7 +65,7 @@ class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
             "",
             "https://example.com/root/repo01",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

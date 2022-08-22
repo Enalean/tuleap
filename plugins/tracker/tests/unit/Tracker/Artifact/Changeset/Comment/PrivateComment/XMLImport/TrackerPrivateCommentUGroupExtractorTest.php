@@ -25,10 +25,11 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 
-class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -58,7 +59,7 @@ class TrackerPrivateCommentUGroupExtractorTest extends \Tuleap\Test\PHPUnit\Test
         $this->dao            = \Mockery::mock(TrackerPrivateCommentUGroupEnabledDao::class);
         $this->ugroup_manager = \Mockery::mock(\UGroupManager::class);
 
-        $this->project = \Project::buildForTest();
+        $this->project = ProjectTestBuilder::aProject()->build();
 
         $this->artifact = \Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturn(52);

@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Branch;
 use CrossReferenceDao;
 use CrossReferenceManager;
 use DateTimeImmutable;
-use Project;
 use Psr\Log\NullLogger;
 use Reference;
 use ReferenceManager;
@@ -33,9 +32,10 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class PostPushWebhookActionBranchHandlerTest extends TestCase
+final class PostPushWebhookActionBranchHandlerTest extends TestCase
 {
     private PostPushWebhookActionBranchHandler $handler;
     /**
@@ -89,7 +89,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -162,7 +162,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -217,7 +217,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -272,7 +272,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -332,7 +332,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -405,7 +405,7 @@ class PostPushWebhookActionBranchHandlerTest extends TestCase
             '',
             'https://example.com/root/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

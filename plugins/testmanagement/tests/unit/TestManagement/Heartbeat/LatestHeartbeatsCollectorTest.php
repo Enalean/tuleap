@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
@@ -60,7 +61,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotCollectAnythingWhenNoTestExecHaveBeenUpdated(): void
     {
-        $project = \Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getUgroups')->once()->andReturn([]);
 
@@ -75,7 +76,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCollectCampaign(): void
     {
-        $project = \Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getUgroups')->once()->andReturn([]);
 

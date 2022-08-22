@@ -25,9 +25,9 @@ namespace Tuleap\Gitlab\Artifact;
 
 use Cocur\Slugify\Slugify;
 use DateTimeImmutable;
-use Project;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -67,7 +67,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
             "",
             "https://example",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
