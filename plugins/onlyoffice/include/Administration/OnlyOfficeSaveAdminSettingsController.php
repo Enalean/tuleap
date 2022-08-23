@@ -55,7 +55,7 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
         $server_url = (string) ($body['server_url'] ?? '');
         $server_key = new ConcealedString((string) ($body['server_key'] ?? ''));
 
-        if ($server_url === '' || $server_key->isIdenticalTo(new ConcealedString('')) || ! $this->valid_https_uri->validate($server_url)) {
+        if ($server_url === '' || $server_key->isIdenticalTo(new ConcealedString('')) || strlen($server_key->getString()) < 32 || ! $this->valid_https_uri->validate($server_url)) {
             throw new ForbiddenException();
         }
 

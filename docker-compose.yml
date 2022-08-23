@@ -99,7 +99,7 @@ services:
     image: onlyoffice/documentserver:7.1.1.23
     environment:
       - JWT_ENABLED=true
-      - JWT_SECRET=DO_NOT_USE_THIS_IN_PRODUCTION
+      - JWT_SECRET=TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION
       - USE_UNAUTHORIZED_STORAGE=true
 
   db55:

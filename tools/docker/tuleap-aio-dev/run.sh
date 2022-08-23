@@ -57,7 +57,7 @@ if [ "$TULEAP_INSTALL_TIME" == "false" ]; then
 fi
 
 tuleap config-set onlyoffice_document_server_url https://tuleap-web.tuleap-aio-dev.docker/onlyoffice-doc-server/ || true
-tuleap config-set onlyoffice_document_server_secret DO_NOT_USE_THIS_IN_PRODUCTION || true
+tuleap config-set onlyoffice_document_server_secret TULEAP_DO_NOT_USE_THIS_IN_PRODUCTION || true
 
 # Activate backend/crontab
 systemctl start tuleap
