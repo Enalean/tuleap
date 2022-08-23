@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Config\ConfigSet;
 use Tuleap\Config\InvalidConfigKeyException;
+use Tuleap\Config\InvalidConfigKeyValueException;
 
 class ConfigSetCommand extends Command
 {
@@ -64,6 +65,8 @@ class ConfigSetCommand extends Command
             $keys = $exception->getConfigKeys();
             sort($keys, SORT_STRING);
             throw new InvalidArgumentException(self::NAME . " only supports a subset of keys:\n* " . implode("\n* ", $keys));
+        } catch (InvalidConfigKeyValueException $exception) {
+            throw new InvalidArgumentException($exception->getMessage());
         }
         return 0;
     }

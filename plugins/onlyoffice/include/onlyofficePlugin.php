@@ -222,7 +222,8 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
         return new \Tuleap\OnlyOffice\Administration\OnlyOfficeSaveAdminSettingsController(
             self::buildCSRFTokenAdmin(),
             new \Tuleap\Config\ConfigSet(EventManager::instance(), new \Tuleap\Config\ConfigDao()),
-            new Valid_HTTPSURI(),
+            \Tuleap\OnlyOffice\Administration\OnlyOfficeServerUrlValidator::buildSelf(),
+            \Tuleap\OnlyOffice\Administration\OnlyOfficeSecretKeyValidator::buildSelf(),
             new \Tuleap\Http\Response\RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
             new \Tuleap\Admin\RejectNonSiteAdministratorMiddleware(UserManager::instance()),

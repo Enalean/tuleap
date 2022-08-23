@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
@@ -39,7 +40,8 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
     public function __construct(
         private CSRFSynchronizerToken $csrf_token,
         private ConfigSet $config_set,
-        private \Valid_HTTPSURI $valid_https_uri,
+        private OnlyOfficeServerUrlValidator $server_url_validator,
+        private OnlyOfficeSecretKeyValidator $secret_key_validator,
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
@@ -55,7 +57,10 @@ final class OnlyOfficeSaveAdminSettingsController extends DispatchablePSR15Compa
         $server_url = (string) ($body['server_url'] ?? '');
         $server_key = new ConcealedString((string) ($body['server_key'] ?? ''));
 
-        if ($server_url === '' || $server_key->isIdenticalTo(new ConcealedString('')) || strlen($server_key->getString()) < 32 || ! $this->valid_https_uri->validate($server_url)) {
+        try {
+            $this->server_url_validator->checkIsValid($server_url);
+            $this->secret_key_validator->checkIsValid($server_key);
+        } catch (InvalidConfigKeyValueException $exception) {
             throw new ForbiddenException();
         }
 
