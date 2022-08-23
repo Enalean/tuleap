@@ -50,7 +50,7 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
 
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, UserTestBuilder::anActiveUser()->build())
-            ->withParsedBody(['server_url' => 'https://example.com', 'server_key' => 'some_secret']);
+            ->withParsedBody(['server_url' => 'https://example.com', 'server_key' => 'some_secret_that_is_long_enough_to_pass_the_requirement']);
 
         $config_dao->expects($this->atLeastOnce())->method('save');
 
@@ -79,6 +79,7 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
             ['No parameters' => []],
             ['No server URL' => ['server_url' => '', 'server_key' => 'something']],
             ['No server key' => ['server_url' => 'https://example.com', 'server_key' => '']],
+            ['Server key not long enough' => ['server_url' => 'https://example.com', 'server_key' => 'small']],
             ['Server URL without HTTPS' => ['server_url' => 'http://example.com', 'server_key' => 'something']],
         ];
     }

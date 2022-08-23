@@ -21,6 +21,7 @@
                         class="tlp-input"
                         id="server-key"
                         name="server_key"
+                        minlength="32"
                         required
                         {{# has_existing_secret }}placeholder="{{# dgettext }} tuleap-onlyoffice | Current secret not displayed {{/ dgettext }}"{{/ has_existing_secret }}
                     >
