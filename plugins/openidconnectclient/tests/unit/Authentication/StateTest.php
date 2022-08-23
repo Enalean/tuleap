@@ -31,7 +31,7 @@ final class StateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesStateFromSignedState(): void
     {
-        $secret_key         = 'Tuleap';
+        $secret_key         = str_repeat('a', 32);
         $return_to          = '/return_to';
         $provider_id        = 1234;
         $nonce              = 'random_string';
@@ -45,10 +45,10 @@ final class StateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testCannotCreateFromSignatureWithInvalidSecretKey(): void
     {
-        $state        = new State(12, '/return_to', 'key', 'random', new ConcealedString('pkce_code_verifier'));
+        $state        = new State(12, '/return_to', str_repeat('a', 32), 'random', new ConcealedString('pkce_code_verifier'));
         $signed_state = $state->getSignedState();
 
         $this->expectException(\RuntimeException::class);
-        State::createFromSignature($signed_state, '/return_to', 'invalid_key', 'random', new ConcealedString('pkce_code_verifier'));
+        State::createFromSignature($signed_state, '/return_to', str_repeat('b', 32), 'random', new ConcealedString('pkce_code_verifier'));
     }
 }

@@ -20,13 +20,11 @@
 
 class RandomNumberGenerator
 {
-    private $token_size;
-
-    // 128 bits of entropy is enough most of the time
-    // @see https://www.owasp.org/index.php/Insufficient_Session-ID_Length
-    public function __construct($token_size = 16)
+    /**
+     * @psalm-param positive-int $token_size
+     */
+    public function __construct(private int $token_size = 16)
     {
-        $this->token_size = $token_size;
     }
 
     /**
@@ -34,13 +32,20 @@ class RandomNumberGenerator
      * reset procedure
      *
      * @return string Number represented has a hexadecimal string
+     * @psalm-return non-empty-string
      */
-    public function getNumber()
+    public function getNumber(): string
     {
         try {
-            return bin2hex(random_bytes($this->token_size));
+            $random = bin2hex(random_bytes($this->token_size));
         } catch (Exception $ex) {
             die('Could not generate a random number. Is your OS secure?');
         }
+        // This need a PR to Psalm, random_bytes always return a non-empty-string
+        if ($random === '') {
+            die('Cannot happen, random string is not supposed to be empty');
+        }
+
+        return $random;
     }
 }

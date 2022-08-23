@@ -20,7 +20,7 @@
 namespace Tuleap\JWT\REST\v1;
 
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Signer\Hmac\UnsafeSha512;
 use Lcobucci\JWT\Signer\Key;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\REST\Header;
@@ -42,7 +42,7 @@ class JWTResource
     {
         $jwt_generator = new JWTGenerator(
             Configuration::forSymmetricSigner(
-                new Sha512(),
+                new UnsafeSha512(),
                 Key\InMemory::plainText(ForgeConfig::get('nodejs_server_jwt_private_key'))
             ),
             UserManager::instance(),

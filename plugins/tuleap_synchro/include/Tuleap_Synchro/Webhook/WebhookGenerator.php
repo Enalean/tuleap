@@ -38,7 +38,7 @@ class WebhookGenerator
 
     /**
      *
-     * @param int $size
+     * @param positive-int $size
      */
     public function __construct(TuleapSynchroDao $tuleap_synchro_dao, $size)
     {

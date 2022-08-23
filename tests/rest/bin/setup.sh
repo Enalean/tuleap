@@ -56,6 +56,7 @@ setup_database() {
 
     TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost"
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
+    echo "\$nodejs_server_jwt_private_key = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';" >> /etc/tuleap/conf/local.inc
 
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-group-list' INTO TABLE wiki_group_list CHARACTER SET ascii"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-page' INTO TABLE wiki_page CHARACTER SET ascii"

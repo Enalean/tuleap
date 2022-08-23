@@ -24,8 +24,8 @@ namespace Tuleap\JWT\Generators;
 
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Mockery;
@@ -66,7 +66,7 @@ final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_literalizer = \Mockery::mock(UGroupLiteralizer::class);
         $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
 
-        $this->jwt_configuration = Configuration::forSymmetricSigner(new Sha512(), Key\InMemory::plainText('private_key_test'));
+        $this->jwt_configuration = Configuration::forSymmetricSigner(new Sha512(), Key\InMemory::plainText(str_repeat('a', 64)));
         $this->jwt_generator     = new JWTGenerator($this->jwt_configuration, $this->user_manager, $this->ugroup_literalizer);
     }
 
