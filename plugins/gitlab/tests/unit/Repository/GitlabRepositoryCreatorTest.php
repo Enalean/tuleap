@@ -101,6 +101,13 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->repository_integration_dao
             ->expects(self::once())
+            ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
+            ->with(101, 12569, 'https://example.com/root/project01')
+            ->willReturn(false);
+
+
+        $this->repository_integration_dao
+            ->expects(self::once())
             ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
             ->willReturn(true);
 
@@ -120,11 +127,6 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRepositoryIsAlreadyIntegratedInProject(): void
     {
-        $this->repository_integration_dao
-            ->expects(self::once())
-            ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
-            ->willReturn(false);
-
         $this->repository_integration_dao
             ->expects(self::once())
             ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
@@ -187,6 +189,72 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($integration, $result);
     }
 
+    public function testItIntegratesSeveralNeededRepositories(): void
+    {
+        $gitlab_project_1 = $this->gitlab_project;
+
+        $gitlab_project_fail_id = 1316;
+        $gitlab_project_fail    = new GitlabProject(
+            $gitlab_project_fail_id,
+            'Desc',
+            'https://example.com/root/projectFAIL',
+            'root/projectFAIL',
+            new DateTimeImmutable(),
+            "main"
+        );
+        $gitlab_project_2_id    = 1400;
+        $gitlab_project_2       = new GitlabProject(
+            $gitlab_project_2_id,
+            'Desc',
+            'https://example.com/root/project103',
+            'root/project103',
+            new DateTimeImmutable(),
+            "main"
+        );
+
+
+        $configuration = GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
+
+        $this->repository_integration_dao
+            ->expects(self::exactly(2))
+            ->method('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->willReturn(false);
+
+        $this->repository_integration_dao
+            ->expects(self::exactly(3))
+            ->method('isTheGitlabRepositoryAlreadyIntegratedInProject')
+            ->withConsecutive([101, 12569, 'https://example.com/root/project01'], [101, $gitlab_project_fail_id, 'https://example.com/root/projectFAIL'], [101, $gitlab_project_2_id, 'https://example.com/root/project103'])
+            ->willReturnOnConsecutiveCalls(false, true, false);
+
+        $integrations = $this->buildGitlabRepositoriesIntegration();
+        $this->repository_integration_factory
+            ->expects(self::exactly(2))
+            ->method('createRepositoryIntegration')
+            ->withConsecutive([$gitlab_project_1, $this->project, $configuration], [$gitlab_project_2, $this->project, $configuration])
+            ->willReturnOnConsecutiveCalls($integrations[0], $integrations[1]);
+
+        $this->webhook_creator
+            ->expects(self::exactly(2))
+            ->method('generateWebhookInGitlabProject')
+            ->withConsecutive([$this->credentials, $integrations[0]], [$this->credentials, $integrations[1]]);
+
+        $this->token_inserter
+            ->expects(self::exactly(2))
+            ->method('insertToken')
+            ->withConsecutive([$integrations[0], $this->credentials->getBotApiToken()->getToken()], [$integrations[1], $this->credentials->getBotApiToken()->getToken()]);
+
+        $gitlab_projects = [$gitlab_project_1, $gitlab_project_fail, $gitlab_project_2];
+
+        $result = $this->creator->integrateGitlabRepositoriesInProject(
+            $this->credentials,
+            $gitlab_projects,
+            $this->project,
+            $configuration
+        );
+
+        self::assertSame($integrations, $result);
+    }
+
     private function buildGitlabRepositoryIntegration(): GitlabRepositoryIntegration
     {
         return new GitlabRepositoryIntegration(
@@ -199,5 +267,31 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ProjectTestBuilder::aProject()->build(),
             false
         );
+    }
+
+    private function buildGitlabRepositoriesIntegration(): array
+    {
+        return [
+            new GitlabRepositoryIntegration(
+                1,
+                12569,
+                'root/project01',
+                'Desc',
+                'https://example.com/root/project01',
+                new DateTimeImmutable(),
+                Project::buildForTest(),
+                false
+            ),
+            new GitlabRepositoryIntegration(
+                2,
+                1300,
+                'root/project103',
+                'Desc',
+                'https://example.com/root/project103',
+                new DateTimeImmutable(),
+                Project::buildForTest(),
+                false
+            ),
+        ];
     }
 }

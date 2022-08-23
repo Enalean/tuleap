@@ -26,7 +26,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class ClientWrapper
+class ClientWrapper implements WrapGitlabClient
 {
     /**
      * @var RequestFactoryInterface
