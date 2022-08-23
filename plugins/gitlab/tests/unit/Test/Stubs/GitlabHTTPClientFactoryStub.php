@@ -20,16 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\API;
+namespace Tuleap\Gitlab\Test\Stubs;
 
-interface WrapGitlabClient
+use Http\Client\Common\PluginClient;
+use Psr\Http\Client\ClientInterface;
+use Tuleap\Gitlab\API\BuildGitlabHttpClient;
+use Tuleap\Gitlab\API\Credentials;
+
+final class GitlabHTTPClientFactoryStub implements BuildGitlabHttpClient
 {
-    public const DEFAULT_NUMBER_OF_ROW_PER_PAGE = 20;
-    /**
-     * @throws GitlabRequestException
-     * @throws GitlabResponseAPIException
-     */
-    public function getUrl(Credentials $gitlab_credentials, string $url): ?array;
+    private function __construct(private ClientInterface $client_interface)
+    {
+    }
 
-    public function getPaginatedUrl(Credentials $gitlab_credentials, string $url, int $row_per_page = self::DEFAULT_NUMBER_OF_ROW_PER_PAGE): ?array;
+    public function buildHTTPClient(Credentials $gitlab_credentials): PluginClient
+    {
+        return new PluginClient($this->client_interface);
+    }
+
+    public static function buildWithClientInterface(ClientInterface $client_interface): self
+    {
+        return new self($client_interface);
+    }
 }
