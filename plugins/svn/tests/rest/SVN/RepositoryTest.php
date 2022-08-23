@@ -359,7 +359,7 @@ class RepositoryTest extends TestBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    public function testPUTRepository()
+    public function testPUTRepository(): void
     {
         $data = json_encode(
             [
@@ -381,6 +381,15 @@ class RepositoryTest extends TestBase
                                 "project-devel@lists.example.com",
                             ],
                             "users"       => [102],
+                            "user_groups" => [
+                                $this->user_group_1_id,
+                                $this->user_group_2_id,
+                            ],
+                        ],
+                        [
+                            'path'        => "/only_ugroup_notifications",
+                            'emails'      => [],
+                            "users"       => [],
                             "user_groups" => [
                                 $this->user_group_1_id,
                                 $this->user_group_2_id,
@@ -416,7 +425,7 @@ class RepositoryTest extends TestBase
             "[/]\r\n* = rw\r\n@members = rw"
         );
 
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             $repository['settings']['email_notifications'],
             [
                 [
@@ -427,6 +436,12 @@ class RepositoryTest extends TestBase
                     ],
                     "user_groups" => [$this->user_group_101, $this->user_group_102],
                     "users"       => [$this->user_102],
+                ],
+                [
+                    'path'        => "/only_ugroup_notifications",
+                    'emails'      => [],
+                    "user_groups" => [$this->user_group_101, $this->user_group_102],
+                    "users"       => [],
                 ],
             ]
         );
