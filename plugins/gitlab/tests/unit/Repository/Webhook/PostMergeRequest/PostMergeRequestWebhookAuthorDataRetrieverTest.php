@@ -21,13 +21,13 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
-use Project;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
@@ -60,7 +60,7 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -97,7 +97,7 @@ class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\PHPUni
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

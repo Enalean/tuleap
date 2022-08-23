@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use Project;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
@@ -32,6 +31,7 @@ use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -93,7 +93,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -154,7 +154,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -232,7 +232,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -315,7 +315,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -369,7 +369,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

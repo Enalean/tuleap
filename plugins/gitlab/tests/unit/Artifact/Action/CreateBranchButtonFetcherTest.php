@@ -32,6 +32,7 @@ use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Test\Builders\IncludeAssetsBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -259,7 +260,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     {
         $artifact = $this->createMock(Artifact::class);
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $tracker  = $this->createMock(Tracker::class);
 
         $tracker
@@ -286,7 +287,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfUserIsNotProjectMember(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -320,7 +321,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfUserCannotSeeArtifact(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -360,7 +361,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsNullIfProjectDoesNotHaveIntegrationWithSecretConfigured(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = Project::buildForTest();
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 

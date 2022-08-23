@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ProjectUGroup;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\InvalidCommentFormatException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
@@ -139,7 +140,7 @@ final class CommentRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(110);
-        $tracker->shouldReceive('getProject')->andReturn(\Project::buildForTest());
+        $tracker->shouldReceive('getProject')->andReturn(ProjectTestBuilder::aProject()->build());
         $artifact = \Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);

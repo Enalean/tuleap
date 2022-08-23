@@ -26,9 +26,10 @@ use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationNotFoundException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-class CreateBranchPrefixUpdaterTest extends TestCase
+final class CreateBranchPrefixUpdaterTest extends TestCase
 {
     private CreateBranchPrefixUpdater $updater;
     /**
@@ -62,7 +63,7 @@ class CreateBranchPrefixUpdaterTest extends TestCase
             'Next gen browser',
             'https://example.com/smartoid/browser',
             new \DateTimeImmutable(),
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -91,7 +92,7 @@ class CreateBranchPrefixUpdaterTest extends TestCase
             'Next gen browser',
             'https://example.com/smartoid/browser',
             new \DateTimeImmutable(),
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -140,7 +141,7 @@ class CreateBranchPrefixUpdaterTest extends TestCase
             'Next gen browser',
             'https://example.com/smartoid/browser',
             new \DateTimeImmutable(),
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

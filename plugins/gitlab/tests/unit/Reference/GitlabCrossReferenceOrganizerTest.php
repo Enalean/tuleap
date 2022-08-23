@@ -23,7 +23,6 @@ namespace Tuleap\Gitlab\Reference;
 
 use DateTimeImmutable;
 use PFUser;
-use Project;
 use ProjectManager;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranch;
@@ -195,7 +194,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -460,7 +459,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -537,7 +536,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -607,7 +606,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -676,7 +675,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -730,7 +729,7 @@ final class GitlabCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

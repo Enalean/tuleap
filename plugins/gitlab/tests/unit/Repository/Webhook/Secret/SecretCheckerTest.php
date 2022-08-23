@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use DateTimeImmutable;
-use Project;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
@@ -31,8 +30,9 @@ use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&SecretRetriever
@@ -51,7 +51,7 @@ class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             'description',
             'https://example.com/path/repo01',
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

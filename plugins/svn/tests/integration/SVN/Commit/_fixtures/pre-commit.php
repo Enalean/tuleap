@@ -1,6 +1,6 @@
 #!/opt/remi/php80/root/usr/bin/php
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -23,10 +23,10 @@
 declare(strict_types=1);
 
 use Tuleap\SVN\Repository\SvnRepository;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 require_once __DIR__ . '/../../../../../../../src/vendor/autoload.php';
 require_once __DIR__ . '/../../../../../include/svnPlugin.php';
-
 
 $repository_path = $argv[1];
 $transaction     = $argv[2];
@@ -35,7 +35,7 @@ $svnlook = new \Tuleap\SVN\Commit\Svnlook(new System_Command());
 
 ForgeConfig::set('sys_data_dir', dirname($repository_path, 3));
 
-$repository = SvnRepository::buildActiveRepository(2, basename($repository_path), Project::buildForTest());
+$repository = SvnRepository::buildActiveRepository(2, basename($repository_path), ProjectTestBuilder::aProject()->build());
 
 $filesize = $svnlook->getFileSize($repository, $transaction, 'trunk/README');
 file_put_contents($repository_path . '/filesize', $filesize);

@@ -27,7 +27,7 @@ use DateTimeImmutable;
 use GitPermissionsManager;
 use GitUserNotAdminException;
 use PFUser;
-use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -93,7 +93,7 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
             "",
             "https://example.com",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 
@@ -124,7 +124,7 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
             "",
             "https://example.com",
             new DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

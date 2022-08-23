@@ -27,8 +27,9 @@ use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ClientWrapper
@@ -54,7 +55,7 @@ class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

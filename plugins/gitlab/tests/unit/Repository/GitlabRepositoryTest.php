@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
+use Tuleap\Test\Builders\ProjectTestBuilder;
+
+final class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetGitlabServerUrl(): void
     {
@@ -33,7 +35,7 @@ class GitlabRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'Next gen browser',
             'https://gitlab.example.com/smartoid/browser',
             new \DateTimeImmutable(),
-            \Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

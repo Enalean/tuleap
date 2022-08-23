@@ -34,9 +34,10 @@ use Project;
 use PFUser;
 use Project_AccessProjectNotFoundException;
 use Planning;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 
-class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -193,7 +194,7 @@ class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = new \Codendi_Request([
             ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT => ProjectMilestonesWidgetRetriever::VALUE_SELECTED_PROJECT_SELF,
-            'project' => \Project::buildForTest(),
+            'project' => ProjectTestBuilder::aProject()->build(),
         ]);
 
         $this->project_milestones_dao->shouldReceive('create')->with(101)->andReturn(455);

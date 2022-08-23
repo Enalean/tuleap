@@ -31,6 +31,7 @@ use Tuleap\Git\GitService;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,7 +47,7 @@ class InvalidCredentialsNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
             'Need more blankets, we are going to freeze our asses',
             'the_full_url',
             new \DateTimeImmutable(),
-            Project::buildForTest(),
+            ProjectTestBuilder::aProject()->build(),
             false
         );
 

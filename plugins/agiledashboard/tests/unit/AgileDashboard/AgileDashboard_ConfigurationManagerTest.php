@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Test\Builders\ProjectTestBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -38,7 +40,7 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager($config_dao, $event_dispatcher);
 
-        self::assertTrue($configuration_manager->scrumIsActivatedForProject(Project::buildForTest()));
+        self::assertTrue($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
     }
 
     public function testScrumIsConsideredDisabledWhenItsAccessIsBlocked(): void
@@ -56,6 +58,6 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
 
         $configuration_manager = new AgileDashboard_ConfigurationManager($config_dao, $event_dispatcher);
 
-        self::assertFalse($configuration_manager->scrumIsActivatedForProject(Project::buildForTest()));
+        self::assertFalse($configuration_manager->scrumIsActivatedForProject(ProjectTestBuilder::aProject()->build()));
     }
 }

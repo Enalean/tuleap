@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository;
 
-use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +36,7 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
             $project_manager
         );
 
-        $project = Project::buildForTest();
+        $project = ProjectTestBuilder::aProject()->build();
 
         $dao
             ->expects(self::once())
@@ -59,7 +59,7 @@ final class GitlabRepositoryIntegrationFactoryTest extends \Tuleap\Test\PHPUnit\
 
         $project_manager
             ->method('getProject')
-            ->willReturn(Project::buildForTest());
+            ->willReturn(ProjectTestBuilder::aProject()->build());
 
         $gitlab_repositories = $factory->getAllIntegrationsInProject($project);
 

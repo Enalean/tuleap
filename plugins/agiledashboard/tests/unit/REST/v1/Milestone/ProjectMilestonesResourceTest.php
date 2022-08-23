@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -34,6 +34,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
         use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
     use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
     use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+    use Tuleap\Test\Builders\ProjectTestBuilder;
     use Tuleap\Test\Builders\UserTestBuilder;
     use Tuleap\Test\Network\HTTPHeaderStack;
 
@@ -73,7 +74,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
         public function testItReturnsMilestoneRepresentations(): void
         {
             $user                = UserTestBuilder::aUser()->build();
-            $project             = \Project::buildForTest();
+            $project             = ProjectTestBuilder::aProject()->build();
             $query               = '';
             $representation_type = MilestoneRepresentation::SLIM;
 
@@ -113,7 +114,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
         public function testItThrowsBadRequestWhenQueryIsMalformed(): void
         {
             $user    = UserTestBuilder::aUser()->build();
-            $project = \Project::buildForTest();
+            $project = ProjectTestBuilder::aProject()->build();
             $query   = 'null';
 
             $this->expectExceptionCode(400);
@@ -123,7 +124,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
         public function testItReturnsEmptyArrayWhenNoPlanning(): void
         {
             $user    = UserTestBuilder::aUser()->build();
-            $project = \Project::buildForTest();
+            $project = ProjectTestBuilder::aProject()->build();
             $query   = '';
             $this->milestone_factory->shouldReceive('getPaginatedTopMilestones')
                 ->once()

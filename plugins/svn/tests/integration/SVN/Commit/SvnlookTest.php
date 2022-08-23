@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\SVN\Commit;
 
 use ForgeConfig;
-use Project;
 use Symfony\Component\Process\Process;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\SVN\Repository\SvnRepository;
 use Tuleap\TemporaryTestDirectory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use function PHPUnit\Framework\assertEquals;
 
 final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,7 +47,7 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         parent::setUp();
 
-        $project         = Project::buildForTest();
+        $project         = ProjectTestBuilder::aProject()->build();
         $repository_name = 'somerepo';
         $this->svnrepo   = $this->getTmpDir() . '/svn_plugin/' . $project->getID() . '/' . $repository_name;
 
