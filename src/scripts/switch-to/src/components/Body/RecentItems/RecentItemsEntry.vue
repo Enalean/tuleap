@@ -20,39 +20,44 @@
 
 <template>
     <div class="switch-to-recent-items-entry" v-on:keydown="changeFocus">
-        <a
-            v-bind:href="entry.html_url"
-            v-bind:class="entry.color_name"
-            class="switch-to-recent-items-entry-link"
-            ref="entry_link"
-            data-test="entry-link"
-        >
-            <span
-                class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
-                v-bind:class="xref_color"
-                v-if="entry.xref"
-            >
-                {{ entry.xref }}
-            </span>
-            <i
-                class="fa fa-fw switch-to-recent-items-entry-icon"
-                v-bind:class="entry.icon_name"
-                v-if="entry.icon_name"
-                aria-hidden="true"
-            ></i>
-            {{ entry.title }}
-        </a>
-        <div class="switch-to-recent-items-entry-quick-links" v-if="has_quick_links">
+        <div class="switch-to-recent-items-entry-with-links">
             <a
-                v-for="link of entry.quick_links"
-                v-bind:key="link.html_url"
-                v-bind:href="link.html_url"
-                v-bind:title="link.name"
-                class="switch-to-recent-items-entry-quick-links-link"
+                v-bind:href="entry.html_url"
+                v-bind:class="entry.color_name"
+                class="switch-to-recent-items-entry-link"
+                ref="entry_link"
+                data-test="entry-link"
             >
-                <i class="fa" v-bind:class="link.icon_name"></i>
+                <span
+                    class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
+                    v-bind:class="xref_color"
+                    v-if="entry.xref"
+                >
+                    {{ entry.xref }}
+                </span>
+                <i
+                    class="fa fa-fw switch-to-recent-items-entry-icon"
+                    v-bind:class="entry.icon_name"
+                    v-if="entry.icon_name"
+                    aria-hidden="true"
+                ></i>
+                {{ entry.title }}
             </a>
+            <div class="switch-to-recent-items-entry-quick-links" v-if="has_quick_links">
+                <a
+                    v-for="link of entry.quick_links"
+                    v-bind:key="link.html_url"
+                    v-bind:href="link.html_url"
+                    v-bind:title="link.name"
+                    class="switch-to-recent-items-entry-quick-links-link"
+                >
+                    <i class="fa" v-bind:class="link.icon_name"></i>
+                </a>
+            </div>
         </div>
+        <span class="switch-to-recent-items-project">
+            {{ this.entry.project.label }}
+        </span>
     </div>
 </template>
 

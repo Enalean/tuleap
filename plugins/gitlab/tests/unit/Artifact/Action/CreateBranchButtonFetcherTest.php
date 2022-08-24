@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Artifact\Action;
 
 use Cocur\Slugify\Slugify;
 use PFUser;
-use Project;
 use Tracker;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
@@ -72,14 +71,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsTheActionLinkButton(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = new Project([
-            'group_id' => 101,
-            'group_name' => 'project01',
-            'unix_group_name' => 'project01',
-            'status' => 'A',
-            'access' => 'public',
-            'type' => 1,
-        ]);
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 
@@ -165,14 +157,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     public function testItReturnsTheActionLinkButtonWithoutArtifactTitle(): void
     {
         $user     = $this->createMock(PFUser::class);
-        $project  = new Project([
-            'group_id' => 101,
-            'group_name' => 'project01',
-            'unix_group_name' => 'project01',
-            'status' => 'A',
-            'access' => 'public',
-            'type' => 1,
-        ]);
+        $project  = ProjectTestBuilder::aProject()->build();
         $artifact = $this->createMock(Artifact::class);
         $tracker  = $this->createMock(Tracker::class);
 

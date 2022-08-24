@@ -4,25 +4,37 @@ exports[`RecentItemsEntry Displays a link with a cross ref 1`] = `
 <div
   class="switch-to-recent-items-entry"
 >
-  <a
-    class="switch-to-recent-items-entry-link lake-placid-blue"
-    data-test="entry-link"
+  <div
+    class="switch-to-recent-items-entry-with-links"
   >
-    <span
-      class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+    <a
+      class="switch-to-recent-items-entry-link lake-placid-blue"
+      data-test="entry-link"
     >
-      
-            art #123
+      <span
+        class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+      >
         
-    </span>
+                art #123
+            
+      </span>
+       
+      <!---->
+      
+            Lorem ipsum
+        
+    </a>
      
     <!---->
-    
-        Lorem ipsum
-    
-  </a>
+  </div>
    
-  <!---->
+  <span
+    class="switch-to-recent-items-project"
+  >
+    
+        Guinea Pig
+    
+  </span>
 </div>
 `;
 
@@ -30,46 +42,58 @@ exports[`RecentItemsEntry Displays a link with a quick links 1`] = `
 <div
   class="switch-to-recent-items-entry"
 >
-  <a
-    class="switch-to-recent-items-entry-link lake-placid-blue"
-    data-test="entry-link"
-  >
-    <span
-      class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
-    >
-      
-            art #123
-        
-    </span>
-     
-    <!---->
-    
-        Lorem ipsum
-    
-  </a>
-   
   <div
-    class="switch-to-recent-items-entry-quick-links"
+    class="switch-to-recent-items-entry-with-links"
   >
     <a
-      class="switch-to-recent-items-entry-quick-links-link"
-      href="/ttm"
-      title="TTM"
+      class="switch-to-recent-items-entry-link lake-placid-blue"
+      data-test="entry-link"
     >
-      <i
-        class="fa fa-check"
-      />
+      <span
+        class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+      >
+        
+                art #123
+            
+      </span>
+       
+      <!---->
+      
+            Lorem ipsum
+        
     </a>
-    <a
-      class="switch-to-recent-items-entry-quick-links-link"
-      href="/ad"
-      title="AD"
+     
+    <div
+      class="switch-to-recent-items-entry-quick-links"
     >
-      <i
-        class="fa fa-table"
-      />
-    </a>
+      <a
+        class="switch-to-recent-items-entry-quick-links-link"
+        href="/ttm"
+        title="TTM"
+      >
+        <i
+          class="fa fa-check"
+        />
+      </a>
+      <a
+        class="switch-to-recent-items-entry-quick-links-link"
+        href="/ad"
+        title="AD"
+      >
+        <i
+          class="fa fa-table"
+        />
+      </a>
+    </div>
   </div>
+   
+  <span
+    class="switch-to-recent-items-project"
+  >
+    
+        Guinea Pig
+    
+  </span>
 </div>
 `;
 
@@ -77,21 +101,33 @@ exports[`RecentItemsEntry Displays a link with an icon 1`] = `
 <div
   class="switch-to-recent-items-entry"
 >
-  <a
-    class="switch-to-recent-items-entry-link lake-placid-blue"
-    data-test="entry-link"
+  <div
+    class="switch-to-recent-items-entry-with-links"
   >
-    <!---->
+    <a
+      class="switch-to-recent-items-entry-link lake-placid-blue"
+      data-test="entry-link"
+    >
+      <!---->
+       
+      <i
+        aria-hidden="true"
+        class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
+      />
+      
+            Kanban
+        
+    </a>
      
-    <i
-      aria-hidden="true"
-      class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
-    />
-    
-        Kanban
-    
-  </a>
+    <!---->
+  </div>
    
-  <!---->
+  <span
+    class="switch-to-recent-items-project"
+  >
+    
+        Guinea Pig
+    
+  </span>
 </div>
 `;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\REST;
 
 use Project;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\REST\JsonCast;
 
@@ -69,9 +70,14 @@ class MinimalProjectRepresentation
 
     public function __construct(Project $project)
     {
-        $this->id          = JsonCast::toInt($project->getID());
-        $this->uri         = self::ROUTE . '/' . $this->id;
-        $this->label       = $project->getPublicName();
+        $this->id  = JsonCast::toInt($project->getID());
+        $this->uri = self::ROUTE . '/' . $this->id;
+
+        $project_icon = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint());
+        $this->label  = $project_icon
+            ? $project_icon . ' ' . $project->getPublicName()
+            : $project->getPublicName();
+
         $this->shortname   = $project->getUnixName();
         $this->status      = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(
             $project->getStatus()

@@ -45,6 +45,10 @@ export interface QuickLink {
     readonly icon_name: string;
 }
 
+interface ProjectReference {
+    readonly label: string;
+}
+
 export interface UserHistoryEntry {
     readonly xref: string | null;
     readonly html_url: string;
@@ -52,6 +56,7 @@ export interface UserHistoryEntry {
     readonly color_name: string;
     readonly icon_name: string | null;
     readonly quick_links: QuickLink[];
+    readonly project: ProjectReference;
 }
 
 export interface UserHistory {
