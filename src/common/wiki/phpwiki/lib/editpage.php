@@ -24,19 +24,6 @@ rcs_id('$Id: editpage.php,v 1.96 2005/05/06 17:54:22 rurban Exp $');
 
 require_once('lib/Template.php');
 
-// USE_HTMLAREA - Support for some WYSIWYG HTML Editor
-// Not yet enabled, since we cannot convert HTML to Wiki Markup yet.
-// (See HtmlParser.php for the ongoing efforts)
-// We might use a HTML PageType, which is contra wiki, but some people might prefer HTML markup.
-// TODO: Change from constant to user preference variable (checkbox setting),
-//       when HtmlParser is finished.
-if (! defined('USE_HTMLAREA')) {
-    define('USE_HTMLAREA', false);
-}
-if (USE_HTMLAREA) {
-    require_once('lib/htmlarea.php');
-}
-
 class PageEditor
 {
     public function __construct(&$request)
@@ -200,10 +187,7 @@ class PageEditor
         }
 
         $title = new FormattedText($title_fs, $pagelink);
-        if (USE_HTMLAREA and $template == 'editpage') {
-            $WikiTheme->addMoreHeaders(Edit_HtmlArea_Head());
-            //$tokens['PAGE_SOURCE'] = Edit_HtmlArea_ConvertBefore($this->_content);
-        }
+
         $template = Template($template, $this->tokens);
         GeneratePage($template, $title, $rev);
         return true;
@@ -393,13 +377,7 @@ class PageEditor
     // possibly convert HTMLAREA content back to Wiki markup
     public function getContent()
     {
-        if (USE_HTMLAREA) {
-            $xml_output     = Edit_HtmlArea_ConvertAfter($this->_content);
-            $this->_content = join("", $xml_output->_content);
-            return $this->_content;
-        } else {
-            return $this->_content;
-        }
+        return $this->_content;
     }
 
     public function getLockedMessage()
@@ -452,11 +430,6 @@ class PageEditor
         $request = &$this->request;
 
         $readonly = ! $this->canEdit(); // || $this->isConcurrentUpdate();
-        if (USE_HTMLAREA) {
-            $html               = $this->getPreview();
-            $this->_wikicontent = $this->_content;
-            $this->_content     = $html->asXML();
-        }
 
         $textarea = HTML::textarea(
             ['class' => 'wikiedit',
@@ -469,11 +442,8 @@ class PageEditor
             ],
             $this->_content
         );
-        if (USE_HTMLAREA) {
-            return Edit_HtmlArea_Textarea($textarea, $this->_wikicontent, 'edit[content]');
-        } else {
-            return $textarea;
-        }
+
+        return $textarea;
     }
 
     public function getFormElements()
