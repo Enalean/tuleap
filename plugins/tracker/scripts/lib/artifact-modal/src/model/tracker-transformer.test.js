@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { transform, addFieldValuesToTracker } from "./tracker-transformer.js";
 import { setCatalog } from "../gettext-catalog";
 
@@ -24,7 +43,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                 const transformed_tracker = transform(tracker, creation_mode);
 
-                expect(transformed_tracker.fields).toEqual([
+                expect(transformed_tracker.fields).toStrictEqual([
                     { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
                     { field_id: 2, type: "fieldset", permissions: ["read"] },
                     { field_id: 3, type: "column", permissions: ["read"] },
@@ -72,7 +91,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                 const transformed_tracker = transform(tracker, creation_mode);
 
-                expect(transformed_tracker.fields).toEqual([
+                expect(transformed_tracker.fields).toStrictEqual([
                     { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
                     { field_id: 2, type: "int", permissions: ["read", "update", "create"] },
                     { field_id: 3, type: "fieldset", permissions: ["read"] },
@@ -94,7 +113,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                 const transformed_tracker = transform(tracker, creation_mode);
 
-                expect(transformed_tracker.fields).toEqual([
+                expect(transformed_tracker.fields).toStrictEqual([
                     { field_id: 1, type: "int", permissions: ["read", "update", "create"] },
                     { field_id: 2, type: "int", permissions: ["read", "update", "create"] },
                     { field_id: 3, type: "fieldset", permissions: ["read"] },
@@ -151,14 +170,65 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                                     { id: 665, is_hidden: false },
                                     { id: 180, is_hidden: false },
                                 ],
+                                default_value: [],
                             },
                         ],
                     };
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.fields[0].values).toEqual([
+                    expect(transformed_tracker.fields[0].values).toStrictEqual([
                         { id: 100, label: "None" },
+                        { id: 665, is_hidden: false },
+                        { id: 180, is_hidden: false },
+                    ]);
+                });
+                it("when I transform the tracker, then a 'None' value will be prepended to its selectable values even if field is mandatory", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
+                        fields: [
+                            {
+                                field_id: 41,
+                                permissions: ["read", "update", "create"],
+                                type: "sb",
+                                values: [
+                                    { id: 665, is_hidden: false },
+                                    { id: 180, is_hidden: false },
+                                ],
+                                required: true,
+                                default_value: [],
+                            },
+                        ],
+                    };
+
+                    const transformed_tracker = transform(tracker);
+
+                    expect(transformed_tracker.fields[0].values).toStrictEqual([
+                        { id: 100, label: "None" },
+                        { id: 665, is_hidden: false },
+                        { id: 180, is_hidden: false },
+                    ]);
+                });
+                it("when I transform the tracker, then a 'None' value will not be prepended to its selectable values if there is a default value", () => {
+                    setCatalog({ getString: (msg) => msg });
+                    const tracker = {
+                        fields: [
+                            {
+                                field_id: 41,
+                                permissions: ["read", "update", "create"],
+                                type: "sb",
+                                values: [
+                                    { id: 665, is_hidden: false },
+                                    { id: 180, is_hidden: false },
+                                ],
+                                default_value: [{ id: 665 }],
+                            },
+                        ],
+                    };
+
+                    const transformed_tracker = transform(tracker);
+
+                    expect(transformed_tracker.fields[0].values).toStrictEqual([
                         { id: 665, is_hidden: false },
                         { id: 180, is_hidden: false },
                     ]);
@@ -184,7 +254,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.fields[0].values).toEqual([
+                    expect(transformed_tracker.fields[0].values).toStrictEqual([
                         { id: 100, label: "None" },
                         { id: 361, is_hidden: false },
                         { id: 992, is_hidden: false },
@@ -208,6 +278,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                                     { id: 46, is_hidden: false },
                                     { id: 35, is_hidden: false },
                                 ],
+                                default_value: [],
                             },
                             {
                                 field_id: 5,
@@ -242,21 +313,21 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.fields[0].values).toEqual([
+                    expect(transformed_tracker.fields[0].values).toStrictEqual([
                         { id: 100, label: "None" },
                         { id: 70, is_hidden: false },
                         { id: 46, is_hidden: false },
                         { id: 35, is_hidden: false },
                     ]);
-                    expect(transformed_tracker.fields[1].values).toEqual([
+                    expect(transformed_tracker.fields[1].values).toStrictEqual([
                         { id: 100, label: "None" },
                         { id: 40, is_hidden: false },
                         { id: 41, is_hidden: false },
                     ]);
-                    expect(transformed_tracker.fields[2].values).toEqual([
+                    expect(transformed_tracker.fields[2].values).toStrictEqual([
                         { id: 80, is_hidden: false },
                     ]);
-                    expect(transformed_tracker.fields[3].values).toEqual([
+                    expect(transformed_tracker.fields[3].values).toStrictEqual([
                         { id: 63, is_hidden: false },
                     ]);
                 });
@@ -303,6 +374,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
                                         },
                                     },
                                 ],
+                                default_value: [],
                             },
                             {
                                 field_id: 7,
@@ -341,39 +413,39 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.fields[0].values[0]).toEqual({
+                    expect(transformed_tracker.fields[0].values[0]).toStrictEqual({
                         id: 100,
                         label: "None",
                     });
-                    expect(transformed_tracker.fields[0].values[1]).toEqual(
+                    expect(transformed_tracker.fields[0].values[1]).toStrictEqual(
                         expect.objectContaining({
                             id: "101_3",
                             label: "MSB Group Name",
                         })
                     );
-                    expect(transformed_tracker.fields[0].values[2]).toEqual(
+                    expect(transformed_tracker.fields[0].values[2]).toStrictEqual(
                         expect.objectContaining({
                             id: "101_4",
                             label: "MSB Other Group Name",
                         })
                     );
-                    expect(transformed_tracker.fields[1].values[0]).toEqual({
+                    expect(transformed_tracker.fields[1].values[0]).toStrictEqual({
                         id: 100,
                         label: "None",
                     });
-                    expect(transformed_tracker.fields[1].values[1]).toEqual(
+                    expect(transformed_tracker.fields[1].values[1]).toStrictEqual(
                         expect.objectContaining({
                             id: "103_4",
                             label: "SB Group Name",
                         })
                     );
-                    expect(transformed_tracker.fields[2].values[0]).toEqual(
+                    expect(transformed_tracker.fields[2].values[0]).toStrictEqual(
                         expect.objectContaining({
                             id: "108_3",
                             label: "CB Group Name",
                         })
                     );
-                    expect(transformed_tracker.fields[3].values[0]).toEqual(
+                    expect(transformed_tracker.fields[3].values[0]).toStrictEqual(
                         expect.objectContaining({
                             id: "107_4",
                             label: "RB Group Name",
@@ -407,7 +479,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.fields).toEqual([
+                    expect(transformed_tracker.fields).toStrictEqual([
                         {
                             field_id: 769,
                             bindings: {
@@ -506,7 +578,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     var transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.workflow.rules.lists).toEqual([
+                    expect(transformed_tracker.workflow.rules.lists).toStrictEqual([
                         {
                             source_field_id: 86,
                             source_value_id: "121_3",
@@ -609,7 +681,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
                     const transformed_tracker = transform(tracker);
 
-                    expect(transformed_tracker.workflow.rules.lists).toEqual(
+                    expect(transformed_tracker.workflow.rules.lists).toStrictEqual(
                         tracker.workflow.rules.lists
                     );
                 });
@@ -640,7 +712,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
             const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
-            expect(transformed_tracker).toEqual({
+            expect(transformed_tracker).toStrictEqual({
                 fields: [
                     {
                         field_id: 719,
@@ -681,7 +753,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
             const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
-            expect(transformed_tracker).toEqual({
+            expect(transformed_tracker).toStrictEqual({
                 fields: [
                     {
                         field_id: 18,
@@ -709,7 +781,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
             const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
-            expect(transformed_tracker).toEqual({
+            expect(transformed_tracker).toStrictEqual({
                 fields: [
                     {
                         field_id: 146,
@@ -796,7 +868,7 @@ describe("TuleapArtifactModalTrackerTransformerService", () => {
 
             const transformed_tracker = addFieldValuesToTracker(artifact_values, tracker);
 
-            expect(transformed_tracker).toEqual({
+            expect(transformed_tracker).toStrictEqual({
                 fields: [
                     { field_id: 1, type: "string" },
                     { field_id: 2, type: "sb" },
