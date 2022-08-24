@@ -20,18 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\OnlyOffice\Open\Editor;
 
 /**
  * @psalm-immutable
+ * @see https://api.onlyoffice.com/editors/config/editor#user
  */
-final class OnlyOfficeEditorPresenter
+final class OnlyOfficeEditorUserConfig
 {
-    public function __construct(
-        public string $script_src,
-        public string $csp_nonce,
-        public string $document_server_url,
-        public string $config_token,
-    ) {
+    private function __construct(public string $id, public string $name)
+    {
+    }
+
+    public static function fromUser(\PFUser $user): self
+    {
+        return new self((string) $user->getId(), $user->getRealName());
     }
 }

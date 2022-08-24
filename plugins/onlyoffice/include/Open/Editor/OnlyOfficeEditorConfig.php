@@ -20,18 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\OnlyOffice\Open\Editor;
 
 /**
  * @psalm-immutable
+ * @see https://api.onlyoffice.com/editors/config/editor
  */
-final class OnlyOfficeEditorPresenter
+final class OnlyOfficeEditorConfig
 {
-    public function __construct(
-        public string $script_src,
-        public string $csp_nonce,
-        public string $document_server_url,
-        public string $config_token,
+    public string $mode = 'view';
+
+    private function __construct(
+        public string $lang,
+        public string $region,
+        public OnlyOfficeEditorUserConfig $user,
     ) {
+    }
+
+    public static function fromUser(\PFUser $user): self
+    {
+        return new self(
+            $user->getShortLocale(),
+            str_replace('_', '-', $user->getLocale()),
+            OnlyOfficeEditorUserConfig::fromUser($user)
+        );
     }
 }

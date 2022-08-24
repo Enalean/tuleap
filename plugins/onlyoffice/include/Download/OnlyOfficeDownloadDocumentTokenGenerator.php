@@ -20,18 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\OnlyOffice\Download;
 
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeEditorPresenter
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OnlyOffice\Open\DocmanFileLastVersion;
+
+interface OnlyOfficeDownloadDocumentTokenGenerator
 {
-    public function __construct(
-        public string $script_src,
-        public string $csp_nonce,
-        public string $document_server_url,
-        public string $config_token,
-    ) {
-    }
+    public function generateDownloadToken(\PFUser $user, DocmanFileLastVersion $docman_file_last_version, \DateTimeImmutable $now): ConcealedString;
 }

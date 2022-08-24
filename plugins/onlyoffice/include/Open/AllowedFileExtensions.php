@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Open;
 
-class AllowedFileExtensions
+final class AllowedFileExtensions
 {
     private const EXTENSIONS = [
         'csv',
@@ -62,8 +62,17 @@ class AllowedFileExtensions
         'xltx',
     ];
 
+    private function __construct()
+    {
+    }
+
     public static function isFilenameAllowedToBeOpenInOnlyOffice(string $filename): bool
     {
-        return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), self::EXTENSIONS, true);
+        return self::isExtensionAllowedToBeOpenInOnlyOffice(pathinfo($filename, PATHINFO_EXTENSION));
+    }
+
+    public static function isExtensionAllowedToBeOpenInOnlyOffice(string $extension): bool
+    {
+        return in_array(strtolower($extension), self::EXTENSIONS, true);
     }
 }

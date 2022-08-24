@@ -19,8 +19,12 @@
 
 const ONLYOFFICE_API_SCRIPT_PATH = "web-apps/apps/api/documents/api.js";
 
+interface OnlyOfficeDocEditorConfig {
+    token: string;
+}
+
 interface OnlyOfficeDocsAPI {
-    DocEditor: (placeholder_id: string) => void;
+    DocEditor: (placeholder_id: string, config: OnlyOfficeDocEditorConfig) => void;
 }
 
 declare global {
@@ -62,9 +66,18 @@ export async function main(document: Document, window: Window): Promise<void> {
         return;
     }
 
+    const config_token = document.body.dataset.configToken;
+    if (!config_token) {
+        document.body.innerText = "Missing config token";
+        return;
+    }
+
     try {
         const docs_api = await addOnlyOfficeAPIScript(document, window, document_server_base_url);
-        docs_api.DocEditor("onlyoffice-editor");
+        const jwt_payload_base64_url = config_token.split(".")[1];
+        const jwt_payload_base64 = jwt_payload_base64_url.replace(/-/g, "+").replace(/_/g, "/");
+        const token_payload = JSON.parse(atob(jwt_payload_base64));
+        docs_api.DocEditor("onlyoffice-editor", { ...token_payload, token: config_token });
     } catch (e) {
         document.body.innerText = "Error while loading ONLYOFFICE editor content";
         throw e;

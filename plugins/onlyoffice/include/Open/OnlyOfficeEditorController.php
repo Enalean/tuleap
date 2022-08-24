@@ -28,18 +28,26 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeDocumentServerSettings;
+use Tuleap\OnlyOffice\Open\Editor\ProvideOnlyOfficeGlobalEditorJWToken;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\ProvideCurrentUser;
 
 final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
 {
     public const EDITOR_ASSET_ENDPOINT = '/no-resource-isolation/onlyoffice/editor_assets';
 
     public function __construct(
+        private LoggerInterface $logger,
+        private ProvideOnlyOfficeGlobalEditorJWToken $onlyoffice_global_editor_jwt_provider,
+        private ProvideCurrentUser $current_user_provider,
         private \TemplateRenderer $template_renderer,
         private IncludeViteAssets $assets,
         private ResponseFactoryInterface $response_factory,
@@ -58,28 +66,44 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
 
         $document_server_url = \ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, null);
         if ($document_server_url === null) {
+            $this->logger->debug(sprintf('Settings %s does not seem to be defined', OnlyOfficeDocumentServerSettings::URL));
             throw new NotFoundException();
         }
 
-        $document_server_url_csp_encoded = str_replace([',', ';'], ['%2C', '%3B'], $document_server_url);
+        $item_id = (int) $request->getAttribute('id');
 
-        $csp_header  = "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts; report-uri /csp-violation;";
-        $csp_header .= "style-src 'nonce-$csp_nonce'; script-src 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
+        return $this->onlyoffice_global_editor_jwt_provider->getGlobalEditorJWToken(
+            $this->current_user_provider->getCurrentUser(),
+            $item_id,
+            new \DateTimeImmutable()
+        )->match(
+            function (string $config_token) use ($document_server_url, $csp_nonce): ResponseInterface {
+                $document_server_url_csp_encoded = str_replace([',', ';'], ['%2C', '%3B'], $document_server_url);
 
-        return $this->response_factory->createResponse()
-            ->withHeader(
-                'Content-Security-Policy',
-                $csp_header
-            )
-            ->withBody(
-                $this->stream_factory->createStream($this->template_renderer->renderToString(
-                    'editor',
-                    new OnlyOfficeEditorPresenter(
-                        self::EDITOR_ASSET_ENDPOINT  . '?name=' . urlencode((new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-editor.ts'))->getFileURL()),
-                        $csp_nonce,
-                        $document_server_url
+                $csp_header  = "default-src 'report-sample'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; sandbox allow-scripts allow-same-origin allow-downloads; report-uri /csp-violation;";
+                $csp_header .= "style-src 'nonce-$csp_nonce'; script-src 'nonce-$csp_nonce' 'strict-dynamic'; frame-src $document_server_url_csp_encoded;";
+
+                return $this->response_factory->createResponse()
+                    ->withHeader(
+                        'Content-Security-Policy',
+                        $csp_header
                     )
-                ))
-            );
+                    ->withBody(
+                        $this->stream_factory->createStream($this->template_renderer->renderToString(
+                            'editor',
+                            new OnlyOfficeEditorPresenter(
+                                self::EDITOR_ASSET_ENDPOINT  . '?name=' . urlencode((new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-editor.ts'))->getFileURL()),
+                                $csp_nonce,
+                                $document_server_url,
+                                $config_token,
+                            )
+                        ))
+                    );
+            },
+            function (Fault $fault): void {
+                Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
+                throw new NotFoundException();
+            }
+        );
     }
 }
