@@ -31,11 +31,6 @@ final class GitlabClientWrapperStub implements WrapGitlabClient
     {
     }
 
-    public function getUrl(Credentials $gitlab_credentials, string $url): ?array
-    {
-        return $this->json;
-    }
-
     public static function buildWithJson(array $json): self
     {
         return new self($json);
@@ -44,5 +39,16 @@ final class GitlabClientWrapperStub implements WrapGitlabClient
     public static function buildWithNullResponse(): self
     {
         return new self(null);
+    }
+
+    public function getUrl(Credentials $gitlab_credentials, string $url): ?array
+    {
+        return $this->json;
+    }
+
+
+    public function getPaginatedUrl(Credentials $gitlab_credentials, string $url, int $row_per_page = self::DEFAULT_NUMBER_OF_ROW_PER_PAGE): ?array
+    {
+        return $this->json;
     }
 }

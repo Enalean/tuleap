@@ -32,9 +32,12 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Gitlab\Test\Stubs\ClientInterfaceWithSeveralCallsStub;
+use Tuleap\Gitlab\Test\Stubs\GitlabHTTPClientFactoryStub;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ClientWrapperTest extends TestCase
 {
     /**
      * @var ClientWrapper
@@ -223,5 +226,79 @@ final class ClientWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectErrorMessageMatches('/' . preg_quote($gitlab_error_message, '/') . '/');
 
         $wrapper->postUrl($credentials, '/something', ['data' => 'data']);
+    }
+
+
+    public function testItThrowsExceptionIfThereIsAnErrorInTheGitlabSide(): void
+    {
+        $client_interface = new class implements ClientInterface {
+            public function sendRequest(RequestInterface $request): ResponseInterface
+            {
+                throw new class extends \Exception implements ClientExceptionInterface {
+                };
+            }
+        };
+        $client_factory   = GitlabHTTPClientFactoryStub::buildWithClientInterface($client_interface);
+
+        $credentials = CredentialsTestBuilder::get()->build();
+
+        self::expectException(GitlabRequestException::class);
+        $wrapper = new ClientWrapper(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $client_factory);
+        $wrapper->getPaginatedUrl($credentials, "/url");
+    }
+
+    public function testItThrowsExceptionIfTheLinkHeaderIsMissing(): void
+    {
+        $client_interface = new class implements ClientInterface {
+            public function sendRequest(RequestInterface $request): ResponseInterface
+            {
+                $body = HTTPFactoryBuilder::streamFactory()->createStream(json_encode([["id" => 100]]));
+                return HTTPFactoryBuilder::responseFactory()->createResponse()->withHeader("X-Total-Pages", ["2"])->withHeader("X-Page", ["1"])->withBody($body);
+            }
+        };
+        $client_factory   = GitlabHTTPClientFactoryStub::buildWithClientInterface($client_interface);
+
+        $credentials = CredentialsTestBuilder::get()->build();
+
+        self::expectException(GitlabResponseAPIException::class);
+        self::expectExceptionMessage("The query is not in error but we cannot retrieve the link header");
+
+        $wrapper = new ClientWrapper(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $client_factory);
+        $result  = $wrapper->getPaginatedUrl($credentials, "/url");
+
+        self::assertSame([['id' => 100]], $result);
+    }
+
+    public function testItReturnsTheResultWhenThereIsOnlyOnePage(): void
+    {
+        $client_interface = new class implements ClientInterface {
+            public function sendRequest(RequestInterface $request): ResponseInterface
+            {
+                $body = HTTPFactoryBuilder::streamFactory()->createStream(json_encode([["id" => 100]]));
+                return HTTPFactoryBuilder::responseFactory()->createResponse()->withHeader("link", ["https://gitlab.example.com; rel='last'"])->withBody($body);
+            }
+        };
+        $client_factory   = GitlabHTTPClientFactoryStub::buildWithClientInterface($client_interface);
+
+        $credentials = CredentialsTestBuilder::get()->build();
+
+        $wrapper = new ClientWrapper(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $client_factory);
+        $result  = $wrapper->getPaginatedUrl($credentials, "/url");
+
+        self::assertSame([['id' => 100]], $result);
+    }
+
+
+    public function testItReturnsThePaginatedResult(): void
+    {
+        $client_interface = new ClientInterfaceWithSeveralCallsStub();
+        $client_factory   = GitlabHTTPClientFactoryStub::buildWithClientInterface($client_interface);
+
+        $credentials = CredentialsTestBuilder::get()->build();
+
+        $wrapper = new ClientWrapper(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $client_factory);
+        $result  = $wrapper->getPaginatedUrl($credentials, "/url");
+
+        self::assertSame([['id' => 100], ["id" => 200]], $result);
     }
 }

@@ -22,14 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API;
 
-interface WrapGitlabClient
-{
-    public const DEFAULT_NUMBER_OF_ROW_PER_PAGE = 20;
-    /**
-     * @throws GitlabRequestException
-     * @throws GitlabResponseAPIException
-     */
-    public function getUrl(Credentials $gitlab_credentials, string $url): ?array;
+use Http\Client\Common\PluginClient;
 
-    public function getPaginatedUrl(Credentials $gitlab_credentials, string $url, int $row_per_page = self::DEFAULT_NUMBER_OF_ROW_PER_PAGE): ?array;
+interface BuildGitlabHttpClient
+{
+    public function buildHTTPClient(Credentials $gitlab_credentials): PluginClient;
 }
