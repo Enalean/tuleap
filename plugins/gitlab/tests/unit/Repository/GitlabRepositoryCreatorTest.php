@@ -279,7 +279,7 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Desc',
                 'https://example.com/root/project01',
                 new DateTimeImmutable(),
-                Project::buildForTest(),
+                $this->project,
                 false
             ),
             new GitlabRepositoryIntegration(
@@ -289,7 +289,7 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Desc',
                 'https://example.com/root/project103',
                 new DateTimeImmutable(),
-                Project::buildForTest(),
+                $this->project,
                 false
             ),
         ];
