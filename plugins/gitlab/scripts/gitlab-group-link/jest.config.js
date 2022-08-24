@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,16 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type VueRouter from "vue-router";
 
-declare module "*.vue" {
-    import type { DefineComponent } from "vue";
-    const component: DefineComponent;
-    export default component;
-}
-
-declare module "vue/types/vue" {
-    interface Vue {
-        $router: VueRouter;
-    }
-}
+import { jest_base_config } from "@tuleap/build-system-configurator";
+export default {
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+    displayName: "gitlab-group-link",
+};

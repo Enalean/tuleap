@@ -71,11 +71,11 @@
             </defs>
         </svg>
         <div class="gitlab-no-group-linked-empty-state-text">
-            <h1 class="empty-state-title">
+            <h1 class="empty-state-title" data-test="gitlab-no-group-linked-empty-state-title">
                 {{
                     $gettext(
                         "%{ current_project_name } is currently not linked to a GitLab group",
-                        { current_project_name }
+                        { current_project_name: root_store.current_project.public_name }
                     )
                 }}
             </h1>
@@ -83,13 +83,21 @@
                 {{ $gettext("Link a GitLab group to import the GitLab projects of the group.") }}
             </p>
         </div>
+        <router-link
+            v-bind:to="{ name: STEP_GITLAB_SERVER }"
+            class="empty-state-action tlp-button-primary tlp-button-large"
+            data-test="button-to-gitlab-server-pane"
+        >
+            {{ $gettext("Link a GitLab group to this project") }}
+        </router-link>
     </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-    current_project_name: string;
-}>();
+import { useRootStore } from "../stores/root";
+import { STEP_GITLAB_SERVER } from "../types";
+
+const root_store = useRootStore();
 </script>
 
 <style scoped lang="scss">

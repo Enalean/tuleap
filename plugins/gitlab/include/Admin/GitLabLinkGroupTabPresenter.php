@@ -43,7 +43,7 @@ final class GitLabLinkGroupTabPresenter
     {
         return new AdminExternalPanePresenter(
             dgettext('tuleap-gitlab', 'GitLab Group Link'),
-            GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/gitlab',
+            GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/administration/gitlab/',
             $is_active
         );
     }
