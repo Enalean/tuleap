@@ -1650,6 +1650,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new TeamDao(),
             $features_dao,
             $features_dao,
+            new IterationsDAO()
         ))->handle(
             PossibleParentSelectorProxy::fromEvent(
                 $possible_parent_selector,
