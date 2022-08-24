@@ -1,0 +1,18 @@
+[Unit]
+Description=Tuleap Mercure Server service (realtime)
+Documentation=https://docs.tuleap.org
+After=tuleap.service
+PartOf=tuleap.service
+
+[Service]
+Type=notify
+User=tuleap-mercure
+Group=tuleap-mercure
+WorkingDirectory=/var/lib/tuleap-mercure
+EnvironmentFile=/etc/tuleap/conf/mercure.env
+ExecStart=/usr/bin/tuleap-mercure run -config /usr/share/tuleap-mercure/Caddyfile
+RestartSec=5
+Restart=on-failure
+
+[Install]
+WantedBy=tuleap.service
