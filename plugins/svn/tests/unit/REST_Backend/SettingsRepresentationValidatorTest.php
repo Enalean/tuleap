@@ -20,8 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-
-class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
      * @var SettingsRepresentationValidator
@@ -116,7 +115,7 @@ class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->validator->validateForPUTRepresentation(null);
     }
 
-    public function testItThrowsAnExceptionWhenUsersAndEmailAreBothEmpty(): void
+    public function testItThrowsAnExceptionWhenUsersAndEmailAndUgroupsAreAllEmpty(): void
     {
         $notification_representation_01 = new NotificationRepresentation(
             ['emails' =>  [], 'users' => [], 'ugroups' => []],
@@ -210,6 +209,28 @@ class SettingsRepresentationValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPUTRepresentation {
+            public function __construct(NotificationRepresentation ...$emails_notifications)
+            {
+                $this->email_notifications = $emails_notifications;
+                $this->access_file         = '';
+                $this->immutable_tags      = [];
+                $this->commit_rules        = [];
+            }
+        };
+
+        $this->expectNotToPerformAssertions();
+
+        $this->validator->validateForPUTRepresentation($settings);
+    }
+
+    public function testItDontThrowExceptionWhenOnlyUgroupsIsProvidedOnPUT(): void
+    {
+        $notification_representation_01 = new NotificationRepresentation(
+            ['emails' =>  [], 'users' => [], 'ugroups' => ['101_4']],
+            '/tags'
+        );
+
+        $settings = new class ($notification_representation_01) extends SettingsPUTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
