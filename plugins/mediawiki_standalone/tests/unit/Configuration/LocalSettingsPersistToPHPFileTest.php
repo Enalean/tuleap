@@ -38,7 +38,7 @@ final class LocalSettingsPersistToPHPFileTest extends TestCase
     protected function setUp(): void
     {
         $this->renderer       = new PHPStringMustacheRenderer(new NullTemplateCache(), __DIR__ . '/../../../templates');
-        $this->representation = (new LocalSettingsRepresentationForTestBuilder())->generateTuleapLocalSettingsRepresentation();
+        $this->representation = (new LocalSettingsRepresentationForTestBuilder())->generateTuleapLocalSettingsRepresentation(\ForgeAccess::getAccessMode());
     }
 
     public function testWritesLocalSettingsFile(): void

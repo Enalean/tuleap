@@ -33,9 +33,12 @@ final class SiteAccessHandler
     ) {
     }
 
-    public function process(): void
+    /**
+     * @param \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED $site_access
+     */
+    public function process(string $site_access): void
     {
-        $this->local_settings_instantiator->instantiateLocalSettings();
+        $this->local_settings_instantiator->instantiateLocalSettings($site_access);
         $this->enqueue_task->enqueue(LogUsersOutInstanceTask::logsOutUserOnAllInstances());
     }
 }

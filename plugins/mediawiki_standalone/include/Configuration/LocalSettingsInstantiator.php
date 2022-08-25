@@ -33,14 +33,15 @@ final class LocalSettingsInstantiator
     ) {
     }
 
-    public function instantiateLocalSettings(): void
+    /**
+     * @param \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED $site_access
+     */
+    public function instantiateLocalSettings(string $site_access): void
     {
         $this->transaction_executor->execute(
-            function (): void {
-                $this->local_settings_persistor->persist(
-                    $this->representation_builder->generateTuleapLocalSettingsRepresentation()
-                );
-            }
+            fn () => $this->local_settings_persistor->persist(
+                $this->representation_builder->generateTuleapLocalSettingsRepresentation($site_access)
+            ),
         );
     }
 }
