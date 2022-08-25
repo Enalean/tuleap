@@ -46,7 +46,8 @@ final class OnlyOfficeDocumentProvider implements ProvideOnlyOfficeDocument
             ->andThen(
                 /** @psalm-return Ok<OnlyOfficeDocument>|Err<Fault> */
                 function (DocmanFileLastVersion $file_last_version): Ok|Err {
-                    if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($file_last_version->version->getFilename())) {
+                    $filename = $file_last_version->version->getFilename();
+                    if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($filename)) {
                         return Result::err(
                             Fault::fromMessage(
                                 sprintf('Item #%d cannot be opened with ONLYOFFICE', $file_last_version->item->getId())
@@ -58,6 +59,8 @@ final class OnlyOfficeDocumentProvider implements ProvideOnlyOfficeDocument
                         new OnlyOfficeDocument(
                             $this->project_factory->getProjectById((int) $file_last_version->item->getGroupId()),
                             $file_last_version->item,
+                            (int) $file_last_version->version->getId(),
+                            $filename
                         )
                     );
                 }

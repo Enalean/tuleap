@@ -182,7 +182,10 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             BackendLogger::getDefaultLogger(),
             new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeGlobalEditorJWTokenProvider(
                 new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfigProvider(
-                    new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+                    new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
+                        new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+                        ProjectManager::instance(),
+                    ),
                     new \Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGeneratorDBStore(
                         new OnlyOfficeDownloadDocumentTokenDAO(),
                         new SplitTokenVerificationStringHasher(),
