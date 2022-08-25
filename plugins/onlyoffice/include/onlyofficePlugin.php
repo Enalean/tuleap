@@ -46,8 +46,8 @@ use Tuleap\OnlyOffice\Download\DownloadDocumentWithTokenMiddleware;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenDAO;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenVerifier;
 use Tuleap\OnlyOffice\Download\PrefixOnlyOfficeDocumentDownload;
-use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
 use Tuleap\OnlyOffice\Open\DocmanFileLastVersionProvider;
+use Tuleap\OnlyOffice\Open\DocmanFileLastVersionToOnlyOfficeDocumentTransformer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeEditorController;
 use Tuleap\OnlyOffice\Open\OpenInOnlyOfficeController;
 use Tuleap\Request\CollectRoutesEvent;
@@ -61,7 +61,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function __construct(?int $id)
     {
         parent::__construct($id);
-        $this->setScope(self::SCOPE_SYSTEM);
+        $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-onlyoffice', __DIR__ . '/../site-content');
     }
 
@@ -145,31 +145,36 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
 
     public function openItemHref(OpenItemHref $open_item_href): void
     {
-        if (! ForgeConfig::get(OnlyOfficeDocumentServerSettings::URL, '')) {
-            return;
-        }
-        if (! ForgeConfig::exists(OnlyOfficeDocumentServerSettings::SECRET)) {
-            return;
-        }
-        if (! AllowedFileExtensions::isFilenameAllowedToBeOpenInOnlyOffice($open_item_href->getVersion()->getFilename())) {
-            return;
-        }
-
-        $open_item_href->setHref(
-            '/onlyoffice/open/' . urlencode((string) $open_item_href->getItem()->getId())
+        $transformer = new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
+            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, BackendLogger::getDefaultLogger()),
+            ProjectManager::instance(),
         );
+
+        $result = $transformer->transformToOnlyOfficeDocument(
+            new \Tuleap\OnlyOffice\Open\DocmanFileLastVersion($open_item_href->getItem(), $open_item_href->getVersion())
+        );
+        if (\Tuleap\NeverThrow\Result::isOk($result)) {
+            $open_item_href->setHref(
+                '/onlyoffice/open/' . urlencode((string) $open_item_href->getItem()->getId())
+            );
+        }
     }
 
     public function routeGetOpenOnlyOffice(): OpenInOnlyOfficeController
     {
+        $logger = BackendLogger::getDefaultLogger();
+
         return new OpenInOnlyOfficeController(
             UserManager::instance(),
             new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                 new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
-                ProjectManager::instance(),
+                new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
+                    new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, $logger),
+                    ProjectManager::instance(),
+                ),
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-            BackendLogger::getDefaultLogger(),
+            $logger,
             CssViteAsset::fromFileName(self::getAssets(), 'themes/style.scss'),
             Prometheus::instance(),
             \Tuleap\ServerHostname::HTTPSUrl(),
@@ -184,7 +189,10 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                 new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfigProvider(
                     new \Tuleap\OnlyOffice\Open\OnlyOfficeDocumentProvider(
                         new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
-                        ProjectManager::instance(),
+                        new DocmanFileLastVersionToOnlyOfficeDocumentTransformer(
+                            new \Tuleap\OnlyOffice\Administration\OnlyOfficeAvailabilityChecker(PluginManager::instance(), $this, BackendLogger::getDefaultLogger()),
+                            ProjectManager::instance(),
+                        ),
                     ),
                     new \Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGeneratorDBStore(
                         new OnlyOfficeDownloadDocumentTokenDAO(),

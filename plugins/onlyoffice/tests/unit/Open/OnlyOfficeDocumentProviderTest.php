@@ -26,38 +26,37 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
 class OnlyOfficeDocumentProviderTest extends TestCase
 {
-    private const PROJECT_ID = 101;
-    private const ITEM_ID    = 123;
-
+    private const ITEM_ID = 123;
     private \Project $project;
 
     protected function setUp(): void
     {
-        $this->project = ProjectTestBuilder::aProject()
-            ->withId(self::PROJECT_ID)
-            ->build();
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testRejectsWhenLastVersionIsRejected(): void
     {
-        $provider = $this->getOnlyOfficeDocumentProvider(ProvideDocmanFileLastVersionStub::buildWithError());
+        $provider = $this->getOnlyOfficeDocumentProvider(
+            ProvideDocmanFileLastVersionStub::buildWithError(),
+            TransformDocmanFileLastVersionToOnlyOfficeDocumentStub::buildWithError(),
+        );
 
         $result = $provider->getDocument(UserTestBuilder::buildWithDefaults(), self::ITEM_ID);
 
         self::assertTrue(Result::isErr($result));
     }
 
-    public function testRejectsWhenFileCannotBeOpenInOnlyOffice(): void
+    public function testRejectsWhenFileCannotBeTransformedInOnlyOfficeDocument(): void
     {
         $provider = $this->getOnlyOfficeDocumentProvider(
             ProvideDocmanFileLastVersionStub::buildWithDocmanVersion(
-                new \Docman_File(['group_id' => self::PROJECT_ID]),
+                new \Docman_File(['item_id' => self::ITEM_ID]),
                 new \Docman_Version(['filename' => 'not_something_onlyoffice_can_open'])
-            )
+            ),
+            TransformDocmanFileLastVersionToOnlyOfficeDocumentStub::buildWithError(),
         );
 
         $result = $provider->getDocument(UserTestBuilder::buildWithDefaults(), self::ITEM_ID);
@@ -67,13 +66,19 @@ class OnlyOfficeDocumentProviderTest extends TestCase
 
     public function testHappyPath(): void
     {
-        $item = new \Docman_File(['group_id' => self::PROJECT_ID]);
+        $item = new \Docman_File(['item_id' => self::ITEM_ID]);
 
         $provider = $this->getOnlyOfficeDocumentProvider(
             ProvideDocmanFileLastVersionStub::buildWithDocmanVersion(
                 $item,
                 new \Docman_Version(['filename' => 'spec.docx'])
-            )
+            ),
+            TransformDocmanFileLastVersionToOnlyOfficeDocumentStub::buildWithDocmanItem(
+                $this->project,
+                $item,
+                123,
+                'spec.docx',
+            ),
         );
 
         $result = $provider->getDocument(UserTestBuilder::buildWithDefaults(), self::ITEM_ID);
@@ -85,10 +90,8 @@ class OnlyOfficeDocumentProviderTest extends TestCase
 
     private function getOnlyOfficeDocumentProvider(
         ProvideDocmanFileLastVersion $last_version_provider,
+        TransformDocmanFileLastVersionToOnlyOfficeDocument $transformer,
     ): OnlyOfficeDocumentProvider {
-        return new OnlyOfficeDocumentProvider(
-            $last_version_provider,
-            ProjectByIDFactoryStub::buildWith($this->project)
-        );
+        return new OnlyOfficeDocumentProvider($last_version_provider, $transformer);
     }
 }
