@@ -37,6 +37,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsController;
 use Tuleap\OnlyOffice\Administration\OnlyOfficeAdminSettingsPresenter;
@@ -169,7 +170,7 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             ),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             BackendLogger::getDefaultLogger(),
-            self::getAssets(),
+            CssViteAsset::fromFileName(self::getAssets(), 'themes/style.scss'),
             Prometheus::instance(),
             \Tuleap\ServerHostname::HTTPSUrl(),
         );
