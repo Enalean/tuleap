@@ -20,24 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository;
+namespace Tuleap\Gitlab\Group\Token;
 
-use Project;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\DB\DataAccessObject;
 
-interface CreateGitlabRepositories
+final class GroupApiTokenDAO extends DataAccessObject
 {
-    /**
-     * @throws GitlabResponseAPIException
-     * @throws GitlabRequestException
-     */
-    public function createGitlabRepositoryIntegration(
-        Credentials $credentials,
-        GitlabProject $gitlab_project,
-        Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration,
-    ): GitlabRepositoryIntegration;
+    public function storeToken(int $group_id, string $encrypted_token): void
+    {
+        $this->getDB()->insertOnDuplicateKeyUpdate(
+            'plugin_gitlab_group_token',
+            [
+                'group_id'                                => $group_id,
+                'token'                                   => $encrypted_token,
+            ],
+            [
+                'token',
+            ]
+        );
+    }
 }

@@ -25,15 +25,14 @@ namespace Tuleap\Gitlab\Group;
 use Luracast\Restler\RestException;
 use Project;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Stubs\BuildGitlabProjectsStub;
-use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
+use Tuleap\Gitlab\Test\Stubs\HandleGitlabRepositoryGroupLinkStub;
+use Tuleap\Gitlab\Test\Stubs\RetrieveGitlabGroupInformationStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -61,97 +60,68 @@ final class GroupCreatorTest extends TestCase
             )
         );
 
-        $gitlab_repository_creator = CreateGitlabRepositoriesStub::buildWithDefault();
-
-        $group_creator = new GroupCreator($gitlab_repository_creator, $build_gitlab_project);
+        $group_creator = new GroupCreator(
+            $build_gitlab_project,
+            RetrieveGitlabGroupInformationStub::buildDefault(),
+            HandleGitlabRepositoryGroupLinkStub::buildDefault()
+        );
 
         self::expectException(RestException::class);
         $group_creator->createGroupAndIntegrations($this->credentials, $this->representation, $this->project);
     }
 
-    public function testItThrowsExceptionIfTheResponseFromAPIIsNotOk(): void
+    public function testItThrowsExceptionIfTheRequestResultHasSomeErrors(): void
+    {
+        $build_gitlab_project = BuildGitlabProjectsStub::buildWithException(
+            new GitlabResponseAPIException("fail")
+        );
+
+
+        $group_creator = new GroupCreator(
+            $build_gitlab_project,
+            RetrieveGitlabGroupInformationStub::buildDefault(),
+            HandleGitlabRepositoryGroupLinkStub::buildDefault()
+        );
+
+        self::expectException(RestException::class);
+        $group_creator->createGroupAndIntegrations($this->credentials, $this->representation, $this->project);
+    }
+
+
+    public function testItThrowsExceptionIfTheGitlabGroupAlreadyExists(): void
     {
         $build_gitlab_project = BuildGitlabProjectsStub::buildWithDefault();
 
-        $gitlab_repository_creator = CreateGitlabRepositoriesStub::buildWithException(
-            new GitlabResponseAPIException('fail')
+        $group_creator = new GroupCreator(
+            $build_gitlab_project,
+            RetrieveGitlabGroupInformationStub::buildDefault(),
+            HandleGitlabRepositoryGroupLinkStub::buildWithException(
+                new GitlabGroupAlreadyExistsException("my_group")
+            )
         );
-
-        $group_creator = new GroupCreator($gitlab_repository_creator, $build_gitlab_project);
 
         self::expectException(RestException::class);
         $group_creator->createGroupAndIntegrations($this->credentials, $this->representation, $this->project);
     }
 
-    public function testItThrowsExceptionIfRepositoryWithTheSameNameExists(): void
+    public function testItReturnsTheRepresentation(): void
     {
         $build_gitlab_project = BuildGitlabProjectsStub::buildWithDefault();
 
-        $gitlab_repository_creator = CreateGitlabRepositoriesStub::buildWithException(
-            new GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException('fail')
+        $created_group_id                     = 15;
+        $number_of_integration                = 3;
+        $gitlab_repository_group_link_handler = HandleGitlabRepositoryGroupLinkStub::buildWithRepresentation(
+            new GitlabGroupRepresentation(15, 3)
         );
 
-
-        $group_creator = new GroupCreator($gitlab_repository_creator, $build_gitlab_project);
-
-        self::expectException(RestException::class);
-        $group_creator->createGroupAndIntegrations($this->credentials, $this->representation, $this->project);
-    }
-
-    public function testItReturnsTheGroupRepresentation(): void
-    {
-        $build_gitlab_project      = BuildGitlabProjectsStub::buildWithGitlabProjects(
-            [
-                new GitlabProject(
-                    9,
-                    'Description',
-                    'https://gitlab.example.com',
-                    '/',
-                    new \DateTimeImmutable('@0'),
-                    'main'
-                ),
-                new GitlabProject(
-                    10,
-                    'Description 2',
-                    'https://gitlab.example.com',
-                    '/',
-                    new \DateTimeImmutable('@0'),
-                    'main'
-                ),
-            ]
+        $group_creator = new GroupCreator(
+            $build_gitlab_project,
+            RetrieveGitlabGroupInformationStub::buildDefault(),
+            $gitlab_repository_group_link_handler
         );
-        $gitlab_repository_creator = CreateGitlabRepositoriesStub::buildWithIntegrations(
-            [
-                new GitlabRepositoryIntegration(
-                    18,
-                    9,
-                    'root/repo01',
-                    'Description',
-                    'https://gitlab.example.com',
-                    new \DateTimeImmutable(),
-                    $this->project,
-                    false
-                ),
-                new GitlabRepositoryIntegration(
-                    18,
-                    10,
-                    'root/repo01',
-                    'Description 2',
-                    'https://gitlab.example.com',
-                    new \DateTimeImmutable(),
-                    $this->project,
-                    false
-                ),
-            ]
-        );
-
-        $group_creator = new GroupCreator($gitlab_repository_creator, $build_gitlab_project);
 
         $result = $group_creator->createGroupAndIntegrations($this->credentials, $this->representation, $this->project);
-
-        $excepted_gitlab_group_id       = 1;
-        $expected_number_of_integration = 2;
-        self::assertSame($excepted_gitlab_group_id, $result->id);
-        self::assertSame($expected_number_of_integration, $result->number_of_integrations);
+        self::assertSame($created_group_id, $result->id);
+        self::assertSame($number_of_integration, $result->number_of_integrations);
     }
 }

@@ -22,36 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use Throwable;
-use Tuleap\Gitlab\API\BuildGitlabProjects;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\Group\BuildGitlabGroup;
+use Tuleap\Gitlab\Group\GitlabGroup;
+use Tuleap\Gitlab\Group\GitlabGroupDBInsertionRepresentation;
 
-final class BuildGitlabProjectsStub implements BuildGitlabProjects
+final class BuildGitlabGroupStub implements BuildGitlabGroup
 {
-    public function __construct(private ?Throwable $exception, private array $gitlab_projects)
+    private function __construct(private int $group_id)
     {
     }
 
-    /**
-     * @return GitlabProject[]
-     * @throws Throwable
-     */
-    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
+    public function createGroup(GitlabGroupDBInsertionRepresentation $gitlab_group): GitlabGroup
     {
-        if ($this->exception) {
-            throw $this->exception;
-        }
-        return $this->gitlab_projects;
+        return GitlabGroup::buildGitlabGroupFromInsertionRows($this->group_id, $gitlab_group);
     }
 
-    public static function buildWithException(Throwable $exception): self
+    public static function buildWithGroupId(int $id): self
     {
-        return new self($exception, []);
-    }
-
-    public static function buildWithDefault(): self
-    {
-        return new self(null, []);
+        return new self($id);
     }
 }

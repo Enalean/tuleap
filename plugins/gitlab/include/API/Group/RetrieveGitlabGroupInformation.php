@@ -20,38 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stubs;
+namespace Tuleap\Gitlab\API\Group;
 
-use Throwable;
-use Tuleap\Gitlab\API\BuildGitlabProjects;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 
-final class BuildGitlabProjectsStub implements BuildGitlabProjects
+interface RetrieveGitlabGroupInformation
 {
-    public function __construct(private ?Throwable $exception, private array $gitlab_projects)
-    {
-    }
-
     /**
-     * @return GitlabProject[]
-     * @throws Throwable
+     * @throws GitlabResponseAPIException
+     * @throws GitlabRequestException
      */
-    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
-    {
-        if ($this->exception) {
-            throw $this->exception;
-        }
-        return $this->gitlab_projects;
-    }
-
-    public static function buildWithException(Throwable $exception): self
-    {
-        return new self($exception, []);
-    }
-
-    public static function buildWithDefault(): self
-    {
-        return new self(null, []);
-    }
+    public function getGitlabGroupFromGitlabApi(Credentials $credential, GitlabGroupPOSTRepresentation $representation): GitlabGroupApiDataRepresentation;
 }

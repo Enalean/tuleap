@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Token;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\API\ApiToken;
 
 /**
  * @psalm-immutable
  */
-final class IntegrationApiToken
+final class IntegrationApiToken implements ApiToken
 {
     /**
      * @var ConcealedString

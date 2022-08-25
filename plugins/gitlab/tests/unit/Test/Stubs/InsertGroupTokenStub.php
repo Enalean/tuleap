@@ -22,36 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use Throwable;
-use Tuleap\Gitlab\API\BuildGitlabProjects;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\Group\GitlabGroup;
+use Tuleap\Gitlab\Group\Token\InsertGroupToken;
 
-final class BuildGitlabProjectsStub implements BuildGitlabProjects
+final class InsertGroupTokenStub implements InsertGroupToken
 {
-    public function __construct(private ?Throwable $exception, private array $gitlab_projects)
+    private int $number_of_call;
+
+    private function __construct()
     {
+        $this->number_of_call = 0;
     }
 
-    /**
-     * @return GitlabProject[]
-     * @throws Throwable
-     */
-    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
+    public function insertToken(GitlabGroup $gitlab_group, ConcealedString $token): void
     {
-        if ($this->exception) {
-            throw $this->exception;
-        }
-        return $this->gitlab_projects;
+        $this->number_of_call++;
     }
 
-    public static function buildWithException(Throwable $exception): self
+    public function getNumberOfCallInsertTokenMethod(): int
     {
-        return new self($exception, []);
+        return $this->number_of_call;
     }
 
-    public static function buildWithDefault(): self
+    public static function build(): self
     {
-        return new self(null, []);
+        return new self();
     }
 }

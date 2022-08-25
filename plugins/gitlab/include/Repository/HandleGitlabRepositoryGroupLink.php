@@ -20,38 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stubs;
+namespace Tuleap\Gitlab\Repository;
 
-use Throwable;
-use Tuleap\Gitlab\API\BuildGitlabProjects;
+use Project;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
+use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
-final class BuildGitlabProjectsStub implements BuildGitlabProjects
+interface HandleGitlabRepositoryGroupLink
 {
-    public function __construct(private ?Throwable $exception, private array $gitlab_projects)
-    {
-    }
-
     /**
-     * @return GitlabProject[]
-     * @throws Throwable
+     * @param GitlabProject[] $gitlab_projects
+     *
+     * @throws GitlabGroupAlreadyExistsException
+     * @throws GitlabResponseAPIException
+     * @throws GitlabRequestException
      */
-    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
-    {
-        if ($this->exception) {
-            throw $this->exception;
-        }
-        return $this->gitlab_projects;
-    }
-
-    public static function buildWithException(Throwable $exception): self
-    {
-        return new self($exception, []);
-    }
-
-    public static function buildWithDefault(): self
-    {
-        return new self(null, []);
-    }
+    public function integrateGitlabRepositoriesInProject(
+        Credentials $credentials,
+        array $gitlab_projects,
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration,
+        GitlabGroupApiDataRepresentation $api_data_representation,
+    ): GitlabGroupRepresentation;
 }

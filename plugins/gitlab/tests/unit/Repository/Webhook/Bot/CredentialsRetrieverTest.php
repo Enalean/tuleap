@@ -60,7 +60,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
         self::assertNotNull($credentials);
-        self::assertEquals($integration_api_token, $credentials->getBotApiToken());
+        self::assertEquals($integration_api_token, $credentials->getApiToken());
         self::assertEquals("https://www.example.com/", $credentials->getGitlabServerUrl());
     }
 

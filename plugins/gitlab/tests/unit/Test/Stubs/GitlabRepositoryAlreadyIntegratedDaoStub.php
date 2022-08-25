@@ -22,36 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use Throwable;
-use Tuleap\Gitlab\API\BuildGitlabProjects;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
+use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedDao;
 
-final class BuildGitlabProjectsStub implements BuildGitlabProjects
+final class GitlabRepositoryAlreadyIntegratedDaoStub implements GitlabRepositoryAlreadyIntegratedDao
 {
-    public function __construct(private ?Throwable $exception, private array $gitlab_projects)
+    private int $number_of_call;
+    private function __construct()
     {
+        $this->number_of_call = 0;
     }
 
-    /**
-     * @return GitlabProject[]
-     * @throws Throwable
-     */
-    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
+    public function isTheGitlabRepositoryAlreadyIntegratedInProject(int $project_id, int $gitlab_repository_id, string $http_path,): bool
     {
-        if ($this->exception) {
-            throw $this->exception;
+        $this->number_of_call++;
+        if ($this->number_of_call === 1) {
+            return false;
         }
-        return $this->gitlab_projects;
+        return true;
     }
 
-    public static function buildWithException(Throwable $exception): self
+    public static function build(): self
     {
-        return new self($exception, []);
-    }
-
-    public static function buildWithDefault(): self
-    {
-        return new self(null, []);
+        return new self();
     }
 }
