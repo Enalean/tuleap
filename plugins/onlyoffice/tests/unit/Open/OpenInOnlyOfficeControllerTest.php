@@ -26,7 +26,8 @@ use Enalean\Prometheus\Registry\CollectorRegistry;
 use Enalean\Prometheus\Storage\NullStore;
 use Psr\Log\NullLogger;
 use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\CssAssetGeneric;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -81,7 +82,17 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
             $document_provider,
             $template_renderer,
             new NullLogger(),
-            new IncludeViteAssets('/', '/'),
+            new class implements CssAssetGeneric {
+                public function getFileURL(ThemeVariation $variant): string
+                {
+                    return '';
+                }
+
+                public function getIdentifier(): string
+                {
+                    return '';
+                }
+            },
             new Prometheus(new CollectorRegistry(new NullStore())),
             '',
         );
