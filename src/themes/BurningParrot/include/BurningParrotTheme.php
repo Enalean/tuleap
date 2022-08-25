@@ -145,7 +145,8 @@ class BurningParrotTheme extends BaseLayout
         if ($params instanceof HeaderConfiguration) {
             $in_project_without_sidebar = $params->in_project_without_sidebar;
             $params                     = [
-                'title' => $params->title,
+                'title'      => $params->title,
+                'body_class' => $params->body_class,
             ];
         }
 

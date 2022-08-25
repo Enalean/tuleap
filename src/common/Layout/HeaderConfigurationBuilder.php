@@ -24,18 +24,42 @@ namespace Tuleap\Layout;
 
 use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar;
 
-/**
- * @psalm-immutable
- */
-final class HeaderConfiguration
+final class HeaderConfigurationBuilder
 {
+    /**
+     * @var string[]
+     */
+    private array $body_class                                    = [];
+    private ?InProjectWithoutSidebar $in_project_without_sidebar = null;
+
+    private function __construct(private string $title)
+    {
+    }
+
+    public static function get(string $title): self
+    {
+        return new self($title);
+    }
+
     /**
      * @param string[] $body_class
      */
-    public function __construct(
-        public string $title,
-        public ?InProjectWithoutSidebar $in_project_without_sidebar,
-        public array $body_class,
-    ) {
+    public function withBodyClass(array $body_class): self
+    {
+        $this->body_class = $body_class;
+
+        return $this;
+    }
+
+    public function inProjectWithoutSidebar(InProjectWithoutSidebar\BackToLinkPresenter $back_to_link): self
+    {
+        $this->in_project_without_sidebar = new InProjectWithoutSidebar($back_to_link);
+
+        return $this;
+    }
+
+    public function build(): HeaderConfiguration
+    {
+        return new HeaderConfiguration($this->title, $this->in_project_without_sidebar, $this->body_class);
     }
 }
