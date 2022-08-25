@@ -20,17 +20,20 @@
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "path";
 
-export default vite.defineAppConfig("oauth2_server", {
-    build: {
-        rollupOptions: {
-            input: {
-                administration: path.resolve(__dirname, "scripts/src/administration.ts"),
-                "user-preferences": path.resolve(__dirname, "scripts/src/user-preferences.ts"),
-                "authorization-form-style": path.resolve(
-                    __dirname,
-                    "themes/authorization-form.scss"
-                ),
+export default vite.defineAppConfig(
+    { plugin_name: "oauth2_server" },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    administration: path.resolve(__dirname, "scripts/src/administration.ts"),
+                    "user-preferences": path.resolve(__dirname, "scripts/src/user-preferences.ts"),
+                    "authorization-form-style": path.resolve(
+                        __dirname,
+                        "themes/authorization-form.scss"
+                    ),
+                },
             },
         },
-    },
-});
+    }
+);

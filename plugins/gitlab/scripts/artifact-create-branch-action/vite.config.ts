@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,20 +22,16 @@ import * as path from "path";
 import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export default vite.defineAppConfig("gitlab", {
-    plugins: [POGettextPlugin.vite(), vue()],
-    build: {
-        rollupOptions: {
-            input: {
-                "gitlab-artifact-create-branch": path.resolve(
-                    __dirname,
-                    "scripts/artifact-create-branch-action/src/index.ts"
-                ),
-                "gitlab-group-link": path.resolve(
-                    __dirname,
-                    "scripts/gitlab-group-link/src/index.ts"
-                ),
+export default vite.defineAppConfig(
+    { plugin_name: "gitlab", outDir: "../../frontend-assets/artifact-create-branch/" },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "gitlab-artifact-create-branch": path.resolve(__dirname, "src/index.ts"),
+                },
             },
         },
-    },
-});
+    }
+);

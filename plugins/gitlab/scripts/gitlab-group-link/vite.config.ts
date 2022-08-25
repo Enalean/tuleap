@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-process.env.DISABLE_TS_TYPECHECK = "true";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "path";
+import vue from "@vitejs/plugin-vue";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-import { jest_base_config } from "@tuleap/build-system-configurator";
-export default {
-    ...jest_base_config,
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "@vue/vue3-jest",
-    },
-    displayName: "gitlab",
-};
+export default vite.defineAppConfig(
+    { plugin_name: "gitlab", outDir: "../../frontend-assets/gitlab-group-link/" },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "gitlab-group-link": path.resolve(__dirname, "src/index.ts"),
+                },
+            },
+        },
+    }
+);

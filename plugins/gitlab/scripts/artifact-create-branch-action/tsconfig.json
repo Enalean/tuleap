@@ -1,5 +1,5 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "../../../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
         "types": [
@@ -9,6 +9,6 @@
         "skipLibCheck": true
     },
     "include": [
-        "scripts/**/*",
+        "src/**/*",
     ]
 }
