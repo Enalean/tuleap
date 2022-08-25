@@ -20,18 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\OnlyOffice\Open\Editor;
 
-/**
- * @psalm-immutable
- */
-final class OnlyOfficeEditorPresenter
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+
+interface ProvideOnlyOfficeConfigDocument
 {
-    public function __construct(
-        public string $script_src,
-        public string $csp_nonce,
-        public string $document_server_url,
-        public string $config_token,
-    ) {
-    }
+    /**
+     * @psalm-return Ok<OnlyOfficeDocumentConfig>|Err<Fault>
+     */
+    public function getDocumentConfig(\PFUser $user, int $item_id, \DateTimeImmutable $now): Ok|Err;
 }

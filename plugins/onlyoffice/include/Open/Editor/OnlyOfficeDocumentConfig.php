@@ -20,18 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OnlyOffice\Open;
+namespace Tuleap\OnlyOffice\Open\Editor;
 
 /**
  * @psalm-immutable
+ * @see https://api.onlyoffice.com/editors/config/document
  */
-final class OnlyOfficeEditorPresenter
+final class OnlyOfficeDocumentConfig
 {
+    public array $permissions = ['chat' => false, 'print' => false];
+
     public function __construct(
-        public string $script_src,
-        public string $csp_nonce,
-        public string $document_server_url,
-        public string $config_token,
+        public string $fileType,
+        public string $key,
+        public string $title,
+        public string $url,
     ) {
     }
 }

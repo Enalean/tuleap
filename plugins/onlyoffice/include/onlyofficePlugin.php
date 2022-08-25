@@ -179,6 +179,21 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
     public function routeGetEditorOnlyOffice(): OnlyOfficeEditorController
     {
         return new OnlyOfficeEditorController(
+            BackendLogger::getDefaultLogger(),
+            new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeGlobalEditorJWTokenProvider(
+                new \Tuleap\OnlyOffice\Open\Editor\OnlyOfficeDocumentConfigProvider(
+                    new DocmanFileLastVersionProvider(new \Docman_ItemFactory(), new Docman_VersionFactory()),
+                    new \Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGeneratorDBStore(
+                        new OnlyOfficeDownloadDocumentTokenDAO(),
+                        new SplitTokenVerificationStringHasher(),
+                        new PrefixedSplitTokenSerializer(new PrefixOnlyOfficeDocumentDownload()),
+                        new DateInterval('PT30S')
+                    )
+                ),
+                new \Lcobucci\JWT\JwtFacade(),
+                new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+            ),
+            UserManager::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
             self::getAssets(),
             HTTPFactoryBuilder::responseFactory(),
