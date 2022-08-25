@@ -36,7 +36,6 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
-use Valid_HTTPSURI;
 
 final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
 {
@@ -106,7 +105,8 @@ final class OnlyOfficeSaveAdminSettingsControllerTest extends TestCase
         return new OnlyOfficeSaveAdminSettingsController(
             $csrf_token,
             new ConfigSet($event_dispatcher, $config_dao),
-            new Valid_HTTPSURI(),
+            OnlyOfficeServerUrlValidator::buildSelf(),
+            OnlyOfficeSecretKeyValidator::buildSelf(),
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new SapiEmitter()
         );

@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -26,15 +25,13 @@ namespace Tuleap\Config;
 /**
  * @psalm-immutable
  */
-final class ConfigKeyMetadata
+#[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
+final class ConfigKeyValueValidator
 {
-    public function __construct(
-        public string $description,
-        public bool $can_be_modified,
-        public bool $is_secret,
-        public ?SecretValidator $secret_validator,
-        public ?ValueValidator $value_validator,
-        public ?string $category,
-    ) {
+    /**
+     * @psalm-param class-string<ValueValidator> $validator_class_name
+     */
+    public function __construct(public string $validator_class_name)
+    {
     }
 }

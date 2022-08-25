@@ -25,17 +25,21 @@ namespace Tuleap\OnlyOffice\Administration;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeySecret;
+use Tuleap\Config\ConfigKeySecretValidator;
 use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\ConfigKeyValueValidator;
 
 #[ConfigKeyCategory('ONLYOFFICE')]
 final class OnlyOfficeDocumentServerSettings
 {
     #[ConfigKey('URL of the ONLYOFFICE document server')]
     #[ConfigKeyString]
+    #[ConfigKeyValueValidator(OnlyOfficeServerUrlValidator::class)]
     public const URL = 'onlyoffice_document_server_url';
 
     #[ConfigKey('JWT secret of the ONLYOFFICE document server')]
     #[ConfigKeySecret]
+    #[ConfigKeySecretValidator(OnlyOfficeSecretKeyValidator::class)]
     public const SECRET = 'onlyoffice_document_server_secret';
 
     private function __construct()
