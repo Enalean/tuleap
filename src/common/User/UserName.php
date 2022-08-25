@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\Closure;
+namespace Tuleap\User;
 
-use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\User\UserName;
-
-final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserName
 {
-    private const USER_LOGIN = 'jambrosius';
-
-    private function getBody(): string
+    private function __construct(private string $name)
     {
-        $user = UserTestBuilder::aUser()->withUserName(self::USER_LOGIN)->build();
-
-        return BadSemanticComment::fromUser(UserName::fromUser($user))->getBody();
     }
 
-    public function testItBuildsFromUser(): void
+    public static function fromUser(\PFUser $user): self
     {
-        self::assertStringContainsString('@' . self::USER_LOGIN, $this->getBody());
+        return new self('@' . $user->getUserName());
+    }
+
+    public static function fromUsername(string $username): self
+    {
+        return new self($username);
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }

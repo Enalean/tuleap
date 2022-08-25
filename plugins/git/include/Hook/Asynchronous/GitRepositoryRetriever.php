@@ -26,15 +26,11 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Project\CheckProjectAccess;
-use Tuleap\Project\ProjectAccessSuspendedException;
 
 final class GitRepositoryRetriever implements RetrieveGitRepository
 {
-    public function __construct(
-        private \GitRepositoryFactory $repository_factory,
-        private CheckProjectAccess $project_access_checker,
-    ) {
+    public function __construct(private \GitRepositoryFactory $repository_factory)
+    {
     }
 
     public function getRepository(int $repository_id, \PFUser $user): Ok|Err
@@ -43,26 +39,24 @@ final class GitRepositoryRetriever implements RetrieveGitRepository
         if (! $repository) {
             return Result::err(Fault::fromMessage('Could not find repository with id #' . $repository_id));
         }
-        if (! $repository->userCanRead($user)) {
-            return Result::err(Fault::fromMessage('Could not find repository with id #' . $repository_id));
-        }
 
-        try {
-            $this->project_access_checker->checkUserCanAccessProject($user, $repository->getProject());
-        } catch (
-            \Project_AccessProjectNotFoundException
-            | ProjectAccessSuspendedException
-            | \Project_AccessDeletedException
-            | \Project_AccessRestrictedException
-            | \Project_AccessPrivateException $e
-        ) {
+
+        if (! $repository->getProject()->isActive()) {
+            if ($repository->getProject()->isSuspended()) {
+                return Result::err(
+                    Fault::fromMessage(
+                        sprintf('Project with id #%d is suspended', $repository->getProjectId())
+                    )
+                );
+            }
+
             return Result::err(
-                Fault::fromThrowableWithMessage(
-                    $e,
-                    sprintf('Could not find repository with id #%d: %s', $repository_id, $e->getMessage())
+                Fault::fromMessage(
+                    sprintf('Project with id #%d is deleted', $repository->getProjectId())
                 )
             );
         }
+
         return Result::ok($repository);
     }
 }

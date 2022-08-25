@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use Psr\Log\Test\TestLogger;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 use Tuleap\Git\Stub\BuildDefaultBranchPushProcessorStub;
+use Tuleap\Git\Stub\RetrieveAuthorStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Stub\RetrieveGitRepositoryStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
@@ -35,6 +36,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\User\UserName;
 
 final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -85,7 +87,8 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
             BuildDefaultBranchPushProcessorStub::withProcessor(
                 new DefaultBranchPushProcessor(
                     $this->closure_verifier,
-                    $this->commit_message_retriever
+                    $this->commit_message_retriever,
+                    RetrieveAuthorStub::buildWithUser(UserName::fromUser($user))
                 )
             ),
             $this->event_dispatcher

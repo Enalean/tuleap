@@ -29,8 +29,9 @@ use Tuleap\Reference\ExtractReferences;
 use Tuleap\Reference\ReferenceInstance;
 use Tuleap\Reference\ReferenceString;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\User\RetrieveUserById;
+use Tuleap\User\UserName;
 
 final class ArtifactClosingReferencesHandler
 {
@@ -39,7 +40,7 @@ final class ArtifactClosingReferencesHandler
     public function __construct(
         private LoggerInterface $logger,
         private ExtractReferences $reference_extractor,
-        private RetrieveViewableArtifact $artifact_retriever,
+        private RetrieveArtifact $artifact_retriever,
         private RetrieveUserById $user_retriever,
         private ArtifactWasClosedCache $closed_cache,
         private ArtifactCloser $artifact_closer,
@@ -75,7 +76,8 @@ final class ArtifactClosingReferencesHandler
                     $event,
                     $text_with_potential_reference->back_reference,
                     $workflow_user,
-                    $instance
+                    $instance,
+                    $text_with_potential_reference->user_name
                 );
                 $counter++;
             }
@@ -87,6 +89,7 @@ final class ArtifactClosingReferencesHandler
         ReferenceString $back_reference,
         \PFUser $workflow_user,
         ReferenceInstance $reference_instance,
+        UserName $user_closing_the_artifact,
     ): void {
         if ($reference_instance->getReference()->getNature() !== Artifact::REFERENCE_NATURE) {
             return;
@@ -98,8 +101,7 @@ final class ArtifactClosingReferencesHandler
         if (! $closing_keyword) {
             return;
         }
-        $artifact = $this->artifact_retriever->getArtifactByIdUserCanView(
-            $event->user,
+        $artifact = $this->artifact_retriever->getArtifactById(
             (int) $reference_instance->getValue()
         );
         if (! $artifact) {
@@ -110,7 +112,7 @@ final class ArtifactClosingReferencesHandler
         }
 
         $closing_comment = ArtifactClosingCommentInCommonMarkFormat::fromParts(
-            '@' . $event->user->getUserName(),
+            $user_closing_the_artifact->getName(),
             $closing_keyword,
             $artifact->getTracker(),
             $back_reference
@@ -120,7 +122,7 @@ final class ArtifactClosingReferencesHandler
             $artifact,
             $workflow_user,
             $closing_comment,
-            BadSemanticComment::fromUser($event->user)
+            BadSemanticComment::fromUser($user_closing_the_artifact)
         )->match(function () use ($artifact) {
             $this->logger->debug(sprintf('Closed artifact #%d', $artifact->getId()));
             $this->closed_cache->addClosedArtifact($artifact);

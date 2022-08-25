@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Closure;
 
+use Tuleap\User\UserName;
+
 /**
  * @psalm-immutable
  */
@@ -31,12 +33,12 @@ final class BadSemanticComment implements BadSemanticCommentInCommonMarkFormat
     {
     }
 
-    public static function fromUser(\PFUser $user): self
+    public static function fromUser(UserName $user): self
     {
         return new self(
             sprintf(
-                '@%s attempts to close this artifact but neither done nor status semantic allow closing it.',
-                $user->getUserName()
+                '%s attempts to close this artifact but neither done nor status semantic allow closing it.',
+                $user->getName()
             )
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Git\CommitMetadata;
 
-final class UserClosingTheArtifact
+use Tuleap\User\UserName;
+
+interface RetrieveAuthor
 {
-    private function __construct(private string $name)
-    {
-    }
-
-    public static function fromUser(\PFUser $user): self
-    {
-        return new self('@' . $user->getUserName());
-    }
-
-    public static function fromUsername(string $username): self
-    {
-        return new self($username);
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    public function getAuthor(string $sha1): UserName;
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Hook\Asynchronous;
 
+use Tuleap\Git\CommitMetadata\AuthorRetriever;
 use Tuleap\Git\CommitMetadata\CommitMessageRetriever;
 use Tuleap\Git\Hook\DefaultBranchPush\DefaultBranchPushProcessor;
 
@@ -29,9 +30,11 @@ final class DefaultBranchPushProcessorBuilder implements BuildDefaultBranchPushP
 {
     public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor
     {
+        $git_exec = \Git_Exec::buildFromRepository($repository);
         return new DefaultBranchPushProcessor(
             new \GitDao(),
-            new CommitMessageRetriever(\Git_Exec::buildFromRepository($repository)),
+            new CommitMessageRetriever($git_exec),
+            new AuthorRetriever($git_exec, \UserManager::instance())
         );
     }
 }

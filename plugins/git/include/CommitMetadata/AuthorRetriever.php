@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\Closure;
+namespace Tuleap\Git\CommitMetadata;
 
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\UserName;
 
-final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AuthorRetriever implements RetrieveAuthor
 {
-    private const USER_LOGIN = 'jambrosius';
-
-    private function getBody(): string
+    public function __construct(private \Git_Exec $git_exec, private \UserManager $user_manager)
     {
-        $user = UserTestBuilder::aUser()->withUserName(self::USER_LOGIN)->build();
-
-        return BadSemanticComment::fromUser(UserName::fromUser($user))->getBody();
     }
 
-    public function testItBuildsFromUser(): void
+    /**
+     * @throws \Git_Command_Exception
+     */
+    public function getAuthor(string $sha1): UserName
     {
-        self::assertStringContainsString('@' . self::USER_LOGIN, $this->getBody());
+        $author      = $this->git_exec->getAuthorEmail($sha1);
+        $tuleap_user = $this->user_manager->getUserByEmail($author);
+
+        if (! $tuleap_user) {
+            $author = $this->git_exec->getAuthorName($sha1);
+            return UserName::fromUsername($author);
+        }
+        return UserName::fromUser($tuleap_user);
     }
 }

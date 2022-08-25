@@ -26,9 +26,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -41,14 +39,18 @@ final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \GitRepository & \PHPUnit\Framework\MockObject\Stub
      */
     private $repository;
-    private CheckProjectAccessStub $project_access_checker;
+    /**
+     * @var \Project & \PHPUnit\Framework\MockObject\Stub
+     */
+    private $project;
 
     protected function setUp(): void
     {
+        $this->project    = $this->createStub(\Project::class);
         $this->repository = $this->createStub(\GitRepository::class);
-        $this->repository->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
-        $this->repository_factory     = $this->createStub(\GitRepositoryFactory::class);
-        $this->project_access_checker = CheckProjectAccessStub::withValidAccess();
+        $this->repository->method('getProjectId')->willReturn(1);
+        $this->repository->method('getProject')->willReturn($this->project);
+        $this->repository_factory = $this->createStub(\GitRepositoryFactory::class);
     }
 
     /**
@@ -58,14 +60,15 @@ final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $retriever = new GitRepositoryRetriever($this->repository_factory, $this->project_access_checker);
-        return $retriever->getRepository(self::GIT_REPOSITORY_ID, $user);
+        return (new GitRepositoryRetriever($this->repository_factory))->getRepository(self::GIT_REPOSITORY_ID, $user);
     }
 
     public function testItReturnsAGitRepository(): void
     {
         $this->mockRepositoryIsFound();
         $this->mockUserCanReadRepository();
+        $this->project->method('isActive')->willReturn(true);
+        $this->project->method('isSuspended')->willReturn(false);
 
         $result = $this->getRepository();
         self::assertTrue(Result::isOk($result));
@@ -80,34 +83,23 @@ final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(Result::isErr($result));
     }
 
-    public function testItReturnsFaultWhenUserDoesNotHaveReadAccessOnRepository(): void
+    public function testItReturnsFaultWhenProjectIsSuspended(): void
     {
         $this->mockRepositoryIsFound();
-        $this->repository->method('userCanRead')->willReturn(false);
+        $this->mockUserCanReadRepository();
+        $this->project->method('isActive')->willReturn(false);
+        $this->project->method('isSuspended')->willReturn(true);
 
         $result = $this->getRepository();
         self::assertTrue(Result::isErr($result));
     }
 
-    public function provideProjectAccessExceptions(): iterable
-    {
-        yield 'with invalid project' => [CheckProjectAccessStub::withNotValidProject()];
-        yield 'with suspended project' => [CheckProjectAccessStub::withSuspendedProject()];
-        yield 'with deleted project' => [CheckProjectAccessStub::withDeletedProject()];
-        yield 'with user restricted without access to project' => [
-            CheckProjectAccessStub::withRestrictedUserWithoutAccess(),
-        ];
-        yield 'with private project and user not member' => [CheckProjectAccessStub::withPrivateProjectWithoutAccess()];
-    }
-
-    /**
-     * @dataProvider provideProjectAccessExceptions
-     */
-    public function testItReturnsFaultWhenUserCannotAccessProjectOfRepository(CheckProjectAccessStub $stub): void
+    public function testItReturnsFaultWhenProjectIsDeleted(): void
     {
         $this->mockRepositoryIsFound();
         $this->mockUserCanReadRepository();
-        $this->project_access_checker = $stub;
+        $this->project->method('isActive')->willReturn(false);
+        $this->project->method('isSuspended')->willReturn(false);
 
         $result = $this->getRepository();
         self::assertTrue(Result::isErr($result));

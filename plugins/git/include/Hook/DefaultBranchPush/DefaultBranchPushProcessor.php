@@ -25,6 +25,7 @@ namespace Tuleap\Git\Hook\DefaultBranchPush;
 use Tuleap\Event\Events\PotentialReferencesReceived;
 use Tuleap\Git\CommitMetadata\GitCommitReferenceString;
 use Tuleap\Git\CommitMetadata\RetrieveCommitMessage;
+use Tuleap\Git\CommitMetadata\RetrieveAuthor;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
 use Tuleap\Git\Repository\Settings\ArtifactClosure\VerifyArtifactClosureIsAllowed;
 use Tuleap\NeverThrow\Err;
@@ -38,6 +39,7 @@ final class DefaultBranchPushProcessor
     public function __construct(
         private VerifyArtifactClosureIsAllowed $closure_verifier,
         private RetrieveCommitMessage $message_retriever,
+        private RetrieveAuthor $author_retriever,
     ) {
     }
 
@@ -66,7 +68,6 @@ final class DefaultBranchPushProcessor
                 new PotentialReferencesReceived(
                     $texts,
                     $push->getRepository()->getProject(),
-                    $push->getPusher(),
                 ),
                 $faults
             )
@@ -86,6 +87,8 @@ final class DefaultBranchPushProcessor
             );
         }
         $back_reference = GitCommitReferenceString::fromRepositoryAndCommit($git_repository, $commit_hash);
-        return Result::ok(new TextWithPotentialReferences($commit_message, $back_reference));
+
+        $pusher = $this->author_retriever->getAuthor($commit_hash->__toString());
+        return Result::ok(new TextWithPotentialReferences($commit_message, $back_reference, $pusher));
     }
 }
