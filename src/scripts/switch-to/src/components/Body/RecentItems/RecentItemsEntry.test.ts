@@ -32,6 +32,9 @@ describe("RecentItemsEntry", () => {
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",
                     quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
@@ -51,6 +54,9 @@ describe("RecentItemsEntry", () => {
                         { name: "TTM", icon_name: "fa-check", html_url: "/ttm" },
                         { name: "AD", icon_name: "fa-table", html_url: "/ad" },
                     ],
+                    project: {
+                        label: "Guinea Pig",
+                    },
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
@@ -67,6 +73,9 @@ describe("RecentItemsEntry", () => {
                     title: "Kanban",
                     color_name: "lake-placid-blue",
                     quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
@@ -81,6 +90,9 @@ describe("RecentItemsEntry", () => {
             title: "Kanban",
             color_name: "lake-placid-blue",
             quick_links: [] as QuickLink[],
+            project: {
+                label: "Guinea Pig",
+            },
         } as UserHistoryEntry;
 
         const wrapper = shallowMount(RecentItemsEntry, {
@@ -112,6 +124,9 @@ describe("RecentItemsEntry", () => {
                     title: "Kanban",
                     color_name: "lake-placid-blue",
                     quick_links: [] as QuickLink[],
+                    project: {
+                        label: "Guinea Pig",
+                    },
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
