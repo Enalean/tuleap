@@ -60,6 +60,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-ldap \
     tuleap-plugin-mediawiki \
     tuleap-plugin-oauth2-server \
+    tuleap-plugin-onlyoffice \
     tuleap-plugin-openidconnectclient \
     tuleap-plugin-projectmilestones \
     tuleap-plugin-project-ownership \
