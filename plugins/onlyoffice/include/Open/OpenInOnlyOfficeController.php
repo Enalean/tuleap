@@ -30,7 +30,8 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetGeneric;
 use Tuleap\Layout\FooterConfiguration;
-use Tuleap\Layout\HeaderConfiguration;
+use Tuleap\Layout\HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter;
+use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Request\NotFoundException;
@@ -69,16 +70,18 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
 
                     $layout->addCssAsset($this->css_asset);
                     $layout->header(
-                        HeaderConfiguration::inProjectWithoutSidebar(
-                            dgettext('tuleap-onlyoffice', 'ONLYOFFICE'),
-                            new HeaderConfiguration\InProjectWithoutSidebar\BackToLinkPresenter(
-                                sprintf(
-                                    dgettext('tuleap-onlyoffice', 'Back to %s documents'),
-                                    $icon_and_name_of_project,
-                                ),
-                                $link_provider->getShowLinkUrl($document->item),
+                        HeaderConfigurationBuilder::get(dgettext('tuleap-onlyoffice', 'ONLYOFFICE'))
+                            ->inProjectWithoutSidebar(
+                                new BackToLinkPresenter(
+                                    sprintf(
+                                        dgettext('tuleap-onlyoffice', 'Back to %s documents'),
+                                        $icon_and_name_of_project,
+                                    ),
+                                    $link_provider->getShowLinkUrl($document->item),
+                                )
                             )
-                        )
+                            ->withBodyClass(['reduce-help-button'])
+                            ->build()
                     );
 
                     $this->template_renderer->renderToPage('open-in-onlyoffice', OpenInOnlyOfficePresenter::fromOnlyOfficeDocument($document));
