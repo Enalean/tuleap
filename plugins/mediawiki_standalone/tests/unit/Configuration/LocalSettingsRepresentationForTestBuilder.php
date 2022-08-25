@@ -26,14 +26,14 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
 {
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    public function generateTuleapLocalSettingsRepresentation(string $site_access): LocalSettingsRepresentation
     {
         return new LocalSettingsRepresentation(
             new ConcealedString('random_value'),
             'https://example.com',
             'tlp-client-id-test',
             new ConcealedString('tlp-client-secret'),
-            \ForgeAccess::ANONYMOUS,
+            $site_access,
             'en_US',
         );
     }

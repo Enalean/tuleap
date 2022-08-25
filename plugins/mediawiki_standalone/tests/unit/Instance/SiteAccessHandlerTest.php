@@ -45,7 +45,7 @@ final class SiteAccessHandlerTest extends TestCase
             $enqueue_task
         );
 
-        $handler->process();
+        $handler->process(\ForgeAccess::REGULAR);
 
         self::assertEquals(LogUsersOutInstanceTask::logsOutUserOnAllInstances(), $enqueue_task->queue_task);
         self::assertTrue($local_settings_persistor->has_persisted);

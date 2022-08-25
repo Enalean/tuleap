@@ -37,7 +37,7 @@ final class LocalSettingsInstantiatorTest extends TestCase
             new DBTransactionExecutorPassthrough()
         );
 
-        $instantiator->instantiateLocalSettings();
+        $instantiator->instantiateLocalSettings(\ForgeAccess::getAccessMode());
 
         self::assertTrue($local_settings_persistor->has_persisted);
     }

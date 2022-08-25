@@ -242,13 +242,14 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
 
     /**
      * @see Event::SITE_ACCESS_CHANGE
+     * @param array{old_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED, new_value: \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED} $params
      */
-    public function siteAccessChange(): void
+    public function siteAccessChange(array $params): void
     {
         (new \Tuleap\MediawikiStandalone\Instance\SiteAccessHandler(
             $this->buildLocalSettingsInstantiator(),
             new EnqueueTask()
-        ))->process();
+        ))->process($params['new_value']);
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
