@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Download;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OnlyOffice\Open\DocmanFileLastVersion;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 
 interface OnlyOfficeDownloadDocumentTokenGenerator
 {
-    public function generateDownloadToken(\PFUser $user, DocmanFileLastVersion $docman_file_last_version, \DateTimeImmutable $now): ConcealedString;
+    public function generateDownloadToken(\PFUser $user, OnlyOfficeDocument $document, \DateTimeImmutable $now): ConcealedString;
 }

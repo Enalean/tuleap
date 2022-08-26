@@ -46,7 +46,7 @@ final class ProvideOnlyOfficeDocumentStub implements ProvideOnlyOfficeDocument
 
     public static function buildWithDocmanFile(\Project $project, \Docman_File $item): self
     {
-        return new self(Result::ok(new OnlyOfficeDocument($project, $item)));
+        return new self(Result::ok(new OnlyOfficeDocument($project, $item, 123, 'document.docx')));
     }
 
     public function getDocument(\PFUser $user, int $item_id): Ok|Err

@@ -27,15 +27,14 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGenerator;
-use Tuleap\OnlyOffice\Open\AllowedFileExtensions;
-use Tuleap\OnlyOffice\Open\DocmanFileLastVersion;
-use Tuleap\OnlyOffice\Open\ProvideDocmanFileLastVersion;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
+use Tuleap\OnlyOffice\Open\ProvideOnlyOfficeDocument;
 use Tuleap\ServerHostname;
 
 final class OnlyOfficeDocumentConfigProvider implements ProvideOnlyOfficeConfigDocument
 {
     public function __construct(
-        private ProvideDocmanFileLastVersion $docman_file_last_version_provider,
+        private ProvideOnlyOfficeDocument $document_provider,
         private OnlyOfficeDownloadDocumentTokenGenerator $token_generator,
     ) {
     }
@@ -45,29 +44,18 @@ final class OnlyOfficeDocumentConfigProvider implements ProvideOnlyOfficeConfigD
      */
     public function getDocumentConfig(\PFUser $user, int $item_id, \DateTimeImmutable $now): Ok|Err
     {
-        return $this->docman_file_last_version_provider
-            ->getLastVersionOfAFileUserCanAccess($user, $item_id)
+        return $this->document_provider
+            ->getDocument($user, $item_id)
             ->andThen(
                 /** @psalm-return Ok<OnlyOfficeDocumentConfig>|Err<Fault> */
-                function (DocmanFileLastVersion $file_last_version) use ($user, $now): Ok|Err {
-                    $filename  = $file_last_version->version->getFilename();
-                    $extension = pathinfo($filename, PATHINFO_EXTENSION);
-                    $item_id   = $file_last_version->item->getId();
-                    if (! AllowedFileExtensions::isExtensionAllowedToBeOpenInOnlyOffice($extension)) {
-                        return Result::err(
-                            Fault::fromMessage(
-                                sprintf('Item #%d cannot be opened with ONLYOFFICE', $item_id)
-                            )
-                        );
-                    }
-
-                    $token = $this->token_generator->generateDownloadToken($user, $file_last_version, $now);
+                function (OnlyOfficeDocument $document) use ($user, $now): Ok|Err {
+                    $token = $this->token_generator->generateDownloadToken($user, $document, $now);
 
                     return Result::ok(
                         new OnlyOfficeDocumentConfig(
-                            $extension,
-                            sprintf('tuleap_document_%d_%d', $item_id, $file_last_version->version->getId()),
-                            $filename,
+                            pathinfo($document->filename, PATHINFO_EXTENSION),
+                            sprintf('tuleap_document_%d_%d', $document->item->getId(), $document->version_id),
+                            $document->filename,
                             ServerHostname::HTTPSUrl() . '/onlyoffice/document_download?token=' . urlencode($token->getString())
                         )
                     );

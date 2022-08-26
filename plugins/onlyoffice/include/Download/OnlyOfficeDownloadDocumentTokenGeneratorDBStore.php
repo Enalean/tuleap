@@ -27,7 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OnlyOffice\Open\DocmanFileLastVersion;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 
 final class OnlyOfficeDownloadDocumentTokenGeneratorDBStore implements OnlyOfficeDownloadDocumentTokenGenerator
 {
@@ -41,14 +41,14 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStore implements OnlyOffic
 
     public function generateDownloadToken(
         \PFUser $user,
-        DocmanFileLastVersion $docman_file_last_version,
+        OnlyOfficeDocument $document,
         \DateTimeImmutable $now,
     ): ConcealedString {
         $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
 
         $token_id = $this->dao->create(
             (int) $user->getId(),
-            $docman_file_last_version->item->getId(),
+            $document->item->getId(),
             $this->hasher->computeHash($secret),
             $now->add($this->expiration_delay)->getTimestamp(),
         );

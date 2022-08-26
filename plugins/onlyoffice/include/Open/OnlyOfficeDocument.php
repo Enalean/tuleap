@@ -27,7 +27,11 @@ namespace Tuleap\OnlyOffice\Open;
  */
 final class OnlyOfficeDocument
 {
-    public function __construct(public \Project $project, public \Docman_Item $item)
-    {
+    public function __construct(
+        public \Project $project,
+        public \Docman_Item $item,
+        public int $version_id,
+        public string $filename,
+    ) {
     }
 }

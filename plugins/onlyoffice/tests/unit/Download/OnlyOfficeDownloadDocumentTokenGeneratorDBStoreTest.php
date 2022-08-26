@@ -25,7 +25,8 @@ namespace Tuleap\OnlyOffice\Download;
 use DateInterval;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\OnlyOffice\Open\DocmanFileLastVersion;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -48,7 +49,7 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
 
         $token = $token_generator->generateDownloadToken(
             $user,
-            new DocmanFileLastVersion($item, new \Docman_Version()),
+            new OnlyOfficeDocument(ProjectTestBuilder::aProject()->build(), $item, 123, 'document.docx'),
             new \DateTimeImmutable('@10'),
         );
 

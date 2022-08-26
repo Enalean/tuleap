@@ -29,8 +29,9 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\Download\OnlyOfficeDownloadDocumentTokenGenerator;
-use Tuleap\OnlyOffice\Open\DocmanFileLastVersion;
-use Tuleap\OnlyOffice\Open\ProvideDocmanFileLastVersion;
+use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
+use Tuleap\OnlyOffice\Open\ProvideOnlyOfficeDocument;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -41,7 +42,14 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
     public function testProvidesDocumentConfig(): void
     {
         $provider = self::buildProvider(
-            Result::ok(new DocmanFileLastVersion(new \Docman_Item(['item_id' => 123]), new \Docman_Version(['id' => 963, 'filename' => 'something.docx'])))
+            Result::ok(
+                new OnlyOfficeDocument(
+                    ProjectTestBuilder::aProject()->build(),
+                    new \Docman_Item(['item_id' => 123]),
+                    963,
+                    'something.docx'
+                )
+            )
         );
 
         $result = $provider->getDocumentConfig(UserTestBuilder::buildWithDefaults(), 123, new \DateTimeImmutable('@10'));
@@ -52,17 +60,6 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
             new OnlyOfficeDocumentConfig('docx', 'tuleap_document_123_963', 'something.docx', 'https:///onlyoffice/document_download?token=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
             $result->unwrapOr(null)
         );
-    }
-
-    public function testRejectsWhenDocumentCannotBeOpenedWithOnlyOffice(): void
-    {
-        $provider = self::buildProvider(
-            Result::ok(new DocmanFileLastVersion(new \Docman_Item(['item_id' => 991]), new \Docman_Version(['id' => 114, 'filename' => 'something.cannot.be.opened.with.oo'])))
-        );
-
-        $result = $provider->getDocumentConfig(UserTestBuilder::buildWithDefaults(), 991, new \DateTimeImmutable('@10'));
-
-        self::assertTrue(Result::isErr($result));
     }
 
     public function testRejectsWhenLastVersionOfADocumentCannotBeFound(): void
@@ -77,17 +74,17 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
     }
 
     /**
-     * @param Ok<DocmanFileLastVersion>|Err<Fault> $result_docman_file_last_version
+     * @param Ok<OnlyOfficeDocument>|Err<Fault> $result_document
      */
-    private static function buildProvider(Ok|Err $result_docman_file_last_version): OnlyOfficeDocumentConfigProvider
+    private static function buildProvider(Ok|Err $result_document): OnlyOfficeDocumentConfigProvider
     {
         return new OnlyOfficeDocumentConfigProvider(
-            new class ($result_docman_file_last_version) implements ProvideDocmanFileLastVersion {
+            new class ($result_document) implements ProvideOnlyOfficeDocument {
                 public function __construct(private Ok|Err $result)
                 {
                 }
 
-                public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
+                public function getDocument(\PFUser $user, int $item_id): Ok|Err
                 {
                     return $this->result;
                 }
@@ -95,7 +92,7 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
             new class implements OnlyOfficeDownloadDocumentTokenGenerator {
                 public function generateDownloadToken(
                     \PFUser $user,
-                    DocmanFileLastVersion $docman_file_last_version,
+                    OnlyOfficeDocument $document,
                     \DateTimeImmutable $now,
                 ): ConcealedString {
                     return new ConcealedString(str_repeat('A', 32));
