@@ -1866,6 +1866,9 @@ msgstr ""
 msgid "click here to change"
 msgstr "cliquer ici pour modifier"
 
+msgid "close artifacts"
+msgstr "fermer les artéfacts"
+
 msgid "disabled"
 msgstr "désactivées"
 
