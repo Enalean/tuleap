@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\HelpDropdown\ReleaseNoteManager;
 use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\DisplaySecurityController;
+use Tuleap\User\FindUserByEmailEvent;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\ProvideAnonymousUser;
@@ -348,6 +349,22 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
             $users[] = $this->getUserInstanceFromRow($user);
         }
         return $users;
+    }
+
+    /**
+     * @return PFUser[]
+     */
+    public function getAndEventuallyCreateUserByEmail(string $email): array
+    {
+        $users = [];
+        foreach ($this->getDao()->searchByEmail($email) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        if (count($users) > 0) {
+            return $users;
+        }
+
+        return EventManager::instance()->dispatch(new FindUserByEmailEvent($email))->getUsers();
     }
 
     /**

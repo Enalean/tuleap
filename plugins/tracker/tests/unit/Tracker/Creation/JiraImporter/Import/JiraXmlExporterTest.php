@@ -186,7 +186,7 @@ class JiraXmlExporterTest extends TestCase
 
         $forge_user = UserTestBuilder::buildWithId(TrackerImporterUser::ID);
 
-        $user_manager->method('getAllUsersByEmail')->willReturnCallback(function ($email) use ($users) {
+        $user_manager->method('getAndEventuallyCreateUserByEmail')->willReturnCallback(function ($email) use ($users) {
             if (isset($users[$email])) {
                 return [$users[$email]];
             }

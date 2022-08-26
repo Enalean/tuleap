@@ -378,7 +378,7 @@ class ArtifactsXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $john_doe->shouldReceive('getPublicProfileUrl')->andReturn('/users/jdoe');
         $john_doe->shouldReceive('getId')->andReturn('105');
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')
+        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
             ->andReturn([$john_doe]);
 

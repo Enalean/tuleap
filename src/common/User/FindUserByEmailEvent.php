@@ -1,7 +1,6 @@
-#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
-/**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,16 +21,37 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\Console\Application;
+namespace Tuleap\User;
 
-require_once __DIR__ . '/../../src/vendor/autoload.php';
-require_once __DIR__ . '/TuleapDev/GerritSetupCommand.php';
-require_once __DIR__ . '/TuleapDev/RegisterIPCommand.php';
-require_once __DIR__ . '/TuleapDev/AddLDAPUserCommand.php';
+use Tuleap\Event\Dispatchable;
 
-$application = new Application();
-$application->add(new TuleapDev\GerritSetupCommand());
-$application->add(new TuleapDev\RegisterIPCommand());
-$application->add(new TuleapDev\AddLDAPUserCommand());
+final class FindUserByEmailEvent implements Dispatchable
+{
+    public const NAME = 'findUserByEmailEvent';
 
-$application->run();
+    private ?\PFUser $user = null;
+
+    public function __construct(
+        /**
+         * @readonly
+         */
+        public string $email,
+    ) {
+    }
+
+    public function setUser(\PFUser $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return \PFUser[]
+     */
+    public function getUsers(): array
+    {
+        if ($this->user === null) {
+            return [];
+        }
+        return [$this->user];
+    }
+}
