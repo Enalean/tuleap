@@ -257,6 +257,13 @@ Requires: mediawiki-%{name}-flavor = @@VERSION@@, tuleap-plugin-mediawiki
 %description plugin-mediawiki-standalone
 %{summary}.
 
+%package plugin-onlyoffice
+Summary: Integration with ONLYOFFICE
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-document
+%description plugin-onlyoffice
+%{summary}.
+
 %package plugin-openidconnectclient
 Summary: OpenId consumer plugin
 Group: Development/Tools
@@ -569,7 +576,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/onlyoffice
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -1325,6 +1331,10 @@ fi
 %{_unitdir}/mediawiki-tuleap-php-fpm.service
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_mediawiki_standalone
+
+%files plugin-onlyoffice
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/onlyoffice
 
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
