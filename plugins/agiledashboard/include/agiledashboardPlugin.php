@@ -117,7 +117,7 @@ use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
+use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
@@ -250,7 +250,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(TrackerCrumbInContext::NAME);
-            $this->addHook(HistoryQuickLinkCollection::NAME);
+            $this->addHook(HistoryLinksCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(ProjectStatusUpdate::NAME);
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
@@ -1708,17 +1708,35 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         (new \Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
     }
 
-    public function getHistoryQuickLinkCollection(HistoryQuickLinkCollection $collection): void
+    public function getHistoryQuickLinkCollection(HistoryLinksCollection $collection): void
     {
         $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($collection->getArtifact());
         if ($milestone === null) {
             return;
         }
 
+        $collection->setIconName('fa-map-signs');
+        $collection->removeXRef();
+
         $pane_factory = $this->getMilestonePaneFactory();
 
-        foreach ($pane_factory->getListOfPaneInfo($milestone, $collection->getCurrentUser()) as $pane) {
-            $collection->add(
+        $list_of_pane_info = $pane_factory->getListOfPaneInfo($milestone, $collection->getCurrentUser());
+        $first_pane        = array_shift($list_of_pane_info);
+        if (! $first_pane) {
+            return;
+        }
+
+        $collection->setMainUri($first_pane->getUri());
+        $collection->addQuickLink(
+            new HistoryQuickLink(
+                dgettext('tuleap-agiledashboard', 'Milestone artifact'),
+                $collection->getArtifactUri(),
+                $collection->getArtifactIconName(),
+            )
+        );
+
+        foreach ($list_of_pane_info as $pane) {
+            $collection->addQuickLink(
                 new HistoryQuickLink(
                     $pane->getTitle(),
                     $pane->getUri(),

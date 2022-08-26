@@ -317,6 +317,9 @@ msgstr ""
 msgid "Milestone"
 msgstr ""
 
+msgid "Milestone artifact"
+msgstr ""
+
 msgid "Milestones"
 msgstr ""
 

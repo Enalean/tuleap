@@ -124,7 +124,7 @@ msgstr ""
 msgid "Test management tool"
 msgstr ""
 
-msgid "Tests campaign"
+msgid "Tests campaign artifact"
 msgstr ""
 
 msgid "Tests executions"

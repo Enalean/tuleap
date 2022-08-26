@@ -21,8 +21,18 @@
 <template>
     <div class="switch-to-projects-container">
         <template v-if="has_projects">
-            <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>My projects</h2>
-            <nav class="switch-to-projects" v-if="has_filtered_projects">
+            <h2
+                class="tlp-modal-subtitle switch-to-modal-body-title"
+                id="switch-to-modal-projects-title"
+                v-translate
+            >
+                My projects
+            </h2>
+            <nav
+                class="switch-to-projects"
+                aria-labelledby="switch-to-modal-projects-title"
+                v-if="has_filtered_projects"
+            >
                 <project-link
                     v-for="project of filtered_projects"
                     v-bind:key="project.project_uri"

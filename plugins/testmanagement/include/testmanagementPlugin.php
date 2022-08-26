@@ -78,7 +78,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
-use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
+use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -156,7 +156,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             $this->addHook(TRACKER_USAGE);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
-            $this->addHook(HistoryQuickLinkCollection::NAME);
+            $this->addHook(HistoryLinksCollection::NAME);
             $this->addHook(ExcludeTrackersFromArtifactHeartbeats::NAME);
             $this->addHook(HeartbeatsEntryCollection::NAME);
             $this->addHook(DisplayingTrackerEvent::NAME);
@@ -899,7 +899,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
         return new ImportXMLFromTracker(new XML_RNGValidator());
     }
 
-    public function getHistoryQuickLinkCollection(HistoryQuickLinkCollection $collection): void
+    public function getHistoryQuickLinkCollection(HistoryLinksCollection $collection): void
     {
         $config  = $this->getConfig();
         $tracker = $collection->getArtifact()->getTracker();
@@ -919,13 +919,16 @@ class testmanagementPlugin extends Plugin implements PluginWithService //phpcs:i
             ]
         ) . '#!/campaigns/' . urlencode((string) $collection->getArtifact()->getId());
 
-        $collection->add(
+        $collection->addQuickLink(
             new HistoryQuickLink(
-                dgettext('tuleap-testmanagement', 'Tests campaign'),
-                $url,
-                'fa-check'
+                dgettext('tuleap-testmanagement', 'Tests campaign artifact'),
+                $collection->getArtifactUri(),
+                $collection->getArtifactIconName()
             )
         );
+        $collection->setIconName('fa-check');
+        $collection->setMainUri($url);
+        $collection->removeXRef();
     }
 
     public function collectExcludedTrackerFromArtifactHeartbeats(ExcludeTrackersFromArtifactHeartbeats $event): void

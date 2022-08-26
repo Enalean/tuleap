@@ -31,10 +31,6 @@ class HistoryEntry
     /**
      * @var string
      */
-    private $xref;
-    /**
-     * @var string
-     */
     private $link;
     /**
      * @var string
@@ -67,7 +63,7 @@ class HistoryEntry
 
     public function __construct(
         $visit_time,
-        $xref,
+        private ?string $xref,
         $link,
         $title,
         $color,
@@ -78,7 +74,6 @@ class HistoryEntry
         array $quick_links,
     ) {
         $this->visit_time  = (int) $visit_time;
-        $this->xref        = $xref;
         $this->link        = $link;
         $this->title       = $title;
         $this->color       = $color;
@@ -98,7 +93,7 @@ class HistoryEntry
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getXref()
     {

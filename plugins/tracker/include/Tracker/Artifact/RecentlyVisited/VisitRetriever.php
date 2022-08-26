@@ -88,22 +88,22 @@ class VisitRetriever
                 continue;
             }
 
-            $collection = new HistoryQuickLinkCollection($artifact, $entry_collection->getUser());
+            $collection = new HistoryLinksCollection($artifact, $entry_collection->getUser());
             \EventManager::instance()->processEvent($collection);
             $tracker = $artifact->getTracker();
 
             $entry_collection->addEntry(
                 new HistoryEntry(
                     $recently_visited_row['created_on'],
-                    $artifact->getXRef(),
-                    $artifact->getUri(),
+                    $collection->getXRef(),
+                    $collection->getMainUri(),
                     $artifact->getTitle(),
                     $tracker->getColor()->getName(),
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),
-                    '',
+                    $collection->getIconName(),
                     $tracker->getProject(),
-                    $collection->getLinks()
+                    $collection->getQuickLinks()
                 )
             );
         }

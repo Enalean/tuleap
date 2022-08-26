@@ -21,15 +21,25 @@
 <template>
     <div class="switch-to-recent-items" data-test="switch-to-recent-items">
         <template v-if="has_history">
-            <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
-            <template v-if="has_filtered_history">
+            <h2
+                class="tlp-modal-subtitle switch-to-modal-body-title"
+                id="switch-to-modal-recent-items-title"
+                v-translate
+            >
+                Recent items
+            </h2>
+            <nav
+                class="switch-to-recent-items-list"
+                aria-labelledby="switch-to-modal-recent-items-title"
+                v-if="has_filtered_history"
+            >
                 <recent-items-entry
                     v-for="entry of filtered_history.entries"
                     v-bind:key="entry.html_url"
                     v-bind:entry="entry"
                     v-bind:has_programmatically_focus="hasProgrammaticallyFocus(entry)"
                 />
-            </template>
+            </nav>
             <p class="switch-to-modal-no-matching-history" v-else>
                 <translate>You didn't visit recently any items matching your query.</translate>
             </p>
