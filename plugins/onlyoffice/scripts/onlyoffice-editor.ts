@@ -19,8 +19,11 @@
 
 const ONLYOFFICE_API_SCRIPT_PATH = "web-apps/apps/api/documents/api.js";
 
+type OnlyOfficeDocumentType = "word" | "cell" | "slide";
+
 interface OnlyOfficeDocEditorConfig {
     token: string;
+    documentType: OnlyOfficeDocumentType;
 }
 
 interface OnlyOfficeDocsAPI {
@@ -59,6 +62,49 @@ function addOnlyOfficeAPIScript(
     });
 }
 
+const CELL_DOCUMENT_TYPE_EXTENSIONS = [
+    "csv",
+    "fods",
+    "ods",
+    "ots",
+    "xls",
+    "xlsb",
+    "xlsm",
+    "xlsx",
+    "xlt",
+    "xltm",
+    "xltx",
+];
+const SLIDE_DOCUMENT_TYPE_EXTENSIONS = [
+    "fodp",
+    "odp",
+    "otp",
+    "pot",
+    "potm",
+    "potx",
+    "pps",
+    "ppsm",
+    "ppsx",
+    "ppt",
+    "pptm",
+    "pptx",
+];
+
+/**
+ * @see https://api.onlyoffice.com/editors/config/#documentType
+ */
+function getDocumentType(token_payload: {
+    document: { fileType: string };
+}): OnlyOfficeDocumentType {
+    if (CELL_DOCUMENT_TYPE_EXTENSIONS.includes(token_payload.document.fileType)) {
+        return "cell";
+    }
+    if (SLIDE_DOCUMENT_TYPE_EXTENSIONS.includes(token_payload.document.fileType)) {
+        return "slide";
+    }
+    return "word";
+}
+
 export async function main(document: Document, window: Window): Promise<void> {
     const document_server_base_url = document.body.dataset.documentServerUrl;
     if (!document_server_base_url) {
@@ -77,7 +123,11 @@ export async function main(document: Document, window: Window): Promise<void> {
         const jwt_payload_base64_url = config_token.split(".")[1];
         const jwt_payload_base64 = jwt_payload_base64_url.replace(/-/g, "+").replace(/_/g, "/");
         const token_payload = JSON.parse(atob(jwt_payload_base64));
-        docs_api.DocEditor("onlyoffice-editor", { ...token_payload, token: config_token });
+        docs_api.DocEditor("onlyoffice-editor", {
+            ...token_payload,
+            documentType: getDocumentType(token_payload),
+            token: config_token,
+        });
     } catch (e) {
         document.body.innerText = "Error while loading ONLYOFFICE editor content";
         throw e;
