@@ -26,26 +26,10 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 
-final class OnlyOfficeDocumentProvider implements ProvideOnlyOfficeDocument
+interface TransformDocmanFileLastVersionToOnlyOfficeDocument
 {
-    public function __construct(
-        private ProvideDocmanFileLastVersion $docman_file_last_version_provider,
-        private TransformDocmanFileLastVersionToOnlyOfficeDocument $transformer,
-    ) {
-    }
-
     /**
      * @psalm-return Ok<OnlyOfficeDocument>|Err<Fault>
      */
-    public function getDocument(\PFUser $user, int $item_id): Ok|Err
-    {
-        return $this->docman_file_last_version_provider
-            ->getLastVersionOfAFileUserCanAccess($user, $item_id)
-            ->andThen(
-                /** @psalm-return Ok<OnlyOfficeDocument>|Err<Fault> */
-                function (DocmanFileLastVersion $file_last_version): Ok|Err {
-                    return $this->transformer->transformToOnlyOfficeDocument($file_last_version);
-                }
-            );
-    }
+    public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err;
 }

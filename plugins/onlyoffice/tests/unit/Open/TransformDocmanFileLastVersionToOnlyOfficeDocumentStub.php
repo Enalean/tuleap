@@ -25,27 +25,29 @@ namespace Tuleap\OnlyOffice\Open;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final class OnlyOfficeDocumentProvider implements ProvideOnlyOfficeDocument
+class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements TransformDocmanFileLastVersionToOnlyOfficeDocument
 {
-    public function __construct(
-        private ProvideDocmanFileLastVersion $docman_file_last_version_provider,
-        private TransformDocmanFileLastVersionToOnlyOfficeDocument $transformer,
-    ) {
+    /**
+     * @param Ok<OnlyOfficeDocument>|Err<Fault> $result
+     */
+    private function __construct(private Ok|Err $result)
+    {
     }
 
-    /**
-     * @psalm-return Ok<OnlyOfficeDocument>|Err<Fault>
-     */
-    public function getDocument(\PFUser $user, int $item_id): Ok|Err
+    public static function buildWithError(): self
     {
-        return $this->docman_file_last_version_provider
-            ->getLastVersionOfAFileUserCanAccess($user, $item_id)
-            ->andThen(
-                /** @psalm-return Ok<OnlyOfficeDocument>|Err<Fault> */
-                function (DocmanFileLastVersion $file_last_version): Ok|Err {
-                    return $this->transformer->transformToOnlyOfficeDocument($file_last_version);
-                }
-            );
+        return new self(Result::err(Fault::fromMessage('Something bad')));
+    }
+
+    public static function buildWithDocmanItem(\Project $project, \Docman_File $item, int $version_id, string $filename): self
+    {
+        return new self(Result::ok(new OnlyOfficeDocument($project, $item, $version_id, $filename)));
+    }
+
+    public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err
+    {
+        return $this->result;
     }
 }
