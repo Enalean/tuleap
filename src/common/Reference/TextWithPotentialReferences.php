@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
+use Tuleap\User\UserName;
+
 /**
  * I hold some text that maybe contains references to some Tuleap-managed objects.
  * I also hold a reference string pattern back to the origin of the text.
@@ -32,6 +34,7 @@ final class TextWithPotentialReferences
     public function __construct(
         public string $text,
         public ReferenceString $back_reference,
+        public UserName $user_name,
     ) {
     }
 }

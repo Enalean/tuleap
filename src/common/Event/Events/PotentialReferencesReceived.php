@@ -39,7 +39,6 @@ final class PotentialReferencesReceived implements \Tuleap\Event\Dispatchable
     public function __construct(
         public array $text_with_potential_references,
         public \Project $project,
-        public \PFUser $user,
     ) {
     }
 }

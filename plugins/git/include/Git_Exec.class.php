@@ -115,6 +115,28 @@ class Git_Exec
         $this->gitCmd('config --add user.email ' . escapeshellarg($email));
     }
 
+    /**
+     * @throws Git_Command_Exception
+     */
+    public function getAuthorEmail(string $sha1): string
+    {
+        $output = [];
+        $this->gitCmdWithOutput('show -s --format=\'%ae\' ' . escapeshellarg($sha1), $output);
+
+        return $output[0];
+    }
+
+    /**
+     * @throws Git_Command_Exception
+     */
+    public function getAuthorName(string $sha1): string
+    {
+        $output = [];
+        $this->gitCmdWithOutput('show -s --format=\'%aN\' ' . escapeshellarg($sha1), $output);
+
+        return $output[0];
+    }
+
     public function remoteAdd($remote)
     {
         $this->gitCmd('remote add origin ' . escapeshellarg($remote));

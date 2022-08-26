@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\User;
 
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class UserClosingTheArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USER_NAME = 'aluscavage';
 
@@ -34,14 +34,14 @@ final class UserClosingTheArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withUserName(self::USER_NAME)
             ->build();
 
-        $committer = UserClosingTheArtifact::fromUser($user);
+        $committer = UserName::fromUser($user);
 
         self::assertSame('@' . self::USER_NAME, $committer->getName());
     }
 
     public function testItBuildsFromUsernameString(): void
     {
-        $committer = UserClosingTheArtifact::fromUsername(self::USER_NAME);
+        $committer = UserName::fromUsername(self::USER_NAME);
 
         self::assertSame(self::USER_NAME, $committer->getName());
     }

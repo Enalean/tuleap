@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Tuleap\Tracker\Artifact\Closure\BadSemanticCommentInCommonMarkFormat;
+use Tuleap\User\UserName;
 
 /**
  * @psalm-immutable
@@ -33,7 +34,7 @@ final class PostPushBadSemanticComment implements BadSemanticCommentInCommonMark
     {
     }
 
-    public static function fromUserClosingTheArtifact(UserClosingTheArtifact $committer_username): self
+    public static function fromUserClosingTheArtifact(UserName $committer_username): self
     {
         return new self(
             sprintf(

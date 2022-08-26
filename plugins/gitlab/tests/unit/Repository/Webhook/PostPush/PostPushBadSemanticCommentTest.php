@@ -23,16 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\UserName;
 
 final class PostPushBadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const USERNAME = 'asticotc';
 
-    private UserClosingTheArtifact $committer_username;
+    private UserName $committer_username;
 
     protected function setUp(): void
     {
-        $this->committer_username = UserClosingTheArtifact::fromUsername(self::USERNAME);
+        $this->committer_username = UserName::fromUsername(self::USERNAME);
     }
 
     public function buildComment(): PostPushBadSemanticComment
@@ -47,7 +48,7 @@ final class PostPushBadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItConcatenatesTuleapUserNameWithAtSymbolInTheMessage(): void
     {
-        $this->committer_username = UserClosingTheArtifact::fromUser(
+        $this->committer_username = UserName::fromUser(
             UserTestBuilder::aUser()->withUserName(self::USERNAME)->build()
         );
         self::assertStringContainsString('@' . self::USERNAME, $this->buildComment()->getBody());

@@ -40,8 +40,9 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
-use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
+use Tuleap\User\UserName;
 
 final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -53,7 +54,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     private TestLogger $logger;
     private ExtractReferencesStub $reference_extractor;
     private \Project $project;
-    private RetrieveViewableArtifactStub $artifact_retriever;
+    private RetrieveArtifactStub $artifact_retriever;
     private RetrieveUserByIdStub $user_retriever;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveStatusFieldStub $status_retriever;
@@ -72,7 +73,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
             [$this->getArtifactReferenceInstance('implements', 'story', self::SECOND_ARTIFACT_ID, $this->project)]
         );
 
-        $this->artifact_retriever   = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+        $this->artifact_retriever   = RetrieveArtifactStub::withArtifacts(
             $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
             $this->mockArtifact('story', self::SECOND_ARTIFACT_ID),
         );
@@ -108,20 +109,22 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
                 $this->changeset_creator
             )
         );
+        $user    = UserTestBuilder::aUser()->withUserName('meisinger')->build();
         $handler->handlePotentialReferencesReceived(
             new PotentialReferencesReceived(
                 [
                     new TextWithPotentialReferences(
                         sprintf('closes art #%d', self::FIRST_ARTIFACT_ID),
-                        ReferenceStringStub::fromString('git #linkable/b9ead7cb')
+                        ReferenceStringStub::fromString('git #linkable/b9ead7cb'),
+                        UserName::fromUser($user)
                     ),
                     new TextWithPotentialReferences(
                         sprintf('implements art #%d', self::SECOND_ARTIFACT_ID),
-                        ReferenceStringStub::fromString('git #linkable/e43c62bb')
+                        ReferenceStringStub::fromString('git #linkable/e43c62bb'),
+                        UserName::fromUser($user)
                     ),
                 ],
                 $this->project,
-                UserTestBuilder::aUser()->withUserName('meisinger')->build(),
             )
         );
     }
@@ -188,7 +191,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItSkipsArtifactsUserCannotSee(): void
     {
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withNoArtifact();
+        $this->artifact_retriever = RetrieveArtifactStub::withNoArtifact();
 
         $this->handlePotentialReferencesReceived();
         self::assertFalse($this->logger->hasDebugRecords());
@@ -210,7 +213,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
             [$this->getArtifactReferenceInstance('fix', 'art', self::FIRST_ARTIFACT_ID, $this->project)],
         );
 
-        $this->artifact_retriever = RetrieveViewableArtifactStub::withSuccessiveArtifacts(
+        $this->artifact_retriever = RetrieveArtifactStub::withArtifacts(
             $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
             $this->mockArtifact('bug', self::FIRST_ARTIFACT_ID),
         );
@@ -231,7 +234,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
             $artifacts[]           = $this->mockArtifact('story', $i);
         }
         $this->reference_extractor = ExtractReferencesStub::withSuccessiveReferenceInstances($reference_instances, []);
-        $this->artifact_retriever  = RetrieveViewableArtifactStub::withSuccessiveArtifacts(...$artifacts);
+        $this->artifact_retriever  = RetrieveArtifactStub::withArtifacts(...$artifacts);
 
         $done_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(7682, 'Closed', 'Irrelevant', 1, false);
 

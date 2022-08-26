@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Git\Hook\DefaultBranchPush;
 
 use Tuleap\Git\Repository\Settings\ArtifactClosure\ArtifactClosureNotAllowedFault;
+use Tuleap\Git\Stub\RetrieveAuthorStub;
 use Tuleap\Git\Stub\RetrieveCommitMessageStub;
 use Tuleap\Git\Stub\VerifyArtifactClosureIsAllowedStub;
 use Tuleap\NeverThrow\Err;
@@ -31,6 +32,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\UserName;
 
 final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -66,7 +68,7 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $git_repository->method('getFullName')->willReturn(self::REPOSITORY_PATH);
         $git_repository->method('getProject')->willReturn($this->project);
 
-        $processor = new DefaultBranchPushProcessor($this->closure_verifier, $this->message_retriever);
+        $processor = new DefaultBranchPushProcessor($this->closure_verifier, $this->message_retriever, RetrieveAuthorStub::buildWithUser(UserName::fromUser($this->pusher)));
         return $processor->process(
             new DefaultBranchPushReceived(
                 $git_repository,
@@ -83,8 +85,8 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(Result::isOk($result));
         $processed = $result->value;
         self::assertSame($this->project, $processed->event->project);
-        self::assertSame($this->pusher, $processed->event->user);
         self::assertEmpty($processed->faults);
+        $user = UserName::fromUser($this->pusher);
 
         self::assertCount(2, $processed->event->text_with_potential_references);
         [$first_text, $second_text] = $processed->event->text_with_potential_references;
@@ -94,11 +96,19 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
             sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, self::REPOSITORY_PATH, self::FIRST_COMMIT_SHA1),
             $first_text->back_reference->getStringReference()
         );
+        self::assertEquals(
+            $user->getName(),
+            $first_text->user_name->getName()
+        );
 
         self::assertSame(self::SECOND_COMMIT_MESSAGE, $second_text->text);
         self::assertSame(
             sprintf('%s #%s/%s', \Git::REFERENCE_KEYWORD, self::REPOSITORY_PATH, self::SECOND_COMMIT_SHA1),
             $second_text->back_reference->getStringReference()
+        );
+        self::assertEquals(
+            $user->getName(),
+            $second_text->user_name->getName()
         );
     }
 

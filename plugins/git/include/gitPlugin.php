@@ -2939,7 +2939,6 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
                 \UserManager::instance(),
                 new GitRepositoryRetriever(
                     new \GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
-                    new ProjectAccessChecker(new RestrictedUserCanAccessProjectVerifier(), $event_manager)
                 )
             ),
             new DefaultBranchPushProcessorBuilder(),

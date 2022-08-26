@@ -35,6 +35,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Closure\ArtifactClosingCommentInCommonMarkFormat;
 use Tuleap\Tracker\Artifact\Closure\ArtifactIsAlreadyClosedFault;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
+use Tuleap\User\UserName;
 use UserManager;
 use UserNotExistException;
 
@@ -182,12 +183,12 @@ class PostPushWebhookCloseArtifactHandler
 
     private function getUserClosingTheArtifactFromGitlabWebhook(
         PostPushCommitWebhookData $commit,
-    ): UserClosingTheArtifact {
+    ): UserName {
         $tuleap_user = $this->user_manager->getUserByEmail($commit->getAuthorEmail());
 
         if (! $tuleap_user) {
-            return UserClosingTheArtifact::fromUsername($commit->getAuthorName());
+            return UserName::fromUsername($commit->getAuthorName());
         }
-        return UserClosingTheArtifact::fromUser($tuleap_user);
+        return UserName::fromUser($tuleap_user);
     }
 }

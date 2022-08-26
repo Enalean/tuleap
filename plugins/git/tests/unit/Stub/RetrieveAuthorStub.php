@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean 2022 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\Closure;
+namespace Tuleap\Git\Stub;
 
-use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Git\CommitMetadata\RetrieveAuthor;
 use Tuleap\User\UserName;
 
-final class BadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
+/**
+ * @psalm-immutable
+ */
+final class RetrieveAuthorStub implements RetrieveAuthor
 {
-    private const USER_LOGIN = 'jambrosius';
-
-    private function getBody(): string
+    private function __construct(private UserName $user)
     {
-        $user = UserTestBuilder::aUser()->withUserName(self::USER_LOGIN)->build();
-
-        return BadSemanticComment::fromUser(UserName::fromUser($user))->getBody();
     }
 
-    public function testItBuildsFromUser(): void
+    public static function buildWithUser(UserName $user): self
     {
-        self::assertStringContainsString('@' . self::USER_LOGIN, $this->getBody());
+        return new self($user);
+    }
+
+    public function getAuthor(string $sha1): UserName
+    {
+        return $this->user;
     }
 }
