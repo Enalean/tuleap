@@ -42,8 +42,6 @@ use Tuleap\User\ProvideCurrentUser;
 
 final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
 {
-    public const EDITOR_ASSET_ENDPOINT = '/no-resource-isolation/onlyoffice/editor_assets';
-
     public function __construct(
         private LoggerInterface $logger,
         private ProvideOnlyOfficeGlobalEditorJWToken $onlyoffice_global_editor_jwt_provider,
@@ -92,7 +90,7 @@ final class OnlyOfficeEditorController extends DispatchablePSR15Compatible
                         $this->stream_factory->createStream($this->template_renderer->renderToString(
                             'editor',
                             new OnlyOfficeEditorPresenter(
-                                self::EDITOR_ASSET_ENDPOINT  . '?name=' . urlencode((new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-editor.ts'))->getFileURL()),
+                                (new JavascriptViteAsset($this->assets, 'scripts/onlyoffice-editor.ts'))->getFileURL(),
                                 $csp_nonce,
                                 $document_server_url,
                                 $config_token,
