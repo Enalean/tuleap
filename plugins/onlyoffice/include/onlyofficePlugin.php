@@ -110,7 +110,6 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
                 $r->get('/editor/{id:\d+}', $this->getRouteHandler('routeGetEditorOnlyOffice'));
             }
         );
-        $route_collector->get(OnlyOfficeEditorController::EDITOR_ASSET_ENDPOINT, $this->getRouteHandler('routeGetEditorAssetsOnlyOffice'));
         $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routeGetAdminSettings'));
         $route_collector->post(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL, $this->getRouteHandler('routePostAdminSettings'));
     }
@@ -210,16 +209,6 @@ final class onlyofficePlugin extends Plugin implements PluginWithConfigKeys
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter()
-        );
-    }
-
-    public function routeGetEditorAssetsOnlyOffice(): \Tuleap\OnlyOffice\Open\OnlyOfficeEditorCrossOriginAssetsController
-    {
-        return new \Tuleap\OnlyOffice\Open\OnlyOfficeEditorCrossOriginAssetsController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            __DIR__ . '/../frontend-assets/assets/',
-            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
         );
     }
 
