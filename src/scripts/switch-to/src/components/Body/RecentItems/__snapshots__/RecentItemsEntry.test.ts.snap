@@ -5,12 +5,17 @@ exports[`RecentItemsEntry Displays a link with a cross ref 1`] = `
   class="switch-to-recent-items-entry"
 >
   <div
-    class="switch-to-recent-items-entry-with-links"
+    class="switch-to-recent-items-entry-with-links switch-to-recent-items-entry-with-links-with-badge"
   >
     <a
       class="switch-to-recent-items-entry-link lake-placid-blue"
       data-test="entry-link"
     >
+      <i
+        aria-hidden="true"
+        class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
+      />
+       
       <span
         class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
       >
@@ -19,10 +24,13 @@ exports[`RecentItemsEntry Displays a link with a cross ref 1`] = `
             
       </span>
        
-      <!---->
-      
-            Lorem ipsum
+      <span
+        class="switch-to-recent-items-entry-label"
+      >
         
+                Lorem ipsum
+            
+      </span>
     </a>
      
     <!---->
@@ -43,12 +51,17 @@ exports[`RecentItemsEntry Displays a link with a quick links 1`] = `
   class="switch-to-recent-items-entry"
 >
   <div
-    class="switch-to-recent-items-entry-with-links"
+    class="switch-to-recent-items-entry-with-links switch-to-recent-items-entry-with-links-with-badge"
   >
     <a
       class="switch-to-recent-items-entry-link lake-placid-blue"
       data-test="entry-link"
     >
+      <i
+        aria-hidden="true"
+        class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
+      />
+       
       <span
         class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
       >
@@ -57,10 +70,13 @@ exports[`RecentItemsEntry Displays a link with a quick links 1`] = `
             
       </span>
        
-      <!---->
-      
-            Lorem ipsum
+      <span
+        class="switch-to-recent-items-entry-label"
+      >
         
+                Lorem ipsum
+            
+      </span>
     </a>
      
     <div
@@ -108,15 +124,20 @@ exports[`RecentItemsEntry Displays a link with an icon 1`] = `
       class="switch-to-recent-items-entry-link lake-placid-blue"
       data-test="entry-link"
     >
-      <!---->
-       
       <i
         aria-hidden="true"
         class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
       />
-      
-            Kanban
+       
+      <!---->
+       
+      <span
+        class="switch-to-recent-items-entry-label"
+      >
         
+                Kanban
+            
+      </span>
     </a>
      
     <!---->

@@ -28,6 +28,7 @@ describe("RecentItemsEntry", () => {
         const wrapper = shallowMount(RecentItemsEntry, {
             propsData: {
                 entry: {
+                    icon_name: "fa-columns",
                     xref: "art #123",
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",
@@ -47,6 +48,7 @@ describe("RecentItemsEntry", () => {
         const wrapper = shallowMount(RecentItemsEntry, {
             propsData: {
                 entry: {
+                    icon_name: "fa-columns",
                     xref: "art #123",
                     title: "Lorem ipsum",
                     color_name: "lake-placid-blue",

@@ -54,7 +54,7 @@ export interface UserHistoryEntry {
     readonly html_url: string;
     readonly title: string | null;
     readonly color_name: string;
-    readonly icon_name: string | null;
+    readonly icon_name: string;
     readonly quick_links: QuickLink[];
     readonly project: ProjectReference;
 }

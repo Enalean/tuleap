@@ -20,7 +20,10 @@
 
 <template>
     <div class="switch-to-recent-items-entry" v-on:keydown="changeFocus">
-        <div class="switch-to-recent-items-entry-with-links">
+        <div
+            class="switch-to-recent-items-entry-with-links"
+            v-bind:class="{ 'switch-to-recent-items-entry-with-links-with-badge': entry.xref }"
+        >
             <a
                 v-bind:href="entry.html_url"
                 v-bind:class="entry.color_name"
@@ -28,6 +31,11 @@
                 ref="entry_link"
                 data-test="entry-link"
             >
+                <i
+                    class="fa fa-fw switch-to-recent-items-entry-icon"
+                    v-bind:class="entry.icon_name"
+                    aria-hidden="true"
+                ></i>
                 <span
                     class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
                     v-bind:class="xref_color"
@@ -35,13 +43,9 @@
                 >
                     {{ entry.xref }}
                 </span>
-                <i
-                    class="fa fa-fw switch-to-recent-items-entry-icon"
-                    v-bind:class="entry.icon_name"
-                    v-if="entry.icon_name"
-                    aria-hidden="true"
-                ></i>
-                {{ entry.title }}
+                <span class="switch-to-recent-items-entry-label">
+                    {{ entry.title }}
+                </span>
             </a>
             <div class="switch-to-recent-items-entry-quick-links" v-if="has_quick_links">
                 <a
@@ -56,7 +60,7 @@
             </div>
         </div>
         <span class="switch-to-recent-items-project">
-            {{ this.entry.project.label }}
+            {{ entry.project.label }}
         </span>
     </div>
 </template>

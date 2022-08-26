@@ -18,6 +18,7 @@
  */
 
 @use "sass:map";
+@use "sass:color";
 @use "@tuleap/tlp-swatch-colors";
 
 $projects-container-width: 400px;
@@ -161,7 +162,9 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-projects-project-link {
-    padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
+    display: flex;
+    align-items: center;
+    padding: 0;
     border-radius: var(--tlp-large-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
@@ -177,13 +180,27 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     text-align: center;
 }
 
-.switch-to-projects-project-icon {
+.switch-to-projects-project-icon,
+.switch-to-recent-items-entry-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: var(--tlp-large-spacing);
+    height: var(--tlp-large-spacing);
     margin: 0 var(--tlp-small-spacing) 0 0;
-    font-size: 0.8rem;
+    border-radius: 50%;
+    background: var(--tlp-dark-color-lighter-05);
+    color: var(--tlp-neutral-dark-color-darker-10);
+    font-size: 0.7rem;
+    line-height: normal;
+}
 
+.switch-to-projects-project-icon {
     &.fa-lock,
     &.fa-tlp-lock-plus-r {
-        color: var(--tlp-main-color);
+        background: var(--tlp-main-color-transparent-80);
+        color: var(--tlp-main-color-lighter-50);
     }
 }
 
@@ -307,6 +324,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
+.switch-to-projects,
+.switch-to-recent-items-list {
+    font-size: 0.875rem;
+}
+
 .switch-to-recent-items-error {
     opacity: 0.75;
     color: var(--tlp-danger-color-on-dark-background);
@@ -361,6 +383,8 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-recent-items-entry-link {
+    display: flex;
+    align-items: center;
     min-width: 0;
     overflow: hidden;
     color: var(--tlp-typo-default-text-color-on-dark-background);
@@ -373,13 +397,18 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     }
 }
 
-.switch-to-recent-items-entry-icon,
 .switch-to-recent-items-entry-badge {
+    flex: 0 0 auto;
     margin: 0 4px 0 0;
+    font-weight: 400;
 }
 
-.switch-to-recent-items-entry-badge {
-    font-weight: 400;
+.switch-to-recent-items-entry-label {
+    flex: 1 1 auto;
+    overflow: hidden;
+    line-height: 1.125rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .switch-to-recent-items-entry-quick-links {
@@ -400,7 +429,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     padding: $white-space-above-and-after-a-project-link var(--tlp-small-spacing);
     border-radius: 50%;
     color: var(--tlp-typo-default-text-color-on-dark-background);
-    font-size: 0.8125rem;
+    font-size: 0.7rem;
 
     &:visited {
         color: var(--tlp-typo-default-text-color-on-dark-background);
@@ -416,7 +445,8 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 
 @each $color-name, $colors in tlp-swatch-colors.$color-map {
     .switch-to-recent-items-entry-link.#{$color-name} > .switch-to-recent-items-entry-icon {
-        color: map.get($colors, "primary");
+        background: map.get($colors, "badge-background-on-dark");
+        color: map.get($colors, "badge-color-on-dark");
     }
 }
 
@@ -426,7 +456,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-recent-items-project {
-    margin: calc(var(--tlp-small-spacing) / 2) 0;
+    margin: 0 0 calc(var(--tlp-small-spacing) / 2) calc(var(--tlp-x-large-spacing));
     color: var(--tlp-neutral-dark-color-darker-20);
     font-size: 0.65rem;
+}
+
+.switch-to-recent-items-entry-with-links-with-badge + .switch-to-recent-items-project {
+    margin-top: calc(var(--tlp-small-spacing) / 2);
 }

@@ -18,6 +18,7 @@
  */
 
 @use "sass:color";
+@use "sass:map";
 
 // Business colors - Primaries
 $inca-silver-primary: #5d5d5d;
@@ -445,3 +446,35 @@ $color-map: (
         pattern: $flamingo-pink-pattern,
     ),
 );
+
+@each $color-name, $colors in $color-map {
+    $badge-color-on-dark: color.mix(map.get($colors, "border"), #ffffff, 90%);
+
+    // Adjustments to have a decent contrast ratio
+    @if $color-name ==
+        "teddy-brown" or
+        $color-name ==
+        "plum-crazy" or
+        $color-name ==
+        "red-wine" or
+        $color-name ==
+        "army-green"
+    {
+        $badge-color-on-dark: color.mix(map.get($colors, "border"), #ffffff, 70%);
+    }
+
+    $color-map: map.merge(
+        $color-map,
+        (
+            $color-name:
+                map.merge(
+                    $colors,
+                    (
+                        badge-background-on-dark:
+                            color.adjust(map.get($colors, "primary"), $alpha: -0.85),
+                        badge-color-on-dark: $badge-color-on-dark,
+                    )
+                ),
+        )
+    );
+}

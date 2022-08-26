@@ -355,6 +355,9 @@ msgstr "Merci de vérifier leur configuration."
 msgid "Milestone"
 msgstr "Jalon"
 
+msgid "Milestone artifact"
+msgstr "Artéfact du jalon"
+
 msgid "Milestones"
 msgstr "Jalons"
 
