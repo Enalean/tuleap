@@ -33,8 +33,15 @@ class JenkinsTuleapPluginHookPayload implements Payload
      */
     private $payload;
 
-    public function __construct(GitRepository $git_repository, string $refname)
-    {
+    /**
+     * @param callable(): \DateTimeImmutable $clock
+     */
+    public function __construct(
+        GitRepository $git_repository,
+        string $refname,
+        private JenkinsTuleapPluginHookTokenGenerator $token_generator,
+        private $clock,
+    ) {
         $this->payload = $this->buildPayload($git_repository, $refname);
     }
 
@@ -49,8 +56,9 @@ class JenkinsTuleapPluginHookPayload implements Payload
         ];
     }
 
-    public function getPayload()
+    public function getPayload(): array
     {
-        return $this->payload;
+        $now = ($this->clock)();
+        return array_merge($this->payload, ['token' => $this->token_generator->generateTriggerToken($now)->getString()]);
     }
 }
