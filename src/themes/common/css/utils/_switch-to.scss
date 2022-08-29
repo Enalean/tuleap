@@ -135,10 +135,12 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     margin: 0 0 calc(var(--tlp-large-spacing) - #{$white-space-above-and-after-a-project-link});
 }
 
+$items-padding: calc(var(--tlp-small-spacing) / 2);
+
 .switch-to-projects-project {
     display: flex;
     align-items: baseline;
-    padding: calc(var(--tlp-small-spacing) / 2);
+    padding: $items-padding;
     border-radius: var(--tlp-medium-radius);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 
@@ -180,15 +182,19 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     text-align: center;
 }
 
+$items-icon-size: var(--tlp-large-spacing);
+$items-icon-margin: var(--tlp-small-spacing);
+$content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-padding);
+
 .switch-to-projects-project-icon,
 .switch-to-recent-items-entry-icon {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    width: var(--tlp-large-spacing);
-    height: var(--tlp-large-spacing);
-    margin: 0 var(--tlp-small-spacing) 0 0;
+    width: $items-icon-size;
+    height: $items-icon-size;
+    margin: 0 $items-icon-margin 0 0;
     border-radius: 50%;
     background: var(--tlp-dark-color-lighter-05);
     color: var(--tlp-neutral-dark-color-darker-10);
@@ -225,7 +231,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-projects-softwaremap {
-    padding: 6px 8px calc(var(--tlp-large-spacing) + 6px) 36px;
+    padding: 6px 8px calc(var(--tlp-large-spacing) + 6px) $content-text-spacing-left;
     opacity: 0.75;
     color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.8125rem;
@@ -276,7 +282,7 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     max-width: 400px;
 
     > .switch-to-modal-body-title {
-        margin: 0 0 var(--tlp-medium-spacing) 36px;
+        margin: 0 0 var(--tlp-medium-spacing) $content-text-spacing-left;
     }
 }
 
@@ -300,12 +306,12 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
 }
 
 .switch-to-modal-no-matching-projects {
-    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) 36px;
+    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) $content-text-spacing-left;
 }
 
 .switch-to-modal-no-matching-history,
 .switch-to-modal-no-matching-history:last-child {
-    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) var(--tlp-small-spacing);
+    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) $content-text-spacing-left;
 }
 
 .switch-to-modal-no-matching-history,
@@ -319,8 +325,8 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     flex: 1 1 auto;
     width: calc(100% - #{$projects-container-width});
 
-    .switch-to-modal-body-title {
-        margin: 0 0 var(--tlp-medium-spacing) var(--tlp-small-spacing);
+    > .switch-to-modal-body-title {
+        margin: 0 0 var(--tlp-medium-spacing) $content-text-spacing-left;
     }
 }
 
