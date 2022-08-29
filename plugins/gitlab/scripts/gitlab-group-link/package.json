@@ -1,0 +1,23 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-gitlab-group-link",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
+    "vue": "^3.2.37",
+    "vue3-gettext": "^2.2.1"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "link:../../../../lib/frontend/build-system-configurator",
+    "@tuleap/po-gettext-plugin": "link:../../../../lib/frontend/po-gettext-plugin",
+    "@vue/test-utils": "^2.0.2"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "typecheck": "vue-tsc --noEmit"
+  }
+}

@@ -22,16 +22,19 @@ import * as path from "path";
 import vue from "@vitejs/plugin-vue";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export default vite.defineAppConfig("document_generation", {
-    plugins: [POGettextPlugin.vite(), vue()],
-    build: {
-        rollupOptions: {
-            input: {
-                "tracker-docgen-report-action": path.resolve(__dirname, "scripts/index.ts"),
+export default vite.defineAppConfig(
+    { plugin_name: "document_generation" },
+    {
+        plugins: [POGettextPlugin.vite(), vue()],
+        build: {
+            rollupOptions: {
+                input: {
+                    "tracker-docgen-report-action": path.resolve(__dirname, "scripts/index.ts"),
+                },
             },
         },
-    },
-    resolve: {
-        dedupe: ["@tuleap/gettext", "@tuleap/tlp-fetch", "docx", "sprintf-js"],
-    },
-});
+        resolve: {
+            dedupe: ["@tuleap/gettext", "@tuleap/tlp-fetch", "docx", "sprintf-js"],
+        },
+    }
+);

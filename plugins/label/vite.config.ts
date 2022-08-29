@@ -23,17 +23,23 @@ import vue from "@vitejs/plugin-vue2";
 import { viteExternalsPlugin } from "vite-plugin-externals";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 
-export default vite.defineAppConfig("label", {
-    plugins: [vue(), POGettextPlugin.vite(), viteExternalsPlugin({ tlp: "tlp" })],
-    build: {
-        rollupOptions: {
-            input: {
-                "configure-widget": path.resolve(__dirname, "scripts/configure-widget/index.js"),
-                "widget-project-labeled-items": path.resolve(
-                    __dirname,
-                    "scripts/project-labeled-items/src/index.js"
-                ),
+export default vite.defineAppConfig(
+    { plugin_name: "label" },
+    {
+        plugins: [vue(), POGettextPlugin.vite(), viteExternalsPlugin({ tlp: "tlp" })],
+        build: {
+            rollupOptions: {
+                input: {
+                    "configure-widget": path.resolve(
+                        __dirname,
+                        "scripts/configure-widget/index.js"
+                    ),
+                    "widget-project-labeled-items": path.resolve(
+                        __dirname,
+                        "scripts/project-labeled-items/src/index.js"
+                    ),
+                },
             },
         },
-    },
-});
+    }
+);

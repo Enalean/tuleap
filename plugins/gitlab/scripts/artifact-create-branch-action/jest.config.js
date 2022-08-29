@@ -17,19 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
-
-export default vite.defineAppConfig(
-    { plugin_name: "onlyoffice" },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    "open-in-onlyoffice": path.resolve(__dirname, "themes/style.scss"),
-                    "onlyoffice-editor": path.resolve(__dirname, "scripts/onlyoffice-editor.ts"),
-                },
-            },
-        },
-    }
-);
+import { jest_base_config } from "@tuleap/build-system-configurator";
+export default {
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+    displayName: "gitlab-create-branch-action",
+};

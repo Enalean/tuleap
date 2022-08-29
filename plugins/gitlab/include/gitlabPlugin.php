@@ -896,8 +896,8 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 new CreateBranchPrefixDao()
             ),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/gitlab'),
-                'scripts/artifact-create-branch-action/src/index.ts'
+                new IncludeViteAssets(__DIR__ . '/../frontend-assets/artifact-create-branch', '/assets/gitlab/artifact-create-branch'),
+                'src/index.ts'
             )
         );
 
@@ -937,8 +937,8 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
             ProjectManager::instance(),
             EventManager::instance(),
             new JavascriptViteAsset(
-                new IncludeViteAssets(__DIR__ . '/../frontend-assets', '/assets/gitlab'),
-                'scripts/gitlab-group-link/src/index.ts'
+                new IncludeViteAssets(__DIR__ . '/../frontend-assets/gitlab-group-link', '/assets/gitlab/gitlab-group-link'),
+                'src/index.ts'
             ),
             $git_plugin->getHeaderRenderer(),
             $git_plugin->getMirrorDataMapper(),

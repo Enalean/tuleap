@@ -20,12 +20,15 @@
 import * as path from "path";
 import { vite } from "@tuleap/build-system-configurator";
 
-export default vite.defineAppConfig("embed", {
-    build: {
-        rollupOptions: {
-            input: {
-                embed: path.resolve(__dirname, "scripts/index.ts"),
+export default vite.defineAppConfig(
+    { plugin_name: "embed" },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    embed: path.resolve(__dirname, "scripts/index.ts"),
+                },
             },
         },
-    },
-});
+    }
+);
