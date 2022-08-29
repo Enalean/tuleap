@@ -38,7 +38,12 @@
                 <span v-if="project.icon" class="switch-to-projects-project-label-icon">
                     {{ project.icon }}
                 </span>
-                {{ project.project_name }}
+                <word-highlighter
+                    v-bind:highlight-class="'tlp-mark-on-dark-background'"
+                    v-bind:query="filter_value"
+                >
+                    {{ project.project_name }}
+                </word-highlighter>
             </span>
         </a>
         <a
@@ -62,8 +67,11 @@ import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { Action, State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 import type { FocusFromProjectPayload } from "../../../store/type";
+import WordHighlighter from "vue-word-highlighter";
 
-@Component
+@Component({
+    components: { WordHighlighter },
+})
 export default class ProjectLink extends Vue {
     @Prop({ required: true })
     private readonly project!: Project;
@@ -73,6 +81,9 @@ export default class ProjectLink extends Vue {
 
     @State
     private readonly are_restricted_users_allowed!: boolean;
+
+    @State
+    private readonly filter_value: string;
 
     @Action
     private readonly changeFocusFromProject!: (payload: FocusFromProjectPayload) => void;
