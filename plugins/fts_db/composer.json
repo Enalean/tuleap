@@ -1,0 +1,13 @@
+{
+    "name": "tuleap/plugin-fts_db",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchDB\\": "include/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchDB\\": "tests/unit/"
+        }
+    }
+}
