@@ -25,6 +25,7 @@ import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
+import SearchResults from "./SearchResults/SearchResults.vue";
 
 describe("SwitchToBody", () => {
     it("Displays projects and recent items", () => {
@@ -36,6 +37,7 @@ describe("SwitchToBody", () => {
                         is_history_loaded: true,
                         history: { entries: [] } as UserHistory,
                         projects: [{}] as Project[],
+                        filter_value: "",
                     },
                 }),
             },
@@ -45,6 +47,29 @@ describe("SwitchToBody", () => {
         expect(wrapper.findComponent(GlobalEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(ListOfProjects).exists()).toBe(true);
         expect(wrapper.findComponent(ListOfRecentItems).exists()).toBe(true);
+        expect(wrapper.findComponent(SearchResults).exists()).toBe(false);
+    });
+
+    it("Displays projects, recent items, and search results", () => {
+        const wrapper = shallowMount(SwitchToBody, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        is_loading_history: false,
+                        is_history_loaded: true,
+                        history: { entries: [] } as UserHistory,
+                        projects: [{}] as Project[],
+                        filter_value: "Lorem",
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);
+        expect(wrapper.findComponent(GlobalEmptyState).exists()).toBe(false);
+        expect(wrapper.findComponent(ListOfProjects).exists()).toBe(true);
+        expect(wrapper.findComponent(ListOfRecentItems).exists()).toBe(true);
+        expect(wrapper.findComponent(SearchResults).exists()).toBe(true);
     });
 
     it("Displays loading state when there is no projects and the history is being loaded", () => {

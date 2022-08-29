@@ -25,7 +25,6 @@ import type { State } from "../../../store/type";
 import type { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
-import TroveCatLink from "../TroveCatLink.vue";
 
 describe("ListOfProjects", () => {
     it("Displays empty state if no projects", async () => {
@@ -34,6 +33,7 @@ describe("ListOfProjects", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "",
                         projects: [] as Project[],
                     } as State,
                     getters: {
@@ -52,6 +52,7 @@ describe("ListOfProjects", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "plop",
                         projects: [
                             { project_uri: "/a" } as Project,
                             { project_uri: "/b" } as Project,
@@ -70,6 +71,30 @@ describe("ListOfProjects", () => {
 
         expect(wrapper.findAllComponents(ProjectLink)).toHaveLength(2);
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(false);
-        expect(wrapper.findComponent(TroveCatLink).exists()).toBe(true);
+    });
+
+    it(`Given user is searching for a term
+        When there is no matching projects
+        Then we should not display anything`, async () => {
+        const wrapper = shallowMount(ListOfProjects, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "plop",
+                        projects: [
+                            { project_uri: "/a" } as Project,
+                            { project_uri: "/b" } as Project,
+                            { project_uri: "/c" } as Project,
+                        ],
+                    } as State,
+                    getters: {
+                        filtered_projects: [] as Project[],
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
     });
 });

@@ -120,6 +120,11 @@ $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);
     color: var(--tlp-typo-default-text-color-on-dark-background);
 }
 
+.switch-to-modal-body-search-results {
+    flex-direction: column;
+    gap: var(--tlp-large-spacing);
+}
+
 .switch-to-modal-body-title {
     color: var(--tlp-dimmed-color);
     font-size: 0.8125rem;
@@ -305,17 +310,12 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     }
 }
 
-.switch-to-modal-no-matching-projects {
-    margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) $content-text-spacing-left;
-}
-
 .switch-to-modal-no-matching-history,
 .switch-to-modal-no-matching-history:last-child {
     margin: var(--tlp-large-spacing) 0 var(--tlp-large-spacing) $content-text-spacing-left;
 }
 
-.switch-to-modal-no-matching-history,
-.switch-to-modal-no-matching-projects {
+.switch-to-modal-no-matching-history {
     opacity: 0.75;
     color: var(--tlp-dimmed-color-on-dark-background);
     font-size: 0.875rem;
@@ -469,4 +469,9 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
 
 .switch-to-recent-items-entry-with-links-with-badge + .switch-to-recent-items-project {
     margin-top: calc(var(--tlp-small-spacing) / 2);
+}
+
+.switch-to-search-results {
+    margin: 0 0 0 $content-text-spacing-left;
+    font-size: 0.875rem;
 }

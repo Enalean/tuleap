@@ -24,10 +24,16 @@ msgstr ""
 msgid "My projects"
 msgstr ""
 
+msgid "No results"
+msgstr ""
+
 msgid "Project, recent item, …"
 msgstr "projeto, item recente, ..."
 
 msgid "Recent items"
+msgstr ""
+
+msgid "Search results"
 msgstr ""
 
 msgid "Start exploring Tuleap"
@@ -40,9 +46,6 @@ msgid "You didn't visit recently any items matching your query."
 msgstr ""
 
 msgid "You don't belong to any projects"
-msgstr ""
-
-msgid "You don't belong to any projects matching your query."
 msgstr ""
 
 msgid "You don’t belong to any project or haven’t viewed anything yet"

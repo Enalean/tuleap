@@ -36,6 +36,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "",
                         is_history_in_error: false,
                         is_loading_history: false,
                         is_history_loaded: true,
@@ -60,6 +61,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "",
                         is_history_in_error: false,
                         is_loading_history: true,
                         is_history_loaded: false,
@@ -84,6 +86,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "",
                         is_history_in_error: false,
                         is_loading_history: false,
                         is_history_loaded: true,
@@ -102,12 +105,37 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findAllComponents(RecentItemsEntry)).toHaveLength(2);
     });
 
+    it(`Given user is searching for a term
+        When there is no matching recent items
+        Then we should not display anything`, async () => {
+        const wrapper = shallowMount(ListOfRecentItems, {
+            localVue: await createSwitchToLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        filter_value: "plop",
+                        is_history_in_error: false,
+                        is_loading_history: false,
+                        is_history_loaded: true,
+                        history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    } as State,
+                    getters: {
+                        filtered_history: { entries: [] as UserHistoryEntry[] },
+                    },
+                }),
+            },
+        });
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+    });
+
     it("Display filtered items", async () => {
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "plop",
                         is_history_in_error: false,
                         is_loading_history: false,
                         is_history_loaded: true,
@@ -132,6 +160,7 @@ describe("ListOfRecentItems", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        filter_value: "",
                         is_history_in_error: true,
                         is_loading_history: true,
                         is_history_loaded: false,

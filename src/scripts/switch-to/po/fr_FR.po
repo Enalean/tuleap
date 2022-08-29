@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "An error occurred while loading your recent items."
 msgstr "Une erreur est survenue lors du chargement de votre historique."
@@ -30,11 +30,17 @@ msgstr "Recherche"
 msgid "My projects"
 msgstr "Mes projets"
 
+msgid "No results"
+msgstr "Pas de résultat"
+
 msgid "Project, recent item, …"
 msgstr "Projet, éléments récents, …"
 
 msgid "Recent items"
 msgstr "Éléments récents"
+
+msgid "Search results"
+msgstr "Résultats de recherche"
 
 msgid "Start exploring Tuleap"
 msgstr "Démarrer l'exploration de Tuleap"
@@ -48,9 +54,6 @@ msgstr ""
 
 msgid "You don't belong to any projects"
 msgstr "Vous n'appartenez à aucun projet"
-
-msgid "You don't belong to any projects matching your query."
-msgstr "Vous n'appartenez à aucun projet qui corresponde à votre recherche."
 
 msgid "You don’t belong to any project or haven’t viewed anything yet"
 msgstr "Vous n'appartenez à aucun projet ou n'avez rien visité pour l'instant"

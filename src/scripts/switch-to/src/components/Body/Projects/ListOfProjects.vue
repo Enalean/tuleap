@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="switch-to-projects-container">
+    <div class="switch-to-projects-container" v-if="should_be_displayed">
         <template v-if="has_projects">
             <h2
                 class="tlp-modal-subtitle switch-to-modal-body-title"
@@ -40,10 +40,10 @@
                     v-bind:has_programmatically_focus="hasProgrammaticallyFocus(project)"
                 />
             </nav>
-            <p class="switch-to-modal-no-matching-projects" v-else>
-                <translate>You don't belong to any projects matching your query.</translate>
-            </p>
-            <trove-cat-link class="switch-to-projects-softwaremap">
+            <trove-cat-link
+                class="switch-to-projects-softwaremap"
+                v-if="should_softwaremap_link_be_displayed"
+            >
                 {{ trove_cat_label }}
             </trove-cat-link>
         </template>
@@ -73,6 +73,9 @@ export default class ListOfProjects extends Vue {
     @State
     private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
 
+    @State
+    private readonly filter_value: string;
+
     hasProgrammaticallyFocus(project: Project): boolean {
         return project === this.programmatically_focused_element;
     }
@@ -87,6 +90,14 @@ export default class ListOfProjects extends Vue {
 
     get has_filtered_projects(): boolean {
         return this.filtered_projects.length > 0;
+    }
+
+    get should_be_displayed(): boolean {
+        return this.filter_value === "" || this.has_filtered_projects;
+    }
+
+    get should_softwaremap_link_be_displayed(): boolean {
+        return this.filter_value === "";
     }
 }
 </script>

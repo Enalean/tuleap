@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <div class="switch-to-recent-items" data-test="switch-to-recent-items">
+    <div
+        class="switch-to-recent-items"
+        data-test="switch-to-recent-items"
+        v-if="should_be_displayed"
+    >
         <template v-if="has_history">
             <h2
                 class="tlp-modal-subtitle switch-to-modal-body-title"
@@ -87,6 +91,9 @@ export default class ListOfRecentItems extends Vue {
     @State
     private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
 
+    @State
+    private readonly filter_value: string;
+
     hasProgrammaticallyFocus(entry: UserHistoryEntry): boolean {
         return entry === this.programmatically_focused_element;
     }
@@ -117,6 +124,10 @@ export default class ListOfRecentItems extends Vue {
         }
 
         return this.filtered_history.entries.length > 0;
+    }
+
+    get should_be_displayed(): boolean {
+        return this.filter_value === "" || this.has_filtered_history;
     }
 }
 </script>
