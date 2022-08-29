@@ -36,16 +36,22 @@
                     v-bind:class="entry.icon_name"
                     aria-hidden="true"
                 ></i>
-                <span
+                <word-highlighter
+                    v-bind:query="filter_value"
+                    v-bind:highlight-class="'tlp-mark-on-dark-background'"
                     class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
                     v-bind:class="xref_color"
                     v-if="entry.xref"
                 >
                     {{ entry.xref }}
-                </span>
-                <span class="switch-to-recent-items-entry-label">
+                </word-highlighter>
+                <word-highlighter
+                    v-bind:query="filter_value"
+                    v-bind:highlight-class="'tlp-mark-on-dark-background'"
+                    class="switch-to-recent-items-entry-label"
+                >
                     {{ entry.title }}
-                </span>
+                </word-highlighter>
             </a>
             <div class="switch-to-recent-items-entry-quick-links" v-if="has_quick_links">
                 <a
@@ -69,16 +75,22 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import type { UserHistoryEntry } from "../../../type";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
 import type { FocusFromHistoryPayload } from "../../../store/type";
+import WordHighlighter from "vue-word-highlighter";
 
-@Component
+@Component({
+    components: { WordHighlighter },
+})
 export default class RecentItemsEntry extends Vue {
     @Prop({ required: true })
     private readonly entry!: UserHistoryEntry;
 
     @Prop({ required: true })
     private readonly has_programmatically_focus!: boolean;
+
+    @State
+    private readonly filter_value: string;
 
     @Action
     private readonly changeFocusFromHistory!: (payload: FocusFromHistoryPayload) => void;

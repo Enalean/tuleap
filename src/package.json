@@ -46,6 +46,7 @@
     "vue": "^2.7.8",
     "vue-dompurify-html": "^2.5.1",
     "vue-router": "^3.5.3",
+    "vue-word-highlighter": "^1.0.5",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

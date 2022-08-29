@@ -56,6 +56,7 @@ specifiers:
   vue-dompurify-html: ^2.5.1
   vue-property-decorator: ^9.1.2
   vue-router: ^3.5.3
+  vue-word-highlighter: ^1.0.5
   vuex: ^3.6.2
   vuex-class: ^0.3.2
 
@@ -100,6 +101,7 @@ dependencies:
   vue: 2.7.8
   vue-dompurify-html: 2.5.1_vue@2.7.8
   vue-router: 3.5.3_vue@2.7.8
+  vue-word-highlighter: 1.0.5_vue@2.7.8
   vuex: 3.6.2_vue@2.7.8
 
 devDependencies:
@@ -1003,7 +1005,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.10
     dev: false
 
   /jsonfile/5.0.0:
@@ -1252,6 +1254,21 @@ packages:
       vue: 2.7.8
     dev: true
 
+  /vue-demi/0.13.1_vue@2.7.8:
+    resolution: {integrity: sha512-xmkJ56koG3ptpLnpgmIzk9/4nFf4CqduSJbUM0OdPoU87NwRuZ6x49OLhjSa/fC15fV+5CbEnrxU4oyE022svg==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 2.7.8
+    dev: false
+
   /vue-dompurify-html/2.5.1_vue@2.7.8:
     resolution: {integrity: sha512-B8rQj2jAPJJhtKHHa6jg5B3/RoKBmmUl/awP/GxWXGu75j4Y7+MHqv0DG52v0Uz0taEpHyZun34KEYMAfrPWnA==}
     peerDependencies:
@@ -1277,6 +1294,19 @@ packages:
       vue: ^2
     dependencies:
       vue: 2.7.8
+    dev: false
+
+  /vue-word-highlighter/1.0.5_vue@2.7.8:
+    resolution: {integrity: sha512-5Yj9AUNbxgzl1THxoLzMHjvJxzc+Vx5F64n7h2yhqx/+yYk/ch4AgFDnrs63e8rPfD67KZfcvKaJty9RxV8uOg==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 2.7.8
+      vue-demi: 0.13.1_vue@2.7.8
     dev: false
 
   /vue/2.7.8:

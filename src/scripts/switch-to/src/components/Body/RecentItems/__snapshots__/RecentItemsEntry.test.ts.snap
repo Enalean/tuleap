@@ -16,21 +16,35 @@ exports[`RecentItemsEntry Displays a link with a cross ref 1`] = `
         class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
       />
        
-      <span
+      <word-highlighter-stub
         class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+        highlightclass="tlp-mark-on-dark-background"
+        highlightstyle=""
+        highlighttag="mark"
+        query=""
+        texttohighlight=""
+        wrapperclass=""
+        wrappertag="span"
       >
         
                 art #123
             
-      </span>
+      </word-highlighter-stub>
        
-      <span
+      <word-highlighter-stub
         class="switch-to-recent-items-entry-label"
+        highlightclass="tlp-mark-on-dark-background"
+        highlightstyle=""
+        highlighttag="mark"
+        query=""
+        texttohighlight=""
+        wrapperclass=""
+        wrappertag="span"
       >
         
                 Lorem ipsum
             
-      </span>
+      </word-highlighter-stub>
     </a>
      
     <!---->
@@ -62,21 +76,35 @@ exports[`RecentItemsEntry Displays a link with a quick links 1`] = `
         class="fa fa-fw switch-to-recent-items-entry-icon fa-columns"
       />
        
-      <span
+      <word-highlighter-stub
         class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
+        highlightclass="tlp-mark-on-dark-background"
+        highlightstyle=""
+        highlighttag="mark"
+        query=""
+        texttohighlight=""
+        wrapperclass=""
+        wrappertag="span"
       >
         
                 art #123
             
-      </span>
+      </word-highlighter-stub>
        
-      <span
+      <word-highlighter-stub
         class="switch-to-recent-items-entry-label"
+        highlightclass="tlp-mark-on-dark-background"
+        highlightstyle=""
+        highlighttag="mark"
+        query=""
+        texttohighlight=""
+        wrapperclass=""
+        wrappertag="span"
       >
         
                 Lorem ipsum
             
-      </span>
+      </word-highlighter-stub>
     </a>
      
     <div
@@ -131,13 +159,20 @@ exports[`RecentItemsEntry Displays a link with an icon 1`] = `
        
       <!---->
        
-      <span
+      <word-highlighter-stub
         class="switch-to-recent-items-entry-label"
+        highlightclass="tlp-mark-on-dark-background"
+        highlightstyle=""
+        highlighttag="mark"
+        query=""
+        texttohighlight=""
+        wrapperclass=""
+        wrappertag="span"
       >
         
                 Kanban
             
-      </span>
+      </word-highlighter-stub>
     </a>
      
     <!---->

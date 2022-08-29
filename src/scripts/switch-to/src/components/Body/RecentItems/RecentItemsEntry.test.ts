@@ -22,9 +22,10 @@ import type { QuickLink, UserHistoryEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../../store/type";
+import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("RecentItemsEntry", () => {
-    it("Displays a link with a cross ref", () => {
+    it("Displays a link with a cross ref", async () => {
         const wrapper = shallowMount(RecentItemsEntry, {
             propsData: {
                 entry: {
@@ -39,12 +40,18 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {} as State,
+                }),
+            },
+            localVue: await createSwitchToLocalVue(),
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a link with a quick links", () => {
+    it("Displays a link with a quick links", async () => {
         const wrapper = shallowMount(RecentItemsEntry, {
             propsData: {
                 entry: {
@@ -62,12 +69,18 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {} as State,
+                }),
+            },
+            localVue: await createSwitchToLocalVue(),
         });
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Displays a link with an icon", () => {
+    it("Displays a link with an icon", async () => {
         const wrapper = shallowMount(RecentItemsEntry, {
             propsData: {
                 entry: {
@@ -81,6 +94,12 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {} as State,
+                }),
+            },
+            localVue: await createSwitchToLocalVue(),
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -107,6 +126,7 @@ describe("RecentItemsEntry", () => {
                     state: {} as State,
                 }),
             },
+            localVue: await createSwitchToLocalVue(),
         });
 
         const key = "ArrowUp";
@@ -132,6 +152,12 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
+            mocks: {
+                $store: createStoreMock({
+                    state: {} as State,
+                }),
+            },
+            localVue: await createSwitchToLocalVue(),
         });
 
         const link = wrapper.find("[data-test=entry-link]");
