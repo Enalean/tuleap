@@ -195,6 +195,8 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -354,6 +356,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
+            $this->addHook(SemanticDoneUsedExternalServiceEvent::NAME);
         }
 
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
@@ -2926,6 +2929,21 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
         }
 
         $event->addAction($button_action);
+    }
+
+    public function semanticDoneUsedExternalServiceEvent(SemanticDoneUsedExternalServiceEvent $event): void
+    {
+        $project = $event->getTracker()->getProject();
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $event->setExternalServicesDescriptions(
+            new SemanticDoneUsedExternalService(
+                dgettext('tuleap-git', 'Git'),
+                dgettext('tuleap-git', 'close artifacts'),
+            )
+        );
     }
 
     public function workerEvent(WorkerEvent $event): void
