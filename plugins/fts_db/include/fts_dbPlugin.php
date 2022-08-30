@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -46,5 +48,21 @@ final class fts_dbPlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks(): Collection
+    {
+        $this->addHook(Event::REST_RESOURCES);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function restResources(array $params): void
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
