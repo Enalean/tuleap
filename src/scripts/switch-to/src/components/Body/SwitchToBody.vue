@@ -19,12 +19,17 @@
   -->
 
 <template>
-    <div tabindex="-1" class="switch-to-modal-body">
+    <div
+        tabindex="-1"
+        class="switch-to-modal-body"
+        v-bind:class="{ 'switch-to-modal-body-search-results': filter_value }"
+    >
         <global-loading-state v-if="should_global_loading_state_be_displayed" />
         <global-empty-state v-else-if="should_global_empty_state_be_displayed" />
         <template v-else>
             <list-of-projects />
             <list-of-recent-items />
+            <search-results v-if="should_search_results_be_displayed" />
         </template>
     </div>
 </template>
@@ -38,9 +43,16 @@ import GlobalEmptyState from "./GlobalEmptyState.vue";
 import { State } from "vuex-class";
 import type { Project, UserHistory } from "../../type";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
+import SearchResults from "./SearchResults/SearchResults.vue";
 
 @Component({
-    components: { GlobalLoadingState, GlobalEmptyState, ListOfProjects, ListOfRecentItems },
+    components: {
+        SearchResults,
+        GlobalLoadingState,
+        GlobalEmptyState,
+        ListOfProjects,
+        ListOfRecentItems,
+    },
 })
 export default class SwitchToBody extends Vue {
     @State
@@ -54,6 +66,9 @@ export default class SwitchToBody extends Vue {
 
     @State
     private readonly projects!: Project[];
+
+    @State
+    private readonly filter_value: string;
 
     get should_global_empty_state_be_displayed(): boolean {
         if (!this.is_history_loaded) {
@@ -73,6 +88,10 @@ export default class SwitchToBody extends Vue {
         }
 
         return this.is_loading_history;
+    }
+
+    get should_search_results_be_displayed(): boolean {
+        return this.filter_value !== "";
     }
 }
 </script>

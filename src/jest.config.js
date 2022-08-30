@@ -40,4 +40,8 @@ module.exports = {
         "!scripts/FlamingParrot/keymaster-sequence/**",
     ],
     testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/"],
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
+    },
 };

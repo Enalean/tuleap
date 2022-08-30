@@ -20,6 +20,11 @@
 import type { State } from "./type";
 import type { Project, UserHistory, UserHistoryEntry } from "../type";
 
+export interface RootGetters {
+    readonly filtered_history: UserHistory;
+    readonly filtered_projects: Project[];
+}
+
 export function filtered_history(state: State): UserHistory {
     return {
         entries: state.history.entries.reduce(

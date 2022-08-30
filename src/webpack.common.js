@@ -320,6 +320,9 @@ const webpack_config_for_vue = {
     },
     resolve: {
         extensions: [".js", ".ts", ".vue"],
+        alias: {
+            vue: path.resolve(__dirname, "node_modules", "vue"),
+        },
     },
 };
 
