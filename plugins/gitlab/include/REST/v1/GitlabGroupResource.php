@@ -43,11 +43,17 @@ use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
+use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
+use Tuleap\Gitlab\Group\GitlabGroupDAO;
+use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\GroupCreator;
+use Tuleap\Gitlab\Group\Token\GroupApiToken;
+use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
+use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
+use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
-use Tuleap\Gitlab\Repository\Token\IntegrationApiToken;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\IntegrationApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -94,11 +100,11 @@ final class GitlabGroupResource
     protected function createGroup(GitlabGroupPOSTRepresentation $gitlab_group_link_representation): GitlabGroupRepresentation
     {
         $this->options();
-        $integration_api_token = IntegrationApiToken::buildBrandNewToken(new ConcealedString($gitlab_group_link_representation->gitlab_token));
-        $gitlab_server_url     = $gitlab_group_link_representation->gitlab_server_url;
+        $group_api_token   = GroupApiToken::buildNewGroupToken(new ConcealedString($gitlab_group_link_representation->gitlab_token));
+        $gitlab_server_url = $gitlab_group_link_representation->gitlab_server_url;
 
         $project     = $this->getProjectById($gitlab_group_link_representation->project_id);
-        $credentials = new Credentials($gitlab_server_url, $integration_api_token);
+        $credentials = new Credentials($gitlab_server_url, $group_api_token);
 
         $current_user = UserManager::instance()->getCurrentUser();
         if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
@@ -115,9 +121,11 @@ final class GitlabGroupResource
 
         $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
 
+        $db_connection =  DBFactory::getMainTuleapDBConnection();
+
         $gitlab_repository_creator = new GitlabRepositoryCreator(
             new DBTransactionExecutorWithConnection(
-                DBFactory::getMainTuleapDBConnection()
+                $db_connection
             ),
             new GitlabRepositoryIntegrationFactory(
                 new GitlabRepositoryIntegrationDao(),
@@ -139,8 +147,15 @@ final class GitlabGroupResource
         );
 
         $group_creation_handler = new GroupCreator(
-            $gitlab_repository_creator,
-            new GitlabProjectBuilder($gitlab_api_client)
+            new GitlabProjectBuilder($gitlab_api_client),
+            new GitlabGroupInformationRetriever($gitlab_api_client),
+            new GitlabRepositoryGroupLinkHandler(
+                new DBTransactionExecutorWithConnection($db_connection),
+                new GitlabRepositoryIntegrationDao(),
+                $gitlab_repository_creator,
+                new GitlabGroupFactory(new GitlabGroupDAO()),
+                new GroupTokenInserter(new GroupApiTokenDAO(), new KeyFactory())
+            )
         );
 
         return $group_creation_handler->createGroupAndIntegrations($credentials, $gitlab_group_link_representation, $project);

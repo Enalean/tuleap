@@ -28,16 +28,19 @@ use Tuleap\Gitlab\API\BuildGitlabProjects;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\CreateGitlabRepositories;
+use Tuleap\Gitlab\API\Group\RetrieveGitlabGroupInformation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
-use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
+use Tuleap\Gitlab\Repository\HandleGitlabRepositoryGroupLink;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
 final class GroupCreator
 {
-    public function __construct(private CreateGitlabRepositories $gitlab_repository_creator, private BuildGitlabProjects $build_gitlab_project)
-    {
+    public function __construct(
+        private BuildGitlabProjects $build_gitlab_project,
+        private RetrieveGitlabGroupInformation $gitlab_group_information_retriever,
+        private HandleGitlabRepositoryGroupLink $repository_group_link_handler,
+    ) {
     }
 
     /**
@@ -46,16 +49,22 @@ final class GroupCreator
     public function createGroupAndIntegrations(Credentials $credentials, GitlabGroupPOSTRepresentation $gitlab_group_representation, Project $project): GitlabGroupRepresentation
     {
         try {
-            $gitlab_group_projects          = $this->build_gitlab_project->getGroupProjectsFromGitlabAPI(
+            $gitlab_group_information = $this->gitlab_group_information_retriever->getGitlabGroupFromGitlabApi($credentials, $gitlab_group_representation);
+            $gitlab_group_projects    = $this->build_gitlab_project->getGroupProjectsFromGitlabAPI(
                 $credentials,
                 $gitlab_group_representation->gitlab_group_id
             );
-            $integrated_gitlab_repositories = $this->gitlab_repository_creator->integrateGitlabRepositoriesInProject($credentials, $gitlab_group_projects, $project, GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration());
-            return new GitlabGroupRepresentation($gitlab_group_representation->gitlab_group_id, count($integrated_gitlab_repositories));
+            return $this->repository_group_link_handler->integrateGitlabRepositoriesInProject(
+                $credentials,
+                $gitlab_group_projects,
+                $project,
+                GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration(),
+                $gitlab_group_information
+            );
         } catch (
-            GitlabResponseAPIException |
-            GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException |
-            GitlabRequestException $exception
+            GitlabGroupAlreadyExistsException |
+            GitlabRequestException |
+            GitlabResponseAPIException $exception
         ) {
             throw new RestException(400, $exception->getMessage());
         }

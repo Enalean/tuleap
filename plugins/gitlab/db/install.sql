@@ -70,3 +70,21 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_branch_info (
      last_push_date INT(11) DEFAULT NULL,
      UNIQUE(integration_id, branch_name(255))
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_group (
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    gitlab_group_id INT(11) NOT NULL ,
+    name VARCHAR(255) NOT NULL,
+    full_path TEXT NOT NULL,
+    web_url VARCHAR(255) NOT NULL,
+    avatar_url TEXT DEFAULT NULL,
+    last_synchronization_date INT(11) NOT NULL,
+    allow_artifact_closure TINYINT(1) NOT NULL DEFAULT 0,
+    prefix_branch_name VARCHAR(255) DEFAULT NULL,
+    UNIQUE(gitlab_group_id)
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_group_token (
+    group_id INT(11) NOT NULL PRIMARY KEY,
+    token BLOB NOT NULL
+) ENGINE = InnoDB;

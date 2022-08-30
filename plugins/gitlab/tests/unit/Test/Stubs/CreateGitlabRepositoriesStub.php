@@ -23,45 +23,42 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Test\Stubs;
 
 use Project;
-use Throwable;
 use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\Repository\CreateGitlabRepositories;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
 {
-    private function __construct(private ?Throwable $exception, private array $integrations)
+    private function __construct(private GitlabRepositoryIntegration $integrations)
     {
     }
 
-    /**
-     * @throws Throwable
-     */
-    public function integrateGitlabRepositoriesInProject(Credentials $credentials, array $gitlab_projects, Project $project, GitlabRepositoryCreatorConfiguration $configuration,): array
-    {
-        if ($this->exception) {
-            throw $this->exception;
-        }
 
+    public function createGitlabRepositoryIntegration(
+        Credentials $credentials,
+        GitlabProject $gitlab_project,
+        Project $project,
+        GitlabRepositoryCreatorConfiguration $configuration,
+    ): GitlabRepositoryIntegration {
         return $this->integrations;
-    }
-
-    public static function buildWithException(Throwable $exception): self
-    {
-        return new self($exception, []);
     }
 
     public static function buildWithDefault(): self
     {
-        return new self(null, []);
-    }
-
-    /**
-     * @param GitlabRepositoryIntegration[] $integrations
-     */
-    public static function buildWithIntegrations(array $integrations): self
-    {
-        return new self(null, $integrations);
+        return new self(
+            new GitlabRepositoryIntegration(
+                1,
+                2,
+                "name",
+                "desc",
+                "repo_url",
+                new \DateTimeImmutable('@0'),
+                ProjectTestBuilder::aProject()->build(),
+                false
+            )
+        );
     }
 }

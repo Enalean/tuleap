@@ -20,24 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository;
+namespace Tuleap\Gitlab\API\Group;
 
-use Project;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\API\WrapGitlabClient;
+use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 
-interface CreateGitlabRepositories
+final class GitlabGroupInformationRetriever implements RetrieveGitlabGroupInformation
 {
+    public function __construct(private WrapGitlabClient $gitlab_client)
+    {
+    }
+
     /**
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
      */
-    public function createGitlabRepositoryIntegration(
-        Credentials $credentials,
-        GitlabProject $gitlab_project,
-        Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration,
-    ): GitlabRepositoryIntegration;
+    public function getGitlabGroupFromGitlabApi(Credentials $credential, GitlabGroupPOSTRepresentation $representation): GitlabGroupApiDataRepresentation
+    {
+        $gitlab_group_data = $this->gitlab_client->getUrl($credential, "/groups/" . urlencode((string) $representation->gitlab_group_id));
+
+        if (! $gitlab_group_data) {
+            throw new GitlabResponseAPIException(
+                "The query is not in error but the json content is empty. This is not expected."
+            );
+        }
+
+        return GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($gitlab_group_data);
+    }
 }

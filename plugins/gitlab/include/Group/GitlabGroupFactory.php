@@ -20,38 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stubs;
+namespace Tuleap\Gitlab\Group;
 
-use Throwable;
-use Tuleap\Gitlab\API\BuildGitlabProjects;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
-
-final class BuildGitlabProjectsStub implements BuildGitlabProjects
+final class GitlabGroupFactory implements BuildGitlabGroup
 {
-    public function __construct(private ?Throwable $exception, private array $gitlab_projects)
+    public function __construct(private GitlabGroupDAO $gitlab_group_DAO)
     {
     }
 
     /**
-     * @return GitlabProject[]
-     * @throws Throwable
+     * @throws GitlabGroupAlreadyExistsException
      */
-    public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
+    public function createGroup(GitlabGroupDBInsertionRepresentation $gitlab_group): GitlabGroup
     {
-        if ($this->exception) {
-            throw $this->exception;
+        if ($this->gitlab_group_DAO->searchGroupByGitlabGroupId($gitlab_group->gitlab_group_id)) {
+            throw new GitlabGroupAlreadyExistsException($gitlab_group->name);
         }
-        return $this->gitlab_projects;
-    }
 
-    public static function buildWithException(Throwable $exception): self
-    {
-        return new self($exception, []);
-    }
-
-    public static function buildWithDefault(): self
-    {
-        return new self(null, []);
+        $group_id = $this->gitlab_group_DAO->insertNewGitlabGroup($gitlab_group);
+        return GitlabGroup::buildGitlabGroupFromInsertionRows($group_id, $gitlab_group);
     }
 }

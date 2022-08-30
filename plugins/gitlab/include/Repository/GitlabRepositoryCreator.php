@@ -122,33 +122,10 @@ class GitlabRepositoryCreator implements CreateGitlabRepositories
     }
 
     /**
-     * @param GitlabProject[] $gitlab_projects
-     * @return GitlabRepositoryIntegration[]
-     *
-     * @throws GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException
-     */
-    public function integrateGitlabRepositoriesInProject(
-        Credentials $credentials,
-        array $gitlab_projects,
-        Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration,
-    ): array {
-        $integrated_repositories = [];
-        foreach ($gitlab_projects as $gitlab_project) {
-            try {
-                $integrated_repositories[] = $this->integrateGitlabRepositoryInProject($credentials, $gitlab_project, $project, $configuration);
-            } catch (GitlabRepositoryAlreadyIntegratedInProjectException $exception) {
-                // do nothing, already integrated
-            }
-        }
-        return $integrated_repositories;
-    }
-
-    /**
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
      */
-    private function createGitlabRepositoryIntegration(
+    public function createGitlabRepositoryIntegration(
         Credentials $credentials,
         GitlabProject $gitlab_project,
         Project $project,
@@ -161,7 +138,7 @@ class GitlabRepositoryCreator implements CreateGitlabRepositories
         );
 
         $this->webhook_creator->generateWebhookInGitlabProject($credentials, $gitlab_repository);
-        $this->token_inserter->insertToken($gitlab_repository, $credentials->getBotApiToken()->getToken());
+        $this->token_inserter->insertToken($gitlab_repository, $credentials->getApiToken()->getToken());
 
         return $gitlab_repository;
     }

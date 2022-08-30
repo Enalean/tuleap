@@ -20,24 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository;
+namespace Tuleap\Gitlab\Group\Token;
 
-use Project;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabProject;
-use Tuleap\Gitlab\API\GitlabRequestException;
-use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Gitlab\Group\GitlabGroup;
 
-interface CreateGitlabRepositories
+final class GroupTokenInserter implements InsertGroupToken
 {
-    /**
-     * @throws GitlabResponseAPIException
-     * @throws GitlabRequestException
-     */
-    public function createGitlabRepositoryIntegration(
-        Credentials $credentials,
-        GitlabProject $gitlab_project,
-        Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration,
-    ): GitlabRepositoryIntegration;
+    public function __construct(private GroupApiTokenDAO $group_api_token_DAO, private KeyFactory $key_factory)
+    {
+    }
+
+    public function insertToken(GitlabGroup $gitlab_group, ConcealedString $token): void
+    {
+        $encrypted_secret = SymmetricCrypto::encrypt(
+            $token,
+            $this->key_factory->getEncryptionKey()
+        );
+
+        $this->group_api_token_DAO->storeToken(
+            $gitlab_group->id,
+            $encrypted_secret
+        );
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,27 +15,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\API;
+namespace Tuleap\Gitlab\Repository;
 
-class Credentials
+interface GitlabRepositoryAlreadyIntegratedDao
 {
-    public function __construct(private string $gitlab_server_url, private ApiToken $api_token)
-    {
-    }
-
-    public function getGitlabServerUrl(): string
-    {
-        return $this->gitlab_server_url;
-    }
-
-    public function getApiToken(): ApiToken
-    {
-        return $this->api_token;
-    }
+    public function isTheGitlabRepositoryAlreadyIntegratedInProject(
+        int $project_id,
+        int $gitlab_repository_id,
+        string $http_path,
+    ): bool;
 }
