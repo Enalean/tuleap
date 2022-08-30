@@ -64,10 +64,9 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import type { Project } from "../../../type";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
-import { Action, State } from "vuex-class";
 import { sprintf } from "sprintf-js";
-import type { FocusFromProjectPayload } from "../../../store/type";
 import WordHighlighter from "vue-word-highlighter";
+import { useSwitchToStore } from "../../../stores";
 
 @Component({
     components: { WordHighlighter },
@@ -79,14 +78,9 @@ export default class ProjectLink extends Vue {
     @Prop({ required: true })
     private readonly has_programmatically_focus!: boolean;
 
-    @State
-    private readonly are_restricted_users_allowed!: boolean;
-
-    @State
-    private readonly filter_value: string;
-
-    @Action
-    private readonly changeFocusFromProject!: (payload: FocusFromProjectPayload) => void;
+    get filter_value(): string {
+        return useSwitchToStore().filter_value;
+    }
 
     @Watch("has_programmatically_focus")
     forceFocus(): void {
@@ -107,7 +101,10 @@ export default class ProjectLink extends Vue {
             case "ArrowDown":
             case "ArrowLeft":
                 event.preventDefault();
-                this.changeFocusFromProject({ project: this.project, key: event.key });
+                useSwitchToStore().changeFocusFromProject({
+                    project: this.project,
+                    key: event.key,
+                });
                 break;
             default:
         }
@@ -125,7 +122,7 @@ export default class ProjectLink extends Vue {
             project_is_private: this.project.is_private,
             project_is_private_incl_restricted: this.project.is_private_incl_restricted,
             project_is_public_incl_restricted: this.project.is_public_incl_restricted,
-            are_restricted_users_allowed: this.are_restricted_users_allowed,
+            are_restricted_users_allowed: useSwitchToStore().are_restricted_users_allowed,
             explanation_text: "",
             privacy_title: "",
         };

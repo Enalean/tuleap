@@ -20,8 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import type { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../../store/type";
+import { createTestingPinia } from "@pinia/testing";
+import { useSwitchToStore } from "../../../stores";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("ProjectLink", () => {
@@ -37,13 +37,13 @@ describe("ProjectLink", () => {
                 } as Project,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         are_restricted_users_allowed: true,
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -62,19 +62,19 @@ describe("ProjectLink", () => {
                 project,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         are_restricted_users_allowed: true,
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         const key = "ArrowUp";
         await wrapper.trigger("keydown", { key });
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("changeFocusFromProject", {
+        expect(useSwitchToStore().changeFocusFromProject).toHaveBeenCalledWith({
             project,
             key,
         });
@@ -91,13 +91,13 @@ describe("ProjectLink", () => {
                 } as Project,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         are_restricted_users_allowed: true,
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         const link = wrapper.find("[data-test=project-link]");

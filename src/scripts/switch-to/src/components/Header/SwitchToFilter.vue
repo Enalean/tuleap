@@ -34,20 +34,14 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { Mutation, State } from "vuex-class";
 import type { Modal } from "tlp";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
+import { useSwitchToStore } from "../../stores";
 
 @Component
 export default class SwitchToFilter extends Vue {
     @Prop({ required: true })
     private readonly modal!: Modal | null;
-
-    @State
-    private readonly filter_value!: string;
-
-    @Mutation
-    private readonly updateFilterValue!: (value: string) => void;
 
     mounted(): void {
         this.listenToHideModalEvent();
@@ -67,8 +61,9 @@ export default class SwitchToFilter extends Vue {
     }
 
     clearInput(): void {
-        if (this.filter_value !== "") {
-            this.updateFilterValue("");
+        const store = useSwitchToStore();
+        if (store.filter_value !== "") {
+            store.updateFilterValue("");
         }
     }
 
@@ -82,8 +77,13 @@ export default class SwitchToFilter extends Vue {
         }
 
         if (event.target instanceof HTMLInputElement) {
-            this.updateFilterValue(event.target.value);
+            const store = useSwitchToStore();
+            store.updateFilterValue(event.target.value);
         }
+    }
+
+    get filter_value(): string {
+        return useSwitchToStore().filter_value;
     }
 
     get placeholder(): string {

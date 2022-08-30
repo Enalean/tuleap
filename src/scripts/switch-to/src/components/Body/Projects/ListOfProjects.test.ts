@@ -20,53 +20,62 @@
 import { shallowMount } from "@vue/test-utils";
 import ListOfProjects from "./ListOfProjects.vue";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../../store/type";
+import { createTestingPinia } from "@pinia/testing";
 import type { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import ProjectLink from "./ProjectLink.vue";
+import type { State } from "../../../stores/type";
+import { defineStore } from "pinia";
 
 describe("ListOfProjects", () => {
     it("Displays empty state if no projects", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "",
+                    projects: [] as Project[],
+                } as State),
+            getters: {
+                filtered_projects: (): Project[] => [],
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfProjects, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                        projects: [] as Project[],
-                    } as State,
-                    getters: {
-                        filtered_projects: [] as Project[],
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findComponent(ProjectsEmptyState).exists()).toBe(true);
     });
 
     it("Display list of filtered projects", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "plop",
+                    projects: [
+                        { project_uri: "/a" } as Project,
+                        { project_uri: "/b" } as Project,
+                        { project_uri: "/c" } as Project,
+                    ],
+                } as State),
+            getters: {
+                filtered_projects: (): Project[] => [
+                    { project_uri: "/a" } as Project,
+                    { project_uri: "/b" } as Project,
+                ],
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfProjects, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "plop",
-                        projects: [
-                            { project_uri: "/a" } as Project,
-                            { project_uri: "/b" } as Project,
-                            { project_uri: "/c" } as Project,
-                        ],
-                    } as State,
-                    getters: {
-                        filtered_projects: [
-                            { project_uri: "/a" } as Project,
-                            { project_uri: "/b" } as Project,
-                        ],
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findAllComponents(ProjectLink)).toHaveLength(2);
@@ -76,23 +85,27 @@ describe("ListOfProjects", () => {
     it(`Given user is searching for a term
         When there is no matching projects
         Then we should not display anything`, async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "plop",
+                    projects: [
+                        { project_uri: "/a" } as Project,
+                        { project_uri: "/b" } as Project,
+                        { project_uri: "/c" } as Project,
+                    ],
+                } as State),
+            getters: {
+                filtered_projects: (): Project[] => [],
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfProjects, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "plop",
-                        projects: [
-                            { project_uri: "/a" } as Project,
-                            { project_uri: "/b" } as Project,
-                            { project_uri: "/c" } as Project,
-                        ],
-                    } as State,
-                    getters: {
-                        filtered_projects: [] as Project[],
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);

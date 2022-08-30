@@ -27,11 +27,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { useSwitchToStore } from "../../stores";
 
 @Component
 export default class TroveCatLink extends Vue {
-    @State
-    private readonly is_trove_cat_enabled!: boolean;
+    get is_trove_cat_enabled(): boolean {
+        return useSwitchToStore().is_trove_cat_enabled;
+    }
 }
 </script>

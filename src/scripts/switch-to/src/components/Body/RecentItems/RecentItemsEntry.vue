@@ -75,9 +75,8 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import type { UserHistoryEntry } from "../../../type";
-import { Action, State } from "vuex-class";
-import type { FocusFromHistoryPayload } from "../../../store/type";
 import WordHighlighter from "vue-word-highlighter";
+import { useSwitchToStore } from "../../../stores";
 
 @Component({
     components: { WordHighlighter },
@@ -89,11 +88,9 @@ export default class RecentItemsEntry extends Vue {
     @Prop({ required: true })
     private readonly has_programmatically_focus!: boolean;
 
-    @State
-    private readonly filter_value: string;
-
-    @Action
-    private readonly changeFocusFromHistory!: (payload: FocusFromHistoryPayload) => void;
+    get filter_value(): string {
+        return useSwitchToStore().filter_value;
+    }
 
     @Watch("has_programmatically_focus")
     forceFocus(): void {
@@ -114,7 +111,7 @@ export default class RecentItemsEntry extends Vue {
             case "ArrowDown":
             case "ArrowLeft":
                 event.preventDefault();
-                this.changeFocusFromHistory({ entry: this.entry, key: event.key });
+                useSwitchToStore().changeFocusFromHistory({ entry: this.entry, key: event.key });
                 break;
             default:
         }

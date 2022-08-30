@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { State } from "./type";
-import type { Store } from "vuex";
-import Vuex from "vuex";
-import * as getters from "./getters";
-import * as mutations from "./mutations";
-import * as actions from "./actions";
+export function isMatchingFilterValue(s: string | null, filter_value: string): boolean {
+    if (!s) {
+        return false;
+    }
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        getters,
-        mutations,
-        actions,
-    });
+    return s.toLowerCase().indexOf(filter_value.toLowerCase()) !== -1;
 }

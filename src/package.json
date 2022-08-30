@@ -39,6 +39,7 @@
     "mustache": "^4.2.0",
     "node-gettext": "^3.0.0",
     "panzoom": "^9.4.1",
+    "pinia": "^2.0.21",
     "prismjs": "^1.29.0",
     "slugify": "^1.6.1",
     "sprintf-js": "^1.1.2",
@@ -51,6 +52,7 @@
     "vuex-composition-helpers": "1.2"
   },
   "devDependencies": {
+    "@pinia/testing": "^0.0.14",
     "@tuleap/build-system-configurator": "link:../lib/frontend/build-system-configurator",
     "@tuleap/vuex-store-wrapper-jest": "link:../lib/frontend/vuex-store-wrapper-jest",
     "@types/bootstrap": "^4.5.0",

@@ -19,28 +19,30 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SwitchToBody from "./SwitchToBody.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { createTestingPinia } from "@pinia/testing";
 import type { Project, UserHistory } from "../../type";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
 import SearchResults from "./SearchResults/SearchResults.vue";
+import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("SwitchToBody", () => {
-    it("Displays projects and recent items", () => {
+    it("Displays projects and recent items", async () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            localVue: await createSwitchToLocalVue(),
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         is_loading_history: false,
                         is_history_loaded: true,
                         history: { entries: [] } as UserHistory,
                         projects: [{}] as Project[],
                         filter_value: "",
                     },
-                }),
-            },
+                },
+            }),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);
@@ -50,19 +52,20 @@ describe("SwitchToBody", () => {
         expect(wrapper.findComponent(SearchResults).exists()).toBe(false);
     });
 
-    it("Displays projects, recent items, and search results", () => {
+    it("Displays projects, recent items, and search results", async () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            localVue: await createSwitchToLocalVue(),
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         is_loading_history: false,
                         is_history_loaded: true,
                         history: { entries: [] } as UserHistory,
                         projects: [{}] as Project[],
                         filter_value: "Lorem",
                     },
-                }),
-            },
+                },
+            }),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);
@@ -72,18 +75,19 @@ describe("SwitchToBody", () => {
         expect(wrapper.findComponent(SearchResults).exists()).toBe(true);
     });
 
-    it("Displays loading state when there is no projects and the history is being loaded", () => {
+    it("Displays loading state when there is no projects and the history is being loaded", async () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            localVue: await createSwitchToLocalVue(),
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         is_loading_history: true,
                         is_history_loaded: false,
                         history: { entries: [] } as UserHistory,
                         projects: [] as Project[],
                     },
-                }),
-            },
+                },
+            }),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(true);
@@ -92,18 +96,19 @@ describe("SwitchToBody", () => {
         expect(wrapper.findComponent(ListOfRecentItems).exists()).toBe(false);
     });
 
-    it("Displays empty state when there is no projects and no history", () => {
+    it("Displays empty state when there is no projects and no history", async () => {
         const wrapper = shallowMount(SwitchToBody, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            localVue: await createSwitchToLocalVue(),
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         is_loading_history: false,
                         is_history_loaded: true,
                         history: { entries: [] } as UserHistory,
                         projects: [] as Project[],
                     },
-                }),
-            },
+                },
+            }),
         });
 
         expect(wrapper.findComponent(GlobalLoadingState).exists()).toBe(false);

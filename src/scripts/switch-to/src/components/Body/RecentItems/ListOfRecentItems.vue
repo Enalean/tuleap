@@ -60,9 +60,9 @@ import { Component } from "vue-property-decorator";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
-import { Getter, State } from "vuex-class";
-import type { Project, UserHistory, UserHistoryEntry } from "../../../type";
+import type { UserHistory, UserHistoryEntry } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
+import { useSwitchToStore } from "../../../stores";
 
 @Component({
     components: {
@@ -73,29 +73,32 @@ import RecentItemsErrorState from "./RecentItemsErrorState.vue";
     },
 })
 export default class ListOfRecentItems extends Vue {
-    @State
-    readonly is_loading_history!: boolean;
+    get is_loading_history(): boolean {
+        return useSwitchToStore().is_loading_history;
+    }
 
-    @State
-    readonly is_history_loaded!: boolean;
+    get is_history_loaded(): boolean {
+        return useSwitchToStore().is_history_loaded;
+    }
 
-    @State
-    readonly is_history_in_error!: boolean;
+    get is_history_in_error(): boolean {
+        return useSwitchToStore().is_history_in_error;
+    }
 
-    @State
-    readonly history!: UserHistory;
+    get history(): UserHistory {
+        return useSwitchToStore().history;
+    }
 
-    @Getter
-    readonly filtered_history!: UserHistory;
+    get filtered_history(): UserHistory {
+        return useSwitchToStore().filtered_history;
+    }
 
-    @State
-    private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
-
-    @State
-    private readonly filter_value: string;
+    get filter_value(): string {
+        return useSwitchToStore().filter_value;
+    }
 
     hasProgrammaticallyFocus(entry: UserHistoryEntry): boolean {
-        return entry === this.programmatically_focused_element;
+        return entry === useSwitchToStore().programmatically_focused_element;
     }
 
     get has_no_history(): boolean {

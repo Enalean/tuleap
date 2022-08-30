@@ -20,8 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import type { QuickLink, UserHistoryEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../../store/type";
+import { createTestingPinia } from "@pinia/testing";
+import { useSwitchToStore } from "../../../stores";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("RecentItemsEntry", () => {
@@ -40,11 +40,7 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
         });
 
@@ -69,11 +65,7 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
         });
 
@@ -94,11 +86,7 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
         });
 
@@ -121,18 +109,14 @@ describe("RecentItemsEntry", () => {
                 entry,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
         });
 
         const key = "ArrowUp";
         await wrapper.trigger("keydown", { key });
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("changeFocusFromHistory", {
+        expect(useSwitchToStore().changeFocusFromHistory).toHaveBeenCalledWith({
             entry,
             key,
         });
@@ -152,11 +136,7 @@ describe("RecentItemsEntry", () => {
                 } as UserHistoryEntry,
                 has_programmatically_focus: false,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
         });
 

@@ -19,8 +19,8 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../store/type";
+import { createTestingPinia } from "@pinia/testing";
+import { useSwitchToStore } from "../../stores";
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "tlp";
 import { createModal } from "tlp";
@@ -40,13 +40,7 @@ describe("SwitchToFilter", () => {
             propsData: {
                 modal,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
+            pinia: createTestingPinia(),
         });
 
         if (wrapper.element instanceof HTMLInputElement) {
@@ -54,30 +48,29 @@ describe("SwitchToFilter", () => {
         }
         await wrapper.trigger("keyup");
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "abc");
+        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("abc");
     });
 
     it("Reset the value if the modal is closed", async () => {
-        const wrapper = shallowMount(SwitchToFilter, {
+        shallowMount(SwitchToFilter, {
             localVue: await createSwitchToLocalVue(),
             propsData: {
                 modal,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         filter_value: "abc",
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
-
         modal.hide();
 
         // There is a TRANSITION_DURATION before listeners are awakened
         jest.advanceTimersByTime(300);
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
+        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("");
     });
 
     it("Closes the modal if the user hit [esc]", async () => {
@@ -88,18 +81,18 @@ describe("SwitchToFilter", () => {
             propsData: {
                 modal,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         filter_value: "abc",
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         await wrapper.trigger("keyup", { key: "Escape" });
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
+        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("");
         expect(hide).toHaveBeenCalled();
     });
 });

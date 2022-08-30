@@ -37,28 +37,23 @@ import $ from "jquery";
 import { Component } from "vue-property-decorator";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
-import { Action, Mutation } from "vuex-class";
+import { useSwitchToStore } from "../stores";
 
 @Component({
     components: { SwitchToHeader, SwitchToBody },
 })
 export default class AppFlamingParrot extends Vue {
-    @Action
-    private readonly loadHistory!: () => void;
-
-    @Mutation
-    private readonly updateFilterValue!: (value: string) => void;
-
     mounted(): void {
         const modal = this.$el;
         if (!(modal instanceof HTMLElement)) {
             return;
         }
+        const store = useSwitchToStore();
 
         $(modal)
             // Force autofocus for bootstrap modal
             .on("shown", () => {
-                this.loadHistory();
+                store.loadHistory();
                 const input = modal.querySelector("input");
                 if (input) {
                     input.focus();
@@ -66,7 +61,7 @@ export default class AppFlamingParrot extends Vue {
             })
             // Clear filter for bootstrap modal
             .on("hidden", () => {
-                this.updateFilterValue("");
+                store.updateFilterValue("");
             });
     }
     get aria_label(): string {

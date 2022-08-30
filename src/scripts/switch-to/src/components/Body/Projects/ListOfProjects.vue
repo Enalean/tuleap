@@ -55,26 +55,30 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ProjectLink from "./ProjectLink.vue";
-import { Getter, State } from "vuex-class";
 import type { Project, UserHistoryEntry } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import TroveCatLink from "../TroveCatLink.vue";
+import { useSwitchToStore } from "../../../stores";
 
 @Component({
     components: { TroveCatLink, ProjectLink, ProjectsEmptyState },
 })
 export default class ListOfProjects extends Vue {
-    @State
-    private readonly projects!: Project[];
+    get projects(): Project[] {
+        return useSwitchToStore().projects;
+    }
 
-    @Getter
-    private readonly filtered_projects!: Project[];
+    get filtered_projects(): Project[] {
+        return useSwitchToStore().filtered_projects;
+    }
 
-    @State
-    private readonly programmatically_focused_element!: Project | UserHistoryEntry | null;
+    get programmatically_focused_element(): Project | UserHistoryEntry | null {
+        return useSwitchToStore().programmatically_focused_element;
+    }
 
-    @State
-    private readonly filter_value: string;
+    get filter_value(): string {
+        return useSwitchToStore().filter_value;
+    }
 
     hasProgrammaticallyFocus(project: Project): boolean {
         return project === this.programmatically_focused_element;
