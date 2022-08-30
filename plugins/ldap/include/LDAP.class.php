@@ -444,6 +444,12 @@ class LDAP
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
 
+    public function searchEmail(string $email): LDAPResultIterator|false
+    {
+        $filter = $this->ldapParams['mail'] . '=' . ldap_escape($email, '', LDAP_ESCAPE_FILTER);
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
+    }
+
     /**
      * Search if a LDAP user match a filter defined in local conf.
      *

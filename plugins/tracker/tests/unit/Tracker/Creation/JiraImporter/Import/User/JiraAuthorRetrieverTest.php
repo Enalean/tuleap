@@ -86,7 +86,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tuleap_user = \Mockery::mock(\PFUser::class);
         $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('johndoe@example.com')->andReturn([$tuleap_user]);
+        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')->with('johndoe@example.com')->andReturn([$tuleap_user]);
 
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, \Mockery::any());
@@ -104,7 +104,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tuleap_user = \Mockery::mock(\PFUser::class);
         $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
-        $this->user_manager->shouldReceive('getAllUsersByEmail')
+        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
             ->andReturn([
                 $tuleap_user,
@@ -128,7 +128,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tuleap_user = \Mockery::mock(\PFUser::class);
         $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
-        $this->user_manager->shouldReceive('getAllUsersByEmail')
+        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')
             ->with('johndoe@example.com')
             ->andReturn([]);
 
@@ -164,7 +164,7 @@ final class JiraAuthorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with(\Mockery::any())
             ->andReturn($this->forge_user);
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->never();
+        $this->user_manager->shouldReceive('getAndEventuallyCreateUserByEmail')->never();
         $this->forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
         $submitter = $this->retriever->retrieveUserFromAPIData([
