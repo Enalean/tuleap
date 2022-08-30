@@ -246,7 +246,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(
-            '/{project_name}/administration/gitlab',
+            '/{project_name}/administration/gitlab/[{vue-routing:.*}]',
             $this->getRouteHandler('routeGetGitlabLinkGroupsController')
         );
     }

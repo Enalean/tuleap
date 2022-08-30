@@ -27,6 +27,7 @@ use GitPresenters_AdminPresenter;
 final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
 {
     public string $current_project_name;
+    public string $current_project_unix_name;
 
     public function __construct(
         \Project $project,
@@ -35,7 +36,8 @@ final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
     ) {
         parent::__construct((int) $project->getID(), $are_mirrors_defined, $external_pane_presenters);
 
-        $this->current_project_name = $project->getPublicName();
+        $this->current_project_name      = $project->getPublicName();
+        $this->current_project_unix_name = $project->getUnixNameLowerCase();
     }
 
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

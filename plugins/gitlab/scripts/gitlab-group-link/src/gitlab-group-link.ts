@@ -20,21 +20,37 @@
 import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { createPinia } from "pinia";
+
+import { createInitializedRouter } from "./router/router";
+
 import GitlabGroupLinkAppComponent from "./components/GitlabGroupLinkAppComponent.vue";
+import { useRootStore } from "./stores/root";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
-    const current_project_name = mount_point.dataset.currentProjectName;
-    if (!current_project_name) {
-        throw new Error("Missing current project name in dataset");
-    }
+    const app = createApp(GitlabGroupLinkAppComponent);
+    const pinia = createPinia();
 
-    const app = createApp(GitlabGroupLinkAppComponent, {
-        current_project_name,
-    });
+    app.use(createInitializedRouter(getDatasetItemFromMountPoint("currentProjectUnixName")));
+
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
             return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
         })
     );
+
+    app.use(pinia);
+    useRootStore().setCurrentProject({
+        public_name: getDatasetItemFromMountPoint("currentProjectName"),
+    });
+
     app.mount(mount_point);
+
+    function getDatasetItemFromMountPoint(item_name: string): string {
+        const item = mount_point.dataset[item_name];
+        if (!item) {
+            throw new Error(`Missing item ${item_name} in dataset`);
+        }
+        return item;
+    }
 }

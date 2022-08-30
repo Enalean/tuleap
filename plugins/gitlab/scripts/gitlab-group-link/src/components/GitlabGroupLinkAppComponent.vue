@@ -19,14 +19,8 @@
 
 <template>
     <div>
-        <empty-state-no-gitlab-group-linked v-bind:current_project_name="current_project_name" />
+        <router-view />
     </div>
 </template>
 
-<script setup lang="ts">
-import EmptyStateNoGitlabGroupLinked from "./EmptyStateNoGitlabGroupLinked.vue";
-
-defineProps<{
-    current_project_name: string;
-}>();
-</script>
+<script setup lang="ts"></script>

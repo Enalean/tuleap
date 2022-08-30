@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GitlabGroupLinkWizard Given the id of the active step, Then it will render the steps with the correct classes (step-previous, step-current, step-next) 1`] = `
+<nav
+  class="tlp-wizard"
+>
+  
+  <span
+    class="tlp-wizard-step-previous"
+  >
+    Server
+  </span>
+  <span
+    class="tlp-wizard-step-current"
+  >
+    Group
+  </span>
+  <span
+    class="tlp-wizard-step-next"
+  >
+    Configuration
+  </span>
+  
+</nav>
+`;

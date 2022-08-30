@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,16 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type VueRouter from "vue-router";
 
-declare module "*.vue" {
-    import type { DefineComponent } from "vue";
-    const component: DefineComponent;
-    export default component;
-}
+import { defineStore } from "pinia";
+import type { RootState, Project } from "./types";
 
-declare module "vue/types/vue" {
-    interface Vue {
-        $router: VueRouter;
-    }
-}
+export const useRootStore = defineStore("root", {
+    state: (): RootState => ({
+        current_project: {
+            public_name: "",
+        },
+    }),
+    actions: {
+        setCurrentProject(project: Project): void {
+            this.current_project = project;
+        },
+    },
+});
