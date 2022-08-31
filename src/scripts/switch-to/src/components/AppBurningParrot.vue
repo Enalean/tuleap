@@ -38,15 +38,12 @@ import type { Modal } from "tlp";
 import { createModal } from "tlp";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
-import { Action } from "vuex-class";
+import { useSwitchToStore } from "../stores";
 
 @Component({
     components: { SwitchToHeader, SwitchToBody },
 })
 export default class AppBurningParrot extends Vue {
-    @Action
-    private readonly loadHistory!: () => void;
-
     private modal: Modal | null = null;
     private trigger: HTMLElement | null = null;
 
@@ -73,7 +70,7 @@ export default class AppBurningParrot extends Vue {
     }
 
     toggleModal(): void {
-        this.loadHistory();
+        useSwitchToStore().loadHistory();
         if (this.modal) {
             this.modal.toggle();
         }

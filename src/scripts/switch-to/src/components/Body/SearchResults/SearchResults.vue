@@ -28,16 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import { useGetters } from "vuex-composition-helpers";
-import type { RootGetters } from "../../../store/getters";
 import { computed } from "vue";
+import { useSwitchToStore } from "../../../stores";
 
-const { filtered_projects, filtered_history } = useGetters<
-    Pick<RootGetters, "filtered_projects" | "filtered_history">
->(["filtered_projects", "filtered_history"]);
+const store = useSwitchToStore();
 
 const should_be_displayed = computed(
     (): boolean =>
-        filtered_history.value.entries.length === 0 && filtered_projects.value.length === 0
+        store.filtered_history.entries.length === 0 && store.filtered_projects.length === 0
 );
 </script>

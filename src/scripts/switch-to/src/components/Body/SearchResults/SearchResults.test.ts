@@ -20,23 +20,26 @@
 import { shallowMount } from "@vue/test-utils";
 import SearchResults from "./SearchResults.vue";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Project, UserHistoryEntry } from "../../../type";
-import type { RootGetters } from "../../../store/getters";
+import { createTestingPinia } from "@pinia/testing";
+import { defineStore } from "pinia";
+import type { Project, UserHistory, UserHistoryEntry } from "../../../type";
 
 describe("SearchResults", () => {
     it(`should display No results
         when the list of filtered projects and the list of filtered recent items are empty`, async () => {
+        const useSwitchToStore = defineStore("root", {
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [] }),
+                filtered_projects: (): Project[] => [],
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(SearchResults, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    getters: {
-                        filtered_projects: [] as Project[],
-                        filtered_history: { entries: [] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.text()).toContain("No results");
@@ -51,18 +54,20 @@ describe("SearchResults", () => {
         when there is at least one matching project %s or recent item %s
         because FTS is not implemented yet and we don't want to display a "No results" which may confuse people.`,
         async (filtered_projects, filtered_history_entries) => {
-            const wrapper = shallowMount(SearchResults, {
-                localVue: await createSwitchToLocalVue(),
-                mocks: {
-                    $store: createStoreMock({
-                        getters: {
-                            filtered_projects,
-                            filtered_history: { entries: filtered_history_entries },
-                        } as RootGetters,
-                    }),
+            const useSwitchToStore = defineStore("root", {
+                getters: {
+                    filtered_history: (): UserHistory => ({ entries: filtered_history_entries }),
+                    filtered_projects: (): Project[] => filtered_projects,
                 },
             });
 
+            const pinia = createTestingPinia();
+            useSwitchToStore(pinia);
+
+            const wrapper = shallowMount(SearchResults, {
+                localVue: await createSwitchToLocalVue(),
+                pinia,
+            });
             expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
         }
     );

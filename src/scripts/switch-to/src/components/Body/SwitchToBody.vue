@@ -40,10 +40,10 @@ import { Component } from "vue-property-decorator";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
-import { State } from "vuex-class";
 import type { Project, UserHistory } from "../../type";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
 import SearchResults from "./SearchResults/SearchResults.vue";
+import { useSwitchToStore } from "../../stores";
 
 @Component({
     components: {
@@ -55,20 +55,25 @@ import SearchResults from "./SearchResults/SearchResults.vue";
     },
 })
 export default class SwitchToBody extends Vue {
-    @State
-    readonly is_loading_history!: boolean;
+    get is_loading_history(): boolean {
+        return useSwitchToStore().is_loading_history;
+    }
 
-    @State
-    private readonly is_history_loaded!: boolean;
+    get is_history_loaded(): boolean {
+        return useSwitchToStore().is_history_loaded;
+    }
 
-    @State
-    private readonly history!: UserHistory;
+    get history(): UserHistory {
+        return useSwitchToStore().history;
+    }
 
-    @State
-    private readonly projects!: Project[];
+    get projects(): Project[] {
+        return useSwitchToStore().projects;
+    }
 
-    @State
-    private readonly filter_value: string;
+    get filter_value(): string {
+        return useSwitchToStore().filter_value;
+    }
 
     get should_global_empty_state_be_displayed(): boolean {
         if (!this.is_history_loaded) {

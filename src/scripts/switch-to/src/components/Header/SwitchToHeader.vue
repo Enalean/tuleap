@@ -53,9 +53,9 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import SwitchToFilter from "./SwitchToFilter.vue";
-import { State } from "vuex-class";
-import type { SearchForm } from "../../type";
 import type { Modal } from "tlp";
+import { useSwitchToStore } from "../../stores";
+import type { SearchForm } from "../../type";
 
 @Component({
     components: { SwitchToFilter },
@@ -63,15 +63,15 @@ import type { Modal } from "tlp";
 export default class SwitchToHeader extends Vue {
     @Prop({ required: true })
     private readonly modal!: Modal | null;
+    private store: ReturnType<useSwitchToStore> | null;
 
-    @State
-    private readonly filter_value!: string;
+    getStore(): ReturnType<useSwitchToStore> {
+        if (!this.store) {
+            this.store = useSwitchToStore();
+        }
 
-    @State
-    private readonly is_search_available!: boolean;
-
-    @State
-    private readonly search_form!: SearchForm;
+        return this.store;
+    }
 
     submit(event: Event): void {
         if (!this.should_button_be_displayed) {
@@ -79,8 +79,13 @@ export default class SwitchToHeader extends Vue {
         }
     }
 
+    get search_form(): SearchForm {
+        return this.getStore().search_form;
+    }
+
     get should_button_be_displayed(): boolean {
-        return this.filter_value.length > 0 && this.is_search_available;
+        const store = this.getStore();
+        return store.filter_value.length > 0 && store.is_search_available;
     }
 
     get is_special_search(): boolean {

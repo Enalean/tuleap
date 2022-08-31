@@ -20,8 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import AppBurningParrot from "./AppBurningParrot.vue";
 import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../store/type";
+import { createTestingPinia } from "@pinia/testing";
+import { useSwitchToStore } from "../stores";
 
 describe("AppBurningParrot", () => {
     beforeEach(() => {
@@ -41,11 +41,7 @@ describe("AppBurningParrot", () => {
 
         const wrapper = await shallowMount(AppBurningParrot, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             attachTo: div,
         });
 
@@ -65,18 +61,16 @@ describe("AppBurningParrot", () => {
         button.id = "switch-to-button";
         document.body.appendChild(button);
 
-        const wrapper = await shallowMount(AppBurningParrot, {
+        await shallowMount(AppBurningParrot, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {} as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             attachTo: div,
         });
 
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith("loadHistory");
+        const store = useSwitchToStore();
+
+        expect(store.loadHistory).not.toHaveBeenCalled();
         button.click();
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadHistory");
+        expect(store.loadHistory).toHaveBeenCalled();
     });
 });

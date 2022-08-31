@@ -21,32 +21,37 @@
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../../store/type";
-import type { UserHistoryEntry } from "../../../type";
+import { createTestingPinia } from "@pinia/testing";
+import type { UserHistory, UserHistoryEntry } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
+import { defineStore } from "pinia";
+import type { State } from "../../../stores/type";
 
 describe("ListOfRecentItems", () => {
     it("Displays an empty state", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "",
+                    is_history_in_error: false,
+                    is_loading_history: false,
+                    is_history_loaded: true,
+                    history: { entries: [] as UserHistoryEntry[] },
+                } as State),
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [] }),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                        is_history_in_error: false,
-                        is_loading_history: false,
-                        is_history_loaded: true,
-                        history: { entries: [] as UserHistoryEntry[] },
-                    } as State,
-                    getters: {
-                        filtered_history: { entries: [] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -56,22 +61,26 @@ describe("ListOfRecentItems", () => {
     });
 
     it("Display a loading state", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "",
+                    is_history_in_error: false,
+                    is_loading_history: true,
+                    is_history_loaded: false,
+                    history: { entries: [] as UserHistoryEntry[] },
+                } as State),
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [] }),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                        is_history_in_error: false,
-                        is_loading_history: true,
-                        is_history_loaded: false,
-                        history: { entries: [] as UserHistoryEntry[] },
-                    } as State,
-                    getters: {
-                        filtered_history: { entries: [] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -81,22 +90,26 @@ describe("ListOfRecentItems", () => {
     });
 
     it("Display recent items", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "",
+                    is_history_in_error: false,
+                    is_loading_history: false,
+                    is_history_loaded: true,
+                    history: { entries: [{}, {}] as UserHistoryEntry[] },
+                } as State),
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [{}, {}] as UserHistoryEntry[] }),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                        is_history_in_error: false,
-                        is_loading_history: false,
-                        is_history_loaded: true,
-                        history: { entries: [{}, {}] as UserHistoryEntry[] },
-                    } as State,
-                    getters: {
-                        filtered_history: { entries: [{}, {}] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -108,44 +121,52 @@ describe("ListOfRecentItems", () => {
     it(`Given user is searching for a term
         When there is no matching recent items
         Then we should not display anything`, async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "plop",
+                    is_history_in_error: false,
+                    is_loading_history: false,
+                    is_history_loaded: true,
+                    history: { entries: [{}, {}] as UserHistoryEntry[] },
+                } as State),
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [] }),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "plop",
-                        is_history_in_error: false,
-                        is_loading_history: false,
-                        is_history_loaded: true,
-                        history: { entries: [{}, {}] as UserHistoryEntry[] },
-                    } as State,
-                    getters: {
-                        filtered_history: { entries: [] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
     });
 
     it("Display filtered items", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "plop",
+                    is_history_in_error: false,
+                    is_loading_history: false,
+                    is_history_loaded: true,
+                    history: { entries: [{}, {}] as UserHistoryEntry[] },
+                } as State),
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [{}] as UserHistoryEntry[] }),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "plop",
-                        is_history_in_error: false,
-                        is_loading_history: false,
-                        is_history_loaded: true,
-                        history: { entries: [{}, {}] as UserHistoryEntry[] },
-                    } as State,
-                    getters: {
-                        filtered_history: { entries: [{}] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
@@ -155,22 +176,26 @@ describe("ListOfRecentItems", () => {
     });
 
     it("Display error state", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    filter_value: "",
+                    is_history_in_error: true,
+                    is_loading_history: true,
+                    is_history_loaded: false,
+                    history: { entries: [] as UserHistoryEntry[] },
+                } as State),
+            getters: {
+                filtered_history: (): UserHistory => ({ entries: [] }),
+            },
+        });
+
+        const pinia = createTestingPinia();
+        useSwitchToStore(pinia);
+
         const wrapper = shallowMount(ListOfRecentItems, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                        is_history_in_error: true,
-                        is_loading_history: true,
-                        is_history_loaded: false,
-                        history: { entries: [] as UserHistoryEntry[] },
-                    } as State,
-                    getters: {
-                        filtered_history: { entries: [] as UserHistoryEntry[] },
-                    },
-                }),
-            },
+            pinia,
         });
 
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(true);

@@ -18,11 +18,11 @@
  */
 
 import Vue from "vue";
-import Vuex from "vuex";
+import { PiniaVuePlugin, createPinia } from "pinia";
 import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
-import { createStore } from "./store";
 import type { VueClass } from "vue-class-component/lib/declarations";
-import type { State } from "./store/type";
+import type { State } from "./stores/type";
+import { useSwitchToStore } from "./stores";
 
 export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue>): Promise<void> {
     await initVueGettext(
@@ -31,8 +31,9 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
             import(/* webpackChunkName: "switch-to-po-" */ "../po/" + getPOFileFromLocale(locale))
     );
 
-    Vue.use(Vuex);
+    Vue.use(PiniaVuePlugin);
 
+    const pinia = createPinia();
     const root_state: State = {
         projects:
             typeof vue_mount_point.dataset.projects !== "undefined"
@@ -54,10 +55,11 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         programmatically_focused_element: null,
     };
 
-    const store = createStore(root_state);
-
     const AppComponent = Vue.extend(component);
     new AppComponent({
-        store,
+        pinia,
     }).$mount(vue_mount_point);
+
+    const store = useSwitchToStore();
+    store.$patch(root_state);
 }

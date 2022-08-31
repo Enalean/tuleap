@@ -21,20 +21,14 @@ import { shallowMount } from "@vue/test-utils";
 import AppFlamingParrot from "./AppFlamingParrot.vue";
 import $ from "jquery";
 import { createSwitchToLocalVue } from "../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../store/type";
+import { createTestingPinia } from "@pinia/testing";
+import { useSwitchToStore } from "../stores";
 
 describe("AppFlamingParrot", () => {
     it("Autofocus the first input in the modal", async () => {
         const wrapper = shallowMount(AppFlamingParrot, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
+            pinia: createTestingPinia(),
             stubs: {
                 "switch-to-header": {
                     template: "<input type='text' data-test='focus'/>",
@@ -56,34 +50,22 @@ describe("AppFlamingParrot", () => {
     it("Loads the history when the modal is shown", async () => {
         const wrapper = shallowMount(AppFlamingParrot, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
+            pinia: createTestingPinia(),
         });
 
         $(wrapper.element).trigger("shown");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("loadHistory");
+        expect(useSwitchToStore().loadHistory).toHaveBeenCalledTimes(1);
     });
 
     it("Clears the filter value when modal is closed", async () => {
         const wrapper = shallowMount(AppFlamingParrot, {
             localVue: await createSwitchToLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        filter_value: "",
-                    } as State,
-                }),
-            },
+            pinia: createTestingPinia(),
         });
 
         $(wrapper.element).trigger("hidden");
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("updateFilterValue", "");
+        expect(useSwitchToStore().updateFilterValue).toHaveBeenCalledWith("");
     });
 });

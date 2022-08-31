@@ -19,16 +19,16 @@
  */
 
 import type { Vue } from "vue/types/vue";
-import Vuex from "vuex";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
+import { PiniaVuePlugin } from "pinia";
 
 export async function createSwitchToLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
     await initVueGettext(local_vue, () => {
         throw new Error("Fallback to default");
     });
-    local_vue.use(Vuex);
+    local_vue.use(PiniaVuePlugin);
 
     return local_vue;
 }

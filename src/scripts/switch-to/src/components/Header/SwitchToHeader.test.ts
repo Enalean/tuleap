@@ -19,8 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { State } from "../../store/type";
+import { createTestingPinia } from "@pinia/testing";
 import SwitchToHeader from "./SwitchToHeader.vue";
 import type { SearchForm } from "../../type";
 
@@ -31,14 +30,14 @@ describe("SwitchToHeader", () => {
             propsData: {
                 modal: null,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         filter_value: "abc",
                         is_search_available: false,
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(false);
@@ -50,14 +49,14 @@ describe("SwitchToHeader", () => {
             propsData: {
                 modal: null,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         filter_value: "",
                         is_search_available: true,
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(false);
@@ -69,18 +68,18 @@ describe("SwitchToHeader", () => {
             propsData: {
                 modal: null,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
+            pinia: createTestingPinia({
+                initialState: {
+                    root: {
                         filter_value: "abc",
                         is_search_available: true,
                         search_form: {
                             type_of_search: "soft",
                             hidden_fields: [],
                         } as SearchForm,
-                    } as State,
-                }),
-            },
+                    },
+                },
+            }),
         });
 
         expect(wrapper.find("[data-test=legacy-search-button]").exists()).toBe(true);
