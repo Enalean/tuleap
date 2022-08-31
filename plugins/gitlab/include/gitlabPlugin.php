@@ -41,18 +41,24 @@ use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
+use Tuleap\Gitlab\Reference\Branch\BranchReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchFactory;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchReference;
+use Tuleap\Gitlab\Reference\Branch\GitlabBranchReferenceSplitValuesBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
+use Tuleap\Gitlab\Reference\GitlabReferenceExtractor;
+use Tuleap\Gitlab\Reference\GitlabReferenceValueWithoutSeparatorSplitValuesBuilder;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagFactory;
 use Tuleap\Gitlab\Reference\Tag\GitlabTagReference;
+use Tuleap\Gitlab\Reference\Tag\GitlabTagReferenceSplitValuesBuilder;
+use Tuleap\Gitlab\Reference\Tag\TagReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
@@ -702,7 +708,17 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
         ) {
             $builder = new GitlabReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
-                $this->getGitlabRepositoryIntegrationFactory()
+                $this->getGitlabRepositoryIntegrationFactory(),
+                new GitlabReferenceExtractor(
+                    new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                    new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                    new GitlabBranchReferenceSplitValuesBuilder(
+                        new BranchReferenceSplitValuesDao()
+                    ),
+                    new GitlabTagReferenceSplitValuesBuilder(
+                        new TagReferenceSplitValuesDao()
+                    ),
+                ),
             );
 
             $reference = $builder->buildGitlabReference(
@@ -822,7 +838,17 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
             ProjectManager::instance(),
             new TlpRelativeDatePresenterBuilder(),
             UserManager::instance(),
-            UserHelper::instance()
+            UserHelper::instance(),
+            new GitlabReferenceExtractor(
+                new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                new GitlabReferenceValueWithoutSeparatorSplitValuesBuilder(),
+                new GitlabBranchReferenceSplitValuesBuilder(
+                    new BranchReferenceSplitValuesDao()
+                ),
+                new GitlabTagReferenceSplitValuesBuilder(
+                    new TagReferenceSplitValuesDao()
+                ),
+            ),
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
     }
