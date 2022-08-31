@@ -321,8 +321,18 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
         CreatedFileURLMapping $url_mapping,
     ) {
-        return $this->getValueDao()->create($changeset_value_id, $value) &&
+        $res = $this->getValueDao()->create($changeset_value_id, $value) &&
                $this->extractCrossRefs($artifact, $value);
+
+        if ($res) {
+            (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+                $artifact,
+                $this,
+                $value,
+            );
+        }
+
+        return $res;
     }
 
     /**
