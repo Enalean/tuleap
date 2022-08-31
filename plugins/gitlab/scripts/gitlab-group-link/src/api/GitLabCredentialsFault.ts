@@ -17,26 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { MountingOptions } from "@vue/test-utils";
-import { createGettext } from "vue3-gettext";
-import { createTestingPinia } from "@pinia/testing";
-import type { StateTree } from "pinia";
+import { Fault } from "@tuleap/fault";
 
-export function getGlobalTestOptions(
-    store_options: StateTree,
-    error_handler: (e: unknown) => void = (e): void => {
-        throw e;
-    }
-): MountingOptions<unknown>["global"] {
-    return {
-        config: {
-            errorHandler: error_handler,
-        },
-        plugins: [
-            createGettext({ silent: true }),
-            createTestingPinia({
-                initialState: store_options,
-            }),
-        ],
-    };
-}
+export const GitLabCredentialsFault = {
+    fromMessage: (message: string): Fault => {
+        const fault = Fault.fromMessage(message);
+
+        return {
+            isGitlabCredentialsFault: () => true,
+            ...fault,
+        };
+    },
+};
+
+export const isGitLabCredentialsFault = (fault: Fault): boolean =>
+    "isGitlabCredentialsFault" in fault && fault.isGitlabCredentialsFault() === true;

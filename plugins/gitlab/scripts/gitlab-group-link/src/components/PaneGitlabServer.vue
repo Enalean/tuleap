@@ -23,8 +23,18 @@
 
         <div class="tlp-framed-vertically">
             <h1>{{ $gettext("GitLab server") }}</h1>
+            <div
+                v-if="error_message"
+                class="tlp-alert-danger"
+                data-test="gitlab-server-fetch-error"
+            >
+                {{ error_message }}
+            </div>
+            <div v-if="success_message" class="tlp-alert-success">
+                {{ success_message }}
+            </div>
             <section class="tlp-pane">
-                <form class="tlp-pane-container">
+                <form ref="form" class="tlp-pane-container">
                     <section class="tlp-pane-section">
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="gitlab_server">
@@ -40,6 +50,8 @@
                                 pattern="https://.+"
                                 maxlength="255"
                                 size="40"
+                                v-model="gitlab_server_url"
+                                data-test="gitlab-server-url"
                             />
                         </div>
 
@@ -56,6 +68,8 @@
                                 maxlength="255"
                                 autocomplete="off"
                                 size="40"
+                                v-model="gitlab_access_token"
+                                data-test="gitlab-access-token"
                             />
                             <p class="tlp-text-info gitlab-test-info-form-token-modal">
                                 {{
@@ -75,7 +89,6 @@
                         <div class="gitlab-server-step-action-buttons">
                             <router-link
                                 v-bind:to="{ name: NO_GROUP_LINKED_EMPTY_STATE }"
-                                type="submit"
                                 class="tlp-button-primary tlp-button-outline"
                             >
                                 <i class="fas fa-arrow-left tlp-button-icon" aria-hidden="true"></i>
@@ -84,11 +97,17 @@
                             <button
                                 type="submit"
                                 class="tlp-button-primary gitlab-server-step-button-submit"
-                                disabled
+                                v-bind:disabled="is_fetching_gitlab_groups_disabled"
+                                v-on:click="onClickFetchGitLabGroups"
+                                data-test="gitlab-fetch-groups-button"
                             >
                                 {{ $gettext("Fetch GitLab groups") }}
                                 <i
                                     class="fas fa-arrow-right tlp-button-icon tlp-button-icon-right"
+                                    v-bind:class="{
+                                        'fas fa-arrow-right': !is_fetching_groups,
+                                        'fas fa-spin fa-circle-notch': is_fetching_groups,
+                                    }"
                                     aria-hidden="true"
                                 ></i>
                             </button>
@@ -101,8 +120,95 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
+import type { Ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import type { Fault } from "@tuleap/fault";
+
 import { STEP_GITLAB_SERVER, NO_GROUP_LINKED_EMPTY_STATE } from "../types";
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
+import { createGitlabApiQuerier } from "../api/gitlab-api-querier";
+import type { GitlabGroup } from "../stores/types";
+import { useGitLabGroupsStore } from "../stores/groups";
+import { isGitLabCredentialsFault } from "../api/GitLabCredentialsFault";
+
+const { $gettext, interpolate } = useGettext();
+const groups_store = useGitLabGroupsStore();
+const gitlab_api_querier = createGitlabApiQuerier(window);
+
+const gitlab_server_url = ref("");
+const gitlab_access_token = ref("");
+const error_message = ref("");
+const success_message = ref("");
+const is_fetching_groups = ref(false);
+const form: Ref<HTMLFormElement | null> = ref(null);
+
+const is_fetching_gitlab_groups_disabled = computed(
+    () => !gitlab_server_url.value || !gitlab_access_token.value || is_fetching_groups.value
+);
+
+const isNetworkFault = (fault: Fault): boolean =>
+    "isNetworkFault" in fault && fault.isNetworkFault() === true;
+
+function onClickFetchGitLabGroups(event: Event): void {
+    event.preventDefault();
+    if (form.value === null) {
+        throw new Error("Cannot find the gitlab server form");
+    }
+
+    if (!form.value.checkValidity()) {
+        form.value.reportValidity();
+        return;
+    }
+
+    let server_url = null;
+    try {
+        server_url = new URL(gitlab_server_url.value);
+    } catch (error) {
+        form.value.reportValidity();
+        return;
+    }
+
+    error_message.value = "";
+    success_message.value = "";
+    is_fetching_groups.value = true;
+
+    gitlab_api_querier
+        .getGitlabGroups({
+            server_url,
+            token: gitlab_access_token.value,
+        })
+        .match(
+            (groups: readonly GitlabGroup[]) => {
+                groups_store.setGroups(groups);
+                success_message.value = $gettext("Groups successfully retrieved");
+            },
+            (fault) => {
+                if (isNetworkFault(fault)) {
+                    error_message.value = $gettext(
+                        "Network error while fetching the GitLab groups. Please verify your GitLab server url validity."
+                    );
+                    return;
+                }
+
+                if (isGitLabCredentialsFault(fault)) {
+                    error_message.value = $gettext(
+                        "Unable to connect to the GitLab server, please check your credentials."
+                    );
+
+                    return;
+                }
+
+                error_message.value = interpolate(
+                    $gettext("Unable to reach the GitLab server: %{ error }"),
+                    { error: String(fault) }
+                );
+            }
+        )
+        .finally(() => {
+            is_fetching_groups.value = false;
+        });
+}
 </script>
 
 <style scoped lang="scss">

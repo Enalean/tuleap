@@ -24,3 +24,12 @@ export interface RootState {
 export interface Project {
     readonly public_name: string;
 }
+
+export interface GroupsState {
+    groups: readonly GitlabGroup[];
+}
+
+export interface GitlabGroup {
+    readonly id: string;
+    readonly name: string;
+}
