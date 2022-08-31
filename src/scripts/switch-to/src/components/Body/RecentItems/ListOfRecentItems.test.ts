@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
 import { createTestingPinia } from "@pinia/testing";
-import type { UserHistory, UserHistoryEntry } from "../../../type";
+import type { UserHistory, ItemEntry } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
@@ -39,7 +39,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [] as UserHistoryEntry[] },
+                    history: { entries: [] as ItemEntry[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -68,7 +68,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: true,
                     is_history_loaded: false,
-                    history: { entries: [] as UserHistoryEntry[] },
+                    history: { entries: [] as ItemEntry[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -97,10 +97,10 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    history: { entries: [{}, {}] as ItemEntry[] },
                 } as State),
             getters: {
-                filtered_history: (): UserHistory => ({ entries: [{}, {}] as UserHistoryEntry[] }),
+                filtered_history: (): UserHistory => ({ entries: [{}, {}] as ItemEntry[] }),
             },
         });
 
@@ -128,7 +128,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    history: { entries: [{}, {}] as ItemEntry[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -154,10 +154,10 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [{}, {}] as UserHistoryEntry[] },
+                    history: { entries: [{}, {}] as ItemEntry[] },
                 } as State),
             getters: {
-                filtered_history: (): UserHistory => ({ entries: [{}] as UserHistoryEntry[] }),
+                filtered_history: (): UserHistory => ({ entries: [{}] as ItemEntry[] }),
             },
         });
 
@@ -183,7 +183,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: true,
                     is_loading_history: true,
                     is_history_loaded: false,
-                    history: { entries: [] as UserHistoryEntry[] },
+                    history: { entries: [] as ItemEntry[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),

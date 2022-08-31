@@ -475,3 +475,19 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     margin: 0 0 0 $content-text-spacing-left;
     font-size: 0.875rem;
 }
+
+.switch-to-search-results-loading-icon {
+    margin: 0 0 0 calc(var(--tlp-small-spacing) / 2);
+}
+
+.switch-to-search-results-error-icon {
+    margin: 0 calc(var(--tlp-small-spacing) / 2) 0 0;
+}
+
+.switch-to-search-results-error {
+    opacity: 0.75;
+    color: var(--tlp-danger-color-on-dark-background);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1rem;
+}

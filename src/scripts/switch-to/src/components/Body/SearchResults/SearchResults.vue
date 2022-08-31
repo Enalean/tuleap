@@ -19,22 +19,58 @@
   -->
 
 <template>
-    <div class="switch-to-search-results" v-if="should_be_displayed">
+    <div
+        class="switch-to-search-results"
+        v-if="should_be_displayed"
+        aria-live="polite"
+        v-bind:aria-busy="is_busy ? 'true' : 'false'"
+    >
         <h2 class="tlp-modal-subtitle switch-to-modal-body-title">
             {{ $gettext("Search results") }}
+            <i
+                class="fa-solid fa-circle-notch fa-spin switch-to-search-results-loading-icon"
+                data-test="switch-to-search-results-loading"
+                aria-hidden="true"
+                v-if="is_busy"
+            ></i>
         </h2>
-        <p class="tlp-text-muted">{{ $gettext("No results") }}</p>
+        <search-results-error v-if="is_error" />
+        <search-query-too-small v-else-if="is_query_too_small" />
+        <search-results-empty v-else-if="is_empty" />
+        <search-results-list v-else-if="!is_busy" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { useSwitchToStore } from "../../../stores";
+import { useFullTextStore } from "../../../stores/fulltext";
+import SearchResultsError from "./SearchResultsError.vue";
+import SearchResultsEmpty from "./SearchResultsEmpty.vue";
+import SearchResultsList from "./SearchResultsList.vue";
+import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
+import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../stores/type";
 
-const store = useSwitchToStore();
+const root_store = useSwitchToStore();
+const fulltext_store = useFullTextStore();
 
+const is_query_too_small = computed(
+    (): boolean =>
+        fulltext_store.fulltext_search_is_available &&
+        root_store.filter_value.length < FULLTEXT_MINIMUM_LENGTH_FOR_QUERY
+);
 const should_be_displayed = computed(
     (): boolean =>
-        store.filtered_history.entries.length === 0 && store.filtered_projects.length === 0
+        (fulltext_store.fulltext_search_is_available && !is_query_too_small.value) ||
+        (root_store.filtered_history.entries.length === 0 &&
+            root_store.filtered_projects.length === 0)
+);
+
+const is_busy = computed((): boolean => fulltext_store.fulltext_search_is_loading);
+const is_error = computed((): boolean => fulltext_store.fulltext_search_is_error);
+const is_empty = computed(
+    (): boolean =>
+        Object.keys(fulltext_store.fulltext_search_results).length === 0 &&
+        !fulltext_store.fulltext_search_is_loading
 );
 </script>
