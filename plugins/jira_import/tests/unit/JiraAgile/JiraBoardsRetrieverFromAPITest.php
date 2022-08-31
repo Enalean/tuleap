@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\NullLogger;
+use RuntimeException;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
 use function PHPUnit\Framework\assertSame;
 
@@ -98,5 +99,88 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNotNull($board);
         self::assertSame(1, $board->id);
         self::assertSame('https://example.com/rest/agile/1.0/board/1', $board->url);
+    }
+
+    public function testItRetrievesBoardByIdInProject(): void
+    {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        {
+            public function getUrl(string $url): ?array
+            {
+                return [
+                    "id"       => 3,
+                    "self"     => "https://example.com/rest/agile/1.0/board/3",
+                    "name"     => "scrum board",
+                    "type"     => "scrum",
+                    "location" => [
+                        "projectId"   => 10040,
+                        "userId"      => 10040,
+                        "projectName" => "Scrum Project",
+                        "projectKey"  => "SP",
+                    ],
+                ];
+            }
+        };
+
+        $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
+        $board     = $retriever->getScrumBoardByIdForProject('SP', 3);
+
+        self::assertNotNull($board);
+        self::assertSame(3, $board->id);
+        self::assertSame('https://example.com/rest/agile/1.0/board/3', $board->url);
+    }
+
+    public function testItRetrievesBoardByIdInProjectThrowsAnExceptionIfBoardIsNotInProject(): void
+    {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        {
+            public function getUrl(string $url): ?array
+            {
+                return [
+                    "id"       => 3,
+                    "self"     => "https://example.com/rest/agile/1.0/board/3",
+                    "name"     => "scrum board",
+                    "type"     => "scrum",
+                    "location" => [
+                        "projectId"   => 10040,
+                        "userId"      => 10040,
+                        "projectName" => "Scrum Project",
+                        "projectKey"  => "SP",
+                    ],
+                ];
+            }
+        };
+
+        $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
+
+        self::expectException(RuntimeException::class);
+        $retriever->getScrumBoardByIdForProject('OtherProject', 3);
+    }
+
+    public function testItRetrievesBoardByIdInProjectThrowsAnExceptionIfBoardIsNotScrum(): void
+    {
+        $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub
+        {
+            public function getUrl(string $url): ?array
+            {
+                return [
+                    "id"       => 3,
+                    "self"     => "https://example.com/rest/agile/1.0/board/3",
+                    "name"     => "Other type board",
+                    "type"     => "other_type",
+                    "location" => [
+                        "projectId"   => 10040,
+                        "userId"      => 10040,
+                        "projectName" => "Scrum Project",
+                        "projectKey"  => "SP",
+                    ],
+                ];
+            }
+        };
+
+        $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger());
+
+        self::expectException(RuntimeException::class);
+        $retriever->getScrumBoardByIdForProject('SP', 3);
     }
 }
