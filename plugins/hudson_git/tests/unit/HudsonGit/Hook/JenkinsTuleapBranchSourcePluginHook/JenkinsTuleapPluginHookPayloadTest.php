@@ -23,25 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Cryptography\ConcealedString;
 
-class JenkinsTuleapPluginHookPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
+final class JenkinsTuleapPluginHookPayloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildsThePayload(): void
     {
-        $git_repository = \Mockery::mock(\GitRepository::class);
-        $git_repository->shouldReceive('getProjectId')->andReturn('35');
-        $git_repository->shouldReceive('getName')->andReturn('Aufrecht_Melcher_Großaspach');
+        $git_repository = $this->createStub(\GitRepository::class);
+        $git_repository->method('getProjectId')->willReturn('35');
+        $git_repository->method('getName')->willReturn('Aufrecht_Melcher_Großaspach');
 
-        $payload = new JenkinsTuleapPluginHookPayload($git_repository, 'refs/heads/chaise');
+        $payload = new JenkinsTuleapPluginHookPayload(
+            $git_repository,
+            'refs/heads/chaise',
+            new class implements JenkinsTuleapPluginHookTokenGenerator {
+                public function generateTriggerToken(\DateTimeImmutable $now): ConcealedString
+                {
+                    return new ConcealedString((string) $now->getTimestamp());
+                }
+            },
+            fn (): \DateTimeImmutable => new \DateTimeImmutable('@10')
+        );
 
         $expected_payload =
             [
                 'tuleapProjectId' => '35',
                 'repositoryName'  => 'Aufrecht_Melcher_Großaspach',
                 'branchName'      => 'chaise',
+                'token' => '10',
             ];
 
         $this->assertEquals($expected_payload, $payload->getPayload());

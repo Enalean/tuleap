@@ -40,6 +40,7 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\HudsonGit\Git\Administration\AddController;
 use Tuleap\HudsonGit\Git\Administration\AdministrationController;
 use Tuleap\HudsonGit\Git\Administration\AdministrationPaneBuilder;
@@ -55,6 +56,9 @@ use Tuleap\HudsonGit\Git\Administration\XML\XMLImporter;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenGeneratorCryptoBased;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierController;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierCryptoBased;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
@@ -166,7 +170,7 @@ class hudson_gitPlugin extends Plugin
         }
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeGetPostLegacyController'));
@@ -174,6 +178,7 @@ class hudson_gitPlugin extends Plugin
             $r->post('/jenkins_server', $this->getRouteHandler('getPostGitAdministrationJenkinsServer'));
             $r->post('/jenkins_server/delete', $this->getRouteHandler('getDeleteGitAdministrationJenkinsServer'));
             $r->post('/test_jenkins_server', $this->getRouteHandler('getAjaxAdministrationTestJenkinsServer'));
+            $r->post('/jenkins_tuleap_hook_trigger_check', $this->getRouteHandler('routePostVerifyHookTrigger'));
         });
     }
 
@@ -249,6 +254,16 @@ class hudson_gitPlugin extends Plugin
         );
     }
 
+    public function routePostVerifyHookTrigger(): JenkinsTuleapPluginHookTokenVerifierController
+    {
+        return new JenkinsTuleapPluginHookTokenVerifierController(
+            HTTPFactoryBuilder::responseFactory(),
+            new JenkinsTuleapPluginHookTokenVerifierCryptoBased((new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new DisableCacheMiddleware()
+        );
+    }
+
     private static function getGitPermissionsManager(): GitPermissionsManager
     {
         $git_system_event_manager = new Git_SystemEventManager(
@@ -288,15 +303,21 @@ class hudson_gitPlugin extends Plugin
             $http_client     = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
             $request_factory = HTTPFactoryBuilder::requestFactory();
             $stream_factory  = HTTPFactoryBuilder::streamFactory();
+            $encryption_key  = (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey();
             $controller      = new Hook\HookTriggerController(
                 new Hook\HookDao(),
                 new Hook\JenkinsClient(
                     $http_client,
                     $request_factory,
                     new JenkinsCSRFCrumbRetriever($http_client, $request_factory),
-                    new JenkinsTuleapPluginHookPayload($repository, $event->getRefname()),
+                    new JenkinsTuleapPluginHookPayload(
+                        $repository,
+                        $event->getRefname(),
+                        new JenkinsTuleapPluginHookTokenGeneratorCryptoBased($encryption_key),
+                        fn (): DateTimeImmutable => new DateTimeImmutable(),
+                    ),
                     $stream_factory,
-                    (new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()
+                    $encryption_key,
                 ),
                 $this->getLogger(),
                 new LogCreator(
