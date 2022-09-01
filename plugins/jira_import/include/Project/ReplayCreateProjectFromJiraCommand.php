@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -55,7 +55,8 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             ->addOption('path', '', InputOption::VALUE_REQUIRED, 'Path to the directory with the debug files')
             ->addOption('user', '', InputOption::VALUE_REQUIRED, 'Tuleap user login of who is doing the import')
             ->addOption('project', '', InputOption::VALUE_REQUIRED, 'Import in project')
-            ->addOption('epic-name', '', InputOption::VALUE_REQUIRED, 'Name of the epic issueType', 'Epic');
+            ->addOption('epic-name', '', InputOption::VALUE_REQUIRED, 'Name of the epic issueType', 'Epic')
+            ->addOption('board-id', '', InputOption::VALUE_REQUIRED, 'Id of the scrum board to import (first one found in project if not provided)', null);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -85,6 +86,13 @@ final class ReplayCreateProjectFromJiraCommand extends Command
             throw new \RuntimeException('jira project not found in manifest.log');
         }
 
+        $jira_board_id = $input->getOption('board-id');
+        if (is_numeric($jira_board_id)) {
+            $jira_board_id = intval($jira_board_id);
+        } else {
+            $jira_board_id = null;
+        }
+
         try {
             $project = $this->create_project_from_jira->create(
                 $logger,
@@ -94,6 +102,7 @@ final class ReplayCreateProjectFromJiraCommand extends Command
                 $tuleap_project_name,
                 $tuleap_project_name,
                 $input->getOption('epic-name'),
+                $jira_board_id,
             );
             $output->writeln(sprintf('Project %d created', $project->getID()));
             $output->writeln("Import completed");

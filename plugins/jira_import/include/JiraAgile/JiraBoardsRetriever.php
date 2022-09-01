@@ -24,4 +24,5 @@ namespace Tuleap\JiraImport\JiraAgile;
 interface JiraBoardsRetriever
 {
     public function getFirstScrumBoardForProject(string $jira_project_key): ?JiraBoard;
+    public function getScrumBoardByIdForProject(string $jira_project_key, int $jira_board_id): ?JiraBoard;
 }

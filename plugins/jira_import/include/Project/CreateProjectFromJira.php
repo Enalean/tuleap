@@ -142,6 +142,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
+        ?int $jira_board_id,
     ): \Project {
         if ($this->project_manager->getProjectByCaseInsensitiveUnixName($shortname) !== null) {
             throw new \RuntimeException('Project shortname already exists');
@@ -153,7 +154,8 @@ final class CreateProjectFromJira
             $jira_project,
             $shortname,
             $fullname,
-            $jira_epic_issue_type
+            $jira_epic_issue_type,
+            $jira_board_id,
         );
 
         $archive = new JiraProjectArchive($xml_element);
@@ -168,6 +170,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
+        ?int $jira_board_id,
         string $archive_path,
     ): void {
         $xml_element = $this->generateFromJira(
@@ -177,7 +180,8 @@ final class CreateProjectFromJira
             $jira_project,
             $shortname,
             $fullname,
-            $jira_epic_issue_type
+            $jira_epic_issue_type,
+            $jira_board_id
         );
 
         $xml_element->saveXML($archive_path);
@@ -191,6 +195,7 @@ final class CreateProjectFromJira
         string $shortname,
         string $fullname,
         string $jira_epic_issue_type,
+        ?int $jira_board_id,
     ): SimpleXMLElement {
         $this->user_roles_checker->checkUserIsAdminOfJiraProject(
             $jira_client,
@@ -217,7 +222,11 @@ final class CreateProjectFromJira
             $logger,
         );
 
-        $board               = $board_retriever->getFirstScrumBoardForProject($jira_project);
+        if ($jira_board_id) {
+            $board = $board_retriever->getScrumBoardByIdForProject($jira_project, $jira_board_id);
+        } else {
+            $board = $board_retriever->getFirstScrumBoardForProject($jira_project);
+        }
         $board_configuration = null;
         if ($board) {
             $board_configuration_retriever = new JiraBoardConfigurationRetrieverFromAPI(
