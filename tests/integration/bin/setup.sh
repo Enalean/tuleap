@@ -67,7 +67,8 @@ seed_data() {
         pullrequest \
         oauth2_server \
         program_management \
-        onlyoffice
+        onlyoffice \
+        fts_db
 }
 
 setup_tuleap

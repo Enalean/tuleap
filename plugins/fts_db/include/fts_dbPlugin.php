@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
+use Tuleap\Search\ItemToIndex;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -53,6 +54,7 @@ final class fts_dbPlugin extends Plugin
     public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(ItemToIndex::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -64,5 +66,10 @@ final class fts_dbPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function indexItem(ItemToIndex $item): void
+    {
+        (new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())->indexItem($item);
     }
 }

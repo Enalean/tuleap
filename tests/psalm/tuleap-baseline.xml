@@ -72068,7 +72068,7 @@
       <code>unsetResourceRestricted</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/AdditionalSearchTabsPresenter.class.php">
+  <file src="src/common/Search/Presenters/AdditionalSearchTabsPresenter.class.php">
     <MissingParamType occurrences="3">
       <code>$name</code>
       <code>$type_of_search</code>
@@ -72080,12 +72080,12 @@
       <code>$url</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/search/Presenters/SearchFacetsPresenter.class.php">
+  <file src="src/common/Search/Presenters/SearchFacetsPresenter.class.php">
     <MissingPropertyType occurrences="1">
       <code>$title</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/search/Presenters/SearchForumResultPresenter.php">
+  <file src="src/common/Search/Presenters/SearchForumResultPresenter.php">
     <MissingReturnType occurrences="4">
       <code>message_author</code>
       <code>message_date</code>
@@ -72105,12 +72105,12 @@
       <code>$this-&gt;message_subject</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/common/search/Presenters/SearchPanePresenter.class.php">
+  <file src="src/common/Search/Presenters/SearchPanePresenter.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>! empty($search_types)</code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/common/search/Presenters/SearchPeopleResultPresenter.php">
+  <file src="src/common/Search/Presenters/SearchPeopleResultPresenter.php">
     <MissingReturnType occurrences="4">
       <code>avatar</code>
       <code>real_name</code>
@@ -72118,7 +72118,7 @@
       <code>user_uri</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/SearchPresenter.class.php">
+  <file src="src/common/Search/Presenters/SearchPresenter.class.php">
     <MissingParamType occurrences="4">
       <code>$project</code>
       <code>$search_result</code>
@@ -72138,7 +72138,7 @@
       <code>classic_search_tab_label</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/SearchProjectResultPresenter.php">
+  <file src="src/common/Search/Presenters/SearchProjectResultPresenter.php">
     <MissingReturnType occurrences="4">
       <code>project_description</code>
       <code>project_name</code>
@@ -72146,7 +72146,7 @@
       <code>project_uri</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/SearchResultsIntroPresenter.php">
+  <file src="src/common/Search/Presenters/SearchResultsIntroPresenter.php">
     <MissingParamType occurrences="2">
       <code>$results</code>
       <code>$words</code>
@@ -72162,7 +72162,7 @@
       <code>search_result_title</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/SearchResultsPresenter.php">
+  <file src="src/common/Search/Presenters/SearchResultsPresenter.php">
     <MissingParamType occurrences="2">
       <code>$maybe_more_results</code>
       <code>$template</code>
@@ -72180,7 +72180,7 @@
       <code>results_intro</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/SearchTrackerV3ResultPresenter.php">
+  <file src="src/common/Search/Presenters/SearchTrackerV3ResultPresenter.php">
     <MissingParamType occurrences="1">
       <code>$result_display</code>
     </MissingParamType>
@@ -72189,7 +72189,7 @@
       <code>result_display</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/Presenters/SearchTypePresenter.class.php">
+  <file src="src/common/Search/Presenters/SearchTypePresenter.class.php">
     <MissingParamType occurrences="4">
       <code>$facets</code>
       <code>$search_type</code>
@@ -72204,7 +72204,7 @@
       <code>$url</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/search/SearchController.class.php">
+  <file src="src/common/Search/SearchController.class.php">
     <InvalidArgument occurrences="1"/>
     <MissingParamType occurrences="5">
       <code>$redirect_to_services</code>
@@ -72227,7 +72227,7 @@
       <code>results</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchForum.class.php">
+  <file src="src/common/Search/SearchForum.class.php">
     <DeprecatedMethod occurrences="1">
       <code>$results</code>
     </DeprecatedMethod>
@@ -72241,7 +72241,7 @@
       <code>search</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchPeople.class.php">
+  <file src="src/common/Search/SearchPeople.class.php">
     <MissingParamType occurrences="2">
       <code>$maybe_more_results</code>
       <code>$words</code>
@@ -72252,12 +72252,12 @@
       <code>search</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchPlugin.class.php">
+  <file src="src/common/Search/SearchPlugin.class.php">
     <MissingReturnType occurrences="1">
       <code>search</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchProject.class.php">
+  <file src="src/common/Search/SearchProject.class.php">
     <DeprecatedMethod occurrences="1">
       <code>$results</code>
     </DeprecatedMethod>
@@ -72271,7 +72271,7 @@
       <code>search</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchQuery.class.php">
+  <file src="src/common/Search/SearchQuery.class.php">
     <MissingParamType occurrences="1">
       <code>$number_of_results</code>
     </MissingParamType>
@@ -72300,7 +72300,7 @@
       <code>setNumberOfResults</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchResults.class.php">
+  <file src="src/common/Search/SearchResults.class.php">
     <MissingParamType occurrences="3">
       <code>$count</code>
       <code>$has_more</code>
@@ -72324,7 +72324,7 @@
       <code>$this-&gt;facets_html</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/common/search/SearchRouter.class.php">
+  <file src="src/common/Search/SearchRouter.class.php">
     <MissingPropertyType occurrences="1">
       <code>$controller</code>
     </MissingPropertyType>
@@ -72332,7 +72332,7 @@
       <code>route</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/search/SearchTrackerV3.class.php">
+  <file src="src/common/Search/SearchTrackerV3.class.php">
     <DeprecatedMethod occurrences="1">
       <code>foundRows</code>
     </DeprecatedMethod>
@@ -72347,7 +72347,7 @@
       <code>! is_object($ath)</code>
     </TypeDoesNotContainType>
   </file>
-  <file src="src/common/search/SearchWiki.class.php">
+  <file src="src/common/Search/SearchWiki.class.php">
     <MissingParamType occurrences="6">
       <code>$page_name</code>
       <code>$project_id</code>
