@@ -32,11 +32,7 @@ const MAIN_BRANCH = "main";
 describe(`rest-querier`, () => {
     it("asks to create the GitLab branch", async () => {
         const postSpy = jest.spyOn(fetch_result, "postJSON");
-        postSpy.mockReturnValue(
-            okAsync({
-                json: () => Promise.resolve({ branch_name: MAIN_BRANCH }),
-            } as unknown as Response)
-        );
+        postSpy.mockReturnValue(okAsync({ branch_name: MAIN_BRANCH }));
 
         const result = await postGitlabBranch(GITLAB_INTEGRATION_ID, ARTIFACT_ID, MAIN_BRANCH);
 
@@ -45,12 +41,15 @@ describe(`rest-querier`, () => {
             artifact_id: ARTIFACT_ID,
             reference: MAIN_BRANCH,
         });
-        expect(result.isOk()).toBe(true);
+        if (!result.isOk()) {
+            throw new Error("Expected an OK");
+        }
+        expect(result.value.branch_name).toBe(MAIN_BRANCH);
     });
 
     it("asks to create the GitLab merge request", async () => {
         const postSpy = jest.spyOn(fetch_result, "postJSON");
-        postSpy.mockReturnValue(okAsync({} as Response));
+        postSpy.mockReturnValue(okAsync({}));
 
         const result = await postGitlabMergeRequest(
             GITLAB_INTEGRATION_ID,

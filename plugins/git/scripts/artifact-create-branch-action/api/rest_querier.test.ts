@@ -53,11 +53,7 @@ describe("API querier", () => {
     describe("postGitBranch", () => {
         it("asks to create the Git branch", async () => {
             const postSpy = jest.spyOn(fetch_result, "postJSON");
-            postSpy.mockReturnValue(
-                okAsync({
-                    json: () => Promise.resolve({ html_url: "URL" }),
-                } as unknown as Response)
-            );
+            postSpy.mockReturnValue(okAsync({ html_url: "URL" }));
 
             const repository_id = 27;
             const branch_name = "tuleap-123-title";
@@ -69,17 +65,16 @@ describe("API querier", () => {
                 branch_name: branch_name,
                 reference: reference,
             });
-            expect(result.isOk()).toBe(true);
+            if (!result.isOk()) {
+                throw new Error("Expected an OK");
+            }
+            expect(result.value.html_url).toBe("URL");
         });
     });
     describe("postPullRequestOnDefaultBranch", () => {
         it("asks to create the Git branch", async () => {
             const postSpy = jest.spyOn(fetch_result, "postJSON");
-            postSpy.mockReturnValue(
-                okAsync({
-                    json: () => Promise.resolve({ id: 123 }),
-                } as unknown as Response)
-            );
+            postSpy.mockReturnValue(okAsync({ id: 123 }));
 
             const repository: GitRepository = {
                 id: 27,

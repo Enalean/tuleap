@@ -36,27 +36,34 @@ import {
 } from "./constants";
 
 type ResponseResult = ResultAsync<Response, Fault>;
-type JSONPayload = {
+type JSONResponsePayload = {
     readonly id: number;
     readonly value: string;
+};
+type JSONRequestPayload = {
+    readonly request_id: number;
+    readonly request_value: string;
 };
 type Parameters = {
     readonly [key: string]: string | number | boolean;
 };
 
 const ID = 521;
+const REQUEST_ID = 196;
 
 describe(`ResultFetcher`, () => {
     let success_response: Response,
         fetcher: FetchInterfaceStub,
-        json_payload: JSONPayload,
+        json_response_payload: JSONResponsePayload,
+        json_request_payload: JSONRequestPayload,
         params: Parameters;
     const uri = "https://example.com/result-fetcher-test/démo";
 
     beforeEach(() => {
         success_response = { ok: true } as unknown as Response;
         fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
-        json_payload = { id: ID, value: "headmaster" };
+        json_response_payload = { id: ID, value: "headmaster" };
+        json_request_payload = { request_id: REQUEST_ID, request_value: "Sphindus" };
         params = {
             quinonyl: "mem",
             "R&D": 91,
@@ -74,7 +81,7 @@ describe(`ResultFetcher`, () => {
         beforeEach(() => {
             const success_response_with_payload = {
                 ok: true,
-                json: () => Promise.resolve(json_payload),
+                json: () => Promise.resolve(json_response_payload),
             } as unknown as Response;
             fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response_with_payload);
         });
@@ -82,12 +89,12 @@ describe(`ResultFetcher`, () => {
         describe(`getJSON()`, () => {
             it(`will encode the given URI with the given parameters
                 and will return a ResultAsync with the decoded JSON from the Response body`, async () => {
-                const result = await getFetcher().getJSON<JSONPayload>(uri, { params });
+                const result = await getFetcher().getJSON<JSONResponsePayload>(uri, { params });
                 if (!result.isOk()) {
                     throw new Error("Expected an Ok");
                 }
 
-                expect(result.value).toBe(json_payload);
+                expect(result.value).toBe(json_response_payload);
                 expect(result.value.id).toBe(ID);
                 expect(fetcher.getRequestInfo(0)).toBe(
                     "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false"
@@ -107,6 +114,37 @@ describe(`ResultFetcher`, () => {
                 expect(fetcher.getRequestInfo(0)).toBe(
                     "https://example.com/result-fetcher-test/d%C3%A9mo"
                 );
+            });
+        });
+
+        describe(`postJSON()`, () => {
+            it(`will encode the given URI and stringify the given JSON payload and add the JSON Content-Type header
+                and will return a ResultAsync with the decoded JSON from the Response body,`, async () => {
+                const result = await getFetcher().postJSON<JSONResponsePayload>(
+                    uri,
+                    json_request_payload
+                );
+                if (!result.isOk()) {
+                    throw new Error("Expected an Ok");
+                }
+
+                expect(result.value).toBe(json_response_payload);
+                expect(result.value.id).toBe(ID);
+                expect(fetcher.getRequestInfo(0)).toBe(
+                    "https://example.com/result-fetcher-test/d%C3%A9mo"
+                );
+                const request_init = fetcher.getRequestInit(0);
+                if (request_init === undefined) {
+                    throw new Error("Expected request init to be defined");
+                }
+                expect(request_init.method).toBe(POST_METHOD);
+                expect(request_init.credentials).toBe("same-origin");
+
+                if (!(request_init.headers instanceof Headers)) {
+                    throw new Error("Expected headers to be set");
+                }
+                expect(request_init.headers.get("Content-Type")).toBe("application/json");
+                expect(request_init.body).toBe(`{"request_id":196,"request_value":"Sphindus"}`);
             });
         });
     });
@@ -145,18 +183,13 @@ describe(`ResultFetcher`, () => {
         it.each([
             [
                 "putJSON()",
-                (): ResponseResult => getFetcher().putJSON(uri, json_payload),
+                (): ResponseResult => getFetcher().putJSON(uri, json_request_payload),
                 PUT_METHOD,
             ],
             [
                 "patchJSON()",
-                (): ResponseResult => getFetcher().patchJSON(uri, json_payload),
+                (): ResponseResult => getFetcher().patchJSON(uri, json_request_payload),
                 PATCH_METHOD,
-            ],
-            [
-                "postJSON()",
-                (): ResponseResult => getFetcher().postJSON(uri, json_payload),
-                POST_METHOD,
             ],
         ])(
             `%s will encode the given URI and stringify the given JSON payload
@@ -186,7 +219,7 @@ describe(`ResultFetcher`, () => {
                     throw new Error("Expected headers to be set");
                 }
                 expect(request_init.headers.get("Content-Type")).toBe("application/json");
-                expect(request_init.body).toBe(`{"id":521,"value":"headmaster"}`);
+                expect(request_init.body).toBe(`{"request_id":196,"request_value":"Sphindus"}`);
             }
         );
 
