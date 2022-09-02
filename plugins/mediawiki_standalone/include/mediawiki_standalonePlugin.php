@@ -153,6 +153,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(ProjectStatusUpdate::NAME);
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::PROJECT_RENAME);
+        $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
 
         return parent::getHooksAndCallbacks();
     }
@@ -297,6 +298,16 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     {
         $injector = new MediawikiStandaloneResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
+     *
+     * @psalm-param array{allowed_services: string[]} $params
+     */
+    public function getServicesAllowedForRestricted(array &$params): void
+    {
+        $params['allowed_services'][] = $this->getServiceShortname();
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event): void
