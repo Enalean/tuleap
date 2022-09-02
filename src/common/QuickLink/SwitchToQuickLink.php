@@ -18,28 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\History;
+namespace Tuleap\QuickLink;
 
-class HistoryQuickLink
+/**
+ * @psalm-immutable
+ */
+final class SwitchToQuickLink
 {
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $url;
-    /**
-     * @var string
-     */
-    private $icon_name;
-
-    public function __construct($name, $url, string $icon_name)
+    public function __construct(private string $name, private string $url, private string $icon_name)
     {
-        $this->name      = $name;
-        $this->url       = $url;
-        $this->icon_name = $icon_name;
     }
 
     /**

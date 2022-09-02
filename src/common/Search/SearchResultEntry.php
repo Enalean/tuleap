@@ -20,16 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\REST\v1;
+namespace Tuleap\Search;
+
+use Tuleap\Glyph\Glyph;
+use Tuleap\QuickLink\SwitchToQuickLink;
 
 /**
  * @psalm-immutable
  */
-final class SearchQueryRepresentation
+final class SearchResultEntry
 {
     /**
-     * @var string {@min 3}
-     * @psalm-var non-empty-string
+     * @param SwitchToQuickLink[] $quick_links
      */
-    public string $keywords;
+    public function __construct(
+        public ?string $xref,
+        public string $link,
+        public string $title,
+        public string $color,
+        public ?Glyph $small_icon,
+        public ?Glyph $normal_icon,
+        public string $icon_name,
+        public \Project $project,
+        public array $quick_links,
+    ) {
+    }
 }

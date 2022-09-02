@@ -26,9 +26,12 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\FullTextSearchDB\Index\InsertItemIntoIndex;
+use Tuleap\FullTextSearchDB\Index\SearchIndexedItem;
+use Tuleap\FullTextSearchDB\Index\SearchResultPage;
+use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\ItemToIndex;
 
-final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex
+final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, SearchIndexedItem
 {
     public function indexItem(ItemToIndex $item): void
     {
@@ -74,5 +77,85 @@ final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex
         foreach ($item->metadata as $name => $value) {
             $this->getDB()->insert('plugin_fts_db_metadata', ['search_id' => $id, 'name' => $name, 'value' => $value]);
         }
+    }
+
+    public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
+    {
+        return $this->getDB()->tryFlatTransaction(
+            function () use ($keywords, $limit, $offset): SearchResultPage {
+                $match_statement = EasyStatement::open()->with('MATCH (plugin_fts_db_search.content) AGAINST(? IN NATURAL LANGUAGE MODE)', $keywords);
+
+                $nb_hits = $this->countSearchHits($match_statement);
+                if ($nb_hits === 0) {
+                    return SearchResultPage::noHits();
+                }
+
+                return SearchResultPage::page(
+                    $nb_hits,
+                    $this->searchMatchingResults($match_statement, $limit, $offset)
+                );
+            }
+        );
+    }
+
+    /**
+     * @psalm-return positive-int|0
+     */
+    private function countSearchHits(EasyStatement $match_statement): int
+    {
+        return $this->getDB()->single(
+            "SELECT COUNT(plugin_fts_db_search.id) FROM plugin_fts_db_search WHERE $match_statement",
+            $match_statement->values()
+        );
+    }
+
+    /**
+     * @return IndexedItemFound[]
+     */
+    private function searchMatchingResults(EasyStatement $match_statement, int $limit, int $offset): array
+    {
+        /** @psalm-var array{id: int, type: non-empty-string}[] $rows */
+        $rows = $this->getDB()->safeQuery(
+            "SELECT plugin_fts_db_search.id, plugin_fts_db_search.type
+                FROM plugin_fts_db_search
+                WHERE $match_statement
+                ORDER BY $match_statement DESC, plugin_fts_db_search.id DESC
+                LIMIT ? OFFSET ?",
+            array_merge($match_statement->values(), $match_statement->values(), [$limit, $offset])
+        );
+
+        $search_id_matches = array_map(
+            static fn (array $row): int => $row['id'],
+            $rows
+        );
+
+        $statement_metadata_filter = EasyStatement::open()->in(
+            'plugin_fts_db_metadata.search_id IN (?*)',
+            $search_id_matches,
+        );
+        /** @psalm-var array<int,array{name: non-empty-string, value: string}[]> $metadata_rows_by_id */
+        $metadata_rows_by_id = $this->getDB()->safeQuery(
+            "SELECT plugin_fts_db_metadata.search_id, plugin_fts_db_metadata.name, plugin_fts_db_metadata.value
+            FROM plugin_fts_db_metadata
+            WHERE $statement_metadata_filter",
+            $statement_metadata_filter->values(),
+            \PDO::FETCH_GROUP | \PDO::FETCH_ASSOC
+        );
+
+        $results = [];
+        foreach ($rows as $row) {
+            $metadata_key_value = [];
+            foreach (($metadata_rows_by_id[$row['id']] ?? []) as $metadata) {
+                $metadata_key_value[$metadata['name']] = $metadata['value'];
+            }
+
+            if (count($metadata_key_value) === 0) {
+                continue;
+            }
+
+            $results[] = new IndexedItemFound($row['type'], $metadata_key_value);
+        }
+
+        return $results;
     }
 }

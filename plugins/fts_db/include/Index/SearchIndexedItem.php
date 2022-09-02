@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\REST\v1;
+namespace Tuleap\FullTextSearchDB\Index;
 
-/**
- * @psalm-immutable
- */
-final class SearchQueryRepresentation
+interface SearchIndexedItem
 {
     /**
-     * @var string {@min 3}
-     * @psalm-var non-empty-string
+     * @psalm-param non-empty-string $keywords
+     * @psalm-param positive-int $limit
+     * @psalm-param positive-int|0 $offset
      */
-    public string $keywords;
+    public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage;
 }

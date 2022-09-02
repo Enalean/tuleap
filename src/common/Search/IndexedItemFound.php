@@ -20,16 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\REST\v1;
+namespace Tuleap\Search;
 
 /**
  * @psalm-immutable
  */
-final class SearchQueryRepresentation
+final class IndexedItemFound
 {
     /**
-     * @var string {@min 3}
-     * @psalm-var non-empty-string
+     * @param non-empty-array<non-empty-string,string> $metadata
      */
-    public string $keywords;
+    public function __construct(
+        public string $type,
+        public array $metadata,
+    ) {
+    }
 }

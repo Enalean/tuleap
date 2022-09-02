@@ -110,6 +110,7 @@ use Tuleap\Project\Service\PluginWithService;
 use Tuleap\Project\Service\ServiceDisabledCollector;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
@@ -117,8 +118,8 @@ use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
-use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
@@ -158,7 +159,6 @@ use Tuleap\Tracker\Workflow\PostAction\GetExternalSubFactoryByNameEvent;
 use Tuleap\Tracker\Workflow\PostAction\GetPostActionShortNameFromXmlTagNameEvent;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\User\History\HistoryEntryCollection;
-use Tuleap\User\History\HistoryQuickLink;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\ProvideCurrentUser;
 
@@ -250,7 +250,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
             $this->addHook(TrackerCrumbInContext::NAME);
-            $this->addHook(HistoryLinksCollection::NAME);
+            $this->addHook(SwitchToLinksCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(ProjectStatusUpdate::NAME);
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
@@ -1708,7 +1708,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         (new \Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
     }
 
-    public function getHistoryQuickLinkCollection(HistoryLinksCollection $collection): void
+    public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
     {
         $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($collection->getArtifact());
         if ($milestone === null) {
@@ -1728,7 +1728,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         $collection->setMainUri($first_pane->getUri());
         $collection->addQuickLink(
-            new HistoryQuickLink(
+            new SwitchToQuickLink(
                 dgettext('tuleap-agiledashboard', 'Milestone artifact'),
                 $collection->getArtifactUri(),
                 $collection->getArtifactIconName(),
@@ -1737,7 +1737,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
         foreach ($list_of_pane_info as $pane) {
             $collection->addQuickLink(
-                new HistoryQuickLink(
+                new SwitchToQuickLink(
                     $pane->getTitle(),
                     $pane->getUri(),
                     $pane->getIconName()

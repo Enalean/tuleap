@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\REST\v1;
+namespace Tuleap\QuickLink\REST\v1;
 
-use Tuleap\User\History\HistoryQuickLink;
+use Tuleap\QuickLink\SwitchToQuickLink;
 
 /**
  * @psalm-immutable
  */
-class UserHistoryQuickLinkRepresentation
+final class SwitchToQuickLinkRepresentation
 {
     /**
      * @var string Name of the quick link {@type string} {@required true}
@@ -47,7 +47,7 @@ class UserHistoryQuickLinkRepresentation
         $this->icon_name = $icon_name;
     }
 
-    public static function build(HistoryQuickLink $quick_link): self
+    public static function build(SwitchToQuickLink $quick_link): self
     {
         return new self(
             $quick_link->getName(),

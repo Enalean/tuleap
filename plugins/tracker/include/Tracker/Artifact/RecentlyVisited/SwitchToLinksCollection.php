@@ -23,14 +23,14 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\User\History\HistoryQuickLink;
+use Tuleap\QuickLink\SwitchToQuickLink;
 
-class HistoryLinksCollection implements Dispatchable
+class SwitchToLinksCollection implements Dispatchable
 {
-    public const NAME = 'getHistoryQuickLinkCollection';
+    public const NAME = 'getSwitchToQuickLinkCollection';
 
     /**
-     * @var HistoryQuickLink[]
+     * @var SwitchToQuickLink[]
      */
     private array $quick_links = [];
     private string $icon_name;
@@ -49,7 +49,7 @@ class HistoryLinksCollection implements Dispatchable
         return $this->quick_links;
     }
 
-    public function addQuickLink(HistoryQuickLink $link): void
+    public function addQuickLink(SwitchToQuickLink $link): void
     {
         $this->quick_links[] = $link;
     }

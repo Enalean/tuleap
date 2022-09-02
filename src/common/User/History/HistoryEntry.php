@@ -21,6 +21,7 @@
 namespace Tuleap\User\History;
 
 use Tuleap\Glyph\Glyph;
+use Tuleap\QuickLink\SwitchToQuickLink;
 
 class HistoryEntry
 {
@@ -53,7 +54,7 @@ class HistoryEntry
      */
     private $project;
     /**
-     * @var HistoryQuickLink[]
+     * @var SwitchToQuickLink[]
      */
     private $quick_links;
     /**
@@ -149,7 +150,7 @@ class HistoryEntry
     }
 
     /**
-     * @return HistoryQuickLink[]
+     * @return SwitchToQuickLink[]
      */
     public function getQuickLinks()
     {
