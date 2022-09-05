@@ -57,7 +57,7 @@ $day_date = "$year$mon$day";
 # LJ `wget -q -O $logfile http://cvs1/cvslogs/$year/$mon/cvs_traffic_$year$mon$day.log`;
 # LJ print `ls -la $logfile`;
 
-# LJ In the current version we get the pre-processed CVS log file on the 
+# LJ In the current version we get the pre-processed CVS log file on the
 # local machine (no separate CVS server
 
 $logfile = "$codendi_log/cvslogs/$year/$mon/cvs_traffic_$year$mon$day.log";
@@ -95,7 +95,7 @@ print "Parsing the information into the database...\n" if $verbose;
 open( LOGFILE, $logfile ) or die "Cannot open $logfile";
 
 # LJ Now that open was succesful make sure that we delete all the rows
-# in the group_cvs_full_history for that day so that his day is not 
+# in the group_cvs_full_history for that day so that his day is not
 # twice in the table in case of a rerun.
 #
 # Now that there exist a new column cvs_browse that is not filled by
@@ -109,36 +109,19 @@ while(<LOGFILE>) {
   ## (G|U|E)::proj_name::user_name::checkouts::commits::adds
   my ($type, $group, $user, $checkouts, $commits, $adds) = split( /::/, $_, 6 );
 	if ( $_ =~ /^G::/ ) {
-		
+
 		$group_id = $groups{$group};
 
 		if ( $group_id == 0 ) {
 			print STDERR "$_";
 			print STDERR "db_cvs_history.pl: bad unix_group_name \'$group\' \n";
 		}
-			
-		$sql = "INSERT INTO stats_project_build_tmp
-			(group_id,stat,value)
-			VALUES ('" . $group_id . "',"
-			. "'cvs_checkouts','" . $checkouts . "')";
-		$dbh->do( $sql );
-		$sql = "INSERT INTO stats_project_build_tmp
-			(group_id,stat,value)
-			VALUES ('" . $group_id . "',"
-			. "'cvs_commits','" . $commits . "')";
-		$dbh->do( $sql );
-
-		$sql = "INSERT INTO stats_project_build_tmp
-			(group_id,stat,value)
-			VALUES ('" . $group_id . "',"
-			. "'cvs_adds','" . $adds . "')";
-		$dbh->do( $sql );
 
         } elsif ( $_ =~ /^U::/ ) {
 
 	  # LJ It is a per user per group statistic so feed the
 	  # group_cvs_full_history table (Codendi specific)
-	  
+
 	  $group_id = $groups{$group};
 
 	  if ( $group_id == 0 ) {
@@ -185,15 +168,15 @@ print "Updating cvs_commits and cvs_adds in group_cvs_history...\n" if $verbose;
 $sql = "DELETE from group_cvs_history";
 $dbh->do($sql);
 
-$sql = "INSERT INTO group_cvs_history 
+$sql = "INSERT INTO group_cvs_history
              SELECT group_cvs_full_history.group_id ,
-                         user.user_name, 
+                         user.user_name,
                          SUM(cvs_commits) AS cvs_commits,
                          0 AS cvs_commits_wk,
                          SUM(cvs_adds) AS cvs_adds,
-                         0 AS cvs_adds_wk 
+                         0 AS cvs_adds_wk
             FROM group_cvs_full_history,user_group,user
-            WHERE user_group.user_id=group_cvs_full_history.user_id AND 
+            WHERE user_group.user_id=group_cvs_full_history.user_id AND
                        group_cvs_full_history.group_id=user_group.group_id AND
                        user.user_id=group_cvs_full_history.user_id
           GROUP BY group_cvs_full_history.group_id, group_cvs_full_history.user_id;";
@@ -201,7 +184,7 @@ $dbh->do($sql);
 
 # Now update the rows with weekly accounting. Since
 # MySQL does not support UPDATE from a table we have
-# to do it in a programmatic way and update one row 
+# to do it in a programmatic way and update one row
 # at a time.
 
 print "Updating cvs_commits_wk and cvs_adds_wk in group_cvs_history...\n" if $verbose;
@@ -211,7 +194,7 @@ my $time_marker = strftime("%Y%m%d", gmtime( time() - $nb_of_days_back*86400 ));
 $sql = "SELECT group_cvs_full_history.group_id,
                           user.user_name,
                           SUM(cvs_commits) AS commits_wk,
-                          SUM(cvs_adds) AS adds_wk 
+                          SUM(cvs_adds) AS adds_wk
               FROM group_cvs_full_history,user_group,user
               WHERE user_group.user_id=group_cvs_full_history.user_id AND
                          group_cvs_full_history.group_id=user_group.group_id AND

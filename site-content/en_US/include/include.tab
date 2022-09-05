@@ -181,10 +181,6 @@ include_project_home	no_public_proj	There are no public projects available
 include_project_home	wiki	Wiki
 include_project_home	nb_wiki_pages	<B>$1</B> pages
 include_project_home	cvs_repo	CVS Repository
-include_project_home	commits	<B>$1</B> commits
-include_project_home	adds	<B>$1</B> adds
-include_project_home	co	<B>$1</B> checkouts
-include_project_home	browse_cvs	Browse CVS
 include_project_home	svn_repo	Subversion Repository
 include_project_home	browse_svn	Browse Subversion
 include_project_home	accesses	<B>$1</B> accesses
