@@ -523,6 +523,13 @@ Provides: tuleap-plugin-textualreport
 
 %if %{with experimental}
 
+%package plugin-fts-db
+Summary: Full-Text search DB backend
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-fts-db
+%{summary}.
+
 %endif
 
 #
@@ -576,7 +583,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -600,6 +606,7 @@ done
 %endif
 %if %{with experimental}
 %else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -1494,6 +1501,10 @@ fi
 %endif
 
 %if %{with experimental}
+
+%files plugin-fts-db
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_db
 
 %endif
 
