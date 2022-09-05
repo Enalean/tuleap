@@ -603,8 +603,21 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $content     = $substitutor->substituteURLsInHTML($content, $url_mapping);
         }
 
-        return $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format) &&
+        $res = $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format) &&
                $this->extractCrossRefs($artifact, $content);
+
+        if ($res) {
+            (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+                $artifact,
+                $this,
+                Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
+                    $content,
+                    $body_format ?? Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+                ),
+            );
+        }
+
+        return $res;
     }
 
     private function getRightContent($value)

@@ -254,17 +254,19 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $formater->format($diff);
     }
 
-    public function getContentAsText()
+    public function getContentAsText(): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        if ($this->isInHTMLFormat()) {
-            return $hp->purify($this->getText(), CODENDI_PURIFIER_STRIP_HTML);
-        }
-        if ($this->format === self::COMMONMARK_CONTENT) {
-            return self::getCommonMarkInterpreter($hp)->getContentStrippedOfTags($this->getText());
-        }
+        return self::getContentHasTextFromRawInfo($this->getText(), $this->format);
+    }
 
-        return $this->getText();
+    public static function getContentHasTextFromRawInfo(string $content, string $format): string
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        return match ($format) {
+            self::HTML_CONTENT => $purifier->purify($content, CODENDI_PURIFIER_STRIP_HTML),
+            self::COMMONMARK_CONTENT => self::getCommonMarkInterpreter($purifier)->getContentStrippedOfTags($content),
+            default => $content
+        };
     }
 
     public function getTextWithReferences(int $group_id): string
