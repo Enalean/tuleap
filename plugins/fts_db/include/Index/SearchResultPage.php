@@ -20,16 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\REST\v1;
+namespace Tuleap\FullTextSearchDB\Index;
+
+use Tuleap\Search\IndexedItemFound;
 
 /**
  * @psalm-immutable
  */
-final class SearchQueryRepresentation
+final class SearchResultPage
 {
     /**
-     * @var string {@min 3}
-     * @psalm-var non-empty-string
+     * @psalm-param positive-int|0 $hits_total
+     * @param IndexedItemFound[] $page_found_items
      */
-    public string $keywords;
+    private function __construct(
+        public int $hits_total,
+        public array $page_found_items,
+    ) {
+    }
+
+    public static function noHits(): self
+    {
+        return new self(0, []);
+    }
+
+    /**
+     * @param positive-int $hits_total
+     * @param IndexedItemFound[] $page_found_items
+     */
+    public static function page(int $hits_total, array $page_found_items): self
+    {
+        return new self($hits_total, $page_found_items);
+    }
 }

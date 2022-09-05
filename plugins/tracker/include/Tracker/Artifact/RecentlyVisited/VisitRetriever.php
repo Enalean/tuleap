@@ -88,7 +88,7 @@ class VisitRetriever
                 continue;
             }
 
-            $collection = new HistoryLinksCollection($artifact, $entry_collection->getUser());
+            $collection = new SwitchToLinksCollection($artifact, $entry_collection->getUser());
             \EventManager::instance()->processEvent($collection);
             $tracker = $artifact->getTracker();
 
@@ -97,7 +97,7 @@ class VisitRetriever
                     $recently_visited_row['created_on'],
                     $collection->getXRef(),
                     $collection->getMainUri(),
-                    $artifact->getTitle(),
+                    $artifact->getTitle() ?? '',
                     $tracker->getColor()->getName(),
                     $this->glyph_finder->get('tuleap-tracker-small'),
                     $this->glyph_finder->get('tuleap-tracker'),

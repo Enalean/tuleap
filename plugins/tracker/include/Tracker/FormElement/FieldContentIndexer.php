@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class FieldContentIndexer
 {
-    private const INDEX_TYPE_FIELD_CONTENT = 'plugin_artifact_field';
+    public const INDEX_TYPE_FIELD_CONTENT = 'plugin_artifact_field';
 
     public function __construct(private EventDispatcherInterface $event_dispatcher)
     {

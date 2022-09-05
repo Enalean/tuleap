@@ -81,6 +81,7 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
+use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -345,6 +346,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(HistoryEntryCollection::NAME);
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
+        $this->addHook(IndexedItemFoundToSearchResult::NAME);
 
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
@@ -1702,6 +1704,19 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             new RecentlyVisitedDao()
         );
         $visit_cleaner->clearVisitedArtifacts($user);
+    }
+
+    public function convertIndexedItemToSearchResult(IndexedItemFoundToSearchResult $indexed_item_convertor): void
+    {
+        $event_dispatcher = EventManager::instance();
+        $retriever        = new \Tuleap\Tracker\Search\SearchResultRetriever(
+            $this->getArtifactFactory(),
+            $this->getTrackerFormElementFactory(),
+            $event_dispatcher,
+            new \Tuleap\Glyph\GlyphFinder($event_dispatcher)
+        );
+
+        $retriever->retrieveSearchResult($indexed_item_convertor);
     }
 
     public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)

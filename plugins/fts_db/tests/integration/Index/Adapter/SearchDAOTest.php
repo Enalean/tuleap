@@ -24,6 +24,8 @@ namespace Tuleap\FullTextSearchDB\Index\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
+use Tuleap\FullTextSearchDB\Index\SearchResultPage;
+use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\ItemToIndex;
 
 final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -64,5 +66,39 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
 
         self::assertEqualsCanonicalizing([['content' => 'content updated']], $result);
+    }
+
+    public function testSearchIndexedItems(): void
+    {
+        $this->dao->indexItem(new ItemToIndex('type A', 'content content A value', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItem(new ItemToIndex('type B', 'content B value', ['A' => 'A', 'B' => 'B2']));
+
+        $this->searchMostRelevantItem();
+        $this->searchMostRecentItemBetweenItemsWithEquivalentRelevance();
+        $this->searchForSomethingWithNoMatch();
+    }
+
+    private function searchMostRelevantItem(): void
+    {
+        self::assertEquals(
+            SearchResultPage::page(2, [new IndexedItemFound('type A', ['A' => 'A', 'B' => 'B'])]),
+            $this->dao->searchItems('content', 1, 0),
+        );
+    }
+
+    private function searchMostRecentItemBetweenItemsWithEquivalentRelevance(): void
+    {
+        self::assertEquals(
+            SearchResultPage::page(2, [new IndexedItemFound('type B', ['A' => 'A', 'B' => 'B2'])]),
+            $this->dao->searchItems('value', 1, 0),
+        );
+    }
+
+    private function searchForSomethingWithNoMatch(): void
+    {
+        self::assertEquals(
+            SearchResultPage::noHits(),
+            $this->dao->searchItems('donotexist', 50, 0)
+        );
     }
 }

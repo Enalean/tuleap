@@ -21,6 +21,7 @@
 namespace Tuleap\User\REST\v1;
 
 use Tuleap\Project\REST\MinimalProjectRepresentation;
+use Tuleap\QuickLink\REST\v1\SwitchToQuickLinkRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\History\HistoryEntry;
 
@@ -64,7 +65,7 @@ class UserHistoryEntryRepresentation
      */
     public $project;
     /**
-     * @var UserHistoryQuickLinkRepresentation[] Quick links to related information {@required true}
+     * @var SwitchToQuickLinkRepresentation[] Quick links to related information {@required true}
      */
     public $quick_links;
     /**
@@ -73,7 +74,7 @@ class UserHistoryEntryRepresentation
     public $icon_name;
 
     /**
-     * @param UserHistoryQuickLinkRepresentation[] $quick_links
+     * @param SwitchToQuickLinkRepresentation[] $quick_links
      */
     private function __construct(
         string $visit_time,
@@ -114,7 +115,7 @@ class UserHistoryEntryRepresentation
 
         $quick_links = [];
         foreach ($entry->getQuickLinks() as $quick_link) {
-            $quick_link_representation = UserHistoryQuickLinkRepresentation::build($quick_link);
+            $quick_link_representation = SwitchToQuickLinkRepresentation::build($quick_link);
             $quick_links[]             = $quick_link_representation;
         }
 
