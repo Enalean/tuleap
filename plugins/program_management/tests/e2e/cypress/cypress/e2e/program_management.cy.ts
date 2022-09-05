@@ -48,17 +48,15 @@ describe("Program management", () => {
     });
 });
 
-function createProjects(
-    program_project_name: string,
-    team_project_name: string,
-    other_team_project_name: string
-): void {
-    cy.log("Create team project");
+function createProject(team_project_name: string, is_team: boolean): void {
     cy.visit("/project/new");
     cy.get("[data-test=project-registration-SAFe-templates-tab]").click();
-    cy.get(
-        "[data-test=project-registration-card-label][for=project-registration-tuleap-template-program_management_team]"
-    ).click();
+
+    const team_or_program_selector = is_team
+        ? "project-registration-tuleap-template-program_management_team"
+        : "project-registration-tuleap-template-program_management_program";
+
+    cy.get(`[data-test=project-registration-card-label][for=${team_or_program_selector}]`).click();
     cy.get("[data-test=project-registration-next-button]").click();
 
     cy.get("[data-test=new-project-name]").type(team_project_name);
@@ -69,40 +67,19 @@ function createProjects(
     cy.get("[data-test=start-working]").click({
         timeout: 20000,
     });
+}
 
+function createProjects(
+    program_project_name: string,
+    team_project_name: string,
+    other_team_project_name: string
+): void {
+    cy.log("Create team project");
+    createProject(team_project_name, true);
     cy.log("Create program project");
-    cy.visit("/project/new");
-    cy.get("[data-test=project-registration-SAFe-templates-tab]").click();
-    cy.get(
-        "[data-test=project-registration-card-label][for=project-registration-tuleap-template-program_management_program]"
-    ).click();
-    cy.get("[data-test=project-registration-next-button]").click();
-
-    cy.get("[data-test=new-project-name]").type(program_project_name);
-    cy.get("[data-test=project-shortname-slugified-section]").click();
-    cy.get("[data-test=new-project-shortname]").type("{selectall}" + program_project_name);
-    cy.get("[data-test=approve_tos]").click();
-    cy.get("[data-test=project-registration-next-button]").click();
-    cy.get("[data-test=start-working]").click({
-        timeout: 20000,
-    });
-
+    createProject(program_project_name, false);
     cy.log("Create other team project");
-    cy.visit("/project/new");
-    cy.get("[data-test=project-registration-SAFe-templates-tab]").click();
-    cy.get(
-        "[data-test=project-registration-card-label][for=project-registration-tuleap-template-program_management_team]"
-    ).click();
-    cy.get("[data-test=project-registration-next-button]").click();
-
-    cy.get("[data-test=new-project-name]").type(other_team_project_name);
-    cy.get("[data-test=project-shortname-slugified-section]").click();
-    cy.get("[data-test=new-project-shortname]").type("{selectall}" + other_team_project_name);
-    cy.get("[data-test=approve_tos]").click();
-    cy.get("[data-test=project-registration-next-button]").click();
-    cy.get("[data-test=start-working]").click({
-        timeout: 20000,
-    });
+    createProject(other_team_project_name, true);
 }
 
 function configureProgram(program_project_name: string, team_project_name: string): void {
@@ -119,12 +96,6 @@ function configureProgram(program_project_name: string, team_project_name: strin
     cy.log("Check configuration is applied");
     cy.visitProjectService(program_project_name, "Program");
     cy.get("[data-test=create-program-increment-button]").contains("Create the first Bar").click();
-
-    cy.log("Create a program increment");
-    cy.get("[data-test=program_increment_name]").type("My first PI");
-    cy.get("[data-test=date-time-start_date]").type("2021-08-03");
-    cy.get("[data-test=date-time-end_date]").type("2021-10-03");
-    cy.get("[data-test=artifact-submit-button]").click();
 }
 
 function createAndLinkUserStory(
@@ -182,6 +153,12 @@ function planFeatureIntoProgramIncrement(
 }
 
 function createAndPlanFeature(program_project_name: string, team_project_name: string): void {
+    cy.log("Create a program increment");
+    cy.get("[data-test=program_increment_name]").type("My first PI");
+    cy.get("[data-test=date-time-start_date]").type("2021-08-03");
+    cy.get("[data-test=date-time-end_date]").type("2021-10-03");
+    cy.get("[data-test=artifact-submit-button]").click();
+
     cy.log("Create a feature");
     cy.visitProjectService(program_project_name, "Trackers");
     cy.get("[data-test=tracker-link-feature]").click();
@@ -259,8 +236,8 @@ function checkThatProgramAndTeamsAreCorrect(
         program_project_name
     );
 
-    checkPIExistsInReleases("My first PI");
-    checkMirrorIterationExistsInSprint("Iteration One");
+    checkPIExistsInReleases("My first PI", team_project_name);
+    checkMirrorIterationExistsInSprint("Iteration One", team_project_name);
 
     cy.log("Check that user story linked to feature has been planned in mirror program increment");
     cy.get("[data-test=go-to-top-backlog]").click();
@@ -268,38 +245,70 @@ function checkThatProgramAndTeamsAreCorrect(
     cy.get("[data-test=milestone-backlog-items]").contains("My US");
 }
 
-function checkPIExistsInReleases(expected_text: string, nb_attempts = 0): void {
-    const max_attempts = 10;
-    if (nb_attempts > max_attempts) {
-        throw new Error("Timed out while checking if mirror program increment has been created");
+const MAX_ATTEMPTS = 10;
+type ReloadCallback = () => void;
+type ConditionPredicate = (number_of_attempts: number) => PromiseLike<boolean>;
+
+function reloadUntilCondition(
+    reloadCallback: ReloadCallback,
+    conditionCallback: ConditionPredicate,
+    max_attempts_reached_message: string,
+    number_of_attempts = 0
+): PromiseLike<void> {
+    if (number_of_attempts > MAX_ATTEMPTS) {
+        throw new Error(max_attempts_reached_message);
     }
-    cy.log(
-        `Check that mirror program increment has been created (attempt ${nb_attempts}/${max_attempts})`
-    );
-    cy.get("[data-test=home-releases]").then((subject) => {
-        if (!subject.text().includes(expected_text)) {
-            // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(100);
-            checkPIExistsInReleases(expected_text, nb_attempts + 1);
+    return conditionCallback(number_of_attempts).then((is_condition_fulfilled) => {
+        if (is_condition_fulfilled) {
+            return Promise.resolve();
         }
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(100);
+        reloadCallback();
+        return reloadUntilCondition(
+            reloadCallback,
+            conditionCallback,
+            max_attempts_reached_message,
+            number_of_attempts + 1
+        );
     });
 }
 
-function checkMirrorIterationExistsInSprint(expected_text: string, nb_attempts = 0): void {
-    const max_attempts = 10;
-    if (nb_attempts > max_attempts) {
-        throw new Error("Timed out while checking if mirror iteration has been created");
-    }
-    cy.log(
-        `Check that mirror iteration ${expected_text} has been created (attempt ${nb_attempts}/${max_attempts})`
+function checkPIExistsInReleases(expected_text: string, team_project_name: string): void {
+    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
+    const conditionCallback: ConditionPredicate = (number_of_attempts) => {
+        cy.log(
+            `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${MAX_ATTEMPTS})`
+        );
+        return cy
+            .get("[data-test=home-releases]")
+            .then((home_releases) => home_releases.text().includes(expected_text));
+    };
+    reloadUntilCondition(
+        reloadCallback,
+        conditionCallback,
+        "Timed out while checking if mirror program increment has been created"
     );
-    cy.get("[data-test=home-sprint-title]").then((subject) => {
-        if (!subject.text().includes(expected_text)) {
-            // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(100);
-            checkMirrorIterationExistsInSprint(expected_text, nb_attempts + 1);
-        }
-    });
+}
+
+function checkMirrorIterationExistsInSprint(
+    expected_text: string,
+    team_project_name: string
+): void {
+    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Agile Dashboard");
+    const conditionCallback: ConditionPredicate = (number_of_attempts) => {
+        cy.log(
+            `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${MAX_ATTEMPTS})`
+        );
+        return cy
+            .get("[data-test=home-sprint-title]")
+            .then((home_sprints) => home_sprints.text().includes(expected_text));
+    };
+    reloadUntilCondition(
+        reloadCallback,
+        conditionCallback,
+        "Timed out while checking if mirror iteration has been created"
+    );
 }
 
 function updateProgramIncrementAndIteration(program_project_name: string): void {
@@ -323,8 +332,8 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     cy.log("Check that mirror program increment is synchronized");
     cy.visitProjectService(team_project_name, "Agile Dashboard");
 
-    checkPIExistsInReleases("My first PI updated");
-    checkMirrorIterationExistsInSprint("Iteration One updated");
+    checkPIExistsInReleases("My first PI updated", team_project_name);
+    checkMirrorIterationExistsInSprint("Iteration One updated", team_project_name);
 }
 
 function selectLabelInListPickerDropdown(
@@ -356,5 +365,5 @@ function linkANewTeamToProgram(
         program_project_name
     );
 
-    checkPIExistsInReleases("My first PI");
+    checkPIExistsInReleases("My first PI updated", other_team_project_name);
 }
