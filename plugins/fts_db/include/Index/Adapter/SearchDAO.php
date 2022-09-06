@@ -35,8 +35,14 @@ use Tuleap\Search\ItemToIndex;
 
 final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, SearchIndexedItem, DeleteIndexedItems
 {
+    private const DEFAULT_MIN_LENGTH_FOR_FTS = 3;
+
     public function indexItem(ItemToIndex $item): void
     {
+        if (mb_strlen(trim($item->content)) < self::DEFAULT_MIN_LENGTH_FOR_FTS) {
+            $this->deleteIndexedItems(new IndexedItemsToRemove($item->type, $item->metadata));
+            return;
+        }
         $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($item): void {
                 $existing_entries = $this->searchMatchingEntries($item);
