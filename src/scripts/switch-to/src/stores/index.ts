@@ -156,17 +156,9 @@ export const useSwitchToStore = defineStore("root", {
                 return;
             }
 
-            let focused_index = current_index + (key === "ArrowUp" ? -1 : 1);
+            const focused_index = current_index + (key === "ArrowUp" ? -1 : 1);
             const is_out_of_boundaries = typeof collection[focused_index] === "undefined";
             if (is_out_of_boundaries) {
-                if (focused_index >= collection.length) {
-                    focused_index = 0;
-                } else {
-                    focused_index = collection.length - 1;
-                }
-            }
-
-            if (current_index === focused_index) {
                 return;
             }
 
