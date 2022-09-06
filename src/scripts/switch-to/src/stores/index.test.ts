@@ -249,7 +249,7 @@ describe("Root store", () => {
                     expect(store.programmatically_focused_element).toStrictEqual(first_project);
                 });
 
-                it("goes around if the current is the first in the list", () => {
+                it("does nothing if the first project has already the focus", () => {
                     const first_project = {
                         project_uri: "/first",
                         project_name: "First",
@@ -262,7 +262,7 @@ describe("Root store", () => {
                     const store = useSwitchToStore();
                     store.$patch({
                         projects: [first_project, another_project],
-                        programmatically_focused_element: another_project,
+                        programmatically_focused_element: first_project,
                     });
 
                     store.changeFocusFromProject({
@@ -270,7 +270,7 @@ describe("Root store", () => {
                         key: "ArrowUp",
                     });
 
-                    expect(store.programmatically_focused_element).toStrictEqual(another_project);
+                    expect(store.programmatically_focused_element).toStrictEqual(first_project);
                 });
             });
 
@@ -338,7 +338,7 @@ describe("Root store", () => {
                     expect(store.programmatically_focused_element).toStrictEqual(another_project);
                 });
 
-                it("goes around if the current is the last in the list", () => {
+                it("does nothing if the last project has already the focus", () => {
                     const first_project = {
                         project_uri: "/first",
                         project_name: "First",
@@ -359,7 +359,7 @@ describe("Root store", () => {
                         key: "ArrowDown",
                     });
 
-                    expect(store.programmatically_focused_element).toStrictEqual(first_project);
+                    expect(store.programmatically_focused_element).toStrictEqual(another_project);
                 });
             });
         });
@@ -489,7 +489,7 @@ describe("Root store", () => {
                     expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                 });
 
-                it("goes around if the current is the first in the list", () => {
+                it("does nothing if the first recent item has already the focus", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
 
@@ -506,7 +506,7 @@ describe("Root store", () => {
                         key: "ArrowUp",
                     });
 
-                    expect(store.programmatically_focused_element).toStrictEqual(another_entry);
+                    expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                 });
             });
 
@@ -569,7 +569,7 @@ describe("Root store", () => {
                     expect(store.programmatically_focused_element).toStrictEqual(another_entry);
                 });
 
-                it("goes around if the current is the first in the list", () => {
+                it("does nothing if the last recent item has already the focus", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
 
@@ -586,7 +586,7 @@ describe("Root store", () => {
                         key: "ArrowDown",
                     });
 
-                    expect(store.programmatically_focused_element).toStrictEqual(first_entry);
+                    expect(store.programmatically_focused_element).toStrictEqual(another_entry);
                 });
             });
         });
