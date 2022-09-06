@@ -22,23 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
 use Tuleap\Queue\EnqueueTaskInterface;
 
 final class SiteAccessHandler
 {
     public function __construct(
-        private LocalSettingsInstantiator $local_settings_instantiator,
         private EnqueueTaskInterface $enqueue_task,
     ) {
     }
 
-    /**
-     * @param \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED $site_access
-     */
-    public function process(string $site_access): void
+    public function process(): void
     {
-        $this->local_settings_instantiator->instantiateLocalSettings($site_access);
         $this->enqueue_task->enqueue(LogUsersOutInstanceTask::logsOutUserOnAllInstances());
     }
 }

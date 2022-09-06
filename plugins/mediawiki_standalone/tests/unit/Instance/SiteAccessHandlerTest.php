@@ -22,10 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Instance;
 
-use Tuleap\MediawikiStandalone\Configuration\LocalSettingsInstantiator;
-use Tuleap\MediawikiStandalone\Configuration\LocalSettingsPersistStub;
-use Tuleap\MediawikiStandalone\Configuration\LocalSettingsRepresentationForTestBuilder;
-use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EnqueueTaskStub;
 
@@ -33,21 +29,14 @@ final class SiteAccessHandlerTest extends TestCase
 {
     public function testHandleSiteAccessChange(): void
     {
-        $enqueue_task             = new EnqueueTaskStub();
-        $local_settings_persistor = new LocalSettingsPersistStub();
+        $enqueue_task = new EnqueueTaskStub();
 
         $handler = new SiteAccessHandler(
-            new LocalSettingsInstantiator(
-                new LocalSettingsRepresentationForTestBuilder(),
-                $local_settings_persistor,
-                new DBTransactionExecutorPassthrough()
-            ),
             $enqueue_task
         );
 
-        $handler->process(\ForgeAccess::REGULAR);
+        $handler->process();
 
         self::assertEquals(LogUsersOutInstanceTask::logsOutUserOnAllInstances(), $enqueue_task->queue_task);
-        self::assertTrue($local_settings_persistor->has_persisted);
     }
 }

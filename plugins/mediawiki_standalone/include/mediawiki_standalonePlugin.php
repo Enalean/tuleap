@@ -248,9 +248,8 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
     public function siteAccessChange(array $params): void
     {
         (new \Tuleap\MediawikiStandalone\Instance\SiteAccessHandler(
-            $this->buildLocalSettingsInstantiator(),
             new EnqueueTask()
-        ))->process($params['new_value']);
+        ))->process();
     }
 
     public function projectStatusUpdate(ProjectStatusUpdate $event): void

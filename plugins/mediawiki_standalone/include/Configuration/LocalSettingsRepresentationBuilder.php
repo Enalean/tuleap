@@ -24,8 +24,5 @@ namespace Tuleap\MediawikiStandalone\Configuration;
 
 interface LocalSettingsRepresentationBuilder
 {
-    /**
-     * @param \ForgeAccess::ANONYMOUS|\ForgeAccess::REGULAR|\ForgeAccess::RESTRICTED $site_access
-     */
-    public function generateTuleapLocalSettingsRepresentation(string $site_access): LocalSettingsRepresentation;
+    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation;
 }
