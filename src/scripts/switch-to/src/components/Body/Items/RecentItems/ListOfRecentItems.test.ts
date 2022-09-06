@@ -19,16 +19,16 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
 import { createTestingPinia } from "@pinia/testing";
-import type { UserHistory, ItemEntry } from "../../../type";
+import type { UserHistory, ItemEntry } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { defineStore } from "pinia";
-import type { State } from "../../../stores/type";
+import type { State } from "../../../../stores/type";
 
 describe("ListOfRecentItems", () => {
     it("Displays an empty state", async () => {

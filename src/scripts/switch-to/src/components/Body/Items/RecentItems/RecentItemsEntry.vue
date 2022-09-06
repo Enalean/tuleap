@@ -68,9 +68,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import type { ItemEntry } from "../../../type";
-import { useSwitchToStore } from "../../../stores";
-import HighlightMatchingText from "../HighlightMatchingText.vue";
+import type { ItemEntry } from "../../../../type";
+import { useSwitchToStore } from "../../../../stores";
+import HighlightMatchingText from "../../HighlightMatchingText.vue";
 
 @Component({
     components: { HighlightMatchingText },

@@ -18,11 +18,11 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { QuickLink, ItemEntry } from "../../../type";
+import type { QuickLink, ItemEntry } from "../../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { useSwitchToStore } from "../../../stores";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { useSwitchToStore } from "../../../../stores";
+import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
 
 describe("RecentItemsEntry", () => {
     it("Displays a link with a cross ref", async () => {

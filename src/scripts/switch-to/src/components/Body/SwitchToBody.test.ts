@@ -22,10 +22,10 @@ import SwitchToBody from "./SwitchToBody.vue";
 import { createTestingPinia } from "@pinia/testing";
 import type { Project, UserHistory } from "../../type";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
-import ListOfRecentItems from "./RecentItems/ListOfRecentItems.vue";
+import ListOfRecentItems from "./Items/RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
-import SearchResults from "./SearchResults/SearchResults.vue";
+import SearchResults from "./Items/SearchResults/SearchResults.vue";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("SwitchToBody", () => {
