@@ -24,7 +24,7 @@ import { useFullTextStore } from "./fulltext";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import type { ItemEntry } from "../type";
+import type { ItemDefinition } from "../type";
 
 describe("FullText Store", () => {
     let cancelPendingQuery: jest.Mock;
@@ -57,8 +57,8 @@ describe("FullText Store", () => {
                     fulltext_search_url: "/search",
                     fulltext_search_is_available: true,
                     fulltext_search_results: {
-                        "/toto": { title: "toto", html_url: "/toto" } as ItemEntry,
-                        "/titi": { title: "titi", html_url: "/titi" } as ItemEntry,
+                        "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                        "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
                     },
                 });
 
@@ -155,7 +155,7 @@ describe("FullText Store", () => {
                         Promise.resolve([
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
-                        ] as ItemEntry[]),
+                        ] as ItemDefinition[]),
                 } as unknown as Response)
             );
 
@@ -166,8 +166,8 @@ describe("FullText Store", () => {
             expect(store.fulltext_search_is_loading).toBe(false);
             expect(store.fulltext_search_is_error).toBe(false);
             expect(store.fulltext_search_results).toStrictEqual({
-                "/toto": { title: "toto", html_url: "/toto" } as ItemEntry,
-                "/titi": { title: "titi", html_url: "/titi" } as ItemEntry,
+                "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
             });
         });
 
@@ -186,7 +186,7 @@ describe("FullText Store", () => {
                         Promise.resolve([
                             { title: "titi", html_url: "/titi" },
                             { title: "titi", html_url: "/titi" },
-                        ] as ItemEntry[]),
+                        ] as ItemDefinition[]),
                 } as unknown as Response)
             );
 
@@ -197,7 +197,7 @@ describe("FullText Store", () => {
             expect(store.fulltext_search_is_loading).toBe(false);
             expect(store.fulltext_search_is_error).toBe(false);
             expect(store.fulltext_search_results).toStrictEqual({
-                "/titi": { title: "titi", html_url: "/titi" } as ItemEntry,
+                "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
             });
         });
 
@@ -213,7 +213,7 @@ describe("FullText Store", () => {
             post_spy.mockReturnValue(
                 okAsync({
                     json: () =>
-                        Promise.resolve([{ title: "toto" }, { title: "titi" }] as ItemEntry[]),
+                        Promise.resolve([{ title: "toto" }, { title: "titi" }] as ItemDefinition[]),
                 } as unknown as Response)
             );
 

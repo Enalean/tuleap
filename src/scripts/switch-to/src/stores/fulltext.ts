@@ -24,7 +24,7 @@ import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { ref } from "vue";
 import { delayedQuerier } from "../helpers/delayed-querier";
 import type { Fault } from "@tuleap/fault";
-import type { ItemEntry } from "../type";
+import type { ItemDefinition } from "../type";
 
 export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
@@ -59,9 +59,9 @@ export const useFullTextStore = defineStore("fulltext", () => {
                     keywords,
                 },
             })
-                .andThen((response) => decodeJSON<ItemEntry[]>(response))
+                .andThen((response) => decodeJSON<ItemDefinition[]>(response))
                 .match(
-                    (results: ItemEntry[]): void => {
+                    (results: ItemDefinition[]): void => {
                         fulltext_search_results.value = deduplicate(results);
                         fulltext_search_is_loading.value = false;
                     },
@@ -77,11 +77,11 @@ export const useFullTextStore = defineStore("fulltext", () => {
         );
     }
 
-    function deduplicate(results: ItemEntry[]): FullTextState["fulltext_search_results"] {
+    function deduplicate(results: ItemDefinition[]): FullTextState["fulltext_search_results"] {
         return results.reduce(
             (
                 deduplicated_entries: FullTextState["fulltext_search_results"],
-                entry: ItemEntry
+                entry: ItemDefinition
             ): FullTextState["fulltext_search_results"] => {
                 if (typeof deduplicated_entries[entry.html_url] === "undefined") {
                     deduplicated_entries[entry.html_url] = entry;

@@ -55,7 +55,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ProjectLink from "./ProjectLink.vue";
-import type { Project, ItemEntry } from "../../../type";
+import type { Project, ItemDefinition } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 import { useSwitchToStore } from "../../../stores";
@@ -72,7 +72,7 @@ export default class ListOfProjects extends Vue {
         return useSwitchToStore().filtered_projects;
     }
 
-    get programmatically_focused_element(): Project | ItemEntry | null {
+    get programmatically_focused_element(): Project | ItemDefinition | null {
         return useSwitchToStore().programmatically_focused_element;
     }
 
