@@ -49,4 +49,28 @@ class FieldContentIndexer
             )
         );
     }
+
+    public function askForDeletionOfIndexedFieldsFromProject(\Project $project): void
+    {
+        $this->event_dispatcher->dispatch(
+            new \Tuleap\Search\IndexedItemsToRemove(
+                self::INDEX_TYPE_FIELD_CONTENT,
+                [
+                    'project_id'  => (string) $project->getID(),
+                ]
+            )
+        );
+    }
+
+    public function askForDeletionOfIndexedFieldsFromArtifact(Artifact $artifact): void
+    {
+        $this->event_dispatcher->dispatch(
+            new \Tuleap\Search\IndexedItemsToRemove(
+                self::INDEX_TYPE_FIELD_CONTENT,
+                [
+                    'artifact_id'  => (string) $artifact->getId(),
+                ]
+            )
+        );
+    }
 }

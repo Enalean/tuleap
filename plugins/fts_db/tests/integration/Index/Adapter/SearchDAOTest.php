@@ -26,6 +26,7 @@ use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DBFactory;
 use Tuleap\FullTextSearchDB\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
+use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
 final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -100,5 +101,30 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
             SearchResultPage::noHits(),
             $this->dao->searchItems('donotexist', 50, 0)
         );
+    }
+
+    public function testItemsRemoval(): void
+    {
+        $this->dao->indexItem(new ItemToIndex('type', 'content', ['A' => 'A']));
+
+        // Type does not match, nothing should be deleted
+        $this->dao->deleteIndexedItems(new IndexedItemsToRemove('anothertype', ['A' => 'A', 'B' => 'B']));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
+
+        // No metadata match, nothing should be deleted
+        $this->dao->deleteIndexedItems(new IndexedItemsToRemove('type', ['A' => 'A2']));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
+
+        // No all metadata match, nothing should be deleted
+        $this->dao->deleteIndexedItems(new IndexedItemsToRemove('type', ['A' => 'A', 'B' => 'B1']));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
+
+        // Type and metadata match, entry should be deleted
+        $this->dao->deleteIndexedItems(new IndexedItemsToRemove('type', ['A' => 'A']));
+        self::assertEquals(0, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
+        self::assertEquals(0, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
     }
 }

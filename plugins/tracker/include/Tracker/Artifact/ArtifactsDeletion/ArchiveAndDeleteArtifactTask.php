@@ -27,6 +27,7 @@ use Tuleap\DB\DBConnection;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 class ArchiveAndDeleteArtifactTask
 {
@@ -54,6 +55,7 @@ class ArchiveAndDeleteArtifactTask
     public function __construct(
         ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter,
         ArtifactDependenciesDeletor $dependencies_deletor,
+        private FieldContentIndexer $field_content_indexer,
         EventManager $event_manager,
         DBConnection $db_connection,
         LoggerInterface $logger,
@@ -69,6 +71,7 @@ class ArchiveAndDeleteArtifactTask
     {
         $this->tryToArchiveArtifact($artifact, $user);
         $this->dependencies_deletor->cleanDependencies($artifact);
+        $this->field_content_indexer->askForDeletionOfIndexedFieldsFromArtifact($artifact);
     }
 
     private function tryToArchiveArtifact(Artifact $artifact, PFUser $user): void

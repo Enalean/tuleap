@@ -48,6 +48,7 @@ use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
@@ -124,6 +125,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao()
             ),
+            new FieldContentIndexer($event_manager),
             $event_manager,
             DBFactory::getMainTuleapDBConnection(),
             $logger

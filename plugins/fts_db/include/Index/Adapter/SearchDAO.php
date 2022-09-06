@@ -25,13 +25,15 @@ namespace Tuleap\FullTextSearchDB\Index\Adapter;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\FullTextSearchDB\Index\DeleteIndexedItems;
 use Tuleap\FullTextSearchDB\Index\InsertItemIntoIndex;
 use Tuleap\FullTextSearchDB\Index\SearchIndexedItem;
 use Tuleap\FullTextSearchDB\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
+use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
-final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, SearchIndexedItem
+final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, SearchIndexedItem, DeleteIndexedItems
 {
     public function indexItem(ItemToIndex $item): void
     {
@@ -55,15 +57,7 @@ final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, S
      */
     private function searchMatchingEntries(ItemToIndex $item_to_index): array
     {
-        $metadata_statement_filter = EasyStatement::open();
-
-        foreach ($item_to_index->metadata as $name => $value) {
-            $metadata_statement_filter->andWith(
-                'id IN (SELECT search_id FROM plugin_fts_db_metadata WHERE name = ? AND value = ?)',
-                $name,
-                $value
-            );
-        }
+        $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item_to_index->metadata);
 
         return $this->getDB()->safeQuery(
             "SELECT id FROM plugin_fts_db_search WHERE type=? AND $metadata_statement_filter",
@@ -157,5 +151,36 @@ final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, S
         }
 
         return $results;
+    }
+
+    public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
+    {
+        $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($items_to_remove->metadata);
+
+        $this->getDB()->safeQuery(
+            "DELETE plugin_fts_db_search, plugin_fts_db_metadata
+                    FROM plugin_fts_db_search
+                    JOIN plugin_fts_db_metadata ON (plugin_fts_db_metadata.search_id = plugin_fts_db_search.id)
+                    WHERE type=? AND $metadata_statement_filter",
+            array_merge([$items_to_remove->type], $metadata_statement_filter->values())
+        );
+    }
+
+    /**
+     * @param non-empty-array<non-empty-string,string> $metadata
+     */
+    private function getFilterSearchIDFromMetadata(array $metadata): EasyStatement
+    {
+        $metadata_statement_filter = EasyStatement::open();
+
+        foreach ($metadata as $name => $value) {
+            $metadata_statement_filter->andWith(
+                'plugin_fts_db_search.id IN (SELECT search_id FROM plugin_fts_db_metadata WHERE name = ? AND value = ?)',
+                $name,
+                $value
+            );
+        }
+
+        return $metadata_statement_filter;
     }
 }
