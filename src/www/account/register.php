@@ -36,8 +36,6 @@ $request               = HTTPRequest::instance();
 $page                  = $request->get('page');
 $confirmation_register = false;
 
-$GLOBALS['Language']->loadLanguage($request->getCurrentUser()->getLocale());
-
 // ###### function register_valid()
 // ###### checks for valid register from form post
 if ($page == "admin_creation") {
@@ -338,7 +336,7 @@ if ($request->isPost() && $request->exist('Register')) {
                     );
                 }
                 $presenter       = new MailPresenterFactory();
-                $email_presenter = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
+                $email_presenter = $presenter->createMailAccountPresenter($request->getCurrentUser(), $user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
             }
 
             $title = _('Your account is created, </br>it now needs to be activated.');
@@ -365,7 +363,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $redirect_url     = '/';
             $redirect_content = _('Go to the home page');
             $presenter        = new MailPresenterFactory();
-            $email_presenter  = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
+            $email_presenter  = $presenter->createMailAccountPresenter($request->getCurrentUser(), $user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,
