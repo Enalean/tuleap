@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,25 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\MediawikiStandalone\Configuration;
+namespace Tuleap\MediawikiStandalone\Instance;
 
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 
-final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
+final class MediaWikiCentralDatabaseParameterGeneratorStub implements MediaWikiCentralDatabaseParameterGenerator
 {
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    public ?string $central_database = null;
+
+    public function getCentralDatabase(): ?string
     {
-        return new LocalSettingsRepresentation(
-            new ConcealedString('random_value'),
-            'https://example.com',
-            'tlp-client-id-test',
-            new ConcealedString('tlp-client-secret'),
-            'en_US',
-            null,
-        );
+        return $this->central_database;
     }
 }

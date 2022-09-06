@@ -20,3 +20,7 @@ $GLOBALS['wgHooks']['GetPreferences'][] = function ($user, array &$preferences):
         }
     );
 };
+
+{{# central_database }}
+$GLOBALS['wgTuleapFarmConfig']['centralDb'] = {{ central_database }};
+{{/ central_database }}

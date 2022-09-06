@@ -30,6 +30,7 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
     public function __construct(
         private MediaWikiOAuth2AppSecretGenerator $oauth2_app_generator,
         private MediaWikiSharedSecretGenerator $shared_secret_generator,
+        private MediaWikiCentralDatabaseParameterGenerator $central_database_parameter,
     ) {
     }
 
@@ -43,6 +44,7 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
             ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),
             $oauth2_secret->getSecret(),
             \ForgeConfig::get('sys_supported_languages', 'en_US'),
+            $this->central_database_parameter->getCentralDatabase(),
         );
     }
 }
