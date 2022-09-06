@@ -43,13 +43,13 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useSwitchToStore } from "../../../stores";
-import { useFullTextStore } from "../../../stores/fulltext";
+import { useSwitchToStore } from "../../../../stores";
+import { useFullTextStore } from "../../../../stores/fulltext";
 import SearchResultsError from "./SearchResultsError.vue";
 import SearchResultsEmpty from "./SearchResultsEmpty.vue";
 import SearchResultsList from "./SearchResultsList.vue";
 import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
-import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../stores/type";
+import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
 
 const root_store = useSwitchToStore();
 const fulltext_store = useFullTextStore();

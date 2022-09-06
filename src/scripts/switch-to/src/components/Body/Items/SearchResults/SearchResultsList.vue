@@ -19,21 +19,19 @@
   -->
 
 <template>
-    <p class="tlp-text-muted">
-        {{ message }}
-    </p>
+    <ul>
+        <li v-for="(item, key) of results" v-bind:key="key">
+            <highlight-matching-text>{{ item.title }}</highlight-matching-text>
+        </li>
+    </ul>
 </template>
 
 <script setup lang="ts">
-import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../stores/type";
+import { useFullTextStore } from "../../../../stores/fulltext";
 import { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import HighlightMatchingText from "../../HighlightMatchingText.vue";
+import type { ItemEntry } from "../../../../type";
 
-const { $gettext, interpolate } = useGettext();
-
-const message = computed((): string => {
-    return interpolate($gettext("Please enter more than %{ n } characters."), {
-        n: FULLTEXT_MINIMUM_LENGTH_FOR_QUERY,
-    });
-});
+const fulltext_store = useFullTextStore();
+const results = computed((): ItemEntry[] => fulltext_store.fulltext_search_results);
 </script>

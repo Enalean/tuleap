@@ -60,9 +60,9 @@ import { Component } from "vue-property-decorator";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
-import type { UserHistory, ItemEntry } from "../../../type";
+import type { UserHistory, ItemEntry } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
-import { useSwitchToStore } from "../../../stores";
+import { useSwitchToStore } from "../../../../stores";
 
 @Component({
     components: {

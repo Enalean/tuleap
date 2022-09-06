@@ -23,12 +23,12 @@ import SearchResultsError from "./SearchResultsError.vue";
 import SearchResultsEmpty from "./SearchResultsEmpty.vue";
 import SearchResultsList from "./SearchResultsList.vue";
 import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
-import type { Project, UserHistory, ItemEntry } from "../../../type";
-import type { FullTextState } from "../../../stores/type";
-import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../stores/type";
+import type { Project, UserHistory, ItemEntry } from "../../../../type";
+import type { FullTextState } from "../../../../stores/type";
+import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
 
 describe("SearchResults", () => {
     describe("FullText search available", () => {
