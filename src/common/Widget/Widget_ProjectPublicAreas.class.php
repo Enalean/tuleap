@@ -113,27 +113,6 @@ class Widget_ProjectPublicAreas extends Widget
             $html .= '<p><a href="' . $purifier->purify($cvs_service->getUrl()) . '">';
             $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($cvs_service->getIcon()) . '"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
-            // LJ Cvs checkouts added
-            $sql            = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='" . db_ei($group_id) . "'";
-            $result         = db_query($sql);
-            $cvs_commit_num = db_result($result, 0, 0);
-            $cvs_add_num    = db_result($result, 0, 1);
-            $cvs_co_num     = db_result($result, 0, 2);
-            if (! $cvs_commit_num) {
-                $cvs_commit_num = 0;
-            }
-            if (! $cvs_add_num) {
-                $cvs_add_num = 0;
-            }
-            if (! $cvs_co_num) {
-                $cvs_co_num = 0;
-            }
-            $uri = session_make_url('/cvs/viewvc.php/?root=' . urlencode($project->getUnixName(false)) . '&roottype=cvs');
-
-            $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'commits', $cvs_commit_num) . ', ' . $GLOBALS['Language']->getText('include_project_home', 'adds', $cvs_add_num) . ', ' . $GLOBALS['Language']->getText('include_project_home', 'co', $cvs_co_num) . ' )';
-            if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
-                $html .= '<br> &nbsp; - <a href="' . $purifier->purify($uri) . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_cvs') . '</a>';
-            }
             $html .= '</p>';
         }
 
