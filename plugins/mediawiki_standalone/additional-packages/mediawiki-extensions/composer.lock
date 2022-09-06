@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "467b901492e47be62df83a0eb0086dab",
+    "content-hash": "112a137c0508718d04acd215bc421f10",
     "packages": [
         {
             "name": "composer/installers",
@@ -329,12 +329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration.git",
-                "reference": "48b33e02401d9dfca981eba1b0af023c391fc5bb"
+                "reference": "5fb4d50edc153d9cc9f30c1a783f364830043ee7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/48b33e02401d9dfca981eba1b0af023c391fc5bb",
-                "reference": "48b33e02401d9dfca981eba1b0af023c391fc5bb",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapIntegration/zipball/5fb4d50edc153d9cc9f30c1a783f364830043ee7",
+                "reference": "5fb4d50edc153d9cc9f30c1a783f364830043ee7",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
             "support": {
                 "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapIntegration/tree/master"
             },
-            "time": "2022-07-11T07:50:47+00:00"
+            "time": "2022-09-06T06:33:37+00:00"
         },
         {
             "name": "mediawiki/tuleap-skin",
@@ -385,12 +385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "b3f3a23781ca299c1fa59d44986b70d7f64f7b3f"
+                "reference": "495010c37a23e1e199dc4e99382d82d8849f21fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/b3f3a23781ca299c1fa59d44986b70d7f64f7b3f",
-                "reference": "b3f3a23781ca299c1fa59d44986b70d7f64f7b3f",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/495010c37a23e1e199dc4e99382d82d8849f21fe",
+                "reference": "495010c37a23e1e199dc4e99382d82d8849f21fe",
                 "shasum": ""
             },
             "require": {
@@ -426,9 +426,9 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/master"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/REL1_39"
             },
-            "time": "2022-07-15T12:54:44+00:00"
+            "time": "2022-08-29T07:18:49+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
@@ -436,12 +436,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm.git",
-                "reference": "7e83f9793d60e8fa8dc185ef98d506ebf5b37e7d"
+                "reference": "a69cc31265d0797be82a635581b190604a3d5e75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/7e83f9793d60e8fa8dc185ef98d506ebf5b37e7d",
-                "reference": "7e83f9793d60e8fa8dc185ef98d506ebf5b37e7d",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-extensions-TuleapWikiFarm/zipball/a69cc31265d0797be82a635581b190604a3d5e75",
+                "reference": "a69cc31265d0797be82a635581b190604a3d5e75",
                 "shasum": ""
             },
             "require": {
@@ -480,9 +480,9 @@
                 ]
             },
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/master"
+                "source": "https://github.com/wikimedia/mediawiki-extensions-TuleapWikiFarm/tree/REL1_39"
             },
-            "time": "2022-07-18T07:09:31+00:00"
+            "time": "2022-08-25T06:27:16+00:00"
         },
         {
             "name": "mwstake/mediawiki-component-thirdpartyresources",
@@ -778,16 +778,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.8",
+            "version": "v5.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3"
+                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
-                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
+                "url": "https://api.github.com/repos/symfony/process/zipball/6e75fe6874cbc7e4773d049616ab450eff537bf1",
+                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1",
                 "shasum": ""
             },
             "require": {
@@ -820,7 +820,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.8"
+                "source": "https://github.com/symfony/process/tree/v5.4.11"
             },
             "funding": [
                 {
@@ -836,7 +836,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-08T05:07:18+00:00"
+            "time": "2022-06-27T16:58:25+00:00"
         }
     ],
     "packages-dev": [],
