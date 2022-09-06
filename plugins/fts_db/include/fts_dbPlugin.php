@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
+use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -55,6 +56,7 @@ final class fts_dbPlugin extends Plugin
     {
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(ItemToIndex::NAME);
+        $this->addHook(IndexedItemsToRemove::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -71,5 +73,10 @@ final class fts_dbPlugin extends Plugin
     public function indexItem(ItemToIndex $item): void
     {
         (new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())->indexItem($item);
+    }
+
+    public function removeIndexedItems(IndexedItemsToRemove $items_to_remove): void
+    {
+        (new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())->deleteIndexedItems($items_to_remove);
     }
 }

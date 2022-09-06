@@ -24,7 +24,9 @@ namespace Tuleap\Tracker\FormElement;
 
 use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -67,5 +69,49 @@ final class FieldContentIndexerTest extends TestCase
         );
 
         self::assertEquals(1, $event_dispatcher->getCallCount());
+    }
+
+    public function testAskForDeletionFromAProject(): void
+    {
+        $event_dispatcher = EventDispatcherStub::withCallback(
+            static function (IndexedItemsToRemove $items_to_remove): IndexedItemsToRemove {
+                self::assertEquals(
+                    new IndexedItemsToRemove(
+                        'plugin_artifact_field',
+                        [
+                            'project_id'  => '4',
+                        ]
+                    ),
+                    $items_to_remove
+                );
+                return $items_to_remove;
+            }
+        );
+
+        $indexer = new FieldContentIndexer($event_dispatcher);
+
+        $indexer->askForDeletionOfIndexedFieldsFromProject(ProjectTestBuilder::aProject()->withId(4)->build());
+    }
+
+    public function testAskForDeletionFromAnArtifact(): void
+    {
+        $event_dispatcher = EventDispatcherStub::withCallback(
+            static function (IndexedItemsToRemove $items_to_remove): IndexedItemsToRemove {
+                self::assertEquals(
+                    new IndexedItemsToRemove(
+                        'plugin_artifact_field',
+                        [
+                            'artifact_id'  => '77',
+                        ]
+                    ),
+                    $items_to_remove
+                );
+                return $items_to_remove;
+            }
+        );
+
+        $indexer = new FieldContentIndexer($event_dispatcher);
+
+        $indexer->askForDeletionOfIndexedFieldsFromArtifact(new Artifact(77, 3, 0, 0, true));
     }
 }

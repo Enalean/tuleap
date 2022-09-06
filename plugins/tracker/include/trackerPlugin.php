@@ -183,6 +183,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadCanceler;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
@@ -1064,10 +1065,12 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public function projectStatusUpdate(ProjectStatusUpdate $event): void
     {
         if ($event->status === \Project::STATUS_DELETED) {
-            EventManager::instance()->processEvent(new ProjectDeletionEvent($event->project->getID()));
+            $event_manager = EventManager::instance();
+            $event_manager->processEvent(new ProjectDeletionEvent($event->project->getID()));
 
             $tracker_manager = new TrackerManager();
             $tracker_manager->deleteProjectTrackers((int) $event->project->getID());
+            (new FieldContentIndexer($event_manager))->askForDeletionOfIndexedFieldsFromProject($event->project);
         }
     }
 
