@@ -30,12 +30,6 @@
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import RecentItemsEmptyStateSvg from "./RecentItemsEmptyStateSvg.vue";
-@Component({
-    components: { RecentItemsEmptyStateSvg },
-})
-export default class RecentItemsEmptyState extends Vue {}
 </script>

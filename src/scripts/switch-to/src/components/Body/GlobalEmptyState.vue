@@ -32,23 +32,12 @@
         <trove-cat-link
             class="tlp-button-secondary switch-to-projects-softwaremap-empty-state empty-state-action"
         >
-            {{ trove_cat_label }}
+            {{ $gettext("Start exploring Tuleap") }}
         </trove-cat-link>
     </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import GlobalEmptyStateSvg from "./GlobalEmptyStateSvg.vue";
 import TroveCatLink from "./TroveCatLink.vue";
-
-@Component({
-    components: { TroveCatLink, GlobalEmptyStateSvg },
-})
-export default class GlobalEmptyState extends Vue {
-    get trove_cat_label(): string {
-        return this.$gettext("Start exploring Tuleap");
-    }
-}
 </script>
