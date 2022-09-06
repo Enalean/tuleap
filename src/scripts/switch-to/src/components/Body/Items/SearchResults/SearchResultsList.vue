@@ -19,19 +19,28 @@
   -->
 
 <template>
-    <ul>
-        <li v-for="(item, key) of results" v-bind:key="key">
-            <highlight-matching-text>{{ item.title }}</highlight-matching-text>
-        </li>
-    </ul>
+    <div class="switch-to-search-results-list">
+        <item-entry
+            v-for="(item, key) of results"
+            v-bind:key="key"
+            v-bind:entry="item"
+            v-bind:has_programmatically_focus="item === programmatically_focused_element"
+            v-bind:change-focus-callback="() => {}"
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
 import { useFullTextStore } from "../../../../stores/fulltext";
 import { computed } from "vue";
-import HighlightMatchingText from "../../HighlightMatchingText.vue";
-import type { ItemEntry } from "../../../../type";
+import type { ItemDefinition } from "../../../../type";
+import ItemEntry from "../ItemEntry.vue";
+import { useSwitchToStore } from "../../../../stores";
+import { storeToRefs } from "pinia";
 
 const fulltext_store = useFullTextStore();
-const results = computed((): ItemEntry[] => fulltext_store.fulltext_search_results);
+const results = computed((): ItemDefinition[] => fulltext_store.fulltext_search_results);
+
+const root_store = useSwitchToStore();
+const { programmatically_focused_element } = storeToRefs(root_store);
 </script>

@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FocusFromHistoryPayload, FocusFromProjectPayload, State } from "./type";
+import type { FocusFromItemPayload, FocusFromProjectPayload, State } from "./type";
 import { defineStore } from "pinia";
 import { get } from "@tuleap/tlp-fetch";
-import type { Project, UserHistory, ItemEntry } from "../type";
+import type { Project, UserHistory, ItemDefinition } from "../type";
 import { isMatchingFilterValue } from "../helpers/is-matching-filter-value";
 import { useFullTextStore } from "./fulltext";
 
@@ -46,7 +46,10 @@ export const useSwitchToStore = defineStore("root", {
         filtered_history(): UserHistory {
             return {
                 entries: this.history.entries.reduce(
-                    (matching_entries: ItemEntry[], entry: ItemEntry): ItemEntry[] => {
+                    (
+                        matching_entries: ItemDefinition[],
+                        entry: ItemDefinition
+                    ): ItemDefinition[] => {
                         if (isMatchingFilterValue(entry.title, this.filter_value)) {
                             matching_entries.push(entry);
                         } else if (isMatchingFilterValue(entry.xref, this.filter_value)) {
@@ -120,7 +123,7 @@ export const useSwitchToStore = defineStore("root", {
             );
         },
 
-        changeFocusFromHistory(payload: FocusFromHistoryPayload): void {
+        changeFocusFromHistory(payload: FocusFromItemPayload): void {
             if (payload.key === "ArrowRight") {
                 return;
             }
@@ -138,14 +141,14 @@ export const useSwitchToStore = defineStore("root", {
             this.navigateInCollection(
                 this.filtered_history.entries,
                 this.filtered_history.entries.findIndex(
-                    (entry: ItemEntry) => entry.html_url === payload.entry.html_url
+                    (entry: ItemDefinition) => entry.html_url === payload.entry.html_url
                 ),
                 payload.key
             );
         },
 
         navigateInCollection(
-            collection: ItemEntry[] | Project[],
+            collection: ItemDefinition[] | Project[],
             current_index: number,
             key: "ArrowUp" | "ArrowDown"
         ): void {

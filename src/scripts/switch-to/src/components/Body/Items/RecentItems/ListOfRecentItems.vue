@@ -37,11 +37,12 @@
                 aria-labelledby="switch-to-modal-recent-items-title"
                 v-if="has_filtered_history"
             >
-                <recent-items-entry
+                <item-entry
                     v-for="entry of filtered_history.entries"
                     v-bind:key="entry.html_url"
                     v-bind:entry="entry"
                     v-bind:has_programmatically_focus="hasProgrammaticallyFocus(entry)"
+                    v-bind:change-focus-callback="changeFocus"
                 />
             </nav>
             <p class="switch-to-modal-no-matching-history" v-else>
@@ -59,17 +60,18 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
-import RecentItemsEntry from "./RecentItemsEntry.vue";
-import type { UserHistory, ItemEntry } from "../../../../type";
+import ItemEntry from "../ItemEntry.vue";
+import type { UserHistory, ItemDefinition } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import { useSwitchToStore } from "../../../../stores";
+import type { FocusFromItemPayload } from "../../../../stores/type";
 
 @Component({
     components: {
         RecentItemsErrorState,
         RecentItemsEmptyState,
         RecentItemsLoadingState,
-        RecentItemsEntry,
+        ItemEntry,
     },
 })
 export default class ListOfRecentItems extends Vue {
@@ -97,8 +99,12 @@ export default class ListOfRecentItems extends Vue {
         return useSwitchToStore().filter_value;
     }
 
-    hasProgrammaticallyFocus(entry: ItemEntry): boolean {
+    hasProgrammaticallyFocus(entry: ItemDefinition): boolean {
         return entry === useSwitchToStore().programmatically_focused_element;
+    }
+
+    changeFocus(payload: FocusFromItemPayload): void {
+        useSwitchToStore().changeFocusFromHistory(payload);
     }
 
     get has_no_history(): boolean {

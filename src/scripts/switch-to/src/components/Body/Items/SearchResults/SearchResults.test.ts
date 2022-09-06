@@ -26,7 +26,7 @@ import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
 import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
-import type { Project, UserHistory, ItemEntry } from "../../../../type";
+import type { Project, UserHistory, ItemDefinition } from "../../../../type";
 import type { FullTextState } from "../../../../stores/type";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../../stores/type";
 
@@ -99,7 +99,9 @@ describe("SearchResults", () => {
                         fulltext: {
                             fulltext_search_url: "/api/search",
                             fulltext_search_is_available: true,
-                            fulltext_search_results: { "/toto": { title: "toto" } as ItemEntry },
+                            fulltext_search_results: {
+                                "/toto": { title: "toto" } as ItemDefinition,
+                            },
                             fulltext_search_is_loading: false,
                             fulltext_search_is_error: false,
                         } as FullTextState,
@@ -117,10 +119,10 @@ describe("SearchResults", () => {
         });
 
         it.each([
-            [[] as Project[], [] as ItemEntry[]],
-            [[] as Project[], [{}] as ItemEntry[]],
-            [[{}] as Project[], [] as ItemEntry[]],
-            [[{}] as Project[], [{}] as ItemEntry[]],
+            [[] as Project[], [] as ItemDefinition[]],
+            [[] as Project[], [{}] as ItemDefinition[]],
+            [[{}] as Project[], [] as ItemDefinition[]],
+            [[{}] as Project[], [{}] as ItemDefinition[]],
         ])(
             `Given there is no search results
             And there is matching projects %s or recent items %s
@@ -163,9 +165,9 @@ describe("SearchResults", () => {
         );
 
         it.each([
-            [[] as Project[], [{}] as ItemEntry[]],
-            [[{}] as Project[], [] as ItemEntry[]],
-            [[{}] as Project[], [{}] as ItemEntry[]],
+            [[] as Project[], [{}] as ItemDefinition[]],
+            [[{}] as Project[], [] as ItemDefinition[]],
+            [[{}] as Project[], [{}] as ItemDefinition[]],
         ])(
             `Given the search query is less than ${FULLTEXT_MINIMUM_LENGTH_FOR_QUERY} chars
             And there is matching projects %s or recent items %s
@@ -286,9 +288,9 @@ describe("SearchResults", () => {
         );
 
         it.each([
-            [[] as Project[], [{}] as ItemEntry[]],
-            [[{}] as Project[], [] as ItemEntry[]],
-            [[{}] as Project[], [{}] as ItemEntry[]],
+            [[] as Project[], [{}] as ItemDefinition[]],
+            [[{}] as Project[], [] as ItemDefinition[]],
+            [[{}] as Project[], [{}] as ItemDefinition[]],
         ])(
             `should not display anything
             when there is at least one matching project %s or recent item %s

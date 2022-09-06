@@ -22,11 +22,11 @@ import { shallowMount } from "@vue/test-utils";
 import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
 import ListOfRecentItems from "./ListOfRecentItems.vue";
 import { createTestingPinia } from "@pinia/testing";
-import type { UserHistory, ItemEntry } from "../../../../type";
+import type { UserHistory, ItemDefinition } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
-import RecentItemsEntry from "./RecentItemsEntry.vue";
+import ItemEntry from "../ItemEntry.vue";
 import { defineStore } from "pinia";
 import type { State } from "../../../../stores/type";
 
@@ -39,7 +39,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [] as ItemEntry[] },
+                    history: { entries: [] as ItemDefinition[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -57,7 +57,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
-        expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
+        expect(wrapper.findComponent(ItemEntry).exists()).toBe(false);
     });
 
     it("Display a loading state", async () => {
@@ -68,7 +68,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: true,
                     is_history_loaded: false,
-                    history: { entries: [] as ItemEntry[] },
+                    history: { entries: [] as ItemDefinition[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -86,7 +86,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(true);
-        expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
+        expect(wrapper.findComponent(ItemEntry).exists()).toBe(false);
     });
 
     it("Display recent items", async () => {
@@ -97,10 +97,10 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [{}, {}] as ItemEntry[] },
+                    history: { entries: [{}, {}] as ItemDefinition[] },
                 } as State),
             getters: {
-                filtered_history: (): UserHistory => ({ entries: [{}, {}] as ItemEntry[] }),
+                filtered_history: (): UserHistory => ({ entries: [{}, {}] as ItemDefinition[] }),
             },
         });
 
@@ -115,7 +115,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
-        expect(wrapper.findAllComponents(RecentItemsEntry)).toHaveLength(2);
+        expect(wrapper.findAllComponents(ItemEntry)).toHaveLength(2);
     });
 
     it(`Given user is searching for a term
@@ -128,7 +128,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [{}, {}] as ItemEntry[] },
+                    history: { entries: [{}, {}] as ItemDefinition[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -154,10 +154,10 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
-                    history: { entries: [{}, {}] as ItemEntry[] },
+                    history: { entries: [{}, {}] as ItemDefinition[] },
                 } as State),
             getters: {
-                filtered_history: (): UserHistory => ({ entries: [{}] as ItemEntry[] }),
+                filtered_history: (): UserHistory => ({ entries: [{}] as ItemDefinition[] }),
             },
         });
 
@@ -172,7 +172,7 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
-        expect(wrapper.findAllComponents(RecentItemsEntry)).toHaveLength(1);
+        expect(wrapper.findAllComponents(ItemEntry)).toHaveLength(1);
     });
 
     it("Display error state", async () => {
@@ -183,7 +183,7 @@ describe("ListOfRecentItems", () => {
                     is_history_in_error: true,
                     is_loading_history: true,
                     is_history_loaded: false,
-                    history: { entries: [] as ItemEntry[] },
+                    history: { entries: [] as ItemDefinition[] },
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
@@ -201,6 +201,6 @@ describe("ListOfRecentItems", () => {
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(true);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
-        expect(wrapper.findComponent(RecentItemsEntry).exists()).toBe(false);
+        expect(wrapper.findComponent(ItemEntry).exists()).toBe(false);
     });
 });

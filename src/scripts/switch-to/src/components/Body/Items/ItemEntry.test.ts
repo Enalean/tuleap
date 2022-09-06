@@ -18,15 +18,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { QuickLink, ItemEntry } from "../../../../type";
-import RecentItemsEntry from "./RecentItemsEntry.vue";
+import type { QuickLink, ItemDefinition } from "../../../type";
+import ItemEntry from "./ItemEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { useSwitchToStore } from "../../../../stores";
-import { createSwitchToLocalVue } from "../../../../helpers/local-vue-for-test";
+import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 
-describe("RecentItemsEntry", () => {
+describe("ItemEntry", () => {
     it("Displays a link with a cross ref", async () => {
-        const wrapper = shallowMount(RecentItemsEntry, {
+        const wrapper = shallowMount(ItemEntry, {
             propsData: {
                 entry: {
                     icon_name: "fa-columns",
@@ -37,8 +36,9 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as ItemEntry,
+                } as ItemDefinition,
                 has_programmatically_focus: false,
+                changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
@@ -48,7 +48,7 @@ describe("RecentItemsEntry", () => {
     });
 
     it("Displays a link with a quick links", async () => {
-        const wrapper = shallowMount(RecentItemsEntry, {
+        const wrapper = shallowMount(ItemEntry, {
             propsData: {
                 entry: {
                     icon_name: "fa-columns",
@@ -62,8 +62,9 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as ItemEntry,
+                } as ItemDefinition,
                 has_programmatically_focus: false,
+                changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
@@ -73,7 +74,7 @@ describe("RecentItemsEntry", () => {
     });
 
     it("Displays a link with an icon", async () => {
-        const wrapper = shallowMount(RecentItemsEntry, {
+        const wrapper = shallowMount(ItemEntry, {
             propsData: {
                 entry: {
                     icon_name: "fa-columns",
@@ -83,8 +84,9 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as ItemEntry,
+                } as ItemDefinition,
                 has_programmatically_focus: false,
+                changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
@@ -93,37 +95,41 @@ describe("RecentItemsEntry", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Changes the focus with arrow keys", async () => {
-        const entry = {
-            icon_name: "fa-columns",
-            title: "Kanban",
-            color_name: "lake-placid-blue",
-            quick_links: [] as QuickLink[],
-            project: {
-                label: "Guinea Pig",
-            },
-        } as ItemEntry;
+    it.each(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"])(
+        "Changes the focus with arrow key %s",
+        async (key) => {
+            const entry = {
+                icon_name: "fa-columns",
+                title: "Kanban",
+                color_name: "lake-placid-blue",
+                quick_links: [] as QuickLink[],
+                project: {
+                    label: "Guinea Pig",
+                },
+            } as ItemDefinition;
 
-        const wrapper = shallowMount(RecentItemsEntry, {
-            propsData: {
+            const changeFocusCallback = jest.fn();
+            const wrapper = shallowMount(ItemEntry, {
+                propsData: {
+                    entry,
+                    has_programmatically_focus: false,
+                    changeFocusCallback,
+                },
+                pinia: createTestingPinia(),
+                localVue: await createSwitchToLocalVue(),
+            });
+
+            await wrapper.trigger("keydown", { key });
+
+            expect(changeFocusCallback).toHaveBeenCalledWith({
                 entry,
-                has_programmatically_focus: false,
-            },
-            pinia: createTestingPinia(),
-            localVue: await createSwitchToLocalVue(),
-        });
-
-        const key = "ArrowUp";
-        await wrapper.trigger("keydown", { key });
-
-        expect(useSwitchToStore().changeFocusFromHistory).toHaveBeenCalledWith({
-            entry,
-            key,
-        });
-    });
+                key,
+            });
+        }
+    );
 
     it("Forces the focus from the outside", async () => {
-        const wrapper = shallowMount(RecentItemsEntry, {
+        const wrapper = shallowMount(ItemEntry, {
             propsData: {
                 entry: {
                     icon_name: "fa-columns",
@@ -133,8 +139,9 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as ItemEntry,
+                } as ItemDefinition,
                 has_programmatically_focus: false,
+                changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
             localVue: await createSwitchToLocalVue(),
