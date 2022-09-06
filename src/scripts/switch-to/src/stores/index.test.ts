@@ -17,15 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { createPinia, defineStore, setActivePinia } from "pinia";
+
+const search = jest.fn();
+jest.mock("./fulltext", () => {
+    return {
+        useFullTextStore: defineStore("fulltext", {
+            actions: {
+                search,
+            },
+        }),
+    };
+});
+
 import * as tlp from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { Project, UserHistoryEntry } from "../type";
-import { createPinia, setActivePinia } from "pinia";
+import type { Project, ItemEntry } from "../type";
 import { useSwitchToStore } from "./index";
 
 describe("Root store", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe("Actions", () => {
@@ -92,7 +108,7 @@ describe("Root store", () => {
                     is_history_loaded: true,
                     is_history_in_error: false,
                     history: {
-                        entries: [{ html_url: "/first", title: "a" } as UserHistoryEntry],
+                        entries: [{ html_url: "/first", title: "a" } as ItemEntry],
                     },
                     programmatically_focused_element: project,
                 });
@@ -148,8 +164,8 @@ describe("Root store", () => {
                 });
 
                 it("focus the first history entry", () => {
-                    const first_entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
-                    const another_entry = { html_url: "/another", title: "b" } as UserHistoryEntry;
+                    const first_entry = { html_url: "/first", title: "a" } as ItemEntry;
+                    const another_entry = { html_url: "/another", title: "b" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -350,7 +366,7 @@ describe("Root store", () => {
 
         describe("changeFocusFromHistory", () => {
             it("does nothing if user hits right key", () => {
-                const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                 const store = useSwitchToStore();
                 store.$patch({
@@ -371,7 +387,7 @@ describe("Root store", () => {
 
             describe("When user hits ArrowLeft", () => {
                 it("does nothing if the project list is empty", () => {
-                    const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                    const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -391,7 +407,7 @@ describe("Root store", () => {
                 });
 
                 it("focus the first project", () => {
-                    const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                    const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                     const first_project = { project_uri: "/a", project_name: "a" } as Project;
                     const another_project = { project_uri: "/b", project_name: "b" } as Project;
@@ -416,7 +432,7 @@ describe("Root store", () => {
 
             describe("When user hits ArrowUp", () => {
                 it("does nothing if the history is empty", () => {
-                    const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                    const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -435,7 +451,7 @@ describe("Root store", () => {
                 });
 
                 it("does nothing if the history contains only one element", () => {
-                    const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                    const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -454,8 +470,8 @@ describe("Root store", () => {
                 });
 
                 it("goes up", () => {
-                    const first_entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
-                    const another_entry = { html_url: "/another", title: "b" } as UserHistoryEntry;
+                    const first_entry = { html_url: "/first", title: "a" } as ItemEntry;
+                    const another_entry = { html_url: "/another", title: "b" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -474,8 +490,8 @@ describe("Root store", () => {
                 });
 
                 it("goes around if the current is the first in the list", () => {
-                    const first_entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
-                    const another_entry = { html_url: "/another", title: "b" } as UserHistoryEntry;
+                    const first_entry = { html_url: "/first", title: "a" } as ItemEntry;
+                    const another_entry = { html_url: "/another", title: "b" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -496,7 +512,7 @@ describe("Root store", () => {
 
             describe("When user hits ArrowDown", () => {
                 it("does nothing if the history is empty", () => {
-                    const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                    const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -515,7 +531,7 @@ describe("Root store", () => {
                 });
 
                 it("does nothing if the history contains only one element", () => {
-                    const entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
+                    const entry = { html_url: "/first", title: "a" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -534,8 +550,8 @@ describe("Root store", () => {
                 });
 
                 it("goes down", () => {
-                    const first_entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
-                    const another_entry = { html_url: "/another", title: "b" } as UserHistoryEntry;
+                    const first_entry = { html_url: "/first", title: "a" } as ItemEntry;
+                    const another_entry = { html_url: "/another", title: "b" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -554,8 +570,8 @@ describe("Root store", () => {
                 });
 
                 it("goes around if the current is the first in the list", () => {
-                    const first_entry = { html_url: "/first", title: "a" } as UserHistoryEntry;
-                    const another_entry = { html_url: "/another", title: "b" } as UserHistoryEntry;
+                    const first_entry = { html_url: "/first", title: "a" } as ItemEntry;
+                    const another_entry = { html_url: "/another", title: "b" } as ItemEntry;
 
                     const store = useSwitchToStore();
                     store.$patch({
@@ -576,15 +592,31 @@ describe("Root store", () => {
         });
 
         describe("updateFilterValue", () => {
-            it("updates the filter value in the store", () => {
+            it("updates the filter value in the store and ask to perform a fulltext search", () => {
                 const store = useSwitchToStore();
                 store.$patch({
                     filter_value: "acme",
                 });
 
+                expect(store.filter_value).toBe("acme");
+
                 store.updateFilterValue("abc");
 
                 expect(store.filter_value).toBe("abc");
+                expect(search).toHaveBeenCalled();
+            });
+
+            it("does not ask to perform a fulltext search if it is the same value as before", () => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    filter_value: "acme",
+                });
+
+                expect(store.filter_value).toBe("acme");
+
+                store.updateFilterValue("acme");
+
+                expect(search).not.toHaveBeenCalled();
             });
         });
     });
@@ -615,10 +647,10 @@ describe("Root store", () => {
                 store.$patch({
                     history: {
                         entries: [
-                            { title: "Acme" } as UserHistoryEntry,
-                            { title: "ACME Corp" } as UserHistoryEntry,
-                            { title: "Another entry" } as UserHistoryEntry,
-                            { xref: "wiki #ACME" } as UserHistoryEntry,
+                            { title: "Acme" } as ItemEntry,
+                            { title: "ACME Corp" } as ItemEntry,
+                            { title: "Another entry" } as ItemEntry,
+                            { xref: "wiki #ACME" } as ItemEntry,
                         ],
                     },
                     filter_value: "acme",
@@ -626,9 +658,9 @@ describe("Root store", () => {
 
                 expect(store.filtered_history).toStrictEqual({
                     entries: [
-                        { title: "Acme" } as UserHistoryEntry,
-                        { title: "ACME Corp" } as UserHistoryEntry,
-                        { xref: "wiki #ACME" } as UserHistoryEntry,
+                        { title: "Acme" } as ItemEntry,
+                        { title: "ACME Corp" } as ItemEntry,
+                        { xref: "wiki #ACME" } as ItemEntry,
                     ],
                 });
             });

@@ -21,8 +21,9 @@ import Vue from "vue";
 import { PiniaVuePlugin, createPinia } from "pinia";
 import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue2-gettext-init";
 import type { VueClass } from "vue-class-component/lib/declarations";
-import type { State } from "./stores/type";
+import type { FullTextState, State } from "./stores/type";
 import { useSwitchToStore } from "./stores";
+import { useFullTextStore } from "./stores/fulltext";
 
 export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue>): Promise<void> {
     await initVueGettext(
@@ -54,12 +55,22 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         history: { entries: [] },
         programmatically_focused_element: null,
     };
-
     const AppComponent = Vue.extend(component);
+
     new AppComponent({
         pinia,
     }).$mount(vue_mount_point);
-
     const store = useSwitchToStore();
+
     store.$patch(root_state);
+
+    const fulltext_state: FullTextState = {
+        fulltext_search_url: "/api/v1/search",
+        fulltext_search_results: [],
+        fulltext_search_is_error: false,
+        fulltext_search_is_loading: false,
+        fulltext_search_is_available: true,
+    };
+    const fulltext_store = useFullTextStore();
+    fulltext_store.$patch(fulltext_state);
 }

@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { QuickLink, UserHistoryEntry } from "../../../type";
+import type { QuickLink, ItemEntry } from "../../../type";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useSwitchToStore } from "../../../stores";
@@ -37,7 +37,7 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as UserHistoryEntry,
+                } as ItemEntry,
                 has_programmatically_focus: false,
             },
             pinia: createTestingPinia(),
@@ -62,7 +62,7 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as UserHistoryEntry,
+                } as ItemEntry,
                 has_programmatically_focus: false,
             },
             pinia: createTestingPinia(),
@@ -83,7 +83,7 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as UserHistoryEntry,
+                } as ItemEntry,
                 has_programmatically_focus: false,
             },
             pinia: createTestingPinia(),
@@ -102,7 +102,7 @@ describe("RecentItemsEntry", () => {
             project: {
                 label: "Guinea Pig",
             },
-        } as UserHistoryEntry;
+        } as ItemEntry;
 
         const wrapper = shallowMount(RecentItemsEntry, {
             propsData: {
@@ -133,7 +133,7 @@ describe("RecentItemsEntry", () => {
                     project: {
                         label: "Guinea Pig",
                     },
-                } as UserHistoryEntry,
+                } as ItemEntry,
                 has_programmatically_focus: false,
             },
             pinia: createTestingPinia(),

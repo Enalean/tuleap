@@ -25,19 +25,11 @@ exports[`ProjectLink Displays the link to a project 1`] = `
             
       </span>
        
-      <word-highlighter-stub
-        highlightclass="tlp-mark-on-dark-background"
-        highlightstyle=""
-        highlighttag="mark"
-        query=""
-        texttohighlight=""
-        wrapperclass=""
-        wrappertag="span"
-      >
+      <highlight-matching-text-stub>
         
                 Guinea Pig
             
-      </word-highlighter-stub>
+      </highlight-matching-text-stub>
     </span>
   </a>
    

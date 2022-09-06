@@ -38,12 +38,9 @@
                 <span v-if="project.icon" class="switch-to-projects-project-label-icon">
                     {{ project.icon }}
                 </span>
-                <word-highlighter
-                    v-bind:highlight-class="'tlp-mark-on-dark-background'"
-                    v-bind:query="filter_value"
-                >
+                <highlight-matching-text>
                     {{ project.project_name }}
-                </word-highlighter>
+                </highlight-matching-text>
             </span>
         </a>
         <a
@@ -65,11 +62,11 @@ import type { Project } from "../../../type";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { sprintf } from "sprintf-js";
-import WordHighlighter from "vue-word-highlighter";
 import { useSwitchToStore } from "../../../stores";
+import HighlightMatchingText from "../HighlightMatchingText.vue";
 
 @Component({
-    components: { WordHighlighter },
+    components: { HighlightMatchingText },
 })
 export default class ProjectLink extends Vue {
     @Prop({ required: true })
@@ -77,10 +74,6 @@ export default class ProjectLink extends Vue {
 
     @Prop({ required: true })
     private readonly has_programmatically_focus!: boolean;
-
-    get filter_value(): string {
-        return useSwitchToStore().filter_value;
-    }
 
     @Watch("has_programmatically_focus")
     forceFocus(): void {

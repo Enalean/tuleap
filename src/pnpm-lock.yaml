@@ -8,6 +8,8 @@ specifiers:
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
+  '@tuleap/fault': link:../lib/frontend/fault
+  '@tuleap/fetch-result': link:../lib/frontend/fetch-result
   '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
   '@tuleap/gettext': link:../lib/frontend/gettext
   '@tuleap/html-escaper': link:../lib/frontend/html-escaper
@@ -26,6 +28,7 @@ specifiers:
   '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../lib/frontend/tooltip
   '@tuleap/vue-permissions-per-group-badge': link:../lib/frontend/vue-permissions-per-group-badge
+  '@tuleap/vue2-gettext-composition-helper': link:../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': ^4.5.0
@@ -46,6 +49,7 @@ specifiers:
   mermaid: ^9.1.3
   moment: ^2.29.3
   mustache: ^4.2.0
+  neverthrow: ^5.0.0
   node-gettext: ^3.0.0
   panzoom: ^9.4.1
   pinia: ^2.0.21
@@ -69,6 +73,7 @@ dependencies:
   '@tuleap/autocomplete-for-select2': link:../lib/frontend/autocomplete-for-select2
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
+  '@tuleap/fetch-result': link:../lib/frontend/fetch-result
   '@tuleap/filter-inline-table': link:../lib/frontend/filter-table
   '@tuleap/gettext': link:../lib/frontend/gettext
   '@tuleap/html-escaper': link:../lib/frontend/html-escaper
@@ -87,6 +92,7 @@ dependencies:
   '@tuleap/tlp-swatch-colors': link:../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip': link:../lib/frontend/tooltip
   '@tuleap/vue-permissions-per-group-badge': link:../lib/frontend/vue-permissions-per-group-badge
+  '@tuleap/vue2-gettext-composition-helper': link:../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init': link:../lib/frontend/vue2-gettext-init
   ckeditor4: 4.18.0
   dompurify: 2.3.6
@@ -112,6 +118,7 @@ dependencies:
 devDependencies:
   '@pinia/testing': 0.0.14_pinia@2.0.21+vue@2.7.8
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
+  '@tuleap/fault': link:../lib/frontend/fault
   '@tuleap/vuex-store-wrapper-jest': link:../lib/frontend/vuex-store-wrapper-jest
   '@types/bootstrap': 4.5.1
   '@types/ckeditor': 4.9.10
@@ -124,6 +131,7 @@ devDependencies:
   '@types/sprintf-js': 1.1.2
   '@vue/test-utils': 1.3.0_vue@2.7.8
   jquery: 3.6.0
+  neverthrow: 5.0.0
   vue-class-component: 7.2.6_vue@2.7.8
   vue-property-decorator: 9.1.2_chk7q7rgeabwy64hfqmb36krqe
   vuex-class: 0.3.2_sk4yiuanjyyynvfsfpq7vngibm
@@ -1105,6 +1113,10 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /neverthrow/5.0.0:
+    resolution: {integrity: sha512-JQAB+oyPwbqBRwRZCcH5Yi4ejb24Ul1vIQwwtWTveIZADQTmIpcnh9uQttW45wPnt8sVBxOuh73hCAMmUhXBiQ==}
+    dev: true
 
   /ngraph.events/1.2.1:
     resolution: {integrity: sha512-D4C+nXH/RFxioGXQdHu8ELDtC6EaCiNsZtih0IvyGN81OZSUby4jXoJ5+RNWasfsd0FnKxxpAROyUMzw64QNsw==}

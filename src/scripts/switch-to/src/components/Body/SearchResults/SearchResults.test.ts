@@ -19,56 +19,304 @@
 
 import { shallowMount } from "@vue/test-utils";
 import SearchResults from "./SearchResults.vue";
+import SearchResultsError from "./SearchResultsError.vue";
+import SearchResultsEmpty from "./SearchResultsEmpty.vue";
+import SearchResultsList from "./SearchResultsList.vue";
+import SearchQueryTooSmall from "./SearchQueryTooSmall.vue";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
-import type { Project, UserHistory, UserHistoryEntry } from "../../../type";
+import type { Project, UserHistory, ItemEntry } from "../../../type";
+import type { FullTextState } from "../../../stores/type";
+import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "../../../stores/type";
 
 describe("SearchResults", () => {
-    it(`should display No results
-        when the list of filtered projects and the list of filtered recent items are empty`, async () => {
-        const useSwitchToStore = defineStore("root", {
-            getters: {
-                filtered_history: (): UserHistory => ({ entries: [] }),
-                filtered_projects: (): Project[] => [],
-            },
+    describe("FullText search available", () => {
+        it("should display a loading state", async () => {
+            const wrapper = shallowMount(SearchResults, {
+                localVue: await createSwitchToLocalVue(),
+                pinia: createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "foobar",
+                        },
+                        fulltext: {
+                            fulltext_search_url: "/api/search",
+                            fulltext_search_is_available: true,
+                            fulltext_search_results: {},
+                            fulltext_search_is_loading: true,
+                            fulltext_search_is_error: false,
+                        } as FullTextState,
+                    },
+                }),
+            });
+
+            expect(wrapper.attributes("aria-busy")).toBe("true");
+            expect(wrapper.find("[data-test=switch-to-search-results-loading]").exists()).toBe(
+                true
+            );
+            expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
+            expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
+            expect(wrapper.findComponent(SearchResultsList).exists()).toBe(false);
         });
 
-        const pinia = createTestingPinia();
-        useSwitchToStore(pinia);
+        it("should display an error state", async () => {
+            const wrapper = shallowMount(SearchResults, {
+                localVue: await createSwitchToLocalVue(),
+                pinia: createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "foobar",
+                        },
+                        fulltext: {
+                            fulltext_search_url: "/api/search",
+                            fulltext_search_is_available: true,
+                            fulltext_search_results: {},
+                            fulltext_search_is_loading: false,
+                            fulltext_search_is_error: true,
+                        } as FullTextState,
+                    },
+                }),
+            });
 
-        const wrapper = shallowMount(SearchResults, {
-            localVue: await createSwitchToLocalVue(),
-            pinia,
+            expect(wrapper.attributes("aria-busy")).toBe("false");
+            expect(wrapper.find("[data-test=switch-to-search-results-loading]").exists()).toBe(
+                false
+            );
+            expect(wrapper.findComponent(SearchResultsError).exists()).toBe(true);
+            expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
+            expect(wrapper.findComponent(SearchResultsList).exists()).toBe(false);
         });
 
-        expect(wrapper.text()).toContain("No results");
-    });
+        it("should display search results", async () => {
+            const wrapper = shallowMount(SearchResults, {
+                localVue: await createSwitchToLocalVue(),
+                pinia: createTestingPinia({
+                    initialState: {
+                        root: {
+                            filter_value: "foobar",
+                        },
+                        fulltext: {
+                            fulltext_search_url: "/api/search",
+                            fulltext_search_is_available: true,
+                            fulltext_search_results: { "/toto": { title: "toto" } as ItemEntry },
+                            fulltext_search_is_loading: false,
+                            fulltext_search_is_error: false,
+                        } as FullTextState,
+                    },
+                }),
+            });
 
-    it.each([
-        [[] as Project[], [{}] as UserHistoryEntry[]],
-        [[{}] as Project[], [] as UserHistoryEntry[]],
-        [[{}] as Project[], [{}] as UserHistoryEntry[]],
-    ])(
-        `should not display anything
-        when there is at least one matching project %s or recent item %s
-        because FTS is not implemented yet and we don't want to display a "No results" which may confuse people.`,
-        async (filtered_projects, filtered_history_entries) => {
+            expect(wrapper.attributes("aria-busy")).toBe("false");
+            expect(wrapper.find("[data-test=switch-to-search-results-loading]").exists()).toBe(
+                false
+            );
+            expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
+            expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(false);
+            expect(wrapper.findComponent(SearchResultsList).exists()).toBe(true);
+        });
+
+        it.each([
+            [[] as Project[], [] as ItemEntry[]],
+            [[] as Project[], [{}] as ItemEntry[]],
+            [[{}] as Project[], [] as ItemEntry[]],
+            [[{}] as Project[], [{}] as ItemEntry[]],
+        ])(
+            `Given there is no search results
+            And there is matching projects %s or recent items %s
+            Then it should always display an empty state for this section.`,
+            async (filtered_projects, filtered_history_entries) => {
+                const useSwitchToStore = defineStore("root", {
+                    state: () => ({
+                        filter_value: "foobar",
+                    }),
+                    getters: {
+                        filtered_history: (): UserHistory => ({
+                            entries: filtered_history_entries,
+                        }),
+                        filtered_projects: (): Project[] => filtered_projects,
+                    },
+                });
+
+                const pinia = createTestingPinia({
+                    initialState: {
+                        fulltext: {
+                            fulltext_search_url: "/api/search",
+                            fulltext_search_is_available: true,
+                            fulltext_search_results: {},
+                            fulltext_search_is_loading: false,
+                            fulltext_search_is_error: false,
+                        } as FullTextState,
+                    },
+                });
+                useSwitchToStore(pinia);
+
+                const wrapper = shallowMount(SearchResults, {
+                    localVue: await createSwitchToLocalVue(),
+                    pinia,
+                });
+                expect(wrapper.attributes("aria-busy")).toBe("false");
+                expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
+                expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(true);
+                expect(wrapper.findComponent(SearchResultsList).exists()).toBe(false);
+            }
+        );
+
+        it.each([
+            [[] as Project[], [{}] as ItemEntry[]],
+            [[{}] as Project[], [] as ItemEntry[]],
+            [[{}] as Project[], [{}] as ItemEntry[]],
+        ])(
+            `Given the search query is less than ${FULLTEXT_MINIMUM_LENGTH_FOR_QUERY} chars
+            And there is matching projects %s or recent items %s
+            Then it should not display something.`,
+            async (filtered_projects, filtered_history_entries) => {
+                const useSwitchToStore = defineStore("root", {
+                    state: () => ({
+                        filter_value: "a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1),
+                    }),
+                    getters: {
+                        filtered_history: (): UserHistory => ({
+                            entries: filtered_history_entries,
+                        }),
+                        filtered_projects: (): Project[] => filtered_projects,
+                    },
+                });
+
+                const pinia = createTestingPinia({
+                    initialState: {
+                        fulltext: {
+                            fulltext_search_url: "/api/search",
+                            fulltext_search_is_available: true,
+                            fulltext_search_results: {},
+                            fulltext_search_is_loading: false,
+                            fulltext_search_is_error: false,
+                        } as FullTextState,
+                    },
+                });
+                useSwitchToStore(pinia);
+
+                const wrapper = shallowMount(SearchResults, {
+                    localVue: await createSwitchToLocalVue(),
+                    pinia,
+                });
+
+                expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+            }
+        );
+
+        it(`Given the search query is less than ${FULLTEXT_MINIMUM_LENGTH_FOR_QUERY} chars
+            And there is no matching projects and recent items
+            Then it should ask to user to enter more than ${FULLTEXT_MINIMUM_LENGTH_FOR_QUERY} chars.`, async () => {
             const useSwitchToStore = defineStore("root", {
+                state: () => ({
+                    filter_value: "a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1),
+                }),
                 getters: {
-                    filtered_history: (): UserHistory => ({ entries: filtered_history_entries }),
-                    filtered_projects: (): Project[] => filtered_projects,
+                    filtered_history: (): UserHistory => ({
+                        entries: [],
+                    }),
+                    filtered_projects: (): Project[] => [],
                 },
             });
 
-            const pinia = createTestingPinia();
+            const pinia = createTestingPinia({
+                initialState: {
+                    fulltext: {
+                        fulltext_search_url: "/api/search",
+                        fulltext_search_is_available: true,
+                        fulltext_search_results: {},
+                        fulltext_search_is_loading: false,
+                        fulltext_search_is_error: false,
+                    } as FullTextState,
+                },
+            });
             useSwitchToStore(pinia);
 
             const wrapper = shallowMount(SearchResults, {
                 localVue: await createSwitchToLocalVue(),
                 pinia,
             });
-            expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
-        }
-    );
+
+            expect(wrapper.findComponent(SearchQueryTooSmall).exists()).toBe(true);
+        });
+    });
+
+    describe("FullText search is NOT available", () => {
+        let fulltext_state: FullTextState;
+        beforeEach(() => {
+            fulltext_state = {
+                fulltext_search_url: "/api/search",
+                fulltext_search_is_available: false,
+                fulltext_search_results: {},
+                fulltext_search_is_loading: false,
+                fulltext_search_is_error: false,
+            };
+        });
+
+        it.each(["a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1), "foobar"])(
+            `should display No results
+            when user search for %s
+            and the list of filtered projects and the list of filtered recent items are empty`,
+            async (filter_value) => {
+                const useSwitchToStore = defineStore("root", {
+                    state: () => ({ filter_value }),
+                    getters: {
+                        filtered_history: (): UserHistory => ({ entries: [] }),
+                        filtered_projects: (): Project[] => [],
+                    },
+                });
+
+                const pinia = createTestingPinia({
+                    initialState: {
+                        fulltext: fulltext_state,
+                    },
+                });
+                useSwitchToStore(pinia);
+
+                const wrapper = shallowMount(SearchResults, {
+                    localVue: await createSwitchToLocalVue(),
+                    pinia,
+                });
+
+                expect(wrapper.attributes("aria-busy")).toBe("false");
+                expect(wrapper.findComponent(SearchResultsError).exists()).toBe(false);
+                expect(wrapper.findComponent(SearchResultsEmpty).exists()).toBe(true);
+            }
+        );
+
+        it.each([
+            [[] as Project[], [{}] as ItemEntry[]],
+            [[{}] as Project[], [] as ItemEntry[]],
+            [[{}] as Project[], [{}] as ItemEntry[]],
+        ])(
+            `should not display anything
+            when there is at least one matching project %s or recent item %s
+            because FTS is not enabled and we don't want to display a "No results" which may confuse people.`,
+            async (filtered_projects, filtered_history_entries) => {
+                const useSwitchToStore = defineStore("root", {
+                    state: () => ({ filter_value: "foobar" }),
+                    getters: {
+                        filtered_history: (): UserHistory => ({
+                            entries: filtered_history_entries,
+                        }),
+                        filtered_projects: (): Project[] => filtered_projects,
+                    },
+                });
+
+                const pinia = createTestingPinia({
+                    initialState: {
+                        fulltext: fulltext_state,
+                    },
+                });
+                useSwitchToStore(pinia);
+
+                const wrapper = shallowMount(SearchResults, {
+                    localVue: await createSwitchToLocalVue(),
+                    pinia,
+                });
+                expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+            }
+        );
+    });
 });

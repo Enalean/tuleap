@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { State } from "./type";
+import type { FocusFromHistoryPayload, FocusFromProjectPayload, State } from "./type";
 import { defineStore } from "pinia";
 import { get } from "@tuleap/tlp-fetch";
-import type { Project, UserHistory, UserHistoryEntry } from "../type";
-import type { FocusFromHistoryPayload, FocusFromProjectPayload } from "./type";
+import type { Project, UserHistory, ItemEntry } from "../type";
 import { isMatchingFilterValue } from "../helpers/is-matching-filter-value";
+import { useFullTextStore } from "./fulltext";
 
 export const useSwitchToStore = defineStore("root", {
     state: (): State => ({
@@ -46,10 +46,7 @@ export const useSwitchToStore = defineStore("root", {
         filtered_history(): UserHistory {
             return {
                 entries: this.history.entries.reduce(
-                    (
-                        matching_entries: UserHistoryEntry[],
-                        entry: UserHistoryEntry
-                    ): UserHistoryEntry[] => {
+                    (matching_entries: ItemEntry[], entry: ItemEntry): ItemEntry[] => {
                         if (isMatchingFilterValue(entry.title, this.filter_value)) {
                             matching_entries.push(entry);
                         } else if (isMatchingFilterValue(entry.xref, this.filter_value)) {
@@ -141,14 +138,14 @@ export const useSwitchToStore = defineStore("root", {
             this.navigateInCollection(
                 this.filtered_history.entries,
                 this.filtered_history.entries.findIndex(
-                    (entry: UserHistoryEntry) => entry.html_url === payload.entry.html_url
+                    (entry: ItemEntry) => entry.html_url === payload.entry.html_url
                 ),
                 payload.key
             );
         },
 
         navigateInCollection(
-            collection: UserHistoryEntry[] | Project[],
+            collection: ItemEntry[] | Project[],
             current_index: number,
             key: "ArrowUp" | "ArrowDown"
         ): void {
@@ -174,7 +171,10 @@ export const useSwitchToStore = defineStore("root", {
         },
 
         updateFilterValue(value: string): void {
-            this.filter_value = value;
+            if (this.filter_value !== value) {
+                this.filter_value = value;
+                useFullTextStore().search(this.filter_value);
+            }
         },
 
         saveHistory(history: UserHistory): void {

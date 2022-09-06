@@ -49,7 +49,7 @@ interface ProjectReference {
     readonly label: string;
 }
 
-export interface UserHistoryEntry {
+export interface ItemEntry {
     readonly xref: string | null;
     readonly html_url: string;
     readonly title: string | null;
@@ -60,5 +60,5 @@ export interface UserHistoryEntry {
 }
 
 export interface UserHistory {
-    readonly entries: UserHistoryEntry[];
+    readonly entries: ItemEntry[];
 }

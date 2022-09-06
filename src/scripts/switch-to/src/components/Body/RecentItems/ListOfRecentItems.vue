@@ -60,7 +60,7 @@ import { Component } from "vue-property-decorator";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import RecentItemsEntry from "./RecentItemsEntry.vue";
-import type { UserHistory, UserHistoryEntry } from "../../../type";
+import type { UserHistory, ItemEntry } from "../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import { useSwitchToStore } from "../../../stores";
 
@@ -97,7 +97,7 @@ export default class ListOfRecentItems extends Vue {
         return useSwitchToStore().filter_value;
     }
 
-    hasProgrammaticallyFocus(entry: UserHistoryEntry): boolean {
+    hasProgrammaticallyFocus(entry: ItemEntry): boolean {
         return entry === useSwitchToStore().programmatically_focused_element;
     }
 

@@ -15,6 +15,9 @@ msgstr ""
 msgid "An error occurred while loading your recent items."
 msgstr "Une erreur est survenue lors du chargement de votre historique."
 
+msgid "An error occurred while searching for results."
+msgstr "Une erreur est survenue lors de la recherche."
+
 msgid "Browse all projects"
 msgstr "Parcourir tous les projets"
 
@@ -32,6 +35,9 @@ msgstr "Mes projets"
 
 msgid "No results"
 msgstr "Pas de résultat"
+
+msgid "Please enter more than %{ n } characters."
+msgstr "Veuillez entrer plus de %{ n } caractères."
 
 msgid "Project, recent item, …"
 msgstr "Projet, éléments récents, …"

@@ -36,22 +36,16 @@
                     v-bind:class="entry.icon_name"
                     aria-hidden="true"
                 ></i>
-                <word-highlighter
-                    v-bind:query="filter_value"
-                    v-bind:highlight-class="'tlp-mark-on-dark-background'"
+                <span
                     class="switch-to-recent-items-entry-badge cross-ref-badge cross-ref-badge-on-dark-background"
                     v-bind:class="xref_color"
                     v-if="entry.xref"
                 >
-                    {{ entry.xref }}
-                </word-highlighter>
-                <word-highlighter
-                    v-bind:query="filter_value"
-                    v-bind:highlight-class="'tlp-mark-on-dark-background'"
-                    class="switch-to-recent-items-entry-label"
-                >
+                    <highlight-matching-text>{{ entry.xref }}</highlight-matching-text>
+                </span>
+                <highlight-matching-text class="switch-to-recent-items-entry-label">
                     {{ entry.title }}
-                </word-highlighter>
+                </highlight-matching-text>
             </a>
             <div class="switch-to-recent-items-entry-quick-links" v-if="has_quick_links">
                 <a
@@ -74,23 +68,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import type { UserHistoryEntry } from "../../../type";
-import WordHighlighter from "vue-word-highlighter";
+import type { ItemEntry } from "../../../type";
 import { useSwitchToStore } from "../../../stores";
+import HighlightMatchingText from "../HighlightMatchingText.vue";
 
 @Component({
-    components: { WordHighlighter },
+    components: { HighlightMatchingText },
 })
 export default class RecentItemsEntry extends Vue {
     @Prop({ required: true })
-    private readonly entry!: UserHistoryEntry;
+    private readonly entry!: ItemEntry;
 
     @Prop({ required: true })
     private readonly has_programmatically_focus!: boolean;
-
-    get filter_value(): string {
-        return useSwitchToStore().filter_value;
-    }
 
     @Watch("has_programmatically_focus")
     forceFocus(): void {
