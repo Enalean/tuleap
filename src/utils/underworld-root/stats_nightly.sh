@@ -17,14 +17,6 @@ echo "--- Beginning of $script ---"
 # computed
 ./db_project_metric.pl
 
-# Compute the top_group table whre all projects
-# are stored with all sorts of ranking. Redirect
-# text output to a file in the dumpt directory
-# LJ note: I was unable to find where and when this
-# output file is used !!
-# $dump_dir is defined in compute_all_daily_stats.sh
-./db_top_groups_calc.pl $* > $dump_dir/db_top_groups_calc_output
-
 # Feed the database with CVS statistics extracted
 # from daily CVS log files
 #

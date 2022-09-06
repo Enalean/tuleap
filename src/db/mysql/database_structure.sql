@@ -694,31 +694,6 @@ CREATE TABLE session (
 ) ENGINE=InnoDB;
 
 #
-# Table structure for table 'top_group'
-#
-
-CREATE TABLE top_group (
-  group_id int(11) NOT NULL default '0',
-  group_name varchar(40) default NULL,
-  downloads_all int(11) NOT NULL default '0',
-  rank_downloads_all int(11) NOT NULL default '0',
-  rank_downloads_all_old int(11) NOT NULL default '0',
-  downloads_week int(11) NOT NULL default '0',
-  rank_downloads_week int(11) NOT NULL default '0',
-  rank_downloads_week_old int(11) NOT NULL default '0',
-  userrank int(11) NOT NULL default '0',
-  rank_userrank int(11) NOT NULL default '0',
-  rank_userrank_old int(11) NOT NULL default '0',
-  forumposts_week int(11) NOT NULL default '0',
-  rank_forumposts_week int(11) NOT NULL default '0',
-  rank_forumposts_week_old int(11) NOT NULL default '0',
-  KEY rank_downloads_all_idx (rank_downloads_all),
-  KEY rank_downloads_week_idx (rank_downloads_week),
-  KEY rank_userrank_idx (rank_userrank),
-  KEY rank_forumposts_week_idx (rank_forumposts_week)
-);
-
-#
 # Table structure for table 'trove_cat'
 #
 
