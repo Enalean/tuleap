@@ -33,7 +33,7 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
     ) {
     }
 
-    public function generateTuleapLocalSettingsRepresentation(string $site_access): LocalSettingsRepresentation
+    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
     {
         $oauth2_secret = $this->oauth2_app_generator->generateOAuth2AppSecret();
 
@@ -42,7 +42,6 @@ final class LocalSettingsFactory implements LocalSettingsRepresentationBuilder
             ServerHostname::HTTPSUrl(),
             ClientIdentifier::fromLastGeneratedClientSecret($oauth2_secret)->toString(),
             $oauth2_secret->getSecret(),
-            $site_access,
             \ForgeConfig::get('sys_supported_languages', 'en_US'),
         );
     }

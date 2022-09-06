@@ -42,7 +42,7 @@ final class GenerateLocalSettingsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->instantiator->instantiateLocalSettings(\ForgeAccess::getAccessMode());
+        $this->instantiator->instantiateLocalSettings();
         $output->writeln('<info>LocalSettings file has been (re-)generated</info>');
         return 0;
     }

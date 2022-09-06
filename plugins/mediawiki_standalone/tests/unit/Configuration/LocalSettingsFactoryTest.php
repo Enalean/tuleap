@@ -50,7 +50,7 @@ final class LocalSettingsFactoryTest extends TestCase
             }
         );
 
-        $representation = $factory->generateTuleapLocalSettingsRepresentation(\ForgeAccess::ANONYMOUS);
+        $representation = $factory->generateTuleapLocalSettingsRepresentation();
 
         self::assertStringContainsString('789', $representation->oauth2_client_id);
         self::assertEquals('random_oauth2_secret', $representation->oauth2_client_secret->getString());

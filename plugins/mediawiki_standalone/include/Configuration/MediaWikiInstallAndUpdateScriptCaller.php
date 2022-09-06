@@ -44,7 +44,7 @@ final class MediaWikiInstallAndUpdateScriptCaller implements MediaWikiInstallAnd
     {
         $this->installFarmInstance();
         $this->logger->debug('Update MediaWiki standalone Tuleap managed LocalSettings file');
-        $this->local_settings_instantiator->instantiateLocalSettings(\ForgeAccess::getAccessMode());
+        $this->local_settings_instantiator->instantiateLocalSettings();
         $this->updateFarmInstance();
         $this->updateProjectInstances();
     }

@@ -12,8 +12,6 @@ $GLOBALS['wgTuleapOAuth2Config'] = ['clientId' =>  {{ oauth2_client_id }}, 'clie
 
 $GLOBALS['wgPhpCli'] = {{ php_cli_path }};
 
-$GLOBALS['wgTuleapAccessPreset'] = {{ forge_access_mode }};
-
 $GLOBALS['wgHooks']['GetPreferences'][] = function ($user, array &$preferences): void {
     $preferences['language']['options'] = array_filter(
         $preferences['language']['options'],
