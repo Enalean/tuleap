@@ -24,48 +24,41 @@
         id="switch-to-modal"
         data-test="switch-to-modal"
         role="dialog"
-        v-bind:aria-label="aria_label"
+        v-bind:aria-label="$gettext('Switch to…')"
+        ref="modal"
     >
         <switch-to-header class="modal-header" v-bind:modal="null" />
         <switch-to-body class="modal-body" />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import $ from "jquery";
-import { Component } from "vue-property-decorator";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
 import { useSwitchToStore } from "../stores";
 
-@Component({
-    components: { SwitchToHeader, SwitchToBody },
-})
-export default class AppFlamingParrot extends Vue {
-    mounted(): void {
-        const modal = this.$el;
-        if (!(modal instanceof HTMLElement)) {
-            return;
-        }
-        const store = useSwitchToStore();
+const modal = ref<HTMLElement | null>(null);
 
-        $(modal)
-            // Force autofocus for bootstrap modal
-            .on("shown", () => {
-                store.loadHistory();
-                const input = modal.querySelector("input");
-                if (input) {
-                    input.focus();
-                }
-            })
-            // Clear filter for bootstrap modal
-            .on("hidden", () => {
-                store.updateFilterValue("");
-            });
+onMounted((): void => {
+    if (!(modal.value instanceof HTMLElement)) {
+        return;
     }
-    get aria_label(): string {
-        return this.$gettext("Switch to…");
-    }
-}
+    const store = useSwitchToStore();
+
+    $(modal.value)
+        // Force autofocus for bootstrap modal
+        .on("shown", () => {
+            store.loadHistory();
+            const input = modal.value.querySelector("input");
+            if (input) {
+                input.focus();
+            }
+        })
+        // Clear filter for bootstrap modal
+        .on("hidden", () => {
+            store.updateFilterValue("");
+        });
+});
 </script>
