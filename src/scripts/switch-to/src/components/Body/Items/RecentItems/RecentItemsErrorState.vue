@@ -22,16 +22,13 @@
     <div>
         <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
         <div class="switch-to-recent-items-error">
-            <i class="fa fa-danger-sign switch-to-recent-items-error-icon" aria-hidden="true"></i>
+            <i
+                class="fa-solid fa-triangle-exclamation switch-to-recent-items-error-icon"
+                aria-hidden="true"
+            ></i>
             <translate>An error occurred while loading your recent items.</translate>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-
-@Component
-export default class RecentItemsErrorState extends Vue {}
-</script>
+<script setup lang="ts"></script>
