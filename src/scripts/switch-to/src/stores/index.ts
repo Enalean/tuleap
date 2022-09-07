@@ -98,11 +98,19 @@ export const useSwitchToStore = defineStore("root", {
         },
 
         changeFocusFromQuickLink(payload: FocusFromQuickLinkPayload): void {
-            if (payload.key === "ArrowUp" || payload.key === "ArrowDown") {
+            const key = payload.key;
+
+            if (key === "ArrowDown" || key === "ArrowUp") {
+                if (payload.item) {
+                    this.changeFocusFromHistory({ key, entry: payload.item });
+                } else if (payload.project) {
+                    this.changeFocusFromProject({ key, project: payload.project });
+                }
+
                 return;
             }
 
-            if (payload.key === "ArrowRight") {
+            if (key === "ArrowRight") {
                 const quick_links = payload.project?.quick_links || payload.item?.quick_links || [];
 
                 const next_index = quick_links.indexOf(payload.quick_link) + 1;
@@ -121,7 +129,7 @@ export const useSwitchToStore = defineStore("root", {
                 return;
             }
 
-            if (payload.key === "ArrowLeft") {
+            if (key === "ArrowLeft") {
                 const quick_links = payload.project?.quick_links || payload.item?.quick_links || [];
 
                 const previous_index = quick_links.indexOf(payload.quick_link) - 1;
