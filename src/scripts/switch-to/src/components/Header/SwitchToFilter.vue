@@ -23,71 +23,66 @@
         id="switch-to-filter"
         type="search"
         name="words"
-        v-bind:placeholder="placeholder"
-        v-bind:value="filter_value"
+        v-bind:placeholder="$gettext('Project, recent item, …')"
+        v-bind:value="filter_value.value"
         v-on:keyup="update"
         autocomplete="off"
         data-test="switch-to-filter"
     />
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, onUnmounted, watch } from "vue";
 import type { Modal } from "tlp";
 import { EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import { useSwitchToStore } from "../../stores";
+import { storeToRefs } from "pinia";
 
-@Component
-export default class SwitchToFilter extends Vue {
-    @Prop({ required: true })
-    private readonly modal!: Modal | null;
+const props = defineProps<{ modal: Modal | null }>();
+const store = useSwitchToStore();
 
-    mounted(): void {
-        this.listenToHideModalEvent();
+const filter_value = storeToRefs(store);
+
+onMounted((): void => {
+    listenToHideModalEvent();
+});
+
+function listenToHideModalEvent(): void {
+    if (props.modal) {
+        props.modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, clearInput);
     }
+}
 
-    @Watch("modal")
-    listenToHideModalEvent(): void {
-        if (this.modal) {
-            this.modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, this.clearInput);
+watch(
+    () => props.modal,
+    () => {
+        listenToHideModalEvent();
+    }
+);
+
+onUnmounted((): void => {
+    if (props.modal) {
+        props.modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, clearInput);
+    }
+});
+
+function clearInput(): void {
+    if (filter_value !== "") {
+        store.updateFilterValue("");
+    }
+}
+
+function update(event: KeyboardEvent): void {
+    if (event.key === "Escape") {
+        if (props.modal) {
+            props.modal.hide();
         }
+        clearInput();
+        return;
     }
 
-    beforeDestroy(): void {
-        if (this.modal) {
-            this.modal.removeEventListener(EVENT_TLP_MODAL_HIDDEN, this.clearInput);
-        }
-    }
-
-    clearInput(): void {
-        const store = useSwitchToStore();
-        if (store.filter_value !== "") {
-            store.updateFilterValue("");
-        }
-    }
-
-    update(event: KeyboardEvent): void {
-        if (event.key === "Escape") {
-            if (this.modal) {
-                this.modal.hide();
-            }
-            this.clearInput();
-            return;
-        }
-
-        if (event.target instanceof HTMLInputElement) {
-            const store = useSwitchToStore();
-            store.updateFilterValue(event.target.value);
-        }
-    }
-
-    get filter_value(): string {
-        return useSwitchToStore().filter_value;
-    }
-
-    get placeholder(): string {
-        return this.$gettext("Project, recent item, …");
+    if (event.target instanceof HTMLInputElement) {
+        store.updateFilterValue(event.target.value);
     }
 }
 </script>
