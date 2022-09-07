@@ -33,6 +33,5 @@ exports[`ProjectLink Displays the link to a project 1`] = `
     </span>
   </a>
    
-  <!---->
 </div>
 `;

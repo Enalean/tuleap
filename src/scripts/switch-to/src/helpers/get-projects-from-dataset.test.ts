@@ -38,7 +38,7 @@ describe("getProjectFromDataset", () => {
         )[0];
 
         expect(project.project_uri).toBe("/project");
-        expect(project.quick_link).toBeNull();
+        expect(project.quick_links).toStrictEqual([]);
     });
 
     it("should get a project where current user is admin", () => {
@@ -48,6 +48,6 @@ describe("getProjectFromDataset", () => {
         )[0];
 
         expect(project.project_uri).toBe("/project");
-        expect(project.quick_link?.html_url).toBe("/admin");
+        expect(project.quick_links[0].html_url).toBe("/admin");
     });
 });

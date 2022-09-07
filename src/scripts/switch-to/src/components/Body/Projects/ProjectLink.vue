@@ -44,8 +44,9 @@
             </span>
         </a>
         <quick-link
-            v-if="project.quick_link"
-            v-bind:link="project.quick_link"
+            v-for="link of project.quick_links"
+            v-bind:key="link.html_url"
+            v-bind:link="link"
             class="switch-to-projects-project-admin-icon"
             data-test="switch-to-projects-project-admin-icon"
         />
@@ -71,7 +72,7 @@ export default class ProjectLink extends Vue {
     @Prop({ required: true })
     private readonly project!: Project;
 
-    get programmatically_focused_element(): Project | ItemDefinition | null {
+    get programmatically_focused_element(): Project | ItemDefinition | QuickLink | null {
         return useSwitchToStore().programmatically_focused_element;
     }
 

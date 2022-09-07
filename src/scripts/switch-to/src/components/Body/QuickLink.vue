@@ -19,13 +19,30 @@
   -->
 
 <template>
-    <a v-bind:href="link.html_url" v-bind:title="link.name">
+    <a v-bind:href="link.html_url" v-bind:title="link.name" ref="link_element">
         <i class="fa-solid" v-bind:class="link.icon_name" aria-hidden="true"></i>
     </a>
 </template>
 
 <script setup lang="ts">
 import type { QuickLink } from "../../type";
+import { useSwitchToStore } from "../../stores";
+import { storeToRefs } from "pinia";
+import { ref, watch } from "vue";
 
-defineProps<{ link: QuickLink }>();
+const props = defineProps<{ link: QuickLink }>();
+
+const root_store = useSwitchToStore();
+const { programmatically_focused_element } = storeToRefs(root_store);
+const link_element = ref<HTMLAnchorElement | null>(null);
+
+watch(programmatically_focused_element, () => {
+    if (programmatically_focused_element.value !== props.link) {
+        return;
+    }
+
+    if (link_element.value instanceof HTMLAnchorElement) {
+        link_element.value.focus();
+    }
+});
 </script>
