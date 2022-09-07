@@ -72,7 +72,7 @@ describe(`rest-querier`, () => {
                 expect(tlpRecursiveGet).toHaveBeenCalledWith(endpoint_uri, {
                     params: {
                         limit: expected_limit,
-                        order: "desc",
+                        order: "asc",
                         fields: "slim",
                         query: JSON.stringify(query),
                     },
