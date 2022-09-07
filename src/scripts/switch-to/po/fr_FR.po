@@ -45,6 +45,9 @@ msgstr "Projet, éléments récents, …"
 msgid "Recent items"
 msgstr "Éléments récents"
 
+msgid "Search in artifacts only"
+msgstr "Recherche dans les artéfacts uniquement"
+
 msgid "Search results"
 msgstr "Résultats de recherche"
 
