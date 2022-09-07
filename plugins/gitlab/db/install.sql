@@ -88,3 +88,9 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_group_token (
     group_id INT(11) NOT NULL PRIMARY KEY,
     token BLOB NOT NULL
 ) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_group_repository_integration (
+    group_id INT(11) NOT NULL,
+    integration_id INT(11) NOT NULL,
+    PRIMARY KEY(group_id, integration_id)
+) ENGINE = InnoDB;
