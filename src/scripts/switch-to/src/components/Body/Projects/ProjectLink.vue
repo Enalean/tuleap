@@ -64,6 +64,7 @@ import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
 import { sprintf } from "sprintf-js";
 import { useSwitchToStore } from "../../../stores";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
+import type { ItemDefinition } from "../../../type";
 
 @Component({
     components: { HighlightMatchingText },
@@ -72,12 +73,13 @@ export default class ProjectLink extends Vue {
     @Prop({ required: true })
     private readonly project!: Project;
 
-    @Prop({ required: true })
-    private readonly has_programmatically_focus!: boolean;
+    get programmatically_focused_element(): Project | ItemDefinition | null {
+        return useSwitchToStore().programmatically_focused_element;
+    }
 
-    @Watch("has_programmatically_focus")
+    @Watch("programmatically_focused_element")
     forceFocus(): void {
-        if (!this.has_programmatically_focus) {
+        if (this.programmatically_focused_element !== this.project) {
             return;
         }
 

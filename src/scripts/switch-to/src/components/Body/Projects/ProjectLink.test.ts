@@ -23,6 +23,7 @@ import ProjectLink from "./ProjectLink.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useSwitchToStore } from "../../../stores";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import type { State } from "../../../stores/type";
 
 describe("ProjectLink", () => {
     it("Displays the link to a project", async () => {
@@ -35,7 +36,6 @@ describe("ProjectLink", () => {
                     project_uri: "/projects/gpig",
                     icon: "🐹",
                 } as Project,
-                has_programmatically_focus: false,
             },
             pinia: createTestingPinia({
                 initialState: {
@@ -60,7 +60,6 @@ describe("ProjectLink", () => {
             localVue: await createSwitchToLocalVue(),
             propsData: {
                 project,
-                has_programmatically_focus: false,
             },
             pinia: createTestingPinia({
                 initialState: {
@@ -81,21 +80,23 @@ describe("ProjectLink", () => {
     });
 
     it("Forces the focus from the outside", async () => {
+        const project = {
+            is_public: true,
+            project_name: "Guinea Pig",
+            project_uri: "/pojects/gpig",
+        } as Project;
+
         const wrapper = shallowMount(ProjectLink, {
             localVue: await createSwitchToLocalVue(),
             propsData: {
-                project: {
-                    is_public: true,
-                    project_name: "Guinea Pig",
-                    project_uri: "/pojects/gpig",
-                } as Project,
-                has_programmatically_focus: false,
+                project,
             },
             pinia: createTestingPinia({
                 initialState: {
                     root: {
                         are_restricted_users_allowed: true,
-                    },
+                        programmatically_focused_element: null,
+                    } as State,
                 },
             }),
         });
@@ -107,8 +108,7 @@ describe("ProjectLink", () => {
 
         const focus = jest.spyOn(link.element, "focus");
 
-        wrapper.setProps({ has_programmatically_focus: true });
-        await wrapper.vm.$nextTick();
+        await useSwitchToStore().$patch({ programmatically_focused_element: project });
 
         expect(focus).toHaveBeenCalled();
     });
