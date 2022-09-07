@@ -20,29 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Test\Stubs;
+namespace Tuleap\Gitlab\Repository;
 
-use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedDao;
-
-final class GitlabRepositoryAlreadyIntegratedDaoStub implements GitlabRepositoryAlreadyIntegratedDao
+interface VerifyGitlabRepositoryIsIntegrated
 {
-    private int $number_of_call;
-    private function __construct()
-    {
-        $this->number_of_call = 0;
-    }
-
-    public function isTheGitlabRepositoryAlreadyIntegratedInProject(int $project_id, int $gitlab_repository_id, string $http_path,): bool
-    {
-        $this->number_of_call++;
-        if ($this->number_of_call === 1) {
-            return false;
-        }
-        return true;
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
+    public function isTheGitlabRepositoryAlreadyIntegratedInProject(
+        int $project_id,
+        int $gitlab_repository_id,
+        string $http_path,
+    ): bool;
 }

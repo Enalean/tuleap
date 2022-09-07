@@ -28,14 +28,15 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\Repository\CreateGitlabRepositories;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
 {
-    private function __construct(private GitlabRepositoryIntegration $integrations)
+    /**
+     * @param GitlabRepositoryIntegration[] $return_values
+     */
+    private function __construct(private array $return_values)
     {
     }
-
 
     public function createGitlabRepositoryIntegration(
         Credentials $credentials,
@@ -43,22 +44,19 @@ final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration,
     ): GitlabRepositoryIntegration {
-        return $this->integrations;
+        if (count($this->return_values) > 0) {
+            return array_shift($this->return_values);
+        }
+        throw new \LogicException('No integration configured');
     }
 
-    public static function buildWithDefault(): self
-    {
-        return new self(
-            new GitlabRepositoryIntegration(
-                1,
-                2,
-                "name",
-                "desc",
-                "repo_url",
-                new \DateTimeImmutable('@0'),
-                ProjectTestBuilder::aProject()->build(),
-                false
-            )
-        );
+    /**
+     * @no-named-arguments
+     */
+    public static function withSuccessiveIntegrations(
+        GitlabRepositoryIntegration $first_integration,
+        GitlabRepositoryIntegration ...$other_integrations,
+    ): self {
+        return new self([$first_integration, ...$other_integrations]);
     }
 }

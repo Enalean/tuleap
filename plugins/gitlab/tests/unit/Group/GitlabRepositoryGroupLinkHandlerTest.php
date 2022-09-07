@@ -26,10 +26,11 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
+use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Stubs\BuildGitlabGroupStub;
 use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
-use Tuleap\Gitlab\Test\Stubs\GitlabRepositoryAlreadyIntegratedDaoStub;
+use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -37,11 +38,47 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
 {
-    public function testItReturnsTheGitlabGroupRepresentation(): void
+    private const GROUP_ID                    = 45;
+    private const SECOND_GITLAB_REPOSITORY_ID = 10;
+    private const FIRST_GITLAB_REPOSITORY_ID  = 9;
+    private VerifyGitlabRepositoryIsIntegratedStub $verify_gitlab_repository_is_integrated;
+    private CreateGitlabRepositoriesStub $gitlab_repository_creator;
+    private \Project $project;
+
+    protected function setUp(): void
+    {
+        $this->project = ProjectTestBuilder::aProject()->build();
+
+        $this->verify_gitlab_repository_is_integrated = VerifyGitlabRepositoryIsIntegratedStub::withNeverIntegrated();
+        $this->gitlab_repository_creator              = CreateGitlabRepositoriesStub::withSuccessiveIntegrations(
+            new GitlabRepositoryIntegration(
+                1,
+                self::FIRST_GITLAB_REPOSITORY_ID,
+                'irrelevant',
+                'irrelevant',
+                'irrelevant',
+                new \DateTimeImmutable('@0'),
+                $this->project,
+                false,
+            ),
+            new GitlabRepositoryIntegration(
+                2,
+                self::SECOND_GITLAB_REPOSITORY_ID,
+                'name',
+                'desc',
+                'repo_url',
+                new \DateTimeImmutable('@0'),
+                $this->project,
+                false
+            )
+        );
+    }
+
+    private function integrate(): \Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation
     {
         $gitlab_projects = [
             new GitlabProject(
-                9,
+                self::FIRST_GITLAB_REPOSITORY_ID,
                 'Description',
                 'https://gitlab.example.com',
                 '/',
@@ -49,16 +86,8 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
                 'main'
             ),
             new GitlabProject(
-                10,
+                self::SECOND_GITLAB_REPOSITORY_ID,
                 'Description 2',
-                'https://gitlab.example.com',
-                '/',
-                new \DateTimeImmutable('@0'),
-                'main'
-            ),
-            new GitlabProject(
-                14,
-                'Description 3',
                 'https://gitlab.example.com',
                 '/',
                 new \DateTimeImmutable('@0'),
@@ -66,35 +95,48 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
             ),
         ];
 
-
-        $group_data               = [];
-        $group_data['id']         = 102;
-        $group_data['name']       = "nine-nine";
-        $group_data['avatar_url'] = "https://avatar.example.com";
-        $group_data['full_path']  = "brookyln/nine-nie";
-        $group_data['web_url']    = "https://gitlab.example.com/nine-nine";
-
+        $gitlab_group = GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
+            'id'         => 102,
+            'name'       => 'nine-nine',
+            'avatar_url' => 'https://avatar.example.com',
+            'full_path'  => 'brookyln/nine-nine',
+            'web_url'    => 'https://gitlab.example.com/nine-nine',
+        ]);
 
         $handler = new GitlabRepositoryGroupLinkHandler(
             new DBTransactionExecutorPassthrough(),
-            GitlabRepositoryAlreadyIntegratedDaoStub::build(),
-            CreateGitlabRepositoriesStub::buildWithDefault(),
-            BuildGitlabGroupStub::buildWithGroupId(45),
+            $this->verify_gitlab_repository_is_integrated,
+            $this->gitlab_repository_creator,
+            BuildGitlabGroupStub::buildWithGroupId(self::GROUP_ID),
             InsertGroupTokenStub::build()
         );
 
         $credentials = CredentialsTestBuilder::get()->build();
-        $project     = ProjectTestBuilder::aProject()->build();
 
-        $result = $handler->integrateGitlabRepositoriesInProject(
+        return $handler->integrateGitlabRepositoriesInProject(
             $credentials,
             $gitlab_projects,
-            $project,
+            $this->project,
             GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration(),
-            GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data)
+            $gitlab_group
         );
+    }
 
-        self::assertSame(45, $result->id);
-        self::assertSame(1, $result->number_of_integrations);
+    public function testItReturnsTheNewGroupIDAndTheNumberOfRepositoriesIntegrated(): void
+    {
+        $result = $this->integrate();
+
+        self::assertSame(self::GROUP_ID, $result->id);
+        self::assertSame(2, $result->number_of_integrations);
+    }
+
+    public function testItDoesNotRecreateRepositoriesThatWereAlreadyIntegrated(): void
+    {
+        $this->verify_gitlab_repository_is_integrated = VerifyGitlabRepositoryIsIntegratedStub::withAlwaysIntegrated();
+
+        $result = $this->integrate();
+
+        self::assertSame(self::GROUP_ID, $result->id);
+        self::assertSame(0, $result->number_of_integrations);
     }
 }

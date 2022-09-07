@@ -39,7 +39,7 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
 {
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,
-        private GitlabRepositoryAlreadyIntegratedDao $gitlab_repository_dao,
+        private VerifyGitlabRepositoryIsIntegrated $verify_gitlab_repository_is_integrated,
         private CreateGitlabRepositories $gitlab_repository_creator,
         private BuildGitlabGroup $gitlab_group_factory,
         private InsertGroupToken $group_token_inserter,
@@ -73,7 +73,7 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
                     $gitlab_web_url       = $gitlab_project->getWebUrl();
                     $project_id           = (int) $project->getID();
 
-                    $already_existing_gitlab_repository = $this->gitlab_repository_dao->isTheGitlabRepositoryAlreadyIntegratedInProject(
+                    $already_existing_gitlab_repository = $this->verify_gitlab_repository_is_integrated->isTheGitlabRepositoryAlreadyIntegratedInProject(
                         $project_id,
                         $gitlab_repository_id,
                         $gitlab_web_url
