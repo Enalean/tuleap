@@ -37,7 +37,6 @@
                     v-for="project of filtered_projects"
                     v-bind:key="project.project_uri"
                     v-bind:project="project"
-                    v-bind:has_programmatically_focus="hasProgrammaticallyFocus(project)"
                 />
             </nav>
             <trove-cat-link
@@ -55,7 +54,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import ProjectLink from "./ProjectLink.vue";
-import type { Project, ItemDefinition } from "../../../type";
+import type { Project } from "../../../type";
 import ProjectsEmptyState from "./ProjectsEmptyState.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 import { useSwitchToStore } from "../../../stores";
@@ -72,16 +71,8 @@ export default class ListOfProjects extends Vue {
         return useSwitchToStore().filtered_projects;
     }
 
-    get programmatically_focused_element(): Project | ItemDefinition | null {
-        return useSwitchToStore().programmatically_focused_element;
-    }
-
     get filter_value(): string {
         return useSwitchToStore().filter_value;
-    }
-
-    hasProgrammaticallyFocus(project: Project): boolean {
-        return project === this.programmatically_focused_element;
     }
 
     get trove_cat_label(): string {

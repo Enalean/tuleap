@@ -70,10 +70,11 @@ import { ref, watch } from "vue";
 import type { ItemDefinition } from "../../../type";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import type { FocusFromItemPayload } from "../../../stores/type";
+import { useSwitchToStore } from "../../../stores";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
     entry: ItemDefinition;
-    has_programmatically_focus: boolean;
     changeFocusCallback: (payload: FocusFromItemPayload) => void;
 }>();
 
@@ -82,18 +83,18 @@ const has_quick_links = ref<boolean>(props.entry.quick_links.length > 0);
 
 const entry_link = ref<HTMLAnchorElement | null>(null);
 
-watch(
-    () => props.has_programmatically_focus,
-    () => {
-        if (!props.has_programmatically_focus) {
-            return;
-        }
+const root_store = useSwitchToStore();
+const { programmatically_focused_element } = storeToRefs(root_store);
 
-        if (entry_link.value instanceof HTMLAnchorElement) {
-            entry_link.value.focus();
-        }
+watch(programmatically_focused_element, () => {
+    if (programmatically_focused_element.value !== props.entry) {
+        return;
     }
-);
+
+    if (entry_link.value instanceof HTMLAnchorElement) {
+        entry_link.value.focus();
+    }
+});
 
 function changeFocus(event: KeyboardEvent): void {
     switch (event.key) {

@@ -41,7 +41,6 @@
                     v-for="entry of filtered_history.entries"
                     v-bind:key="entry.html_url"
                     v-bind:entry="entry"
-                    v-bind:has_programmatically_focus="hasProgrammaticallyFocus(entry)"
                     v-bind:change-focus-callback="changeFocus"
                 />
             </nav>
@@ -61,7 +60,7 @@ import { Component } from "vue-property-decorator";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import ItemEntry from "../ItemEntry.vue";
-import type { UserHistory, ItemDefinition } from "../../../../type";
+import type { UserHistory } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import { useSwitchToStore } from "../../../../stores";
 import type { FocusFromItemPayload } from "../../../../stores/type";
@@ -97,10 +96,6 @@ export default class ListOfRecentItems extends Vue {
 
     get filter_value(): string {
         return useSwitchToStore().filter_value;
-    }
-
-    hasProgrammaticallyFocus(entry: ItemDefinition): boolean {
-        return entry === useSwitchToStore().programmatically_focused_element;
     }
 
     changeFocus(payload: FocusFromItemPayload): void {

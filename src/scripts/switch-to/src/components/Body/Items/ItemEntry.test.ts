@@ -22,6 +22,8 @@ import type { QuickLink, ItemDefinition } from "../../../type";
 import ItemEntry from "./ItemEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
+import { defineStore } from "pinia";
+import type { State } from "../../../stores/type";
 
 describe("ItemEntry", () => {
     it("Displays a link with a cross ref", async () => {
@@ -37,7 +39,6 @@ describe("ItemEntry", () => {
                         label: "Guinea Pig",
                     },
                 } as ItemDefinition,
-                has_programmatically_focus: false,
                 changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
@@ -63,7 +64,6 @@ describe("ItemEntry", () => {
                         label: "Guinea Pig",
                     },
                 } as ItemDefinition,
-                has_programmatically_focus: false,
                 changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
@@ -85,7 +85,6 @@ describe("ItemEntry", () => {
                         label: "Guinea Pig",
                     },
                 } as ItemDefinition,
-                has_programmatically_focus: false,
                 changeFocusCallback: jest.fn(),
             },
             pinia: createTestingPinia(),
@@ -112,7 +111,6 @@ describe("ItemEntry", () => {
             const wrapper = shallowMount(ItemEntry, {
                 propsData: {
                     entry,
-                    has_programmatically_focus: false,
                     changeFocusCallback,
                 },
                 pinia: createTestingPinia(),
@@ -129,21 +127,32 @@ describe("ItemEntry", () => {
     );
 
     it("Forces the focus from the outside", async () => {
+        const useSwitchToStore = defineStore("root", {
+            state: (): State =>
+                ({
+                    programmatically_focused_element: null,
+                } as State),
+        });
+
+        const pinia = createTestingPinia();
+        const store = useSwitchToStore(pinia);
+
+        const entry = {
+            icon_name: "fa-columns",
+            title: "Kanban",
+            color_name: "lake-placid-blue",
+            quick_links: [] as QuickLink[],
+            project: {
+                label: "Guinea Pig",
+            },
+        } as ItemDefinition;
+
         const wrapper = shallowMount(ItemEntry, {
             propsData: {
-                entry: {
-                    icon_name: "fa-columns",
-                    title: "Kanban",
-                    color_name: "lake-placid-blue",
-                    quick_links: [] as QuickLink[],
-                    project: {
-                        label: "Guinea Pig",
-                    },
-                } as ItemDefinition,
-                has_programmatically_focus: false,
+                entry,
                 changeFocusCallback: jest.fn(),
             },
-            pinia: createTestingPinia(),
+            pinia,
             localVue: await createSwitchToLocalVue(),
         });
 
@@ -154,8 +163,9 @@ describe("ItemEntry", () => {
 
         const focus = jest.spyOn(link.element, "focus");
 
-        wrapper.setProps({ has_programmatically_focus: true });
-        await wrapper.vm.$nextTick();
+        await store.$patch({
+            programmatically_focused_element: entry,
+        });
 
         expect(focus).toHaveBeenCalled();
     });

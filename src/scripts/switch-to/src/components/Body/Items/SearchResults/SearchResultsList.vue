@@ -24,7 +24,6 @@
             v-for="(item, key) of results"
             v-bind:key="key"
             v-bind:entry="item"
-            v-bind:has_programmatically_focus="item === programmatically_focused_element"
             v-bind:change-focus-callback="() => {}"
         />
     </div>
@@ -35,12 +34,7 @@ import { useFullTextStore } from "../../../../stores/fulltext";
 import { computed } from "vue";
 import type { ItemDefinition } from "../../../../type";
 import ItemEntry from "../ItemEntry.vue";
-import { useSwitchToStore } from "../../../../stores";
-import { storeToRefs } from "pinia";
 
 const fulltext_store = useFullTextStore();
 const results = computed((): ItemDefinition[] => fulltext_store.fulltext_search_results);
-
-const root_store = useSwitchToStore();
-const { programmatically_focused_element } = storeToRefs(root_store);
 </script>
