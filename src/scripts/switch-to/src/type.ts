@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Project {
+export interface ProjectBaseDefinition {
     readonly project_uri: string;
     readonly project_name: string;
     readonly project_config_uri: string;
@@ -27,6 +27,10 @@ export interface Project {
     readonly is_private_incl_restricted: boolean;
     readonly is_current_user_admin: boolean;
     readonly icon: string;
+}
+
+export interface Project extends ProjectBaseDefinition {
+    readonly quick_link: QuickLink | null;
 }
 
 export interface HiddenField {

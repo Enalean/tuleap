@@ -43,15 +43,12 @@
                 </highlight-matching-text>
             </span>
         </a>
-        <a
-            v-if="project.is_current_user_admin"
-            v-bind:href="project.project_config_uri"
+        <quick-link
+            v-if="project.quick_link"
+            v-bind:link="project.quick_link"
             class="switch-to-projects-project-admin-icon"
-            v-bind:title="admin_title"
             data-test="switch-to-projects-project-admin-icon"
-        >
-            <i class="fa fa-cog" aria-hidden="true"></i>
-        </a>
+        />
     </div>
 </template>
 
@@ -65,9 +62,10 @@ import { sprintf } from "sprintf-js";
 import { useSwitchToStore } from "../../../stores";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import type { ItemDefinition } from "../../../type";
+import QuickLink from "../QuickLink.vue";
 
 @Component({
-    components: { HighlightMatchingText },
+    components: { QuickLink, HighlightMatchingText },
 })
 export default class ProjectLink extends Vue {
     @Prop({ required: true })

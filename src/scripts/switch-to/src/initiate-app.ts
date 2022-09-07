@@ -24,6 +24,7 @@ import type { VueClass } from "vue-class-component/lib/declarations";
 import type { FullTextState, State } from "./stores/type";
 import { useSwitchToStore } from "./stores";
 import { useFullTextStore } from "./stores/fulltext";
+import { getProjectsFromDataset } from "./helpers/get-projects-from-dataset";
 
 export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue>): Promise<void> {
     await initVueGettext(
@@ -36,10 +37,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
 
     const pinia = createPinia();
     const root_state: State = {
-        projects:
-            typeof vue_mount_point.dataset.projects !== "undefined"
-                ? JSON.parse(vue_mount_point.dataset.projects)
-                : [],
+        projects: getProjectsFromDataset(vue_mount_point.dataset.projects, Vue.prototype.$gettext),
         is_trove_cat_enabled: Boolean(vue_mount_point.dataset.isTroveCatEnabled),
         are_restricted_users_allowed: Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed),
         is_search_available: Boolean(vue_mount_point.dataset.isSearchAvailable),
@@ -66,7 +64,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
 
     const fulltext_state: FullTextState = {
         fulltext_search_url: "/api/v1/search",
-        fulltext_search_results: [],
+        fulltext_search_results: {},
         fulltext_search_is_error: false,
         fulltext_search_is_loading: false,
         fulltext_search_is_available: true,
