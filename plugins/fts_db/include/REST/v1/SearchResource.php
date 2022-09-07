@@ -56,6 +56,7 @@ final class SearchResource extends AuthenticatedResource
      * @status 200
      *
      * @return SearchResultEntryRepresentation[]
+     * @psalm-return list<SearchResultEntryRepresentation>
      */
     public function getSearchItems(SearchQueryRepresentation $search_query, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
@@ -69,11 +70,11 @@ final class SearchResource extends AuthenticatedResource
         $event_dispatcher = \EventManager::instance();
         $current_user     = \UserManager::instance()->getCurrentUser();
 
-        return array_map(
+        return array_values(array_map(
             static fn (SearchResultEntry $entry): SearchResultEntryRepresentation => SearchResultEntryRepresentation::fromSearchResultEntry($entry),
             $event_dispatcher->dispatch(
                 new IndexedItemFoundToSearchResult($result_page->page_found_items, $current_user)
             )->search_results
-        );
+        ));
     }
 }
