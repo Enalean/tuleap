@@ -117,7 +117,7 @@ describe("ItemEntry", () => {
                 localVue: await createSwitchToLocalVue(),
             });
 
-            await wrapper.trigger("keydown", { key });
+            await wrapper.find("[data-test=entry-link]").trigger("keydown", { key });
 
             expect(changeFocusCallback).toHaveBeenCalledWith({
                 entry,

@@ -71,7 +71,7 @@ describe("ProjectLink", () => {
         });
 
         const key = "ArrowUp";
-        await wrapper.trigger("keydown", { key });
+        await wrapper.find("[data-test=project-link]").trigger("keydown", { key });
 
         expect(useSwitchToStore().changeFocusFromProject).toHaveBeenCalledWith({
             project,

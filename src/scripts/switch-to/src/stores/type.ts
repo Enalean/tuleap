@@ -44,6 +44,13 @@ export interface FocusFromItemPayload {
     readonly key: "ArrowUp" | "ArrowRight" | "ArrowDown" | "ArrowLeft";
 }
 
+export interface FocusFromQuickLinkPayload {
+    readonly project: Project | null;
+    readonly item: ItemDefinition | null;
+    readonly quick_link: QuickLink;
+    readonly key: "ArrowUp" | "ArrowRight" | "ArrowDown" | "ArrowLeft";
+}
+
 export interface FullTextState {
     fulltext_search_url: string;
     fulltext_search_results: Record<string, ItemDefinition>;

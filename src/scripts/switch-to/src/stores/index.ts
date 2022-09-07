@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FocusFromItemPayload, FocusFromProjectPayload, State } from "./type";
+import type {
+    FocusFromItemPayload,
+    FocusFromProjectPayload,
+    FocusFromQuickLinkPayload,
+    State,
+} from "./type";
 import { defineStore } from "pinia";
 import { get } from "@tuleap/tlp-fetch";
 import type { Project, UserHistory, ItemDefinition } from "../type";
@@ -91,6 +96,48 @@ export const useSwitchToStore = defineStore("root", {
                 throw e;
             }
         },
+
+        changeFocusFromQuickLink(payload: FocusFromQuickLinkPayload): void {
+            if (payload.key === "ArrowUp" || payload.key === "ArrowDown") {
+                return;
+            }
+
+            if (payload.key === "ArrowRight") {
+                const quick_links = payload.project?.quick_links || payload.item?.quick_links || [];
+
+                const next_index = quick_links.indexOf(payload.quick_link) + 1;
+                if (!next_index) {
+                    return;
+                }
+
+                if (next_index >= quick_links.length) {
+                    if (payload.project) {
+                        this.focusFirstHistoryEntry();
+                    }
+                    return;
+                }
+
+                this.programmatically_focused_element = quick_links[next_index];
+                return;
+            }
+
+            if (payload.key === "ArrowLeft") {
+                const quick_links = payload.project?.quick_links || payload.item?.quick_links || [];
+
+                const previous_index = quick_links.indexOf(payload.quick_link) - 1;
+                if (previous_index < -1) {
+                    return;
+                }
+
+                if (previous_index === -1) {
+                    this.programmatically_focused_element = payload.project || payload.item;
+                    return;
+                }
+
+                this.programmatically_focused_element = quick_links[previous_index];
+            }
+        },
+
         changeFocusFromProject(payload: FocusFromProjectPayload): void {
             if (payload.key === "ArrowLeft") {
                 return;
@@ -102,19 +149,7 @@ export const useSwitchToStore = defineStore("root", {
                     return;
                 }
 
-                if (!this.is_history_loaded) {
-                    return;
-                }
-
-                if (this.is_history_in_error) {
-                    return;
-                }
-
-                if (this.filtered_history.entries.length === 0) {
-                    return;
-                }
-
-                this.programmatically_focused_element = this.filtered_history.entries[0];
+                this.focusFirstHistoryEntry();
 
                 return;
             }
@@ -126,6 +161,22 @@ export const useSwitchToStore = defineStore("root", {
                 ),
                 payload.key
             );
+        },
+
+        focusFirstHistoryEntry(): void {
+            if (!this.is_history_loaded) {
+                return;
+            }
+
+            if (this.is_history_in_error) {
+                return;
+            }
+
+            if (this.filtered_history.entries.length === 0) {
+                return;
+            }
+
+            this.programmatically_focused_element = this.filtered_history.entries[0];
         },
 
         changeFocusFromHistory(payload: FocusFromItemPayload): void {

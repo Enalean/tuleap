@@ -84,10 +84,12 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
     >
       <quick-link-stub
         class="switch-to-item-entry-quick-links-link"
+        item="[object Object]"
         link="[object Object]"
       />
       <quick-link-stub
         class="switch-to-item-entry-quick-links-link"
+        item="[object Object]"
         link="[object Object]"
       />
     </div>

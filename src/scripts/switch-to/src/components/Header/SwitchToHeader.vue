@@ -49,47 +49,29 @@
     </form>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import SwitchToFilter from "./SwitchToFilter.vue";
 import type { Modal } from "tlp";
 import { useSwitchToStore } from "../../stores";
-import type { SearchForm } from "../../type";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-@Component({
-    components: { SwitchToFilter },
-})
-export default class SwitchToHeader extends Vue {
-    @Prop({ required: true })
-    private readonly modal!: Modal | null;
-    private store: ReturnType<useSwitchToStore> | null;
+defineProps<{ modal: Modal | null }>();
+const store = useSwitchToStore();
 
-    getStore(): ReturnType<useSwitchToStore> {
-        if (!this.store) {
-            this.store = useSwitchToStore();
-        }
+const { search_form } = storeToRefs(store);
 
-        return this.store;
-    }
+const should_button_be_displayed = computed((): boolean => {
+    return store.filter_value.length > 0 && store.is_search_available;
+});
 
-    submit(event: Event): void {
-        if (!this.should_button_be_displayed) {
-            event.preventDefault();
-        }
-    }
+const is_special_search = computed((): boolean => {
+    return search_form.value.type_of_search !== "soft";
+});
 
-    get search_form(): SearchForm {
-        return this.getStore().search_form;
-    }
-
-    get should_button_be_displayed(): boolean {
-        const store = this.getStore();
-        return store.filter_value.length > 0 && store.is_search_available;
-    }
-
-    get is_special_search(): boolean {
-        return this.search_form.type_of_search !== "soft";
+function submit(event: Event): void {
+    if (!should_button_be_displayed.value) {
+        event.preventDefault();
     }
 }
 </script>

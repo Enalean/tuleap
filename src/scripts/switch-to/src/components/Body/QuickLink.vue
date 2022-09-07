@@ -19,18 +19,27 @@
   -->
 
 <template>
-    <a v-bind:href="link.html_url" v-bind:title="link.name" ref="link_element">
+    <a
+        v-bind:href="link.html_url"
+        v-bind:title="link.name"
+        ref="link_element"
+        v-on:keydown="changeFocus"
+    >
         <i class="fa-solid" v-bind:class="link.icon_name" aria-hidden="true"></i>
     </a>
 </template>
 
 <script setup lang="ts">
-import type { QuickLink } from "../../type";
+import type { ItemDefinition, Project, QuickLink } from "../../type";
 import { useSwitchToStore } from "../../stores";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 
-const props = defineProps<{ link: QuickLink }>();
+const props = defineProps<{
+    link: QuickLink;
+    project: Project | null;
+    item: ItemDefinition | null;
+}>();
 
 const root_store = useSwitchToStore();
 const { programmatically_focused_element } = storeToRefs(root_store);
@@ -45,4 +54,22 @@ watch(programmatically_focused_element, () => {
         link_element.value.focus();
     }
 });
+
+function changeFocus(event: KeyboardEvent): void {
+    switch (event.key) {
+        case "ArrowUp":
+        case "ArrowRight":
+        case "ArrowDown":
+        case "ArrowLeft":
+            event.preventDefault();
+            root_store.changeFocusFromQuickLink({
+                item: props.item,
+                project: props.project,
+                quick_link: props.link,
+                key: event.key,
+            });
+            break;
+        default:
+    }
+}
 </script>
