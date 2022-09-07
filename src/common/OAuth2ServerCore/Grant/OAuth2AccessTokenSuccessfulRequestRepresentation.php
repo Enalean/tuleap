@@ -94,7 +94,7 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
     public function jsonSerialize(): array
     {
         $json_encoded = [
-            'token_type'   => 'bearer',
+            'token_type'   => 'Bearer',
             'access_token' => $this->access_token->getString(),
             'expires_in'   => $this->expires_in,
         ];
