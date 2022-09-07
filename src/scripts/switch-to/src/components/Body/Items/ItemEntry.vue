@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="switch-to-item-entry" v-on:keydown="changeFocus">
+    <div class="switch-to-item-entry">
         <div
             class="switch-to-item-entry-with-links"
             v-bind:class="{ 'switch-to-item-entry-with-links-with-badge': entry.xref }"
@@ -30,6 +30,7 @@
                 class="switch-to-item-entry-link"
                 ref="entry_link"
                 data-test="entry-link"
+                v-on:keydown="changeFocus"
             >
                 <i
                     class="fa fa-fw switch-to-item-entry-icon"
@@ -53,6 +54,8 @@
                     v-bind:key="link.html_url"
                     class="switch-to-item-entry-quick-links-link"
                     v-bind:link="link"
+                    v-bind:item="entry"
+                    v-bind:project="null"
                 />
             </div>
         </div>

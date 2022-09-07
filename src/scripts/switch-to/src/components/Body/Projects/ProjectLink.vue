@@ -19,15 +19,12 @@
   -->
 
 <template>
-    <div
-        class="switch-to-projects-project"
-        v-on:keydown="changeFocus"
-        data-test="switch-to-projects-project"
-    >
+    <div class="switch-to-projects-project" data-test="switch-to-projects-project">
         <a
             v-bind:href="project.project_uri"
             class="switch-to-projects-project-link"
             ref="project_link"
+            v-on:keydown="changeFocus"
             data-test="project-link"
         >
             <i
@@ -47,6 +44,8 @@
             v-for="link of project.quick_links"
             v-bind:key="link.html_url"
             v-bind:link="link"
+            v-bind:project="project"
+            v-bind:item="null"
             class="switch-to-projects-project-admin-icon"
             data-test="switch-to-projects-project-admin-icon"
         />
