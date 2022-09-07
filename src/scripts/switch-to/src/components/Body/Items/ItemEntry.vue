@@ -48,15 +48,12 @@
                 </highlight-matching-text>
             </a>
             <div class="switch-to-item-entry-quick-links" v-if="has_quick_links">
-                <a
+                <quick-link
                     v-for="link of entry.quick_links"
                     v-bind:key="link.html_url"
-                    v-bind:href="link.html_url"
-                    v-bind:title="link.name"
                     class="switch-to-item-entry-quick-links-link"
-                >
-                    <i class="fa" v-bind:class="link.icon_name"></i>
-                </a>
+                    v-bind:link="link"
+                />
             </div>
         </div>
         <span class="switch-to-item-project">
@@ -72,6 +69,7 @@ import HighlightMatchingText from "../HighlightMatchingText.vue";
 import type { FocusFromItemPayload } from "../../../stores/type";
 import { useSwitchToStore } from "../../../stores";
 import { storeToRefs } from "pinia";
+import QuickLink from "../QuickLink.vue";
 
 const props = defineProps<{
     entry: ItemDefinition;

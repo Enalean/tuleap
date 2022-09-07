@@ -82,24 +82,14 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
     <div
       class="switch-to-item-entry-quick-links"
     >
-      <a
+      <quick-link-stub
         class="switch-to-item-entry-quick-links-link"
-        href="/ttm"
-        title="TTM"
-      >
-        <i
-          class="fa fa-check"
-        />
-      </a>
-      <a
+        link="[object Object]"
+      />
+      <quick-link-stub
         class="switch-to-item-entry-quick-links-link"
-        href="/ad"
-        title="AD"
-      >
-        <i
-          class="fa fa-table"
-        />
-      </a>
+        link="[object Object]"
+      />
     </div>
   </div>
    
