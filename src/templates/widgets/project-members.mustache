@@ -5,7 +5,7 @@
             </span>
         </div>
         <a href="{{ view_members_link }}"
-           class="tlp-button-primary tlp-button-outline tlp-button-wide"
+           class="tlp-button-primary tlp-button-outline tlp-button-small"
         >{{# gettext }}View members{{/ gettext }}</a>
     </section>
 </div>
@@ -16,19 +16,16 @@
     <section class="tlp-pane-section-for-cards">
         {{# administrators }}
             <a class="tlp-card tlp-card-selectable widget-project-members-administrators-card" href="/users/{{ user_name }}">
-                <div class="tlp-avatar widget-project-members-avatar">
+                <div class="tlp-avatar tlp-avatar-small widget-project-members-avatar">
                     {{# has_avatar }}
                         <img src="{{ avatar_url }}">
                     {{/ has_avatar }}
                 </div>
                 <span class="widget-project-members-username">{{ username_display }}</span>
-                <span class="widget-project-members-spacer"></span>
                 {{# star_badge_presenter }}
-                    <span class="tlp-badge-warning tlp-badge-rounded widget-project-members-badge tlp-tooltip tlp-tooltip-left"
+                    <span class="tlp-badge-primary tlp-badge-outline tlp-tooltip tlp-tooltip-left"
                           data-tlp-tooltip="{{ tooltip_text }}"
-                    >
-                        <i class="fa fa-star tlp-badge-icon"></i> {{ label }}
-                    </span>
+                    >{{ label }}</span>
                 {{/ star_badge_presenter }}
             </a>
         {{/ administrators }}
