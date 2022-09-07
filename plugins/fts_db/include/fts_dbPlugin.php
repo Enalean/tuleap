@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\FullTextSearchDB\CLI\IndexAllItemsCommand;
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
@@ -57,6 +59,7 @@ final class fts_dbPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(ItemToIndex::NAME);
         $this->addHook(IndexedItemsToRemove::NAME);
+        $this->addHook(CLICommandsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -78,5 +81,15 @@ final class fts_dbPlugin extends Plugin
     public function removeIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
         (new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())->deleteIndexedItems($items_to_remove);
+    }
+
+    public function collectCLICommands(CLICommandsCollector $collector): void
+    {
+        $collector->addCommand(
+            IndexAllItemsCommand::NAME,
+            function (): IndexAllItemsCommand {
+                return new IndexAllItemsCommand(EventManager::instance());
+            }
+        );
     }
 }

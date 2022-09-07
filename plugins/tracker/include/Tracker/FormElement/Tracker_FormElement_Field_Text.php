@@ -607,14 +607,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
                $this->extractCrossRefs($artifact, $content);
 
         if ($res) {
-            (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
-                $artifact,
-                $this,
-                Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
-                    $content,
-                    $body_format ?? Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
-                ),
-            );
+            $this->addRawValueToSearchIndex($artifact, $content, $body_format);
         }
 
         return $res;
@@ -631,6 +624,28 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         assert($last_changeset_value === null || $last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
         $old_format = $last_changeset_value ? $last_changeset_value->getFormat() : null;
         return is_array($value) ? $value['format'] : $old_format;
+    }
+
+    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    {
+        assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
+        $this->addRawValueToSearchIndex(
+            $changeset_value->getChangeset()->getArtifact(),
+            $changeset_value->getText(),
+            $changeset_value->getFormat(),
+        );
+    }
+
+    private function addRawValueToSearchIndex(Artifact $artifact, string $content, ?string $body_format): void
+    {
+        (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+            $artifact,
+            $this,
+            Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
+                $content,
+                $body_format ?? Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+            ),
+        );
     }
 
     /**
