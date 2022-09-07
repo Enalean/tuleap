@@ -81,6 +81,7 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
+use Tuleap\Search\IndexAllPossibleItemsEvent;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
@@ -227,6 +228,7 @@ use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -365,6 +367,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
         $this->addHook(CollectTuleapComputedMetrics::NAME);
         $this->addHook(ConfigureAtXMLImport::NAME);
+
+        $this->addHook(\Tuleap\Search\IndexAllPossibleItemsEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -2630,5 +2634,18 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             )
         );
         $handler->handlePotentialReferencesReceived($event);
+    }
+
+    public function indexAllPossibleItems(IndexAllPossibleItemsEvent $index_all_possible_items_event): void
+    {
+        (new IndexAllArtifactsProcessor(
+            new \Tuleap\Tracker\Search\IndexArtifactDAO(),
+            static function (): Tracker_ArtifactFactory {
+                Tracker_ArtifactFactory::clearInstance();
+                return Tracker_ArtifactFactory::instance();
+            },
+        ))->queueAllExistingArtifactsIntoIndexQueue(
+            $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')
+        );
     }
 }

@@ -1589,4 +1589,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             FrozenFieldsRetriever::instance(),
         );
     }
+
+    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    {
+    }
 }

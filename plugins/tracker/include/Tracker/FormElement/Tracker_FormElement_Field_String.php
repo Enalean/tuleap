@@ -325,14 +325,28 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
                $this->extractCrossRefs($artifact, $value);
 
         if ($res) {
-            (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
-                $artifact,
-                $this,
-                $value,
-            );
+            $this->addRawValueToSearchIndex($artifact, $value);
         }
 
         return $res;
+    }
+
+    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    {
+        assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_String);
+        $this->addRawValueToSearchIndex(
+            $changeset_value->getChangeset()->getArtifact(),
+            $changeset_value->getText(),
+        );
+    }
+
+    private function addRawValueToSearchIndex(Artifact $artifact, string $content): void
+    {
+        (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+            $artifact,
+            $this,
+            $content
+        );
     }
 
     /**
