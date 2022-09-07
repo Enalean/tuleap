@@ -32,7 +32,7 @@ jest.mock("./fulltext", () => {
 
 import * as tlp from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import type { Project, ItemDefinition } from "../type";
+import type { Project, ItemDefinition, QuickLink } from "../type";
 import { useSwitchToStore } from "./index";
 
 describe("Root store", () => {
@@ -122,66 +122,95 @@ describe("Root store", () => {
             });
 
             describe("When user hits ArrowRight", () => {
-                it.each([
-                    [
-                        "the history is not loaded yet",
-                        {
-                            is_history_loaded: false,
-                        },
-                    ],
-                    [
-                        "the history is in error",
-                        {
-                            is_history_loaded: false,
-                            is_history_in_error: true,
-                        },
-                    ],
-                    [
-                        "the history is empty",
-                        {
+                describe("on project user is admin", () => {
+                    it("should focus the admin icon", () => {
+                        const admin_link: QuickLink = {} as QuickLink;
+
+                        const project = {
+                            quick_links: [admin_link],
+                        } as Project;
+
+                        const store = useSwitchToStore();
+                        store.$patch({
+                            programmatically_focused_element: project,
+                        });
+
+                        store.changeFocusFromProject({
+                            project,
+                            key: "ArrowRight",
+                        });
+
+                        expect(store.programmatically_focused_element).toStrictEqual(admin_link);
+                    });
+                });
+
+                describe("on project user is not admin", () => {
+                    it.each([
+                        [
+                            "the history is not loaded yet",
+                            {
+                                is_history_loaded: false,
+                            },
+                        ],
+                        [
+                            "the history is in error",
+                            {
+                                is_history_loaded: false,
+                                is_history_in_error: true,
+                            },
+                        ],
+                        [
+                            "the history is empty",
+                            {
+                                is_history_loaded: true,
+                                is_history_in_error: false,
+                                history: {
+                                    entries: [],
+                                },
+                            },
+                        ],
+                    ])("does nothing if %s", (description, partial_state) => {
+                        const project = {
+                            quick_links: [] as QuickLink[],
+                        } as Project;
+
+                        const store = useSwitchToStore();
+                        store.$patch({
+                            ...partial_state,
+                            programmatically_focused_element: project,
+                        });
+
+                        store.changeFocusFromProject({
+                            project,
+                            key: "ArrowRight",
+                        });
+
+                        expect(store.programmatically_focused_element).toStrictEqual(project);
+                    });
+
+                    it("focus the first history entry", () => {
+                        const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
+                        const another_entry = {
+                            html_url: "/another",
+                            title: "b",
+                        } as ItemDefinition;
+
+                        const store = useSwitchToStore();
+                        store.$patch({
                             is_history_loaded: true,
                             is_history_in_error: false,
                             history: {
-                                entries: [],
+                                entries: [first_entry, another_entry],
                             },
-                        },
-                    ],
-                ])("does nothing if %s", (description, partial_state) => {
-                    const project = {} as Project;
+                        });
 
-                    const store = useSwitchToStore();
-                    store.$patch({
-                        ...partial_state,
-                        programmatically_focused_element: project,
+                        store.changeFocusFromProject({
+                            project: { quick_links: [] as QuickLink[] } as Project,
+                            key: "ArrowRight",
+                        });
+
+                        expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                     });
-
-                    store.changeFocusFromProject({
-                        project,
-                        key: "ArrowRight",
-                    });
-
-                    expect(store.programmatically_focused_element).toStrictEqual(project);
-                });
-
-                it("focus the first history entry", () => {
-                    const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
-                    const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
-
-                    const store = useSwitchToStore();
-                    store.$patch({
-                        is_history_loaded: true,
-                        is_history_in_error: false,
-                        history: {
-                            entries: [first_entry, another_entry],
-                        },
-                    });
-
-                    store.changeFocusFromProject({
-                        project: {} as Project,
-                        key: "ArrowRight",
-                    });
-
-                    expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                 });
             });
 
@@ -365,24 +394,56 @@ describe("Root store", () => {
         });
 
         describe("changeFocusFromHistory", () => {
-            it("does nothing if user hits right key", () => {
-                const entry = { html_url: "/first", title: "a" } as ItemDefinition;
+            describe("When user hits ArrowRight", () => {
+                it("does nothing if item has no quick link", () => {
+                    const entry = {
+                        html_url: "/first",
+                        title: "a",
+                        quick_links: [] as QuickLink[],
+                    } as ItemDefinition;
 
-                const store = useSwitchToStore();
-                store.$patch({
-                    history: {
-                        entries: [entry],
-                    },
-                    projects: [{ project_uri: "/a", project_name: "a" } as Project],
-                    programmatically_focused_element: entry,
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [entry],
+                        },
+                        projects: [{ project_uri: "/a", project_name: "a" } as Project],
+                        programmatically_focused_element: entry,
+                    });
+
+                    store.changeFocusFromHistory({
+                        entry,
+                        key: "ArrowRight",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(entry);
                 });
 
-                store.changeFocusFromHistory({
-                    entry,
-                    key: "ArrowRight",
-                });
+                it("should focus on first quick link", () => {
+                    const first_quick_link = {} as QuickLink;
+                    const second_quick_link = {} as QuickLink;
+                    const entry = {
+                        html_url: "/first",
+                        title: "a",
+                        quick_links: [first_quick_link, second_quick_link],
+                    } as ItemDefinition;
 
-                expect(store.programmatically_focused_element).toStrictEqual(entry);
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [entry],
+                        },
+                        projects: [{ project_uri: "/a", project_name: "a" } as Project],
+                        programmatically_focused_element: entry,
+                    });
+
+                    store.changeFocusFromHistory({
+                        entry,
+                        key: "ArrowRight",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(first_quick_link);
+                });
             });
 
             describe("When user hits ArrowLeft", () => {

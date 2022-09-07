@@ -97,6 +97,11 @@ export const useSwitchToStore = defineStore("root", {
             }
 
             if (payload.key === "ArrowRight") {
+                if (payload.project.quick_links.length > 0) {
+                    this.programmatically_focused_element = payload.project.quick_links[0];
+                    return;
+                }
+
                 if (!this.is_history_loaded) {
                     return;
                 }
@@ -125,6 +130,9 @@ export const useSwitchToStore = defineStore("root", {
 
         changeFocusFromHistory(payload: FocusFromItemPayload): void {
             if (payload.key === "ArrowRight") {
+                if (payload.entry.quick_links.length > 0) {
+                    this.programmatically_focused_element = payload.entry.quick_links[0];
+                }
                 return;
             }
 

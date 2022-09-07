@@ -18,7 +18,6 @@
  */
 
 import type { Project, ProjectBaseDefinition } from "../type";
-import type { QuickLink } from "../type";
 import { sprintf } from "sprintf-js";
 
 export function getProjectsFromDataset(
@@ -32,16 +31,18 @@ export function getProjectsFromDataset(
     const projects_definitions: ProjectBaseDefinition[] = JSON.parse(projects);
 
     return projects_definitions.map((project): Project => {
-        const quick_link: QuickLink | null = project.is_current_user_admin
-            ? {
-                  name: sprintf(
-                      $gettext("Go to project administration of %s"),
-                      project.project_name
-                  ),
-                  html_url: project.project_config_uri,
-                  icon_name: "fa-gear",
-              }
-            : null;
-        return { ...project, quick_link };
+        const quick_links = project.is_current_user_admin
+            ? [
+                  {
+                      name: sprintf(
+                          $gettext("Go to project administration of %s"),
+                          project.project_name
+                      ),
+                      html_url: project.project_config_uri,
+                      icon_name: "fa-gear",
+                  },
+              ]
+            : [];
+        return { ...project, quick_links };
     });
 }

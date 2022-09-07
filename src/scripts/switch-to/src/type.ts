@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface ElementWithQuickLinks {
+    readonly quick_links: QuickLink[];
+}
+
 export interface ProjectBaseDefinition {
     readonly project_uri: string;
     readonly project_name: string;
@@ -29,9 +33,7 @@ export interface ProjectBaseDefinition {
     readonly icon: string;
 }
 
-export interface Project extends ProjectBaseDefinition {
-    readonly quick_link: QuickLink | null;
-}
+export type Project = ProjectBaseDefinition & ElementWithQuickLinks;
 
 export interface HiddenField {
     readonly name: string;
@@ -53,13 +55,12 @@ interface ProjectReference {
     readonly label: string;
 }
 
-export interface ItemDefinition {
+export interface ItemDefinition extends ElementWithQuickLinks {
     readonly xref: string | null;
     readonly html_url: string;
     readonly title: string | null;
     readonly color_name: string;
     readonly icon_name: string;
-    readonly quick_links: QuickLink[];
     readonly project: ProjectReference;
 }
 
