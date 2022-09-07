@@ -30,7 +30,6 @@ use Tracker_ArtifactFactory;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Tracker\Artifact\Heartbeat\ExcludeTrackersFromArtifactHeartbeats;
-use UserHelper;
 use UserManager;
 
 final class LatestHeartbeatsCollector
@@ -39,7 +38,6 @@ final class LatestHeartbeatsCollector
         private Tracker_ArtifactDao $dao,
         private Tracker_ArtifactFactory $factory,
         private UserManager $user_manager,
-        private UserHelper $user_helper,
         private EventDispatcherInterface $event_manager,
     ) {
     }
@@ -74,13 +72,14 @@ final class LatestHeartbeatsCollector
                 new HeartbeatsEntry(
                     $artifact->getLastUpdateDate(),
                     $this->getHTMLMessage($artifact),
-                    "fas fa-list"
+                    "fas fa-list-ol",
+                    $this->getUser($artifact)
                 )
             );
         }
     }
 
-    private function getLastModifiedBy(Artifact $artifact): ?PFUser
+    private function getUser(Artifact $artifact): ?PFUser
     {
         $user = null;
 
@@ -94,37 +93,19 @@ final class LatestHeartbeatsCollector
 
     private function getHTMLMessage(Artifact $artifact): string
     {
-        $last_modified_by = $this->getLastModifiedBy($artifact);
-        $is_an_update     = $artifact->hasMoreThanOneChangeset();
+        $is_an_update = $artifact->hasMoreThanOneChangeset();
+        $title        = $this->getTitle($artifact);
 
-        $title = $this->getTitle($artifact);
-        if ($last_modified_by) {
-            $user_link = $this->user_helper->getLinkOnUser($last_modified_by);
-            if ($is_an_update) {
-                $message = sprintf(
-                    dgettext('tuleap-tracker', '%s has been updated by %s'),
-                    $title,
-                    $user_link
-                );
-            } else {
-                $message = sprintf(
-                    dgettext('tuleap-tracker', '%s has been created by %s'),
-                    $title,
-                    $user_link
-                );
-            }
+        if ($is_an_update) {
+            $message = sprintf(
+                dgettext('tuleap-tracker', '%s updated'),
+                $title
+            );
         } else {
-            if ($is_an_update) {
-                $message = sprintf(
-                    dgettext('tuleap-tracker', '%s has been updated'),
-                    $title
-                );
-            } else {
-                $message = sprintf(
-                    dgettext('tuleap-tracker', '%s has been created'),
-                    $title
-                );
-            }
+            $message = sprintf(
+                dgettext('tuleap-tracker', '%s created'),
+                $title
+            );
         }
 
         return $message;
@@ -139,8 +120,7 @@ final class LatestHeartbeatsCollector
             <a class="direct-link-to-artifact" href="' . $artifact->getUri() . '">
                 <span class="cross-ref-badge ' . $badge_color . '">
                 ' . $artifact->getXRef() . '
-                </span>
-                ' . $purifier->purify($artifact->getTitle()) . '</a>';
+                </span>' . $purifier->purify($artifact->getTitle()) . '</a>';
 
         return $title;
     }

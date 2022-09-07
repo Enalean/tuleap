@@ -81,7 +81,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->dao,
             $this->factory,
             \Mockery::spy(\UserManager::class),
-            \Mockery::spy(\UserHelper::class),
             $event_manager
         );
     }

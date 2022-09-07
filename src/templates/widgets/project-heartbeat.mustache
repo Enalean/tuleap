@@ -43,9 +43,8 @@
                                 <div class="dashboard-widget-content-projectheartbeat-item-message">
                                     {{{ html_message }}}
                                 </div>
-                                <div class="dashboard-widget-content-projectheartbeat-item-time">
-                                    <i class="far fa-clock dashboard-widget-content-projectheartbeat-item-time-icon" aria-hidden="true"></i>
-                                    {{ updated_at }}
+                                <div class="dashboard-widget-content-projectheartbeat-item-metadata">
+                                    {{ updated_at }}{{# user}} by <a class="dashboard-widget-content-projectheartbeat-item-metadata-user" href="{{ user.user_url}}">{{ user.display_name }}</a>{{/ user}}
                                 </div>
                             </div>
                         </div>
