@@ -119,7 +119,7 @@ export const useSwitchToStore = defineStore("root", {
                 }
 
                 if (next_index >= quick_links.length) {
-                    if (payload.project) {
+                    if (payload.project && this.filter_value.length === 0) {
                         this.focusFirstHistoryEntry();
                     }
                     return;
@@ -157,7 +157,9 @@ export const useSwitchToStore = defineStore("root", {
                     return;
                 }
 
-                this.focusFirstHistoryEntry();
+                if (this.filter_value.length === 0) {
+                    this.focusFirstHistoryEntry();
+                }
 
                 return;
             }
@@ -196,6 +198,10 @@ export const useSwitchToStore = defineStore("root", {
             }
 
             if (payload.key === "ArrowLeft") {
+                if (this.filter_value.length !== 0) {
+                    return;
+                }
+
                 if (this.filtered_projects.length === 0) {
                     return;
                 }
