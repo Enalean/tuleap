@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Codendi_HTMLPurifier;
+use EventManager;
 use LogicException;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -385,8 +386,48 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     ) {
         $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value, $url_mapping);
 
-        return $this->getValueDao()->create($changeset_value_id, $steps) &&
+        $res = $this->getValueDao()->create($changeset_value_id, $steps) &&
             $this->extractCrossRefs($artifact, $value);
+
+        if ($res) {
+            $this->addRawValueToSearchIndex($artifact, $steps);
+        }
+
+        return $res;
+    }
+
+    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    {
+        assert($changeset_value instanceof StepDefinitionChangesetValue);
+        $this->addRawValueToSearchIndex(
+            $changeset_value->getChangeset()->getArtifact(),
+            $changeset_value->getValue(),
+        );
+    }
+
+    /**
+     * @param Step[] $steps
+     */
+    private function addRawValueToSearchIndex(Artifact $artifact, array $steps): void
+    {
+        $content_to_index = '';
+
+        foreach ($steps as $step) {
+            $content_to_index .= Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
+                $step->getDescription(),
+                $step->getDescriptionFormat(),
+            ) . "\n";
+            $content_to_index .= Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(
+                $step->getExpectedResults() ?? '',
+                $step->getExpectedResultsFormat(),
+            ) . "\n";
+        }
+
+        (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+            $artifact,
+            $this,
+            $content_to_index,
+        );
     }
 
     /**
