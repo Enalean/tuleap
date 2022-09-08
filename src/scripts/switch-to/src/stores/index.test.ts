@@ -737,6 +737,31 @@ describe("Root store", () => {
                     expect(store.programmatically_focused_element).toStrictEqual(another_project);
                 });
 
+                it("goes down even when we are searching for something", () => {
+                    const first_project = {
+                        project_uri: "/first",
+                        project_name: "First lorem",
+                    } as Project;
+                    const another_project = {
+                        project_uri: "/another",
+                        project_name: "Another lorem",
+                    } as Project;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        projects: [first_project, another_project],
+                        filter_value: "lorem",
+                        programmatically_focused_element: first_project,
+                    });
+
+                    store.changeFocusFromProject({
+                        project: first_project,
+                        key: "ArrowDown",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(another_project);
+                });
+
                 it("does nothing if the last project has already the focus", () => {
                     const first_project = {
                         project_uri: "/first",
@@ -759,6 +784,45 @@ describe("Root store", () => {
                     });
 
                     expect(store.programmatically_focused_element).toStrictEqual(another_project);
+                });
+
+                it("should focus the first recent item if the last project has already the focus and we are searching for something", () => {
+                    const first_project = {
+                        project_uri: "/first",
+                        project_name: "lorem First",
+                    } as Project;
+                    const another_project = {
+                        project_uri: "/another",
+                        project_name: "lorem Another",
+                    } as Project;
+
+                    const first_entry = {
+                        html_url: "/first",
+                        title: "lorem a",
+                    } as ItemDefinition;
+                    const another_entry = {
+                        html_url: "/another",
+                        title: "lorem b",
+                    } as ItemDefinition;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        is_history_loaded: true,
+                        is_history_in_error: false,
+                        history: {
+                            entries: [first_entry, another_entry],
+                        },
+                        projects: [first_project, another_project],
+                        filter_value: "lorem",
+                        programmatically_focused_element: another_project,
+                    });
+
+                    store.changeFocusFromProject({
+                        project: another_project,
+                        key: "ArrowDown",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                 });
             });
         });
@@ -947,6 +1011,43 @@ describe("Root store", () => {
                     expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                 });
 
+                it("goes up even when we are searching for something", () => {
+                    const first_project = {
+                        project_uri: "/first",
+                        project_name: "First lorem",
+                    } as Project;
+                    const another_project = {
+                        project_uri: "/another",
+                        project_name: "Another lorem",
+                    } as Project;
+
+                    const first_entry = {
+                        html_url: "/first-entry",
+                        title: "a lorem",
+                    } as ItemDefinition;
+                    const another_entry = {
+                        html_url: "/another-entry",
+                        title: "b lorem",
+                    } as ItemDefinition;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [first_entry, another_entry],
+                        },
+                        projects: [first_project, another_project],
+                        filter_value: "lorem",
+                        programmatically_focused_element: another_entry,
+                    });
+
+                    store.changeFocusFromHistory({
+                        entry: another_entry,
+                        key: "ArrowUp",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(first_entry);
+                });
+
                 it("does nothing if the first recent item has already the focus", () => {
                     const first_entry = { html_url: "/first", title: "a" } as ItemDefinition;
                     const another_entry = { html_url: "/another", title: "b" } as ItemDefinition;
@@ -965,6 +1066,43 @@ describe("Root store", () => {
                     });
 
                     expect(store.programmatically_focused_element).toStrictEqual(first_entry);
+                });
+
+                it("should focus the last project if the first recent item has already the focus and we are searching for something", () => {
+                    const first_project = {
+                        project_uri: "/first",
+                        project_name: "First lorem",
+                    } as Project;
+                    const another_project = {
+                        project_uri: "/another",
+                        project_name: "Another lorem",
+                    } as Project;
+
+                    const first_entry = {
+                        html_url: "/first-entry",
+                        title: "a lorem",
+                    } as ItemDefinition;
+                    const another_entry = {
+                        html_url: "/another-entry",
+                        title: "b lorem",
+                    } as ItemDefinition;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [first_entry, another_entry],
+                        },
+                        projects: [first_project, another_project],
+                        filter_value: "lorem",
+                        programmatically_focused_element: first_entry,
+                    });
+
+                    store.changeFocusFromHistory({
+                        entry: first_entry,
+                        key: "ArrowUp",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(another_project);
                 });
             });
 
