@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,25 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Config\InvalidConfigKeyValueException;
+use Tuleap\Config\ValueValidator;
 
-final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
+final class MediaWikiCentralDatabaseParameterValidator implements ValueValidator
 {
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    private function __construct(private \PluginManager $plugin_manager)
     {
-        return new LocalSettingsRepresentation(
-            new ConcealedString('random_value'),
-            'https://example.com',
-            'tlp-client-id-test',
-            new ConcealedString('tlp-client-secret'),
-            'en_US',
-            null,
-        );
+    }
+
+    public static function buildSelf(): ValueValidator
+    {
+        return new self(\PluginManager::instance());
+    }
+
+    public function checkIsValid(string $value): void
+    {
+        $plugin = $this->plugin_manager->getPluginByName('mediawiki');
+        if ($plugin instanceof \MediaWikiPlugin && $this->plugin_manager->isPluginEnabled($plugin)) {
+            throw new InvalidConfigKeyValueException("Cannot set value when Mediawiki (legacy) is enabled.\nReference value is in `/etc/tuleap/plugins/mediawiki/etc/mediawiki.inc`");
+        }
     }
 }

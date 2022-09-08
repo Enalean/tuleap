@@ -27,6 +27,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Queue\WorkerEvent;
 
@@ -38,13 +39,14 @@ final class InstanceManagement
         private RequestFactoryInterface $http_request_factory,
         private StreamFactoryInterface $http_stream_factory,
         private ProjectByIDFactory $project_factory,
+        private MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator,
     ) {
     }
 
     public function process(WorkerEvent $worker_event): void
     {
         try {
-            if (($create_event = CreateInstance::fromEvent($worker_event, $this->project_factory)) !== null) {
+            if (($create_event = CreateInstance::fromEvent($worker_event, $this->project_factory, $this->central_database_parameter_generator)) !== null) {
                 $create_event->sendRequest($this->client_factory->getHTTPClient(), $this->http_request_factory, $this->http_stream_factory, $this->logger);
                 return;
             }

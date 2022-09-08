@@ -30,6 +30,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Tuleap\MediawikiStandalone\Configuration\MediaWikiCentralDatabaseParameterGenerator;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -42,11 +43,11 @@ final class CreateInstance
 {
     public const TOPIC = 'tuleap.mediawiki-standalone.instance-creation';
 
-    private function __construct(private \Project $project)
+    private function __construct(private \Project $project, private bool $use_central_database)
     {
     }
 
-    public static function fromEvent(WorkerEvent $event, ProjectByIDFactory $project_factory): ?self
+    public static function fromEvent(WorkerEvent $event, ProjectByIDFactory $project_factory, MediaWikiCentralDatabaseParameterGenerator $central_database_parameter_generator): ?self
     {
         if ($event->getEventName() !== self::TOPIC) {
             return null;
@@ -56,8 +57,10 @@ final class CreateInstance
             throw new \Exception(sprintf('Payload doesnt have project_id or project_id is not integer: %s', var_export($payload, true)));
         }
 
-        $project = $project_factory->getValidProjectById($payload['project_id']);
-        return new self($project);
+        return new self(
+            $project_factory->getValidProjectById($payload['project_id']),
+            $central_database_parameter_generator->getCentralDatabase() !== null,
+        );
     }
 
     public function sendRequest(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): void
@@ -112,7 +115,11 @@ final class CreateInstance
      */
     private function createInstance(ClientInterface $client, RequestFactoryInterface $request_factory, StreamFactoryInterface $stream_factory, LoggerInterface $logger): Ok|Err
     {
-        return self::jsonEncoder(['project_id' => (int) $this->project->getID()])
+        $payload = ['project_id' => (int) $this->project->getID()];
+        if ($this->use_central_database) {
+            $payload['dbprefix'] = 'mw_' . $this->project->getID() . '_';
+        }
+        return self::jsonEncoder($payload)
             ->andThen(
                 /** @return Ok<null>|Err<Fault> */
                 function (string $json_payload) use ($request_factory, $stream_factory, $logger, $client): Ok|Err {

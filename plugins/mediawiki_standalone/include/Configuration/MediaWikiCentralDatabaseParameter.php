@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,25 +16,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
-use Tuleap\Cryptography\ConcealedString;
+use PluginManager;
 
-final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
+final class MediaWikiCentralDatabaseParameter implements MediaWikiCentralDatabaseParameterGenerator
 {
-    public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
+    public function __construct(private PluginManager $plugin_manager)
     {
-        return new LocalSettingsRepresentation(
-            new ConcealedString('random_value'),
-            'https://example.com',
-            'tlp-client-id-test',
-            new ConcealedString('tlp-client-secret'),
-            'en_US',
-            null,
-        );
+    }
+
+    public function getCentralDatabase(): ?string
+    {
+        $plugin = $this->plugin_manager->getPluginByName('mediawiki');
+        if (! $plugin instanceof \MediaWikiPlugin || ! $this->plugin_manager->isPluginEnabled($plugin)) {
+            return null;
+        }
+
+        $legacy_mediawiki = $plugin->getPluginInfo()->getPropertyValueForName('central_database');
+        if (is_string($legacy_mediawiki)) {
+            return $legacy_mediawiki;
+        }
+
+        return \ForgeConfig::get(LocalSettingsRepresentation::CONFIG_CENTRAL_DATABASE, null);
     }
 }

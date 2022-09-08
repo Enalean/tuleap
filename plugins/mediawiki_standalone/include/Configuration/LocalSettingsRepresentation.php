@@ -22,13 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\Configuration;
 
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyCategory;
+use Tuleap\Config\ConfigKeyHelp;
+use Tuleap\Config\ConfigKeyString;
+use Tuleap\Config\ConfigKeyValueValidator;
 use Tuleap\Cryptography\ConcealedString;
 
 /**
  * @psalm-immutable
  */
+#[ConfigKeyCategory('Mediawiki')]
 final class LocalSettingsRepresentation
 {
+    #[ConfigKey('Shared database that centralize all MediaWiki tables')]
+    #[ConfigKeyHelp(<<<EOT
+    This configuration key should be used when system administrator want
+    to restrict the number of database used. It's also useful in a context
+    where it's not possible to create database at will.
+
+    The value that must be provided is the name of the database where all
+    MediaWiki instances tables will created (sharded by a prefix).
+    EOT)]
+    #[ConfigKeyString(null)]
+    #[ConfigKeyValueValidator(MediaWikiCentralDatabaseParameterValidator::class)]
+    public const CONFIG_CENTRAL_DATABASE = 'mediawiki_central_database';
+
     public const MEDIAWIKI_PHP_CLI = '/opt/remi/php74/root/usr/bin/php';
 
     public string $php_cli_path             = self::MEDIAWIKI_PHP_CLI;
@@ -40,6 +59,7 @@ final class LocalSettingsRepresentation
         public string $oauth2_client_id,
         public ConcealedString $oauth2_client_secret,
         string $forge_supported_languages,
+        public ?string $central_database,
     ) {
         $supported_languages = [];
         foreach (explode(',', $forge_supported_languages) as $supported_language) {
