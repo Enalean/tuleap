@@ -28,6 +28,11 @@
         <h2 class="tlp-modal-subtitle switch-to-modal-body-title">
             {{ $gettext("Search results") }}
             <i
+                class="fa-solid fa-circle-question switch-to-search-results-info-icon"
+                role="img"
+                v-bind:title="$gettext('Search in artifacts only')"
+            ></i>
+            <i
                 class="fa-solid fa-circle-notch fa-spin switch-to-search-results-loading-icon"
                 data-test="switch-to-search-results-loading"
                 aria-hidden="true"
