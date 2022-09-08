@@ -106,6 +106,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
@@ -2205,6 +2206,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $this->getChangesetCommentDao(),
                 $this->getReferenceManager(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    EventManager::instance(),
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
     }

@@ -28,6 +28,7 @@ use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\SearchResultEntry;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\RecentlyVisited\SwitchToLinksCollection;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
@@ -55,6 +56,7 @@ class SearchResultRetriever
     {
         return match ($indexed_item->type) {
             FieldContentIndexer::INDEX_TYPE_FIELD_CONTENT => $this->processIndexedFieldContentItem($user, $indexed_item->metadata),
+            ChangesetCommentIndexer::INDEX_TYPE_CHANGESET_COMMENT => $this->processChangesetCommentItem($user, $indexed_item->metadata),
             default => null
         };
     }
@@ -75,6 +77,20 @@ class SearchResultRetriever
 
         $field = $this->form_element_factory->getUsedFormElementFieldById((int) $metadata['field_id']);
         if ($field === null || ! $field->userCanRead($user)) {
+            return null;
+        }
+
+        return $this->buildSearchResultEntry($user, $artifact);
+    }
+
+    private function processChangesetCommentItem(\PFUser $user, array $metadata): ?SearchResultEntry
+    {
+        if (! isset($metadata['artifact_id'])) {
+            return null;
+        }
+
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, (int) $metadata['artifact_id']);
+        if ($artifact === null) {
             return null;
         }
 

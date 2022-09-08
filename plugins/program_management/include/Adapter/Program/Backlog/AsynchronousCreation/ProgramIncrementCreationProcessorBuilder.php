@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
+use Codendi_HTMLPurifier;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_ChangesetFactoryBuilder;
@@ -63,6 +64,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -154,6 +156,10 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    \EventManager::instance(),
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 

@@ -95,6 +95,37 @@ final class SearchResultRetrieverTest extends TestCase
         );
     }
 
+    public function testTransformIndexedChangesetCommentIntoASearchUserWhenUserCanAccessTheArtifactd(): void
+    {
+        $indexed_item_convertor = new IndexedItemFoundToSearchResult(
+            [2 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '123'])],
+            UserTestBuilder::buildWithDefaults()
+        );
+
+        $project  = ProjectTestBuilder::aProject()->build();
+        $artifact = ArtifactTestBuilder::anArtifact(123)->withTitle('title')->inProject($project)->build();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
+
+        $this->retriever->retrieveSearchResult($indexed_item_convertor);
+
+        self::assertEquals(
+            [
+                2 => new SearchResultEntry(
+                    $artifact->getXRef(),
+                    $artifact->getUri(),
+                    $artifact->getTitle(),
+                    'fiesta-red',
+                    null,
+                    null,
+                    'fa-list-ol',
+                    $project,
+                    []
+                ),
+            ],
+            $indexed_item_convertor->search_results
+        );
+    }
+
     public function testDoesNotTouchIndexedItemsWithUnknownTypes(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
@@ -122,7 +153,10 @@ final class SearchResultRetrieverTest extends TestCase
     public function testDoesNotTransformIndexedItemRelatedToAnArtifactTheUserCannotSee(): void
     {
         $indexed_item_convertor = new IndexedItemFoundToSearchResult(
-            [8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '403', 'field_id' => '777'])],
+            [
+                8 => new IndexedItemFound('plugin_artifact_field', ['artifact_id' => '403', 'field_id' => '777']),
+                9 => new IndexedItemFound('plugin_artifact_changeset_comment', ['artifact_id' => '403']),
+            ],
             UserTestBuilder::buildWithDefaults()
         );
 

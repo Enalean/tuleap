@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
@@ -560,7 +561,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                     'text'         => $body,
                 ];
 
-                EventManager::instance()->processEvent('tracker_followup_event_update', $params);
+                $event_manager = EventManager::instance();
+                $event_manager->processEvent('tracker_followup_event_update', $params);
+
+                $changeset_comment_indexer = new ChangesetCommentIndexer($event_manager, Codendi_HTMLPurifier::instance());
+                $changeset_comment_indexer->indexChangesetCommentFromChangeset($this);
 
                 return true;
             }

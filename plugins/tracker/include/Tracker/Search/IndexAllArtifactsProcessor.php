@@ -24,14 +24,18 @@ namespace Tuleap\Tracker\Search;
 
 use Tuleap\Search\ProgressQueueIndexItemCategory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 
 class IndexAllArtifactsProcessor
 {
     /**
      * @psalm-param callable():\Tracker_ArtifactFactory $artifact_factory_builder
      */
-    public function __construct(private IndexArtifactDAO $artifact_dao, private $artifact_factory_builder)
-    {
+    public function __construct(
+        private IndexArtifactDAO $artifact_dao,
+        private $artifact_factory_builder,
+        private ChangesetCommentIndexer $changeset_comment_indexer,
+    ) {
     }
 
     public function queueAllExistingArtifactsIntoIndexQueue(ProgressQueueIndexItemCategory $progress_queue_index_item_category): void
@@ -71,6 +75,10 @@ class IndexAllArtifactsProcessor
             }
 
             $field->addChangesetValueToSearchIndex($changeset_value);
+        }
+
+        foreach ($artifact->getChangesets() as $changeset) {
+            $this->changeset_comment_indexer->indexChangesetCommentFromChangeset($changeset);
         }
     }
 }

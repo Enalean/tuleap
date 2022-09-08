@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Codendi_HTMLPurifier;
 use EventManager;
 use FeedbackDao;
 use Luracast\Restler\RestException;
@@ -79,6 +80,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -746,6 +748,10 @@ class ArtifactsResource extends AuthenticatedResource
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    EventManager::instance(),
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 
