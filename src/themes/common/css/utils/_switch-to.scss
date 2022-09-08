@@ -285,11 +285,16 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
 .switch-to-projects-container {
     flex: 0 0 auto;
     min-width: 200px;
-    max-width: 400px;
+    max-width: $projects-container-width;
 
     > .switch-to-modal-body-title {
         margin: 0 0 var(--tlp-medium-spacing) $content-text-spacing-left;
     }
+}
+
+.switch-to-modal-body-search-results > .switch-to-projects-container {
+    min-width: auto;
+    max-width: none;
 }
 
 .empty-state-text.switch-to-modal-body-global-empty-text,
@@ -329,6 +334,10 @@ $content-text-spacing-left: calc($items-icon-size + $items-icon-margin + $items-
     > .switch-to-modal-body-title {
         margin: 0 0 var(--tlp-medium-spacing) $content-text-spacing-left;
     }
+}
+
+.switch-to-modal-body-search-results > .switch-to-recent-items {
+    width: auto;
 }
 
 .switch-to-projects,

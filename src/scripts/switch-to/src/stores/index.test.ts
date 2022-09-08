@@ -100,9 +100,8 @@ describe("Root store", () => {
         });
 
         describe("changeFocusFromQuickLink", () => {
-            it.each<"ArrowUp" | "ArrowDown">(["ArrowUp", "ArrowDown"])(
-                `it does nothing when user hits %s`,
-                (key) => {
+            describe("When user hits ArrowDown", () => {
+                it("should focus the next item", () => {
                     const first_quick_link = { html_url: "/a" } as QuickLink;
                     const second_quick_link = { html_url: "/b" } as QuickLink;
                     const entry = {
@@ -110,11 +109,16 @@ describe("Root store", () => {
                         title: "a",
                         quick_links: [first_quick_link, second_quick_link],
                     } as ItemDefinition;
+                    const next_entry = {
+                        html_url: "/second",
+                        title: "b",
+                        quick_links: [] as QuickLink[],
+                    } as ItemDefinition;
 
                     const store = useSwitchToStore();
                     store.$patch({
                         history: {
-                            entries: [entry],
+                            entries: [entry, next_entry],
                         },
                         projects: [{ project_uri: "/a", project_name: "a" } as Project],
                         programmatically_focused_element: first_quick_link,
@@ -124,12 +128,119 @@ describe("Root store", () => {
                         project: null,
                         item: entry,
                         quick_link: first_quick_link,
-                        key,
+                        key: "ArrowDown",
                     });
 
-                    expect(store.programmatically_focused_element).toStrictEqual(first_quick_link);
-                }
-            );
+                    expect(store.programmatically_focused_element).toStrictEqual(next_entry);
+                });
+
+                it("should focus the next project", () => {
+                    const admin_quick_link = { html_url: "/admin" } as QuickLink;
+                    const entry = { html_url: "/first", title: "a" } as ItemDefinition;
+
+                    const project_a = {
+                        project_name: "a",
+                        project_uri: "/a",
+                        quick_links: [admin_quick_link],
+                    } as Project;
+                    const project_b = {
+                        project_name: "b",
+                        project_uri: "/b",
+                        quick_links: [] as QuickLink[],
+                    } as Project;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        is_history_loaded: true,
+                        is_history_in_error: false,
+                        history: {
+                            entries: [entry],
+                        },
+                        projects: [project_a, project_b],
+                        programmatically_focused_element: admin_quick_link,
+                    });
+
+                    store.changeFocusFromQuickLink({
+                        project: project_a,
+                        item: null,
+                        quick_link: admin_quick_link,
+                        key: "ArrowDown",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(project_b);
+                });
+            });
+
+            describe("When user hits ArrowUp", () => {
+                it("should focus the previous item", () => {
+                    const first_quick_link = { html_url: "/a" } as QuickLink;
+                    const second_quick_link = { html_url: "/b" } as QuickLink;
+                    const entry = {
+                        html_url: "/first",
+                        title: "a",
+                        quick_links: [first_quick_link, second_quick_link],
+                    } as ItemDefinition;
+                    const previous_entry = {
+                        html_url: "/second",
+                        title: "b",
+                        quick_links: [] as QuickLink[],
+                    } as ItemDefinition;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [previous_entry, entry],
+                        },
+                        projects: [{ project_uri: "/a", project_name: "a" } as Project],
+                        programmatically_focused_element: first_quick_link,
+                    });
+
+                    store.changeFocusFromQuickLink({
+                        project: null,
+                        item: entry,
+                        quick_link: first_quick_link,
+                        key: "ArrowUp",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(previous_entry);
+                });
+
+                it("should focus the previous project", () => {
+                    const admin_quick_link = { html_url: "/admin" } as QuickLink;
+                    const entry = { html_url: "/first", title: "a" } as ItemDefinition;
+
+                    const project_a = {
+                        project_name: "a",
+                        project_uri: "/a",
+                        quick_links: [] as QuickLink[],
+                    } as Project;
+                    const project_b = {
+                        project_name: "b",
+                        project_uri: "/b",
+                        quick_links: [admin_quick_link],
+                    } as Project;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        is_history_loaded: true,
+                        is_history_in_error: false,
+                        history: {
+                            entries: [entry],
+                        },
+                        projects: [project_a, project_b],
+                        programmatically_focused_element: admin_quick_link,
+                    });
+
+                    store.changeFocusFromQuickLink({
+                        project: project_b,
+                        item: null,
+                        quick_link: admin_quick_link,
+                        key: "ArrowUp",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(project_a);
+                });
+            });
 
             describe("When user hits ArrowRight", () => {
                 it("should focus next quick link", () => {
