@@ -164,11 +164,18 @@ final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, S
         $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($items_to_remove->metadata);
 
         $this->getDB()->safeQuery(
-            "DELETE plugin_fts_db_search, plugin_fts_db_metadata
+            "DELETE plugin_fts_db_search
                     FROM plugin_fts_db_search
                     JOIN plugin_fts_db_metadata ON (plugin_fts_db_metadata.search_id = plugin_fts_db_search.id)
                     WHERE type=? AND $metadata_statement_filter",
             array_merge([$items_to_remove->type], $metadata_statement_filter->values())
+        );
+
+        $this->getDB()->run(
+            'DELETE plugin_fts_db_metadata
+            FROM plugin_fts_db_metadata
+            LEFT JOIN plugin_fts_db_search ON (plugin_fts_db_search.id = plugin_fts_db_metadata.search_id)
+            WHERE plugin_fts_db_search.id IS NULL'
         );
     }
 
