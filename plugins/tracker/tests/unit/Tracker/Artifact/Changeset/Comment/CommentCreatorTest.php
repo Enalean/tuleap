@@ -49,15 +49,20 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $ugroup_inserter;
     /**
+     * @var ChangesetCommentIndexer&\PHPUnit\Framework\MockObject\Stub
+     */
+    private $changeset_comment_indexer;
+    /**
      * @var \ProjectUGroup[]
      */
     private array $user_groups_that_are_allowed_to_see;
 
     protected function setUp(): void
     {
-        $this->dao               = $this->createMock(\Tracker_Artifact_Changeset_CommentDao::class);
-        $this->reference_manager = $this->createMock(\ReferenceManager::class);
-        $this->ugroup_inserter   = $this->createMock(TrackerPrivateCommentUGroupPermissionInserter::class);
+        $this->dao                       = $this->createMock(\Tracker_Artifact_Changeset_CommentDao::class);
+        $this->reference_manager         = $this->createMock(\ReferenceManager::class);
+        $this->ugroup_inserter           = $this->createMock(TrackerPrivateCommentUGroupPermissionInserter::class);
+        $this->changeset_comment_indexer = $this->createStub(ChangesetCommentIndexer::class);
 
         $this->user_groups_that_are_allowed_to_see = [];
     }
@@ -80,8 +85,12 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $creator = new CommentCreator(
             $this->dao,
             $this->reference_manager,
-            $this->ugroup_inserter
+            $this->ugroup_inserter,
+            $this->changeset_comment_indexer,
         );
+
+        $this->changeset_comment_indexer->method('indexNewChangesetComment');
+
         $creator->createComment($artifact, $comment);
     }
 
@@ -99,6 +108,9 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             self::CHANGESET_ID,
             new CreatedFileURLMapping()
         );
+
+        $this->changeset_comment_indexer->method('indexNewChangesetComment');
+
         $this->create($comment);
     }
 

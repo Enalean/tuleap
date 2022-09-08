@@ -79,13 +79,10 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookAut
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchInfoDao;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\BranchNameTuleapReferenceParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Branch\PostPushWebhookActionBranchHandler;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
-use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -107,6 +104,8 @@ use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentationFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
@@ -123,6 +122,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -131,6 +131,7 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
+use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -360,7 +361,11 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 $reference_manager,
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 
@@ -582,7 +587,11 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 $reference_manager,
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 

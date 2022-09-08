@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1\Card;
 
+use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Exception;
@@ -37,6 +38,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -120,6 +122,10 @@ class CardPatcher
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    \EventManager::instance(),
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 

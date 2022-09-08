@@ -215,6 +215,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -981,6 +982,10 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new \Tracker_Artifact_Changeset_CommentDao(),
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
+                new ChangesetCommentIndexer(
+                    EventManager::instance(),
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 

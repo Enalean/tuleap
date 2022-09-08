@@ -75,6 +75,7 @@ use Tuleap\Reference\CheckCrossReferenceValidityEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
+use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
@@ -105,6 +106,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\AsynchronousArtifactsDeletionActio
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
+use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
@@ -266,7 +268,6 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Tuleap\Reference\NatureCollection;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -1075,6 +1076,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $tracker_manager = new TrackerManager();
             $tracker_manager->deleteProjectTrackers((int) $event->project->getID());
             (new FieldContentIndexer($event_manager))->askForDeletionOfIndexedFieldsFromProject($event->project);
+            (new ChangesetCommentIndexer($event_manager, Codendi_HTMLPurifier::instance()))->askForDeletionOfIndexedCommentsFromProject($event->project);
         }
     }
 
@@ -2611,7 +2613,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 $reference_manager,
                 new TrackerPrivateCommentUGroupPermissionInserter(
                     new TrackerPrivateCommentUGroupPermissionDao()
-                )
+                ),
+                new ChangesetCommentIndexer(
+                    $event_manager,
+                    Codendi_HTMLPurifier::instance(),
+                ),
             )
         );
 
@@ -2644,6 +2650,10 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 Tracker_ArtifactFactory::clearInstance();
                 return Tracker_ArtifactFactory::instance();
             },
+            new ChangesetCommentIndexer(
+                EventManager::instance(),
+                Codendi_HTMLPurifier::instance(),
+            )
         ))->queueAllExistingArtifactsIntoIndexQueue(
             $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')
         );
