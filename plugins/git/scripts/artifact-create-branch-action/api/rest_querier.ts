@@ -18,7 +18,7 @@
  */
 
 import type { GitRepository } from "../src/types";
-import { decodeJSON, postJSON, getAllJSON } from "@tuleap/fetch-result";
+import { postJSON, getAllJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 
@@ -54,15 +54,15 @@ export const postGitBranch = (
     branch_name: string,
     reference: string
 ): ResultAsync<GitCreateBranchResponse, Fault> =>
-    postJSON(`/api/v1/git/${encodeURIComponent(repository_id)}/branches`, {
+    postJSON<GitCreateBranchResponse>(`/api/v1/git/${encodeURIComponent(repository_id)}/branches`, {
         branch_name,
         reference,
-    }).andThen((response) => decodeJSON<GitCreateBranchResponse>(response));
+    });
 
 export const postPullRequestOnDefaultBranch = (
     repository: GitRepository,
     branch_name: string
-): ResultAsync<Response, Fault> =>
+): ResultAsync<unknown, Fault> =>
     postJSON(`/api/v1/pull_requests`, {
         repository_id: repository.id,
         repository_dest_id: repository.id,

@@ -120,11 +120,15 @@ import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { postJSON } from "@tuleap/fetch-result";
 
-function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<Response, Fault> {
+type CreatedArtifact = {
+    readonly artifact_id: number
+};
+
+function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<CreatedArtifact, Fault> {
     // URI is automatically encoded
     // "Content-Type" header is automatically set to "application/json"
     // The second parameter is automatically encoded to JSON string in the Request body
-    return postJSON("/api/v1/artifacts", { tracker: { id: tracker_id }, values: field_values });
+    return postJSON<CreatedArtifact>("/api/v1/artifacts", { tracker: { id: tracker_id }, values: field_values });
 }
 ```
 

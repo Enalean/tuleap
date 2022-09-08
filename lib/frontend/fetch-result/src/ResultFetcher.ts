@@ -52,7 +52,10 @@ export type FetchResult = {
 
     patchJSON(uri: string, json_payload: unknown): ResultAsync<Response, Fault>;
 
-    postJSON(uri: string, json_payload: unknown): ResultAsync<Response, Fault>;
+    postJSON<TypeOfJSONPayload>(
+        uri: string,
+        json_payload: unknown
+    ): ResultAsync<TypeOfJSONPayload, Fault>;
 
     del(uri: string): ResultAsync<Response, Fault>;
 } & GetAll;
@@ -89,12 +92,14 @@ export const ResultFetcher = (
             body: JSON.stringify(json_payload),
         }),
 
-    postJSON: (uri, json_payload) =>
-        response_retriever.retrieveResponse(getURI(uri), {
-            method: POST_METHOD,
-            headers: json_headers,
-            body: JSON.stringify(json_payload),
-        }),
+    postJSON: <TypeOfJSONPayload>(uri: string, json_payload: unknown) =>
+        response_retriever
+            .retrieveResponse(getURI(uri), {
+                method: POST_METHOD,
+                headers: json_headers,
+                body: JSON.stringify(json_payload),
+            })
+            .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
     del: (uri) => response_retriever.retrieveResponse(getURI(uri), { method: DELETE_METHOD }),
 });

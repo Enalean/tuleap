@@ -80,11 +80,7 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
             const post_spy = jest.spyOn(fetch_result, "postJSON");
-            post_spy.mockReturnValue(
-                okAsync({
-                    json: () => Promise.resolve([]),
-                } as unknown as Response)
-            );
+            post_spy.mockReturnValue(okAsync([]));
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -150,13 +146,10 @@ describe("FullText Store", () => {
 
             const post_spy = jest.spyOn(fetch_result, "postJSON");
             post_spy.mockReturnValue(
-                okAsync({
-                    json: () =>
-                        Promise.resolve([
-                            { title: "toto", html_url: "/toto" },
-                            { title: "titi", html_url: "/titi" },
-                        ] as ItemDefinition[]),
-                } as unknown as Response)
+                okAsync([
+                    { title: "toto", html_url: "/toto" },
+                    { title: "titi", html_url: "/titi" },
+                ] as ItemDefinition[])
             );
 
             store.search("foobar");
@@ -181,13 +174,10 @@ describe("FullText Store", () => {
 
             const post_spy = jest.spyOn(fetch_result, "postJSON");
             post_spy.mockReturnValue(
-                okAsync({
-                    json: () =>
-                        Promise.resolve([
-                            { title: "titi", html_url: "/titi" },
-                            { title: "titi", html_url: "/titi" },
-                        ] as ItemDefinition[]),
-                } as unknown as Response)
+                okAsync([
+                    { title: "titi", html_url: "/titi" },
+                    { title: "titi", html_url: "/titi" },
+                ] as ItemDefinition[])
             );
 
             store.search("foobar");
@@ -211,10 +201,7 @@ describe("FullText Store", () => {
 
             const post_spy = jest.spyOn(fetch_result, "postJSON");
             post_spy.mockReturnValue(
-                okAsync({
-                    json: () =>
-                        Promise.resolve([{ title: "toto" }, { title: "titi" }] as ItemDefinition[]),
-                } as unknown as Response)
+                okAsync([{ title: "toto" }, { title: "titi" }] as ItemDefinition[])
             );
 
             store.search("foobar");
