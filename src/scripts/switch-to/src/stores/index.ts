@@ -164,13 +164,21 @@ export const useSwitchToStore = defineStore("root", {
                 return;
             }
 
-            this.navigateInCollection(
-                this.filtered_projects,
-                this.filtered_projects.findIndex(
-                    (project: Project) => project.project_uri === payload.project.project_uri
-                ),
-                payload.key
+            const current_index = this.filtered_projects.findIndex(
+                (project: Project) => project.project_uri === payload.project.project_uri
             );
+            const is_the_last_project = current_index === this.filtered_projects.length - 1;
+
+            if (
+                is_the_last_project &&
+                payload.key === "ArrowDown" &&
+                this.filter_value.length !== 0
+            ) {
+                this.focusFirstHistoryEntry();
+                return;
+            }
+
+            this.navigateInCollection(this.filtered_projects, current_index, payload.key);
         },
 
         focusFirstHistoryEntry(): void {
@@ -211,13 +219,19 @@ export const useSwitchToStore = defineStore("root", {
                 return;
             }
 
-            this.navigateInCollection(
-                this.filtered_history.entries,
-                this.filtered_history.entries.findIndex(
-                    (entry: ItemDefinition) => entry.html_url === payload.entry.html_url
-                ),
-                payload.key
+            const current_index = this.filtered_history.entries.findIndex(
+                (entry: ItemDefinition) => entry.html_url === payload.entry.html_url
             );
+            const is_the_first_entry = current_index === 0;
+            if (is_the_first_entry && payload.key === "ArrowUp" && this.filter_value.length !== 0) {
+                if (this.filtered_projects.length !== 0) {
+                    this.programmatically_focused_element =
+                        this.filtered_projects[this.filtered_projects.length - 1];
+                }
+                return;
+            }
+
+            this.navigateInCollection(this.filtered_history.entries, current_index, payload.key);
         },
 
         navigateInCollection(
