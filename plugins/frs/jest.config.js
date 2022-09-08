@@ -17,14 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const {
-    jest_base_config,
-    jest_angular_mocks_config,
-} = require("@tuleap/build-system-configurator");
+const { defineAngularMocksJestConfiguration } = require("@tuleap/build-system-configurator");
 
+const jest_base_config = defineAngularMocksJestConfiguration();
 module.exports = {
     ...jest_base_config,
-    ...jest_angular_mocks_config,
     displayName: "frs",
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,

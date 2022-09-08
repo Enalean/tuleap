@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const { defineAngularMocksJestConfiguration } = require("@tuleap/build-system-configurator");
+
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const {
-    jest_base_config,
-    jest_angular_mocks_config,
-} = require("@tuleap/build-system-configurator");
-
+const jest_base_config = defineAngularMocksJestConfiguration();
 module.exports = {
     ...jest_base_config,
-    ...jest_angular_mocks_config,
     displayName: "@tuleap/plugin-tracker-artifact-modal",
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,

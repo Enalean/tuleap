@@ -19,6 +19,7 @@
 
 import path from "path";
 import fs from "fs";
+import { env } from "process";
 
 const esModules = [
     "d3-selection",
@@ -31,93 +32,109 @@ const esModules = [
     "hybrids",
 ].join("|");
 
+type JestConfiguration = Record<string, unknown> & {
+    setupFiles: string[];
+    transform: Record<string, string>;
+};
 const OUTPUT_DIRECTORY = "js-test-results/";
 
-fs.rmSync(OUTPUT_DIRECTORY, { recursive: true, force: true });
+export const defineJestConfiguration = (): JestConfiguration => {
+    fs.rmSync(OUTPUT_DIRECTORY, { recursive: true, force: true });
 
-let config_additional_config = {};
-if (process.env.CI_MODE === "true") {
-    config_additional_config = {
-        ci: true,
-        reporters: ["default", ["jest-junit", { outputDirectory: OUTPUT_DIRECTORY }]],
-        maxWorkers: "30%",
-        verbose: false,
-    };
-}
-if (process.env.COLLECT_COVERAGE === "true") {
-    config_additional_config = {
-        ...config_additional_config,
-        collectCoverage: true,
-        coverageReporters: ["text-summary", "cobertura"],
-        coverageDirectory: OUTPUT_DIRECTORY,
-    };
-}
+    let config_additional_config = {};
+    if (env.CI_MODE === "true") {
+        config_additional_config = {
+            ci: true,
+            reporters: ["default", ["jest-junit", { outputDirectory: OUTPUT_DIRECTORY }]],
+            maxWorkers: "30%",
+            verbose: false,
+        };
+    }
+    if (env.COLLECT_COVERAGE === "true") {
+        config_additional_config = {
+            ...config_additional_config,
+            collectCoverage: true,
+            coverageReporters: ["text-summary", "cobertura"],
+            coverageDirectory: OUTPUT_DIRECTORY,
+        };
+    }
 
-const is_typechecking_enabled = process.env.DISABLE_TS_TYPECHECK !== "true";
+    const is_typechecking_enabled = env.DISABLE_TS_TYPECHECK !== "true";
 
-export const base_config = {
-    testEnvironment: "jsdom",
-    testEnvironmentOptions: {
-        customExportConditions: ["node", "node-addons"],
-    },
-    transform: {
-        "^.+\\.vue$": "@vue/vue2-jest",
-        "^.+\\.ts$": "ts-jest",
-        "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),
-    },
-    moduleNameMapper: {
-        "^.+\\.po$": "identity-obj-proxy",
-        "^tlp$": path.resolve(__dirname, "../../../../../src/themes/tlp/src/js/index.ts"),
-        "^@tuleap/tlp$": path.resolve(__dirname, "../../../../../src/themes/tlp/src/js/index.ts"),
-        // alias to the source TS file to avoid running into "regeneratorRuntime" not defined errors in tests
-        "^@tuleap/tlp-fetch$": path.resolve(__dirname, "../../../tlp-fetch/src/fetch-wrapper.ts"),
-        "\\.(css|scss)(\\?inline)?$": "identity-obj-proxy",
-    },
-    setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],
-    setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
-    globals: {
-        "vue-jest": {
-            transform: {
-                "^js$": path.resolve(__dirname, "./babel-jest-process.js"),
+    return {
+        testEnvironment: "jsdom",
+        testEnvironmentOptions: {
+            customExportConditions: ["node", "node-addons"],
+        },
+        transform: {
+            "^.+\\.vue$": "@vue/vue2-jest",
+            "^.+\\.ts$": "ts-jest",
+            "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),
+        },
+        moduleNameMapper: {
+            "^.+\\.po$": "identity-obj-proxy",
+            "^tlp$": path.resolve(__dirname, "../../../../../src/themes/tlp/src/js/index.ts"),
+            "^@tuleap/tlp$": path.resolve(
+                __dirname,
+                "../../../../../src/themes/tlp/src/js/index.ts"
+            ),
+            // alias to the source TS file to avoid running into "regeneratorRuntime" not defined errors in tests
+            "^@tuleap/tlp-fetch$": path.resolve(
+                __dirname,
+                "../../../tlp-fetch/src/fetch-wrapper.ts"
+            ),
+            "\\.(css|scss)(\\?inline)?$": "identity-obj-proxy",
+        },
+        setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],
+        setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
+        globals: {
+            "vue-jest": {
+                transform: {
+                    "^js$": path.resolve(__dirname, "./babel-jest-process.js"),
+                },
+            },
+            "ts-jest": {
+                diagnostics: is_typechecking_enabled,
+                isolatedModules: !is_typechecking_enabled,
             },
         },
-        "ts-jest": {
-            diagnostics: is_typechecking_enabled,
-            isolatedModules: !is_typechecking_enabled,
-        },
-    },
-    snapshotSerializers: ["jest-serializer-vue"],
-    testMatch: ["**/?(*.)+(test).{js,ts}"],
-    testPathIgnorePatterns: ["/node_modules/", "<rootDir>/scripts/lib/"],
-    collectCoverageFrom: [
-        "**/*.{js,ts,vue}",
-        "!**/node_modules/**",
-        "!**/vendor/**",
-        "!**/assets/**",
-        "!**/frontend-assets/**",
-        "!**/dist/**",
-        "!**/tests/**",
-        "!**/coverage/**",
-        "!**/webpack*js",
-        "!**/vite.config.ts",
-        "!**/jest.config.js",
-        "!**/*.d.ts",
-        "!**/scripts/lib/**",
-    ],
-    // Transpile ESModules because they are not supported by NodeJS (yet)
-    // They are only used in some part of Tuleap but to avoid wasting more
-    // developers time than needed we consider they are present everywhere
-    transformIgnorePatterns: [
-        `/(?!${esModules})/`,
-        "/angular-locker/",
-        "/dragular/",
-        "/ckeditor4/",
-    ],
-    resetModules: true,
-    restoreMocks: true,
-    ...config_additional_config,
+        snapshotSerializers: ["jest-serializer-vue"],
+        testMatch: ["**/?(*.)+(test).{js,ts}"],
+        testPathIgnorePatterns: ["/node_modules/", "<rootDir>/scripts/lib/"],
+        collectCoverageFrom: [
+            "**/*.{js,ts,vue}",
+            "!**/node_modules/**",
+            "!**/vendor/**",
+            "!**/assets/**",
+            "!**/frontend-assets/**",
+            "!**/dist/**",
+            "!**/tests/**",
+            "!**/coverage/**",
+            "!**/webpack*js",
+            "!**/vite.config.ts",
+            "!**/jest.config.js",
+            "!**/*.d.ts",
+            "!**/scripts/lib/**",
+        ],
+        // Transpile ESModules because they are not supported by NodeJS (yet)
+        // They are only used in some part of Tuleap but to avoid wasting more
+        // developers time than needed we consider they are present everywhere
+        transformIgnorePatterns: [
+            `/(?!${esModules})/`,
+            "/angular-locker/",
+            "/dragular/",
+            "/ckeditor4/",
+        ],
+        resetModules: true,
+        restoreMocks: true,
+        ...config_additional_config,
+    };
 };
 
-export const angular_mocks_config = {
-    setupFiles: [...base_config.setupFiles, path.resolve(__dirname, "./fake-jasmine2-env.js")],
+export const defineAngularMocksJestConfiguration = (): JestConfiguration => {
+    const base_config = defineJestConfiguration();
+    return {
+        ...base_config,
+        setupFiles: [...base_config.setupFiles, path.resolve(__dirname, "./fake-jasmine2-env.js")],
+    };
 };

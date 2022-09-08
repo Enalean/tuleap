@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { jest_base_config } from "@tuleap/build-system-configurator";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
 export default {
-    ...jest_base_config,
+    ...defineJestConfiguration(),
     displayName: "@tuleap/plugin-tracker-artifact-ckeditor-image-upload",
 };

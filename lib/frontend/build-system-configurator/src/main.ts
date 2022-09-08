@@ -21,8 +21,5 @@ export * as vite from "./vite/vite-configurator";
 export * from "./vite/vite-plugin-dts";
 export * as webpack_configurator from "./webpack/main";
 export { esbuild_target } from "./browserslist_config";
-export {
-    base_config as jest_base_config,
-    angular_mocks_config as jest_angular_mocks_config,
-} from "./jest/base-config";
+export { defineJestConfiguration, defineAngularMocksJestConfiguration } from "./jest/base-config";
 export { createAngularPromiseWrapper } from "./jest/angular-promise-wrapper";
