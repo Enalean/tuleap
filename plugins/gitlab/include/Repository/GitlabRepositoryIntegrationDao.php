@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Repository;
 
 use Tuleap\DB\DataAccessObject;
 
-class GitlabRepositoryIntegrationDao extends DataAccessObject implements GitlabRepositoryAlreadyIntegratedDao
+class GitlabRepositoryIntegrationDao extends DataAccessObject implements VerifyGitlabRepositoryIsIntegrated
 {
     /**
      * @psalm-return list<array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}>
