@@ -55,8 +55,8 @@ class AgileDashboardPaneInfo extends PaneInfo
         return "/frs/release/$release_id/release-notes";
     }
 
-    public function getIconName()
+    public function getIconName(): string
     {
-        return 'fa-files-o';
+        return 'fa-regular fa-copy';
     }
 }

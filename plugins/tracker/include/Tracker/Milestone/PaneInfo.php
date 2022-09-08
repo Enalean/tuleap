@@ -80,5 +80,5 @@ abstract class PaneInfo
     /**
      * @return string eg: 'fa-table'
      */
-    abstract public function getIconName();
+    abstract public function getIconName(): string;
 }

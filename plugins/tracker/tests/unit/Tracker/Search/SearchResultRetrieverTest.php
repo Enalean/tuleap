@@ -86,7 +86,7 @@ final class SearchResultRetrieverTest extends TestCase
                     'fiesta-red',
                     null,
                     null,
-                    'fa-list-ol',
+                    'fa-solid fa-list-ol',
                     $project,
                     []
                 ),
@@ -117,7 +117,7 @@ final class SearchResultRetrieverTest extends TestCase
                     'fiesta-red',
                     null,
                     null,
-                    'fa-list-ol',
+                    'fa-solid fa-list-ol',
                     $project,
                     []
                 ),
