@@ -34,6 +34,7 @@ import * as tlp from "@tuleap/tlp-fetch";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Project, ItemDefinition, QuickLink } from "../type";
 import { useSwitchToStore } from "./index";
+import type { State } from "./type";
 
 describe("Root store", () => {
     beforeEach(() => {
@@ -329,6 +330,40 @@ describe("Root store", () => {
 
                         expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                     });
+
+                    it("should not focus on recent items if we are on a project but we started to search something", () => {
+                        const admin_quick_link = { html_url: "/admin" } as QuickLink;
+                        const first_entry = {
+                            html_url: "/first",
+                            title: "lorem a",
+                        } as ItemDefinition;
+                        const another_entry = {
+                            html_url: "/another",
+                            title: "lorem b",
+                        } as ItemDefinition;
+
+                        const store = useSwitchToStore();
+                        store.$patch({
+                            is_history_loaded: true,
+                            is_history_in_error: false,
+                            history: {
+                                entries: [first_entry, another_entry],
+                            },
+                            filter_value: "lorem",
+                            programmatically_focused_element: admin_quick_link,
+                        });
+
+                        store.changeFocusFromQuickLink({
+                            project: { quick_links: [admin_quick_link] } as Project,
+                            item: null,
+                            quick_link: admin_quick_link,
+                            key: "ArrowRight",
+                        });
+
+                        expect(store.programmatically_focused_element).toStrictEqual(
+                            admin_quick_link
+                        );
+                    });
                 });
             });
 
@@ -468,7 +503,7 @@ describe("Root store", () => {
                 });
 
                 describe("on project user is not admin", () => {
-                    it.each([
+                    it.each<[string, Partial<State>]>([
                         [
                             "the history is not loaded yet",
                             {
@@ -492,8 +527,20 @@ describe("Root store", () => {
                                 },
                             },
                         ],
+                        [
+                            "the history is not empty but we started to search for something",
+                            {
+                                is_history_loaded: true,
+                                is_history_in_error: false,
+                                history: {
+                                    entries: [{ title: "lorem" } as ItemDefinition],
+                                },
+                                filter_value: "lorem",
+                            },
+                        ],
                     ])("does nothing if %s", (description, partial_state) => {
                         const project = {
+                            project_name: "lorem ipsum project",
                             quick_links: [] as QuickLink[],
                         } as Project;
 
@@ -811,6 +858,33 @@ describe("Root store", () => {
                     });
 
                     expect(store.programmatically_focused_element).toStrictEqual(first_project);
+                });
+
+                it("should not focus the first project if we started to search for something", () => {
+                    const entry = { html_url: "/first", title: "lorem a" } as ItemDefinition;
+
+                    const first_project = { project_uri: "/a", project_name: "lorem a" } as Project;
+                    const another_project = {
+                        project_uri: "/b",
+                        project_name: "lorem b",
+                    } as Project;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [entry],
+                        },
+                        filter_value: "lorem",
+                        projects: [first_project, another_project],
+                        programmatically_focused_element: entry,
+                    });
+
+                    store.changeFocusFromHistory({
+                        entry,
+                        key: "ArrowLeft",
+                    });
+
+                    expect(store.programmatically_focused_element).toStrictEqual(entry);
                 });
             });
 
