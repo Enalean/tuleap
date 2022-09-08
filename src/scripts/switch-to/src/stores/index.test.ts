@@ -20,11 +20,13 @@
 import { createPinia, defineStore, setActivePinia } from "pinia";
 
 const search = jest.fn();
+const focusFirstSearchResult = jest.fn();
 jest.mock("./fulltext", () => {
     return {
         useFullTextStore: defineStore("fulltext", {
             actions: {
                 search,
+                focusFirstSearchResult,
             },
         }),
     };
@@ -824,6 +826,36 @@ describe("Root store", () => {
 
                     expect(store.programmatically_focused_element).toStrictEqual(first_entry);
                 });
+
+                it("should focus the first search result if the last project has already the focus and we are searching for something and there is no recent item", () => {
+                    const first_project = {
+                        project_uri: "/first",
+                        project_name: "lorem First",
+                    } as Project;
+                    const another_project = {
+                        project_uri: "/another",
+                        project_name: "lorem Another",
+                    } as Project;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        is_history_loaded: true,
+                        is_history_in_error: false,
+                        history: {
+                            entries: [],
+                        },
+                        projects: [first_project, another_project],
+                        filter_value: "lorem",
+                        programmatically_focused_element: another_project,
+                    });
+
+                    store.changeFocusFromProject({
+                        project: another_project,
+                        key: "ArrowDown",
+                    });
+
+                    expect(focusFirstSearchResult).toHaveBeenCalled();
+                });
             });
         });
 
@@ -1184,6 +1216,30 @@ describe("Root store", () => {
 
                     expect(store.programmatically_focused_element).toStrictEqual(another_entry);
                 });
+
+                it("should focus the first search result if the last recent item has already the focus and we are searching for something", () => {
+                    const first_entry = { html_url: "/first", title: "a lorem" } as ItemDefinition;
+                    const another_entry = {
+                        html_url: "/another",
+                        title: "b lorem",
+                    } as ItemDefinition;
+
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        history: {
+                            entries: [first_entry, another_entry],
+                        },
+                        filter_value: "lorem",
+                        programmatically_focused_element: another_entry,
+                    });
+
+                    store.changeFocusFromHistory({
+                        entry: another_entry,
+                        key: "ArrowDown",
+                    });
+
+                    expect(focusFirstSearchResult).toHaveBeenCalled();
+                });
             });
         });
 
@@ -1259,6 +1315,21 @@ describe("Root store", () => {
                         { xref: "wiki #ACME" } as ItemDefinition,
                     ],
                 });
+            });
+        });
+
+        describe("setProgrammaticallyFocusedElement", () => {
+            it("should store the new focused element", () => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    programmatically_focused_element: null,
+                });
+
+                const quick_link = { html_url: "/nous-c-est-le-gout" } as QuickLink;
+
+                store.setProgrammaticallyFocusedElement(quick_link);
+
+                expect(store.programmatically_focused_element).toStrictEqual(quick_link);
             });
         });
     });
