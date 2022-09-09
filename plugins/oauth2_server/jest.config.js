@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
-
 module.exports = {
-    ...jest_base_config,
+    ...defineJestConfiguration(),
     displayName: "oauth2_server",
 };

@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { jest_base_config, jest_angular_mocks_config } from "@tuleap/build-system-configurator";
+import { defineAngularMocksJestConfiguration } from "@tuleap/build-system-configurator";
+import { env } from "process";
+
+env.DISABLE_TS_TYPECHECK = "true";
+
+const jest_base_config = defineAngularMocksJestConfiguration();
 export default {
     ...jest_base_config,
-    ...jest_angular_mocks_config,
     displayName: "card-fields",
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,

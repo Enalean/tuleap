@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
+
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-import { jest_base_config } from "@tuleap/build-system-configurator";
 export default {
-    ...jest_base_config,
+    ...defineJestConfiguration(),
     displayName: "@tuleap/plugin-tracker-rich-text-editor",
 };

@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+
 process.env.DISABLE_TS_TYPECHECK = "true";
 
-const { jest_base_config } = require("@tuleap/build-system-configurator");
+const jest_base_config = defineJestConfiguration();
 module.exports = {
     ...jest_base_config,
     displayName: "git-artifact-create-branch-action",
