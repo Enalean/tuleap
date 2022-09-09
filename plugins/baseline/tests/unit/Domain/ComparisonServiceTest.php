@@ -105,7 +105,8 @@ class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         $comparison = ComparisonFactory::one();
         $this->comparison_repository
             ->shouldReceive('delete')
-            ->with($comparison, $this->current_user);
+            ->with($comparison, $this->current_user)
+            ->atLeast()->once();
 
         $this->service->delete($this->current_user, $comparison);
     }

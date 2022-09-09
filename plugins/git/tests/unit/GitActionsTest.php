@@ -442,8 +442,8 @@ class GitActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->shouldReceive('getProjectRepositoriesOwners')->with($projectId)->andReturns($repo_owners);
 
         $controller = \Mockery::spy(\Git::class);
-        $controller->shouldReceive('addData')->with(['repository_list' => $project_repos, 'repositories_owners' => $repo_owners])->ordered();
-        $controller->shouldReceive('addData')->with(['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners])->ordered();
+        $controller->shouldReceive('addData')->with(['repository_list' => $project_repos, 'repositories_owners' => $repo_owners])->ordered()->atLeast()->once();
+        $controller->shouldReceive('addData')->with(['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners])->ordered()->atLeast()->once();
 
         $action = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $action->setController($controller);

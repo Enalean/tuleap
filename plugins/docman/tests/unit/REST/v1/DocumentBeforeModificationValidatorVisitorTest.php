@@ -127,6 +127,7 @@ class DocumentBeforeModificationValidatorVisitorTest extends \Tuleap\Test\PHPUni
 
     public function testItDoesNotThrowErrorWhenExpectingAFileAndGivenItemIsAFile()
     {
+        $this->expectNotToPerformAssertions();
         $file_item = new Docman_File();
 
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);

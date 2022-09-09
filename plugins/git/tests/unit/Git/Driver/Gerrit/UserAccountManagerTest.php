@@ -86,6 +86,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends \Tulea
 
     public function testItCallsRemoteServerFactory(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->user);
     }
 
@@ -126,11 +127,13 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends \Tulea
             'Im an additional key',
         ];
 
+        $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->atLeast()->once();
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server1, $this->user, $added_keys[1]);
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server2, $this->user, $added_keys[1]);
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server1, $this->user, $added_keys[0]);
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server2, $this->user, $added_keys[0]);
 
+        $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->atLeast()->once();
         $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server1, $this->user, $removed_keys[0]);
         $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server2, $this->user, $removed_keys[0]);
         $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->with($this->remote_server1, $this->user, $removed_keys[1]);

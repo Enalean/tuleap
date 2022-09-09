@@ -220,7 +220,7 @@ class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->process_factory
             ->shouldReceive('getProcess')
             ->with(['/usr/bin/systemctl', 'start', 'httpd', 'nginx'])
-            ->andReturns($this->process);
+            ->andReturns($this->process)->atLeast()->once();
 
         $this->command_tester->execute(['action' => 'start', 'targets' => ['httpd', 'nginx']]);
     }

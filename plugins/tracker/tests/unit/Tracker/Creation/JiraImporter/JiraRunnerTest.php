@@ -142,7 +142,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->queue_factory
             ->shouldReceive('getPersistentQueue')
             ->with('app_user_events', 'redis')
-            ->andReturn($persistent_queue);
+            ->andReturn($persistent_queue)
+            ->atLeast()->once();
 
         $persistent_queue
             ->shouldReceive('pushSinglePersistentMessage')
@@ -151,7 +152,8 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
                 [
                     'pending_jira_import_id' => 123,
                 ]
-            );
+            )
+            ->atLeast()->once();
 
         $this->runner->queueJiraImportEvent(123);
     }

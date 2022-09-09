@@ -99,7 +99,7 @@ class SystemEvent_GIT_REPO_DELETETest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($param) {
             return $param instanceof \Tuleap\Git\GitRepositoryDeletionEvent;
-        }));
+        }))->atLeast()->once();
 
         $this->event->process();
     }

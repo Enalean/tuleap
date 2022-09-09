@@ -56,6 +56,7 @@ class ListValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->empty_string_checker->shouldReceive('isEmptyStringAProblem')->withArgs([''])->andReturn(false);
 
+        $this->expectNotToPerformAssertions();
         $this->validator->checkValueIsValid('');
     }
 
@@ -73,6 +74,7 @@ class ListValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getUserByUserName', 'lromo')->andReturn($user);
 
+        $this->expectNotToPerformAssertions();
         $this->validator->checkValueIsValid('lromo');
     }
 

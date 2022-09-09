@@ -82,7 +82,8 @@ class CIBuildUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ci_build_repository
             ->shouldReceive('create')
-            ->with($transition, $added_action);
+            ->with($transition, $added_action)
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -100,7 +101,8 @@ class CIBuildUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransition')
-            ->with($transition);
+            ->with($transition)
+            ->atLeast()->once();
 
         $this->ci_build_repository
             ->shouldReceive('create')
@@ -122,7 +124,8 @@ class CIBuildUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransition')
-            ->with($transition);
+            ->with($transition)
+            ->atLeast()->once();
 
         $this->ci_build_repository
             ->shouldReceive('create')

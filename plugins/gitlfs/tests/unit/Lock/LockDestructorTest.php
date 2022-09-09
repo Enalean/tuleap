@@ -77,7 +77,7 @@ class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->shouldReceive('deleteLock')->with($lock->getId());
+        $this->lock_dao->shouldReceive('deleteLock')->with($lock->getId())->atLeast()->once();
 
         $this->lock_destructor->deleteLock($lock, $lock_owner);
     }
@@ -95,7 +95,7 @@ class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
             1548080140
         );
 
-        $this->lock_dao->shouldReceive('deleteLock')->with($lock->getId());
+        $this->lock_dao->shouldReceive('deleteLock')->with($lock->getId())->atLeast()->once();
 
         $this->lock_destructor->forceDeleteLock($lock);
     }

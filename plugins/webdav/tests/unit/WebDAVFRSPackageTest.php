@@ -380,11 +380,10 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRSPackage->delete();
     }
 
-    /**
-     * Testing succeeded delete
-     */
-    public function testDeleteSucceede(): void
+    public function testDeleteSucceeds(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(true);
         $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns([]);
@@ -437,11 +436,10 @@ class WebDAVFRSPackageTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRSPackage->setName('newName');
     }
 
-    /**
-     * Testing setName succeede
-     */
-    public function testSetNameSucceede(): void
+    public function testSetNameSucceeds(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(true);
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);

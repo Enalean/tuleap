@@ -34,9 +34,9 @@ class WholeInstanceKeysAggregatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $whole_instance_keys = new WholeInstanceKeysAggregator($gitolite_admin_key, $gerrit_server_keys, $user_keys);
 
-        $gitolite_admin_key->shouldReceive('valid')->atLeast();
-        $gerrit_server_keys->shouldReceive('valid')->atLeast();
-        $user_keys->shouldReceive('valid')->atLeast();
+        $gitolite_admin_key->shouldReceive('valid')->atLeast()->once();
+        $gerrit_server_keys->shouldReceive('valid')->atLeast()->once();
+        $user_keys->shouldReceive('valid')->atLeast()->once();
 
         iterator_to_array($whole_instance_keys);
     }

@@ -51,6 +51,8 @@ class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
+        $this->expectNotToPerformAssertions();
+
         $float_field       = Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->shouldReceive('getId')
             ->andReturn(1)

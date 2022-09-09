@@ -289,6 +289,8 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
 
     public function testVisitorDoesNotReturnExceptionIsEverythingIsAlright(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $file_item = new Docman_File();
 
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);

@@ -63,9 +63,11 @@ class SetFloatValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->set_float_value_dao->shouldReceive('create')
             ->with(1)
-            ->andReturn(9);
+            ->andReturn(9)
+            ->atLeast()->once();
         $this->set_float_value_dao->shouldReceive('updatePostAction')
-            ->with(9, 43, 1.23);
+            ->with(9, 43, 1.23)
+            ->atLeast()->once();
 
         $transition      = TransitionFactory::buildATransitionWithId(1);
         $set_float_value = new SetFloatValue(43, 1.23);
@@ -91,7 +93,8 @@ class SetFloatValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_float_value_dao
             ->shouldReceive('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->atLeast()->once();
         $transition = TransitionFactory::buildATransitionWithId(1);
         $this->set_float_value_repository->deleteAllByTransition($transition);
     }

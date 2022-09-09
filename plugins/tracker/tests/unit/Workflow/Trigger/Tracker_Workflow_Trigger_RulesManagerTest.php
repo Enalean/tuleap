@@ -554,8 +554,8 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         $manager->shouldReceive('getRuleById')->with(1)->andReturns($trigger_1);
         $manager->shouldReceive('getRuleById')->with(2)->andReturns($trigger_2);
 
-        $this->rules_processor->shouldReceive('process')->with($artifact, $trigger_1);
-        $this->rules_processor->shouldReceive('process')->with($artifact, $trigger_2);
+        $this->rules_processor->shouldReceive('process')->with($artifact, $trigger_1)->atLeast()->once();
+        $this->rules_processor->shouldReceive('process')->with($artifact, $trigger_2)->atLeast()->once();
         $manager->processTriggers($changeset);
     }
 

@@ -408,6 +408,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = \Mockery::mock(\UserPreferencesDao::class);
         $user->shouldReceive('getPreferencesDao')->andReturns($dao);
 
+        $this->expectNotToPerformAssertions();
+
         $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
@@ -424,6 +426,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = \Mockery::mock(\UserPreferencesDao::class);
         $user->shouldReceive('getPreferencesDao')->andReturns($dao);
 
+        $this->expectNotToPerformAssertions();
+
         $dao->shouldReceive('search')->with($user_id, 'pref_name')->andReturns(\TestHelper::arrayToDar([
             'user_id'          => $user_id,
             'preference_name'  => 'pref_name',
@@ -438,6 +442,8 @@ final class UserTest extends \Tuleap\Test\PHPUnit\TestCase
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao  = \Mockery::mock(\UserPreferencesDao::class);
         $user->shouldReceive('getPreferencesDao')->andReturns($dao);
+
+        $this->expectNotToPerformAssertions();
 
         $dao->shouldReceive('search')->with(101, 'pref_name')->andReturns(\TestHelper::emptyDar());
 

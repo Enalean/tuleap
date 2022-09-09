@@ -454,6 +454,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
 
     public function testItRaisesNoExceptionIfWorkflowIsNotEnabled(): void
     {
+        $this->expectNotToPerformAssertions();
         $fields_data = [];
         $artifact    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
@@ -585,6 +586,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
 
     public function testItDisablesTheGlobalRulesValidation(): void
     {
+        $this->expectNotToPerformAssertions();
         $fields_data = [];
 
         $rules_manager = \Mockery::spy(\Tracker_RulesManager::class);

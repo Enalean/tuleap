@@ -157,6 +157,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
 
     public function testItDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys(): void
     {
+        $this->expectNotToPerformAssertions();
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
         $user = new PFUser([

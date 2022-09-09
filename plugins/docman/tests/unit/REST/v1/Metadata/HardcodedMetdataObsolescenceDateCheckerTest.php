@@ -84,9 +84,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends \Tuleap\Test\PHPUnit\T
     {
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
-        $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->with('obsolescence_date')
-                                 ->andReturn('1');
+        $this->expectNotToPerformAssertions();
 
         $checker->checkObsolescenceDateUsageForDocument(ItemRepresentation::OBSOLESCENCE_DATE_NONE);
     }

@@ -63,9 +63,11 @@ class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->set_date_value_dao->shouldReceive('create')
             ->with(1)
-            ->andReturn(9);
+            ->andReturn(9)
+            ->atLeast()->once();
         $this->set_date_value_dao->shouldReceive('updatePostAction')
-            ->with(9, 43, 1);
+            ->with(9, 43, 1)
+            ->atLeast()->once();
 
         $transition     = TransitionFactory::buildATransitionWithId(1);
         $set_date_value = new SetDateValue(43, 1);
@@ -90,7 +92,8 @@ class SetDateValueRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->set_date_value_dao->shouldReceive('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->atLeast()->once()->atLeast()->once();
 
         $transition = TransitionFactory::buildATransitionWithId(1);
 

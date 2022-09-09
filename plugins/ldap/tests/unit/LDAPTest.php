@@ -22,30 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\LDAP;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\Test\TestLogger;
 
 final class LDAPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * @testWith ["ldaps://ldap1.example.com,ldaps://ldap2.example.com"]
      *           ["ldaps://ldap1.example.com;ldaps://ldap2.example.com"]
      */
     public function testCanTryToFailOverMultipleServersToConnect(string $sys_ldap_server): void
     {
-        $logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $logger = new TestLogger();
 
         $ldap = new \LDAP(
             ['server' => $sys_ldap_server],
             $logger
         );
 
-        $logger->shouldReceive('warning')->with(\Mockery::pattern('# ldaps://ldap1.example.com #'));
-        $logger->shouldReceive('warning')->with(\Mockery::pattern('# ldaps://ldap2.example.com #'));
-        $logger->shouldReceive('warning')->with(\Mockery::pattern('#Cannot connect to any LDAP server#'));
-        $logger->shouldReceive('error');
-
         $ldap->search('dc=example,dc=com', 'filter=something');
+
+        self::assertTrue($logger->hasWarningThatContains('ldaps://ldap1.example.com'));
+        self::assertTrue($logger->hasWarningThatContains('ldaps://ldap2.example.com'));
+        self::assertTrue($logger->hasWarningThatContains('Cannot connect to any LDAP server'));
+        self::assertTrue($logger->hasErrorRecords());
     }
 }

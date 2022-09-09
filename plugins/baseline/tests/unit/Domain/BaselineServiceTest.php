@@ -81,7 +81,7 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->a_project = ProjectFactory::one();
     }
 
-    public function testCreatWithoutSnapshotDateAddsGivenBaselineWithNowAsSnapshoDate()
+    public function testCreateWithoutSnapshotDateAddsGivenBaselineWithNowAsSnapshotDate()
     {
         $this->authorizations->allows(['canCreateBaseline' => true]);
 
@@ -90,12 +90,13 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $this->baseline_repository
             ->shouldReceive('add')
-            ->with($baseline, $this->current_user, $this->clock->now());
+            ->with($baseline, $this->current_user, $this->clock->now())
+            ->atLeast()->once()->atLeast()->once();
 
         $this->service->create($this->current_user, $baseline);
     }
 
-    public function testCreatWithSnapshotDateAddsBaselineWithGivenSnapshoDate()
+    public function testCreateWithSnapshotDateAddsBaselineWithGivenSnapshotDate()
     {
         $this->authorizations->allows(['canCreateBaseline' => true]);
 
@@ -105,7 +106,8 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         $this->baseline_repository
             ->shouldReceive('add')
-            ->with($baseline, $this->current_user, $snapshot_date);
+            ->with($baseline, $this->current_user, $snapshot_date)
+            ->atLeast()->once();
 
         $this->service->create($this->current_user, $baseline);
     }
@@ -131,7 +133,8 @@ class BaselineServiceTest extends \Tuleap\Test\PHPUnit\TestCase
         $baseline = BaselineFactory::one()->build();
         $this->baseline_repository
             ->shouldReceive('delete')
-            ->with($baseline, $this->current_user);
+            ->with($baseline, $this->current_user)
+            ->atLeast()->once();
 
         $this->service->delete($this->current_user, $baseline);
     }

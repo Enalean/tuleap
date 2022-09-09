@@ -263,6 +263,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         // Expect no error
+        $this->expectNotToPerformAssertions();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -275,6 +276,7 @@ class ManifestFileGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         // Expect no error
+        $this->expectNotToPerformAssertions();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }

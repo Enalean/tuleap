@@ -193,7 +193,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_project->shouldReceive('isActive')->andReturnFalse();
         $template_project->shouldReceive('isTemplate')->andReturnTrue();
         $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data);
+        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data)->atLeast()->once();
 
         $this->creator->create(
             $this->project_post_representation,
@@ -220,7 +220,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $template_project->shouldReceive('isActive')->andReturnFalse();
         $template_project->shouldReceive('isTemplate')->andReturnTrue();
         $this->project_manager->shouldReceive('getProject')->with($this->project_post_representation->template_id)->andReturn($template_project);
-        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data);
+        $this->project_creator->shouldReceive('processProjectCreation')->with($project_creation_data)->atLeast()->once();
 
         $this->creator->create(
             $this->project_post_representation,

@@ -92,7 +92,8 @@ class ComparisonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->comparison_service
             ->shouldReceive('delete')
-            ->with($this->current_user, $comparison);
+            ->with($this->current_user, $comparison)
+            ->atLeast()->once();
 
         $this->controller->delete(2);
     }

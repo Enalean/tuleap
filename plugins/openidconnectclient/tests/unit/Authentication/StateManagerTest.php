@@ -31,6 +31,8 @@ final class StateManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItValidatesValidState(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $key                = str_repeat('a', 32);
         $return_to          = '/return_to';
         $nonce              = 'random_string';

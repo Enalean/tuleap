@@ -66,8 +66,8 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file');
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file')->atLeast()->once();
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -82,9 +82,9 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
-        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotFoundException::class);
-        $this->error_logging_helper->shouldReceive('logFileNotFoundException');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
+        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotFoundException::class)->atLeast()->once();
+        $this->error_logging_helper->shouldReceive('logFileNotFoundException')->atLeast()->once();
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -99,9 +99,9 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems();
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
-        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotReadableException::class);
-        $this->error_logging_helper->shouldReceive('logFileNotReadableException');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
+        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotReadableException::class)->atLeast()->once();
+        $this->error_logging_helper->shouldReceive('logFileNotReadableException')->atLeast()->once();
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
@@ -116,9 +116,9 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $root_folder = $this->getRootFolderWithItems(true);
 
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
-        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file');
-        $this->error_logging_helper->shouldReceive('logCorruptedFile');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded')->atLeast()->once();
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/file.pdf', '/path/to/file')->atLeast()->once();
+        $this->error_logging_helper->shouldReceive('logCorruptedFile')->atLeast()->once();
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }

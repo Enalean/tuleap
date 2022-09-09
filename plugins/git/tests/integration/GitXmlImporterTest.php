@@ -440,6 +440,7 @@ XML;
 
     public function testItShouldImportStaticUgroups(): void
     {
+        $this->expectNotToPerformAssertions();
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -473,6 +474,7 @@ XML;
 
     public function testItShouldImportLegacyPermissions(): void
     {
+        $this->expectNotToPerformAssertions();
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -543,6 +545,7 @@ XML;
 
     public function testItShouldAtLeastSetProjectsAdminAsGitAdmins(): void
     {
+        $this->expectNotToPerformAssertions();
         $xml = <<<XML
             <project>
                 <git>
@@ -556,6 +559,7 @@ XML;
 
     public function testItShouldImportGitAdmins(): void
     {
+        $this->expectNotToPerformAssertions();
         $xml    = <<<XML
             <project>
                 <git>

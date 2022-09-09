@@ -370,6 +370,8 @@ class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         );
 
+        $this->expectNotToPerformAssertions();
+
         $hook->assertCommitIsValid($this->repository, '1');
     }
 

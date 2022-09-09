@@ -104,7 +104,7 @@ class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             }),
             $this->user,
             $user_operation
-        )->andReturns(Mockery::mock(SplitToken::class));
+        )->andReturns(Mockery::mock(SplitToken::class))->atLeast()->once();
 
         $this->response_builder->getResponse(
             $this->repository,

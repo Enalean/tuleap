@@ -154,8 +154,8 @@ XML;
         $pm      = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
 
-        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [2], FRSPermission::FRS_READER)->ordered();
-        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [3], FRSPermission::FRS_ADMIN)->ordered();
+        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [2], FRSPermission::FRS_READER)->ordered()->atLeast()->once();
+        $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [3], FRSPermission::FRS_ADMIN)->ordered()->atLeast()->once();
 
         $xml = <<<XML
         <project>

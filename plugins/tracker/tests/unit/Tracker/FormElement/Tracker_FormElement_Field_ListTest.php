@@ -543,6 +543,7 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
         $this->list_field->setCriteriaValue(['404'], 12);
 
+        $this->expectNotToPerformAssertions();
         $this->list_field->exportCriteriaValueToXML($criteria, $xml_element);
     }
 }

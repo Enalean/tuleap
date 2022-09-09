@@ -216,6 +216,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldNotRaiseExceptionWithEmptyTrackerDescription(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->tracker_xml_importer->shouldReceive('createFromXML')->andReturn(\Mockery::spy(\Tracker::class));
 
         $xml_input = new SimpleXMLElement(
@@ -237,6 +238,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldNotRaiseExceptionWithOnlyWhitespacesTrackerDescription(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->tracker_xml_importer->shouldReceive('createFromXML')->andReturn(\Mockery::spy(\Tracker::class));
 
         $xml_input = new SimpleXMLElement(
@@ -853,6 +855,8 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItImportsUpdatedArtifacts(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
                      <trackers>

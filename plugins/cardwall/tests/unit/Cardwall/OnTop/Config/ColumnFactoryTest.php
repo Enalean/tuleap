@@ -51,6 +51,7 @@ class ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldNotFatalErrorOnInvalidBindValue()
     {
+        $this->expectNotToPerformAssertions();
         $filter = [123, 234];
         $bind   = Mockery::mock(\Tracker_FormElement_Field_List_Bind::class)->makePartial();
 
