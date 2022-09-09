@@ -18,22 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Language\LocaleSwitcher;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TuleapRegisterMail
 {
-    /** @var MailPresenterFactory */
-    private $mail_presenter_factory;
-
-    /** @var TemplateRenderer */
-    private $renderer;
-
-    /** @var string */
-    private $template;
-
-    public function __construct(MailPresenterFactory $mail_presenter_factory, TemplateRenderer $renderer, $template)
-    {
-        $this->mail_presenter_factory = $mail_presenter_factory;
-        $this->renderer               = $renderer;
-        $this->template               = $template;
+    public function __construct(
+        private MailPresenterFactory $mail_presenter_factory,
+        private TemplateRenderer $renderer,
+        private UserManager $user_manager,
+        private LocaleSwitcher $locale_switcher,
+        private string $template,
+    ) {
     }
 
     /**
@@ -43,41 +39,54 @@ class TuleapRegisterMail
      */
     public function getMail($login, $confirm_hash, $base_url, $from, $to, $presenter_role)
     {
-        if ($presenter_role === "user") {
-            $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
-            include($GLOBALS['Language']->getContent('include/new_user_email'));
-        } elseif ($presenter_role === "admin") {
-            $subject = sprintf(_('Welcome to %1$s!'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
-            include($GLOBALS['Language']->getContent('account/new_account_email'));
-        } elseif ($presenter_role === "admin-notification") {
-            $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
-            $subject      = sprintf(_('New User Registered: %1$s'), $login);
-            $message      = $this->createNotificationMessageText($login, $redirect_url);
-        } else {
-            $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
-            include($GLOBALS['Language']->getContent('admin/new_account_email'));
+        $user = $this->user_manager->getUserByLoginName($login);
+        if (! $user) {
+            throw new LogicException(
+                "User $login not found. This is not expected."
+            );
         }
 
-        $mail     = new Codendi_Mail();
-        $cid_logo = $this->addLogoInAttachment($mail);
-        $mail->setSubject($subject);
-        $mail->setTo($to);
-        $mail->setBodyHtml(
-            $this->renderer->renderToString(
-                $this->template,
-                $this->mail_presenter_factory->createMailAccountPresenter(
-                    $login,
-                    $confirm_hash,
-                    $presenter_role,
-                    $cid_logo
-                )
-            ),
-            Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL
-        );
-        $mail->setBodyText($message);
-        $mail->setFrom($from);
+        return $this->locale_switcher->setLocaleForSpecificExecutionContext(
+            $user->getLocale(),
+            function () use ($user, $login, $confirm_hash, $base_url, $from, $to, $presenter_role): Codendi_Mail {
+                if ($presenter_role === "user") {
+                    $subject = $user->getLanguage()->getText('include_proj_email', 'account_register', ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
+                    include($user->getLanguage()->getContent('include/new_user_email'));
+                } elseif ($presenter_role === "admin") {
+                    $subject = sprintf(_('Welcome to %1$s!'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
+                    include($user->getLanguage()->getContent('account/new_account_email'));
+                } elseif ($presenter_role === "admin-notification") {
+                    $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
+                    $subject      = sprintf(_('New User Registered: %1$s'), $login);
+                    $message      = $this->createNotificationMessageText($login, $redirect_url);
+                } else {
+                    $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME));
+                    include($user->getLanguage()->getContent('admin/new_account_email'));
+                }
 
-        return $mail;
+                $mail     = new Codendi_Mail();
+                $cid_logo = $this->addLogoInAttachment($mail);
+                $mail->setSubject($subject);
+                $mail->setTo($to);
+                $mail->setBodyHtml(
+                    $this->renderer->renderToString(
+                        $this->template,
+                        $this->mail_presenter_factory->createMailAccountPresenter(
+                            $user,
+                            $login,
+                            $confirm_hash,
+                            $presenter_role,
+                            $cid_logo,
+                        )
+                    ),
+                    Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL
+                );
+                $mail->setBodyText($message);
+                $mail->setFrom($from);
+
+                return $mail;
+            }
+        );
     }
 
     /**

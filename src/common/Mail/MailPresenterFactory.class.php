@@ -21,6 +21,7 @@
 use Tuleap\Mail\MailAccountSuspensionAlertPresenter;
 use Tuleap\Mail\MailAccountSuspensionPresenter;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MailPresenterFactory
 {
     public const FLAMING_PARROT_THEME = 'FlamingParrot';
@@ -28,9 +29,9 @@ class MailPresenterFactory
     /**
      * Create a presenter for email account.
      *
-     * @return MailRegisterPresenter
+     * @return MailRegisterPresenter|MailNotificationPresenter
      */
-    public function createMailAccountPresenter($login, $confirm_hash, $presenter_role, string $logo_url)
+    public function createMailAccountPresenter(PFUser $user, $login, $confirm_hash, $presenter_role, string $logo_url)
     {
         $color_logo   = "#000";
         $color_button = "#347DBA";
@@ -48,13 +49,13 @@ class MailPresenterFactory
         ];
 
         if ($presenter_role === "user") {
-            $presenter = $this->createUserEmailPresenter($attributes_presenter);
+            $presenter = $this->createUserEmailPresenter($user, $attributes_presenter);
         } elseif ($presenter_role === "admin") {
-            $presenter = $this->createAdminEmailPresenter($attributes_presenter);
+            $presenter = $this->createAdminEmailPresenter($user, $attributes_presenter);
         } elseif ($presenter_role === "admin-notification") {
             $presenter = $this->createAdminNotificationPresenter($attributes_presenter);
         } else {
-            $presenter = $this->createApprovalEmailPresenter($attributes_presenter);
+            $presenter = $this->createApprovalEmailPresenter($user, $attributes_presenter);
         }
         return $presenter;
     }
@@ -98,11 +99,11 @@ class MailPresenterFactory
      *
      * @return MailRegisterByAdminPresenter
      */
-    private function createAdminEmailPresenter(array $attributes_presenter)
+    private function createAdminEmailPresenter(PFUser $user, array $attributes_presenter)
     {
         $login = $attributes_presenter["login"];
 
-        include($GLOBALS['Language']->getContent('account/new_account_email'));
+        include($user->getLanguage()->getContent('account/new_account_email'));
         $presenter = new MailRegisterByAdminPresenter(
             $attributes_presenter["logo_url"],
             $title,
@@ -125,13 +126,13 @@ class MailPresenterFactory
      *
      * @return MailRegisterByUserPresenter
      */
-    private function createUserEmailPresenter(array $attributes_presenter)
+    private function createUserEmailPresenter(PFUser $user, array $attributes_presenter)
     {
         $base_url     = $attributes_presenter["base_url"];
         $login        = $attributes_presenter["login"];
         $confirm_hash = $attributes_presenter["confirm_hash"];
 
-        include($GLOBALS['Language']->getContent('include/new_user_email'));
+        include($user->getLanguage()->getContent('include/new_user_email'));
         $redirect_url = $base_url . "/account/login.php?confirm_hash=$confirm_hash";
 
         $presenter = new MailRegisterByUserPresenter(
@@ -153,12 +154,9 @@ class MailPresenterFactory
     }
 
     /**
-     * Create a presenter for
-     * admin notification.
-     *
-     * @return MailRegisterByUserPresenter
+     * Create a presenter for admin notification.
      */
-    private function createAdminNotificationPresenter(array $attributes_presenter)
+    private function createAdminNotificationPresenter(array $attributes_presenter): MailRegisterByAdminNotificationPresenter
     {
         $base_url     = $attributes_presenter["base_url"];
         $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
@@ -183,17 +181,14 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
     }
 
     /**
-     * Create a presenter for approval
-     * account register.
-     *
-     * @return MailRegisterByUserPresenter
+     * Create a presenter for approval account register.
      */
-    private function createApprovalEmailPresenter(array $attributes_presenter)
+    private function createApprovalEmailPresenter(PFUser $user, array $attributes_presenter): MailRegisterByAdminApprovalPresenter
     {
         $base_url = $attributes_presenter["base_url"];
         $login    = $attributes_presenter["login"];
 
-        include($GLOBALS['Language']->getContent('admin/new_account_email'));
+        include($user->getLanguage()->getContent('admin/new_account_email'));
 
         $presenter = new MailRegisterByAdminApprovalPresenter(
             $attributes_presenter["logo_url"],
@@ -213,10 +208,8 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
 
     /**
      * Create a presenter for project register.
-     *
-     * @return MailRegisterByUserPresenter
      */
-    private function createMailProjectRegisterPresenter(Project $project, $color_logo, $logo_url)
+    private function createMailProjectRegisterPresenter(Project $project, $color_logo, $logo_url): MailProjectOneStepRegisterPresenter
     {
         $presenter = new MailProjectOneStepRegisterPresenter(
             $project,
@@ -229,10 +222,8 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
 
     /**
      * Create a presenter for project register.
-     *
-     * @return MailRegisterByUserPresenter
      */
-    private function createMailProjectRegisterNotificationPresenter(Project $project, $color_logo, $logo_url, $color_button)
+    private function createMailProjectRegisterNotificationPresenter(Project $project, $color_logo, $logo_url, $color_button): MailProjectNotificationPresenter
     {
         $presenter = new MailProjectNotificationPresenter(
             $project,
@@ -245,12 +236,9 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
     }
 
     /**
-     * Create a presenter for project register,
-     * which must be approved
-     *
-     * @return MailRegisterByUserPresenter
+     * Create a presenter for project register, which must be approved
      */
-    private function createMailProjectNotificationMustBeApprovedPresenter(Project $project, $color_logo, $logo_url, $color_button)
+    private function createMailProjectNotificationMustBeApprovedPresenter(Project $project, $color_logo, $logo_url, $color_button): MailProjectNotificationMustBeApprovedPresenter
     {
         $presenter = new MailProjectNotificationMustBeApprovedPresenter(
             $project,
@@ -263,12 +251,9 @@ User Name:'), ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME), $at
     }
 
     /**
-     * Return the color of theme
-     * with references parameters
-     *
-     * @return string
+     * Return the color of theme with references parameters
      */
-    private function setColorTheme(&$color_logo = null, &$color_button = null)
+    private function setColorTheme(&$color_logo = null, &$color_button = null): void
     {
         if (! class_exists('FlamingParrot_Theme')) {
             require_once __DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
