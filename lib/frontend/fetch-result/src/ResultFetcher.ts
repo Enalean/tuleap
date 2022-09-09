@@ -57,6 +57,8 @@ export type FetchResult = {
         json_payload: unknown
     ): ResultAsync<TypeOfJSONPayload, Fault>;
 
+    post(uri: string, json_payload: unknown): ResultAsync<Response, Fault>;
+
     del(uri: string): ResultAsync<Response, Fault>;
 } & GetAll;
 
@@ -100,6 +102,13 @@ export const ResultFetcher = (
                 body: JSON.stringify(json_payload),
             })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
+
+    post: (uri: string, json_payload: unknown) =>
+        response_retriever.retrieveResponse(getURI(uri), {
+            method: POST_METHOD,
+            headers: json_headers,
+            body: JSON.stringify(json_payload),
+        }),
 
     del: (uri) => response_retriever.retrieveResponse(getURI(uri), { method: DELETE_METHOD }),
 });
