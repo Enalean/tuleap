@@ -18,7 +18,7 @@
  */
 
 import { defineStore } from "pinia";
-import { postJSON } from "@tuleap/fetch-result";
+import { post, decodeJSON } from "@tuleap/fetch-result";
 import type { FullTextState, FocusFromItemPayload } from "./type";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { ref } from "vue";
@@ -55,24 +55,26 @@ export const useFullTextStore = defineStore("fulltext", () => {
         }
 
         delayed_querier.scheduleQuery(() =>
-            postJSON<ItemDefinition[]>(url, {
+            post(url, {
                 search_query: {
                     keywords,
                 },
-            }).match(
-                (results: ItemDefinition[]): void => {
-                    fulltext_search_results.value = deduplicate(results);
-                    fulltext_search_is_loading.value = false;
-                },
-                (fault: Fault) => {
-                    fulltext_search_is_loading.value = false;
-                    if ("isNotFound" in fault && fault.isNotFound() === true) {
-                        fulltext_search_is_available.value = false;
-                        return;
+            })
+                .andThen((response) => decodeJSON<ItemDefinition[]>(response))
+                .match(
+                    (results: ItemDefinition[]): void => {
+                        fulltext_search_results.value = deduplicate(results);
+                        fulltext_search_is_loading.value = false;
+                    },
+                    (fault: Fault) => {
+                        fulltext_search_is_loading.value = false;
+                        if ("isNotFound" in fault && fault.isNotFound() === true) {
+                            fulltext_search_is_available.value = false;
+                            return;
+                        }
+                        fulltext_search_is_error.value = true;
                     }
-                    fulltext_search_is_error.value = true;
-                }
-            )
+                )
         );
     }
 
