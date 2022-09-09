@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\FullTextSearchDB\CLI\IndexAllItemsCommand;
+use Tuleap\FullTextSearchDB\Index\Asynchronous\IndexingWorkerEventDispatcher;
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
@@ -59,9 +61,15 @@ final class fts_dbPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(ItemToIndex::NAME);
         $this->addHook(IndexedItemsToRemove::NAME);
+        $this->addHook(WorkerEvent::NAME);
         $this->addHook(CLICommandsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function getInstallRequirements(): array
+    {
+        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
     }
 
     /**
@@ -75,12 +83,22 @@ final class fts_dbPlugin extends Plugin
 
     public function indexItem(ItemToIndex $item): void
     {
-        (new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())->indexItem($item);
+        (new \Tuleap\Queue\EnqueueTask())->enqueue(
+            \Tuleap\FullTextSearchDB\Index\Asynchronous\IndexItemTask::fromItemToIndex($item)
+        );
     }
 
     public function removeIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
-        (new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())->deleteIndexedItems($items_to_remove);
+        (new \Tuleap\Queue\EnqueueTask())->enqueue(
+            \Tuleap\FullTextSearchDB\Index\Asynchronous\RemoveItemsFromIndexTask::fromItemsToRemove($items_to_remove)
+        );
+    }
+
+    public function workerEvent(WorkerEvent $event): void
+    {
+        $search_dao = new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO();
+        (new IndexingWorkerEventDispatcher($search_dao, $search_dao))->process($event);
     }
 
     public function collectCLICommands(CLICommandsCollector $collector): void
