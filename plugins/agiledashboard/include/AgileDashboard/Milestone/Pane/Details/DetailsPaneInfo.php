@@ -48,9 +48,9 @@ class DetailsPaneInfo extends PaneInfo
         return dgettext('tuleap-agiledashboard', 'Overview');
     }
 
-    public function getIconName()
+    public function getIconName(): string
     {
-        return 'fa-bar-chart';
+        return 'fa-solid fa-chart-bar';
     }
 
     public function getUri(): string

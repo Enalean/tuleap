@@ -45,7 +45,7 @@ class TaskboardPaneInfo extends PaneInfo
 
     public function getIconName(): string
     {
-        return 'fa-tlp-taskboard';
+        return 'fa-solid fa-tlp-taskboard';
     }
 
     public function getUri(): string

@@ -42,7 +42,7 @@ final class AgileDashboardPaneInfoTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetIconName(): void
     {
-        $this->assertSame('fa-files-o', $this->agile_dashboard_pane_info->getIconName());
+        $this->assertSame('fa-regular fa-copy', $this->agile_dashboard_pane_info->getIconName());
     }
 
     public function testIsExternalLink(): void

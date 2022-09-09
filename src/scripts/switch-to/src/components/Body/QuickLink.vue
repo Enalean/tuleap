@@ -25,7 +25,7 @@
         ref="link_element"
         v-on:keydown="changeFocus"
     >
-        <i class="fa-solid" v-bind:class="link.icon_name" aria-hidden="true"></i>
+        <i v-bind:class="link.icon_name" aria-hidden="true"></i>
     </a>
 </template>
 

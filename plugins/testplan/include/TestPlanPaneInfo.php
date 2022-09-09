@@ -68,6 +68,6 @@ final class TestPlanPaneInfo extends PaneInfo
 
     public function getIconName(): string
     {
-        return 'fa-check';
+        return 'fa-solid fa-check';
     }
 }
