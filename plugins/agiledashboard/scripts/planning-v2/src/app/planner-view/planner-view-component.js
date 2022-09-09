@@ -18,7 +18,7 @@
  */
 
 import "./planner-view.tpl.html";
-import { sortByStartDateDescending } from "../milestone/sort-helper";
+import { sortByStartDateAscending } from "../milestone/sort-helper";
 import { extractErrorMessage } from "@tuleap/plugin-agiledashboard-shared";
 import {
     getClosedSubMilestones,
@@ -161,7 +161,7 @@ function controller(
         });
         self.milestones.content = self.milestones.content.concat(milestones);
         $scope.$apply();
-        self.milestones.content.sort(sortByStartDateDescending);
+        self.milestones.content.sort(sortByStartDateAscending);
         return milestones;
     }
 
@@ -289,7 +289,7 @@ function controller(
 
     function addMilestone(milestone) {
         self.milestones.content.unshift(milestone);
-        self.milestones.content.sort(sortByStartDateDescending);
+        self.milestones.content.sort(sortByStartDateAscending);
     }
 
     function showAddItemToSubMilestoneModal(item_type, parent_item) {

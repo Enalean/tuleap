@@ -114,11 +114,13 @@
 
             <span translate>There are no open milestones</span>
         </div>
-        <section class="tlp-pane milestone"
-                 ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
-                 ng-class="['project-color-'+milestone.original_project_provider.background.identifier, milestone.collapsed ? 'collapsed' : '']"
-                 milestone
-        ></section>
+        <div class="milestones">
+            <section class="tlp-pane milestone"
+                    ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
+                    ng-class="['project-color-'+milestone.original_project_provider.background.identifier, milestone.collapsed ? 'collapsed' : '']"
+                    milestone
+            ></section>
+        </div>
 
         <div ng-if="planning.thereAreClosedMilestonesLoaded() || (! planning.thereAreClosedMilestonesLoaded() && planning.milestones.closed_milestones_fully_loaded)" class="milestones-separator">
             <span translate>Closed milestones are below</span>
@@ -141,12 +143,14 @@
 
             <span translate>There are no closed milestones</span>
         </div>
-        <section class="tlp-pane milestone"
-                 ng-if="planning.thereAreClosedMilestonesLoaded()"
-                 ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
-                 ng-class="['project-color-'+milestone.original_project_provider.background.identifier, milestone.collapsed ? 'collapsed' : '']"
-                 milestone
-        ></section>
+        <div class="milestones">
+            <section class="tlp-pane milestone"
+                    ng-if="planning.thereAreClosedMilestonesLoaded()"
+                    ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
+                    ng-class="['project-color-'+milestone.original_project_provider.background.identifier, milestone.collapsed ? 'collapsed' : '']"
+                    milestone
+            ></section>
+        </div>
 
         <div class="milestones-loading" ng-if="planning.milestones.loading"></div>
     </div>

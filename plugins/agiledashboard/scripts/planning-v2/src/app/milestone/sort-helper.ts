@@ -21,15 +21,15 @@ interface ItemWithStartDate {
     readonly start_date: string | null;
 }
 
-export function sortByStartDateDescending(a: ItemWithStartDate, b: ItemWithStartDate): number {
+export function sortByStartDateAscending(a: ItemWithStartDate, b: ItemWithStartDate): number {
     if (a.start_date === b.start_date) {
         return 0;
     }
     if (a.start_date === null) {
-        return -1;
-    }
-    if (b.start_date === null) {
         return 1;
     }
-    return a.start_date > b.start_date ? -1 : 1;
+    if (b.start_date === null) {
+        return -1;
+    }
+    return a.start_date > b.start_date ? 1 : -1;
 }
