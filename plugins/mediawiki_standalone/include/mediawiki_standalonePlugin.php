@@ -156,6 +156,7 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
         $this->addHook(RegisterProjectCreationEvent::NAME);
         $this->addHook(Event::PROJECT_RENAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
+        $this->addHook(Event::USER_MANAGER_UPDATE_DB);
 
         return parent::getHooksAndCallbacks();
     }
@@ -236,6 +237,22 @@ final class mediawiki_standalonePlugin extends Plugin implements PluginWithServi
             (int) $params['group_id'],
             ProjectManager::instance(),
             (int) $params['user_id']
+        );
+
+        if ($task !== null) {
+            (new EnqueueTask())->enqueue($task);
+        }
+    }
+
+    /**
+     * @see Event::USER_MANAGER_UPDATE_DB
+     *
+     * @psalm-param array{old_user: PFUser, new_user: PFUser} $params
+     */
+    public function userManagerUpdateDb(array $params): void
+    {
+        $task = LogUsersOutInstanceTask::logsSpecificUserOutOfAllProjects(
+            (int) $params['new_user']->getId(),
         );
 
         if ($task !== null) {

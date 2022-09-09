@@ -65,6 +65,11 @@ final class LogUsersOutInstanceTask implements QueueTask
         return $task;
     }
 
+    public static function logsSpecificUserOutOfAllProjects(int $user_id): ?self
+    {
+        return new self(null, $user_id);
+    }
+
     public function getTopic(): string
     {
         return LogUsersOutInstance::TOPIC;
