@@ -30,8 +30,11 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Group\BuildGitlabGroup;
+use Tuleap\Gitlab\Group\GitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
 use Tuleap\Gitlab\Group\GitlabGroupDBInsertionRepresentation;
+use Tuleap\Gitlab\Group\LinkARepositoryIntegrationToAGroup;
+use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
 use Tuleap\Gitlab\Group\Token\InsertGroupToken;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
@@ -43,6 +46,7 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
         private CreateGitlabRepositories $gitlab_repository_creator,
         private BuildGitlabGroup $gitlab_group_factory,
         private InsertGroupToken $group_token_inserter,
+        private LinkARepositoryIntegrationToAGroup $link_integration_to_group,
     ) {
     }
 
@@ -62,34 +66,56 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
     ): GitlabGroupRepresentation {
         return $this->db_transaction_executor->execute(
             function () use ($credentials, $gitlab_projects, $project, $configuration, $api_data_representation) {
-                $gitlab_group_for_insertion = GitlabGroupDBInsertionRepresentation::buildGitlabGroupToInsertFromGitlabApi($api_data_representation);
-                $gitlab_group               = $this->gitlab_group_factory->createGroup($gitlab_group_for_insertion);
+                $gitlab_group = $this->gitlab_group_factory->createGroup(
+                    GitlabGroupDBInsertionRepresentation::buildGitlabGroupToInsertFromGitlabApi(
+                        $api_data_representation
+                    )
+                );
 
                 $this->group_token_inserter->insertToken($gitlab_group, $credentials->getApiToken()->getToken());
 
-                $integrated_repositories = [];
+                $number_of_integrated_repositories = 0;
                 foreach ($gitlab_projects as $gitlab_project) {
-                    $gitlab_repository_id = $gitlab_project->getId();
-                    $gitlab_web_url       = $gitlab_project->getWebUrl();
-                    $project_id           = (int) $project->getID();
-
-                    $already_existing_gitlab_repository = $this->verify_gitlab_repository_is_integrated->isTheGitlabRepositoryAlreadyIntegratedInProject(
-                        $project_id,
-                        $gitlab_repository_id,
-                        $gitlab_web_url
-                    );
-
-                    if (! $already_existing_gitlab_repository) {
-                        $integrated_repositories[] = $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
-                            $credentials,
-                            $gitlab_project,
-                            $project,
-                            $configuration
-                        );
-                    }
+                    $this->integrateOneProject($gitlab_project, $project, $credentials, $configuration, $gitlab_group);
+                    $number_of_integrated_repositories++;
                 }
-                return new GitlabGroupRepresentation($gitlab_group->id, count($integrated_repositories));
+                return new GitlabGroupRepresentation($gitlab_group->id, $number_of_integrated_repositories);
             }
+        );
+    }
+
+    /**
+     * @throws GitlabResponseAPIException
+     * @throws GitlabRequestException
+     */
+    private function integrateOneProject(
+        GitlabProject $gitlab_project,
+        Project $project,
+        Credentials $credentials,
+        GitlabRepositoryCreatorConfiguration $configuration,
+        GitlabGroup $gitlab_group,
+    ): void {
+        $gitlab_repository_id = $gitlab_project->getId();
+
+        $already_existing_gitlab_repository = $this->verify_gitlab_repository_is_integrated->isTheGitlabRepositoryAlreadyIntegratedInProject(
+            (int) $project->getID(),
+            $gitlab_repository_id,
+            $gitlab_project->getWebUrl()
+        );
+
+        if (! $already_existing_gitlab_repository) {
+            $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
+                $credentials,
+                $gitlab_project,
+                $project,
+                $configuration
+            );
+        }
+        $this->link_integration_to_group->linkARepositoryIntegrationToAGroup(
+            new NewRepositoryIntegrationLinkedToAGroup(
+                $gitlab_repository_id,
+                $gitlab_group->id
+            )
         );
     }
 }

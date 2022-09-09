@@ -47,6 +47,7 @@ use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\GroupCreator;
+use Tuleap\Gitlab\Group\GroupRepositoryIntegrationDAO;
 use Tuleap\Gitlab\Group\Token\GroupApiToken;
 use Tuleap\Gitlab\Group\Token\GroupApiTokenDAO;
 use Tuleap\Gitlab\Group\Token\GroupTokenInserter;
@@ -120,20 +121,19 @@ final class GitlabGroupResource
         );
 
         $gitlab_backend_logger = BackendLogger::getDefaultLogger(gitlabPlugin::LOG_IDENTIFIER);
-
-        $db_connection =  DBFactory::getMainTuleapDBConnection();
+        $transaction_executor  = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $integration_dao       = new GitlabRepositoryIntegrationDao();
+        $key_factory           = new KeyFactory();
 
         $gitlab_repository_creator = new GitlabRepositoryCreator(
-            new DBTransactionExecutorWithConnection(
-                $db_connection
-            ),
+            $transaction_executor,
             new GitlabRepositoryIntegrationFactory(
-                new GitlabRepositoryIntegrationDao(),
+                $integration_dao,
                 ProjectManager::instance()
             ),
-            new GitlabRepositoryIntegrationDao(),
+            $integration_dao,
             new WebhookCreator(
-                new KeyFactory(),
+                $key_factory,
                 new WebhookDao(),
                 new WebhookDeletor(
                     new WebhookDao(),
@@ -143,18 +143,19 @@ final class GitlabGroupResource
                 $gitlab_api_client,
                 $gitlab_backend_logger,
             ),
-            new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), new KeyFactory())
+            new IntegrationApiTokenInserter(new IntegrationApiTokenDao(), $key_factory)
         );
 
         $group_creation_handler = new GroupCreator(
             new GitlabProjectBuilder($gitlab_api_client),
             new GitlabGroupInformationRetriever($gitlab_api_client),
             new GitlabRepositoryGroupLinkHandler(
-                new DBTransactionExecutorWithConnection($db_connection),
-                new GitlabRepositoryIntegrationDao(),
+                $transaction_executor,
+                $integration_dao,
                 $gitlab_repository_creator,
                 new GitlabGroupFactory(new GitlabGroupDAO()),
-                new GroupTokenInserter(new GroupApiTokenDAO(), new KeyFactory())
+                new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
+                new GroupRepositoryIntegrationDAO()
             )
         );
 
