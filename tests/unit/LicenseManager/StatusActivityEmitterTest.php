@@ -18,39 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Enalean\LicenseManager;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
 use Tuleap\Webhook\Emitter;
 
-class StatusActivityEmitterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StatusActivityEmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testWebhookIsCalledWhenAvailable()
+    public function testWebhookIsCalledWhenAvailable(): void
     {
-        $emitter = \Mockery::mock(Emitter::class);
-        $emitter->shouldReceive('emit')->once();
+        $emitter = $this->createMock(Emitter::class);
+        $emitter->expects(self::once())->method('emit');
 
         $status_activity_emitter = new StatusActivityEmitter($emitter);
 
-        $payload = \Mockery::mock(UserCounterPayload::class);
-        $payload->shouldReceive('getPayload')->andReturns(['users' => [], 'max_users' => 0]);
+        $payload = $this->createStub(UserCounterPayload::class);
+        $payload->method('getPayload')->willReturn(['users' => [], 'max_users' => 0]);
 
         $status_activity_emitter->emit($payload, 'https://example.com');
     }
 
-    public function testWebhookDoesNotTryToEmitWhenNoURLIsProvided()
+    public function testWebhookDoesNotTryToEmitWhenNoURLIsProvided(): void
     {
-        $emitter = \Mockery::mock(Emitter::class);
+        $emitter = $this->createMock(Emitter::class);
+        $emitter->expects(self::never())->method('emit');
 
         $status_activity_emitter = new StatusActivityEmitter($emitter);
 
-        $payload = \Mockery::mock(UserCounterPayload::class);
-        $payload->shouldReceive('getPayload')->andReturns(['users' => [], 'max_users' => 0]);
+        $payload = $this->createStub(UserCounterPayload::class);
+        $payload->method('getPayload')->willReturn(['users' => [], 'max_users' => 0]);
 
         $status_activity_emitter->emit($payload, '');
     }
