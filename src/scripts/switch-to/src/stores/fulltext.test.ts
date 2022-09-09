@@ -81,8 +81,10 @@ describe("FullText Store", () => {
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
-            const post_spy = jest.spyOn(fetch_result, "postJSON");
-            post_spy.mockReturnValue(okAsync([]));
+            const post_spy = jest.spyOn(fetch_result, "post");
+            post_spy.mockReturnValue(
+                okAsync({ json: () => Promise.resolve([]) } as unknown as Response)
+            );
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -100,7 +102,7 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "postJSON");
+            const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
             store.search("foobar");
@@ -120,7 +122,7 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "postJSON");
+            const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(
                 errAsync({
                     isNotFound: () => true,
@@ -146,12 +148,15 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "postJSON");
+            const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(
-                okAsync([
-                    { title: "toto", html_url: "/toto" },
-                    { title: "titi", html_url: "/titi" },
-                ] as ItemDefinition[])
+                okAsync({
+                    json: () =>
+                        Promise.resolve([
+                            { title: "toto", html_url: "/toto" },
+                            { title: "titi", html_url: "/titi" },
+                        ] as ItemDefinition[]),
+                } as unknown as Response)
             );
 
             store.search("foobar");
@@ -174,12 +179,15 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "postJSON");
+            const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(
-                okAsync([
-                    { title: "titi", html_url: "/titi" },
-                    { title: "titi", html_url: "/titi" },
-                ] as ItemDefinition[])
+                okAsync({
+                    json: () =>
+                        Promise.resolve([
+                            { title: "titi", html_url: "/titi" },
+                            { title: "titi", html_url: "/titi" },
+                        ] as ItemDefinition[]),
+                } as unknown as Response)
             );
 
             store.search("foobar");
@@ -201,9 +209,12 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "postJSON");
+            const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(
-                okAsync([{ title: "toto" }, { title: "titi" }] as ItemDefinition[])
+                okAsync({
+                    json: () =>
+                        Promise.resolve([{ title: "toto" }, { title: "titi" }] as ItemDefinition[]),
+                } as unknown as Response)
             );
 
             store.search("foobar");
