@@ -34,6 +34,9 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
 {
     use GlobalLanguageMock;
 
+    private const EPIC_ID    = 737;
+    private const EPIC_TITLE = 'Epic #737';
+
     /** @var BaselineArtifactController */
     private $controller;
 
@@ -47,8 +50,8 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
     {
         $snapshot_date = DateTimeFactory::one();
         $epic          = BaselineArtifactFactory::one()
-            ->id(9)
-            ->title('Epic #9')
+            ->id(self::EPIC_ID)
+            ->title(self::EPIC_TITLE)
             ->description('Epic description')
             ->status('On going')
             ->trackerName('Epic')
@@ -57,7 +60,7 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
         $this->baseline_artifact_repository->addAt($epic, $snapshot_date);
 
         $milestone = BaselineArtifactFactory::one()
-            ->linkedArtifactIds([9])
+            ->linkedArtifactIds([self::EPIC_ID])
             ->build();
         $this->baseline_artifact_repository->addAt($milestone, $snapshot_date);
 
@@ -73,8 +76,8 @@ class BaselineArtifactControllerIntTest extends IntegrationTestCaseWithStubs
         $artifacts_representations = $artifacts_representation->artifacts;
         $this->assertEquals(1, count($artifacts_representations));
         $artifact_representation = $artifacts_representations[0];
-        $this->assertEquals(9, $artifact_representation->id);
-        $this->assertEquals('Epic #9', $artifact_representation->title);
+        $this->assertEquals(self::EPIC_ID, $artifact_representation->id);
+        $this->assertEquals(self::EPIC_TITLE, $artifact_representation->title);
         $this->assertEquals('Epic description', $artifact_representation->description);
         $this->assertEquals('On going', $artifact_representation->status);
         $this->assertEquals('Epic', $artifact_representation->tracker_name);

@@ -80,8 +80,8 @@ class ComparisonServiceTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectException(InvalidComparisonException::class);
 
-        $artifact1 = BaselineArtifactFactory::one()->build();
-        $artifact2 = BaselineArtifactFactory::one()->build();
+        $artifact1 = BaselineArtifactFactory::one()->id(1)->build();
+        $artifact2 = BaselineArtifactFactory::one()->id(2)->build();
 
         $comparison = TransientComparisonFactory::one()
             ->base(BaselineFactory::one()->artifact($artifact1)->build())
