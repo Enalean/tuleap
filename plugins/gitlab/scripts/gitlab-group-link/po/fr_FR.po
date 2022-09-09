@@ -34,11 +34,21 @@ msgstr "URL du serveur GitLab"
 msgid "Group"
 msgstr "Groupe"
 
+msgid "Groups successfully retrieved"
+msgstr "Groupes récupérés avec succès"
+
 msgid "Link a GitLab group to import the GitLab projects of the group."
 msgstr "Liez un groupe GitLab pour importer les projets GitLab du groupe."
 
 msgid "Link a GitLab group to this project"
 msgstr "Lier un groupe GitLab à ce projet"
+
+msgid ""
+"Network error while fetching the GitLab groups. Please verify your GitLab "
+"server url validity."
+msgstr ""
+"Erreur réseau lors de la récupération des groupes GitLab. Veuillez vérifier "
+"la validité de votre url de serveur."
 
 msgid "Server"
 msgstr "Serveur"
@@ -52,3 +62,11 @@ msgstr ""
 "les hooks de projet et commenter automatiquement les commits et les demandes "
 "de fusion GitLab. Il sera également utilisé pour extraire les références "
 "Tuleap contenues dans les étiquettes GitLab."
+
+msgid "Unable to connect to the GitLab server, please check your credentials."
+msgstr ""
+"Impossible de se connecter au serveur GitLab, veuillez vérifier vos "
+"informations de connexion."
+
+msgid "Unable to reach the GitLab server: %{ error }"
+msgstr "Impossible d'atteindre le serveur GitLab: %{ error }"

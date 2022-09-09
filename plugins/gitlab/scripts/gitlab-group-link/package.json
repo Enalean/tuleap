@@ -6,7 +6,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/fault": "link:../../../../lib/frontend/fault",
+    "@tuleap/fetch-result": "link:../../../../lib/frontend/fetch-result",
     "@tuleap/vue3-gettext-init": "link:../../../../lib/frontend/vue3-gettext-init",
+    "neverthrow": "^5.0.0",
     "pinia": "^2.0.21",
     "vue": "^3.2.37",
     "vue-router": "^4.1.4",

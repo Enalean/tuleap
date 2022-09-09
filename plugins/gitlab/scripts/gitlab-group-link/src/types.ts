@@ -24,3 +24,8 @@ export const STEP_GITLAB_GROUP: GitlabGroupLinkStepName = "gitlab-group";
 export const STEP_GITLAB_CONFIGURATION: GitlabGroupLinkStepName = "gitlab-configuration";
 
 export const NO_GROUP_LINKED_EMPTY_STATE = "no-group-linked-empty-state";
+
+export interface GitlabCredentials {
+    readonly server_url: URL;
+    readonly token: string;
+}

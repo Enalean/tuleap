@@ -33,10 +33,18 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
+msgid "Groups successfully retrieved"
+msgstr ""
+
 msgid "Link a GitLab group to import the GitLab projects of the group."
 msgstr ""
 
 msgid "Link a GitLab group to this project"
+msgstr ""
+
+msgid ""
+"Network error while fetching the GitLab groups. Please verify your GitLab "
+"server url validity."
 msgstr ""
 
 msgid "Server"
@@ -46,4 +54,10 @@ msgid ""
 "The access token will be used to fetch repositories, configure project hooks "
 "and automatically write comments on GitLab commit and merge requests. It "
 "will also be used to extract references to Tuleap from GitLab tags."
+msgstr ""
+
+msgid "Unable to connect to the GitLab server, please check your credentials."
+msgstr ""
+
+msgid "Unable to reach the GitLab server: %{ error }"
 msgstr ""

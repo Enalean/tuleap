@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
-import { STEP_GITLAB_GROUP } from "../types";
-import { getGlobalTestOptions } from "../tests/helpers/global-options-for-tests";
+const LINKS_SEPARATOR = ",";
+const LINK_AND_FLAG_SEPARATOR = ";";
+const NEXT_URL_FLAG = 'rel="next"';
 
-describe("GitlabGroupLinkWizard", () => {
-    it("Given the id of the active step, Then it will render the steps with the correct classes (step-previous, step-current, step-next)", () => {
-        const wrapper = shallowMount(GitlabGroupLinkWizard, {
-            props: {
-                active_step_id: STEP_GITLAB_GROUP,
-            },
-            global: {
-                ...getGlobalTestOptions({}),
-            },
-        });
+const removeAngleBracketsFromLink = (link: string): string => {
+    return link.replaceAll("<", "").replaceAll(">", "").trim();
+};
 
-        expect(wrapper.element).toMatchSnapshot();
-    });
-});
+export const extractNextUrl = (link_header: string): string | null => {
+    const parts = link_header.split(LINKS_SEPARATOR);
+    const part_containing_next_url = parts.find((part) => part.includes(NEXT_URL_FLAG));
+    if (!part_containing_next_url) {
+        return null;
+    }
+
+    const link = part_containing_next_url.split(LINK_AND_FLAG_SEPARATOR)[0];
+
+    return removeAngleBracketsFromLink(link);
+};

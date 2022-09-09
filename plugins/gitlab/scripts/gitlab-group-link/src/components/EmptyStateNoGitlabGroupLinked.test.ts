@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import EmptyStateNoGitlabGroupLinked from "./EmptyStateNoGitlabGroupLinked.vue";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../tests/helpers/global-options-for-tests";
 
 describe("EmptyStateNoGitlabGroupLinked", () => {
     it("should include the current project's public name in the empty-state's title", () => {

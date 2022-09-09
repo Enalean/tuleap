@@ -37,6 +37,8 @@ type _Unused = ResultAsync<never, Fault>;
 export { ResultFetcher };
 export { decodeJSON } from "./json-decoder";
 
+export { NetworkFault } from "./NetworkFault";
+
 /**
  * `getJSON` returns a `ResultAsync<TypeOfJSONPayload, Fault>` with `TypeOfJSONPayload` supplied as a generic type.
  * It queries the given URI with GET method, decodes the response into JSON and returns an `Ok` variant containing the
