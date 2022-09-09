@@ -191,6 +191,11 @@ describe(`ResultFetcher`, () => {
                 (): ResponseResult => getFetcher().patchJSON(uri, json_request_payload),
                 PATCH_METHOD,
             ],
+            [
+                "post()",
+                (): ResponseResult => getFetcher().post(uri, json_request_payload),
+                POST_METHOD,
+            ],
         ])(
             `%s will encode the given URI and stringify the given JSON payload
             and add the JSON Content-Type header and will return a ResultAsync with the Response`,

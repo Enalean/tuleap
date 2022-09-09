@@ -155,7 +155,24 @@ export const putJSON = result_fetcher.putJSON;
 export const patchJSON = result_fetcher.patchJSON;
 
 /**
- * `postJSON` queries the given URI with POST method and returns an `Ok` variant containing a Response.
+ * `postJSON` queries the given URI with POST method and returns a `ResultAsync<TypeOfJSONPayload, Fault>`
+ * with `TypeOfJSONPayload` supplied as a generic type.
+ * It automatically sets the "Content-type" header to "application/json".
+ * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
+ * containing a `Fault`.
+ *
+ * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @template TypeOfJSONPayload
+ * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
+ * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
+ * string.
+ * @returns {ResultAsync<TypeOfJSONPayload, Fault>}
+ */
+export const postJSON = result_fetcher.postJSON;
+
+/**
+ * `post` queries the given URI with POST method and returns an `Ok` variant containing a Response.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error, JSON parsing error), it returns an `Err` variant
  * containing a `Fault`.
@@ -167,7 +184,7 @@ export const patchJSON = result_fetcher.patchJSON;
  * string.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const postJSON = result_fetcher.postJSON;
+export const post = result_fetcher.post;
 
 /**
  * `del` queries the given URI with DELETE method and returns an `Ok` variant containing a Response.
