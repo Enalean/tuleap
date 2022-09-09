@@ -79,24 +79,6 @@ class Docman_NotificationsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testSendNotificationsSuccess(): void
-    {
-        $mail = \Mockery::mock(Codendi_Mail_Interface::class);
-        $mail->shouldReceive('send')->andReturns(true);
-
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getEmail')->andReturn('foo@codendi.org');
-        $this->notification_manager->_messages = [
-            [
-                'title'   => 'Move',
-                'content' => 'Changed',
-                'to'      => [$user],
-            ],
-        ];
-
-        $this->notification_manager->sendNotifications('', '');
-    }
-
     public function testGetMessageForUserSameListenedItem(): void
     {
         $user = Mockery::mock(PFUser::class);

@@ -129,6 +129,7 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testChecksTheUserCanMergeAPullRequest(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('userCanAccessProject')->andReturn(\Mockery::mock(\Project::class));

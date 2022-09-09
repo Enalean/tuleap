@@ -85,7 +85,8 @@ class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_float_value_repository
             ->shouldReceive('create')
             ->with($transition, $added_action)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -104,12 +105,14 @@ class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_float_value_repository
             ->shouldReceive('deleteAllByTransition')
             ->with($transition)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->set_float_value_repository
             ->shouldReceive('create')
             ->with($transition, $updated_action)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -128,12 +131,14 @@ class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_float_value_repository
             ->shouldReceive('deleteAllByTransition')
             ->with($transition)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->set_float_value_repository
             ->shouldReceive('create')
             ->with($transition, $action)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }

@@ -50,7 +50,7 @@ final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
     {
         $middleware = new ServiceInstrumentationMiddleware('service');
 
-        $this->event_manager->shouldReceive('processEvent')->with(\Mockery::type(ServiceAccessEvent::class));
+        $this->event_manager->shouldReceive('processEvent')->with(\Mockery::type(ServiceAccessEvent::class))->atLeast()->once();
 
         $middleware->process(new NullServerRequest(), new AlwaysSuccessfulRequestHandler(HTTPFactoryBuilder::responseFactory()));
     }

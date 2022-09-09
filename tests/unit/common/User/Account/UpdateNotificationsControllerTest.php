@@ -313,6 +313,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesEmailFormatPreferenceToHtml(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->csrf_token->shouldReceive('check');
 
         $this->user
@@ -335,6 +336,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesEmailFormatPreferenceToText(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->csrf_token->shouldReceive('check');
 
         $this->user
@@ -357,6 +359,7 @@ class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesntUpdateMailFormatPreferenceWhenPreferenceDoesntChange(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->csrf_token->shouldReceive('check');
 
         $this->user

@@ -420,6 +420,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNotRaiseWarningIfItDoesNotHaveAllInformationToDisplayAnAsyncRenderer(): void
     {
+        $this->expectNotToPerformAssertions();
         $field = $this->buildField();
 
         $field->process(

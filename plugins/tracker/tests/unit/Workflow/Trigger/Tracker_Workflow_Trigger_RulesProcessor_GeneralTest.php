@@ -84,6 +84,8 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
     {
         $this->artifact->setParentWithoutPermissionChecking(Artifact::NO_PARENT);
 
+        $this->expectNotToPerformAssertions();
+
         // expect no errors
         $this->rules_processor->process($this->artifact, $this->rule);
     }

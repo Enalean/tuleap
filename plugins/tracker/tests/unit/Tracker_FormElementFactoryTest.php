@@ -411,21 +411,21 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $this->dao->shouldReceive('searchProjectSharedFieldsTargets')->with($this->project_id)
-            ->andReturns($new_project_shared_fields);
+            ->andReturns($new_project_shared_fields)->atLeast()->once();
         $this->dao->shouldReceive('searchFieldIdsByGroupId')->with($this->template_id)
-            ->andReturns($template_project_field_ids);
+            ->andReturns($template_project_field_ids)->atLeast()->once();
 
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(234, 777)->ordered();
-        $this->dao->shouldReceive('updateOriginalFieldId')->with(567, 888)->ordered();
+        $this->dao->shouldReceive('updateOriginalFieldId')->with(234, 777)->ordered()->atLeast()->once();
+        $this->dao->shouldReceive('updateOriginalFieldId')->with(567, 888)->ordered()->atLeast()->once();
 
         $field_234 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(234)->andReturns($field_234);
+        $this->factory->shouldReceive('getShareableFieldById')->with(234)->andReturns($field_234)->atLeast()->once();
 
         $field_567 = \Mockery::spy(\Tracker_FormElement_Field_Shareable::class);
-        $this->factory->shouldReceive('getShareableFieldById')->with(567)->andReturns($field_567);
+        $this->factory->shouldReceive('getShareableFieldById')->with(567)->andReturns($field_567)->atLeast()->once();
 
-        $field_234->shouldReceive('fixOriginalValueIds')->with([3 => 4, 5 => 6])->ordered();
-        $field_567->shouldReceive('fixOriginalValueIds')->with([1 => 2])->ordered();
+        $field_234->shouldReceive('fixOriginalValueIds')->with([3 => 4, 5 => 6])->ordered()->atLeast()->once();
+        $field_567->shouldReceive('fixOriginalValueIds')->with([1 => 2])->ordered()->atLeast()->once();
 
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }

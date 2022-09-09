@@ -78,7 +78,8 @@ class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_date_value_repository
             ->shouldReceive('create')
             ->with($transition, $added_action)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -97,12 +98,14 @@ class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_date_value_repository
             ->shouldReceive('deleteAllByTransition')
             ->with($transition)
-            ->andReturnTrue();
+            ->andReturnTrue()
+            ->atLeast()->once();
 
         $this->set_date_value_repository
             ->shouldReceive('create')
             ->with($transition, $updated_action)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -121,12 +124,14 @@ class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->set_date_value_repository
             ->shouldReceive('deleteAllByTransition')
             ->with($transition)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->set_date_value_repository
             ->shouldReceive('create')
             ->with($transition, $action)
-            ->andReturns();
+            ->andReturns()
+            ->atLeast()->once();
 
         $this->updater->updateByTransition($actions, $transition);
     }

@@ -28,7 +28,7 @@ class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user          = \Mockery::spy(\PFUser::class);
         $event_manager = \Mockery::mock(\EventManager::class);
-        $event_manager->shouldReceive('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user]);
+        $event_manager->shouldReceive('processEvent')->with(\Event::USER_HISTORY_CLEAR, ['user' => $user])->atLeast()->once();
 
         $history_cleaner = new HistoryCleaner($event_manager);
         $history_cleaner->clearHistory($user);

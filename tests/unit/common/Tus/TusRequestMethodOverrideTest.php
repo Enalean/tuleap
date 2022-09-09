@@ -40,7 +40,7 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);
 
-        $request->shouldReceive('withMethod')->with('PATCH')->andReturnSelf();
+        $request->shouldReceive('withMethod')->with('PATCH')->andReturnSelf()->once();
 
         $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
     }
@@ -49,6 +49,8 @@ final class TusRequestMethodOverrideTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('');
+
+        $request->shouldNotReceive('withMethod');
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $method_overrider = new TusRequestMethodOverride($response_factory);

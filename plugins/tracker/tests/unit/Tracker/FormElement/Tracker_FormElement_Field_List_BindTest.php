@@ -123,7 +123,8 @@ final class Tracker_FormElement_Field_List_BindTest extends \Tuleap\Test\PHPUnit
         $default_value_dao
             ->shouldReceive("save")
             ->withArgs([42, ["111", "112"]])
-            ->andReturn(true);
+            ->andReturn(true)
+            ->atLeast()->once();
 
         $params = ["default" => ["111", "112", "116"]];
         $this->bind->process($params, true);

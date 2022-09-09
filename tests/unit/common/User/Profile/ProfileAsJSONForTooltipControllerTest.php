@@ -62,7 +62,7 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
                         return $response->getStatusCode() === 403;
                     }
                 )
-            );
+            )->atLeast()->once();
 
         $controller->process($current_user, $user);
     }
@@ -114,7 +114,7 @@ final class ProfileAsJSONForTooltipControllerTest extends \Tuleap\Test\PHPUnit\T
                             && $response->getBody()->getContents() === '{"title_as_html":"title","body_as_html":"body"}';
                     }
                 )
-            );
+            )->atLeast()->once();
 
         $controller->process($current_user, $user);
     }

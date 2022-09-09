@@ -553,11 +553,10 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRSRelease->delete();
     }
 
-    /**
-     * Testing succeeded delete
-     */
-    public function testDeleteSucceede(): void
+    public function testDeleteSucceeds(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSRelease->shouldReceive('userCanWrite')->andReturns(true);
         $frsrf = \Mockery::spy(\FRSReleaseFactory::class);
@@ -613,11 +612,10 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
         $webDAVFRSRelease->setName('newName');
     }
 
-    /**
-     * Testing setName succeede
-     */
-    public function testSetNameSucceede(): void
+    public function testSetNameSucceeds(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSRelease->shouldReceive('userCanWrite')->andReturns(true);
         $frsrf = \Mockery::spy(\FRSReleaseFactory::class);
@@ -750,6 +748,8 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMoveSucceedPackageAndReleaseHidden(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $source = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $frsrf  = \Mockery::spy(\FRSReleaseFactory::class);
         $frsrf->shouldReceive('userCanUpdate')->andReturns(true);
@@ -772,6 +772,8 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMoveSucceedReleaseHidden(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $source = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $frsrf  = \Mockery::spy(\FRSReleaseFactory::class);
         $frsrf->shouldReceive('userCanUpdate')->andReturns(true);
@@ -794,6 +796,8 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMoveSucceed(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $source = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $frsrf  = \Mockery::spy(\FRSReleaseFactory::class);
         $frsrf->shouldReceive('userCanUpdate')->andReturns(true);

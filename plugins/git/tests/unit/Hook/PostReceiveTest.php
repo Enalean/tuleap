@@ -152,6 +152,7 @@ final class PostReceiveTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFallsBackOnAnonymousIfUserIsNotKnown(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->getPushDetailsWithoutRevisions());

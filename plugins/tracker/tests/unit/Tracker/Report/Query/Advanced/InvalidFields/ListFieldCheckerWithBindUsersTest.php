@@ -118,34 +118,34 @@ class ListFieldCheckerWithBindUsersTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void
     {
+        $this->expectNotToPerformAssertions();
         $value_wrapper = new SimpleValueWrapper('');
 
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItDoesNotThrowWhenValueExists(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->current_user);
         $value_wrapper = new SimpleValueWrapper('admin');
 
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItDoesNotThrowWithMyselfValueAndCurrentUserIsLoggedIn(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($this->current_user);
         $value_wrapper = new CurrentUserValueWrapper($this->user_manager);
 
         $this->comparison->shouldReceive('getValueWrapper')->andReturns($value_wrapper);
 
         $this->list_field_checker->checkFieldIsValidForComparison($this->comparison, $this->field);
-        $this->doesNotPerformAssertions();
     }
 
     public function testItThrowsWithMyselfValueAndCurrentUserIsAnonymous(): void

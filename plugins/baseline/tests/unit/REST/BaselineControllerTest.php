@@ -104,7 +104,8 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->baseline_service
             ->shouldReceive('create')
-            ->andReturn(BaselineFactory::one()->build());
+            ->andReturn(BaselineFactory::one()->build())
+            ->atLeast()->once();
 
         $this->controller->post('new baseline', 3, null);
     }
@@ -235,7 +236,8 @@ class BaselineControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->baseline_service
             ->shouldReceive('delete')
-            ->with($this->current_user, $baseline);
+            ->with($this->current_user, $baseline)
+            ->atLeast()->once();
 
         $this->controller->delete(2);
     }

@@ -173,7 +173,7 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testChangesetShouldUseUserLanguageInGetBody()
     {
         $user_language = \Mockery::mock(\BaseLanguage::class);
-        $user_language->shouldReceive('getText')->andReturn('')->atLeast(1);
+        $user_language->shouldReceive('getText')->andReturn('Foo')->atLeast(1);
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
@@ -185,19 +185,20 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender
         );
-        $mail_notification_task->getBodyText(
+        $body_text              = $mail_notification_task->getBodyText(
             $this->changeset,
             false,
             \Mockery::mock(\PFUser::class),
             $user_language,
             false
         );
+        self::assertNotEmpty($body_text);
     }
 
     public function testChangesetShouldUseUserLanguageInBuildMessage()
     {
         $user_language = \Mockery::mock(\BaseLanguage::class);
-        $user_language->shouldReceive('getText')->andReturn('')->atLeast(1);
+        $user_language->shouldReceive('getText')->andReturn('')->atLeast()->once();
 
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getPreference')->with('text')->andReturns(['user_tracker_mailformat']);
@@ -218,7 +219,9 @@ class EmailNotificationTaskTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender
         );
-        $mail_notification_task->buildOneMessageForMultipleRecipients($this->changeset, ['user01' => false], true);
+        $res                    = $mail_notification_task->buildOneMessageForMultipleRecipients($this->changeset, ['user01' => false], true);
+
+        self::assertNotEmpty($res);
     }
 
     public function testItSendsOneMailPerRecipient()

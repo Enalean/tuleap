@@ -79,6 +79,7 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateSucceedsForSoloItem(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->swimlane_artifact = $this->mockArtifact(25);
         $this->validate($this->swimlane_artifact);
     }

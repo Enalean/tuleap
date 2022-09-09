@@ -84,7 +84,7 @@ class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturn($this->admin_user);
 
-        $this->release_note_manager->shouldReceive("getReleaseNoteLink");
+        $this->release_note_manager->shouldReceive("getReleaseNoteLink")->atLeast()->once();
         $this->admin_page_renderer->shouldReceive("renderANoFramedPresenter");
 
         $this->admin_release_note_controller->process($request, $this->layout, []);

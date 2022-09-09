@@ -449,7 +449,7 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $request->shouldReceive('get')->with('group_id')->andReturns($params['group_id']);
         $request->shouldReceive('getProject')->andReturns($project);
 
-        $this->itemFactory->shouldReceive('create')->andReturn(128002);
+        $this->itemFactory->shouldReceive('create')->andReturn(128002)->atLeast()->once();
 
         $item = \Mockery::mock(\Docman_Item::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $item->shouldReceive('getEventManager')->andReturns($action->event_manager);
@@ -545,5 +545,7 @@ class Docman_SOAPActionsTest extends \Tuleap\Test\PHPUnit\TestCase
         $action->getControler()->request = $request;
 
         $action->getFileChunk();
+
+        $this->expectNotToPerformAssertions();
     }
 }

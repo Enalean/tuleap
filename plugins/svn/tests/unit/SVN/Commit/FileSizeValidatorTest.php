@@ -66,8 +66,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAllowsCommitWhenNoLimitIsDefined(): void
     {
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(150);
-
+        $this->expectNotToPerformAssertions();
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'U   trunk/README.mkd');
     }
 
@@ -75,7 +74,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         ForgeConfig::set(FileSizeValidator::CONFIG_KEY, '200');
 
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(150);
+        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/README.mkd')->andReturn(150)->atLeast()->once();
 
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'U   trunk/README.mkd');
     }
@@ -98,7 +97,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $failed_command = Mockery::mock(Process::class, ['getErrorOutput' => "svnlook: E160017: Path 'trunk/aaa' is not a file"]);
 
         $exception = Mockery::mock(ProcessFailedException::class, ['getProcess' => $failed_command]);
-        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->andThrow($exception);
+        $this->svnlook->shouldReceive('getFilesize')->with($this->repository, 't1-r1', 'trunk/add/')->andThrow($exception)->atLeast()->once();
 
         $this->validator->assertPathIsValid($this->repository, 't1-r1', 'A   trunk/add/');
     }

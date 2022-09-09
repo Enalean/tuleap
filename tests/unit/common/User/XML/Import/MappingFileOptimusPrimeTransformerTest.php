@@ -352,6 +352,7 @@ EOS;
 
     public function testItDoesNotThrowAnExceptionIfUserInMappingIsUnknownInCollectionSoThatWeCanReuseTheMappingFileInAnotherImport(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->generateCSV('unknown.user', 'map:cstevens');
 
         $this->transformer->transform($this->collection, $this->filename);
@@ -359,6 +360,7 @@ EOS;
 
     public function testItDoesNotThrowAnExceptionWhenMapIsFilledWithAKnownUser(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addToBeMappedUserToCollection();
 
         $this->generateCSV('to.be.mapped', 'map:cstevens');
@@ -368,6 +370,7 @@ EOS;
 
     public function testItDoesNotThrowAnExceptionWhenEmailDoesNotMatch(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addEmailDoesNotMatchUserToCollection();
 
         $this->generateCSV('email.does.not.match', 'map:cstevens');
@@ -377,6 +380,7 @@ EOS;
 
     public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsAlreadyExistingUser(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addAlreadyExistingUserToCollection();
 
         $this->generateCSV('already.existing', 'map:cstevens');
@@ -386,6 +390,7 @@ EOS;
 
     public function testItDoesNotThrowExceptionWhenEntryInTheCollectionToBeActivatedUser(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addToBeActivatedUserToCollection();
 
         $this->generateCSV('to.be.activated', 'map:cstevens');
@@ -395,6 +400,7 @@ EOS;
 
     public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedUser(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addToBeCreatedUserToCollection();
 
         $this->generateCSV('to.be.created', 'map:cstevens');
@@ -437,6 +443,7 @@ EOS;
 
     public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedSuspendedUser(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addToBeCreatedUserToCollection();
 
         $this->generateCSV('to.be.created', 'create:S');
@@ -446,6 +453,7 @@ EOS;
 
     public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeActivatedUser(): void
     {
+        $this->expectNotToPerformAssertions();
         $this->addToBeActivatedUserToCollection();
 
         $this->generateCSV('to.be.activated', 'noop');

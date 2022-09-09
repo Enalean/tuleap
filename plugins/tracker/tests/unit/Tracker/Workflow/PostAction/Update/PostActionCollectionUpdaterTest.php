@@ -69,10 +69,12 @@ class PostActionCollectionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->post_action_updater1
             ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition);
+            ->with($action_collection, $transition)
+            ->atLeast()->once();
         $this->post_action_updater2
             ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition);
+            ->with($action_collection, $transition)
+            ->atLeast()->once();
 
         $this->collection_updater->updateByTransition($transition, $action_collection);
     }

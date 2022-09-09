@@ -38,7 +38,7 @@ class GitActionsProjectPrivacyTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNothingWhenThereAreNoRepositories(): void
     {
         $project_id = 99;
-        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([]);
+        $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([])->atLeast()->once();
         $this->changeProjectRepositoriesAccess($project_id, true);
         $this->changeProjectRepositoriesAccess($project_id, false);
     }

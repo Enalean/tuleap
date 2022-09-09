@@ -122,7 +122,7 @@ class MembershipManagerCreateGroupForUmbrellaTest extends \Tuleap\Test\PHPUnit\T
         $this->remote_server_factory->shouldReceive('getServersForProject')->andReturns(
             [$this->buildGerritServer(3)],
             [$this->buildGerritServer(5)],
-        );
+        )->atLeast()->once();
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
 

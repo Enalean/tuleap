@@ -112,7 +112,7 @@ class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs([$data_row])
             ->andReturn($this->azure_provider);
 
-        $this->provider_manager->getById(42);
+        self::assertSame($this->azure_provider, $this->provider_manager->getById(42));
     }
 
     public function testGetByIdCallGenericProvider(): void
@@ -128,7 +128,7 @@ class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withArgs([$data_row])
             ->andReturn($this->generic_provider);
 
-        $this->provider_manager->getById(42);
+        self::assertSame($this->generic_provider, $this->provider_manager->getById(42));
     }
 
     public function testGetByIdCallTrowErrorIfInvalidParameters(): void

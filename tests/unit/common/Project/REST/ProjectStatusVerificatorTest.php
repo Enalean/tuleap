@@ -49,6 +49,7 @@ class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testEverybodyCanAccessANotSuspendedProject()
     {
+        $this->expectNotToPerformAssertions();
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('isSuspended')->andReturn(false);
 
@@ -87,6 +88,7 @@ class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSiteAdminUsersCanAccessASuspendedProject()
     {
+        $this->expectNotToPerformAssertions();
         $project = \Mockery::mock(\Project::class);
 
         $user = \Mockery::mock(\PFUser::class);

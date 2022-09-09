@@ -254,9 +254,9 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
-        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2]);
-        $dao->shouldReceive('insert')->with($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered();
-        $dao->shouldReceive('insert')->with($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered();
+        $dao->shouldReceive('searchByTrackerId')->andReturns([$db_data1, $db_data2])->atLeast()->once();
+        $dao->shouldReceive('insert')->with($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered()->atLeast()->once();
+        $dao->shouldReceive('insert')->with($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->ordered()->atLeast()->once();
         $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
         $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);

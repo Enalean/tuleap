@@ -52,7 +52,7 @@ final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHP
         $destination->shouldReceive('getID')->andReturn(120);
 
         $this->dao->shouldReceive('duplicateActivationFromTemplate')
-            ->with(104, 120);
+            ->with(104, 120)->atLeast()->once();
 
         $this->duplicator->duplicate(104, $destination);
     }
@@ -61,6 +61,8 @@ final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHP
     {
         $destination = M::mock(Project::class);
         $destination->shouldReceive('isPublic')->andReturnFalse();
+
+        $this->dao->shouldNotReceive('duplicateActivationFromTemplate');
 
         $this->duplicator->duplicate(104, $destination);
     }

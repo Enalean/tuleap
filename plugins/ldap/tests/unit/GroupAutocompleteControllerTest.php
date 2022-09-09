@@ -67,7 +67,7 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 'more' => false,
             ],
         ];
-        $this->layout->shouldReceive('sendJSON')->with($output);
+        $this->layout->shouldReceive('sendJSON')->with($output)->atLeast()->once();
 
         $this->group_autocomplete->process($this->request, $this->layout, []);
     }
@@ -83,7 +83,7 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 'more' => false,
             ],
         ];
-        $this->layout->shouldReceive('sendJSON')->with($output);
+        $this->layout->shouldReceive('sendJSON')->with($output)->atLeast()->once();
 
 
         $this->group_autocomplete->process($this->request, $this->layout, []);
@@ -117,7 +117,7 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
                 ],
             'pagination' => ['more' => false],
         ];
-        $this->layout->shouldReceive('sendJSON')->with($output);
+        $this->layout->shouldReceive('sendJSON')->with($output)->atLeast()->once();
 
         $this->group_autocomplete->process($this->request, $this->layout, []);
     }

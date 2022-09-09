@@ -115,7 +115,7 @@ final class AgileDashboardRouterTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $request->shouldReceive('get')->withArgs(['action'])->andReturn('update');
         $request->shouldReceive('getValidated')->andReturn(0);
 
-        $this->router->shouldReceive('executeAction')->withArgs([$this->planning_controller, 'update']);
+        $this->router->shouldReceive('executeAction')->withArgs([$this->planning_controller, 'update'])->atLeast()->once();
         $this->router->route($request);
     }
 

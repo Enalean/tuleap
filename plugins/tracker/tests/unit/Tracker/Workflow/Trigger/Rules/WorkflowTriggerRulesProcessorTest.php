@@ -79,6 +79,8 @@ final class WorkflowTriggerRulesProcessorTest extends \Tuleap\Test\PHPUnit\TestC
             $processor
         );
 
+        $this->expectNotToPerformAssertions();
+
         $processor->process($artifact_1, $rule);
     }
 

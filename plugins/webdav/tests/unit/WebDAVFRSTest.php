@@ -207,6 +207,8 @@ final class WebDAVFRSTest extends \Tuleap\Test\PHPUnit\TestCase
         $utils->shouldReceive('getPermissionsManager')->andReturns($pm);
         $webDAVFRS->shouldReceive('getUtils')->andReturns($utils);
 
+        $this->expectNotToPerformAssertions();
+
         $webDAVFRS->createDirectory('pkg');
     }
 }

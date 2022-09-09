@@ -299,6 +299,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->response_factory->createResponse(409)
         );
 
+        $this->expectNotToPerformAssertions();
         $this->driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
     }
 

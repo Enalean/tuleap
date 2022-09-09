@@ -107,11 +107,13 @@ class PermissionsManagerSavePermissionsCommonTest extends \Tuleap\Test\PHPUnit\T
         $this->permissions_dao->shouldReceive('addPermission')
             ->with($this->permission_type, $this->object_id, 104)
             ->ordered()
-            ->andReturns(true);
+            ->andReturns(true)
+            ->atLeast()->once();
         $this->permissions_dao->shouldReceive('addPermission')
             ->with($this->permission_type, $this->object_id, 201)
             ->ordered()
-            ->andReturns(true);
+            ->andReturns(true)
+            ->atLeast()->once();
 
         $this->savePermissions([104, 201, 104]);
     }

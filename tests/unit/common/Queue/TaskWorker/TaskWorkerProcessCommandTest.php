@@ -57,7 +57,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         $logger->shouldReceive('debug')->with(Mockery::on(static function (string $message) use ($event_serialized_string): bool {
             return strpos($message, $event_serialized_string) !== false;
         }));
-        $event_dispatcher->shouldReceive('dispatch')->with(Mockery::type(WorkerEvent::class));
+        $event_dispatcher->shouldReceive('dispatch')->with(Mockery::type(WorkerEvent::class))->atLeast()->once();
 
         $command_tester = new CommandTester($command);
         $command_tester->execute(['input_file' => $path_to_file]);

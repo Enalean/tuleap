@@ -146,15 +146,18 @@ class PermissionsManagerSavePermissionsPlatformForAnonymousProjectPublicTest ext
         $this->permissions_dao->shouldReceive('addPermission')
             ->with($this->permission_type, $this->object_id, ProjectUGroup::SVN_ADMIN)
             ->once()
-            ->andReturns(true);
+            ->andReturns(true)
+            ->atLeast()->once();
         $this->permissions_dao->shouldReceive('addPermission')
             ->with($this->permission_type, $this->object_id, ProjectUGroup::WIKI_ADMIN)
             ->once()
-            ->andReturns(true);
+            ->andReturns(true)
+            ->atLeast()->once();
         $this->permissions_dao->shouldReceive('addPermission')
             ->with($this->permission_type, $this->object_id, 104)
             ->once()
-            ->andReturns(true);
+            ->andReturns(true)
+            ->atLeast()->once();
 
         $this->savePermissions([ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, 104]);
     }
