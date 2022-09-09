@@ -17,10 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type GitlabGroupLinkStepName = "gitlab-server" | "gitlab-group" | "gitlab-configuration";
+import { defineStore } from "pinia";
+import type { CredentialsState, GitlabCredentials } from "./types";
 
-export const STEP_GITLAB_SERVER: GitlabGroupLinkStepName = "gitlab-server";
-export const STEP_GITLAB_GROUP: GitlabGroupLinkStepName = "gitlab-group";
-export const STEP_GITLAB_CONFIGURATION: GitlabGroupLinkStepName = "gitlab-configuration";
-
-export const NO_GROUP_LINKED_EMPTY_STATE = "no-group-linked-empty-state";
+export const useCredentialsStore = defineStore("credentials", {
+    state: (): CredentialsState => ({
+        credentials: {
+            server_url: "",
+            token: "",
+        },
+    }),
+    actions: {
+        setCredentials(credentials: GitlabCredentials): void {
+            this.credentials = credentials;
+        },
+    },
+});

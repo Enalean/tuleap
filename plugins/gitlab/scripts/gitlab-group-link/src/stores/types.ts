@@ -32,4 +32,19 @@ export interface GroupsState {
 export interface GitlabGroup {
     readonly id: string;
     readonly name: string;
+    readonly avatar_url: string | null;
+    readonly full_path: string;
+}
+
+export interface GitlabCredentialsInit {
+    readonly server_url: URL | "";
+    readonly token: string;
+}
+
+export interface GitlabCredentials extends GitlabCredentialsInit {
+    readonly server_url: URL;
+}
+
+export interface CredentialsState {
+    credentials: GitlabCredentialsInit;
 }

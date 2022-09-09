@@ -9,10 +9,16 @@ msgstr ""
 msgid "%{ current_project_name } is currently not linked to a GitLab group"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
 msgid "Configuration"
+msgstr ""
+
+msgid "Configure selected group"
 msgstr ""
 
 msgid "Fetch GitLab groups"
@@ -24,6 +30,9 @@ msgstr ""
 msgid "GitLab access token scope must contain at least: api."
 msgstr ""
 
+msgid "GitLab group selection"
+msgstr ""
+
 msgid "GitLab server"
 msgstr ""
 
@@ -31,9 +40,6 @@ msgid "GitLab server URL"
 msgstr ""
 
 msgid "Group"
-msgstr ""
-
-msgid "Groups successfully retrieved"
 msgstr ""
 
 msgid "Link a GitLab group to import the GitLab projects of the group."
@@ -54,6 +60,9 @@ msgid ""
 "The access token will be used to fetch repositories, configure project hooks "
 "and automatically write comments on GitLab commit and merge requests. It "
 "will also be used to extract references to Tuleap from GitLab tags."
+msgstr ""
+
+msgid "There isn't any group, please verify the permissions on GitLab's side"
 msgstr ""
 
 msgid "Unable to connect to the GitLab server, please check your credentials."

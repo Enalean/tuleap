@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nextTick } from "vue";
+import type { StateTree } from "pinia";
 import { flushPromises, shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
@@ -28,15 +28,20 @@ import { getGlobalTestOptions } from "../tests/helpers/global-options-for-tests"
 import { GitlabApiQuerierStub } from "../tests/stubs/GitlabApiQuerierStub";
 import { useGitLabGroupsStore } from "../stores/groups";
 import type { GitlabGroup } from "../stores/types";
+import * as router from "vue-router";
+import type { Router } from "vue-router";
+import type { GitlabGroupLinkStepName } from "../types";
+import { STEP_GITLAB_GROUP } from "../types";
+import { useCredentialsStore } from "../stores/credentials";
 
-const server_url = "https://example.com";
+const server_url = "https://example.com/";
 const token = "glpat-a1e2i3o4u5y6";
 
-function getWrapper(): VueWrapper<InstanceType<typeof PaneGitlabServer>> {
+function getWrapper(state: StateTree = {}): VueWrapper<InstanceType<typeof PaneGitlabServer>> {
     return shallowMount(PaneGitlabServer, {
         global: {
             stubs: ["router-link"],
-            ...getGlobalTestOptions(),
+            ...getGlobalTestOptions(state),
         },
     });
 }
@@ -52,7 +57,16 @@ function getFetchGroupsButton(
 }
 
 describe("PaneGitlabServer", () => {
-    it("should fetch the gitlab groups with the credentials provided by the user and store them", async () => {
+    let push_route_spy: (to: { name: GitlabGroupLinkStepName }) => void;
+
+    beforeEach(() => {
+        push_route_spy = jest.fn();
+        jest.spyOn(router, "useRouter").mockReturnValue({
+            push: push_route_spy,
+        } as unknown as Router);
+    });
+
+    it("should fetch the gitlab groups with the credentials provided by the user, store them and navigate to the next step", async () => {
         const groups = [
             {
                 id: "818532",
@@ -68,22 +82,23 @@ describe("PaneGitlabServer", () => {
         jest.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(querier);
 
         const wrapper = getWrapper();
-        const store = useGitLabGroupsStore();
+        const groups_store = useGitLabGroupsStore();
+        const credentials_store = useCredentialsStore();
+        const expected_credentials = {
+            server_url: new URL(server_url),
+            token,
+        };
 
-        wrapper.get("[data-test=gitlab-server-url]").setValue(server_url);
-        wrapper.get("[data-test=gitlab-access-token]").setValue(token);
-
-        await nextTick();
+        await wrapper.get("[data-test=gitlab-server-url]").setValue(server_url);
+        await wrapper.get("[data-test=gitlab-access-token]").setValue(token);
 
         getFetchGroupsButton(wrapper).click();
 
         await flushPromises();
-
-        expect(querier.getUsedCredentials()).toStrictEqual({
-            server_url: new URL(server_url),
-            token,
-        });
-        expect(store.setGroups).toHaveBeenCalledWith(groups);
+        expect(querier.getUsedCredentials()).toStrictEqual(expected_credentials);
+        expect(credentials_store.setCredentials).toHaveBeenCalledWith(expected_credentials);
+        expect(groups_store.setGroups).toHaveBeenCalledWith(groups);
+        expect(push_route_spy).toHaveBeenCalledWith({ name: STEP_GITLAB_GROUP });
     });
 
     it("should display an error when a fault is detected", async () => {
@@ -93,10 +108,8 @@ describe("PaneGitlabServer", () => {
 
         const wrapper = getWrapper();
 
-        wrapper.get("[data-test=gitlab-server-url]").setValue(server_url);
-        wrapper.get("[data-test=gitlab-access-token]").setValue(token);
-
-        await nextTick();
+        await wrapper.get("[data-test=gitlab-server-url]").setValue(server_url);
+        await wrapper.get("[data-test=gitlab-access-token]").setValue(token);
 
         getFetchGroupsButton(wrapper).click();
 
@@ -113,10 +126,8 @@ describe("PaneGitlabServer", () => {
         const fetcher = GitlabApiQuerierStub.withGitlabGroups([]);
         jest.spyOn(gitlab_api_querier, "createGitlabApiQuerier").mockReturnValue(fetcher);
 
-        wrapper.get("[data-test=gitlab-server-url]").setValue("not a url");
-        wrapper.get("[data-test=gitlab-access-token]").setValue(token);
-
-        await nextTick();
+        await wrapper.get("[data-test=gitlab-server-url]").setValue("not a url");
+        await wrapper.get("[data-test=gitlab-access-token]").setValue(token);
 
         getFetchGroupsButton(wrapper).click();
 
@@ -128,11 +139,27 @@ describe("PaneGitlabServer", () => {
 
         expect(getFetchGroupsButton(wrapper).hasAttribute("disabled")).toBe(true);
 
-        wrapper.get("[data-test=gitlab-server-url]").setValue(server_url);
-        wrapper.get("[data-test=gitlab-access-token]").setValue(token);
-
-        await nextTick();
+        await wrapper.get("[data-test=gitlab-server-url]").setValue(server_url);
+        await wrapper.get("[data-test=gitlab-access-token]").setValue(token);
 
         expect(getFetchGroupsButton(wrapper).hasAttribute("disabled")).toBe(false);
+    });
+
+    it("should fill the server_url and the token if they are defined in store during setup", () => {
+        const wrapper = getWrapper({
+            credentials: {
+                credentials: {
+                    server_url: new URL(server_url),
+                    token,
+                },
+            },
+        });
+
+        expect(
+            wrapper.get<HTMLInputElement>("[data-test=gitlab-server-url]").element.value
+        ).toStrictEqual(server_url);
+        expect(
+            wrapper.get<HTMLInputElement>("[data-test=gitlab-access-token]").element.value
+        ).toStrictEqual(token);
     });
 });

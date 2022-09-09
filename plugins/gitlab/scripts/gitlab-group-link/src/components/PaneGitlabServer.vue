@@ -30,9 +30,6 @@
             >
                 {{ error_message }}
             </div>
-            <div v-if="success_message" class="tlp-alert-success">
-                {{ success_message }}
-            </div>
             <section class="tlp-pane">
                 <form ref="form" class="tlp-pane-container">
                     <section class="tlp-pane-section">
@@ -123,23 +120,26 @@
 import { ref, computed } from "vue";
 import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { useRouter } from "vue-router";
 import type { Fault } from "@tuleap/fault";
 
-import { STEP_GITLAB_SERVER, NO_GROUP_LINKED_EMPTY_STATE } from "../types";
+import { STEP_GITLAB_SERVER, STEP_GITLAB_GROUP, NO_GROUP_LINKED_EMPTY_STATE } from "../types";
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
 import { createGitlabApiQuerier } from "../api/gitlab-api-querier";
 import type { GitlabGroup } from "../stores/types";
 import { useGitLabGroupsStore } from "../stores/groups";
 import { isGitLabCredentialsFault } from "../api/GitLabCredentialsFault";
+import { useCredentialsStore } from "../stores/credentials";
 
 const { $gettext, interpolate } = useGettext();
 const groups_store = useGitLabGroupsStore();
 const gitlab_api_querier = createGitlabApiQuerier(window);
+const credentials_store = useCredentialsStore();
+const router = useRouter();
 
-const gitlab_server_url = ref("");
-const gitlab_access_token = ref("");
+const gitlab_server_url = ref(credentials_store.credentials.server_url);
+const gitlab_access_token = ref(credentials_store.credentials.token);
 const error_message = ref("");
-const success_message = ref("");
 const is_fetching_groups = ref(false);
 const form: Ref<HTMLFormElement | null> = ref(null);
 
@@ -170,7 +170,6 @@ function onClickFetchGitLabGroups(event: Event): void {
     }
 
     error_message.value = "";
-    success_message.value = "";
     is_fetching_groups.value = true;
 
     gitlab_api_querier
@@ -181,7 +180,11 @@ function onClickFetchGitLabGroups(event: Event): void {
         .match(
             (groups: readonly GitlabGroup[]) => {
                 groups_store.setGroups(groups);
-                success_message.value = $gettext("Groups successfully retrieved");
+                credentials_store.setCredentials({
+                    server_url: new URL(gitlab_server_url.value),
+                    token: gitlab_access_token.value,
+                });
+                router.push({ name: STEP_GITLAB_GROUP });
             },
             (fault) => {
                 if (isNetworkFault(fault)) {

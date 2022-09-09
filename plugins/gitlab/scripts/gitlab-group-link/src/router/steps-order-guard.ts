@@ -17,10 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type GitlabGroupLinkStepName = "gitlab-server" | "gitlab-group" | "gitlab-configuration";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import { STEP_GITLAB_GROUP, STEP_GITLAB_SERVER, NO_GROUP_LINKED_EMPTY_STATE } from "../types";
 
-export const STEP_GITLAB_SERVER: GitlabGroupLinkStepName = "gitlab-server";
-export const STEP_GITLAB_GROUP: GitlabGroupLinkStepName = "gitlab-group";
-export const STEP_GITLAB_CONFIGURATION: GitlabGroupLinkStepName = "gitlab-configuration";
+export const ensureStepsHaveBeenCompletedInTheRightOrder = (
+    to: RouteLocationNormalized,
+    from: RouteLocationNormalized
+): RouteLocationRaw | void => {
+    if (to.name === STEP_GITLAB_GROUP && from.name !== STEP_GITLAB_SERVER) {
+        return { name: NO_GROUP_LINKED_EMPTY_STATE };
+    }
 
-export const NO_GROUP_LINKED_EMPTY_STATE = "no-group-linked-empty-state";
+    return;
+};
