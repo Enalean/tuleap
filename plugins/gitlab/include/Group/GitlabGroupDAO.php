@@ -26,19 +26,20 @@ use Tuleap\DB\DataAccessObject;
 
 final class GitlabGroupDAO extends DataAccessObject
 {
-    public function insertNewGitlabGroup(GitlabGroupDBInsertionRepresentation $gitlab_group): int
+    public function insertNewGitlabGroup(NewGroup $gitlab_group): int
     {
         return (int) $this->getDB()->insertReturnId(
             'plugin_gitlab_group',
             [
                 'gitlab_group_id'           => $gitlab_group->gitlab_group_id,
+                'project_id'                => $gitlab_group->project_id,
                 'name'                      => $gitlab_group->name,
                 'full_path'                 => $gitlab_group->full_path,
                 'web_url'                   => $gitlab_group->web_url,
                 'avatar_url'                => $gitlab_group->avatar_url,
                 'last_synchronization_date' => $gitlab_group->last_synchronization_date->getTimestamp(),
                 'allow_artifact_closure'    => $gitlab_group->allow_artifact_closure,
-                'prefix_branch_name'        => $gitlab_group->prefix_branch_name,
+                'create_branch_prefix'      => $gitlab_group->prefix_branch_name,
             ]
         );
     }

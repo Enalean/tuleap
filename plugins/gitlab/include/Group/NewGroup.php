@@ -25,10 +25,14 @@ namespace Tuleap\Gitlab\Group;
 use DateTimeImmutable;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 
-final class GitlabGroupDBInsertionRepresentation
+/**
+ * @psalm-immutable
+ */
+final class NewGroup
 {
     private function __construct(
         public int $gitlab_group_id,
+        public int $project_id,
         public string $name,
         public string $full_path,
         public string $web_url,
@@ -39,10 +43,13 @@ final class GitlabGroupDBInsertionRepresentation
     ) {
     }
 
-    public static function buildGitlabGroupToInsertFromGitlabApi(GitlabGroupApiDataRepresentation $representation): self
-    {
+    public static function fromAPIRepresentationAndProject(
+        GitlabGroupApiDataRepresentation $representation,
+        \Project $project,
+    ): self {
         return new self(
             $representation->getGitlabGroupId(),
+            (int) $project->getID(),
             $representation->getName(),
             $representation->getFullPath(),
             $representation->getWebUrl(),

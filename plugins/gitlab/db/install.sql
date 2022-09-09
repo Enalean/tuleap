@@ -73,15 +73,16 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_integration_branch_info (
 
 CREATE TABLE IF NOT EXISTS plugin_gitlab_group (
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    gitlab_group_id INT(11) NOT NULL ,
-    name VARCHAR(255) NOT NULL,
+    gitlab_group_id INT(11) NOT NULL,
+    project_id INT(11) NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
     full_path TEXT NOT NULL,
     web_url VARCHAR(255) NOT NULL,
     avatar_url TEXT DEFAULT NULL,
     last_synchronization_date INT(11) NOT NULL,
     allow_artifact_closure TINYINT(1) NOT NULL DEFAULT 0,
-    prefix_branch_name VARCHAR(255) DEFAULT NULL,
-    UNIQUE(gitlab_group_id)
+    create_branch_prefix VARCHAR(255) DEFAULT NULL,
+    UNIQUE(gitlab_group_id, project_id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_gitlab_group_token (

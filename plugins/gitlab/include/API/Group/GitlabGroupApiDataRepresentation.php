@@ -24,6 +24,9 @@ namespace Tuleap\Gitlab\API\Group;
 
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 
+/**
+ * @psalm-immutable
+ */
 final class GitlabGroupApiDataRepresentation
 {
     private int $gitlab_group_id;

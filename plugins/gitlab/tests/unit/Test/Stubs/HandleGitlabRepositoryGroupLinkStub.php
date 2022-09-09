@@ -44,7 +44,7 @@ final class HandleGitlabRepositoryGroupLinkStub implements HandleGitlabRepositor
         array $gitlab_projects,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration,
-        GitlabGroupApiDataRepresentation $api_data_representation,
+        GitlabGroupApiDataRepresentation $api_group,
     ): GitlabGroupRepresentation {
         if ($this->exception) {
             throw $this->exception;
