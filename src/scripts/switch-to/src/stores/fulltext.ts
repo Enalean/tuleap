@@ -18,14 +18,13 @@
  */
 
 import { defineStore } from "pinia";
-import { post, decodeJSON } from "@tuleap/fetch-result";
 import type { FullTextState, FocusFromItemPayload } from "./type";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { ref } from "vue";
 import { delayedQuerier } from "../helpers/delayed-querier";
 import type { Fault } from "@tuleap/fault";
-import type { ItemDefinition } from "../type";
 import { useSwitchToStore } from "./index";
+import { query } from "../helpers/search-querier";
 
 export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
@@ -55,42 +54,20 @@ export const useFullTextStore = defineStore("fulltext", () => {
         }
 
         delayed_querier.scheduleQuery(() =>
-            post(url, {
-                search_query: {
-                    keywords,
+            query(url, keywords).match(
+                (results: FullTextState["fulltext_search_results"]): void => {
+                    fulltext_search_results.value = results;
+                    fulltext_search_is_loading.value = false;
                 },
-            })
-                .andThen((response) => decodeJSON<ItemDefinition[]>(response))
-                .match(
-                    (results: ItemDefinition[]): void => {
-                        fulltext_search_results.value = deduplicate(results);
-                        fulltext_search_is_loading.value = false;
-                    },
-                    (fault: Fault) => {
-                        fulltext_search_is_loading.value = false;
-                        if ("isNotFound" in fault && fault.isNotFound() === true) {
-                            fulltext_search_is_available.value = false;
-                            return;
-                        }
-                        fulltext_search_is_error.value = true;
+                (fault: Fault) => {
+                    fulltext_search_is_loading.value = false;
+                    if ("isNotFound" in fault && fault.isNotFound() === true) {
+                        fulltext_search_is_available.value = false;
+                        return;
                     }
-                )
-        );
-    }
-
-    function deduplicate(results: ItemDefinition[]): FullTextState["fulltext_search_results"] {
-        return results.reduce(
-            (
-                deduplicated_entries: FullTextState["fulltext_search_results"],
-                entry: ItemDefinition
-            ): FullTextState["fulltext_search_results"] => {
-                if (typeof deduplicated_entries[entry.html_url] === "undefined") {
-                    deduplicated_entries[entry.html_url] = entry;
+                    fulltext_search_is_error.value = true;
                 }
-
-                return deduplicated_entries;
-            },
-            {}
+            )
         );
     }
 
