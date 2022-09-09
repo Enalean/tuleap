@@ -39,7 +39,7 @@ export function getProjectsFromDataset(
                           project.project_name
                       ),
                       html_url: project.project_config_uri,
-                      icon_name: "fa-gear",
+                      icon_name: "fa-solid fa-gear",
                   },
               ]
             : [];
