@@ -19,12 +19,13 @@
 
 import { defineStore } from "pinia";
 import { postJSON } from "@tuleap/fetch-result";
-import type { FullTextState } from "./type";
+import type { FullTextState, FocusFromItemPayload } from "./type";
 import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { ref } from "vue";
 import { delayedQuerier } from "../helpers/delayed-querier";
 import type { Fault } from "@tuleap/fault";
 import type { ItemDefinition } from "../type";
+import { useSwitchToStore } from "./index";
 
 export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
@@ -91,6 +92,74 @@ export const useFullTextStore = defineStore("fulltext", () => {
         );
     }
 
+    function focusFirstSearchResult(): void {
+        const result_keys = Object.keys(fulltext_search_results.value);
+        if (result_keys.length > 0) {
+            useSwitchToStore().setProgrammaticallyFocusedElement(
+                fulltext_search_results.value[result_keys[0]]
+            );
+        }
+    }
+
+    function changeFocusFromSearchResult(payload: FocusFromItemPayload): void {
+        const key = payload.key;
+        if (key === "ArrowLeft") {
+            return;
+        }
+
+        const root_store = useSwitchToStore();
+        if (key === "ArrowRight") {
+            if (payload.entry.quick_links.length > 0) {
+                root_store.setProgrammaticallyFocusedElement(payload.entry.quick_links[0]);
+            }
+            return;
+        }
+
+        const result_keys = Object.keys(fulltext_search_results.value);
+        const current_index = result_keys.findIndex(
+            (html_url: string) => html_url === payload.entry.html_url
+        );
+        const is_first_result = current_index === 0;
+        if (is_first_result && key === "ArrowUp") {
+            if (root_store.filtered_history.entries.length > 0) {
+                root_store.setProgrammaticallyFocusedElement(
+                    root_store.filtered_history.entries[
+                        root_store.filtered_history.entries.length - 1
+                    ]
+                );
+            } else if (root_store.filtered_projects.length > 0) {
+                root_store.setProgrammaticallyFocusedElement(
+                    root_store.filtered_projects[root_store.filtered_projects.length - 1]
+                );
+            }
+            return;
+        }
+
+        navigateInsearchResults(current_index, key, result_keys);
+    }
+
+    function navigateInsearchResults(
+        current_index: number,
+        key: "ArrowUp" | "ArrowDown",
+        result_keys: string[]
+    ): void {
+        if (current_index === -1) {
+            return;
+        }
+
+        const focused_index = current_index + (key === "ArrowUp" ? -1 : 1);
+        const is_out_of_boundaries =
+            typeof fulltext_search_results.value[result_keys[focused_index]] === "undefined";
+        if (is_out_of_boundaries) {
+            return;
+        }
+
+        const root_store = useSwitchToStore();
+        root_store.setProgrammaticallyFocusedElement(
+            fulltext_search_results.value[result_keys[focused_index]]
+        );
+    }
+
     return {
         fulltext_search_url,
         fulltext_search_results,
@@ -98,5 +167,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
         fulltext_search_is_loading,
         fulltext_search_is_available,
         search,
+        changeFocusFromSearchResult,
+        focusFirstSearchResult,
     };
 });

@@ -24,7 +24,7 @@
             v-for="(item, key) of results"
             v-bind:key="key"
             v-bind:entry="item"
-            v-bind:change-focus-callback="() => {}"
+            v-bind:change-focus-callback="changeFocus"
         />
     </div>
 </template>
@@ -34,7 +34,12 @@ import { useFullTextStore } from "../../../../stores/fulltext";
 import { computed } from "vue";
 import type { ItemDefinition } from "../../../../type";
 import ItemEntry from "../ItemEntry.vue";
+import type { FocusFromItemPayload } from "../../../../stores/type";
 
 const fulltext_store = useFullTextStore();
 const results = computed((): ItemDefinition[] => fulltext_store.fulltext_search_results);
+
+function changeFocus(payload: FocusFromItemPayload): void {
+    fulltext_store.changeFocusFromSearchResult(payload);
+}
 </script>

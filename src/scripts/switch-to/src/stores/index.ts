@@ -28,6 +28,7 @@ import { get } from "@tuleap/tlp-fetch";
 import type { Project, UserHistory, ItemDefinition } from "../type";
 import { isMatchingFilterValue } from "../helpers/is-matching-filter-value";
 import { useFullTextStore } from "./fulltext";
+import type { QuickLink } from "../type";
 
 export const useSwitchToStore = defineStore("root", {
     state: (): State => ({
@@ -174,27 +175,30 @@ export const useSwitchToStore = defineStore("root", {
                 payload.key === "ArrowDown" &&
                 this.filter_value.length !== 0
             ) {
-                this.focusFirstHistoryEntry();
+                if (!this.focusFirstHistoryEntry()) {
+                    useFullTextStore().focusFirstSearchResult();
+                }
                 return;
             }
 
             this.navigateInCollection(this.filtered_projects, current_index, payload.key);
         },
 
-        focusFirstHistoryEntry(): void {
+        focusFirstHistoryEntry(): boolean {
             if (!this.is_history_loaded) {
-                return;
+                return false;
             }
 
             if (this.is_history_in_error) {
-                return;
+                return false;
             }
 
             if (this.filtered_history.entries.length === 0) {
-                return;
+                return false;
             }
 
             this.programmatically_focused_element = this.filtered_history.entries[0];
+            return true;
         },
 
         changeFocusFromHistory(payload: FocusFromItemPayload): void {
@@ -228,6 +232,15 @@ export const useSwitchToStore = defineStore("root", {
                     this.programmatically_focused_element =
                         this.filtered_projects[this.filtered_projects.length - 1];
                 }
+                return;
+            }
+            const is_the_last_entry = current_index === this.filtered_history.entries.length - 1;
+            if (
+                is_the_last_entry &&
+                payload.key === "ArrowDown" &&
+                this.filter_value.length !== 0
+            ) {
+                useFullTextStore().focusFirstSearchResult();
                 return;
             }
 
@@ -267,6 +280,12 @@ export const useSwitchToStore = defineStore("root", {
 
         setErrorForHistory(is_error: boolean): void {
             this.is_history_in_error = is_error;
+        },
+
+        setProgrammaticallyFocusedElement(
+            element: Project | ItemDefinition | QuickLink | null
+        ): void {
+            this.programmatically_focused_element = element;
         },
     },
 });

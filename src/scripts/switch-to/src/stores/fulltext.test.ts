@@ -25,6 +25,8 @@ import { FULLTEXT_MINIMUM_LENGTH_FOR_QUERY } from "./type";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ItemDefinition } from "../type";
+import type { Project, QuickLink } from "../type";
+import { useSwitchToStore } from "./index";
 
 describe("FullText Store", () => {
     let cancelPendingQuery: jest.Mock;
@@ -209,6 +211,319 @@ describe("FullText Store", () => {
             await callback_promise;
 
             expect(post_spy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("changeFocusFromSearchResult", () => {
+        describe("When user hits ArrowRight", () => {
+            it("does nothing if item has no quick link", () => {
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    programmatically_focused_element: first_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: first_search_result,
+                    key: "ArrowRight",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(first_search_result);
+            });
+
+            it("should focus on first quick link", () => {
+                const quick_link = { html_url: "/nous-c-est-le-gout" } as QuickLink;
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [quick_link],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    programmatically_focused_element: first_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: first_search_result,
+                    key: "ArrowRight",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(quick_link);
+            });
+        });
+
+        describe("When user hits ArrowUp", () => {
+            it("goes up", () => {
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+                const second_search_result = {
+                    title: "second search result",
+                    html_url: "/second-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                        "/second-search-result": second_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    programmatically_focused_element: second_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: second_search_result,
+                    key: "ArrowUp",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(first_search_result);
+            });
+
+            it("should focus the last recent item if the first search result has already the focus", () => {
+                const first_project = {
+                    project_uri: "/first",
+                    project_name: "First lorem",
+                } as Project;
+                const another_project = {
+                    project_uri: "/another",
+                    project_name: "Another lorem",
+                } as Project;
+
+                const first_entry = {
+                    html_url: "/first-entry",
+                    title: "a lorem",
+                } as ItemDefinition;
+                const another_entry = {
+                    html_url: "/another-entry",
+                    title: "b lorem",
+                } as ItemDefinition;
+
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+                const second_search_result = {
+                    title: "second search result",
+                    html_url: "/second-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                        "/second-search-result": second_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    history: {
+                        entries: [first_entry, another_entry],
+                    },
+                    projects: [first_project, another_project],
+                    filter_value: "lorem",
+                    programmatically_focused_element: first_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: first_search_result,
+                    key: "ArrowUp",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(another_entry);
+            });
+
+            it("should focus the last project if the first search result has already the focus and there is no recent items", () => {
+                const first_project = {
+                    project_uri: "/first",
+                    project_name: "First lorem",
+                } as Project;
+                const another_project = {
+                    project_uri: "/another",
+                    project_name: "Another lorem",
+                } as Project;
+
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+                const second_search_result = {
+                    title: "second search result",
+                    html_url: "/second-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                        "/second-search-result": second_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    history: {
+                        entries: [],
+                    },
+                    projects: [first_project, another_project],
+                    filter_value: "lorem",
+                    programmatically_focused_element: first_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: first_search_result,
+                    key: "ArrowUp",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(another_project);
+            });
+        });
+
+        describe("When user hits ArrowDown", () => {
+            it("goes down", () => {
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+                const second_search_result = {
+                    title: "second search result",
+                    html_url: "/second-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                        "/second-search-result": second_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    programmatically_focused_element: first_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: first_search_result,
+                    key: "ArrowDown",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(second_search_result);
+            });
+
+            it("does nothing if the last recent item has already the focus", () => {
+                const first_search_result = {
+                    title: "first search result",
+                    html_url: "/first-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+                const second_search_result = {
+                    title: "second search result",
+                    html_url: "/second-search-result",
+                    quick_links: [] as QuickLink[],
+                } as ItemDefinition;
+
+                const fts = useFullTextStore();
+                fts.$patch({
+                    fulltext_search_url: "/search",
+                    fulltext_search_is_available: true,
+                    fulltext_search_results: {
+                        "/first-search-result": first_search_result,
+                        "/second-search-result": second_search_result,
+                    },
+                });
+
+                const store = useSwitchToStore();
+                store.$patch({
+                    programmatically_focused_element: second_search_result,
+                });
+
+                fts.changeFocusFromSearchResult({
+                    entry: second_search_result,
+                    key: "ArrowDown",
+                });
+
+                expect(store.programmatically_focused_element).toStrictEqual(second_search_result);
+            });
+        });
+    });
+
+    describe("focusFirstSearchResult", () => {
+        it("should focus the first search result", () => {
+            const first_search_result = {
+                title: "first search result",
+                html_url: "/first-search-result",
+                quick_links: [] as QuickLink[],
+            } as ItemDefinition;
+            const second_search_result = {
+                title: "second search result",
+                html_url: "/second-search-result",
+                quick_links: [] as QuickLink[],
+            } as ItemDefinition;
+
+            const fts = useFullTextStore();
+            fts.$patch({
+                fulltext_search_url: "/search",
+                fulltext_search_is_available: true,
+                fulltext_search_results: {
+                    "/first-search-result": first_search_result,
+                    "/second-search-result": second_search_result,
+                },
+            });
+
+            const store = useSwitchToStore();
+            store.$patch({
+                programmatically_focused_element: { project_name: "acme" } as Project,
+            });
+
+            fts.focusFirstSearchResult();
+
+            expect(store.programmatically_focused_element).toStrictEqual(first_search_result);
         });
     });
 });
