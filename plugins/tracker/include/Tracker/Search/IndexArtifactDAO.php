@@ -26,17 +26,29 @@ use Tuleap\DB\DataAccessObject;
 
 class IndexArtifactDAO extends DataAccessObject
 {
-    /**
-     * @return array{id:int}[]
-     */
-    public function searchAllArtifactsToIndex(): array
+    public function markExistingArtifactsAsPending(): void
     {
-        $sql = 'SELECT tracker_artifact.id
+        $this->getDB()->run(
+            'INSERT INTO plugin_tracker_artifact_pending_indexation(id)
+            SELECT tracker_artifact.id
             FROM tracker_artifact
             JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
             JOIN `groups` ON (tracker.group_id = `groups`.group_id)
-            WHERE tracker.deletion_date IS NULL AND `groups`.status != "D"';
+            WHERE tracker.deletion_date IS NULL AND `groups`.status != "D"
+            ON DUPLICATE KEY UPDATE plugin_tracker_artifact_pending_indexation.id=plugin_tracker_artifact_pending_indexation.id'
+        );
+    }
 
-        return $this->getDB()->run($sql);
+    /**
+     * @return array{id:int}[]
+     */
+    public function searchAllPendingArtifactsToIndex(): array
+    {
+        return $this->getDB()->run('SELECT id FROM plugin_tracker_artifact_pending_indexation');
+    }
+
+    public function markPendingArtifactAsProcessed(int $artifact_id): void
+    {
+        $this->getDB()->run('DELETE FROM plugin_tracker_artifact_pending_indexation WHERE id = ?', $artifact_id);
     }
 }

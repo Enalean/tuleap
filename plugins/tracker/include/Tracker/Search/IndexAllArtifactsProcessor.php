@@ -40,17 +40,19 @@ class IndexAllArtifactsProcessor
     ) {
     }
 
-    public function queueAllExistingArtifactsIntoIndexQueue(ProgressQueueIndexItemCategory $progress_queue_index_item_category): void
+    public function queueAllPendingArtifactsIntoIndexQueue(ProgressQueueIndexItemCategory $progress_queue_index_item_category): void
     {
         $seen_since_last_clear_cache = 0;
         $artifact_factory            = ($this->artifact_factory_builder)();
-        $rows                        = $this->artifact_dao->searchAllArtifactsToIndex();
+        $rows                        = $this->artifact_dao->searchAllPendingArtifactsToIndex();
         $progress_queue_index_item_category->start(count($rows));
         foreach ($rows as $row) {
-            $artifact = $artifact_factory->getArtifactById($row['id']);
+            $artifact_id = $row['id'];
+            $artifact    = $artifact_factory->getArtifactById($artifact_id);
             if ($artifact !== null) {
                 $this->queueArtifactInformationIntoIndex($artifact);
             }
+            $this->artifact_dao->markPendingArtifactAsProcessed($artifact_id);
             $progress_queue_index_item_category->advance();
             $seen_since_last_clear_cache++;
             if ($seen_since_last_clear_cache > 100) {

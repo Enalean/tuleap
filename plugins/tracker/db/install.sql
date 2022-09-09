@@ -563,6 +563,11 @@ CREATE TABLE tracker_artifact(
   INDEX idx_submitted_on(submitted_on)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_artifact_pending_indexation;
+CREATE TABLE plugin_tracker_artifact_pending_indexation(
+    id int(11) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS plugin_tracker_artifact_pending_removal;
 CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact;
 

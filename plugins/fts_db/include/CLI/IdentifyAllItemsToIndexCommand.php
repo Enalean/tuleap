@@ -26,37 +26,26 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\Search\IndexAllPossibleItemsEvent;
-use Tuleap\Search\ItemToIndexQueue;
-use Tuleap\Search\ProgressQueueIndexItemCategory;
+use Tuleap\Search\IdentifyAllItemsToIndexEvent;
 
-final class IndexAllItemsCommand extends Command
+final class IdentifyAllItemsToIndexCommand extends Command
 {
-    public const NAME = 'full-text-search:index-all-items';
+    public const NAME = 'full-text-search:identify-all-items-to-index';
 
-    public function __construct(
-        private EventDispatcherInterface $event_dispatcher,
-        private ItemToIndexQueue $item_to_index_queue,
-    ) {
+    public function __construct(private EventDispatcherInterface $event_dispatcher)
+    {
         parent::__construct(self::NAME);
     }
 
     protected function configure(): void
     {
-        $this->setDescription('Add all existing items into queue to be indexed');
+        $this->setDescription('Identify all items that can be indexed');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>Start queueing existing items into the index queue</info>');
-        $this->event_dispatcher->dispatch(
-            new IndexAllPossibleItemsEvent(
-                $this->item_to_index_queue,
-                function (string $item_category) use ($output): ProgressQueueIndexItemCategory {
-                    return new ProgressQueueIndexItemCategorySymfonyOutput($output, $item_category);
-                }
-            )
-        );
+        $this->event_dispatcher->dispatch(new IdentifyAllItemsToIndexEvent());
+        $output->writeln('<info>All indexable items have been identified</info>');
 
         return 0;
     }
