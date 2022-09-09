@@ -24,19 +24,22 @@ namespace Tuleap\Tracker\FormElement;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_FormElement_Field;
+use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class FieldContentIndexer
 {
     public const INDEX_TYPE_FIELD_CONTENT = 'plugin_artifact_field';
 
-    public function __construct(private EventDispatcherInterface $event_dispatcher)
-    {
+    public function __construct(
+        private ItemToIndexQueue $index_queue,
+        private EventDispatcherInterface $event_dispatcher,
+    ) {
     }
 
     public function indexFieldContent(Artifact $artifact, Tracker_FormElement_Field $field, string $value): void
     {
-        $this->event_dispatcher->dispatch(
+        $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_FIELD_CONTENT,
                 $value,

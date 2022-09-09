@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Artifact_Changeset_Comment;
+use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetCommentIndexer
@@ -31,6 +32,7 @@ class ChangesetCommentIndexer
     public const INDEX_TYPE_CHANGESET_COMMENT = 'plugin_artifact_changeset_comment';
 
     public function __construct(
+        private ItemToIndexQueue $index_queue,
         private EventDispatcherInterface $event_dispatcher,
         private \Codendi_HTMLPurifier $purifier,
     ) {
@@ -65,7 +67,7 @@ class ChangesetCommentIndexer
     private function indexComment(Artifact $artifact, string $changeset_id, string $comment_body, CommentFormatIdentifier $comment_format): void
     {
         $tracker = $artifact->getTracker();
-        $this->event_dispatcher->dispatch(
+        $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(
                 self::INDEX_TYPE_CHANGESET_COMMENT,
                 Tracker_Artifact_Changeset_Comment::getCommentInPlaintext($this->purifier, $comment_body, $comment_format),

@@ -19,12 +19,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Search\ItemToIndexQueue;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
@@ -607,7 +610,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
                $this->extractCrossRefs($artifact, $content);
 
         if ($res) {
-            $this->addRawValueToSearchIndex($artifact, $content, $body_format);
+            $this->addRawValueToSearchIndex(new ItemToIndexQueueEventBased(EventManager::instance()), $artifact, $content, $body_format);
         }
 
         return $res;
@@ -626,19 +629,21 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return is_array($value) ? $value['format'] : $old_format;
     }
 
-    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
         $this->addRawValueToSearchIndex(
+            $index_queue,
             $changeset_value->getChangeset()->getArtifact(),
             $changeset_value->getText(),
             $changeset_value->getFormat(),
         );
     }
 
-    private function addRawValueToSearchIndex(Artifact $artifact, string $content, ?string $body_format): void
+    private function addRawValueToSearchIndex(ItemToIndexQueue $index_queue, Artifact $artifact, string $content, ?string $body_format): void
     {
-        (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+        $event_dispatcher = EventManager::instance();
+        (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
             $artifact,
             $this,
             Tracker_Artifact_ChangesetValue_Text::getContentHasTextFromRawInfo(

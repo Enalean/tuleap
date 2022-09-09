@@ -20,31 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\CLI;
+namespace Tuleap\Search;
 
-use Symfony\Component\Console\Tester\CommandTester;
-use Tuleap\Search\ItemToIndex;
-use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
 
-final class IndexAllItemsCommandTest extends TestCase
+final class ItemToIndexQueueEventBasedTest extends TestCase
 {
-    public function testCommandCanAskForIndexationOfAllExistingItems(): void
+    public function testDispatchEvent(): void
     {
-        $index_queue      = new class implements ItemToIndexQueue {
-            public function addItemToQueue(ItemToIndex $item_to_index): void
-            {
+        $item_to_index = new ItemToIndex('type', 'content', ['A' => 'A']);
+
+        $event_dispatcher = EventDispatcherStub::withCallback(
+            static function (ItemToIndex $received) use ($item_to_index): ItemToIndex {
+                self::assertSame($item_to_index, $received);
+                return $received;
             }
-        };
-        $event_dispatcher = EventDispatcherStub::withIdentityCallback();
-        $command          = new IndexAllItemsCommand($event_dispatcher, $index_queue);
+        );
+        $queue            = new ItemToIndexQueueEventBased($event_dispatcher);
 
-        $command_tester = new CommandTester($command);
+        $queue->addItemToQueue($item_to_index);
 
-        $command_tester->execute([]);
-
-        $command_tester->assertCommandIsSuccessful();
         self::assertEquals(1, $event_dispatcher->getCallCount());
     }
 }

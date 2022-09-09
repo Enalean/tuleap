@@ -32,6 +32,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
@@ -3218,6 +3219,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
                 ),

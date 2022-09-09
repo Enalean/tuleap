@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Search;
 
+use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ProgressQueueIndexItemCategory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -34,6 +35,7 @@ class IndexAllArtifactsProcessor
     public function __construct(
         private IndexArtifactDAO $artifact_dao,
         private $artifact_factory_builder,
+        private ItemToIndexQueue $index_queue,
         private ChangesetCommentIndexer $changeset_comment_indexer,
     ) {
     }
@@ -74,7 +76,7 @@ class IndexAllArtifactsProcessor
                 continue;
             }
 
-            $field->addChangesetValueToSearchIndex($changeset_value);
+            $field->addChangesetValueToSearchIndex($this->index_queue, $changeset_value);
         }
 
         foreach ($artifact->getChangesets() as $changeset) {

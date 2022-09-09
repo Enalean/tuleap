@@ -67,6 +67,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
@@ -366,6 +367,7 @@ class CampaignsResource
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
                 ),

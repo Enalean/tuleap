@@ -27,14 +27,17 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Search\IndexAllPossibleItemsEvent;
+use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ProgressQueueIndexItemCategory;
 
 final class IndexAllItemsCommand extends Command
 {
     public const NAME = 'full-text-search:index-all-items';
 
-    public function __construct(private EventDispatcherInterface $event_dispatcher)
-    {
+    public function __construct(
+        private EventDispatcherInterface $event_dispatcher,
+        private ItemToIndexQueue $item_to_index_queue,
+    ) {
         parent::__construct(self::NAME);
     }
 
@@ -47,9 +50,12 @@ final class IndexAllItemsCommand extends Command
     {
         $output->writeln('<info>Start queueing existing items into the index queue</info>');
         $this->event_dispatcher->dispatch(
-            new IndexAllPossibleItemsEvent(function (string $item_category) use ($output): ProgressQueueIndexItemCategory {
-                return new ProgressQueueIndexItemCategorySymfonyOutput($output, $item_category);
-            })
+            new IndexAllPossibleItemsEvent(
+                $this->item_to_index_queue,
+                function (string $item_category) use ($output): ProgressQueueIndexItemCategory {
+                    return new ProgressQueueIndexItemCategorySymfonyOutput($output, $item_category);
+                }
+            )
         );
 
         return 0;

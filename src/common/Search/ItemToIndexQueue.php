@@ -22,26 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Search;
 
-use Tuleap\Event\Dispatchable;
-
-final class IndexAllPossibleItemsEvent implements Dispatchable
+interface ItemToIndexQueue
 {
-    public const NAME = 'indexAllPossibleItems';
-
-    /**
-     * @psalm-param callable(string):ProgressQueueIndexItemCategory $progress_queue_item_factory
-     */
-    public function __construct(private ItemToIndexQueue $item_to_index_queue, private $progress_queue_item_factory)
-    {
-    }
-
-    public function getProcessQueueForItemCategory(string $item_category): ProgressQueueIndexItemCategory
-    {
-        return ($this->progress_queue_item_factory)($item_category);
-    }
-
-    public function getItemToIndexQueue(): ItemToIndexQueue
-    {
-        return $this->item_to_index_queue;
-    }
+    public function addItemToQueue(ItemToIndex $item_to_index): void;
 }

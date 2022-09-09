@@ -38,6 +38,7 @@ use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
@@ -99,6 +100,7 @@ class CardMappedFieldUpdater
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $artifact_factory     = \Tracker_ArtifactFactory::instance();
         $fields_retriever     = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $event_dispatcher     = \EventManager::instance();
 
         $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -133,7 +135,8 @@ class CardMappedFieldUpdater
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
-                    \EventManager::instance(),
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
                     Codendi_HTMLPurifier::instance(),
                 ),
             )

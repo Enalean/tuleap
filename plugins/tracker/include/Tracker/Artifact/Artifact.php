@@ -92,6 +92,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
@@ -2187,6 +2188,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $tracker_artifact_factory = $this->getArtifactFactory();
         $form_element_factory     = $this->getFormElementFactory();
+        $event_dispatcher         = EventManager::instance();
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
         return new NewChangesetCreator(
             $fields_validator,
@@ -2207,7 +2209,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $this->getReferenceManager(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
-                    EventManager::instance(),
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
                     Codendi_HTMLPurifier::instance(),
                 ),
             )

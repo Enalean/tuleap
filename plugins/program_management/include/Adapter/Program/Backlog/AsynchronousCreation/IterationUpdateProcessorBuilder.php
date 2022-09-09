@@ -44,6 +44,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIterationUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\ProcessIterationUpdate;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
@@ -88,6 +89,7 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
         $artifact_retriever       = new ArtifactFactoryAdapter($artifact_factory);
         $field_retriever          = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $fields_retriever         = new FieldsToBeSavedInSpecificOrderRetriever($form_element_factory);
+        $event_dispatcher         = \EventManager::instance();
 
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
@@ -135,7 +137,8 @@ final class IterationUpdateProcessorBuilder implements BuildIterationUpdateProce
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
-                    \EventManager::instance(),
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
                     Codendi_HTMLPurifier::instance(),
                 ),
             )

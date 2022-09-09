@@ -19,9 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Search\ItemToIndexQueue;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\StringField\StringFieldDao;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
 {
@@ -325,24 +328,26 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
                $this->extractCrossRefs($artifact, $value);
 
         if ($res) {
-            $this->addRawValueToSearchIndex($artifact, $value);
+            $this->addRawValueToSearchIndex(new ItemToIndexQueueEventBased(EventManager::instance()), $artifact, $value);
         }
 
         return $res;
     }
 
-    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
         assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_String);
         $this->addRawValueToSearchIndex(
+            $index_queue,
             $changeset_value->getChangeset()->getArtifact(),
             $changeset_value->getText(),
         );
     }
 
-    private function addRawValueToSearchIndex(Artifact $artifact, string $content): void
+    private function addRawValueToSearchIndex(ItemToIndexQueue $index_queue, Artifact $artifact, string $content): void
     {
-        (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+        $event_dispatcher = EventManager::instance();
+        (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
             $artifact,
             $this,
             $content
