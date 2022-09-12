@@ -31,7 +31,7 @@ final class IndexAllPendingItemsEvent implements Dispatchable
     /**
      * @psalm-param callable(string):ProgressQueueIndexItemCategory $progress_queue_item_factory
      */
-    public function __construct(private ItemToIndexQueue $item_to_index_queue, private $progress_queue_item_factory)
+    public function __construct(private ItemToIndexBatchQueue $item_to_index_batch_queue, private $progress_queue_item_factory)
     {
     }
 
@@ -40,8 +40,8 @@ final class IndexAllPendingItemsEvent implements Dispatchable
         return ($this->progress_queue_item_factory)($item_category);
     }
 
-    public function getItemToIndexQueue(): ItemToIndexQueue
+    public function getItemToIndexBatchQueue(): ItemToIndexBatchQueue
     {
-        return $this->item_to_index_queue;
+        return $this->item_to_index_batch_queue;
     }
 }

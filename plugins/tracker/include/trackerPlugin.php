@@ -2646,21 +2646,25 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function indexAllPendingItems(IndexAllPendingItemsEvent $index_all_possible_items_event): void
     {
-        $index_queue = $index_all_possible_items_event->getItemToIndexQueue();
-        (new IndexAllArtifactsProcessor(
-            new \Tuleap\Tracker\Search\IndexArtifactDAO(),
-            static function (): Tracker_ArtifactFactory {
-                Tracker_ArtifactFactory::clearInstance();
-                return Tracker_ArtifactFactory::instance();
-            },
-            $index_queue,
-            new ChangesetCommentIndexer(
-                $index_queue,
-                EventManager::instance(),
-                Codendi_HTMLPurifier::instance(),
-            )
-        ))->queueAllPendingArtifactsIntoIndexQueue(
-            $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')
+        $index_batch_queue = $index_all_possible_items_event->getItemToIndexBatchQueue();
+        $index_batch_queue->startBatchingItemsIntoQueue(
+            function (\Tuleap\Search\ItemToIndexQueue $index_queue) use ($index_all_possible_items_event): void {
+                (new IndexAllArtifactsProcessor(
+                    new \Tuleap\Tracker\Search\IndexArtifactDAO(),
+                    static function (): Tracker_ArtifactFactory {
+                        Tracker_ArtifactFactory::clearInstance();
+                        return Tracker_ArtifactFactory::instance();
+                    },
+                    $index_queue,
+                    new ChangesetCommentIndexer(
+                        $index_queue,
+                        EventManager::instance(),
+                        Codendi_HTMLPurifier::instance(),
+                    )
+                ))->queueAllPendingArtifactsIntoIndexQueue(
+                    $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')
+                );
+            }
         );
     }
 

@@ -24,7 +24,7 @@ namespace Tuleap\FullTextSearchDB\Index\Asynchronous;
 
 use Psr\Log\NullLogger;
 use Tuleap\FullTextSearchDB\Index\DeleteIndexedItems;
-use Tuleap\FullTextSearchDB\Index\InsertItemIntoIndex;
+use Tuleap\FullTextSearchDB\Index\InsertItemsIntoIndex;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
@@ -34,7 +34,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
 {
     public function testDoesNothingWhenProcessingAnUnknownEvent(): void
     {
-        $dispatcher = self::buildIndexingWorkerEventDispatcher($this->createStub(InsertItemIntoIndex::class), $this->createStub(DeleteIndexedItems::class));
+        $dispatcher = self::buildIndexingWorkerEventDispatcher($this->createStub(InsertItemsIntoIndex::class), $this->createStub(DeleteIndexedItems::class));
 
         $this->expectNotToPerformAssertions();
         $dispatcher->process(new WorkerEvent(new NullLogger(), ['event_name' => 'not.a.indexing.event', 'payload' => []]));
@@ -42,9 +42,9 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
 
     public function testCanProcessItemToIndexWorkerEvent(): void
     {
-        $inserter = new class implements InsertItemIntoIndex {
+        $inserter = new class implements InsertItemsIntoIndex {
             public bool $has_been_called = false;
-            public function indexItem(ItemToIndex $item): void
+            public function indexItems(ItemToIndex ...$items): void
             {
                 $this->has_been_called = true;
             }
@@ -69,7 +69,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
             }
         };
 
-        $dispatcher = self::buildIndexingWorkerEventDispatcher($this->createStub(InsertItemIntoIndex::class), $remover);
+        $dispatcher = self::buildIndexingWorkerEventDispatcher($this->createStub(InsertItemsIntoIndex::class), $remover);
 
         $task = RemoveItemsFromIndexTask::fromItemsToRemove(new IndexedItemsToRemove('type', ['A' => 'A']));
 
@@ -79,7 +79,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
     }
 
     private static function buildIndexingWorkerEventDispatcher(
-        InsertItemIntoIndex $item_into_index_inserter,
+        InsertItemsIntoIndex $item_into_index_inserter,
         DeleteIndexedItems $indexed_items_remover,
     ): IndexingWorkerEventDispatcher {
         return new IndexingWorkerEventDispatcher($item_into_index_inserter, $indexed_items_remover);

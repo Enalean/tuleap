@@ -26,7 +26,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\Search\ItemToIndexQueue;
+use Tuleap\Search\ItemToIndexBatchQueue;
 use Tuleap\Search\IndexAllPendingItemsEvent;
 use Tuleap\Search\ProgressQueueIndexItemCategory;
 
@@ -36,7 +36,7 @@ final class IndexAllPendingItemsCommand extends Command
 
     public function __construct(
         private EventDispatcherInterface $event_dispatcher,
-        private ItemToIndexQueue $item_to_index_queue,
+        private ItemToIndexBatchQueue $item_to_index_batch_queue,
     ) {
         parent::__construct(self::NAME);
     }
@@ -51,7 +51,7 @@ final class IndexAllPendingItemsCommand extends Command
         $output->writeln('<info>Start queueing items into the index queue</info>');
         $this->event_dispatcher->dispatch(
             new IndexAllPendingItemsEvent(
-                $this->item_to_index_queue,
+                $this->item_to_index_batch_queue,
                 function (string $item_category) use ($output): ProgressQueueIndexItemCategory {
                     return new ProgressQueueIndexItemCategorySymfonyOutput($output, $item_category);
                 }

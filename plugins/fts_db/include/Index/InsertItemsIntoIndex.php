@@ -24,7 +24,7 @@ namespace Tuleap\FullTextSearchDB\Index;
 
 use Tuleap\Search\ItemToIndex;
 
-interface InsertItemIntoIndex
+interface InsertItemsIntoIndex
 {
-    public function indexItem(ItemToIndex $item): void;
+    public function indexItems(ItemToIndex ...$items): void;
 }
