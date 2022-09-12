@@ -27,5 +27,5 @@ interface BuildGitlabGroup
     /**
      * @throws GitlabGroupAlreadyExistsException
      */
-    public function createGroup(GitlabGroupDBInsertionRepresentation $gitlab_group): GitlabGroup;
+    public function createGroup(NewGroup $gitlab_group): GitlabGroup;
 }

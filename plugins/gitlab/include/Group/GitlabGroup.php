@@ -44,7 +44,7 @@ final class GitlabGroup
 
     public static function buildGitlabGroupFromInsertionRows(
         int $id,
-        GitlabGroupDBInsertionRepresentation $group_DB_insertion,
+        NewGroup $group_DB_insertion,
     ): self {
         return new self(
             $id,

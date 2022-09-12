@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Test\Stubs;
 
 use Tuleap\Gitlab\Group\BuildGitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroup;
-use Tuleap\Gitlab\Group\GitlabGroupDBInsertionRepresentation;
+use Tuleap\Gitlab\Group\NewGroup;
 
 final class BuildGitlabGroupStub implements BuildGitlabGroup
 {
@@ -32,7 +32,7 @@ final class BuildGitlabGroupStub implements BuildGitlabGroup
     {
     }
 
-    public function createGroup(GitlabGroupDBInsertionRepresentation $gitlab_group): GitlabGroup
+    public function createGroup(NewGroup $gitlab_group): GitlabGroup
     {
         return GitlabGroup::buildGitlabGroupFromInsertionRows($this->group_id, $gitlab_group);
     }

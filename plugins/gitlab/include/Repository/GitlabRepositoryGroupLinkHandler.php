@@ -32,7 +32,7 @@ use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Group\BuildGitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
-use Tuleap\Gitlab\Group\GitlabGroupDBInsertionRepresentation;
+use Tuleap\Gitlab\Group\NewGroup;
 use Tuleap\Gitlab\Group\LinkARepositoryIntegrationToAGroup;
 use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
 use Tuleap\Gitlab\Group\Token\InsertGroupToken;
@@ -62,13 +62,14 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
         array $gitlab_projects,
         Project $project,
         GitlabRepositoryCreatorConfiguration $configuration,
-        GitlabGroupApiDataRepresentation $api_data_representation,
+        GitlabGroupApiDataRepresentation $api_group,
     ): GitlabGroupRepresentation {
         return $this->db_transaction_executor->execute(
-            function () use ($credentials, $gitlab_projects, $project, $configuration, $api_data_representation) {
+            function () use ($credentials, $gitlab_projects, $project, $configuration, $api_group) {
                 $gitlab_group = $this->gitlab_group_factory->createGroup(
-                    GitlabGroupDBInsertionRepresentation::buildGitlabGroupToInsertFromGitlabApi(
-                        $api_data_representation
+                    NewGroup::fromAPIRepresentationAndProject(
+                        $api_group,
+                        $project
                     )
                 );
 

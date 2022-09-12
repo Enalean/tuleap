@@ -31,7 +31,7 @@ final class GitlabGroupFactory implements BuildGitlabGroup
     /**
      * @throws GitlabGroupAlreadyExistsException
      */
-    public function createGroup(GitlabGroupDBInsertionRepresentation $gitlab_group): GitlabGroup
+    public function createGroup(NewGroup $gitlab_group): GitlabGroup
     {
         if ($this->gitlab_group_DAO->searchGroupByGitlabGroupId($gitlab_group->gitlab_group_id)) {
             throw new GitlabGroupAlreadyExistsException($gitlab_group->name);
