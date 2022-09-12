@@ -425,6 +425,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-roadmap
 %{summary}.
 
+%package plugin-fts-db
+Summary: Full-Text search DB backend
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-fts-db
+%{summary}.
+
 %package plugin-oauth2-server
 Summary: OAuth2 Server
 Group: Development/Tools
@@ -523,13 +530,6 @@ Provides: tuleap-plugin-textualreport
 
 %if %{with experimental}
 
-%package plugin-fts-db
-Summary: Full-Text search DB backend
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-fts-db
-%{summary}.
-
 %endif
 
 #
@@ -599,6 +599,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tee_container
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
@@ -606,7 +607,6 @@ done
 %endif
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -1443,6 +1443,10 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/roadmap
 
+%files plugin-fts-db
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_db
+
 %files plugin-oauth2-server
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/oauth2_server
@@ -1501,10 +1505,6 @@ fi
 %endif
 
 %if %{with experimental}
-
-%files plugin-fts-db
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/fts_db
 
 %endif
 
