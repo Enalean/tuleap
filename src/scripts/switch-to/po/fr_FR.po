@@ -57,6 +57,9 @@ msgstr "Démarrer l'exploration de Tuleap"
 msgid "Switch to…"
 msgstr "Basculer vers…"
 
+msgid "There are more results, please refine your search."
+msgstr "Il y a plus de résultats, veuillez affiner votre recherche."
+
 msgid "You didn't visit recently any items matching your query."
 msgstr ""
 "Vous n'avez pas visité d'élément récemment qui corresponde à votre recherche."

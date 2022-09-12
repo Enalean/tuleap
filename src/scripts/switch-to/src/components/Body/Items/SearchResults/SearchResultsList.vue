@@ -26,6 +26,9 @@
             v-bind:entry="item"
             v-bind:change-focus-callback="changeFocus"
         />
+        <div v-if="has_more" class="switch-to-search-results-list-has-more tlp-text-muted">
+            {{ $gettext("There are more results, please refine your search.") }}
+        </div>
     </div>
 </template>
 
@@ -38,6 +41,7 @@ import type { FocusFromItemPayload } from "../../../../stores/type";
 
 const fulltext_store = useFullTextStore();
 const results = computed((): ItemDefinition[] => fulltext_store.fulltext_search_results);
+const has_more = computed((): ItemDefinition[] => fulltext_store.fulltext_search_has_more_results);
 
 function changeFocus(payload: FocusFromItemPayload): void {
     fulltext_store.changeFocusFromSearchResult(payload);

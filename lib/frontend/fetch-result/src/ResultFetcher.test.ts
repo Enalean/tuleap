@@ -184,16 +184,19 @@ describe(`ResultFetcher`, () => {
             [
                 "putJSON()",
                 (): ResponseResult => getFetcher().putJSON(uri, json_request_payload),
+                "https://example.com/result-fetcher-test/d%C3%A9mo",
                 PUT_METHOD,
             ],
             [
                 "patchJSON()",
                 (): ResponseResult => getFetcher().patchJSON(uri, json_request_payload),
+                "https://example.com/result-fetcher-test/d%C3%A9mo",
                 PATCH_METHOD,
             ],
             [
                 "post()",
-                (): ResponseResult => getFetcher().post(uri, json_request_payload),
+                (): ResponseResult => getFetcher().post(uri, { params }, json_request_payload),
+                "https://example.com/result-fetcher-test/d%C3%A9mo?quinonyl=mem&R%26D=91&Jwahar=false",
                 POST_METHOD,
             ],
         ])(
@@ -202,6 +205,7 @@ describe(`ResultFetcher`, () => {
             async (
                 _method_name: string,
                 method_under_test: () => ResponseResult,
+                expected_url: string,
                 expected_http_method: string
             ) => {
                 const result = await method_under_test();
@@ -210,9 +214,8 @@ describe(`ResultFetcher`, () => {
                 }
 
                 expect(result.value).toBe(success_response);
-                expect(fetcher.getRequestInfo(0)).toBe(
-                    "https://example.com/result-fetcher-test/d%C3%A9mo"
-                );
+                expect(fetcher.getRequestInfo(0)).toBe(expected_url);
+
                 const request_init = fetcher.getRequestInit(0);
                 if (request_init === undefined) {
                     throw new Error("Expected request init to be defined");

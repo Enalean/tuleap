@@ -57,6 +57,7 @@ export interface FullTextState {
     fulltext_search_is_loading: boolean;
     fulltext_search_is_error: boolean;
     fulltext_search_is_available: boolean;
+    fulltext_search_has_more_results: boolean;
 }
 
 export const FULLTEXT_MINIMUM_LENGTH_FOR_QUERY = 3;
