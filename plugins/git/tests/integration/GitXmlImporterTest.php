@@ -440,7 +440,6 @@ XML;
 
     public function testItShouldImportStaticUgroups(): void
     {
-        $this->expectNotToPerformAssertions();
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -469,12 +468,11 @@ XML;
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_READ, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WRITE, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WPLUS, \Mockery::any(), 4)->ordered();
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldImportLegacyPermissions(): void
     {
-        $this->expectNotToPerformAssertions();
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -501,7 +499,7 @@ XML;
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_READ, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WRITE, \Mockery::any(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_WPLUS, \Mockery::any(), 4)->ordered();
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldUpdateConfViaSystemEvents(): void
@@ -545,7 +543,6 @@ XML;
 
     public function testItShouldAtLeastSetProjectsAdminAsGitAdmins(): void
     {
-        $this->expectNotToPerformAssertions();
         $xml = <<<XML
             <project>
                 <git>
@@ -554,12 +551,11 @@ XML;
             </project>
 XML;
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4);
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldImportGitAdmins(): void
     {
-        $this->expectNotToPerformAssertions();
         $xml    = <<<XML
             <project>
                 <git>
@@ -576,7 +572,7 @@ XML;
 
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 3)->ordered();
         $this->permission_dao->shouldReceive('addPermission')->with(Git::PERM_ADMIN, $this->project->getId(), 4)->ordered();
-        $this->import(new SimpleXMLElement($xml));
+        self::assertTrue($this->import(new SimpleXMLElement($xml)));
     }
 
     public function testItShouldImportReferences(): void

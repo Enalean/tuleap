@@ -157,17 +157,16 @@ final class SSHKeyDumperTest extends GitoliteTestCase
 
     public function testItDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys(): void
     {
-        $this->expectNotToPerformAssertions();
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
         $user = new PFUser([
-            'id'              => 12,
-            'language_id'     => 'en',
-            'user_name'       => 'john_do',
+            'id' => 12,
+            'language_id' => 'en',
+            'user_name' => 'john_do',
             'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2,
         ]);
-        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
+        self::assertTrue($this->dumper->dumpSSHKeys($user, $invalid_keys_collector));
 
-        $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
+        self::assertTrue($this->dumper->dumpSSHKeys($user, $invalid_keys_collector));
     }
 }
