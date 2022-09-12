@@ -124,6 +124,7 @@ final class GitlabGroupResource
         $transaction_executor  = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         $integration_dao       = new GitlabRepositoryIntegrationDao();
         $key_factory           = new KeyFactory();
+        $group_dao             = new GitlabGroupDAO();
 
         $gitlab_repository_creator = new GitlabRepositoryCreator(
             $transaction_executor,
@@ -153,7 +154,7 @@ final class GitlabGroupResource
                 $transaction_executor,
                 $integration_dao,
                 $gitlab_repository_creator,
-                new GitlabGroupFactory(new GitlabGroupDAO()),
+                new GitlabGroupFactory($group_dao, $group_dao),
                 new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
                 new GroupRepositoryIntegrationDAO()
             )

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,30 +15,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Test\Stubs;
 
-use Tuleap\Gitlab\Group\BuildGitlabGroup;
-use Tuleap\Gitlab\Group\GitlabGroup;
-use Tuleap\Gitlab\Group\NewGroup;
-
-final class BuildGitlabGroupStub implements BuildGitlabGroup
+final class VerifyGroupIsAlreadyLinkedStub implements \Tuleap\Gitlab\Group\VerifyGroupIsAlreadyLinked
 {
-    private function __construct(private int $group_id)
+    private function __construct(private bool $is_linked)
     {
     }
 
-    public function createGroup(NewGroup $gitlab_group): GitlabGroup
+    public function isGroupAlreadyLinked(int $gitlab_group_id): bool
     {
-        return GitlabGroup::buildGitlabGroupFromInsertionRows($this->group_id, $gitlab_group);
+        return $this->is_linked;
     }
 
-    public static function buildWithGroupId(int $id): self
+    public static function withAlwaysLinked(): self
     {
-        return new self($id);
+        return new self(true);
+    }
+
+    public static function withNeverLinked(): self
+    {
+        return new self(false);
     }
 }

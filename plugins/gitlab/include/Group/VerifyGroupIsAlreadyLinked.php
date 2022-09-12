@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-interface BuildGitlabGroup
+interface VerifyGroupIsAlreadyLinked
 {
-    /**
-     * @throws GitlabGroupAlreadyExistsException
-     */
-    public function createGroup(NewGroup $gitlab_group): GitlabGroup;
+    public function isGroupAlreadyLinked(int $gitlab_group_id): bool;
 }

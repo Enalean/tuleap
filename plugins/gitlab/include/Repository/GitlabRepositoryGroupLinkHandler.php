@@ -29,9 +29,9 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
-use Tuleap\Gitlab\Group\BuildGitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
+use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\NewGroup;
 use Tuleap\Gitlab\Group\LinkARepositoryIntegrationToAGroup;
 use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
@@ -44,7 +44,7 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
         private DBTransactionExecutor $db_transaction_executor,
         private VerifyGitlabRepositoryIsIntegrated $verify_gitlab_repository_is_integrated,
         private CreateGitlabRepositories $gitlab_repository_creator,
-        private BuildGitlabGroup $gitlab_group_factory,
+        private GitlabGroupFactory $gitlab_group_factory,
         private InsertGroupToken $group_token_inserter,
         private LinkARepositoryIntegrationToAGroup $link_integration_to_group,
     ) {
