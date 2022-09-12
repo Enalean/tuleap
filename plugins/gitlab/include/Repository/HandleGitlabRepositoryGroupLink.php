@@ -29,6 +29,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
+use Tuleap\Gitlab\Group\ProjectAlreadyLinkedToGitlabGroupException;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
 interface HandleGitlabRepositoryGroupLink
@@ -37,6 +38,7 @@ interface HandleGitlabRepositoryGroupLink
      * @param GitlabProject[] $gitlab_projects
      *
      * @throws GitlabGroupAlreadyExistsException
+     * @throws ProjectAlreadyLinkedToGitlabGroupException
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
      */
