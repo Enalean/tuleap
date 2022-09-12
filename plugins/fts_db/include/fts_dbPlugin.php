@@ -21,11 +21,13 @@
 declare(strict_types=1);
 
 use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\FullTextSearchDB\CLI\IndexAllItemsCommand;
+use Tuleap\FullTextSearchDB\CLI\IdentifyAllItemsToIndexCommand;
+use Tuleap\FullTextSearchDB\CLI\IndexAllPendingItemsCommand;
 use Tuleap\FullTextSearchDB\Index\Asynchronous\IndexingWorkerEventDispatcher;
 use Tuleap\FullTextSearchDB\Index\ItemToIndexQueueImmediate;
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Search\IdentifyAllItemsToIndexEvent;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
@@ -73,6 +75,12 @@ final class fts_dbPlugin extends Plugin
         return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
     }
 
+    public function postEnable(): void
+    {
+        parent::postEnable();
+        (EventManager::instance())->dispatch(new IdentifyAllItemsToIndexEvent());
+    }
+
     /**
      * @see REST_RESOURCES
      */
@@ -105,12 +113,18 @@ final class fts_dbPlugin extends Plugin
     public function collectCLICommands(CLICommandsCollector $collector): void
     {
         $collector->addCommand(
-            IndexAllItemsCommand::NAME,
-            function (): IndexAllItemsCommand {
-                return new IndexAllItemsCommand(
+            IndexAllPendingItemsCommand::NAME,
+            function (): IndexAllPendingItemsCommand {
+                return new IndexAllPendingItemsCommand(
                     EventManager::instance(),
                     new ItemToIndexQueueImmediate(new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())
                 );
+            }
+        );
+        $collector->addCommand(
+            IdentifyAllItemsToIndexCommand::NAME,
+            function (): IdentifyAllItemsToIndexCommand {
+                return new IdentifyAllItemsToIndexCommand(EventManager::instance());
             }
         );
     }

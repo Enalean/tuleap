@@ -82,7 +82,7 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
-use Tuleap\Search\IndexAllPossibleItemsEvent;
+use Tuleap\Search\IndexAllPendingItemsEvent;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Service\ServiceCreator;
@@ -370,7 +370,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $this->addHook(CollectTuleapComputedMetrics::NAME);
         $this->addHook(ConfigureAtXMLImport::NAME);
 
-        $this->addHook(\Tuleap\Search\IndexAllPossibleItemsEvent::NAME);
+        $this->addHook(\Tuleap\Search\IndexAllPendingItemsEvent::NAME);
+        $this->addHook(\Tuleap\Search\IdentifyAllItemsToIndexEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -2643,7 +2644,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $handler->handlePotentialReferencesReceived($event);
     }
 
-    public function indexAllPossibleItems(IndexAllPossibleItemsEvent $index_all_possible_items_event): void
+    public function indexAllPendingItems(IndexAllPendingItemsEvent $index_all_possible_items_event): void
     {
         $index_queue = $index_all_possible_items_event->getItemToIndexQueue();
         (new IndexAllArtifactsProcessor(
@@ -2658,8 +2659,13 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 EventManager::instance(),
                 Codendi_HTMLPurifier::instance(),
             )
-        ))->queueAllExistingArtifactsIntoIndexQueue(
+        ))->queueAllPendingArtifactsIntoIndexQueue(
             $index_all_possible_items_event->getProcessQueueForItemCategory('artifacts')
         );
+    }
+
+    public function identifyAllItemsToIndex(): void
+    {
+        (new \Tuleap\Tracker\Search\IndexArtifactDAO())->markExistingArtifactsAsPending();
     }
 }

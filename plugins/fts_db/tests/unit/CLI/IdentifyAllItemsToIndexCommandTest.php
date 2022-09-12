@@ -20,28 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Search;
+namespace Tuleap\FullTextSearchDB\CLI;
 
-use Tuleap\Event\Dispatchable;
+use Symfony\Component\Console\Tester\CommandTester;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stub\EventDispatcherStub;
 
-final class IndexAllPossibleItemsEvent implements Dispatchable
+final class IdentifyAllItemsToIndexCommandTest extends TestCase
 {
-    public const NAME = 'indexAllPossibleItems';
-
-    /**
-     * @psalm-param callable(string):ProgressQueueIndexItemCategory $progress_queue_item_factory
-     */
-    public function __construct(private ItemToIndexQueue $item_to_index_queue, private $progress_queue_item_factory)
+    public function testCommandCanAskForTheIdentificationOfAllItemsToIndex(): void
     {
-    }
+        $event_dispatcher = EventDispatcherStub::withIdentityCallback();
+        $command          = new IdentifyAllItemsToIndexCommand($event_dispatcher);
 
-    public function getProcessQueueForItemCategory(string $item_category): ProgressQueueIndexItemCategory
-    {
-        return ($this->progress_queue_item_factory)($item_category);
-    }
+        $command_tester = new CommandTester($command);
 
-    public function getItemToIndexQueue(): ItemToIndexQueue
-    {
-        return $this->item_to_index_queue;
+        $command_tester->execute([]);
+
+        $command_tester->assertCommandIsSuccessful();
+        self::assertEquals(1, $event_dispatcher->getCallCount());
     }
 }

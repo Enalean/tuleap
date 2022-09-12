@@ -28,9 +28,9 @@ use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
 
-final class IndexAllItemsCommandTest extends TestCase
+final class IndexAllPendingItemsCommandTest extends TestCase
 {
-    public function testCommandCanAskForIndexationOfAllExistingItems(): void
+    public function testCommandCanAskForIndexationOfAllPendingItems(): void
     {
         $index_queue      = new class implements ItemToIndexQueue {
             public function addItemToQueue(ItemToIndex $item_to_index): void
@@ -38,7 +38,7 @@ final class IndexAllItemsCommandTest extends TestCase
             }
         };
         $event_dispatcher = EventDispatcherStub::withIdentityCallback();
-        $command          = new IndexAllItemsCommand($event_dispatcher, $index_queue);
+        $command          = new IndexAllPendingItemsCommand($event_dispatcher, $index_queue);
 
         $command_tester = new CommandTester($command);
 
