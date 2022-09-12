@@ -37,6 +37,7 @@ use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
 use Tuleap\Gitlab\Test\Stubs\RetrieveGitlabGroupInformationStub;
+use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
@@ -52,6 +53,7 @@ final class GroupCreatorTest extends TestCase
     private BuildGitlabProjectsStub $project_builder;
     private VerifyGroupIsAlreadyLinkedStub $group_integrated_verifier;
     private VerifyProjectIsAlreadyLinkedStub $project_linked_verifier;
+    private string $branch_prefix;
 
     protected function setUp(): void
     {
@@ -63,6 +65,8 @@ final class GroupCreatorTest extends TestCase
         ]);
         $this->group_integrated_verifier = VerifyGroupIsAlreadyLinkedStub::withNeverLinked();
         $this->project_linked_verifier   = VerifyProjectIsAlreadyLinkedStub::withNeverLinked();
+
+        $this->branch_prefix = 'dev-';
     }
 
     private function createGroup(): GitlabGroupRepresentation
@@ -97,6 +101,7 @@ final class GroupCreatorTest extends TestCase
                 ),
                 InsertGroupTokenStub::build(),
                 LinkARepositoryIntegrationToAGroupStub::withCallCount(),
+                SaveIntegrationBranchPrefixStub::withCallCount()
             )
         );
 
@@ -104,8 +109,10 @@ final class GroupCreatorTest extends TestCase
         $post        = new GitlabGroupPOSTRepresentation(
             self::PROJECT_ID,
             1,
-            "azertyuiop",
-            "https://gitlab.example.com"
+            'azertyuiop',
+            'https://gitlab.example.com',
+            true,
+            $this->branch_prefix
         );
 
         return $creator->createGroupAndIntegrations($credentials, $post, $project);
@@ -146,6 +153,14 @@ final class GroupCreatorTest extends TestCase
     public function testItThrowsIfTheProjectIsAlreadyLinkedToAGitlabGroup(): void
     {
         $this->project_linked_verifier = VerifyProjectIsAlreadyLinkedStub::withAlwaysLinked();
+
+        $this->expectException(RestException::class);
+        $this->createGroup();
+    }
+
+    public function testItThrowsIfTheBranchPrefixProducesInvalidBranchNames(): void
+    {
+        $this->branch_prefix = 'invalid:';
 
         $this->expectException(RestException::class);
         $this->createGroup();

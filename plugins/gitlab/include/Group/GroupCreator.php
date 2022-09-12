@@ -24,12 +24,12 @@ namespace Tuleap\Gitlab\Group;
 
 use Luracast\Restler\RestException;
 use Project;
+use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Gitlab\API\BuildGitlabProjects;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\Group\RetrieveGitlabGroupInformation;
-use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
@@ -60,12 +60,20 @@ final class GroupCreator
                 $credentials,
                 $gitlab_group_representation->gitlab_group_id
             );
+
+            $new_group = NewGroup::fromAPIRepresentation(
+                $gitlab_group_information,
+                $project,
+                new \DateTimeImmutable(),
+                $gitlab_group_representation->allow_artifact_closure,
+                $gitlab_group_representation->create_branch_prefix
+            );
+
             return $this->repository_group_link_handler->integrateGitlabRepositoriesInProject(
                 $credentials,
                 $gitlab_group_projects,
                 $project,
-                GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration(),
-                $gitlab_group_information
+                $new_group
             );
         } catch (
             GitlabGroupAlreadyExistsException
@@ -74,6 +82,14 @@ final class GroupCreator
             | GitlabResponseAPIException $exception
         ) {
             throw new RestException(400, $exception->getMessage());
+        } catch (InvalidBranchNameException) {
+            throw new RestException(
+                400,
+                sprintf(
+                    "The branch name prefix '%s' produces invalid git branch names",
+                    $gitlab_group_representation->create_branch_prefix ?? ''
+                )
+            );
         }
     }
 }
