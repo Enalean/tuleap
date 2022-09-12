@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\FullTextSearchDB\CLI\IndexAllItemsCommand;
 use Tuleap\FullTextSearchDB\Index\Asynchronous\IndexingWorkerEventDispatcher;
+use Tuleap\FullTextSearchDB\Index\ItemToIndexQueueImmediate;
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Search\IndexedItemsToRemove;
@@ -106,7 +107,10 @@ final class fts_dbPlugin extends Plugin
         $collector->addCommand(
             IndexAllItemsCommand::NAME,
             function (): IndexAllItemsCommand {
-                return new IndexAllItemsCommand(EventManager::instance());
+                return new IndexAllItemsCommand(
+                    EventManager::instance(),
+                    new ItemToIndexQueueImmediate(new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())
+                );
             }
         );
     }

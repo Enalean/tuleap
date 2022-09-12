@@ -20,28 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Search;
+namespace Tuleap\FullTextSearchDB\Index;
 
-use Tuleap\Event\Dispatchable;
+use Tuleap\Search\ItemToIndex;
+use Tuleap\Search\ItemToIndexQueue;
 
-final class IndexAllPossibleItemsEvent implements Dispatchable
+final class ItemToIndexQueueImmediate implements ItemToIndexQueue
 {
-    public const NAME = 'indexAllPossibleItems';
-
-    /**
-     * @psalm-param callable(string):ProgressQueueIndexItemCategory $progress_queue_item_factory
-     */
-    public function __construct(private ItemToIndexQueue $item_to_index_queue, private $progress_queue_item_factory)
+    public function __construct(private InsertItemIntoIndex $inserter)
     {
     }
 
-    public function getProcessQueueForItemCategory(string $item_category): ProgressQueueIndexItemCategory
+    public function addItemToQueue(ItemToIndex $item_to_index): void
     {
-        return ($this->progress_queue_item_factory)($item_category);
-    }
-
-    public function getItemToIndexQueue(): ItemToIndexQueue
-    {
-        return $this->item_to_index_queue;
+        $this->inserter->indexItem($item_to_index);
     }
 }

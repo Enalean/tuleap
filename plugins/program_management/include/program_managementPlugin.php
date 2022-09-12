@@ -210,6 +210,7 @@ use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
@@ -943,6 +944,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $artifact_changeset_saver       = ArtifactChangesetSaver::build();
         $after_new_changeset_handler    = new AfterNewChangesetHandler($artifact_factory, $fields_retriever);
         $retrieve_workflow              = \WorkflowFactory::instance();
+        $event_dispatcher               = EventManager::instance();
 
         $new_changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -983,7 +985,8 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
-                    EventManager::instance(),
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
                     Codendi_HTMLPurifier::instance(),
                 ),
             )

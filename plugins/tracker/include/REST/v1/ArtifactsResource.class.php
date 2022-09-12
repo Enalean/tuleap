@@ -59,6 +59,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
@@ -715,6 +716,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         $usage_dao        = new ArtifactLinksUsageDao();
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->formelement_factory);
+        $event_dispatcher = EventManager::instance();
 
         $changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -749,7 +751,8 @@ class ArtifactsResource extends AuthenticatedResource
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
-                    EventManager::instance(),
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
                     Codendi_HTMLPurifier::instance(),
                 ),
             )

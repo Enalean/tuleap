@@ -26,6 +26,7 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
+use Tuleap\Search\ItemToIndexQueueStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
@@ -35,26 +36,25 @@ final class FieldContentIndexerTest extends TestCase
 {
     public function testIndexesFieldContent(): void
     {
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (ItemToIndex $item): ItemToIndex {
-                self::assertEquals(
-                    new ItemToIndex(
-                        'plugin_artifact_field',
-                        'value',
-                        [
-                            'field_id'    => '1',
-                            'artifact_id' => '2',
-                            'tracker_id'  => '3',
-                            'project_id'  => '4',
-                        ]
-                    ),
-                    $item
-                );
-                return $item;
-            }
-        );
+        $has_been_called = false;
+        $callback        = static function (ItemToIndex $item) use (&$has_been_called): void {
+            $has_been_called = true;
+            self::assertEquals(
+                new ItemToIndex(
+                    'plugin_artifact_field',
+                    'value',
+                    [
+                        'field_id'    => '1',
+                        'artifact_id' => '2',
+                        'tracker_id'  => '3',
+                        'project_id'  => '4',
+                    ]
+                ),
+                $item
+            );
+        };
 
-        $indexer = new FieldContentIndexer($event_dispatcher);
+        $indexer = new FieldContentIndexer(ItemToIndexQueueStub::withCallback($callback), EventDispatcherStub::withIdentityCallback());
 
         $field = $this->createStub(Tracker_FormElement_Field::class);
         $field->method('getId')->willReturn(1);
@@ -68,7 +68,7 @@ final class FieldContentIndexerTest extends TestCase
             'value'
         );
 
-        self::assertEquals(1, $event_dispatcher->getCallCount());
+        self::assertTrue($has_been_called);
     }
 
     public function testAskForDeletionFromAProject(): void
@@ -88,7 +88,7 @@ final class FieldContentIndexerTest extends TestCase
             }
         );
 
-        $indexer = new FieldContentIndexer($event_dispatcher);
+        $indexer = new FieldContentIndexer(ItemToIndexQueueStub::noop(), $event_dispatcher);
 
         $indexer->askForDeletionOfIndexedFieldsFromProject(ProjectTestBuilder::aProject()->withId(4)->build());
     }
@@ -110,7 +110,7 @@ final class FieldContentIndexerTest extends TestCase
             }
         );
 
-        $indexer = new FieldContentIndexer($event_dispatcher);
+        $indexer = new FieldContentIndexer(ItemToIndexQueueStub::noop(), $event_dispatcher);
 
         $indexer->askForDeletionOfIndexedFieldsFromArtifact(new Artifact(77, 3, 0, 0, true));
     }

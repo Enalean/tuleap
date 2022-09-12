@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
@@ -564,7 +565,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
                 $event_manager = EventManager::instance();
                 $event_manager->processEvent('tracker_followup_event_update', $params);
 
-                $changeset_comment_indexer = new ChangesetCommentIndexer($event_manager, Codendi_HTMLPurifier::instance());
+                $changeset_comment_indexer = new ChangesetCommentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager, Codendi_HTMLPurifier::instance());
                 $changeset_comment_indexer->indexChangesetCommentFromChangeset($this);
 
                 return true;

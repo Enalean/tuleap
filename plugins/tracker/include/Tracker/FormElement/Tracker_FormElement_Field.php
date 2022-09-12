@@ -20,6 +20,7 @@
  */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
@@ -1590,7 +1591,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         );
     }
 
-    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
     }
 }

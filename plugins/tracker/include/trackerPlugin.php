@@ -84,6 +84,7 @@ use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
 use Tuleap\Search\IndexAllPossibleItemsEvent;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -1075,8 +1076,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
             $tracker_manager = new TrackerManager();
             $tracker_manager->deleteProjectTrackers((int) $event->project->getID());
-            (new FieldContentIndexer($event_manager))->askForDeletionOfIndexedFieldsFromProject($event->project);
-            (new ChangesetCommentIndexer($event_manager, Codendi_HTMLPurifier::instance()))->askForDeletionOfIndexedCommentsFromProject($event->project);
+            (new FieldContentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager))->askForDeletionOfIndexedFieldsFromProject($event->project);
+            (new ChangesetCommentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager, Codendi_HTMLPurifier::instance()))->askForDeletionOfIndexedCommentsFromProject($event->project);
         }
     }
 
@@ -2615,6 +2616,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     new TrackerPrivateCommentUGroupPermissionDao()
                 ),
                 new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
                 ),
@@ -2644,13 +2646,16 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function indexAllPossibleItems(IndexAllPossibleItemsEvent $index_all_possible_items_event): void
     {
+        $index_queue = $index_all_possible_items_event->getItemToIndexQueue();
         (new IndexAllArtifactsProcessor(
             new \Tuleap\Tracker\Search\IndexArtifactDAO(),
             static function (): Tracker_ArtifactFactory {
                 Tracker_ArtifactFactory::clearInstance();
                 return Tracker_ArtifactFactory::instance();
             },
+            $index_queue,
             new ChangesetCommentIndexer(
+                $index_queue,
                 EventManager::instance(),
                 Codendi_HTMLPurifier::instance(),
             )

@@ -41,6 +41,7 @@ use TrackerFactory;
 use TrackerXmlExport;
 use Tuleap\DB\DBFactory;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -126,8 +127,8 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new RecentlyVisitedDao(),
                 new PendingArtifactRemovalDao()
             ),
-            new FieldContentIndexer($event_manager),
-            new ChangesetCommentIndexer($event_manager, \Codendi_HTMLPurifier::instance()),
+            new FieldContentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager),
+            new ChangesetCommentIndexer(new ItemToIndexQueueEventBased($event_manager), $event_manager, \Codendi_HTMLPurifier::instance()),
             $event_manager,
             DBFactory::getMainTuleapDBConnection(),
             $logger

@@ -20,31 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\CLI;
+namespace Tuleap\FullTextSearchDB\Index;
 
-use Symfony\Component\Console\Tester\CommandTester;
 use Tuleap\Search\ItemToIndex;
-use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Test\Stub\EventDispatcherStub;
 
-final class IndexAllItemsCommandTest extends TestCase
+final class ItemToIndexQueueImmediateTest extends TestCase
 {
-    public function testCommandCanAskForIndexationOfAllExistingItems(): void
+    public function testAddsItemDirectlyIntoTheIndexInserter(): void
     {
-        $index_queue      = new class implements ItemToIndexQueue {
-            public function addItemToQueue(ItemToIndex $item_to_index): void
+        $inserter = new class implements InsertItemIntoIndex
+        {
+            public bool $has_been_called = false;
+
+            public function indexItem(ItemToIndex $item): void
             {
+                $this->has_been_called = true;
             }
         };
-        $event_dispatcher = EventDispatcherStub::withIdentityCallback();
-        $command          = new IndexAllItemsCommand($event_dispatcher, $index_queue);
 
-        $command_tester = new CommandTester($command);
+        $queue = new ItemToIndexQueueImmediate($inserter);
 
-        $command_tester->execute([]);
+        $queue->addItemToQueue(new ItemToIndex('type', 'content', ['A' => 'A']));
 
-        $command_tester->assertCommandIsSuccessful();
-        self::assertEquals(1, $event_dispatcher->getCallCount());
+        self::assertTrue($inserter->has_been_called);
     }
 }

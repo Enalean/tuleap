@@ -27,6 +27,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -171,6 +172,7 @@ final class ChangesetCommentIndexerTest extends TestCase
     public static function buildChangesetCommentIndexer(EventDispatcherInterface $event_dispatcher): ChangesetCommentIndexer
     {
         return new ChangesetCommentIndexer(
+            new ItemToIndexQueueEventBased($event_dispatcher),
             $event_dispatcher,
             \Codendi_HTMLPurifier::instance(),
         );

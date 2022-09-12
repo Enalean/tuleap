@@ -118,6 +118,7 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
@@ -363,6 +364,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                     new TrackerPrivateCommentUGroupPermissionDao()
                 ),
                 new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
                 ),
@@ -589,6 +591,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                     new TrackerPrivateCommentUGroupPermissionDao()
                 ),
                 new ChangesetCommentIndexer(
+                    new ItemToIndexQueueEventBased($event_manager),
                     $event_manager,
                     Codendi_HTMLPurifier::instance(),
                 ),

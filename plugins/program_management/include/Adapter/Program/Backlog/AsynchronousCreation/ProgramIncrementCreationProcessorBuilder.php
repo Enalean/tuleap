@@ -61,6 +61,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\Program
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementsPlanner;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\AfterNewChangesetHandler;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
@@ -117,6 +118,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $artifact_changeset_saver       = ArtifactChangesetSaver::build();
         $after_new_changeset_handler    = new AfterNewChangesetHandler($artifact_factory, $fields_retriever);
         $retrieve_workflow              = \WorkflowFactory::instance();
+        $event_dispatcher               = \EventManager::instance();
 
         $new_changeset_creator = new NewChangesetCreator(
             new \Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
@@ -157,7 +159,8 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                 \ReferenceManager::instance(),
                 new TrackerPrivateCommentUGroupPermissionInserter(new TrackerPrivateCommentUGroupPermissionDao()),
                 new ChangesetCommentIndexer(
-                    \EventManager::instance(),
+                    new ItemToIndexQueueEventBased($event_dispatcher),
+                    $event_dispatcher,
                     Codendi_HTMLPurifier::instance(),
                 ),
             )

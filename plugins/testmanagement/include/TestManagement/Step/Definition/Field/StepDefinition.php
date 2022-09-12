@@ -32,6 +32,8 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
+use Tuleap\Search\ItemToIndexQueue;
+use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\TestManagement\Step\Definition\Field\XML\XMLStepDefinition;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepChecker;
@@ -41,6 +43,7 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
+use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 
@@ -390,16 +393,17 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $this->extractCrossRefs($artifact, $value);
 
         if ($res) {
-            $this->addRawValueToSearchIndex($artifact, $steps);
+            $this->addRawValueToSearchIndex(new ItemToIndexQueueEventBased(EventManager::instance()), $artifact, $steps);
         }
 
         return $res;
     }
 
-    public function addChangesetValueToSearchIndex(Tracker_Artifact_ChangesetValue $changeset_value): void
+    public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
         assert($changeset_value instanceof StepDefinitionChangesetValue);
         $this->addRawValueToSearchIndex(
+            $index_queue,
             $changeset_value->getChangeset()->getArtifact(),
             $changeset_value->getValue(),
         );
@@ -408,7 +412,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @param Step[] $steps
      */
-    private function addRawValueToSearchIndex(Artifact $artifact, array $steps): void
+    private function addRawValueToSearchIndex(ItemToIndexQueue $index_queue, Artifact $artifact, array $steps): void
     {
         $content_to_index = '';
 
@@ -423,7 +427,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             ) . "\n";
         }
 
-        (new \Tuleap\Tracker\FormElement\FieldContentIndexer(EventManager::instance()))->indexFieldContent(
+        $event_dispatcher = EventManager::instance();
+        (new FieldContentIndexer($index_queue, $event_dispatcher))->indexFieldContent(
             $artifact,
             $this,
             $content_to_index,
