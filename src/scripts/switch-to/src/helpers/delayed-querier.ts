@@ -17,24 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface StoppableQuery {
+    readonly run: () => void;
+    readonly stop: () => void;
+}
+
 interface DelayedQuerier {
     readonly cancelPendingQuery: () => void;
-    readonly scheduleQuery: (callback: () => void) => void;
+    readonly scheduleQuery: (callback: StoppableQuery) => void;
 }
 
 export const delayedQuerier = (): DelayedQuerier => {
     const THRESHOLD_TO_NOT_FLOOD_SERVER_IN_MS = 250;
-    let timeout_id: undefined | ReturnType<typeof setTimeout>;
+    let already_scheduled_query: {
+        stop: StoppableQuery["stop"];
+        timeout_id: ReturnType<typeof setTimeout>;
+    } | null = null;
 
     const cancelPendingQuery = (): void => {
-        if (timeout_id) {
-            clearTimeout(timeout_id);
+        if (already_scheduled_query !== null) {
+            clearTimeout(already_scheduled_query.timeout_id);
+            already_scheduled_query.stop();
         }
     };
 
-    const scheduleQuery = (callback: () => void): void => {
+    const scheduleQuery = ({ stop, run }: StoppableQuery): void => {
         cancelPendingQuery();
-        timeout_id = setTimeout(callback, THRESHOLD_TO_NOT_FLOOD_SERVER_IN_MS);
+        already_scheduled_query = {
+            stop,
+            timeout_id: setTimeout(run, THRESHOLD_TO_NOT_FLOOD_SERVER_IN_MS),
+        };
     };
 
     return {

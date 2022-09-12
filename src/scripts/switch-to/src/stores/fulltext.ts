@@ -24,8 +24,10 @@ import { ref } from "vue";
 import { delayedQuerier } from "../helpers/delayed-querier";
 import type { Fault } from "@tuleap/fault";
 import { useSwitchToStore } from "./index";
-import { query } from "../helpers/search-querier";
+import type { QueryResults } from "../helpers/search-querier";
+import { querier } from "../helpers/search-querier";
 import type { ItemDefinition } from "../type";
+import type { ResultAsync } from "neverthrow";
 
 export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
@@ -57,24 +59,31 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
-        delayed_querier.scheduleQuery(() =>
-            query(url, keywords, (result: ItemDefinition): void => {
-                if (typeof fulltext_search_results.value[result.html_url] === "undefined") {
-                    fulltext_search_results.value[result.html_url] = result;
-                }
-            }).match(
-                ({ results, has_more_results }): void => {
-                    fulltext_search_results.value = results;
-                    fulltext_search_is_loading.value = false;
-                    fulltext_search_has_more_results.value = has_more_results;
-                },
-                (fault: Fault) => {
-                    fulltext_search_is_loading.value = false;
-                    if ("isNotFound" in fault && fault.isNotFound() === true) {
-                        fulltext_search_is_available.value = false;
-                        return;
+        delayed_querier.scheduleQuery(
+            querier(
+                url,
+                keywords,
+                (result: ItemDefinition): void => {
+                    if (typeof fulltext_search_results.value[result.html_url] === "undefined") {
+                        fulltext_search_results.value[result.html_url] = result;
                     }
-                    fulltext_search_is_error.value = true;
+                },
+                (results: ResultAsync<QueryResults, Fault>): void => {
+                    results.match(
+                        ({ results, has_more_results }): void => {
+                            fulltext_search_results.value = results;
+                            fulltext_search_is_loading.value = false;
+                            fulltext_search_has_more_results.value = has_more_results;
+                        },
+                        (fault: Fault) => {
+                            fulltext_search_is_loading.value = false;
+                            if ("isNotFound" in fault && fault.isNotFound() === true) {
+                                fulltext_search_is_available.value = false;
+                                return;
+                            }
+                            fulltext_search_is_error.value = true;
+                        }
+                    );
                 }
             )
         );
