@@ -41,7 +41,7 @@ function getWrapper(groups_state: GroupsState): VueWrapper<InstanceType<typeof P
 }
 
 const group_1 = {
-    id: "818532",
+    id: 818532,
     name: "R&D fellows",
     full_path: "r-and-d-fellows",
     avatar_url: "some/url/to/r-and-d-fellows/avatar",
@@ -62,7 +62,7 @@ describe("PaneGitlabGroup", () => {
             groups: [
                 group_1,
                 {
-                    id: "984142",
+                    id: 984142,
                     name: "QA folks",
                     full_path: "qa-folks",
                     avatar_url: null,

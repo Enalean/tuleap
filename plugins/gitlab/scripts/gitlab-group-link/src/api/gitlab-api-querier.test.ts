@@ -67,12 +67,12 @@ const credentials = {
 };
 
 const group_1 = {
-    id: "818532",
+    id: 818532,
     name: "R&D fellows",
 } as GitlabGroup;
 
 const group_2 = {
-    id: "984142",
+    id: 984142,
     name: "QA folks",
 } as GitlabGroup;
 

@@ -13,6 +13,13 @@ msgstr ""
 msgid "Allow artifact closure"
 msgstr "Autoriser la fermeture des artéfacts"
 
+msgid ""
+"An error occurred while linking the selected group and synchronizing its "
+"repositories: %{ error }"
+msgstr ""
+"Une erreur s'est produite en liant le groupe sélectionné et en synchronisant "
+"ses dépôts : %{ error }"
+
 msgid "Associated group configuration"
 msgstr "Configuration du groupe associé"
 
@@ -49,6 +56,9 @@ msgstr "URL du serveur GitLab"
 msgid "Group"
 msgstr "Groupe"
 
+msgid "Group associated and synchronized successfully"
+msgstr "Groupe lié et synchronisé avec succès"
+
 msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."
@@ -71,6 +81,9 @@ msgstr "Lier un groupe GitLab à ce projet"
 
 msgid "Link group and synchronize"
 msgstr "Lier le groupe et synchroniser"
+
+msgid "Linking and synchronizing..."
+msgstr "Liaison et synchronisation en cours..."
 
 msgid ""
 "Network error while fetching the GitLab groups. Please verify your GitLab "

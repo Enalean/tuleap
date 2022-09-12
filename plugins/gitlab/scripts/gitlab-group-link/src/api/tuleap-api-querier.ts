@@ -17,19 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineStore } from "pinia";
-import type { RootState, Project } from "./types";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { postJSON } from "@tuleap/fetch-result";
 
-export const useRootStore = defineStore("root", {
-    state: (): RootState => ({
-        current_project: {
-            id: 0,
-            public_name: "",
-        },
-    }),
-    actions: {
-        setCurrentProject(project: Project): void {
-            this.current_project = project;
-        },
-    },
-});
+export const linkGitlabGroupWithTuleap = (
+    current_project_id: number,
+    group_id: number,
+    server_url: string,
+    token: string,
+    create_branch_prefix: string,
+    allow_artifact_closure: boolean
+): ResultAsync<void, Fault> => {
+    return postJSON("/api/v1/gitlab_groups", {
+        project_id: current_project_id,
+        gitlab_group_id: group_id,
+        gitlab_server_url: server_url,
+        gitlab_token: token,
+        create_branch_prefix,
+        allow_artifact_closure,
+    });
+};

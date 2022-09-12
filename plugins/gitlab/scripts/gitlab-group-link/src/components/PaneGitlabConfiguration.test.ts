@@ -17,9 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, flushPromises } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import PaneGitlabConfiguration from "./PaneGitlabConfiguration.vue";
 import { getGlobalTestOptions } from "../tests/helpers/global-options-for-tests";
+import * as tuleap_api from "../api/tuleap-api-querier";
 
 describe("PaneGitlabConfiguration", () => {
     it(`When the "Prefix the branch name" option is selected,
@@ -58,5 +62,73 @@ describe("PaneGitlabConfiguration", () => {
         await branch_prefix_input.setValue("my-prefix");
 
         expect(submit_button.element.disabled).toBe(false);
+    });
+
+    describe("When user submits", () => {
+        let wrapper: VueWrapper<InstanceType<typeof PaneGitlabConfiguration>>;
+
+        beforeEach(() => {
+            wrapper = shallowMount(PaneGitlabConfiguration, {
+                global: {
+                    stubs: ["router-link"],
+                    ...getGlobalTestOptions({
+                        root: {
+                            current_project: {
+                                id: 101,
+                            },
+                        },
+                        credentials: {
+                            credentials: {
+                                server_url: new URL("https://example.com/"),
+                                token: "a1e2i3o4u5y6",
+                            },
+                        },
+                        groups: {
+                            selected_group: {
+                                id: 7894568453,
+                            },
+                        },
+                    }),
+                },
+            });
+        });
+
+        it("should call the tuleap api with all the information needed", async () => {
+            const create_link_spy = jest
+                .spyOn(tuleap_api, "linkGitlabGroupWithTuleap")
+                .mockReturnValue(okAsync(undefined));
+
+            await wrapper.get("[data-test=branch-name-prefix-input]").setValue("my-prefix");
+
+            wrapper
+                .get<HTMLButtonElement>("[data-test=gitlab-configuration-submit-button]")
+                .element.click();
+
+            await flushPromises();
+
+            expect(create_link_spy).toHaveBeenCalledWith(
+                101,
+                7894568453,
+                "https://example.com/",
+                "a1e2i3o4u5y6",
+                "my-prefix",
+                false
+            );
+        });
+
+        it("When an error occurs, Then it should display an error message", async () => {
+            jest.spyOn(tuleap_api, "linkGitlabGroupWithTuleap").mockReturnValue(
+                errAsync(Fault.fromMessage("some-reason"))
+            );
+
+            wrapper
+                .get<HTMLButtonElement>("[data-test=gitlab-configuration-submit-button]")
+                .element.click();
+
+            await flushPromises();
+
+            const error_message = wrapper.get("[data-test=gitlab-configuration-save-error]");
+            expect(error_message.text()).toContain("some-reason");
+        });
     });
 });

@@ -23,6 +23,16 @@
 
         <div class="tlp-framed-vertically">
             <h1>{{ $gettext("Associated group configuration") }}</h1>
+            <div
+                v-if="error_message"
+                class="tlp-alert-danger"
+                data-test="gitlab-configuration-save-error"
+            >
+                {{ error_message }}
+            </div>
+            <div v-if="success_message" class="tlp-alert-success">
+                {{ success_message }}
+            </div>
             <section class="tlp-pane">
                 <form class="tlp-pane-container">
                     <div class="tlp-pane-header">
@@ -33,9 +43,13 @@
                         }}
                     </div>
                     <section class="tlp-pane-section">
-                        <div class="tlp-form-element">
+                        <div class="tlp-form-element" v-bind:class="disabled_checkbox_class">
                             <label class="tlp-label tlp-checkbox">
-                                <input type="checkbox" v-model="is_artifact_closure_allowed" />
+                                <input
+                                    type="checkbox"
+                                    v-model="is_artifact_closure_allowed"
+                                    v-bind:disabled="is_linking_group"
+                                />
                                 {{ $gettext("Allow artifact closure") }}
                             </label>
                             <p class="tlp-text-info">
@@ -47,11 +61,12 @@
                                 }}
                             </p>
                         </div>
-                        <div class="tlp-form-element">
+                        <div class="tlp-form-element" v-bind:class="disabled_checkbox_class">
                             <label class="tlp-label tlp-checkbox">
                                 <input
                                     type="checkbox"
                                     v-model="uses_branch_name_prefix"
+                                    v-bind:disabled="is_linking_group"
                                     data-test="checkbox-prefix-branch-name"
                                 />
                                 {{ $gettext("Prefix the branch name") }}
@@ -67,9 +82,7 @@
                         </div>
                         <div
                             class="tlp-form-element gitlab-configuration-branch-name-prefix"
-                            v-bind:class="{
-                                'tlp-form-element-disabled': !is_branch_name_prefix_toggled,
-                            }"
+                            v-bind:class="disabled_branch_name_prefix_input_class"
                             data-test="branch-name-prefix-form-element"
                         >
                             <label class="tlp-label" for="gitlab_server">
@@ -86,6 +99,7 @@
                                 class="tlp-input"
                                 size="40"
                                 v-bind:required="is_branch_name_prefix_toggled"
+                                v-bind:disabled="is_linking_group"
                                 v-model="branch_name_prefix"
                                 data-test="branch-name-prefix-input"
                             />
@@ -102,9 +116,15 @@
                                 type="submit"
                                 class="tlp-button-primary gitlab-configuration-step-button-submit"
                                 v-bind:disabled="is_synchronization_disabled"
+                                v-on:click="onClickLinkGroupAndSynchronize"
                                 data-test="gitlab-configuration-submit-button"
                             >
-                                {{ $gettext("Link group and synchronize") }}
+                                <template v-if="is_linking_group">
+                                    {{ $gettext("Linking and synchronizing...") }}
+                                </template>
+                                <template v-else>
+                                    {{ $gettext("Link group and synchronize") }}
+                                </template>
                             </button>
                         </div>
                     </section>
@@ -116,17 +136,78 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useGettext } from "vue3-gettext";
 import { STEP_GITLAB_GROUP, STEP_GITLAB_CONFIGURATION } from "../types";
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
+import { linkGitlabGroupWithTuleap } from "../api/tuleap-api-querier";
+import { useRootStore } from "../stores/root";
+import { useCredentialsStore } from "../stores/credentials";
+import { useGitLabGroupsStore } from "../stores/groups";
 
 const is_artifact_closure_allowed = ref(false);
 const uses_branch_name_prefix = ref(false);
 const branch_name_prefix = ref("");
+const is_linking_group = ref(false);
+const error_message = ref("");
+const success_message = ref("");
+
+const root_store = useRootStore();
+const credentials_store = useCredentialsStore();
+const groups_store = useGitLabGroupsStore();
+const { $gettext, interpolate } = useGettext();
 
 const is_branch_name_prefix_toggled = computed(() => uses_branch_name_prefix.value === true);
 const is_synchronization_disabled = computed(
-    () => uses_branch_name_prefix.value === true && branch_name_prefix.value === ""
+    () =>
+        (uses_branch_name_prefix.value === true && branch_name_prefix.value === "") ||
+        is_linking_group.value
 );
+
+const disabled_checkbox_class = computed(() => ({
+    "tlp-form-element-disabled": is_linking_group.value,
+}));
+
+const disabled_branch_name_prefix_input_class = computed(() => ({
+    "tlp-form-element-disabled": is_linking_group.value || !uses_branch_name_prefix.value,
+}));
+
+function onClickLinkGroupAndSynchronize(event: Event): void {
+    event.preventDefault();
+
+    const { selected_group } = groups_store;
+    if (!selected_group) {
+        return;
+    }
+
+    is_linking_group.value = true;
+    error_message.value = "";
+    success_message.value = "";
+
+    linkGitlabGroupWithTuleap(
+        root_store.current_project.id,
+        selected_group.id,
+        credentials_store.credentials.server_url.toString(),
+        credentials_store.credentials.token,
+        branch_name_prefix.value,
+        is_artifact_closure_allowed.value
+    )
+        .match(
+            () => {
+                success_message.value = $gettext("Group associated and synchronized successfully");
+            },
+            (fault) => {
+                error_message.value = interpolate(
+                    $gettext(
+                        "An error occurred while linking the selected group and synchronizing its repositories: %{ error }"
+                    ),
+                    { error: String(fault) }
+                );
+            }
+        )
+        .finally(() => {
+            is_linking_group.value = false;
+        });
+}
 </script>
 
 <style scoped lang="scss">

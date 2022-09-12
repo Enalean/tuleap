@@ -48,7 +48,6 @@
                                         <label class="tlp-radio">
                                             <input
                                                 type="radio"
-                                                v-bind:id="group.id"
                                                 v-bind:value="group"
                                                 class="gitlab-select-group-radio-button"
                                                 v-model="selected_group"
