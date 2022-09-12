@@ -52,6 +52,7 @@
                                                 v-bind:value="group"
                                                 class="gitlab-select-group-radio-button"
                                                 v-model="selected_group"
+                                                data-test="gitlab-select-group-radio-button"
                                             />
                                         </label>
                                     </td>
@@ -109,7 +110,9 @@
                             <button
                                 type="submit"
                                 class="tlp-button-primary gitlab-select-group-step-button-submit"
-                                disabled
+                                v-bind:disabled="has_no_selected_group"
+                                v-on:click="onClickConfigureSelectedGroup"
+                                data-test="gitlab-select-group-submit-button"
                             >
                                 {{ $gettext("Configure selected group") }}
                                 <i
@@ -126,16 +129,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import type { Ref } from "vue";
-import { STEP_GITLAB_GROUP, STEP_GITLAB_SERVER } from "../types";
+import { useRouter } from "vue-router";
+
+import { STEP_GITLAB_GROUP, STEP_GITLAB_SERVER, STEP_GITLAB_CONFIGURATION } from "../types";
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
 
 import { useGitLabGroupsStore } from "../stores/groups";
 import type { GitlabGroup } from "../stores/types";
 
 const groups_store = useGitLabGroupsStore();
-const selected_group: Ref<GitlabGroup | null> = ref(null);
+const selected_group: Ref<GitlabGroup | null> = ref(groups_store.selected_group);
+const router = useRouter();
+
+const has_no_selected_group = computed(() => selected_group.value === null);
+
+function onClickConfigureSelectedGroup(): void {
+    if (selected_group.value === null) {
+        return;
+    }
+
+    groups_store.setSelectedGroup(selected_group.value);
+    router.push({ name: STEP_GITLAB_CONFIGURATION });
+}
 </script>
 
 <style scoped lang="scss">

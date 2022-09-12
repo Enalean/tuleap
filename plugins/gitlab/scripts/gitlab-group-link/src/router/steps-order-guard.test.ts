@@ -19,14 +19,54 @@
 
 import type { RouteLocationNormalized } from "vue-router";
 import { ensureStepsHaveBeenCompletedInTheRightOrder } from "./steps-order-guard";
-import { NO_GROUP_LINKED_EMPTY_STATE, STEP_GITLAB_GROUP, STEP_GITLAB_SERVER } from "../types";
+import {
+    NO_GROUP_LINKED_EMPTY_STATE,
+    STEP_GITLAB_CONFIGURATION,
+    STEP_GITLAB_GROUP,
+    STEP_GITLAB_SERVER,
+} from "../types";
 
 describe("step-order-guard", () => {
     it.each([
         [
+            "from nowhere to the GitLab server pane",
+            { name: undefined } as RouteLocationNormalized,
+            { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
+        ],
+        [
+            "from the GitLab configuration pane to the GitLab server pane",
+            { name: STEP_GITLAB_CONFIGURATION } as RouteLocationNormalized,
+            { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
+        ],
+        [
             "from nowhere to the GitLab group pane",
             { name: undefined } as RouteLocationNormalized,
             { name: STEP_GITLAB_GROUP } as RouteLocationNormalized,
+        ],
+        [
+            "from the empty state to the GitLab group pane",
+            { name: NO_GROUP_LINKED_EMPTY_STATE } as RouteLocationNormalized,
+            { name: STEP_GITLAB_GROUP } as RouteLocationNormalized,
+        ],
+        [
+            "from nowhere to the GitLab configuration pane",
+            { name: undefined } as RouteLocationNormalized,
+            { name: STEP_GITLAB_CONFIGURATION } as RouteLocationNormalized,
+        ],
+        [
+            "from the empty state to the GitLab configuration pane",
+            { name: NO_GROUP_LINKED_EMPTY_STATE } as RouteLocationNormalized,
+            { name: STEP_GITLAB_CONFIGURATION } as RouteLocationNormalized,
+        ],
+        [
+            "from the GitLab server pane to the GitLab configuration pane",
+            { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
+            { name: STEP_GITLAB_CONFIGURATION } as RouteLocationNormalized,
+        ],
+        [
+            "from an unknown route to another unknown route",
+            { name: "an-unknown-route" } as RouteLocationNormalized,
+            { name: "another-one" } as RouteLocationNormalized,
         ],
     ])(
         `should redirect to the empty state when the navigation occurs %s`,
@@ -50,9 +90,34 @@ describe("step-order-guard", () => {
             { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
         ],
         [
+            "from the GitLab server pane to the empty state (Cancel)",
+            { name: NO_GROUP_LINKED_EMPTY_STATE } as RouteLocationNormalized,
+            { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
+        ],
+        [
             "from the GitLab server pane to the Gitlab group pane",
             { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
             { name: STEP_GITLAB_GROUP } as RouteLocationNormalized,
+        ],
+        [
+            "from the Gitlab group pane to the GitLab server pane (going back)",
+            { name: STEP_GITLAB_GROUP } as RouteLocationNormalized,
+            { name: STEP_GITLAB_SERVER } as RouteLocationNormalized,
+        ],
+        [
+            "from the Gitlab group pane to the Gitlab configuration pane",
+            { name: STEP_GITLAB_GROUP } as RouteLocationNormalized,
+            { name: STEP_GITLAB_CONFIGURATION } as RouteLocationNormalized,
+        ],
+        [
+            "from the Gitlab configuration pane to the Gitlab group pane (going back)",
+            { name: STEP_GITLAB_CONFIGURATION } as RouteLocationNormalized,
+            { name: STEP_GITLAB_GROUP } as RouteLocationNormalized,
+        ],
+        [
+            "already a redirection to the empty state",
+            { name: undefined } as RouteLocationNormalized,
+            { name: NO_GROUP_LINKED_EMPTY_STATE } as RouteLocationNormalized,
         ],
     ])(
         "should let the navigation occur when it is %s",

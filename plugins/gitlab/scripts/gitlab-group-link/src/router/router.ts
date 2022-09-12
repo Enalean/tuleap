@@ -23,7 +23,13 @@ import type { RouteRecordRaw, Router } from "vue-router";
 import EmptyStateNoGitlabGroupLinked from "../components/EmptyStateNoGitlabGroupLinked.vue";
 import PaneGitlabServer from "../components/PaneGitlabServer.vue";
 import PaneGitlabGroup from "../components/PaneGitlabGroup.vue";
-import { STEP_GITLAB_SERVER, STEP_GITLAB_GROUP, NO_GROUP_LINKED_EMPTY_STATE } from "../types";
+import PaneGitlabConfiguration from "../components/PaneGitlabConfiguration.vue";
+import {
+    STEP_GITLAB_SERVER,
+    STEP_GITLAB_GROUP,
+    NO_GROUP_LINKED_EMPTY_STATE,
+    STEP_GITLAB_CONFIGURATION,
+} from "../types";
 import { ensureStepsHaveBeenCompletedInTheRightOrder } from "./steps-order-guard";
 
 export function createInitializedRouter(current_project_unix_name: string): Router {
@@ -46,6 +52,11 @@ export function createInitializedRouter(current_project_unix_name: string): Rout
             path: buildPath(STEP_GITLAB_GROUP),
             name: STEP_GITLAB_GROUP,
             component: PaneGitlabGroup,
+        },
+        {
+            path: buildPath(STEP_GITLAB_CONFIGURATION),
+            name: STEP_GITLAB_CONFIGURATION,
+            component: PaneGitlabConfiguration,
         },
     ];
 

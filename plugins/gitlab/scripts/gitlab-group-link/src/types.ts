@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type GitlabGroupLinkStepName = "gitlab-server" | "gitlab-group" | "gitlab-configuration";
+export type GitlabGroupLinkStepName =
+    | "no-group-linked-empty-state"
+    | "gitlab-server"
+    | "gitlab-group"
+    | "gitlab-configuration";
 
+export const NO_GROUP_LINKED_EMPTY_STATE: GitlabGroupLinkStepName = "no-group-linked-empty-state";
 export const STEP_GITLAB_SERVER: GitlabGroupLinkStepName = "gitlab-server";
 export const STEP_GITLAB_GROUP: GitlabGroupLinkStepName = "gitlab-group";
 export const STEP_GITLAB_CONFIGURATION: GitlabGroupLinkStepName = "gitlab-configuration";
-
-export const NO_GROUP_LINKED_EMPTY_STATE = "no-group-linked-empty-state";
