@@ -23,10 +23,14 @@ import type { GroupsState, GitlabGroup } from "./types";
 export const useGitLabGroupsStore = defineStore("groups", {
     state: (): GroupsState => ({
         groups: [],
+        selected_group: null,
     }),
     actions: {
         setGroups(groups: readonly GitlabGroup[]): void {
             this.groups = groups;
+        },
+        setSelectedGroup(group: GitlabGroup): void {
+            this.selected_group = group;
         },
     },
 });

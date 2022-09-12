@@ -10,6 +10,12 @@ msgid "%{ current_project_name } is currently not linked to a GitLab group"
 msgstr ""
 "%{ current_project_name } n'est actuellement pas lié avec un groupe GitLab"
 
+msgid "Allow artifact closure"
+msgstr "Autoriser la fermeture des artéfacts"
+
+msgid "Associated group configuration"
+msgstr "Configuration du groupe associé"
+
 msgid "Back"
 msgstr "Retour"
 
@@ -43,11 +49,28 @@ msgstr "URL du serveur GitLab"
 msgid "Group"
 msgstr "Groupe"
 
+msgid ""
+"If selected, artifacts of this project can be closed with GitLab commit "
+"messages from the selected repository."
+msgstr ""
+"Si choisi, les artéfacts de ce projet pourront être fermés à l'aide des "
+"messages de commit de GitLab depuis le dépôt sélectionné."
+
+msgid ""
+"If set, this prefix will be automatically added to the branch name in the "
+"create GitLab branch action."
+msgstr ""
+"Si une valeur existe, ce préfixe sera automatiquement ajouté au nom de la "
+"branche dans l'action de création de branche GitLab"
+
 msgid "Link a GitLab group to import the GitLab projects of the group."
 msgstr "Liez un groupe GitLab pour importer les projets GitLab du groupe."
 
 msgid "Link a GitLab group to this project"
 msgstr "Lier un groupe GitLab à ce projet"
+
+msgid "Link group and synchronize"
+msgstr "Lier le groupe et synchroniser"
 
 msgid ""
 "Network error while fetching the GitLab groups. Please verify your GitLab "
@@ -55,6 +78,19 @@ msgid ""
 msgstr ""
 "Erreur réseau lors de la récupération des groupes GitLab. Veuillez vérifier "
 "la validité de votre url de serveur."
+
+msgid ""
+"Please note that the following settings will be applied to all linked "
+"repositories and may be changed by each repository afterwards."
+msgstr ""
+"Veuillez noter que les paramètres ci-dessous seront appliqués à tous les "
+"dépôts liés et pourrons être redéfinis individuellement."
+
+msgid "Prefix"
+msgstr "Préfixe"
+
+msgid "Prefix the branch name"
+msgstr "Préfixer le nom de la branche"
 
 msgid "Server"
 msgstr "Serveur"

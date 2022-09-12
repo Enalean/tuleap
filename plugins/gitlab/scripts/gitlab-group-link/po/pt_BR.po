@@ -9,6 +9,12 @@ msgstr ""
 msgid "%{ current_project_name } is currently not linked to a GitLab group"
 msgstr ""
 
+msgid "Allow artifact closure"
+msgstr ""
+
+msgid "Associated group configuration"
+msgstr ""
+
 msgid "Back"
 msgstr ""
 
@@ -42,15 +48,39 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
+msgid ""
+"If selected, artifacts of this project can be closed with GitLab commit "
+"messages from the selected repository."
+msgstr ""
+
+msgid ""
+"If set, this prefix will be automatically added to the branch name in the "
+"create GitLab branch action."
+msgstr ""
+
 msgid "Link a GitLab group to import the GitLab projects of the group."
 msgstr ""
 
 msgid "Link a GitLab group to this project"
 msgstr ""
 
+msgid "Link group and synchronize"
+msgstr ""
+
 msgid ""
 "Network error while fetching the GitLab groups. Please verify your GitLab "
 "server url validity."
+msgstr ""
+
+msgid ""
+"Please note that the following settings will be applied to all linked "
+"repositories and may be changed by each repository afterwards."
+msgstr ""
+
+msgid "Prefix"
+msgstr ""
+
+msgid "Prefix the branch name"
 msgstr ""
 
 msgid "Server"

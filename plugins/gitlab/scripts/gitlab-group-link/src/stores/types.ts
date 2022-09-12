@@ -27,6 +27,7 @@ export interface Project {
 
 export interface GroupsState {
     groups: readonly GitlabGroup[];
+    selected_group: GitlabGroup | null;
 }
 
 export interface GitlabGroup {
