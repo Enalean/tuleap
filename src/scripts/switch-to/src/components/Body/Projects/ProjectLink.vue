@@ -52,82 +52,60 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
 import type { Project } from "../../../type";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 import { getProjectPrivacyIcon } from "@tuleap/project-privacy-helper";
-import { sprintf } from "sprintf-js";
 import { useSwitchToStore } from "../../../stores";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
-import type { ItemDefinition } from "../../../type";
 import QuickLink from "../QuickLink.vue";
+import { storeToRefs } from "pinia";
 
-@Component({
-    components: { QuickLink, HighlightMatchingText },
-})
-export default class ProjectLink extends Vue {
-    @Prop({ required: true })
-    private readonly project!: Project;
+const props = defineProps<{ project: Project }>();
 
-    get programmatically_focused_element(): Project | ItemDefinition | QuickLink | null {
-        return useSwitchToStore().programmatically_focused_element;
+const project_link = ref<HTMLAnchorElement | undefined>(undefined);
+
+const store = useSwitchToStore();
+
+const { programmatically_focused_element } = storeToRefs(store);
+watch(programmatically_focused_element, () => {
+    if (programmatically_focused_element.value !== props.project) {
+        return;
     }
 
-    @Watch("programmatically_focused_element")
-    forceFocus(): void {
-        if (this.programmatically_focused_element !== this.project) {
-            return;
-        }
-
-        const link = this.$refs.project_link;
-        if (link instanceof HTMLAnchorElement) {
-            link.focus();
-        }
+    if (project_link.value instanceof HTMLAnchorElement) {
+        project_link.value.focus();
     }
+});
 
-    changeFocus(event: KeyboardEvent): void {
-        switch (event.key) {
-            case "ArrowUp":
-            case "ArrowRight":
-            case "ArrowDown":
-            case "ArrowLeft":
-                event.preventDefault();
-                useSwitchToStore().changeFocusFromProject({
-                    project: this.project,
-                    key: event.key,
-                });
-                break;
-            default:
-        }
-    }
-
-    goToAdmin(event: Event): void {
-        event.preventDefault();
-
-        window.location.href = this.project.project_config_uri;
-    }
-
-    get project_privacy_icon(): string {
-        const privacy: ProjectPrivacy = {
-            project_is_public: this.project.is_public,
-            project_is_private: this.project.is_private,
-            project_is_private_incl_restricted: this.project.is_private_incl_restricted,
-            project_is_public_incl_restricted: this.project.is_public_incl_restricted,
-            are_restricted_users_allowed: useSwitchToStore().are_restricted_users_allowed,
-            explanation_text: "",
-            privacy_title: "",
-        };
-
-        return getProjectPrivacyIcon(privacy);
-    }
-
-    get admin_title(): string {
-        return sprintf(
-            this.$gettext("Go to project administration of %s"),
-            this.project.project_name
-        );
+function changeFocus(event: KeyboardEvent): void {
+    switch (event.key) {
+        case "ArrowUp":
+        case "ArrowRight":
+        case "ArrowDown":
+        case "ArrowLeft":
+            event.preventDefault();
+            store.changeFocusFromProject({
+                project: props.project,
+                key: event.key,
+            });
+            break;
+        default:
     }
 }
+
+const project_privacy_icon = computed((): string => {
+    const privacy: ProjectPrivacy = {
+        project_is_public: props.project.is_public,
+        project_is_private: props.project.is_private,
+        project_is_private_incl_restricted: props.project.is_private_incl_restricted,
+        project_is_public_incl_restricted: props.project.is_public_incl_restricted,
+        are_restricted_users_allowed: useSwitchToStore().are_restricted_users_allowed,
+        explanation_text: "",
+        privacy_title: "",
+    };
+
+    return getProjectPrivacyIcon(privacy);
+});
 </script>

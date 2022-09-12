@@ -54,84 +54,60 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import RecentItemsEmptyState from "./RecentItemsEmptyState.vue";
 import RecentItemsLoadingState from "./RecentItemsLoadingState.vue";
 import ItemEntry from "../ItemEntry.vue";
-import type { UserHistory } from "../../../../type";
 import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import { useSwitchToStore } from "../../../../stores";
 import type { FocusFromItemPayload } from "../../../../stores/type";
+import { storeToRefs } from "pinia";
 
-@Component({
-    components: {
-        RecentItemsErrorState,
-        RecentItemsEmptyState,
-        RecentItemsLoadingState,
-        ItemEntry,
-    },
-})
-export default class ListOfRecentItems extends Vue {
-    get is_loading_history(): boolean {
-        return useSwitchToStore().is_loading_history;
-    }
+const store = useSwitchToStore();
 
-    get is_history_loaded(): boolean {
-        return useSwitchToStore().is_history_loaded;
-    }
+const {
+    is_loading_history,
+    is_history_loaded,
+    is_history_in_error,
+    history,
+    filtered_history,
+    filter_value,
+} = storeToRefs(store);
 
-    get is_history_in_error(): boolean {
-        return useSwitchToStore().is_history_in_error;
-    }
-
-    get history(): UserHistory {
-        return useSwitchToStore().history;
-    }
-
-    get filtered_history(): UserHistory {
-        return useSwitchToStore().filtered_history;
-    }
-
-    get filter_value(): string {
-        return useSwitchToStore().filter_value;
-    }
-
-    changeFocus(payload: FocusFromItemPayload): void {
-        useSwitchToStore().changeFocusFromHistory(payload);
-    }
-
-    get has_no_history(): boolean {
-        if (!this.is_history_loaded) {
-            return false;
-        }
-
-        return this.history.entries.length === 0;
-    }
-
-    get has_history(): boolean {
-        if (this.is_history_in_error) {
-            return false;
-        }
-
-        if (!this.is_history_loaded) {
-            return false;
-        }
-
-        return this.history.entries.length > 0;
-    }
-
-    get has_filtered_history(): boolean {
-        if (!this.is_history_loaded) {
-            return false;
-        }
-
-        return this.filtered_history.entries.length > 0;
-    }
-
-    get should_be_displayed(): boolean {
-        return this.filter_value === "" || this.has_filtered_history;
-    }
+function changeFocus(payload: FocusFromItemPayload): void {
+    store.changeFocusFromHistory(payload);
 }
+
+const has_no_history = computed((): boolean => {
+    if (!is_history_loaded.value) {
+        return false;
+    }
+
+    return history.value.entries.length === 0;
+});
+
+const has_history = computed((): boolean => {
+    if (is_history_in_error.value) {
+        return false;
+    }
+
+    if (!is_history_loaded.value) {
+        return false;
+    }
+
+    return history.value.entries.length > 0;
+});
+
+const has_filtered_history = computed((): boolean => {
+    if (!is_history_loaded.value) {
+        return false;
+    }
+
+    return filtered_history.value.entries.length > 0;
+});
+
+const should_be_displayed = computed((): boolean => {
+    return filter_value.value === "" || has_filtered_history.value;
+});
 </script>

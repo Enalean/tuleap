@@ -24,15 +24,9 @@
     </a>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import { useSwitchToStore } from "../../stores";
+import { storeToRefs } from "pinia";
 
-@Component
-export default class TroveCatLink extends Vue {
-    get is_trove_cat_enabled(): boolean {
-        return useSwitchToStore().is_trove_cat_enabled;
-    }
-}
+const { is_trove_cat_enabled } = storeToRefs(useSwitchToStore());
 </script>
