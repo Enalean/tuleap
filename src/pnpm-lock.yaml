@@ -6,6 +6,7 @@ specifiers:
   '@pinia/testing': ^0.0.14
   '@tuleap/autocomplete-for-select2': link:../lib/frontend/autocomplete-for-select2
   '@tuleap/build-system-configurator': link:../lib/frontend/build-system-configurator
+  '@tuleap/concurrency-limit-pool': link:../lib/frontend/concurrency-limit-pool
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
   '@tuleap/fault': link:../lib/frontend/fault
@@ -71,6 +72,7 @@ dependencies:
   '@fortawesome/fontawesome-free': 6.1.1
   '@joeattardi/emoji-button': 4.6.2
   '@tuleap/autocomplete-for-select2': link:../lib/frontend/autocomplete-for-select2
+  '@tuleap/concurrency-limit-pool': link:../lib/frontend/concurrency-limit-pool
   '@tuleap/copy-to-clipboard': link:../lib/frontend/copy-to-clipboard
   '@tuleap/date-helper': link:../lib/frontend/date-helper
   '@tuleap/fetch-result': link:../lib/frontend/fetch-result

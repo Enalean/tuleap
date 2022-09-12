@@ -16,6 +16,7 @@
     "@tuleap/gettext": "link:../lib/frontend/gettext",
     "@tuleap/html-escaper": "link:../lib/frontend/html-escaper",
     "@tuleap/keyboard-shortcuts": "link:../lib/frontend/keyboard-shortcuts",
+    "@tuleap/concurrency-limit-pool": "link:../lib/frontend/concurrency-limit-pool",
     "@tuleap/list-picker": "link:../lib/frontend/list-picker",
     "@tuleap/mention": "link:../lib/frontend/mention",
     "@tuleap/pie-chart": "link:../lib/frontend/pie-chart",

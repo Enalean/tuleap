@@ -57,7 +57,11 @@ export type FetchResult = {
         json_payload: unknown
     ): ResultAsync<TypeOfJSONPayload, Fault>;
 
-    post(uri: string, json_payload: unknown): ResultAsync<Response, Fault>;
+    post(
+        uri: string,
+        options: OptionsWithAutoEncodedParameters,
+        json_payload: unknown
+    ): ResultAsync<Response, Fault>;
 
     del(uri: string): ResultAsync<Response, Fault>;
 } & GetAll;
@@ -103,8 +107,8 @@ export const ResultFetcher = (
             })
             .andThen((response) => decodeJSON<TypeOfJSONPayload>(response)),
 
-    post: (uri: string, json_payload: unknown) =>
-        response_retriever.retrieveResponse(getURI(uri), {
+    post: (uri: string, options: OptionsWithAutoEncodedParameters, json_payload: unknown) =>
+        response_retriever.retrieveResponse(getURI(uri, options.params), {
             method: POST_METHOD,
             headers: json_headers,
             body: JSON.stringify(json_payload),

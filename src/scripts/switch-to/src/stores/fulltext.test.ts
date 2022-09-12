@@ -82,7 +82,7 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
             const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(okAsync({}));
+            post_spy.mockReturnValue(okAsync({ results: {}, has_more_results: false }));
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -149,8 +149,11 @@ describe("FullText Store", () => {
             const post_spy = jest.spyOn(search_querier, "query");
             post_spy.mockReturnValue(
                 okAsync({
-                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
-                    "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                    results: {
+                        "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                        "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                    },
+                    has_more_results: false,
                 })
             );
 
@@ -164,6 +167,39 @@ describe("FullText Store", () => {
                 "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
                 "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
             });
+            expect(store.fulltext_search_has_more_results).toBe(false);
+        });
+
+        it("should store the fact that there are more results", async () => {
+            const store = useFullTextStore();
+            store.$patch({
+                fulltext_search_url: "/search",
+                fulltext_search_is_available: true,
+                fulltext_search_results: {},
+            });
+
+            const post_spy = jest.spyOn(search_querier, "query");
+            post_spy.mockReturnValue(
+                okAsync({
+                    results: {
+                        "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                        "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                    },
+                    has_more_results: true,
+                })
+            );
+
+            store.search("foobar");
+            expect(scheduleQuery).toHaveBeenCalled();
+            await callback_promise;
+
+            expect(store.fulltext_search_is_loading).toBe(false);
+            expect(store.fulltext_search_is_error).toBe(false);
+            expect(store.fulltext_search_results).toStrictEqual({
+                "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+            });
+            expect(store.fulltext_search_has_more_results).toBe(true);
         });
 
         it("should not perform the search if fts is not available", async () => {
@@ -177,7 +213,10 @@ describe("FullText Store", () => {
             const post_spy = jest.spyOn(search_querier, "query");
             post_spy.mockReturnValue(
                 okAsync({
-                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                    results: {
+                        "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                    },
+                    has_more_results: false,
                 })
             );
 

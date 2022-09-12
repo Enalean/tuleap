@@ -104,6 +104,7 @@ describe("SearchResults", () => {
                             },
                             fulltext_search_is_loading: false,
                             fulltext_search_is_error: false,
+                            fulltext_search_has_more_results: false,
                         } as FullTextState,
                     },
                 }),
@@ -253,6 +254,7 @@ describe("SearchResults", () => {
                 fulltext_search_results: {},
                 fulltext_search_is_loading: false,
                 fulltext_search_is_error: false,
+                fulltext_search_has_more_results: false,
             };
         });
 

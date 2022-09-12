@@ -37,6 +37,7 @@ type _Unused = ResultAsync<never, Fault>;
 export { ResultFetcher };
 export { decodeJSON } from "./json-decoder";
 
+export { JSONParseFault } from "./JSONParseFault";
 export { NetworkFault } from "./NetworkFault";
 
 /**
@@ -182,6 +183,8 @@ export const postJSON = result_fetcher.postJSON;
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
  * @param {string} uri The URI destination of the request. URI-encoding is handled automatically.
+ * @param {OptionsWithAutoEncodedParameters} options An object with a `params` key containing a list of URI
+ * search parameters. Each key-value pair will be URI-encoded and appended to `uri`.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
  * string.
  * @returns {ResultAsync<Response, Fault>}

@@ -32,6 +32,8 @@ export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_is_error = ref<FullTextState["fulltext_search_is_error"]>(false);
     const fulltext_search_is_loading = ref<FullTextState["fulltext_search_is_loading"]>(false);
     const fulltext_search_is_available = ref<FullTextState["fulltext_search_is_available"]>(true);
+    const fulltext_search_has_more_results =
+        ref<FullTextState["fulltext_search_has_more_results"]>(false);
 
     const delayed_querier = delayedQuerier();
 
@@ -55,9 +57,10 @@ export const useFullTextStore = defineStore("fulltext", () => {
 
         delayed_querier.scheduleQuery(() =>
             query(url, keywords).match(
-                (results: FullTextState["fulltext_search_results"]): void => {
+                ({ results, has_more_results }): void => {
                     fulltext_search_results.value = results;
                     fulltext_search_is_loading.value = false;
+                    fulltext_search_has_more_results.value = has_more_results;
                 },
                 (fault: Fault) => {
                     fulltext_search_is_loading.value = false;
@@ -145,6 +148,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
         fulltext_search_is_error,
         fulltext_search_is_loading,
         fulltext_search_is_available,
+        fulltext_search_has_more_results,
         search,
         changeFocusFromSearchResult,
         focusFirstSearchResult,
