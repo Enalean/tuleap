@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as fetch_result from "@tuleap/fetch-result";
+import * as search_querier from "../helpers/search-querier";
 import * as delayed_querier from "../helpers/delayed-querier";
 import { createPinia, setActivePinia } from "pinia";
 import { useFullTextStore } from "./fulltext";
@@ -81,10 +81,8 @@ describe("FullText Store", () => {
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
-            const post_spy = jest.spyOn(fetch_result, "post");
-            post_spy.mockReturnValue(
-                okAsync({ json: () => Promise.resolve([]) } as unknown as Response)
-            );
+            const post_spy = jest.spyOn(search_querier, "query");
+            post_spy.mockReturnValue(okAsync({}));
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -102,7 +100,7 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(search_querier, "query");
             post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
             store.search("foobar");
@@ -122,7 +120,7 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(search_querier, "query");
             post_spy.mockReturnValue(
                 errAsync({
                     isNotFound: () => true,
@@ -148,15 +146,12 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(search_querier, "query");
             post_spy.mockReturnValue(
                 okAsync({
-                    json: () =>
-                        Promise.resolve([
-                            { title: "toto", html_url: "/toto" },
-                            { title: "titi", html_url: "/titi" },
-                        ] as ItemDefinition[]),
-                } as unknown as Response)
+                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                    "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+                })
             );
 
             store.search("foobar");
@@ -171,36 +166,6 @@ describe("FullText Store", () => {
             });
         });
 
-        it("should deduplicate results", async () => {
-            const store = useFullTextStore();
-            store.$patch({
-                fulltext_search_url: "/search",
-                fulltext_search_is_available: true,
-                fulltext_search_results: {},
-            });
-
-            const post_spy = jest.spyOn(fetch_result, "post");
-            post_spy.mockReturnValue(
-                okAsync({
-                    json: () =>
-                        Promise.resolve([
-                            { title: "titi", html_url: "/titi" },
-                            { title: "titi", html_url: "/titi" },
-                        ] as ItemDefinition[]),
-                } as unknown as Response)
-            );
-
-            store.search("foobar");
-            expect(scheduleQuery).toHaveBeenCalled();
-            await callback_promise;
-
-            expect(store.fulltext_search_is_loading).toBe(false);
-            expect(store.fulltext_search_is_error).toBe(false);
-            expect(store.fulltext_search_results).toStrictEqual({
-                "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
-            });
-        });
-
         it("should not perform the search if fts is not available", async () => {
             const store = useFullTextStore();
             store.$patch({
@@ -209,12 +174,11 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(search_querier, "query");
             post_spy.mockReturnValue(
                 okAsync({
-                    json: () =>
-                        Promise.resolve([{ title: "toto" }, { title: "titi" }] as ItemDefinition[]),
-                } as unknown as Response)
+                    "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                })
             );
 
             store.search("foobar");
