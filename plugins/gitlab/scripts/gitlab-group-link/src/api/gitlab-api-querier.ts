@@ -19,8 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
-import type { GitlabCredentials } from "../types";
-import type { GitlabGroup } from "../stores/types";
+import type { GitlabGroup, GitlabCredentials } from "../stores/types";
 import { extractNextUrl } from "./link-header-helper";
 import { decodeJSON, NetworkFault } from "@tuleap/fetch-result";
 import { GitLabCredentialsFault } from "./GitLabCredentialsFault";

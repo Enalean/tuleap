@@ -10,11 +10,17 @@ msgid "%{ current_project_name } is currently not linked to a GitLab group"
 msgstr ""
 "%{ current_project_name } n'est actuellement pas lié avec un groupe GitLab"
 
+msgid "Back"
+msgstr "Retour"
+
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Configuration"
 msgstr "Configuration"
+
+msgid "Configure selected group"
+msgstr "Configurer le groupe sélectionné"
 
 msgid "Fetch GitLab groups"
 msgstr "Récupérer les groupes GitLab"
@@ -25,6 +31,9 @@ msgstr "Jeton d'accès de GitLab (personnel ou groupe)"
 msgid "GitLab access token scope must contain at least: api."
 msgstr "La portée du jeton d'accès de GitLab doit contenir au moins : api."
 
+msgid "GitLab group selection"
+msgstr "Sélection du groupe GitLab"
+
 msgid "GitLab server"
 msgstr "Serveur GitLab"
 
@@ -33,9 +42,6 @@ msgstr "URL du serveur GitLab"
 
 msgid "Group"
 msgstr "Groupe"
-
-msgid "Groups successfully retrieved"
-msgstr "Groupes récupérés avec succès"
 
 msgid "Link a GitLab group to import the GitLab projects of the group."
 msgstr "Liez un groupe GitLab pour importer les projets GitLab du groupe."
@@ -62,6 +68,10 @@ msgstr ""
 "les hooks de projet et commenter automatiquement les commits et les demandes "
 "de fusion GitLab. Il sera également utilisé pour extraire les références "
 "Tuleap contenues dans les étiquettes GitLab."
+
+msgid "There isn't any group, please verify the permissions on GitLab's side"
+msgstr ""
+"Il n'y a aucun groupe, veuillez vérifier les permissions du côté GitLab"
 
 msgid "Unable to connect to the GitLab server, please check your credentials."
 msgstr ""

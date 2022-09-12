@@ -141,9 +141,12 @@ describe("gitlab-api-querier", () => {
             const querier = createGitlabApiQuerier(fetcher);
             const result = await querier.getGitlabGroups(credentials);
 
+            if (!result.isErr()) {
+                throw new Error("Expected an Err");
+            }
+
             expect(fetcher.getCallsNumber()).toBe(2);
-            expect(result.isErr()).toBe(true);
-            expect(isGitlabApiFault(result._unsafeUnwrapErr())).toBeTruthy();
+            expect(isGitlabApiFault(result.error)).toBeTruthy();
         });
 
         it("should stop fetching groups when api sends a 401 error and should return a GitlabCredentialsFault", async () => {
@@ -155,9 +158,12 @@ describe("gitlab-api-querier", () => {
             const querier = createGitlabApiQuerier(fetcher);
             const result = await querier.getGitlabGroups(credentials);
 
+            if (!result.isErr()) {
+                throw new Error("Expected an Err");
+            }
+
             expect(fetcher.getCallsNumber()).toBe(1);
-            expect(result.isErr()).toBe(true);
-            expect(isGitLabCredentialsFault(result._unsafeUnwrapErr())).toBeTruthy();
+            expect(isGitLabCredentialsFault(result.error)).toBeTruthy();
         });
     });
 });
