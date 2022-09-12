@@ -81,8 +81,8 @@ describe("FullText Store", () => {
                 fulltext_search_is_available: true,
                 fulltext_search_results: {},
             });
-            const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(okAsync({ results: {}, has_more_results: false }));
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockReturnValue(okAsync({ results: {}, has_more_results: false }));
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -100,8 +100,8 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
             store.search("foobar");
             expect(scheduleQuery).toHaveBeenCalled();
@@ -120,8 +120,8 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockReturnValue(
                 errAsync({
                     isNotFound: () => true,
                     ...Fault.fromMessage("Something went wrong"),
@@ -146,8 +146,8 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockReturnValue(
                 okAsync({
                     results: {
                         "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
@@ -170,6 +170,39 @@ describe("FullText Store", () => {
             expect(store.fulltext_search_has_more_results).toBe(false);
         });
 
+        it("should incrementally add items to search results so that user has better chance to see progress if results are spanned between multiple pages", async () => {
+            const store = useFullTextStore();
+            store.$patch({
+                fulltext_search_url: "/search",
+                fulltext_search_is_available: true,
+                fulltext_search_results: {},
+            });
+
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockImplementation((url, keywords, callback) => {
+                const toto = { title: "toto", html_url: "/toto" } as ItemDefinition;
+                const titi = { title: "titi", html_url: "/titi" } as ItemDefinition;
+                callback(toto);
+                callback(titi);
+                return okAsync({
+                    results: {
+                        "/toto": toto,
+                        "/titi": titi,
+                    },
+                    has_more_results: false,
+                });
+            });
+
+            store.search("foobar");
+            expect(scheduleQuery).toHaveBeenCalled();
+            expect(store.fulltext_search_results).toStrictEqual({
+                "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
+                "/titi": { title: "titi", html_url: "/titi" } as ItemDefinition,
+            });
+            expect(store.fulltext_search_is_loading).toBe(true);
+            await callback_promise;
+        });
+
         it("should store the fact that there are more results", async () => {
             const store = useFullTextStore();
             store.$patch({
@@ -178,8 +211,8 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockReturnValue(
                 okAsync({
                     results: {
                         "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
@@ -210,8 +243,8 @@ describe("FullText Store", () => {
                 fulltext_search_results: {},
             });
 
-            const post_spy = jest.spyOn(search_querier, "query");
-            post_spy.mockReturnValue(
+            const query_spy = jest.spyOn(search_querier, "query");
+            query_spy.mockReturnValue(
                 okAsync({
                     results: {
                         "/toto": { title: "toto", html_url: "/toto" } as ItemDefinition,
@@ -224,7 +257,7 @@ describe("FullText Store", () => {
             expect(scheduleQuery).not.toHaveBeenCalled();
             await callback_promise;
 
-            expect(post_spy).not.toHaveBeenCalled();
+            expect(query_spy).not.toHaveBeenCalled();
         });
     });
 

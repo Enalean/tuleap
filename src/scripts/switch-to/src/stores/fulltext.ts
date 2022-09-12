@@ -25,6 +25,7 @@ import { delayedQuerier } from "../helpers/delayed-querier";
 import type { Fault } from "@tuleap/fault";
 import { useSwitchToStore } from "./index";
 import { query } from "../helpers/search-querier";
+import type { ItemDefinition } from "../type";
 
 export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
@@ -47,6 +48,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
         fulltext_search_is_loading.value = true;
         fulltext_search_results.value = {};
         fulltext_search_is_error.value = false;
+        fulltext_search_has_more_results.value = false;
 
         delayed_querier.cancelPendingQuery();
 
@@ -56,7 +58,11 @@ export const useFullTextStore = defineStore("fulltext", () => {
         }
 
         delayed_querier.scheduleQuery(() =>
-            query(url, keywords).match(
+            query(url, keywords, (result: ItemDefinition): void => {
+                if (typeof fulltext_search_results.value[result.html_url] === "undefined") {
+                    fulltext_search_results.value[result.html_url] = result;
+                }
+            }).match(
                 ({ results, has_more_results }): void => {
                     fulltext_search_results.value = results;
                     fulltext_search_is_loading.value = false;
