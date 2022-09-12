@@ -32,7 +32,7 @@ final class NewGroupTest extends \Tuleap\Test\PHPUnit\TestCase
     private const GROUP_NAME      = 'foldy-logarithm';
     private const FULL_PATH       = 'Saltigradae/foldy-logarithm';
     private const WEB_URL         = 'https://gitlab.example.com/Saltigradae/foldy-logarithm';
-    private const AVATAR_URL      = 'https://gitlab.example.com//avatar';
+    private const AVATAR_URL      = 'https://gitlab.example.com/avatar';
 
     public function testItBuildsFromAPIRepresentationAndProject(): void
     {

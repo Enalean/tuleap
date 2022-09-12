@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-final class GitlabGroupFactory implements BuildGitlabGroup
+final class GitlabGroupFactory
 {
-    public function __construct(private GitlabGroupDAO $gitlab_group_DAO)
-    {
+    public function __construct(
+        private VerifyGroupIsAlreadyLinked $group_integrated_verifier,
+        private AddNewGroup $group_adder,
+    ) {
     }
 
     /**
@@ -33,11 +35,11 @@ final class GitlabGroupFactory implements BuildGitlabGroup
      */
     public function createGroup(NewGroup $gitlab_group): GitlabGroup
     {
-        if ($this->gitlab_group_DAO->searchGroupByGitlabGroupId($gitlab_group->gitlab_group_id)) {
+        if ($this->group_integrated_verifier->isGroupAlreadyLinked($gitlab_group->gitlab_group_id)) {
             throw new GitlabGroupAlreadyExistsException($gitlab_group->name);
         }
 
-        $group_id = $this->gitlab_group_DAO->insertNewGitlabGroup($gitlab_group);
+        $group_id = $this->group_adder->addNewGroup($gitlab_group);
         return GitlabGroup::buildGitlabGroupFromInsertionRows($group_id, $gitlab_group);
     }
 }

@@ -28,11 +28,12 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
-use Tuleap\Gitlab\Test\Stubs\BuildGitlabGroupStub;
+use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
 use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
+use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -111,7 +112,10 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
             new DBTransactionExecutorPassthrough(),
             $this->verify_gitlab_repository_is_integrated,
             $gitlab_repository_creator,
-            BuildGitlabGroupStub::buildWithGroupId(self::GROUP_ID),
+            new GitlabGroupFactory(
+                VerifyGroupIsAlreadyLinkedStub::withNeverLinked(),
+                AddNewGroupStub::withGroupId(self::GROUP_ID)
+            ),
             InsertGroupTokenStub::build(),
             $this->link_integration_to_group
         );
