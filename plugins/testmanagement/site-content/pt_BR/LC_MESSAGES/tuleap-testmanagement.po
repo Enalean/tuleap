@@ -7,11 +7,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, php-format
-msgid "%s has been updated"
-msgstr ""
-
-#, php-format
-msgid "%s has been updated by %s"
+msgid "%s updated"
 msgstr ""
 
 msgid "Administration"

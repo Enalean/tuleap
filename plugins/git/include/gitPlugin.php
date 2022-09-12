@@ -2430,8 +2430,7 @@ class GitPlugin extends Plugin implements PluginWithService //phpcs:ignore PSR1.
             $this->getRepositoryFactory(),
             $this->getGitLogDao(),
             $this->getGitRepositoryUrlManager(),
-            UserManager::instance(),
-            UserHelper::instance()
+            UserManager::instance()
         );
         $collector->collect($collection);
     }

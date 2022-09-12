@@ -22,7 +22,7 @@ namespace Tuleap\Project;
 
 final class HeartbeatsEntry
 {
-    public function __construct(private int $updated_at, private string $html_message, private string $icon_name)
+    public function __construct(private int $updated_at, private string $html_message, private string $icon_name, private ?\PFUser $user = null)
     {
     }
 
@@ -39,5 +39,10 @@ final class HeartbeatsEntry
     public function getIconName(): string
     {
         return $this->icon_name;
+    }
+
+    public function getUser(): ?\PFUser
+    {
+        return $this->user;
     }
 }

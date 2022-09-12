@@ -1743,7 +1743,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $this->getArtifactDao(),
             $this->getArtifactFactory(),
             $this->getUserManager(),
-            UserHelper::instance(),
             EventManager::instance()
         );
         $collector->collect($collection);

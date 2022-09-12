@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.1.1\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -108,12 +108,8 @@ msgid "%s administration"
 msgstr "Administration de %s"
 
 #, php-format
-msgid "%s has been created"
-msgstr "%s a été créé"
-
-#, php-format
-msgid "%s has been created by %s"
-msgstr "%s a été créé par %s"
+msgid "%s created"
+msgstr "%s créé"
 
 #, php-format
 msgid "%s has been successfully moved to %s"
@@ -124,16 +120,12 @@ msgid "%s has been successfully moved to %s in %s"
 msgstr "%s a été déplacé avec succès vers %s dans %s"
 
 #, php-format
-msgid "%s has been updated"
-msgstr "%s a été mis à jour"
-
-#, php-format
-msgid "%s has been updated by %s"
-msgstr "%s a été mis à jour par %s"
-
-#, php-format
 msgid "%s tracker"
 msgstr "Tracker %s"
+
+#, php-format
+msgid "%s updated"
+msgstr "%s mis à jour"
 
 #, php-format
 msgid "%s working day"

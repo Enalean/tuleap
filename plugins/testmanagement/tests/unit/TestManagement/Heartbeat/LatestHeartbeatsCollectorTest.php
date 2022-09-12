@@ -30,7 +30,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
-use UserHelper;
 use UserManager;
 
 final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -39,7 +38,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private LatestHeartbeatsCollector $collector;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager $user_manager;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper $user_helper;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory $factory;
     private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExecutionDao $dao;
 
@@ -48,13 +46,11 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao          = \Mockery::mock(ExecutionDao::class);
         $this->factory      = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->glyph_finder = \Mockery::mock(GlyphFinder::class);
-        $this->user_helper  = \Mockery::mock(UserHelper::class);
         $this->user_manager = \Mockery::mock(UserManager::class);
 
         $this->collector = new LatestHeartbeatsCollector(
             $this->dao,
             $this->factory,
-            $this->user_helper,
             $this->user_manager
         );
     }
@@ -109,7 +105,6 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory->shouldReceive('getInstanceFromRow')->andReturn($artifact);
 
         $this->user_manager->shouldReceive('getUserById')->andReturn($user);
-        $this->user_helper->shouldReceive('getLinkOnUser')->once();
 
         $this->collector->collect($collection);
 

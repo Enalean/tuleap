@@ -118,17 +118,27 @@ $timeline-color: var(--tlp-main-color-lighter-90);
     height: 24px;
     margin: 0 var(--tlp-small-spacing) 0 0;
     border-radius: 50%;
-    background: var(--tlp-main-color);
-    color: var(--tlp-white-color);
+    background: var(--tlp-main-color-lighter-90);
+    color: var(--tlp-main-color);
     font-size: 0.75rem;
 }
 
-.dashboard-widget-content-projectheartbeat-item-message {
-    margin: 0 0 5px;
-    line-height: 22px;
+.dashboard-widget-content-projectheartbeat-item-content {
+    margin-top: 3px;
+}
 
-    > .direct-link-to-artifact > span {
-        margin: 0 5px 0 0;
+.dashboard-widget-content-projectheartbeat-item-message {
+    margin: 0 0 calc(var(--tlp-small-spacing) / 2);
+    font-size: 0.875rem;
+    line-height: 1.3rem;
+
+    > .direct-link-to-artifact {
+        color: inherit;
+
+        > .cross-ref-badge {
+            flex: 0 0 auto;
+            margin: -3px calc(var(--tlp-small-spacing) / 2) 0 0;
+        }
     }
 
     > a {
@@ -140,11 +150,11 @@ $timeline-color: var(--tlp-main-color-lighter-90);
     }
 }
 
-.dashboard-widget-content-projectheartbeat-item-time {
+.dashboard-widget-content-projectheartbeat-item-metadata {
     color: var(--tlp-dimmed-color);
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
-.dashboard-widget-content-projectheartbeat-item-time-icon {
-    margin: 0 3px 0 0;
+.dashboard-widget-content-projectheartbeat-item-metadata-user {
+    color: var(--tlp-dimmed-color);
 }

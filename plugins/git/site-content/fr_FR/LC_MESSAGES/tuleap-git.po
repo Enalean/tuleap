@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.1.1\n"
 
 msgid " At least a git repository is migrated to gerrit"
 msgstr " Au moins un repertoire git est migré sur gerrit"
@@ -32,20 +32,10 @@ msgid "%s (Default)"
 msgstr "%s (Défaut)"
 
 #, php-format
-msgid "%s commit was pushed on %s"
-msgid_plural "%s commits were pushed on %s"
-msgstr[0] "%s commit a été poussé sur %s"
-msgstr[1] "%s commits ont été poussés sur %s"
-
-#, php-format
-msgid "%s pushed %s commit on %s"
-msgid_plural "%s pushed %s commits on %s"
-msgstr[0] "%s a poussé %s commit sur %s"
-msgstr[1] "%s a poussé %s commits sur %s"
-
-#, php-format
-msgid "%s pushed on %s"
-msgstr "%s a poussé sur %s"
+msgid "%s commit pushed on %s"
+msgid_plural "%s commits pushed on %s"
+msgstr[0] "%s commit poussé sur %s"
+msgstr[1] "%s commits poussés sur %s"
 
 msgid ""
 "<p>You can create personal forks of any reference repositories. By default "

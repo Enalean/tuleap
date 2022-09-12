@@ -26,20 +26,10 @@ msgid "%s (Default)"
 msgstr ""
 
 #, php-format
-msgid "%s commit was pushed on %s"
-msgid_plural "%s commits were pushed on %s"
+msgid "%s commit pushed on %s"
+msgid_plural "%s commits pushed on %s"
 msgstr[0] ""
 msgstr[1] ""
-
-#, php-format
-msgid "%s pushed %s commit on %s"
-msgid_plural "%s pushed %s commits on %s"
-msgstr[0] ""
-msgstr[1] ""
-
-#, php-format
-msgid "%s pushed on %s"
-msgstr ""
 
 msgid ""
 "<p>You can create personal forks of any reference repositories. By default "

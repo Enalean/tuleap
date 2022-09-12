@@ -26,7 +26,6 @@ use GitRepository;
 use GitRepositoryFactory;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
-use UserHelper;
 use UserManager;
 
 class LatestHeartbeatsCollector
@@ -36,7 +35,6 @@ class LatestHeartbeatsCollector
         private Git_LogDao $dao,
         private Git_GitRepositoryUrlManager $git_url_manager,
         private UserManager $user_manager,
-        private UserHelper $user_helper,
     ) {
     }
 
@@ -61,58 +59,45 @@ class LatestHeartbeatsCollector
                 new HeartbeatsEntry(
                     $push_row['push_date'],
                     $this->getHTMLMessage($repository, $push_row),
-                    "fas fa-tlp-versioning-git"
+                    "fas fa-tlp-versioning-git",
+                    $this->getUser((int) $push_row['user_id'])
                 )
             );
         }
     }
 
+    private function getUser(int $user_id): ?\PFUser
+    {
+        $pushed_by = $this->user_manager->getUserById($user_id);
+
+        if ($pushed_by && $pushed_by->getId() && ! $pushed_by->isNone()) {
+            return $pushed_by;
+        }
+
+        return null;
+    }
+
     private function getHTMLMessage(GitRepository $repository, $push_row)
     {
         $nb_commits      = (int) $push_row['commits_number'];
-        $pushed_by       = $this->user_manager->getUserById($push_row['user_id']);
         $repository_link = $repository->getHTMLLink($this->git_url_manager);
 
-        if ($pushed_by && $pushed_by->getId() && ! $pushed_by->isNone()) {
-            $user_link = $this->user_helper->getLinkOnUser($pushed_by);
-
-            if ($nb_commits === 0) {
-                $message = sprintf(
-                    dgettext('tuleap-git', '%s pushed on %s'),
-                    $user_link,
-                    $repository_link
-                );
-            } else {
-                $message = sprintf(
-                    dngettext(
-                        'tuleap-git',
-                        '%s pushed %s commit on %s',
-                        '%s pushed %s commits on %s',
-                        $nb_commits
-                    ),
-                    $user_link,
-                    $nb_commits,
-                    $repository_link
-                );
-            }
+        if ($nb_commits === 0) {
+            $message = sprintf(
+                dgettext('tuleap-git', 'A push occured on %s'),
+                $repository_link
+            );
         } else {
-            if ($nb_commits === 0) {
-                $message = sprintf(
-                    dgettext('tuleap-git', 'A push occured on %s'),
-                    $repository_link
-                );
-            } else {
-                $message = sprintf(
-                    dngettext(
-                        'tuleap-git',
-                        '%s commit was pushed on %s',
-                        '%s commits were pushed on %s',
-                        $nb_commits
-                    ),
-                    $nb_commits,
-                    $repository_link
-                );
-            }
+            $message = sprintf(
+                dngettext(
+                    'tuleap-git',
+                    '%s commit pushed on %s',
+                    '%s commits pushed on %s',
+                    $nb_commits
+                ),
+                $nb_commits,
+                $repository_link
+            );
         }
 
         return $message;

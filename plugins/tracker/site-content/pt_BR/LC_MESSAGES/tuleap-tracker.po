@@ -93,11 +93,7 @@ msgid "%s administration"
 msgstr ""
 
 #, php-format
-msgid "%s has been created"
-msgstr ""
-
-#, php-format
-msgid "%s has been created by %s"
+msgid "%s created"
 msgstr ""
 
 #, php-format
@@ -109,15 +105,11 @@ msgid "%s has been successfully moved to %s in %s"
 msgstr ""
 
 #, php-format
-msgid "%s has been updated"
-msgstr ""
-
-#, php-format
-msgid "%s has been updated by %s"
-msgstr ""
-
-#, php-format
 msgid "%s tracker"
+msgstr ""
+
+#, php-format
+msgid "%s updated"
 msgstr ""
 
 #, php-format
