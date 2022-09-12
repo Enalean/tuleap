@@ -53,7 +53,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\RealTimeMercure\Client;
-use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\RealTimeMercure\MercureMessageDataPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
@@ -183,6 +183,7 @@ class KanbanResource extends AuthenticatedResource
      */
     private $tracker_report_updater;
     private Client $mercure_client;
+
     private FirstPossibleValueInListRetriever $first_possible_value_retriever;
 
     public function __construct()
@@ -247,12 +248,7 @@ class KanbanResource extends AuthenticatedResource
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger()
         );
-        $this->mercure_client         = new MercureClient(
-            HttpClientFactory::createClientForInternalTuleapUse(),
-            HTTPFactoryBuilder::requestFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            BackendLogger::getDefaultLogger()
-        );
+        $this->mercure_client         = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );

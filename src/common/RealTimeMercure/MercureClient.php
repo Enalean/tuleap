@@ -25,6 +25,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\JWT\generators\MercureJWTGenerator;
 
 class MercureClient implements Client
 {
@@ -38,6 +39,7 @@ class MercureClient implements Client
         private RequestFactoryInterface $request_factory,
         private StreamFactoryInterface $stream_factory,
         private LoggerInterface $logger,
+        private MercureJWTGenerator $jwt_generator,
     ) {
     }
 
@@ -55,9 +57,10 @@ class MercureClient implements Client
             'topic' => $message->topic,
             'private' => 'on',
         ];
+        $auth_string   = $this->jwt_generator->getTokenBackend();
         $request_body  = $this->stream_factory->createStream(http_build_query($request_table));
         $request       = $this->request_factory->createRequest('POST', self::MERCURE_LOCAL_URL)
-            ->withHeader('Authorization', '')// Auth will be added later
+            ->withHeader('Authorization', 'Bearer ' . $auth_string)
             ->withHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8')
             ->withBody($request_body);
         try {
