@@ -37,7 +37,7 @@ describe("search-querier", () => {
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
-            const result = await query(url, keywords);
+            const result = await query(url, keywords, jest.fn());
             expect(result.isErr()).toBe(true);
         });
 
@@ -63,7 +63,7 @@ describe("search-querier", () => {
                 } as unknown as Response)
             );
 
-            const result = await query(url, keywords);
+            const result = await query(url, keywords, jest.fn());
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto": { title: "toto", html_url: "/toto" },
@@ -71,6 +71,34 @@ describe("search-querier", () => {
                 },
                 has_more_results: false,
             });
+        });
+
+        it("should incrementally add items so that user has better chance to see progress if results are spanned between multiple pages", async () => {
+            const post_spy = jest.spyOn(fetch_result, "post");
+            post_spy.mockReturnValue(
+                okAsync({
+                    headers: {
+                        get: (name: string): string | null =>
+                            name === PAGINATION_SIZE_HEADER
+                                ? "2"
+                                : name === PAGINATION_LIMIT_MAX_HEADER
+                                ? "50"
+                                : name === PAGINATION_LIMIT_HEADER
+                                ? "50"
+                                : null,
+                    },
+                    json: () =>
+                        Promise.resolve([
+                            { title: "toto", html_url: "/toto" },
+                            { title: "titi", html_url: "/titi" },
+                        ] as ItemDefinition[]),
+                } as unknown as Response)
+            );
+
+            const addItemToCollection = jest.fn();
+            await query(url, keywords, addItemToCollection);
+            expect(addItemToCollection).toHaveBeenCalledWith({ title: "toto", html_url: "/toto" });
+            expect(addItemToCollection).toHaveBeenCalledWith({ title: "titi", html_url: "/titi" });
         });
 
         it("should deduplicate the results", async () => {
@@ -95,7 +123,7 @@ describe("search-querier", () => {
                 } as unknown as Response)
             );
 
-            const result = await query(url, keywords);
+            const result = await query(url, keywords, jest.fn());
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto": { title: "toto", html_url: "/toto" },
@@ -167,7 +195,7 @@ describe("search-querier", () => {
                 }
             );
 
-            const result = await query(url, keywords);
+            const result = await query(url, keywords, jest.fn());
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto-01": { title: "toto-01", html_url: "/toto-01" },
@@ -242,7 +270,7 @@ describe("search-querier", () => {
                 }
             );
 
-            const result = await query(url, keywords);
+            const result = await query(url, keywords, jest.fn());
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto-01": { title: "toto-01", html_url: "/toto-01" },

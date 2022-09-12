@@ -33,7 +33,11 @@ interface QueryResults {
     readonly has_more_results: boolean;
 }
 
-export function query(url: string, keywords: string): ResultAsync<QueryResults, Fault> {
+export function query(
+    url: string,
+    keywords: string,
+    addItemToCollection: (result: ItemDefinition) => void
+): ResultAsync<QueryResults, Fault> {
     const PAGE_SIZE = 15;
     const MAX_PARALLEL_REQUESTS = 4;
     const limit = 50;
@@ -112,6 +116,7 @@ export function query(url: string, keywords: string): ResultAsync<QueryResults, 
 
             if (typeof deduplicated_results[item.html_url] === "undefined") {
                 deduplicated_results[item.html_url] = item;
+                addItemToCollection(item);
             }
         }
     }
