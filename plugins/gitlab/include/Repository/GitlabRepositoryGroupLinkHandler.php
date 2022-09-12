@@ -39,7 +39,7 @@ use Tuleap\Gitlab\Group\ProjectAlreadyLinkedToGitlabGroupException;
 use Tuleap\Gitlab\Group\Token\InsertGroupToken;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
-final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGroupLink
+final class GitlabRepositoryGroupLinkHandler
 {
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,

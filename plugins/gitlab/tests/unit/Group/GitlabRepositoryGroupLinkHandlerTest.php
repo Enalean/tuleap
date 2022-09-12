@@ -26,8 +26,8 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
-use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
 use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
@@ -87,26 +87,14 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
         ]);
 
         $gitlab_repository_creator = CreateGitlabRepositoriesStub::withSuccessiveIntegrations(
-            new GitlabRepositoryIntegration(
-                1,
-                self::FIRST_GITLAB_REPOSITORY_ID,
-                'irrelevant',
-                'irrelevant',
-                'irrelevant',
-                new \DateTimeImmutable('@0'),
-                $this->project,
-                false,
-            ),
-            new GitlabRepositoryIntegration(
-                2,
-                self::SECOND_GITLAB_REPOSITORY_ID,
-                'name',
-                'desc',
-                'repo_url',
-                new \DateTimeImmutable('@0'),
-                $this->project,
-                false
-            )
+            RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(1)
+                ->withGitLabProjectId(self::FIRST_GITLAB_REPOSITORY_ID)
+                ->inProject($this->project)
+                ->build(),
+            RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(2)
+                ->withGitLabProjectId(self::SECOND_GITLAB_REPOSITORY_ID)
+                ->inProject($this->project)
+                ->build()
         );
 
         $handler = new GitlabRepositoryGroupLinkHandler(

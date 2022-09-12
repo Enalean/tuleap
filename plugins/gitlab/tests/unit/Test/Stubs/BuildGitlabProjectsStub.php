@@ -50,8 +50,11 @@ final class BuildGitlabProjectsStub implements BuildGitlabProjects
         return new self($exception, []);
     }
 
-    public static function buildWithDefault(): self
+    /**
+     * @param GitlabProject[] $projects
+     */
+    public static function withProjects(array $projects): self
     {
-        return new self(null, []);
+        return new self(null, $projects);
     }
 }

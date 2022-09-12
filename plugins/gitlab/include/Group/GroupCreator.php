@@ -30,7 +30,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\API\Group\RetrieveGitlabGroupInformation;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
-use Tuleap\Gitlab\Repository\HandleGitlabRepositoryGroupLink;
+use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupPOSTRepresentation;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
@@ -39,7 +39,7 @@ final class GroupCreator
     public function __construct(
         private BuildGitlabProjects $build_gitlab_project,
         private RetrieveGitlabGroupInformation $gitlab_group_information_retriever,
-        private HandleGitlabRepositoryGroupLink $repository_group_link_handler,
+        private GitlabRepositoryGroupLinkHandler $repository_group_link_handler,
     ) {
     }
 
