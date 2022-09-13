@@ -22,6 +22,7 @@
     <word-highlighter
         v-bind:query="keywords"
         v-bind:highlight-class="'tlp-mark-on-dark-background'"
+        v-bind:split-by-space="true"
         class="switch-to-recent-items-entry-label"
     >
         <slot></slot>
