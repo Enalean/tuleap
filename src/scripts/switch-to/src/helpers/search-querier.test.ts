@@ -18,12 +18,13 @@
  */
 
 import * as fetch_result from "@tuleap/fetch-result";
-import { query } from "./search-querier";
+import type { QueryResults } from "./search-querier";
+import { querier } from "./search-querier";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import type { ItemDefinition } from "../type";
-import type { OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result/src/ResultFetcher";
+import type { OptionsWithAutoEncodedParameters } from "@tuleap/fetch-result";
 
 describe("search-querier", () => {
     const url = "/search";
@@ -32,13 +33,22 @@ describe("search-querier", () => {
     const PAGINATION_LIMIT_HEADER = "X-PAGINATION-LIMIT";
     const PAGINATION_LIMIT_MAX_HEADER = "X-PAGINATION-LIMIT-MAX";
 
-    describe("query", () => {
+    describe("run()", () => {
+        let expected_results: ResultAsync<QueryResults, Fault> | undefined = undefined;
+
         it("should propagate the API error", async () => {
             const post_spy = jest.spyOn(fetch_result, "post");
             post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
-            const result = await query(url, keywords, jest.fn());
-            expect(result.isErr()).toBe(true);
+            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
+                expected_results = result;
+            }).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const awaited_results = await expected_results;
+            expect(awaited_results.isErr()).toBe(true);
         });
 
         it("should return the results", async () => {
@@ -63,7 +73,14 @@ describe("search-querier", () => {
                 } as unknown as Response)
             );
 
-            const result = await query(url, keywords, jest.fn());
+            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
+                expected_results = result;
+            }).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const result = await expected_results;
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto": { title: "toto", html_url: "/toto" },
@@ -96,7 +113,17 @@ describe("search-querier", () => {
             );
 
             const addItemToCollection = jest.fn();
-            await query(url, keywords, addItemToCollection);
+            await querier(url, keywords, addItemToCollection, jest.fn());
+            querier(
+                url,
+                keywords,
+                addItemToCollection,
+                (result: ResultAsync<QueryResults, Fault>) => {
+                    expected_results = result;
+                }
+            ).run();
+
+            await expected_results;
             expect(addItemToCollection).toHaveBeenCalledWith({ title: "toto", html_url: "/toto" });
             expect(addItemToCollection).toHaveBeenCalledWith({ title: "titi", html_url: "/titi" });
         });
@@ -123,7 +150,14 @@ describe("search-querier", () => {
                 } as unknown as Response)
             );
 
-            const result = await query(url, keywords, jest.fn());
+            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
+                expected_results = result;
+            }).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const result = await expected_results;
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto": { title: "toto", html_url: "/toto" },
@@ -195,7 +229,14 @@ describe("search-querier", () => {
                 }
             );
 
-            const result = await query(url, keywords, jest.fn());
+            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
+                expected_results = result;
+            }).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const result = await expected_results;
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto-01": { title: "toto-01", html_url: "/toto-01" },
@@ -270,7 +311,14 @@ describe("search-querier", () => {
                 }
             );
 
-            const result = await query(url, keywords, jest.fn());
+            querier(url, keywords, jest.fn(), (result: ResultAsync<QueryResults, Fault>) => {
+                expected_results = result;
+            }).run();
+
+            if (!expected_results) {
+                throw Error("No expected results");
+            }
+            const result = await expected_results;
             expect(result.unwrapOr({})).toStrictEqual({
                 results: {
                     "/toto-01": { title: "toto-01", html_url: "/toto-01" },
@@ -280,6 +328,82 @@ describe("search-querier", () => {
                 },
                 has_more_results: false,
             });
+        });
+    });
+
+    describe("stop()", () => {
+        it("should not make any call if the stop() is being called before run()", () => {
+            const query = querier(url, keywords, jest.fn(), jest.fn());
+
+            const post_spy = jest.spyOn(fetch_result, "post");
+            post_spy.mockReturnValue(
+                okAsync({
+                    headers: {
+                        get: (name: string): string | null =>
+                            name === PAGINATION_SIZE_HEADER
+                                ? "2"
+                                : name === PAGINATION_LIMIT_MAX_HEADER
+                                ? "50"
+                                : name === PAGINATION_LIMIT_HEADER
+                                ? "50"
+                                : null,
+                    },
+                    json: () =>
+                        Promise.resolve([
+                            { title: "toto", html_url: "/toto" },
+                            { title: "titi", html_url: "/titi" },
+                        ] as ItemDefinition[]),
+                } as unknown as Response)
+            );
+
+            query.stop();
+            query.run();
+
+            expect(post_spy).not.toHaveBeenCalled();
+        });
+
+        it("should not make any subsequent calls if the stop() is being called while during run()", () => {
+            const query = querier(url, keywords, jest.fn(), jest.fn());
+
+            const post_spy = jest.spyOn(fetch_result, "post");
+            post_spy.mockImplementation(
+                (
+                    url: string,
+                    options: OptionsWithAutoEncodedParameters
+                ): ResultAsync<Response, Fault> => {
+                    const results_by_offset = new Map<number, ItemDefinition[]>([
+                        [0, [] as ItemDefinition[]],
+                        [50, [] as ItemDefinition[]],
+                        [100, [] as ItemDefinition[]],
+                        [150, [] as ItemDefinition[]],
+                    ]);
+
+                    const offset = Number(options.params ? options.params.offset : 0);
+                    const results = results_by_offset.get(offset) || ([] as ItemDefinition[]);
+
+                    if (offset === 0) {
+                        query.stop();
+                    }
+
+                    return okAsync({
+                        headers: {
+                            get: (name: string): string | null =>
+                                name === PAGINATION_SIZE_HEADER
+                                    ? "2000"
+                                    : name === PAGINATION_LIMIT_MAX_HEADER
+                                    ? "50"
+                                    : name === PAGINATION_LIMIT_HEADER
+                                    ? "50"
+                                    : null,
+                        },
+                        json: () => Promise.resolve(results),
+                    } as unknown as Response);
+                }
+            );
+
+            query.run();
+
+            expect(post_spy).toHaveBeenCalledTimes(1);
         });
     });
 });

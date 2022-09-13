@@ -25,14 +25,14 @@ describe("DelayedQuerier", () => {
     });
 
     it("should schedule the query", () => {
-        const query = jest.fn();
+        const run = jest.fn();
         const querier = delayedQuerier();
 
-        querier.scheduleQuery(() => query());
+        querier.scheduleQuery({ run, stop: jest.fn() });
 
-        expect(query).not.toHaveBeenCalled();
+        expect(run).not.toHaveBeenCalled();
         jest.advanceTimersByTime(1000);
-        expect(query).toHaveBeenCalled();
+        expect(run).toHaveBeenCalled();
     });
 
     it("should only schedule one query at a time", () => {
@@ -40,8 +40,8 @@ describe("DelayedQuerier", () => {
         const query_2 = jest.fn();
         const querier = delayedQuerier();
 
-        querier.scheduleQuery(() => query_1());
-        querier.scheduleQuery(() => query_2());
+        querier.scheduleQuery({ run: query_1, stop: jest.fn() });
+        querier.scheduleQuery({ run: query_2, stop: jest.fn() });
 
         jest.advanceTimersByTime(1000);
         expect(query_1).not.toHaveBeenCalled();
@@ -49,13 +49,16 @@ describe("DelayedQuerier", () => {
     });
 
     it("should allow to cancel the query", () => {
-        const query = jest.fn();
+        const run = jest.fn();
+        const stop = jest.fn();
+
         const querier = delayedQuerier();
 
-        querier.scheduleQuery(() => query());
+        querier.scheduleQuery({ run, stop });
         querier.cancelPendingQuery();
 
         jest.advanceTimersByTime(1000);
-        expect(query).not.toHaveBeenCalled();
+        expect(run).not.toHaveBeenCalled();
+        expect(stop).toHaveBeenCalled();
     });
 });
