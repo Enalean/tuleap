@@ -128,6 +128,28 @@ describe("Root store", () => {
 
                 expect(search).not.toHaveBeenCalled();
             });
+
+            it("does not ask to perform a fulltext search if there is no keywords", () => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    filter_value: "",
+                });
+
+                store.updateFilterValue("   ");
+
+                expect(search).not.toHaveBeenCalled();
+            });
+
+            it("should pass the keywords and not the raw filter_value", () => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    filter_value: "",
+                });
+
+                store.updateFilterValue("  foo  ");
+
+                expect(search).toHaveBeenCalledWith("foo");
+            });
         });
     });
 
@@ -149,6 +171,20 @@ describe("Root store", () => {
                     { project_name: "ACME Corp" } as Project,
                 ]);
             });
+
+            it("No filtered projects when filter is only spaces", () => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    projects: [
+                        { project_name: "Acme" } as Project,
+                        { project_name: "ACME Corp" } as Project,
+                        { project_name: "Another project" } as Project,
+                    ],
+                    filter_value: "   ",
+                });
+
+                expect(store.filtered_projects).toStrictEqual(store.projects);
+            });
         });
 
         describe("filtered_history", () => {
@@ -166,14 +202,61 @@ describe("Root store", () => {
                     filter_value: "acme",
                 });
 
-                expect(store.filtered_history).toStrictEqual({
-                    entries: [
-                        { title: "Acme" } as ItemDefinition,
-                        { title: "ACME Corp" } as ItemDefinition,
-                        { xref: "wiki #ACME" } as ItemDefinition,
-                    ],
-                });
+                expect(store.filtered_history.entries).toStrictEqual([
+                    { title: "Acme" } as ItemDefinition,
+                    { title: "ACME Corp" } as ItemDefinition,
+                    { xref: "wiki #ACME" } as ItemDefinition,
+                ]);
             });
+
+            it("No filtered recent items when filter is only spaces", () => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    history: {
+                        entries: [
+                            { title: "Acme" } as ItemDefinition,
+                            { title: "ACME Corp" } as ItemDefinition,
+                            { title: "Another entry" } as ItemDefinition,
+                            { xref: "wiki #ACME" } as ItemDefinition,
+                        ],
+                    },
+                    filter_value: "   ",
+                });
+
+                expect(store.filtered_history).toStrictEqual(store.history);
+            });
+        });
+
+        describe("keywords", () => {
+            it.each([
+                ["   ", ""],
+                ["  acme  ", "acme"],
+            ])("should trim the filter_value '%s' to '%s'", (filter_value, expected_keywords) => {
+                const store = useSwitchToStore();
+                store.$patch({
+                    filter_value,
+                });
+
+                expect(store.keywords).toBe(expected_keywords);
+            });
+        });
+
+        describe("is_in_search_mode", () => {
+            it.each([
+                ["", false],
+                ["   ", false],
+                ["  acme  ", true],
+            ])(
+                "when filter_value is '%s' then is_in_search_mode is %s",
+                (filter_value, expected_is_in_search_mode) => {
+                    const store = useSwitchToStore();
+                    store.$patch({
+                        filter_value,
+                    });
+
+                    expect(store.is_in_search_mode).toBe(expected_is_in_search_mode);
+                }
+            );
         });
     });
 });

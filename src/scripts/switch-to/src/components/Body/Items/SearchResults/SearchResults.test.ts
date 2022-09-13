@@ -130,14 +130,12 @@ describe("SearchResults", () => {
             Then it should always display an empty state for this section.`,
             async (filtered_projects, filtered_history_entries) => {
                 const useSwitchToStore = defineStore("root", {
-                    state: () => ({
-                        filter_value: "foobar",
-                    }),
                     getters: {
                         filtered_history: (): UserHistory => ({
                             entries: filtered_history_entries,
                         }),
                         filtered_projects: (): Project[] => filtered_projects,
+                        keywords: (): string => "foobar",
                     },
                 });
 
@@ -175,14 +173,12 @@ describe("SearchResults", () => {
             Then it should not display something.`,
             async (filtered_projects, filtered_history_entries) => {
                 const useSwitchToStore = defineStore("root", {
-                    state: () => ({
-                        filter_value: "a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1),
-                    }),
                     getters: {
                         filtered_history: (): UserHistory => ({
                             entries: filtered_history_entries,
                         }),
                         filtered_projects: (): Project[] => filtered_projects,
+                        keywords: (): string => "a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1),
                     },
                 });
 
@@ -212,14 +208,12 @@ describe("SearchResults", () => {
             And there is no matching projects and recent items
             Then it should ask to user to enter more than ${FULLTEXT_MINIMUM_LENGTH_FOR_QUERY} chars.`, async () => {
             const useSwitchToStore = defineStore("root", {
-                state: () => ({
-                    filter_value: "a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1),
-                }),
                 getters: {
                     filtered_history: (): UserHistory => ({
                         entries: [],
                     }),
                     filtered_projects: (): Project[] => [],
+                    keywords: (): string => "a".repeat(FULLTEXT_MINIMUM_LENGTH_FOR_QUERY - 1),
                 },
             });
 
@@ -264,10 +258,10 @@ describe("SearchResults", () => {
             and the list of filtered projects and the list of filtered recent items are empty`,
             async (filter_value) => {
                 const useSwitchToStore = defineStore("root", {
-                    state: () => ({ filter_value }),
                     getters: {
                         filtered_history: (): UserHistory => ({ entries: [] }),
                         filtered_projects: (): Project[] => [],
+                        keywords: (): string => filter_value,
                     },
                 });
 
@@ -299,12 +293,12 @@ describe("SearchResults", () => {
             because FTS is not enabled and we don't want to display a "No results" which may confuse people.`,
             async (filtered_projects, filtered_history_entries) => {
                 const useSwitchToStore = defineStore("root", {
-                    state: () => ({ filter_value: "foobar" }),
                     getters: {
                         filtered_history: (): UserHistory => ({
                             entries: filtered_history_entries,
                         }),
                         filtered_projects: (): Project[] => filtered_projects,
+                        keywords: (): string => "foobar",
                     },
                 });
 

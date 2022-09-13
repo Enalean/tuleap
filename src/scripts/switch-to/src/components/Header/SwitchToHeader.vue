@@ -62,7 +62,7 @@ const store = useSwitchToStore();
 const { search_form } = storeToRefs(store);
 
 const should_button_be_displayed = computed((): boolean => {
-    return store.filter_value.length > 0 && store.is_search_available;
+    return store.is_search_available && store.is_in_search_mode;
 });
 
 const is_special_search = computed((): boolean => {

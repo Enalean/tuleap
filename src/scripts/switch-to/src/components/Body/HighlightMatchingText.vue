@@ -20,7 +20,7 @@
 
 <template>
     <word-highlighter
-        v-bind:query="filter_value"
+        v-bind:query="keywords"
         v-bind:highlight-class="'tlp-mark-on-dark-background'"
         class="switch-to-recent-items-entry-label"
     >
@@ -34,5 +34,5 @@ import { useSwitchToStore } from "../../stores";
 import { computed } from "vue";
 
 const root_store = useSwitchToStore();
-const filter_value = computed((): string => root_store.filter_value);
+const keywords = computed((): string => root_store.keywords);
 </script>

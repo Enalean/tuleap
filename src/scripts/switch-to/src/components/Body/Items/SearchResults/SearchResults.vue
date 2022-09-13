@@ -62,7 +62,7 @@ const fulltext_store = useFullTextStore();
 const is_query_too_small = computed(
     (): boolean =>
         fulltext_store.fulltext_search_is_available &&
-        root_store.filter_value.length < FULLTEXT_MINIMUM_LENGTH_FOR_QUERY
+        root_store.keywords.length < FULLTEXT_MINIMUM_LENGTH_FOR_QUERY
 );
 const should_be_displayed = computed(
     (): boolean =>

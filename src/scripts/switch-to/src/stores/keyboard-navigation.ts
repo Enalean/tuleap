@@ -57,7 +57,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
 
             const root_store = useSwitchToStore();
             if (next_index >= quick_links.length) {
-                if (payload.project && root_store.filter_value.length === 0) {
+                if (payload.project && root_store.keywords.length === 0) {
                     focusFirstHistoryEntry();
                 }
                 return;
@@ -96,7 +96,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
                 return;
             }
 
-            if (root_store.filter_value.length === 0) {
+            if (root_store.keywords.length === 0) {
                 focusFirstHistoryEntry();
             }
 
@@ -111,7 +111,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
         if (
             is_the_last_project &&
             payload.key === "ArrowDown" &&
-            root_store.filter_value.length !== 0
+            root_store.keywords.length !== 0
         ) {
             if (!focusFirstHistoryEntry()) {
                 useFullTextStore().focusFirstSearchResult();
@@ -150,7 +150,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
 
         const root_store = useSwitchToStore();
         if (payload.key === "ArrowLeft") {
-            if (root_store.filter_value.length !== 0) {
+            if (root_store.keywords.length !== 0) {
                 return;
             }
 
@@ -167,11 +167,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
             (entry: ItemDefinition) => entry.html_url === payload.entry.html_url
         );
         const is_the_first_entry = current_index === 0;
-        if (
-            is_the_first_entry &&
-            payload.key === "ArrowUp" &&
-            root_store.filter_value.length !== 0
-        ) {
+        if (is_the_first_entry && payload.key === "ArrowUp" && root_store.keywords.length !== 0) {
             if (root_store.filtered_projects.length !== 0) {
                 programmatically_focused_element.value =
                     root_store.filtered_projects[root_store.filtered_projects.length - 1];
@@ -179,11 +175,7 @@ export const useKeyboardNavigationStore = defineStore("keyboard-navigation", () 
             return;
         }
         const is_the_last_entry = current_index === root_store.filtered_history.entries.length - 1;
-        if (
-            is_the_last_entry &&
-            payload.key === "ArrowDown" &&
-            root_store.filter_value.length !== 0
-        ) {
+        if (is_the_last_entry && payload.key === "ArrowDown" && root_store.keywords.length !== 0) {
             useFullTextStore().focusFirstSearchResult();
             return;
         }
