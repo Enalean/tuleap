@@ -26,10 +26,14 @@ export const useRootStore = defineStore("root", {
             id: 0,
             public_name: "",
         },
+        base_url: "",
     }),
     actions: {
         setCurrentProject(project: Project): void {
             this.current_project = project;
+        },
+        setBaseUrl(base_url: string): void {
+            this.base_url = base_url;
         },
     },
 });

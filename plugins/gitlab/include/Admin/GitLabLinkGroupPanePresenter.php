@@ -34,6 +34,7 @@ final class GitLabLinkGroupPanePresenter extends GitPresenters_AdminPresenter
         \Project $project,
         bool $are_mirrors_defined,
         array $external_pane_presenters,
+        public bool $is_a_group_already_linked,
     ) {
         parent::__construct((int) $project->getID(), $are_mirrors_defined, $external_pane_presenters);
 

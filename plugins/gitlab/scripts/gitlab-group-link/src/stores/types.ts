@@ -19,6 +19,7 @@
 
 export interface RootState {
     current_project: Project;
+    base_url: string;
 }
 
 export interface Project {

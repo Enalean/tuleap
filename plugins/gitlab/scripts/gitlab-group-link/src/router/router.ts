@@ -32,14 +32,10 @@ import {
 } from "../types";
 import { ensureStepsHaveBeenCompletedInTheRightOrder } from "./steps-order-guard";
 
-export function createInitializedRouter(current_project_unix_name: string): Router {
-    const BASE = `/plugins/git/${encodeURIComponent(
-        current_project_unix_name
-    )}/administration/gitlab/`;
-
+export function createInitializedRouter(base_url: string): Router {
     const routes: RouteRecordRaw[] = [
         {
-            path: BASE,
+            path: "/",
             name: NO_GROUP_LINKED_EMPTY_STATE,
             component: EmptyStateNoGitlabGroupLinked,
         },
@@ -61,7 +57,7 @@ export function createInitializedRouter(current_project_unix_name: string): Rout
     ];
 
     const router = createRouter({
-        history: createWebHistory(),
+        history: createWebHistory(base_url),
         routes,
     });
 
@@ -70,6 +66,6 @@ export function createInitializedRouter(current_project_unix_name: string): Rout
     return router;
 
     function buildPath(route: string): string {
-        return `${BASE}\\${route}`;
+        return "/" + route;
     }
 }

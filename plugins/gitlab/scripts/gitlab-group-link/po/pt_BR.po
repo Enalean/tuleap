@@ -53,9 +53,6 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-msgid "Group associated and synchronized successfully"
-msgstr ""
-
 msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."

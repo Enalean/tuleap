@@ -30,9 +30,6 @@
             >
                 {{ error_message }}
             </div>
-            <div v-if="success_message" class="tlp-alert-success">
-                {{ success_message }}
-            </div>
             <section class="tlp-pane">
                 <form class="tlp-pane-container">
                     <div class="tlp-pane-header">
@@ -149,7 +146,6 @@ const uses_branch_name_prefix = ref(false);
 const branch_name_prefix = ref("");
 const is_linking_group = ref(false);
 const error_message = ref("");
-const success_message = ref("");
 
 const root_store = useRootStore();
 const credentials_store = useCredentialsStore();
@@ -181,7 +177,6 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
 
     is_linking_group.value = true;
     error_message.value = "";
-    success_message.value = "";
 
     linkGitlabGroupWithTuleap(
         root_store.current_project.id,
@@ -193,7 +188,7 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
     )
         .match(
             () => {
-                success_message.value = $gettext("Group associated and synchronized successfully");
+                location.assign(root_store.base_url);
             },
             (fault) => {
                 error_message.value = interpolate(
