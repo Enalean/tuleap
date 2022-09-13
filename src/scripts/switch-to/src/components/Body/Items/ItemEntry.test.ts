@@ -23,7 +23,7 @@ import ItemEntry from "./ItemEntry.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import { defineStore } from "pinia";
-import type { State } from "../../../stores/type";
+import type { KeyboardNavigationState } from "../../../stores/type";
 
 describe("ItemEntry", () => {
     it("Displays a link with a cross ref", async () => {
@@ -127,15 +127,15 @@ describe("ItemEntry", () => {
     );
 
     it("Forces the focus from the outside", async () => {
-        const useSwitchToStore = defineStore("root", {
-            state: (): State =>
+        const useKeyboardNavigationStore = defineStore("keyboard-navigation", {
+            state: (): KeyboardNavigationState =>
                 ({
                     programmatically_focused_element: null,
-                } as State),
+                } as KeyboardNavigationState),
         });
 
         const pinia = createTestingPinia();
-        const store = useSwitchToStore(pinia);
+        const store = useKeyboardNavigationStore(pinia);
 
         const entry = {
             icon_name: "fa-columns",

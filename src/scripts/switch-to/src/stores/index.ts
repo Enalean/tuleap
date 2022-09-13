@@ -17,18 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    FocusFromItemPayload,
-    FocusFromProjectPayload,
-    FocusFromQuickLinkPayload,
-    State,
-} from "./type";
+import type { State } from "./type";
 import { defineStore } from "pinia";
 import { get } from "@tuleap/tlp-fetch";
 import type { Project, UserHistory, ItemDefinition } from "../type";
 import { isMatchingFilterValue } from "../helpers/is-matching-filter-value";
 import { useFullTextStore } from "./fulltext";
-import type { QuickLink } from "../type";
 
 export const useSwitchToStore = defineStore("root", {
     state: (): State => ({
@@ -46,7 +40,6 @@ export const useSwitchToStore = defineStore("root", {
         is_history_in_error: false,
         history: { entries: [] },
         filter_value: "",
-        programmatically_focused_element: null,
     }),
     getters: {
         filtered_history(): UserHistory {
@@ -98,173 +91,6 @@ export const useSwitchToStore = defineStore("root", {
             }
         },
 
-        changeFocusFromQuickLink(payload: FocusFromQuickLinkPayload): void {
-            const key = payload.key;
-
-            if (key === "ArrowDown" || key === "ArrowUp") {
-                if (payload.item) {
-                    this.changeFocusFromHistory({ key, entry: payload.item });
-                } else if (payload.project) {
-                    this.changeFocusFromProject({ key, project: payload.project });
-                }
-
-                return;
-            }
-
-            if (key === "ArrowRight") {
-                const quick_links = payload.project?.quick_links || payload.item?.quick_links || [];
-
-                const next_index = quick_links.indexOf(payload.quick_link) + 1;
-                if (!next_index) {
-                    return;
-                }
-
-                if (next_index >= quick_links.length) {
-                    if (payload.project && this.filter_value.length === 0) {
-                        this.focusFirstHistoryEntry();
-                    }
-                    return;
-                }
-
-                this.programmatically_focused_element = quick_links[next_index];
-                return;
-            }
-
-            if (key === "ArrowLeft") {
-                const quick_links = payload.project?.quick_links || payload.item?.quick_links || [];
-
-                const previous_index = quick_links.indexOf(payload.quick_link) - 1;
-                if (previous_index < -1) {
-                    return;
-                }
-
-                if (previous_index === -1) {
-                    this.programmatically_focused_element = payload.project || payload.item;
-                    return;
-                }
-
-                this.programmatically_focused_element = quick_links[previous_index];
-            }
-        },
-
-        changeFocusFromProject(payload: FocusFromProjectPayload): void {
-            if (payload.key === "ArrowLeft") {
-                return;
-            }
-
-            if (payload.key === "ArrowRight") {
-                if (payload.project.quick_links.length > 0) {
-                    this.programmatically_focused_element = payload.project.quick_links[0];
-                    return;
-                }
-
-                if (this.filter_value.length === 0) {
-                    this.focusFirstHistoryEntry();
-                }
-
-                return;
-            }
-
-            const current_index = this.filtered_projects.findIndex(
-                (project: Project) => project.project_uri === payload.project.project_uri
-            );
-            const is_the_last_project = current_index === this.filtered_projects.length - 1;
-
-            if (
-                is_the_last_project &&
-                payload.key === "ArrowDown" &&
-                this.filter_value.length !== 0
-            ) {
-                if (!this.focusFirstHistoryEntry()) {
-                    useFullTextStore().focusFirstSearchResult();
-                }
-                return;
-            }
-
-            this.navigateInCollection(this.filtered_projects, current_index, payload.key);
-        },
-
-        focusFirstHistoryEntry(): boolean {
-            if (!this.is_history_loaded) {
-                return false;
-            }
-
-            if (this.is_history_in_error) {
-                return false;
-            }
-
-            if (this.filtered_history.entries.length === 0) {
-                return false;
-            }
-
-            this.programmatically_focused_element = this.filtered_history.entries[0];
-            return true;
-        },
-
-        changeFocusFromHistory(payload: FocusFromItemPayload): void {
-            if (payload.key === "ArrowRight") {
-                if (payload.entry.quick_links.length > 0) {
-                    this.programmatically_focused_element = payload.entry.quick_links[0];
-                }
-                return;
-            }
-
-            if (payload.key === "ArrowLeft") {
-                if (this.filter_value.length !== 0) {
-                    return;
-                }
-
-                if (this.filtered_projects.length === 0) {
-                    return;
-                }
-
-                this.programmatically_focused_element = this.filtered_projects[0];
-
-                return;
-            }
-
-            const current_index = this.filtered_history.entries.findIndex(
-                (entry: ItemDefinition) => entry.html_url === payload.entry.html_url
-            );
-            const is_the_first_entry = current_index === 0;
-            if (is_the_first_entry && payload.key === "ArrowUp" && this.filter_value.length !== 0) {
-                if (this.filtered_projects.length !== 0) {
-                    this.programmatically_focused_element =
-                        this.filtered_projects[this.filtered_projects.length - 1];
-                }
-                return;
-            }
-            const is_the_last_entry = current_index === this.filtered_history.entries.length - 1;
-            if (
-                is_the_last_entry &&
-                payload.key === "ArrowDown" &&
-                this.filter_value.length !== 0
-            ) {
-                useFullTextStore().focusFirstSearchResult();
-                return;
-            }
-
-            this.navigateInCollection(this.filtered_history.entries, current_index, payload.key);
-        },
-
-        navigateInCollection(
-            collection: ItemDefinition[] | Project[],
-            current_index: number,
-            key: "ArrowUp" | "ArrowDown"
-        ): void {
-            if (current_index === -1) {
-                return;
-            }
-
-            const focused_index = current_index + (key === "ArrowUp" ? -1 : 1);
-            const is_out_of_boundaries = typeof collection[focused_index] === "undefined";
-            if (is_out_of_boundaries) {
-                return;
-            }
-
-            this.programmatically_focused_element = collection[focused_index];
-        },
-
         updateFilterValue(value: string): void {
             if (this.filter_value !== value) {
                 this.filter_value = value;
@@ -280,12 +106,6 @@ export const useSwitchToStore = defineStore("root", {
 
         setErrorForHistory(is_error: boolean): void {
             this.is_history_in_error = is_error;
-        },
-
-        setProgrammaticallyFocusedElement(
-            element: Project | ItemDefinition | QuickLink | null
-        ): void {
-            this.programmatically_focused_element = element;
         },
     },
 });

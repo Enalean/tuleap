@@ -61,14 +61,15 @@ import { useSwitchToStore } from "../../../stores";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import QuickLink from "../QuickLink.vue";
 import { storeToRefs } from "pinia";
+import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
 
 const props = defineProps<{ project: Project }>();
 
 const project_link = ref<HTMLAnchorElement | undefined>(undefined);
 
-const store = useSwitchToStore();
+const navigation_store = useKeyboardNavigationStore();
 
-const { programmatically_focused_element } = storeToRefs(store);
+const { programmatically_focused_element } = storeToRefs(navigation_store);
 watch(programmatically_focused_element, () => {
     if (programmatically_focused_element.value !== props.project) {
         return;
@@ -86,7 +87,7 @@ function changeFocus(event: KeyboardEvent): void {
         case "ArrowDown":
         case "ArrowLeft":
             event.preventDefault();
-            store.changeFocusFromProject({
+            navigation_store.changeFocusFromProject({
                 project: props.project,
                 key: event.key,
             });

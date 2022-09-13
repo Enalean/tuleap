@@ -28,6 +28,7 @@ import type { ItemDefinition } from "../type";
 import type { Project, QuickLink } from "../type";
 import { useSwitchToStore } from "./index";
 import type { StoppableQuery } from "../helpers/delayed-querier";
+import { useKeyboardNavigationStore } from "./keyboard-navigation";
 
 describe("FullText Store", () => {
     let cancelPendingQuery: jest.Mock;
@@ -283,8 +284,8 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
-                store.$patch({
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: first_search_result,
                 });
 
@@ -293,7 +294,9 @@ describe("FullText Store", () => {
                     key: "ArrowRight",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(first_search_result);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    first_search_result
+                );
             });
 
             it("should focus on first quick link", () => {
@@ -313,8 +316,8 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
-                store.$patch({
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: first_search_result,
                 });
 
@@ -323,7 +326,7 @@ describe("FullText Store", () => {
                     key: "ArrowRight",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(quick_link);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(quick_link);
             });
         });
 
@@ -350,8 +353,8 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
-                store.$patch({
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: second_search_result,
                 });
 
@@ -360,7 +363,9 @@ describe("FullText Store", () => {
                     key: "ArrowUp",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(first_search_result);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    first_search_result
+                );
             });
 
             it("should focus the last recent item if the first search result has already the focus", () => {
@@ -410,6 +415,9 @@ describe("FullText Store", () => {
                     },
                     projects: [first_project, another_project],
                     filter_value: "lorem",
+                });
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: first_search_result,
                 });
 
@@ -418,7 +426,9 @@ describe("FullText Store", () => {
                     key: "ArrowUp",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(another_entry);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    another_entry
+                );
             });
 
             it("should focus the last project if the first search result has already the focus and there is no recent items", () => {
@@ -459,6 +469,9 @@ describe("FullText Store", () => {
                     },
                     projects: [first_project, another_project],
                     filter_value: "lorem",
+                });
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: first_search_result,
                 });
 
@@ -467,7 +480,9 @@ describe("FullText Store", () => {
                     key: "ArrowUp",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(another_project);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    another_project
+                );
             });
         });
 
@@ -494,8 +509,8 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
-                store.$patch({
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: first_search_result,
                 });
 
@@ -504,7 +519,9 @@ describe("FullText Store", () => {
                     key: "ArrowDown",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(second_search_result);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    second_search_result
+                );
             });
 
             it("does nothing if the last recent item has already the focus", () => {
@@ -529,8 +546,8 @@ describe("FullText Store", () => {
                     },
                 });
 
-                const store = useSwitchToStore();
-                store.$patch({
+                const navigation_store = useKeyboardNavigationStore();
+                navigation_store.$patch({
                     programmatically_focused_element: second_search_result,
                 });
 
@@ -539,7 +556,9 @@ describe("FullText Store", () => {
                     key: "ArrowDown",
                 });
 
-                expect(store.programmatically_focused_element).toStrictEqual(second_search_result);
+                expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                    second_search_result
+                );
             });
         });
     });
@@ -567,14 +586,16 @@ describe("FullText Store", () => {
                 },
             });
 
-            const store = useSwitchToStore();
-            store.$patch({
+            const navigation_store = useKeyboardNavigationStore();
+            navigation_store.$patch({
                 programmatically_focused_element: { project_name: "acme" } as Project,
             });
 
             fts.focusFirstSearchResult();
 
-            expect(store.programmatically_focused_element).toStrictEqual(first_search_result);
+            expect(navigation_store.programmatically_focused_element).toStrictEqual(
+                first_search_result
+            );
         });
     });
 });

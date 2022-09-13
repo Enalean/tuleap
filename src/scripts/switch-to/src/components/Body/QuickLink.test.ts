@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
 import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { default as QuickLinkComponent } from "./QuickLink.vue";
-import { useSwitchToStore } from "../../stores";
+import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
 
 describe("QuickLink", () => {
     it.each(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"])(
@@ -51,7 +51,7 @@ describe("QuickLink", () => {
 
             await wrapper.trigger("keydown", { key });
 
-            expect(useSwitchToStore().changeFocusFromQuickLink).toHaveBeenCalledWith({
+            expect(useKeyboardNavigationStore().changeFocusFromQuickLink).toHaveBeenCalledWith({
                 item,
                 quick_link,
                 project: null,

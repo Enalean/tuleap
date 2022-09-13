@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import type { ItemDefinition, Project, QuickLink } from "../../type";
-import { useSwitchToStore } from "../../stores";
+import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 
@@ -41,8 +41,8 @@ const props = defineProps<{
     item: ItemDefinition | null;
 }>();
 
-const root_store = useSwitchToStore();
-const { programmatically_focused_element } = storeToRefs(root_store);
+const navigation_store = useKeyboardNavigationStore();
+const { programmatically_focused_element } = storeToRefs(navigation_store);
 const link_element = ref<HTMLAnchorElement | null>(null);
 
 watch(programmatically_focused_element, () => {
@@ -62,7 +62,7 @@ function changeFocus(event: KeyboardEvent): void {
         case "ArrowDown":
         case "ArrowLeft":
             event.preventDefault();
-            root_store.changeFocusFromQuickLink({
+            navigation_store.changeFocusFromQuickLink({
                 item: props.item,
                 project: props.project,
                 quick_link: props.link,

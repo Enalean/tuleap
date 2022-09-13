@@ -21,9 +21,9 @@ import { shallowMount } from "@vue/test-utils";
 import type { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { useSwitchToStore } from "../../../stores";
+import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
 import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
-import type { State } from "../../../stores/type";
+import type { KeyboardNavigationState, State } from "../../../stores/type";
 
 describe("ProjectLink", () => {
     it("Displays the link to a project", async () => {
@@ -73,7 +73,7 @@ describe("ProjectLink", () => {
         const key = "ArrowUp";
         await wrapper.find("[data-test=project-link]").trigger("keydown", { key });
 
-        expect(useSwitchToStore().changeFocusFromProject).toHaveBeenCalledWith({
+        expect(useKeyboardNavigationStore().changeFocusFromProject).toHaveBeenCalledWith({
             project,
             key,
         });
@@ -95,8 +95,10 @@ describe("ProjectLink", () => {
                 initialState: {
                     root: {
                         are_restricted_users_allowed: true,
-                        programmatically_focused_element: null,
                     } as State,
+                    "keyboard-navigation": {
+                        programmatically_focused_element: null,
+                    } as KeyboardNavigationState,
                 },
             }),
         });
@@ -108,7 +110,7 @@ describe("ProjectLink", () => {
 
         const focus = jest.spyOn(link.element, "focus");
 
-        await useSwitchToStore().$patch({ programmatically_focused_element: project });
+        await useKeyboardNavigationStore().$patch({ programmatically_focused_element: project });
 
         expect(focus).toHaveBeenCalled();
     });

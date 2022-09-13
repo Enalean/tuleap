@@ -51,7 +51,6 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         is_history_loaded: false,
         is_history_in_error: false,
         history: { entries: [] },
-        programmatically_focused_element: null,
     };
     const AppComponent = Vue.extend(component);
 
@@ -68,6 +67,7 @@ export async function init(vue_mount_point: HTMLElement, component: VueClass<Vue
         fulltext_search_is_error: false,
         fulltext_search_is_loading: false,
         fulltext_search_is_available: true,
+        fulltext_search_has_more_results: false,
     };
     const fulltext_store = useFullTextStore();
     fulltext_store.$patch(fulltext_state);
