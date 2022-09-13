@@ -22,14 +22,14 @@
     <div
         tabindex="-1"
         class="switch-to-modal-body"
-        v-bind:class="{ 'switch-to-modal-body-search-results': filter_value }"
+        v-bind:class="{ 'switch-to-modal-body-search-results': keywords }"
     >
         <global-loading-state v-if="should_global_loading_state_be_displayed" />
         <global-empty-state v-else-if="should_global_empty_state_be_displayed" />
         <template v-else>
             <list-of-projects />
             <list-of-recent-items />
-            <search-results v-if="should_search_results_be_displayed" />
+            <search-results v-if="is_in_search_mode" />
         </template>
     </div>
 </template>
@@ -45,7 +45,7 @@ import { useSwitchToStore } from "../../stores";
 import { storeToRefs } from "pinia";
 
 const store = useSwitchToStore();
-const { is_loading_history, is_history_loaded, history, projects, filter_value } =
+const { is_loading_history, is_history_loaded, history, projects, keywords, is_in_search_mode } =
     storeToRefs(store);
 
 const should_global_empty_state_be_displayed = computed((): boolean => {
@@ -66,9 +66,5 @@ const should_global_loading_state_be_displayed = computed((): boolean => {
     }
 
     return is_loading_history.value;
-});
-
-const should_search_results_be_displayed = computed((): boolean => {
-    return filter_value.value !== "";
 });
 </script>

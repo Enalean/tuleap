@@ -35,7 +35,6 @@ describe("ListOfRecentItems", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "",
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
@@ -43,6 +42,7 @@ describe("ListOfRecentItems", () => {
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
+                is_in_search_mode: (): boolean => false,
             },
         });
 
@@ -53,7 +53,6 @@ describe("ListOfRecentItems", () => {
             localVue: await createSwitchToLocalVue(),
             pinia,
         });
-
         expect(wrapper.findComponent(RecentItemsErrorState).exists()).toBe(false);
         expect(wrapper.findComponent(RecentItemsEmptyState).exists()).toBe(true);
         expect(wrapper.findComponent(RecentItemsLoadingState).exists()).toBe(false);
@@ -64,7 +63,6 @@ describe("ListOfRecentItems", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "",
                     is_history_in_error: false,
                     is_loading_history: true,
                     is_history_loaded: false,
@@ -72,6 +70,7 @@ describe("ListOfRecentItems", () => {
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
+                is_in_search_mode: (): boolean => false,
             },
         });
 
@@ -93,7 +92,6 @@ describe("ListOfRecentItems", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "",
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
@@ -101,6 +99,7 @@ describe("ListOfRecentItems", () => {
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [{}, {}] as ItemDefinition[] }),
+                is_in_search_mode: (): boolean => false,
             },
         });
 
@@ -124,7 +123,6 @@ describe("ListOfRecentItems", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "plop",
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
@@ -132,6 +130,7 @@ describe("ListOfRecentItems", () => {
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
+                is_in_search_mode: (): boolean => true,
             },
         });
 
@@ -150,7 +149,6 @@ describe("ListOfRecentItems", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "plop",
                     is_history_in_error: false,
                     is_loading_history: false,
                     is_history_loaded: true,
@@ -158,6 +156,7 @@ describe("ListOfRecentItems", () => {
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [{}] as ItemDefinition[] }),
+                is_in_search_mode: (): boolean => true,
             },
         });
 
@@ -179,7 +178,6 @@ describe("ListOfRecentItems", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "",
                     is_history_in_error: true,
                     is_loading_history: true,
                     is_history_loaded: false,
@@ -187,6 +185,7 @@ describe("ListOfRecentItems", () => {
                 } as State),
             getters: {
                 filtered_history: (): UserHistory => ({ entries: [] }),
+                is_in_search_mode: (): boolean => false,
             },
         });
 

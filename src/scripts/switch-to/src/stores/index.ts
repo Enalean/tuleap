@@ -49,9 +49,9 @@ export const useSwitchToStore = defineStore("root", {
                         matching_entries: ItemDefinition[],
                         entry: ItemDefinition
                     ): ItemDefinition[] => {
-                        if (isMatchingFilterValue(entry.title, this.filter_value)) {
+                        if (isMatchingFilterValue(entry.title, this.keywords)) {
                             matching_entries.push(entry);
-                        } else if (isMatchingFilterValue(entry.xref, this.filter_value)) {
+                        } else if (isMatchingFilterValue(entry.xref, this.keywords)) {
                             matching_entries.push(entry);
                         }
 
@@ -65,7 +65,7 @@ export const useSwitchToStore = defineStore("root", {
         filtered_projects(): Project[] {
             return this.projects.reduce(
                 (matching_projects: Project[], project: Project): Project[] => {
-                    if (isMatchingFilterValue(project.project_name, this.filter_value)) {
+                    if (isMatchingFilterValue(project.project_name, this.keywords)) {
                         matching_projects.push(project);
                     }
 
@@ -73,6 +73,14 @@ export const useSwitchToStore = defineStore("root", {
                 },
                 []
             );
+        },
+
+        keywords(): string {
+            return this.filter_value.trim();
+        },
+
+        is_in_search_mode(): boolean {
+            return this.keywords.length > 0;
         },
     },
     actions: {
@@ -94,7 +102,10 @@ export const useSwitchToStore = defineStore("root", {
         updateFilterValue(value: string): void {
             if (this.filter_value !== value) {
                 this.filter_value = value;
-                useFullTextStore().search(this.filter_value);
+
+                if (this.is_in_search_mode) {
+                    useFullTextStore().search(this.keywords);
+                }
             }
         },
 

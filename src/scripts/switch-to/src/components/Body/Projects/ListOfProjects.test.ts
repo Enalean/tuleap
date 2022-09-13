@@ -32,11 +32,11 @@ describe("ListOfProjects", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "",
                     projects: [] as Project[],
                 } as State),
             getters: {
                 filtered_projects: (): Project[] => [],
+                is_in_search_mode: (): boolean => false,
             },
         });
 
@@ -55,7 +55,6 @@ describe("ListOfProjects", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "plop",
                     projects: [
                         { project_uri: "/a" } as Project,
                         { project_uri: "/b" } as Project,
@@ -67,6 +66,7 @@ describe("ListOfProjects", () => {
                     { project_uri: "/a" } as Project,
                     { project_uri: "/b" } as Project,
                 ],
+                is_in_search_mode: (): boolean => true,
             },
         });
 
@@ -88,7 +88,6 @@ describe("ListOfProjects", () => {
         const useSwitchToStore = defineStore("root", {
             state: (): State =>
                 ({
-                    filter_value: "plop",
                     projects: [
                         { project_uri: "/a" } as Project,
                         { project_uri: "/b" } as Project,
@@ -97,6 +96,7 @@ describe("ListOfProjects", () => {
                 } as State),
             getters: {
                 filtered_projects: (): Project[] => [],
+                is_in_search_mode: (): boolean => true,
             },
         });
 

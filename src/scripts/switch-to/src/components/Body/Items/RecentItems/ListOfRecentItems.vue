@@ -73,7 +73,7 @@ const {
     is_history_in_error,
     history,
     filtered_history,
-    filter_value,
+    is_in_search_mode,
 } = storeToRefs(store);
 
 function changeFocus(payload: FocusFromItemPayload): void {
@@ -109,6 +109,6 @@ const has_filtered_history = computed((): boolean => {
 });
 
 const should_be_displayed = computed((): boolean => {
-    return filter_value.value === "" || has_filtered_history.value;
+    return is_in_search_mode.value === false || has_filtered_history.value;
 });
 </script>

@@ -59,7 +59,7 @@ import ProjectLink from "./ProjectLink.vue";
 import TroveCatLink from "../TroveCatLink.vue";
 
 const store = useSwitchToStore();
-const { projects, filtered_projects, filter_value } = storeToRefs(store);
+const { projects, filtered_projects, is_in_search_mode } = storeToRefs(store);
 
 const has_projects = computed((): boolean => {
     return projects.value.length > 0;
@@ -70,10 +70,10 @@ const has_filtered_projects = computed((): boolean => {
 });
 
 const should_be_displayed = computed((): boolean => {
-    return filter_value.value === "" || has_filtered_projects.value;
+    return is_in_search_mode.value === false || has_filtered_projects.value;
 });
 
 const should_softwaremap_link_be_displayed = computed((): boolean => {
-    return filter_value.value === "";
+    return is_in_search_mode.value === false;
 });
 </script>
