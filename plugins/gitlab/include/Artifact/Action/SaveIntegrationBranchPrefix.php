@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,20 +15,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Gitlab\Artifact\Action;
 
-namespace Tuleap\Git\Branch;
-
-use Throwable;
-
-final class InvalidBranchNameException extends \Exception
+interface SaveIntegrationBranchPrefix
 {
-    public function __construct(string $branch_name, ?Throwable $previous = null)
-    {
-        parent::__construct($branch_name . ' is not a valid branch name', 0, $previous);
-    }
+    public function setCreateBranchPrefixForIntegration(int $integration_id, string $prefix): void;
 }

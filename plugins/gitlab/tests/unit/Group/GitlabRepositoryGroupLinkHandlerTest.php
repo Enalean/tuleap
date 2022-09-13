@@ -24,13 +24,13 @@ namespace Tuleap\Gitlab\Group;
 
 use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
-use Tuleap\Gitlab\Repository\GitlabRepositoryCreatorConfiguration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryGroupLinkHandler;
 use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
 use Tuleap\Gitlab\Test\Stubs\AddNewGroupStub;
 use Tuleap\Gitlab\Test\Stubs\CreateGitlabRepositoriesStub;
 use Tuleap\Gitlab\Test\Stubs\LinkARepositoryIntegrationToAGroupStub;
+use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGitlabRepositoryIsIntegratedStub;
 use Tuleap\Gitlab\Test\Stubs\InsertGroupTokenStub;
 use Tuleap\Gitlab\Test\Stubs\VerifyGroupIsAlreadyLinkedStub;
@@ -46,15 +46,16 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
     private const FIRST_GITLAB_REPOSITORY_ID  = 9;
     private VerifyGitlabRepositoryIsIntegratedStub $verify_gitlab_repository_is_integrated;
     private LinkARepositoryIntegrationToAGroupStub $link_integration_to_group;
-    private \Project $project;
+    private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
+    private ?string $branch_prefix;
 
     protected function setUp(): void
     {
-        $this->project = ProjectTestBuilder::aProject()->build();
-
         $this->verify_gitlab_repository_is_integrated = VerifyGitlabRepositoryIsIntegratedStub::withNeverIntegrated();
+        $this->link_integration_to_group              = LinkARepositoryIntegrationToAGroupStub::withCallCount();
+        $this->branch_prefix_saver                    = SaveIntegrationBranchPrefixStub::withCallCount();
 
-        $this->link_integration_to_group = LinkARepositoryIntegrationToAGroupStub::withCallCount();
+        $this->branch_prefix = 'dev-';
     }
 
     private function integrate(): \Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation
@@ -78,22 +79,30 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
             ),
         ];
 
-        $gitlab_group = GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
-            'id'         => 102,
-            'name'       => 'nine-nine',
-            'avatar_url' => 'https://avatar.example.com',
-            'full_path'  => 'brookyln/nine-nine',
-            'web_url'    => 'https://gitlab.example.com/nine-nine',
-        ]);
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $new_group = NewGroup::fromAPIRepresentation(
+            GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
+                'id'         => 102,
+                'name'       => 'nine-nine',
+                'avatar_url' => 'https://avatar.example.com',
+                'full_path'  => 'brookyln/nine-nine',
+                'web_url'    => 'https://gitlab.example.com/nine-nine',
+            ]),
+            $project,
+            new \DateTimeImmutable(),
+            true,
+            $this->branch_prefix
+        );
 
         $gitlab_repository_creator = CreateGitlabRepositoriesStub::withSuccessiveIntegrations(
             RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(1)
                 ->withGitLabProjectId(self::FIRST_GITLAB_REPOSITORY_ID)
-                ->inProject($this->project)
+                ->inProject($project)
                 ->build(),
             RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(2)
                 ->withGitLabProjectId(self::SECOND_GITLAB_REPOSITORY_ID)
-                ->inProject($this->project)
+                ->inProject($project)
                 ->build()
         );
 
@@ -107,18 +116,13 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
                 AddNewGroupStub::withGroupId(self::GROUP_ID)
             ),
             InsertGroupTokenStub::build(),
-            $this->link_integration_to_group
+            $this->link_integration_to_group,
+            $this->branch_prefix_saver
         );
 
         $credentials = CredentialsTestBuilder::get()->build();
 
-        return $handler->integrateGitlabRepositoriesInProject(
-            $credentials,
-            $gitlab_projects,
-            $this->project,
-            GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration(),
-            $gitlab_group
-        );
+        return $handler->integrateGitlabRepositoriesInProject($credentials, $gitlab_projects, $project, $new_group);
     }
 
     public function testItReturnsTheNewGroupIDAndTheNumberOfRepositoriesIntegrated(): void
@@ -128,6 +132,7 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
         self::assertSame(self::GROUP_ID, $result->id);
         self::assertSame(2, $result->number_of_integrations);
         self::assertSame(2, $this->link_integration_to_group->getCallCount());
+        self::assertSame(2, $this->branch_prefix_saver->getCallCount());
     }
 
     public function testItDoesNotRecreateRepositoriesThatWereAlreadyIntegrated(): void
@@ -139,5 +144,15 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
         self::assertSame(self::GROUP_ID, $result->id);
         self::assertSame(2, $result->number_of_integrations);
         self::assertSame(2, $this->link_integration_to_group->getCallCount());
+        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
+    }
+
+    public function testItDoesNotSetBranchPrefixIfItIsNull(): void
+    {
+        $this->branch_prefix = null;
+
+        $this->integrate();
+
+        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
     }
 }

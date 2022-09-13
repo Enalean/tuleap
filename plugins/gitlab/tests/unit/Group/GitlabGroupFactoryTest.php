@@ -55,9 +55,12 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'avatar_url' => 'https://gitlab.example.com/avatar',
         ]);
 
-        $new_group = NewGroup::fromAPIRepresentationAndProject(
+        $new_group = NewGroup::fromAPIRepresentation(
             $api_group,
             ProjectTestBuilder::aProject()->withId(153)->build(),
+            new \DateTimeImmutable(),
+            true,
+            'dev-'
         );
 
         return $factory->createGroup($new_group);

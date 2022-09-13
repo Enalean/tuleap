@@ -44,6 +44,7 @@ use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\Group\GitlabGroupInformationRetriever;
+use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\GroupCreator;
@@ -92,7 +93,7 @@ final class GitlabGroupResource
      * @param GitlabGroupPOSTRepresentation $gitlab_group_link_representation {@from body}
      *
      * @return GitlabGroupRepresentation {@type GitlabGroupRepresentation}
-     * @status 201
+     * @status 200
      *
      * @throws RestException 404
      * @throws RestException 401
@@ -156,7 +157,8 @@ final class GitlabGroupResource
                 $gitlab_repository_creator,
                 new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
                 new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
-                new GroupRepositoryIntegrationDAO()
+                new GroupRepositoryIntegrationDAO(),
+                new CreateBranchPrefixDao()
             )
         );
 

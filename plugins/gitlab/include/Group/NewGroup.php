@@ -43,9 +43,12 @@ final class NewGroup
     ) {
     }
 
-    public static function fromAPIRepresentationAndProject(
+    public static function fromAPIRepresentation(
         GitlabGroupApiDataRepresentation $representation,
         \Project $project,
+        \DateTimeImmutable $last_synchronization_date,
+        bool $allow_artifact_closure,
+        ?string $prefix_branch_name,
     ): self {
         return new self(
             $representation->getGitlabGroupId(),
@@ -54,9 +57,9 @@ final class NewGroup
             $representation->getFullPath(),
             $representation->getWebUrl(),
             $representation->getAvatarUrl(),
-            new DateTimeImmutable(),
-            false,
-            null
+            $last_synchronization_date,
+            $allow_artifact_closure,
+            $prefix_branch_name
         );
     }
 }

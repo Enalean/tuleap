@@ -24,11 +24,13 @@ namespace Tuleap\Gitlab\Repository;
 
 use Project;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Git\Branch\BranchName;
+use Tuleap\Git\Branch\InvalidBranchNameException;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\API\Group\GitlabGroupApiDataRepresentation;
+use Tuleap\Gitlab\Artifact\Action\SaveIntegrationBranchPrefix;
 use Tuleap\Gitlab\Group\GitlabGroup;
 use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
@@ -41,6 +43,8 @@ use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
 final class GitlabRepositoryGroupLinkHandler
 {
+    private const FAKE_BRANCH_NAME = 'branch_name';
+
     public function __construct(
         private DBTransactionExecutor $db_transaction_executor,
         private VerifyGitlabRepositoryIsIntegrated $verify_gitlab_repository_is_integrated,
@@ -48,6 +52,7 @@ final class GitlabRepositoryGroupLinkHandler
         private GitlabGroupFactory $gitlab_group_factory,
         private InsertGroupToken $group_token_inserter,
         private LinkARepositoryIntegrationToAGroup $link_integration_to_group,
+        private SaveIntegrationBranchPrefix $branch_prefix_saver,
     ) {
     }
 
@@ -58,28 +63,25 @@ final class GitlabRepositoryGroupLinkHandler
      * @throws ProjectAlreadyLinkedToGitlabGroupException
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
+     * @throws InvalidBranchNameException
      */
     public function integrateGitlabRepositoriesInProject(
         Credentials $credentials,
         array $gitlab_projects,
         Project $project,
-        GitlabRepositoryCreatorConfiguration $configuration,
-        GitlabGroupApiDataRepresentation $api_group,
+        NewGroup $new_group,
     ): GitlabGroupRepresentation {
+        BranchName::fromBranchNameShortHand($new_group->prefix_branch_name . self::FAKE_BRANCH_NAME);
+
         return $this->db_transaction_executor->execute(
-            function () use ($credentials, $gitlab_projects, $project, $configuration, $api_group) {
-                $gitlab_group = $this->gitlab_group_factory->createGroup(
-                    NewGroup::fromAPIRepresentationAndProject(
-                        $api_group,
-                        $project
-                    )
-                );
+            function () use ($credentials, $gitlab_projects, $project, $new_group) {
+                $gitlab_group = $this->gitlab_group_factory->createGroup($new_group);
 
                 $this->group_token_inserter->insertToken($gitlab_group, $credentials->getApiToken()->getToken());
 
                 $number_of_integrated_repositories = 0;
                 foreach ($gitlab_projects as $gitlab_project) {
-                    $this->integrateOneProject($gitlab_project, $project, $credentials, $configuration, $gitlab_group);
+                    $this->integrateOneProject($gitlab_project, $project, $credentials, $gitlab_group);
                     $number_of_integrated_repositories++;
                 }
                 return new GitlabGroupRepresentation($gitlab_group->id, $number_of_integrated_repositories);
@@ -95,7 +97,6 @@ final class GitlabRepositoryGroupLinkHandler
         GitlabProject $gitlab_project,
         Project $project,
         Credentials $credentials,
-        GitlabRepositoryCreatorConfiguration $configuration,
         GitlabGroup $gitlab_group,
     ): void {
         $gitlab_repository_id = $gitlab_project->getId();
@@ -107,12 +108,21 @@ final class GitlabRepositoryGroupLinkHandler
         );
 
         if (! $already_existing_gitlab_repository) {
-            $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
+            $configuration   = $gitlab_group->allow_artifact_closure
+                ? GitlabRepositoryCreatorConfiguration::buildConfigurationAllowingArtifactClosure()
+                : GitlabRepositoryCreatorConfiguration::buildDefaultConfiguration();
+            $new_integration = $this->gitlab_repository_creator->createGitlabRepositoryIntegration(
                 $credentials,
                 $gitlab_project,
                 $project,
                 $configuration
             );
+            if ($gitlab_group->prefix_branch_name !== null) {
+                $this->branch_prefix_saver->setCreateBranchPrefixForIntegration(
+                    $new_integration->getId(),
+                    $gitlab_group->prefix_branch_name
+                );
+            }
         }
         $this->link_integration_to_group->linkARepositoryIntegrationToAGroup(
             new NewRepositoryIntegrationLinkedToAGroup(

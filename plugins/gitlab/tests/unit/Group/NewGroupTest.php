@@ -27,14 +27,16 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class NewGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private const PROJECT_ID      = 136;
-    private const GITLAB_GROUP_ID = 84;
-    private const GROUP_NAME      = 'foldy-logarithm';
-    private const FULL_PATH       = 'Saltigradae/foldy-logarithm';
-    private const WEB_URL         = 'https://gitlab.example.com/Saltigradae/foldy-logarithm';
-    private const AVATAR_URL      = 'https://gitlab.example.com/avatar';
+    private const PROJECT_ID                     = 136;
+    private const GITLAB_GROUP_ID                = 84;
+    private const GROUP_NAME                     = 'foldy-logarithm';
+    private const FULL_PATH                      = 'Saltigradae/foldy-logarithm';
+    private const WEB_URL                        = 'https://gitlab.example.com/Saltigradae/foldy-logarithm';
+    private const AVATAR_URL                     = 'https://gitlab.example.com/avatar';
+    private const LAST_SYNCHRONIZATION_TIMESTAMP = 1658457229;
+    private const BRANCH_PREFIX                  = 'dev-';
 
-    public function testItBuildsFromAPIRepresentationAndProject(): void
+    public function testItBuildsFromAPIRepresentation(): void
     {
         $api_group = GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi([
             'id'         => self::GITLAB_GROUP_ID,
@@ -46,7 +48,15 @@ final class NewGroupTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
 
-        $group = NewGroup::fromAPIRepresentationAndProject($api_group, $project);
+        $last_synchronization_date = new \DateTimeImmutable('@' . self::LAST_SYNCHRONIZATION_TIMESTAMP);
+
+        $group = NewGroup::fromAPIRepresentation(
+            $api_group,
+            $project,
+            $last_synchronization_date,
+            true,
+            self::BRANCH_PREFIX
+        );
 
         self::assertSame(self::GITLAB_GROUP_ID, $group->gitlab_group_id);
         self::assertSame(self::PROJECT_ID, $group->project_id);
@@ -54,8 +64,8 @@ final class NewGroupTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FULL_PATH, $group->full_path);
         self::assertSame(self::WEB_URL, $group->web_url);
         self::assertSame(self::AVATAR_URL, $group->avatar_url);
-        self::assertNotSame(0, $group->last_synchronization_date->getTimestamp());
-        self::assertFalse($group->allow_artifact_closure);
-        self::assertNull($group->prefix_branch_name);
+        self::assertSame(self::LAST_SYNCHRONIZATION_TIMESTAMP, $group->last_synchronization_date->getTimestamp());
+        self::assertTrue($group->allow_artifact_closure);
+        self::assertSame(self::BRANCH_PREFIX, $group->prefix_branch_name);
     }
 }

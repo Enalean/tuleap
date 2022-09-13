@@ -32,12 +32,20 @@ final class GitlabGroupPOSTRepresentation
      */
     public string $gitlab_server_url;
 
+    /**
+     * @var string | null $create_branch_prefix {@required false}
+     */
+    public string | null $create_branch_prefix = null;
+
     public function __construct(
         public int $project_id,
         public int $gitlab_group_id,
         public string $gitlab_token,
         string $gitlab_server_url,
+        public bool $allow_artifact_closure,
+        ?string $create_branch_prefix,
     ) {
-        $this->gitlab_server_url = $gitlab_server_url;
+        $this->gitlab_server_url    = $gitlab_server_url;
+        $this->create_branch_prefix = $create_branch_prefix;
     }
 }

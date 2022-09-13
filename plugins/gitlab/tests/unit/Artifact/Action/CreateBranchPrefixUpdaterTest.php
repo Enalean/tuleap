@@ -23,93 +23,65 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Artifact\Action;
 
 use Tuleap\Git\Branch\InvalidBranchNameException;
-use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegrationNotFoundException;
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Gitlab\Test\Builder\RepositoryIntegrationBuilder;
+use Tuleap\Gitlab\Test\Stubs\SaveIntegrationBranchPrefixStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CreateBranchPrefixUpdaterTest extends TestCase
 {
-    private CreateBranchPrefixUpdater $updater;
+    private const INTEGRATION_ID = 18;
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryIntegrationFactory
      */
     private $integration_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CreateBranchPrefixDao
-     */
-    private $create_branch_prefix_dao;
+    private SaveIntegrationBranchPrefixStub $branch_prefix_saver;
+    private string $branch_prefix;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->integration_factory = $this->createMock(GitlabRepositoryIntegrationFactory::class);
+        $this->branch_prefix_saver = SaveIntegrationBranchPrefixStub::withCallCount();
 
-        $this->integration_factory      = $this->createMock(GitlabRepositoryIntegrationFactory::class);
-        $this->create_branch_prefix_dao = $this->createMock(CreateBranchPrefixDao::class);
+        $this->branch_prefix = 'dev-';
+    }
 
-        $this->updater = new CreateBranchPrefixUpdater(
+    private function updateBranchPrefix(): void
+    {
+        $updater = new CreateBranchPrefixUpdater(
             $this->integration_factory,
-            $this->create_branch_prefix_dao
+            $this->branch_prefix_saver
         );
+
+        $updater->updateBranchPrefix(self::INTEGRATION_ID, $this->branch_prefix);
     }
 
     public function testItStoresTheBranchPrefix(): void
     {
-        $integration = new GitlabRepositoryIntegration(
-            18,
-            2,
-            'smartoid/browser',
-            'Next gen browser',
-            'https://example.com/smartoid/browser',
-            new \DateTimeImmutable(),
-            ProjectTestBuilder::aProject()->build(),
-            false
-        );
-
         $this->integration_factory
             ->expects(self::once())
             ->method('getIntegrationById')
-            ->with(18)
-            ->willReturn($integration);
+            ->with(self::INTEGRATION_ID)
+            ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
-        $this->create_branch_prefix_dao
-            ->expects(self::once())
-            ->method('setCreateBranchPrefixForIntegration');
+        $this->updateBranchPrefix();
 
-        $this->updater->updateBranchPrefix(
-            18,
-            "dev-"
-        );
+        self::assertSame(1, $this->branch_prefix_saver->getCallCount());
     }
 
     public function testItStoresTheBranchPrefixWithSomeSpecialChars(): void
     {
-        $integration = new GitlabRepositoryIntegration(
-            18,
-            2,
-            'smartoid/browser',
-            'Next gen browser',
-            'https://example.com/smartoid/browser',
-            new \DateTimeImmutable(),
-            ProjectTestBuilder::aProject()->build(),
-            false
-        );
-
         $this->integration_factory
             ->expects(self::once())
             ->method('getIntegrationById')
-            ->with(18)
-            ->willReturn($integration);
+            ->with(self::INTEGRATION_ID)
+            ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
-        $this->create_branch_prefix_dao
-            ->expects(self::once())
-            ->method('setCreateBranchPrefixForIntegration');
+        $this->branch_prefix = 'dev/';
+        $this->updateBranchPrefix();
 
-        $this->updater->updateBranchPrefix(
-            18,
-            "dev/"
-        );
+        self::assertSame(1, $this->branch_prefix_saver->getCallCount());
     }
 
     public function testItThrowsAnExceptionIfIntegrationNotFoundTheBranchPrefix(): void
@@ -117,49 +89,28 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
         $this->integration_factory
             ->expects(self::once())
             ->method('getIntegrationById')
-            ->with(18)
+            ->with(self::INTEGRATION_ID)
             ->willReturn(null);
 
-        $this->create_branch_prefix_dao
-            ->expects(self::never())
-            ->method('setCreateBranchPrefixForIntegration');
-
         $this->expectException(GitlabRepositoryIntegrationNotFoundException::class);
+        $this->updateBranchPrefix();
 
-        $this->updater->updateBranchPrefix(
-            18,
-            "dev-"
-        );
+        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
     }
 
     public function testItThrowsAnExceptionIfBranchPrefixIsNotValid(): void
     {
-        $integration = new GitlabRepositoryIntegration(
-            18,
-            2,
-            'smartoid/browser',
-            'Next gen browser',
-            'https://example.com/smartoid/browser',
-            new \DateTimeImmutable(),
-            ProjectTestBuilder::aProject()->build(),
-            false
-        );
-
         $this->integration_factory
             ->expects(self::once())
             ->method('getIntegrationById')
-            ->with(18)
-            ->willReturn($integration);
+            ->with(self::INTEGRATION_ID)
+            ->willReturn(RepositoryIntegrationBuilder::aGitlabRepositoryIntegration(self::INTEGRATION_ID)->build());
 
-        $this->create_branch_prefix_dao
-            ->expects(self::never())
-            ->method('setCreateBranchPrefixForIntegration');
+        $this->branch_prefix = 'dev:';
 
         $this->expectException(InvalidBranchNameException::class);
+        $this->updateBranchPrefix();
 
-        $this->updater->updateBranchPrefix(
-            18,
-            "dev:"
-        );
+        self::assertSame(0, $this->branch_prefix_saver->getCallCount());
     }
 }

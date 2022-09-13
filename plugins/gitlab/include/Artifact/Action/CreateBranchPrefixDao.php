@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Artifact\Action;
 
 use Tuleap\DB\DataAccessObject;
 
-class CreateBranchPrefixDao extends DataAccessObject
+class CreateBranchPrefixDao extends DataAccessObject implements SaveIntegrationBranchPrefix
 {
     public function setCreateBranchPrefixForIntegration(int $integration_id, string $prefix): void
     {
