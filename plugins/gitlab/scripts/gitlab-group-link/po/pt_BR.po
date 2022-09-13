@@ -12,6 +12,11 @@ msgstr ""
 msgid "Allow artifact closure"
 msgstr ""
 
+msgid ""
+"An error occurred while linking the selected group and synchronizing its "
+"repositories: %{ error }"
+msgstr ""
+
 msgid "Associated group configuration"
 msgstr ""
 
@@ -48,6 +53,9 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
+msgid "Group associated and synchronized successfully"
+msgstr ""
+
 msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."
@@ -65,6 +73,9 @@ msgid "Link a GitLab group to this project"
 msgstr ""
 
 msgid "Link group and synchronize"
+msgstr ""
+
+msgid "Linking and synchronizing..."
 msgstr ""
 
 msgid ""

@@ -69,11 +69,11 @@ describe("PaneGitlabServer", () => {
     it("should fetch the gitlab groups with the credentials provided by the user, store them and navigate to the next step", async () => {
         const groups = [
             {
-                id: "818532",
+                id: 818532,
                 name: "R&D fellows",
             } as GitlabGroup,
             {
-                id: "984142",
+                id: 984142,
                 name: "QA folks",
             } as GitlabGroup,
         ];

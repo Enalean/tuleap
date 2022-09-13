@@ -41,6 +41,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
 
     app.use(pinia);
     useRootStore().setCurrentProject({
+        id: Number.parseInt(getDatasetItemFromMountPoint("currentProjectId"), 10),
         public_name: getDatasetItemFromMountPoint("currentProjectName"),
     });
 

@@ -22,6 +22,7 @@ export interface RootState {
 }
 
 export interface Project {
+    readonly id: number;
     readonly public_name: string;
 }
 
@@ -31,7 +32,7 @@ export interface GroupsState {
 }
 
 export interface GitlabGroup {
-    readonly id: string;
+    readonly id: number;
     readonly name: string;
     readonly avatar_url: string | null;
     readonly full_path: string;
