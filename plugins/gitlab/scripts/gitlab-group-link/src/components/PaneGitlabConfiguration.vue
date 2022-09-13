@@ -88,7 +88,7 @@
                             <label class="tlp-label" for="gitlab_server">
                                 {{ $gettext("Prefix") }}
                                 <i
-                                    v-if="is_branch_name_prefix_toggled"
+                                    v-if="is_branch_name_prefix_required"
                                     class="fas fa-asterisk"
                                     aria-hidden="true"
                                     data-test="branch-name-prefix-required-flag"
@@ -98,8 +98,8 @@
                                 type="text"
                                 class="tlp-input"
                                 size="40"
-                                v-bind:required="is_branch_name_prefix_toggled"
-                                v-bind:disabled="is_linking_group"
+                                v-bind:required="is_branch_name_prefix_required"
+                                v-bind:disabled="is_branch_name_prefix_disabled"
                                 v-model="branch_name_prefix"
                                 data-test="branch-name-prefix-input"
                             />
@@ -156,7 +156,10 @@ const credentials_store = useCredentialsStore();
 const groups_store = useGitLabGroupsStore();
 const { $gettext, interpolate } = useGettext();
 
-const is_branch_name_prefix_toggled = computed(() => uses_branch_name_prefix.value === true);
+const is_branch_name_prefix_required = computed(() => uses_branch_name_prefix.value === true);
+const is_branch_name_prefix_disabled = computed(
+    () => !uses_branch_name_prefix.value || is_linking_group.value === true
+);
 const is_synchronization_disabled = computed(
     () =>
         (uses_branch_name_prefix.value === true && branch_name_prefix.value === "") ||
@@ -188,7 +191,7 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
         selected_group.id,
         credentials_store.credentials.server_url.toString(),
         credentials_store.credentials.token,
-        branch_name_prefix.value,
+        uses_branch_name_prefix.value ? branch_name_prefix.value : "",
         is_artifact_closure_allowed.value
     )
         .match(

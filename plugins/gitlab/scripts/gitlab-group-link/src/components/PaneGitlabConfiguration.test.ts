@@ -49,6 +49,7 @@ describe("PaneGitlabConfiguration", () => {
 
         expect(submit_button.element.disabled).toBe(false);
         expect(branch_prefix_input.element.required).toBe(false);
+        expect(branch_prefix_input.element.disabled).toBe(true);
         expect(branch_prefix_form_element.classes()).toContain("tlp-form-element-disabled");
         expect(wrapper.find("[data-test=branch-name-prefix-required-flag]").exists()).toBe(false);
 
@@ -56,6 +57,7 @@ describe("PaneGitlabConfiguration", () => {
 
         expect(submit_button.element.disabled).toBe(true);
         expect(branch_prefix_input.element.required).toBe(true);
+        expect(branch_prefix_input.element.disabled).toBe(false);
         expect(branch_prefix_form_element.classes()).not.toContain("tlp-form-element-disabled");
         expect(wrapper.find("[data-test=branch-name-prefix-required-flag]").exists()).toBe(true);
 
@@ -98,6 +100,7 @@ describe("PaneGitlabConfiguration", () => {
                 .spyOn(tuleap_api, "linkGitlabGroupWithTuleap")
                 .mockReturnValue(okAsync(undefined));
 
+            await wrapper.get("[data-test=checkbox-prefix-branch-name]").setValue(true);
             await wrapper.get("[data-test=branch-name-prefix-input]").setValue("my-prefix");
 
             wrapper
