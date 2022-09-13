@@ -46,10 +46,16 @@ final class GroupCreator
     /**
      * @throws RestException
      */
-    public function createGroupAndIntegrations(Credentials $credentials, GitlabGroupPOSTRepresentation $gitlab_group_representation, Project $project): GitlabGroupRepresentation
-    {
+    public function createGroupAndIntegrations(
+        Credentials $credentials,
+        GitlabGroupPOSTRepresentation $gitlab_group_representation,
+        Project $project,
+    ): GitlabGroupRepresentation {
         try {
-            $gitlab_group_information = $this->gitlab_group_information_retriever->getGitlabGroupFromGitlabApi($credentials, $gitlab_group_representation);
+            $gitlab_group_information = $this->gitlab_group_information_retriever->getGitlabGroupFromGitlabApi(
+                $credentials,
+                $gitlab_group_representation
+            );
             $gitlab_group_projects    = $this->build_gitlab_project->getGroupProjectsFromGitlabAPI(
                 $credentials,
                 $gitlab_group_representation->gitlab_group_id
@@ -62,9 +68,10 @@ final class GroupCreator
                 $gitlab_group_information
             );
         } catch (
-            GitlabGroupAlreadyExistsException |
-            GitlabRequestException |
-            GitlabResponseAPIException $exception
+            GitlabGroupAlreadyExistsException
+            | ProjectAlreadyLinkedToGitlabGroupException
+            | GitlabRequestException
+            | GitlabResponseAPIException $exception
         ) {
             throw new RestException(400, $exception->getMessage());
         }

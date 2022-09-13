@@ -35,6 +35,7 @@ use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\NewGroup;
 use Tuleap\Gitlab\Group\LinkARepositoryIntegrationToAGroup;
 use Tuleap\Gitlab\Group\NewRepositoryIntegrationLinkedToAGroup;
+use Tuleap\Gitlab\Group\ProjectAlreadyLinkedToGitlabGroupException;
 use Tuleap\Gitlab\Group\Token\InsertGroupToken;
 use Tuleap\Gitlab\REST\v1\Group\GitlabGroupRepresentation;
 
@@ -54,6 +55,7 @@ final class GitlabRepositoryGroupLinkHandler implements HandleGitlabRepositoryGr
      * @param GitlabProject[] $gitlab_projects
      *
      * @throws GitlabGroupAlreadyExistsException
+     * @throws ProjectAlreadyLinkedToGitlabGroupException
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
      */

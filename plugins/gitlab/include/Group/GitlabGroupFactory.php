@@ -26,17 +26,23 @@ final class GitlabGroupFactory
 {
     public function __construct(
         private VerifyGroupIsAlreadyLinked $group_integrated_verifier,
+        private VerifyProjectIsAlreadyLinked $project_linked_verifier,
         private AddNewGroup $group_adder,
     ) {
     }
 
     /**
      * @throws GitlabGroupAlreadyExistsException
+     * @throws ProjectAlreadyLinkedToGitlabGroupException
      */
     public function createGroup(NewGroup $gitlab_group): GitlabGroup
     {
         if ($this->group_integrated_verifier->isGroupAlreadyLinked($gitlab_group->gitlab_group_id)) {
             throw new GitlabGroupAlreadyExistsException($gitlab_group->name);
+        }
+
+        if ($this->project_linked_verifier->isProjectAlreadyLinked($gitlab_group->project_id)) {
+            throw new ProjectAlreadyLinkedToGitlabGroupException($gitlab_group->project_id);
         }
 
         $group_id = $this->group_adder->addNewGroup($gitlab_group);

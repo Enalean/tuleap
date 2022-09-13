@@ -154,7 +154,7 @@ final class GitlabGroupResource
                 $transaction_executor,
                 $integration_dao,
                 $gitlab_repository_creator,
-                new GitlabGroupFactory($group_dao, $group_dao),
+                new GitlabGroupFactory($group_dao, $group_dao, $group_dao),
                 new GroupTokenInserter(new GroupApiTokenDAO(), $key_factory),
                 new GroupRepositoryIntegrationDAO()
             )
