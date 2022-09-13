@@ -17,10 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function isMatchingFilterValue(s: string | null, filter_value: string): boolean {
+export function isMatchingFilterValue(s: string | null, keywords: string): boolean {
     if (!s) {
         return false;
     }
 
-    return s.toLowerCase().indexOf(filter_value.toLowerCase()) !== -1;
+    if (keywords.length === 0) {
+        return true;
+    }
+
+    const lower_case_string = s.toLowerCase();
+    return keywords
+        .toLowerCase()
+        .split(" ")
+        .filter((keyword) => keyword)
+        .some((keyword) => lower_case_string.indexOf(keyword) !== -1);
 }
