@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\FullTextSearchDB\Index\Asynchronous;
 
 use Tuleap\FullTextSearchDB\Index\DeleteIndexedItems;
-use Tuleap\FullTextSearchDB\Index\InsertItemIntoIndex;
+use Tuleap\FullTextSearchDB\Index\InsertItemsIntoIndex;
 use Tuleap\Queue\WorkerEvent;
 
 final class IndexingWorkerEventDispatcher
 {
     public function __construct(
-        private InsertItemIntoIndex $item_into_index_inserter,
+        private InsertItemsIntoIndex $item_into_index_inserter,
         private DeleteIndexedItems $indexed_items_remover,
     ) {
     }
@@ -38,7 +38,7 @@ final class IndexingWorkerEventDispatcher
     {
         $item_to_index = IndexItemTask::parseWorkerEventIntoItemToIndexWhenPossible($worker_event);
         if ($item_to_index !== null) {
-            $this->item_into_index_inserter->indexItem($item_to_index);
+            $this->item_into_index_inserter->indexItems($item_to_index);
         }
 
         $items_to_remove = RemoveItemsFromIndexTask::parseWorkerEventIntoItemsToRemoveWhenPossible($worker_event);

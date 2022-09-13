@@ -20,19 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FullTextSearchDB\Index;
+namespace Tuleap\Search;
 
-use Tuleap\Search\ItemToIndex;
-use Tuleap\Search\ItemToIndexQueue;
-
-final class ItemToIndexQueueImmediate implements ItemToIndexQueue
+interface ItemToIndexBatchQueue
 {
-    public function __construct(private InsertItemIntoIndex $inserter)
-    {
-    }
-
-    public function addItemToQueue(ItemToIndex $item_to_index): void
-    {
-        $this->inserter->indexItem($item_to_index);
-    }
+    /**
+     * @param callable(ItemToIndexQueue $queue):void $callback
+     */
+    public function startBatchingItemsIntoQueue(callable $callback): void;
 }

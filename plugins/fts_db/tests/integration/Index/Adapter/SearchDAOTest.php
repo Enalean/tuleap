@@ -51,9 +51,11 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testIndexItems(): void
     {
-        $this->dao->indexItem(new ItemToIndex('type', 'content A', ['A' => 'A', 'B' => 'B']));
-        $this->dao->indexItem(new ItemToIndex('type', 'content B', ['A' => 'A', 'B' => 'B2']));
-        $this->dao->indexItem(new ItemToIndex('type', 'AA', ['A' => 'A', 'B' => 'B3'])); // Small content, not indexed
+        $this->dao->indexItems(
+            new ItemToIndex('type', 'content A', ['A' => 'A', 'B' => 'B']),
+            new ItemToIndex('type', 'content B', ['A' => 'A', 'B' => 'B2']),
+            new ItemToIndex('type', 'AA', ['A' => 'A', 'B' => 'B3']), // Small content, not indexed
+        );
 
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
 
@@ -62,15 +64,15 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesAlreadyIndexedItem(): void
     {
-        $this->dao->indexItem(new ItemToIndex('type', 'content', ['A' => 'A', 'B' => 'B']));
-        $this->dao->indexItem(new ItemToIndex('type', 'content updated', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItems(new ItemToIndex('type', 'content', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItems(new ItemToIndex('type', 'content updated', ['A' => 'A', 'B' => 'B']));
 
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
 
         self::assertEqualsCanonicalizing([['content' => 'content updated']], $result);
 
         // Drop the entry if content becomes empty
-        $this->dao->indexItem(new ItemToIndex('type', '   ', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItems(new ItemToIndex('type', '   ', ['A' => 'A', 'B' => 'B']));
 
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
 
@@ -79,8 +81,10 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSearchIndexedItems(): void
     {
-        $this->dao->indexItem(new ItemToIndex('type A', 'content content A value', ['A' => 'A', 'B' => 'B']));
-        $this->dao->indexItem(new ItemToIndex('type B', 'content B value', ['A' => 'A', 'B' => 'B2']));
+        $this->dao->indexItems(
+            new ItemToIndex('type A', 'content content A value', ['A' => 'A', 'B' => 'B']),
+            new ItemToIndex('type B', 'content B value', ['A' => 'A', 'B' => 'B2']),
+        );
 
         $this->searchMostRelevantItem();
         $this->searchMostRecentItemBetweenItemsWithEquivalentRelevance();
@@ -113,7 +117,7 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItemsRemoval(): void
     {
-        $this->dao->indexItem(new ItemToIndex('type', 'content', ['A' => 'A']));
+        $this->dao->indexItems(new ItemToIndex('type', 'content', ['A' => 'A']));
 
         // Type does not match, nothing should be deleted
         $this->dao->deleteIndexedItems(new IndexedItemsToRemove('anothertype', ['A' => 'A', 'B' => 'B']));

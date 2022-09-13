@@ -24,7 +24,6 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\FullTextSearchDB\CLI\IdentifyAllItemsToIndexCommand;
 use Tuleap\FullTextSearchDB\CLI\IndexAllPendingItemsCommand;
 use Tuleap\FullTextSearchDB\Index\Asynchronous\IndexingWorkerEventDispatcher;
-use Tuleap\FullTextSearchDB\Index\ItemToIndexQueueImmediate;
 use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Search\IdentifyAllItemsToIndexEvent;
@@ -36,6 +35,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class fts_dbPlugin extends Plugin
 {
+    private const MAX_ITEMS_PER_BATCH = 128;
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -117,7 +118,7 @@ final class fts_dbPlugin extends Plugin
             function (): IndexAllPendingItemsCommand {
                 return new IndexAllPendingItemsCommand(
                     EventManager::instance(),
-                    new ItemToIndexQueueImmediate(new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO())
+                    new \Tuleap\FullTextSearchDB\Index\ItemToIndexLimitedBatchQueue(new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO(), self::MAX_ITEMS_PER_BATCH)
                 );
             }
         );

@@ -23,8 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\FullTextSearchDB\CLI;
 
 use Symfony\Component\Console\Tester\CommandTester;
-use Tuleap\Search\ItemToIndex;
-use Tuleap\Search\ItemToIndexQueue;
+use Tuleap\Search\ItemToIndexBatchQueue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
 
@@ -32,8 +31,8 @@ final class IndexAllPendingItemsCommandTest extends TestCase
 {
     public function testCommandCanAskForIndexationOfAllPendingItems(): void
     {
-        $index_queue      = new class implements ItemToIndexQueue {
-            public function addItemToQueue(ItemToIndex $item_to_index): void
+        $index_queue      = new class implements ItemToIndexBatchQueue {
+            public function startBatchingItemsIntoQueue(callable $callback): void
             {
             }
         };

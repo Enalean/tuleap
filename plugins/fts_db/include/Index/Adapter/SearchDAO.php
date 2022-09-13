@@ -26,18 +26,29 @@ use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\FullTextSearchDB\Index\DeleteIndexedItems;
-use Tuleap\FullTextSearchDB\Index\InsertItemIntoIndex;
+use Tuleap\FullTextSearchDB\Index\InsertItemsIntoIndex;
 use Tuleap\FullTextSearchDB\Index\SearchIndexedItem;
 use Tuleap\FullTextSearchDB\Index\SearchResultPage;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 
-final class SearchDAO extends DataAccessObject implements InsertItemIntoIndex, SearchIndexedItem, DeleteIndexedItems
+final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, SearchIndexedItem, DeleteIndexedItems
 {
     private const DEFAULT_MIN_LENGTH_FOR_FTS = 3;
 
-    public function indexItem(ItemToIndex $item): void
+    public function indexItems(ItemToIndex ...$items): void
+    {
+        $this->getDB()->tryFlatTransaction(
+            function () use ($items): void {
+                foreach ($items as $item) {
+                    $this->indexItem($item);
+                }
+            }
+        );
+    }
+
+    private function indexItem(ItemToIndex $item): void
     {
         if (mb_strlen(trim($item->content)) < self::DEFAULT_MIN_LENGTH_FOR_FTS) {
             $this->deleteIndexedItems(new IndexedItemsToRemove($item->type, $item->metadata));
