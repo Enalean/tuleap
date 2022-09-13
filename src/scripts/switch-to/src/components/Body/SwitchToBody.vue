@@ -34,69 +34,41 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import ListOfProjects from "./Projects/ListOfProjects.vue";
 import ListOfRecentItems from "./Items/RecentItems/ListOfRecentItems.vue";
 import GlobalEmptyState from "./GlobalEmptyState.vue";
-import type { Project, UserHistory } from "../../type";
 import GlobalLoadingState from "./GlobalLoadingState.vue";
 import SearchResults from "./Items/SearchResults/SearchResults.vue";
 import { useSwitchToStore } from "../../stores";
+import { storeToRefs } from "pinia";
 
-@Component({
-    components: {
-        SearchResults,
-        GlobalLoadingState,
-        GlobalEmptyState,
-        ListOfProjects,
-        ListOfRecentItems,
-    },
-})
-export default class SwitchToBody extends Vue {
-    get is_loading_history(): boolean {
-        return useSwitchToStore().is_loading_history;
+const store = useSwitchToStore();
+const { is_loading_history, is_history_loaded, history, projects, filter_value } =
+    storeToRefs(store);
+
+const should_global_empty_state_be_displayed = computed((): boolean => {
+    if (!is_history_loaded.value) {
+        return false;
     }
 
-    get is_history_loaded(): boolean {
-        return useSwitchToStore().is_history_loaded;
+    if (projects.value.length > 0) {
+        return false;
     }
 
-    get history(): UserHistory {
-        return useSwitchToStore().history;
+    return history.value.entries.length === 0;
+});
+
+const should_global_loading_state_be_displayed = computed((): boolean => {
+    if (projects.value.length > 0) {
+        return false;
     }
 
-    get projects(): Project[] {
-        return useSwitchToStore().projects;
-    }
+    return is_loading_history.value;
+});
 
-    get filter_value(): string {
-        return useSwitchToStore().filter_value;
-    }
-
-    get should_global_empty_state_be_displayed(): boolean {
-        if (!this.is_history_loaded) {
-            return false;
-        }
-
-        if (this.projects.length > 0) {
-            return false;
-        }
-
-        return this.history.entries.length === 0;
-    }
-
-    get should_global_loading_state_be_displayed(): boolean {
-        if (this.projects.length > 0) {
-            return false;
-        }
-
-        return this.is_loading_history;
-    }
-
-    get should_search_results_be_displayed(): boolean {
-        return this.filter_value !== "";
-    }
-}
+const should_search_results_be_displayed = computed((): boolean => {
+    return filter_value.value !== "";
+});
 </script>

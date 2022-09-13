@@ -43,56 +43,37 @@
                 class="switch-to-projects-softwaremap"
                 v-if="should_softwaremap_link_be_displayed"
             >
-                {{ trove_cat_label }}
+                {{ $gettext("Browse all…") }}
             </trove-cat-link>
         </template>
         <projects-empty-state v-else />
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import ProjectLink from "./ProjectLink.vue";
-import type { Project } from "../../../type";
-import ProjectsEmptyState from "./ProjectsEmptyState.vue";
-import TroveCatLink from "../TroveCatLink.vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useSwitchToStore } from "../../../stores";
+import { storeToRefs } from "pinia";
+import ProjectsEmptyState from "./ProjectsEmptyState.vue";
+import ProjectLink from "./ProjectLink.vue";
+import TroveCatLink from "../TroveCatLink.vue";
 
-@Component({
-    components: { TroveCatLink, ProjectLink, ProjectsEmptyState },
-})
-export default class ListOfProjects extends Vue {
-    get projects(): Project[] {
-        return useSwitchToStore().projects;
-    }
+const store = useSwitchToStore();
+const { projects, filtered_projects, filter_value } = storeToRefs(store);
 
-    get filtered_projects(): Project[] {
-        return useSwitchToStore().filtered_projects;
-    }
+const has_projects = computed((): boolean => {
+    return projects.value.length > 0;
+});
 
-    get filter_value(): string {
-        return useSwitchToStore().filter_value;
-    }
+const has_filtered_projects = computed((): boolean => {
+    return filtered_projects.value.length > 0;
+});
 
-    get trove_cat_label(): string {
-        return this.$gettext("Browse all…");
-    }
+const should_be_displayed = computed((): boolean => {
+    return filter_value.value === "" || has_filtered_projects.value;
+});
 
-    get has_projects(): boolean {
-        return this.projects.length > 0;
-    }
-
-    get has_filtered_projects(): boolean {
-        return this.filtered_projects.length > 0;
-    }
-
-    get should_be_displayed(): boolean {
-        return this.filter_value === "" || this.has_filtered_projects;
-    }
-
-    get should_softwaremap_link_be_displayed(): boolean {
-        return this.filter_value === "";
-    }
-}
+const should_softwaremap_link_be_displayed = computed((): boolean => {
+    return filter_value.value === "";
+});
 </script>
