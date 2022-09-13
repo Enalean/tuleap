@@ -50,44 +50,46 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
 
     private function indexItem(ItemToIndex $item): void
     {
+        $existing_entries = $this->searchMatchingEntries($item);
         if (mb_strlen(trim($item->content)) < self::DEFAULT_MIN_LENGTH_FOR_FTS) {
-            $this->deleteIndexedItems(new IndexedItemsToRemove($item->type, $item->metadata));
+            $this->deleteIndexedItemsFromIDs($existing_entries);
             return;
         }
         $this->getDB()->tryFlatTransaction(
-            function (EasyDB $db) use ($item): void {
-                $existing_entries = $this->searchMatchingEntries($item);
+            function (EasyDB $db) use ($item, $existing_entries): void {
                 if (count($existing_entries) === 0) {
                     $this->createNewEntry($item);
                     return;
                 }
 
-                foreach ($existing_entries as $existing_entry) {
-                    $db->run('UPDATE plugin_fts_db_search SET content = ? WHERE id = ?', $item->content, $existing_entry['id']);
+                foreach ($existing_entries as $existing_entry_id) {
+                    $db->run('UPDATE plugin_fts_db_search SET content = ? WHERE id = ?', $item->content, $existing_entry_id);
                 }
             }
         );
     }
 
     /**
-     * @psalm-return array{id: int}[]
+     * @psalm-return int[]
      */
-    private function searchMatchingEntries(ItemToIndex $item_to_index): array
+    private function searchMatchingEntries(ItemToIndex|IndexedItemsToRemove $item): array
     {
-        $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item_to_index->metadata);
+        $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item->metadata);
 
-        return $this->getDB()->safeQuery(
+        return $this->getDB()->column(
             "SELECT id FROM plugin_fts_db_search WHERE type=? AND $metadata_statement_filter",
-            array_merge([$item_to_index->type], $metadata_statement_filter->values())
+            array_merge([$item->type], $metadata_statement_filter->values())
         );
     }
 
     private function createNewEntry(ItemToIndex $item): void
     {
-        $id = $this->getDB()->insertReturnId('plugin_fts_db_search', ['type' => $item->type, 'content' => $item->content]);
+        $id                 = $this->getDB()->insertReturnId('plugin_fts_db_search', ['type' => $item->type, 'content' => $item->content]);
+        $metadata_to_insert = [];
         foreach ($item->metadata as $name => $value) {
-            $this->getDB()->insert('plugin_fts_db_metadata', ['search_id' => $id, 'name' => $name, 'value' => $value]);
+            $metadata_to_insert[] = ['search_id' => $id, 'name' => $name, 'value' => $value];
         }
+        $this->getDB()->insertMany('plugin_fts_db_metadata', $metadata_to_insert);
     }
 
     public function searchItems(string $keywords, int $limit, int $offset): SearchResultPage
@@ -172,21 +174,22 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
 
     public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
     {
-        $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($items_to_remove->metadata);
+        $this->deleteIndexedItemsFromIDs($this->searchMatchingEntries($items_to_remove));
+    }
 
-        $this->getDB()->safeQuery(
-            "DELETE plugin_fts_db_search
-                    FROM plugin_fts_db_search
-                    JOIN plugin_fts_db_metadata ON (plugin_fts_db_metadata.search_id = plugin_fts_db_search.id)
-                    WHERE type=? AND $metadata_statement_filter",
-            array_merge([$items_to_remove->type], $metadata_statement_filter->values())
-        );
+    private function deleteIndexedItemsFromIDs(array $ids_to_remove): void
+    {
+        if (count($ids_to_remove) === 0) {
+            return;
+        }
 
-        $this->getDB()->run(
-            'DELETE plugin_fts_db_metadata
-            FROM plugin_fts_db_metadata
-            LEFT JOIN plugin_fts_db_search ON (plugin_fts_db_search.id = plugin_fts_db_metadata.search_id)
-            WHERE plugin_fts_db_search.id IS NULL'
+        $this->getDB()->tryFlatTransaction(
+            static function (EasyDB $db) use ($ids_to_remove): void {
+                $statement_id = EasyStatement::open()->in('id = ?*', $ids_to_remove);
+                $db->safeQuery("DELETE FROM plugin_fts_db_search WHERE $statement_id", $statement_id->values());
+                $statement_search_id = EasyStatement::open()->in('search_id = ?*', $ids_to_remove);
+                $db->safeQuery("DELETE FROM plugin_fts_db_metadata WHERE $statement_search_id", $statement_search_id->values());
+            }
         );
     }
 
