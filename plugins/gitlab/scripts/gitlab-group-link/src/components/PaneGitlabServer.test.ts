@@ -40,7 +40,6 @@ const token = "glpat-a1e2i3o4u5y6";
 function getWrapper(state: StateTree = {}): VueWrapper<InstanceType<typeof PaneGitlabServer>> {
     return shallowMount(PaneGitlabServer, {
         global: {
-            stubs: ["router-link"],
             ...getGlobalTestOptions(state),
         },
     });
@@ -145,21 +144,57 @@ describe("PaneGitlabServer", () => {
         expect(getFetchGroupsButton(wrapper).hasAttribute("disabled")).toBe(false);
     });
 
-    it("should fill the server_url and the token if they are defined in store during setup", () => {
-        const wrapper = getWrapper({
-            credentials: {
+    describe("stores", () => {
+        let wrapper: VueWrapper<InstanceType<typeof PaneGitlabServer>>;
+
+        beforeEach(() => {
+            const group_1 = {
+                id: 818532,
+                name: "R&D fellows",
+            } as GitlabGroup;
+            wrapper = getWrapper({
                 credentials: {
-                    server_url: new URL(server_url),
-                    token,
+                    credentials: {
+                        server_url: new URL(server_url),
+                        token,
+                    },
                 },
-            },
+                groups: {
+                    groups: [
+                        group_1,
+                        {
+                            id: 984142,
+                            name: "QA folks",
+                        } as GitlabGroup,
+                    ],
+                    selected_group: group_1,
+                },
+            });
         });
 
-        expect(
-            wrapper.get<HTMLInputElement>("[data-test=gitlab-server-url]").element.value
-        ).toStrictEqual(server_url);
-        expect(
-            wrapper.get<HTMLInputElement>("[data-test=gitlab-access-token]").element.value
-        ).toStrictEqual(token);
+        it("should fill the server_url and the token if they are defined in store during setup", () => {
+            expect(
+                wrapper.get<HTMLInputElement>("[data-test=gitlab-server-url]").element.value
+            ).toStrictEqual(server_url);
+            expect(
+                wrapper.get<HTMLInputElement>("[data-test=gitlab-access-token]").element.value
+            ).toStrictEqual(token);
+        });
+
+        it("should reset the group store and the credentials store when user cancels", () => {
+            const groups_store = useGitLabGroupsStore();
+            const credentials_store = useCredentialsStore();
+
+            wrapper
+                .get<HTMLButtonElement>("[data-test=gitlab-group-link-cancel-button]")
+                .element.click();
+
+            expect(groups_store.groups).toHaveLength(0);
+            expect(groups_store.selected_group).toBeNull();
+            expect(credentials_store.credentials).toStrictEqual({
+                server_url: "",
+                token: "",
+            });
+        });
     });
 });

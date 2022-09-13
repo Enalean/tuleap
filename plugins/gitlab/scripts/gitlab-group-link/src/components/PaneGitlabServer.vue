@@ -84,13 +84,14 @@
                             </p>
                         </div>
                         <div class="gitlab-server-step-action-buttons">
-                            <router-link
-                                v-bind:to="{ name: NO_GROUP_LINKED_EMPTY_STATE }"
+                            <button
+                                v-on:click="onClickCancel"
                                 class="tlp-button-primary tlp-button-outline"
+                                data-test="gitlab-group-link-cancel-button"
                             >
                                 <i class="fas fa-arrow-left tlp-button-icon" aria-hidden="true"></i>
                                 {{ $gettext("Cancel") }}
-                            </router-link>
+                            </button>
                             <button
                                 type="submit"
                                 class="tlp-button-primary gitlab-server-step-button-submit"
@@ -127,14 +128,14 @@ import { STEP_GITLAB_SERVER, STEP_GITLAB_GROUP, NO_GROUP_LINKED_EMPTY_STATE } fr
 import GitlabGroupLinkWizard from "./GitlabGroupLinkWizard.vue";
 import { createGitlabApiQuerier } from "../api/gitlab-api-querier";
 import type { GitlabGroup } from "../stores/types";
-import { useGitLabGroupsStore } from "../stores/groups";
 import { isGitLabCredentialsFault } from "../api/GitLabCredentialsFault";
+import { useGitLabGroupsStore } from "../stores/groups";
 import { useCredentialsStore } from "../stores/credentials";
 
 const { $gettext, interpolate } = useGettext();
-const groups_store = useGitLabGroupsStore();
 const gitlab_api_querier = createGitlabApiQuerier(window);
 const credentials_store = useCredentialsStore();
+const groups_store = useGitLabGroupsStore();
 const router = useRouter();
 
 const gitlab_server_url = ref(credentials_store.credentials.server_url);
@@ -211,6 +212,13 @@ function onClickFetchGitLabGroups(event: Event): void {
         .finally(() => {
             is_fetching_groups.value = false;
         });
+}
+
+function onClickCancel(): void {
+    credentials_store.$reset();
+    groups_store.$reset();
+
+    router.push({ name: NO_GROUP_LINKED_EMPTY_STATE });
 }
 </script>
 
