@@ -31,7 +31,6 @@ export interface State {
     is_history_in_error: boolean;
     history: UserHistory;
     filter_value: string;
-    programmatically_focused_element: Project | ItemDefinition | QuickLink | null;
 }
 
 export interface FocusFromProjectPayload {
@@ -61,3 +60,7 @@ export interface FullTextState {
 }
 
 export const FULLTEXT_MINIMUM_LENGTH_FOR_QUERY = 3;
+
+export interface KeyboardNavigationState {
+    programmatically_focused_element: Project | ItemDefinition | QuickLink | null;
+}

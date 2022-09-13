@@ -70,7 +70,7 @@ import { ref, watch } from "vue";
 import type { ItemDefinition } from "../../../type";
 import HighlightMatchingText from "../HighlightMatchingText.vue";
 import type { FocusFromItemPayload } from "../../../stores/type";
-import { useSwitchToStore } from "../../../stores";
+import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
 import { storeToRefs } from "pinia";
 import QuickLink from "../QuickLink.vue";
 
@@ -84,8 +84,8 @@ const has_quick_links = ref<boolean>(props.entry.quick_links.length > 0);
 
 const entry_link = ref<HTMLAnchorElement | null>(null);
 
-const root_store = useSwitchToStore();
-const { programmatically_focused_element } = storeToRefs(root_store);
+const navigation_store = useKeyboardNavigationStore();
+const { programmatically_focused_element } = storeToRefs(navigation_store);
 
 watch(programmatically_focused_element, () => {
     if (programmatically_focused_element.value !== props.entry) {

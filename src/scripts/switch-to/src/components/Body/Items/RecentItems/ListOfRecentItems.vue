@@ -63,6 +63,7 @@ import RecentItemsErrorState from "./RecentItemsErrorState.vue";
 import { useSwitchToStore } from "../../../../stores";
 import type { FocusFromItemPayload } from "../../../../stores/type";
 import { storeToRefs } from "pinia";
+import { useKeyboardNavigationStore } from "../../../../stores/keyboard-navigation";
 
 const store = useSwitchToStore();
 
@@ -76,7 +77,7 @@ const {
 } = storeToRefs(store);
 
 function changeFocus(payload: FocusFromItemPayload): void {
-    store.changeFocusFromHistory(payload);
+    useKeyboardNavigationStore().changeFocusFromHistory(payload);
 }
 
 const has_no_history = computed((): boolean => {

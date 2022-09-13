@@ -28,6 +28,7 @@ import type { QueryResults } from "../helpers/search-querier";
 import { querier } from "../helpers/search-querier";
 import type { ItemDefinition } from "../type";
 import type { ResultAsync } from "neverthrow";
+import { useKeyboardNavigationStore } from "./keyboard-navigation";
 
 export const useFullTextStore = defineStore("fulltext", () => {
     const fulltext_search_url = ref<FullTextState["fulltext_search_url"]>("/api/v1/search");
@@ -92,7 +93,7 @@ export const useFullTextStore = defineStore("fulltext", () => {
     function focusFirstSearchResult(): void {
         const result_keys = Object.keys(fulltext_search_results.value);
         if (result_keys.length > 0) {
-            useSwitchToStore().setProgrammaticallyFocusedElement(
+            useKeyboardNavigationStore().setProgrammaticallyFocusedElement(
                 fulltext_search_results.value[result_keys[0]]
             );
         }
@@ -104,14 +105,15 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
-        const root_store = useSwitchToStore();
+        const navigation_store = useKeyboardNavigationStore();
         if (key === "ArrowRight") {
             if (payload.entry.quick_links.length > 0) {
-                root_store.setProgrammaticallyFocusedElement(payload.entry.quick_links[0]);
+                navigation_store.setProgrammaticallyFocusedElement(payload.entry.quick_links[0]);
             }
             return;
         }
 
+        const root_store = useSwitchToStore();
         const result_keys = Object.keys(fulltext_search_results.value);
         const current_index = result_keys.findIndex(
             (html_url: string) => html_url === payload.entry.html_url
@@ -119,13 +121,13 @@ export const useFullTextStore = defineStore("fulltext", () => {
         const is_first_result = current_index === 0;
         if (is_first_result && key === "ArrowUp") {
             if (root_store.filtered_history.entries.length > 0) {
-                root_store.setProgrammaticallyFocusedElement(
+                navigation_store.setProgrammaticallyFocusedElement(
                     root_store.filtered_history.entries[
                         root_store.filtered_history.entries.length - 1
                     ]
                 );
             } else if (root_store.filtered_projects.length > 0) {
-                root_store.setProgrammaticallyFocusedElement(
+                navigation_store.setProgrammaticallyFocusedElement(
                     root_store.filtered_projects[root_store.filtered_projects.length - 1]
                 );
             }
@@ -151,8 +153,8 @@ export const useFullTextStore = defineStore("fulltext", () => {
             return;
         }
 
-        const root_store = useSwitchToStore();
-        root_store.setProgrammaticallyFocusedElement(
+        const navigation_store = useKeyboardNavigationStore();
+        navigation_store.setProgrammaticallyFocusedElement(
             fulltext_search_results.value[result_keys[focused_index]]
         );
     }
