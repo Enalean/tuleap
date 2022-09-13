@@ -31,8 +31,11 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     const app = createApp(GitlabGroupLinkAppComponent);
     const pinia = createPinia();
 
-    app.use(createInitializedRouter(getDatasetItemFromMountPoint("currentProjectUnixName")));
+    const base_url = `/plugins/git/${encodeURIComponent(
+        getDatasetItemFromMountPoint("currentProjectUnixName")
+    )}/administration/gitlab/`;
 
+    app.use(createInitializedRouter(base_url));
     app.use(
         await initVueGettext(createGettext, (locale: string) => {
             return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
@@ -40,7 +43,9 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     );
 
     app.use(pinia);
-    useRootStore().setCurrentProject({
+    const root_store = useRootStore();
+    root_store.setBaseUrl(base_url);
+    root_store.setCurrentProject({
         id: Number.parseInt(getDatasetItemFromMountPoint("currentProjectId"), 10),
         public_name: getDatasetItemFromMountPoint("currentProjectName"),
     });

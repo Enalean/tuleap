@@ -40,6 +40,7 @@ use Tuleap\Gitlab\Artifact\Action\CreateBranchButtonFetcher;
 use Tuleap\Gitlab\Artifact\Action\CreateBranchPrefixDao;
 use Tuleap\Gitlab\Artifact\ArtifactRetriever;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Group\GitlabGroupDAO;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\Reference\Branch\BranchReferenceSplitValuesDao;
 use Tuleap\Gitlab\Reference\Branch\GitlabBranchCrossReferenceEnhancer;
@@ -978,6 +979,7 @@ class gitlabPlugin extends Plugin implements PluginWithConfigKeys
                 new IncludeViteAssets(__DIR__ . '/../frontend-assets/gitlab-group-link', '/assets/gitlab/gitlab-group-link'),
                 'src/index.ts'
             ),
+            new GitlabGroupDAO(),
             $git_plugin->getHeaderRenderer(),
             $git_plugin->getMirrorDataMapper(),
             new GitPermissionsManager(

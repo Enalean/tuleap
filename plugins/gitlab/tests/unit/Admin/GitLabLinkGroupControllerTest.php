@@ -28,6 +28,8 @@ use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitPresenters\AdminExternalPanePresenter;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Gitlab\Group\VerifyProjectIsAlreadyLinked;
+use Tuleap\Gitlab\Test\Stubs\VerifyProjectIsAlreadyLinkedStub;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\ProjectByUnixNameFactory;
@@ -91,7 +93,8 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $controller = $this->getController(
             ProjectByUnixUnixNameFactory::buildWithoutProject(),
-            EventDispatcherStub::withIdentityCallback()
+            EventDispatcherStub::withIdentityCallback(),
+            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
         );
 
         $this->expectException(NotFoundException::class);
@@ -115,7 +118,8 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $controller = $this->getController(
             ProjectByUnixUnixNameFactory::buildWith($project),
-            EventDispatcherStub::withIdentityCallback()
+            EventDispatcherStub::withIdentityCallback(),
+            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
         );
 
         $this->expectException(NotFoundException::class);
@@ -135,7 +139,8 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $controller = $this->getController(
             ProjectByUnixUnixNameFactory::buildWith($this->project),
-            EventDispatcherStub::withIdentityCallback()
+            EventDispatcherStub::withIdentityCallback(),
+            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
         );
 
         $this->expectException(ForbiddenException::class);
@@ -165,10 +170,15 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('renderToPage')
             ->with(
                 'git-administration-gitlab-link-group',
-                new GitLabLinkGroupPanePresenter($this->project, false, [
-                    $gitlab_tab,
-                    $another_tab,
-                ])
+                new GitLabLinkGroupPanePresenter(
+                    $this->project,
+                    false,
+                    [
+                        $gitlab_tab,
+                        $another_tab,
+                    ],
+                    false
+                ),
             );
 
         $this->getController(
@@ -180,7 +190,8 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
                     }
                     return $event;
                 }
-            )
+            ),
+            VerifyProjectIsAlreadyLinkedStub::withNeverLinked()
         )->process(
             $this->request,
             $this->layout,
@@ -193,11 +204,13 @@ class GitLabLinkGroupControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getController(
         ProjectByUnixNameFactory $project_by_id_factory,
         EventDispatcherInterface $event_dispatcher,
+        VerifyProjectIsAlreadyLinked $verify_project_is_already_linked,
     ): GitLabLinkGroupController {
         return new GitLabLinkGroupController(
             $project_by_id_factory,
             $event_dispatcher,
             $this->assets,
+            $verify_project_is_already_linked,
             $this->header_renderer,
             $this->mirror_data_mapper,
             $this->git_permission_manager,

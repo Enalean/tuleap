@@ -6,6 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "A group is already linked to this project."
+msgstr ""
+
 #, php-format
 msgid "An error occurred while creating the branch on GitLab: %s"
 msgstr ""
@@ -49,6 +52,9 @@ msgid "GitLab merge request"
 msgstr ""
 
 msgid "GitLab tag"
+msgstr ""
+
+msgid "Linked group information"
 msgstr ""
 
 msgid "Merged"

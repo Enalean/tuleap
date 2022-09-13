@@ -31,6 +31,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Gitlab\Group\VerifyProjectIsAlreadyLinked;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Project\ProjectByUnixNameFactory;
@@ -46,6 +47,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
         private ProjectByUnixNameFactory $project_manager,
         private EventDispatcherInterface $event_manager,
         private JavascriptAssetGeneric $assets,
+        private VerifyProjectIsAlreadyLinked $project_linked_verifier,
         private HeaderRenderer $header_renderer,
         private Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         private GitPermissionsManager $git_permissions_manager,
@@ -70,7 +72,10 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
             throw new ForbiddenException(dgettext("tuleap-hudson_git", 'User is not Git administrator.'));
         }
 
-        $layout->addJavascriptAsset($this->assets);
+        $is_a_group_already_linked = $this->project_linked_verifier->isProjectAlreadyLinked((int) $project->getID());
+        if (! $is_a_group_already_linked) {
+            $layout->addJavascriptAsset($this->assets);
+        }
 
         $this->header_renderer->renderServiceAdministrationHeader(
             $request,
@@ -87,6 +92,7 @@ final class GitLabLinkGroupController implements DispatchableWithRequest, Dispat
                 $project,
                 ! empty($this->mirror_data_mapper->fetchAllForProject($project)),
                 $event->getExternalPanePresenters(),
+                $is_a_group_already_linked
             )
         );
 

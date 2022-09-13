@@ -56,9 +56,6 @@ msgstr "URL du serveur GitLab"
 msgid "Group"
 msgstr "Groupe"
 
-msgid "Group associated and synchronized successfully"
-msgstr "Groupe lié et synchronisé avec succès"
-
 msgid ""
 "If selected, artifacts of this project can be closed with GitLab commit "
 "messages from the selected repository."
