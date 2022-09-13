@@ -425,10 +425,17 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
 %description plugin-roadmap
 %{summary}.
 
+%package plugin-fts-common
+Summary: Common parts of full-Text search backends
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-fts-common
+%{summary}.
+
 %package plugin-fts-db
 Summary: Full-Text search DB backend
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-fts-common
 %description plugin-fts-db
 %{summary}.
 
@@ -599,6 +606,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tee_container
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_common
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fts_db
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
@@ -1442,6 +1450,10 @@ fi
 %files plugin-roadmap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/roadmap
+
+%files plugin-fts-common
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fts_common
 
 %files plugin-fts-db
 %defattr(-,root,root,-)

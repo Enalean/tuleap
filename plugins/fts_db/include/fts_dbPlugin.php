@@ -20,20 +20,11 @@
 
 declare(strict_types=1);
 
-use Tuleap\CLI\CLICommandsCollector;
-use Tuleap\FullTextSearchDB\CLI\IdentifyAllItemsToIndexCommand;
-use Tuleap\FullTextSearchDB\CLI\IndexAllPendingItemsCommand;
-use Tuleap\FullTextSearchDB\Index\Asynchronous\IndexingWorkerEventDispatcher;
-use Tuleap\FullTextSearchDB\REST\ResourcesInjector;
-use Tuleap\Queue\WorkerEvent;
-use Tuleap\Search\IdentifyAllItemsToIndexEvent;
-use Tuleap\Search\IndexedItemsToRemove;
-use Tuleap\Search\ItemToIndex;
-
+require_once __DIR__ . '/../../fts_common/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class fts_dbPlugin extends Plugin
+final class fts_dbPlugin extends \Tuleap\FullTextSearchCommon\FullTextSearchBackendPlugin
 {
     private const MAX_ITEMS_PER_BATCH = 128;
 
@@ -60,73 +51,23 @@ final class fts_dbPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function getHooksAndCallbacks(): Collection
+    protected function getIndexSearcher(): \Tuleap\FullTextSearchCommon\Index\SearchIndexedItem
     {
-        $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(ItemToIndex::NAME);
-        $this->addHook(IndexedItemsToRemove::NAME);
-        $this->addHook(WorkerEvent::NAME);
-        $this->addHook(CLICommandsCollector::NAME);
-
-        return parent::getHooksAndCallbacks();
+        return new \Tuleap\FullTextSearchDB\Index\SearchDAO();
     }
 
-    public function getInstallRequirements(): array
+    protected function getItemInserter(): \Tuleap\FullTextSearchCommon\Index\InsertItemsIntoIndex
     {
-        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
+        return new \Tuleap\FullTextSearchDB\Index\SearchDAO();
     }
 
-    public function postEnable(): void
+    protected function getItemRemover(): \Tuleap\FullTextSearchCommon\Index\DeleteIndexedItems
     {
-        parent::postEnable();
-        (EventManager::instance())->dispatch(new IdentifyAllItemsToIndexEvent());
+        return new \Tuleap\FullTextSearchDB\Index\SearchDAO();
     }
 
-    /**
-     * @see REST_RESOURCES
-     */
-    public function restResources(array $params): void
+    protected function getBatchQueue(): \Tuleap\Search\ItemToIndexBatchQueue
     {
-        $injector = new ResourcesInjector();
-        $injector->populate($params['restler']);
-    }
-
-    public function indexItem(ItemToIndex $item): void
-    {
-        (new \Tuleap\Queue\EnqueueTask())->enqueue(
-            \Tuleap\FullTextSearchDB\Index\Asynchronous\IndexItemTask::fromItemToIndex($item)
-        );
-    }
-
-    public function removeIndexedItems(IndexedItemsToRemove $items_to_remove): void
-    {
-        (new \Tuleap\Queue\EnqueueTask())->enqueue(
-            \Tuleap\FullTextSearchDB\Index\Asynchronous\RemoveItemsFromIndexTask::fromItemsToRemove($items_to_remove)
-        );
-    }
-
-    public function workerEvent(WorkerEvent $event): void
-    {
-        $search_dao = new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO();
-        (new IndexingWorkerEventDispatcher($search_dao, $search_dao))->process($event);
-    }
-
-    public function collectCLICommands(CLICommandsCollector $collector): void
-    {
-        $collector->addCommand(
-            IndexAllPendingItemsCommand::NAME,
-            function (): IndexAllPendingItemsCommand {
-                return new IndexAllPendingItemsCommand(
-                    EventManager::instance(),
-                    new \Tuleap\FullTextSearchDB\Index\ItemToIndexLimitedBatchQueue(new \Tuleap\FullTextSearchDB\Index\Adapter\SearchDAO(), self::MAX_ITEMS_PER_BATCH)
-                );
-            }
-        );
-        $collector->addCommand(
-            IdentifyAllItemsToIndexCommand::NAME,
-            function (): IdentifyAllItemsToIndexCommand {
-                return new IdentifyAllItemsToIndexCommand(EventManager::instance());
-            }
-        );
+        return new \Tuleap\FullTextSearchCommon\Index\ItemToIndexLimitedBatchQueue($this->getItemInserter(), self::MAX_ITEMS_PER_BATCH);
     }
 }

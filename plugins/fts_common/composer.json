@@ -1,0 +1,13 @@
+{
+    "name": "tuleap/plugin-fts_common",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchCommon\\": "include/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\FullTextSearchCommon\\": "tests/unit/"
+        }
+    }
+}
