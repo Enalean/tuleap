@@ -19,7 +19,7 @@
 
 describe("Frs", function () {
     let project_id: string;
-    const now: number = Date.now();
+    let now: number;
 
     context("Project administrators", function () {
         before(() => {
@@ -31,6 +31,7 @@ describe("Frs", function () {
         beforeEach(() => {
             cy.preserveSessionCookies();
             cy.visitProjectService("frs-project", "Files");
+            now = Date.now();
         });
 
         it("can access to admin section", function () {
