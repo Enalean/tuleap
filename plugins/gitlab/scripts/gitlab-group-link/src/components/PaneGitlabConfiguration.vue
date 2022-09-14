@@ -198,7 +198,8 @@ function onClickLinkGroupAndSynchronize(event: Event): void {
                     $gettext(
                         "An error occurred while linking the selected group and synchronizing its repositories: %{ error }"
                     ),
-                    { error: String(fault) }
+                    { error: String(fault) },
+                    true
                 );
             }
         )

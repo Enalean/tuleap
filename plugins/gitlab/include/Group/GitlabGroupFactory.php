@@ -32,13 +32,13 @@ final class GitlabGroupFactory
     }
 
     /**
-     * @throws GitlabGroupAlreadyExistsException
+     * @throws GitlabGroupAlreadyLinkedToProjectException
      * @throws ProjectAlreadyLinkedToGitlabGroupException
      */
     public function createGroup(NewGroup $gitlab_group): GitlabGroup
     {
         if ($this->group_integrated_verifier->isGroupAlreadyLinked($gitlab_group->gitlab_group_id)) {
-            throw new GitlabGroupAlreadyExistsException($gitlab_group->name);
+            throw new GitlabGroupAlreadyLinkedToProjectException($gitlab_group->gitlab_group_id);
         }
 
         if ($this->project_linked_verifier->isProjectAlreadyLinked($gitlab_group->project_id)) {

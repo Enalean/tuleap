@@ -85,6 +85,7 @@
                         </div>
                         <div class="gitlab-server-step-action-buttons">
                             <button
+                                type="button"
                                 v-on:click="onClickCancel"
                                 class="tlp-button-primary tlp-button-outline"
                                 data-test="gitlab-group-link-cancel-button"
@@ -205,7 +206,8 @@ function onClickFetchGitLabGroups(event: Event): void {
 
                 error_message.value = interpolate(
                     $gettext("Unable to reach the GitLab server: %{ error }"),
-                    { error: String(fault) }
+                    { error: String(fault) },
+                    true
                 );
             }
         )

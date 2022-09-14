@@ -76,7 +76,7 @@ final class GroupCreator
                 $new_group
             );
         } catch (
-            GitlabGroupAlreadyExistsException
+            GitlabGroupAlreadyLinkedToProjectException
             | ProjectAlreadyLinkedToGitlabGroupException
             | GitlabRequestException
             | GitlabResponseAPIException $exception

@@ -78,7 +78,7 @@ final class GitlabGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->group_verifier = VerifyGroupIsAlreadyLinkedStub::withAlwaysLinked();
 
-        $this->expectException(GitlabGroupAlreadyExistsException::class);
+        $this->expectException(GitlabGroupAlreadyLinkedToProjectException::class);
         $this->createGroup();
     }
 
