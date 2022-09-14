@@ -24,7 +24,10 @@ namespace Tuleap\Search;
 
 interface ProgressQueueIndexItemCategory
 {
-    public function start(int $total_items): void;
-    public function advance(): void;
-    public function done(): void;
+    /**
+     * @template T
+     * @psalm-param iterable<T> $iterable
+     * @psalm-return iterable<T>
+     */
+    public function iterate(iterable $iterable): iterable;
 }
