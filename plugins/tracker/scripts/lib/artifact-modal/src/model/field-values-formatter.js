@@ -26,7 +26,7 @@ import {
 } from "../adapters/REST/fields/open-list-field/open-list-field-initializer";
 import { formatExistingValue as formatForTextFieldValue } from "../fields/text-field/text-field-value-formatter.js";
 import { cleanValue as defaultForIntField } from "../fields/int-field/int-field-value-formatter";
-import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttach";
+import { NewFileToAttach } from "../domain/fields/file-field/NewFileToAttach";
 import { Fault, isFault } from "@tuleap/fault";
 
 /**

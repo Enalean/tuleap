@@ -19,7 +19,7 @@
 
 import moment from "moment";
 import { getSelectedValues } from "./field-values-formatter.js";
-import { NewFileToAttach } from "../adapters/UI/fields/file-field/NewFileToAttach";
+import { NewFileToAttach } from "../domain/fields/file-field/NewFileToAttach";
 
 describe("TuleapArtifactFieldValues", () => {
     describe("getSelectedValues() -", () => {

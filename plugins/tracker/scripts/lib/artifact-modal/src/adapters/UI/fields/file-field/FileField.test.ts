@@ -24,12 +24,12 @@ import {
     getAddNewFileToAttachButtonTemplate,
     getAttachedFileTemplate,
 } from "./FileField";
-import type { AttachedFileDescription } from "./AttachedFileDescription";
+import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
 import { setCatalog } from "../../../../gettext-catalog";
 import { AttachedFileDescriptionStub } from "../../../../../tests/stubs/AttachedFileDescriptionStub";
-import { NewFileToAttach } from "./NewFileToAttach";
-import type { FileFieldType } from "./FileFieldType";
-import type { FileFieldValueModel } from "./FileFieldValueModel";
+import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
+import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
+import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
 import { FileFieldController } from "./FileFieldController";
 
 jest.mock("pretty-kibibytes", () => {

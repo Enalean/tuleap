@@ -29,8 +29,8 @@ import {
     getMarkForRemovalLabel,
     getUndoFileRemovalLabel,
 } from "../../../../gettext-catalog";
-import type { AttachedFileDescription } from "./AttachedFileDescription";
-import type { FileFieldType } from "./FileFieldType";
+import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
+import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
 import "./NewFileToAttachElement";
 import type { AttachedFileCollection, FileFieldControllerType } from "./FileFieldController";
 import type { NewFileToAttachCollection } from "./FileFieldController";

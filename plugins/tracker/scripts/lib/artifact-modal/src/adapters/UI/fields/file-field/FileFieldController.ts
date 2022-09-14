@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FileFieldValueModel } from "./FileFieldValueModel";
-import { NewFileToAttach } from "./NewFileToAttach";
-import type { AttachedFileDescription } from "./AttachedFileDescription";
-import type { FileFieldType } from "./FileFieldType";
+import type { FileFieldValueModel } from "../../../../domain/fields/file-field/FileFieldValueModel";
+import { NewFileToAttach } from "../../../../domain/fields/file-field/NewFileToAttach";
+import type { AttachedFileDescription } from "../../../../domain/fields/file-field/AttachedFileDescription";
+import type { FileFieldType } from "../../../../domain/fields/file-field/FileFieldType";
 
 export type NewFileToAttachCollection = ReadonlyArray<NewFileToAttach>;
 export type AttachedFileCollection = ReadonlyArray<AttachedFileDescription> | undefined;
