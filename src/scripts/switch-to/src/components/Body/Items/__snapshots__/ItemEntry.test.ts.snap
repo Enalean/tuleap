@@ -8,40 +8,31 @@ exports[`ItemEntry Displays a link with a cross ref 1`] = `
     class="switch-to-item-entry-with-links switch-to-item-entry-with-links-with-badge"
   >
     <a
-      class="switch-to-item-entry-link lake-placid-blue"
+      class="lake-placid-blue switch-to-item-entry-link"
       data-test="entry-link"
     >
       <i
         aria-hidden="true"
         class="fa fa-fw switch-to-item-entry-icon fa-columns"
       />
-       
       <span
         class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
       >
-        <highlight-matching-text-stub>
-          art #123
-        </highlight-matching-text-stub>
+        <highlight-matching-text-stub
+          text="art #123"
+        />
       </span>
-       
       <highlight-matching-text-stub
         class="switch-to-item-entry-label"
-      >
-        
-                Lorem ipsum
-            
-      </highlight-matching-text-stub>
+        text="Lorem ipsum"
+      />
     </a>
-     
-    <!---->
+    <!--v-if-->
   </div>
-   
   <span
     class="switch-to-item-project"
   >
-    
-        Guinea Pig
-    
+    Guinea Pig
   </span>
 </div>
 `;
@@ -54,34 +45,29 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
     class="switch-to-item-entry-with-links switch-to-item-entry-with-links-with-badge"
   >
     <a
-      class="switch-to-item-entry-link lake-placid-blue"
+      class="lake-placid-blue switch-to-item-entry-link"
       data-test="entry-link"
     >
       <i
         aria-hidden="true"
         class="fa fa-fw switch-to-item-entry-icon fa-columns"
       />
-       
       <span
         class="switch-to-item-entry-badge cross-ref-badge cross-ref-badge-on-dark-background tlp-swatch-lake-placid-blue"
       >
-        <highlight-matching-text-stub>
-          art #123
-        </highlight-matching-text-stub>
+        <highlight-matching-text-stub
+          text="art #123"
+        />
       </span>
-       
       <highlight-matching-text-stub
         class="switch-to-item-entry-label"
-      >
-        
-                Lorem ipsum
-            
-      </highlight-matching-text-stub>
+        text="Lorem ipsum"
+      />
     </a>
-     
     <div
       class="switch-to-item-entry-quick-links"
     >
+      
       <quick-link-stub
         class="switch-to-item-entry-quick-links-link"
         item="[object Object]"
@@ -92,15 +78,13 @@ exports[`ItemEntry Displays a link with a quick links 1`] = `
         item="[object Object]"
         link="[object Object]"
       />
+      
     </div>
   </div>
-   
   <span
     class="switch-to-item-project"
   >
-    
-        Guinea Pig
-    
+    Guinea Pig
   </span>
 </div>
 `;
@@ -113,34 +97,25 @@ exports[`ItemEntry Displays a link with an icon 1`] = `
     class="switch-to-item-entry-with-links"
   >
     <a
-      class="switch-to-item-entry-link lake-placid-blue"
+      class="lake-placid-blue switch-to-item-entry-link"
       data-test="entry-link"
     >
       <i
         aria-hidden="true"
         class="fa fa-fw switch-to-item-entry-icon fa-columns"
       />
-       
-      <!---->
-       
+      <!--v-if-->
       <highlight-matching-text-stub
         class="switch-to-item-entry-label"
-      >
-        
-                Kanban
-            
-      </highlight-matching-text-stub>
+        text="Kanban"
+      />
     </a>
-     
-    <!---->
+    <!--v-if-->
   </div>
-   
   <span
     class="switch-to-item-project"
   >
-    
-        Guinea Pig
-    
+    Guinea Pig
   </span>
 </div>
 `;

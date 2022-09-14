@@ -13,25 +13,20 @@ exports[`ProjectLink Displays the link to a project 1`] = `
     <i
       class="fas fa-fw switch-to-projects-project-icon fa-lock-open"
     />
-     
     <span
       class="switch-to-projects-project-label"
     >
       <span
         class="switch-to-projects-project-label-icon"
       >
-        
-                🐹
-            
+        🐹
       </span>
-       
-      <highlight-matching-text-stub>
-        
-                Guinea Pig
-            
-      </highlight-matching-text-stub>
+      <highlight-matching-text-stub
+        text="Guinea Pig"
+      />
     </span>
   </a>
-   
+  
+  
 </div>
 `;

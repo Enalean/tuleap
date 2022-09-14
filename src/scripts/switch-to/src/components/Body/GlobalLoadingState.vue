@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="switch-to-modal-body-global-loading">
         <p>
             <span class="tlp-skeleton-text"></span>

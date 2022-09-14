@@ -22,11 +22,8 @@
     <section class="empty-state-pane switch-to-projects-empty">
         <projects-empty-state-svg />
 
-        <p
-            class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text"
-            v-translate
-        >
-            You don't belong to any projects
+        <p class="empty-state-text empty-state-text-smaller switch-to-projects-empty-text">
+            {{ $gettext("You don't belong to any projects") }}
         </p>
 
         <trove-cat-link

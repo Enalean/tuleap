@@ -38,7 +38,9 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
 use Tuleap\Layout\NewDropdown\NewDropdownPresenterBuilder;
@@ -129,6 +131,14 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     public function header(HeaderConfiguration|array $params): void
     {
+        $this->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../frontend-assets/switch-to',
+                '/assets/core/switch-to'
+            ),
+            'src/index-fp.ts'
+        ));
+
         $this->header_has_been_written = true;
 
         if ($params instanceof HeaderConfiguration) {

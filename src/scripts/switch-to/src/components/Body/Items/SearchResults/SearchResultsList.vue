@@ -21,12 +21,15 @@
 <template>
     <div class="switch-to-search-results-list">
         <item-entry
-            v-for="(item, key) of results"
+            v-for="(item, key) of fulltext_search_results"
             v-bind:key="key"
             v-bind:entry="item"
             v-bind:change-focus-callback="changeFocus"
         />
-        <div v-if="has_more" class="switch-to-search-results-list-has-more tlp-text-muted">
+        <div
+            v-if="fulltext_search_has_more_results"
+            class="switch-to-search-results-list-has-more tlp-text-muted"
+        >
             {{ $gettext("There are more results, please refine your search.") }}
         </div>
     </div>
@@ -34,14 +37,12 @@
 
 <script setup lang="ts">
 import { useFullTextStore } from "../../../../stores/fulltext";
-import { computed } from "vue";
-import type { ItemDefinition } from "../../../../type";
 import ItemEntry from "../ItemEntry.vue";
 import type { FocusFromItemPayload } from "../../../../stores/type";
+import { storeToRefs } from "pinia";
 
 const fulltext_store = useFullTextStore();
-const results = computed((): ItemDefinition[] => fulltext_store.fulltext_search_results);
-const has_more = computed((): ItemDefinition[] => fulltext_store.fulltext_search_has_more_results);
+const { fulltext_search_results, fulltext_search_has_more_results } = storeToRefs(fulltext_store);
 
 function changeFocus(payload: FocusFromItemPayload): void {
     fulltext_store.changeFocusFromSearchResult(payload);

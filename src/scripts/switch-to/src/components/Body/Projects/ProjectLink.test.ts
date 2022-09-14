@@ -22,14 +22,13 @@ import type { Project } from "../../../type";
 import ProjectLink from "./ProjectLink.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useKeyboardNavigationStore } from "../../../stores/keyboard-navigation";
-import { createSwitchToLocalVue } from "../../../helpers/local-vue-for-test";
 import type { KeyboardNavigationState, State } from "../../../stores/type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ProjectLink", () => {
-    it("Displays the link to a project", async () => {
+    it("Displays the link to a project", () => {
         const wrapper = shallowMount(ProjectLink, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 project: {
                     is_public: true,
                     project_name: "Guinea Pig",
@@ -37,13 +36,15 @@ describe("ProjectLink", () => {
                     icon: "🐹",
                 } as Project,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        are_restricted_users_allowed: true,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            are_restricted_users_allowed: true,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -57,17 +58,18 @@ describe("ProjectLink", () => {
         } as Project;
 
         const wrapper = shallowMount(ProjectLink, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 project,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        are_restricted_users_allowed: true,
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            are_restricted_users_allowed: true,
+                        },
                     },
-                },
-            }),
+                })
+            ),
         });
 
         const key = "ArrowUp";
@@ -87,20 +89,21 @@ describe("ProjectLink", () => {
         } as Project;
 
         const wrapper = shallowMount(ProjectLink, {
-            localVue: await createSwitchToLocalVue(),
-            propsData: {
+            props: {
                 project,
             },
-            pinia: createTestingPinia({
-                initialState: {
-                    root: {
-                        are_restricted_users_allowed: true,
-                    } as State,
-                    "keyboard-navigation": {
-                        programmatically_focused_element: null,
-                    } as KeyboardNavigationState,
-                },
-            }),
+            global: getGlobalTestOptions(
+                createTestingPinia({
+                    initialState: {
+                        root: {
+                            are_restricted_users_allowed: true,
+                        } as State,
+                        "keyboard-navigation": {
+                            programmatically_focused_element: null,
+                        } as KeyboardNavigationState,
+                    },
+                })
+            ),
         });
 
         const link = wrapper.find("[data-test=project-link]");

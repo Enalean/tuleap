@@ -42,7 +42,9 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfiguration;
+use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\Logo\CachedCustomizedLogoDetector;
 use Tuleap\Layout\Logo\CustomizedLogoDetector;
 use Tuleap\Layout\Logo\FileContentComparator;
@@ -119,7 +121,14 @@ class BurningParrotTheme extends BaseLayout
             $this->include_asset->getFileURLWithFallback('tlp-' . $this->current_user->user->getLocale() . '.js', 'tlp-en_US.js')
         );
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('switch-to-bp.js'));
+
+        $this->addJavascriptAsset(new JavascriptViteAsset(
+            new IncludeViteAssets(
+                __DIR__ . '/../../../frontend-assets/switch-to',
+                '/assets/core/switch-to'
+            ),
+            'src/index-bp.ts'
+        ));
     }
 
     protected function getUser()

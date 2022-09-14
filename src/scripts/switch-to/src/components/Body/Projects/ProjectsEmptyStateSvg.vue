@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg
         width="58"
         height="65"

@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,20 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import type { Vue } from "vue/types/vue";
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import { PiniaVuePlugin } from "pinia";
+import { env } from "process";
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-export async function createSwitchToLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-    local_vue.use(PiniaVuePlugin);
+env.DISABLE_TS_TYPECHECK = "true";
 
-    return local_vue;
-}
+const jest_base_config = defineJestConfiguration();
+export default {
+    ...jest_base_config,
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
+    testPathIgnorePatterns: ["/node_modules/"],
+    displayName: "switch-to",
+};

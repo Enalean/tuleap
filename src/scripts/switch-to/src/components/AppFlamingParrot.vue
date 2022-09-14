@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import $ from "jquery";
+import jQuery from "jquery";
 import SwitchToHeader from "./Header/SwitchToHeader.vue";
 import SwitchToBody from "./Body/SwitchToBody.vue";
 import { useSwitchToStore } from "../stores";
@@ -47,13 +47,15 @@ onMounted((): void => {
     }
     const store = useSwitchToStore();
 
-    $(modal.value)
+    jQuery(modal.value)
         // Force autofocus for bootstrap modal
         .on("shown", () => {
             store.loadHistory();
-            const input = modal.value.querySelector("input");
-            if (input) {
-                input.focus();
+            if (modal.value) {
+                const input = modal.value.querySelector("input");
+                if (input) {
+                    input.focus();
+                }
             }
         })
         // Clear filter for bootstrap modal

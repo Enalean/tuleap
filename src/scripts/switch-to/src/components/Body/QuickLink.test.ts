@@ -19,10 +19,9 @@
 
 import type { ItemDefinition, QuickLink } from "../../type";
 import { shallowMount } from "@vue/test-utils";
-import { createTestingPinia } from "@pinia/testing";
-import { createSwitchToLocalVue } from "../../helpers/local-vue-for-test";
 import { default as QuickLinkComponent } from "./QuickLink.vue";
 import { useKeyboardNavigationStore } from "../../stores/keyboard-navigation";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLink", () => {
     it.each(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"])(
@@ -40,13 +39,12 @@ describe("QuickLink", () => {
             } as ItemDefinition;
 
             const wrapper = shallowMount(QuickLinkComponent, {
-                propsData: {
+                props: {
                     link: quick_link,
                     item,
                     project: null,
                 },
-                pinia: createTestingPinia(),
-                localVue: await createSwitchToLocalVue(),
+                global: getGlobalTestOptions(),
             });
 
             await wrapper.trigger("keydown", { key });

@@ -23,6 +23,7 @@
         v-bind:query="keywords"
         v-bind:highlight-class="'tlp-mark-on-dark-background'"
         v-bind:split-by-space="true"
+        v-bind:text-to-highlight="text"
         class="switch-to-recent-items-entry-label"
     >
         <slot></slot>
@@ -33,6 +34,8 @@
 import WordHighlighter from "vue-word-highlighter";
 import { useSwitchToStore } from "../../stores";
 import { computed } from "vue";
+
+defineProps<{ text: string }>();
 
 const root_store = useSwitchToStore();
 const keywords = computed((): string => root_store.keywords);

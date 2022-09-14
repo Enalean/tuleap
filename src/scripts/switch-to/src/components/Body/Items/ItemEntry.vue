@@ -42,11 +42,12 @@
                     v-bind:class="xref_color"
                     v-if="entry.xref"
                 >
-                    <highlight-matching-text>{{ entry.xref }}</highlight-matching-text>
+                    <highlight-matching-text v-bind:text="entry.xref" />
                 </span>
-                <highlight-matching-text class="switch-to-item-entry-label">
-                    {{ entry.title }}
-                </highlight-matching-text>
+                <highlight-matching-text
+                    class="switch-to-item-entry-label"
+                    v-bind:text="entry.title || ''"
+                />
             </a>
             <div class="switch-to-item-entry-quick-links" v-if="has_quick_links">
                 <quick-link

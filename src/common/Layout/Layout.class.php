@@ -362,7 +362,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         $this->includeJavascriptFile($this->include_asset->getFileURL('ckeditor.js'));
         $this->includeJavascriptFile($this->include_asset->getFileURL('rich-text-editor-including-prototypejs.js'));
-        $this->includeJavascriptFile($this->include_asset->getFileURL('switch-to-fp.js'));
 
         //Javascript i18n
         echo '<script type="text/javascript" nonce="' . $this->purifier->purify($this->getCSPNonce()) . '">' . "\n";

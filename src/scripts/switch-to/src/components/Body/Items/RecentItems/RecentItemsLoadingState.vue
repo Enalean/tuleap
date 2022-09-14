@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="switch-to-recent-items-loading">
         <h2 class="tlp-modal-subtitle switch-to-modal-body-title" v-translate>Recent items</h2>
         <p>
