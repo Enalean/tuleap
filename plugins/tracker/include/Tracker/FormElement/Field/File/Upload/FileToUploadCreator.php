@@ -61,59 +61,50 @@ final class FileToUploadCreator
         string $filename,
         int $filesize,
         string $filetype,
+        string $description,
     ): FileToUpload {
         if ($filesize > $this->max_size_upload) {
             throw new UploadMaxSizeExceededException($filesize, $this->max_size_upload);
         }
 
+        $new_upload = NewFileUpload::fromComponents(
+            $field,
+            $filename,
+            $filesize,
+            $filetype,
+            $description,
+            $user,
+            $this->getExpirationDate($current_time)
+        );
+
         $this->transaction_executor->execute(
-            function () use (
-                $field,
-                $user,
-                $current_time,
-                $filename,
-                $filesize,
-                $filetype,
-                &$id
-            ) {
-                $id = $this->searchFileOngoingUpload($field, $filename, $current_time, $user, $filesize);
+            function () use ($new_upload, $current_time, &$id) {
+                $id = $this->searchFileOngoingUpload($new_upload, $current_time);
                 if ($id) {
                     return;
                 }
 
-                $id = $this->dao->saveFileOngoingUpload(
-                    $this->getExpirationDate($current_time)->getTimestamp(),
-                    (int) $field->getId(),
-                    $filename,
-                    $filesize,
-                    $filetype,
-                    (int) $user->getId()
-                );
+                $id = $this->dao->saveFileOngoingUpload($new_upload);
             }
         );
 
         return new FileToUpload($id, $filename);
     }
 
-    private function searchFileOngoingUpload(
-        Tracker_FormElement_Field_File $field,
-        string $name,
-        DateTimeImmutable $current_time,
-        PFUser $user,
-        int $file_size,
-    ): ?int {
+    private function searchFileOngoingUpload(NewFileUpload $new_upload, \DateTimeImmutable $current_time): ?int
+    {
         $rows = $this->dao->searchFileOngoingUploadByFieldIdNameAndExpirationDate(
-            (int) $field->getId(),
-            $name,
+            $new_upload->file_field_id,
+            $new_upload->file_name,
             $current_time->getTimestamp()
         );
 
         foreach ($rows as $row) {
-            if ((int) $row['submitted_by'] !== (int) $user->getId() && $file_size === (int) $row['filesize']) {
+            if ((int) $row['submitted_by'] !== $new_upload->uploading_user_id && $new_upload->file_size === (int) $row['filesize']) {
                 throw new UploadCreationConflictException();
             }
 
-            if ($file_size === (int) $row['filesize']) {
+            if ($new_upload->file_size === (int) $row['filesize']) {
                 return (int) $row['id'];
             }
         }
