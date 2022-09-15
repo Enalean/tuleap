@@ -32,7 +32,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Artifact\Action\SaveIntegrationBranchPrefix;
 use Tuleap\Gitlab\Group\GitlabGroup;
-use Tuleap\Gitlab\Group\GitlabGroupAlreadyExistsException;
+use Tuleap\Gitlab\Group\GitlabGroupAlreadyLinkedToProjectException;
 use Tuleap\Gitlab\Group\GitlabGroupFactory;
 use Tuleap\Gitlab\Group\NewGroup;
 use Tuleap\Gitlab\Group\LinkARepositoryIntegrationToAGroup;
@@ -59,7 +59,7 @@ final class GitlabRepositoryGroupLinkHandler
     /**
      * @param GitlabProject[] $gitlab_projects
      *
-     * @throws GitlabGroupAlreadyExistsException
+     * @throws GitlabGroupAlreadyLinkedToProjectException
      * @throws ProjectAlreadyLinkedToGitlabGroupException
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException

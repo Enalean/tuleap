@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Group;
 
-use Exception;
-
-final class GitlabGroupAlreadyExistsException extends Exception
+final class GitlabGroupAlreadyLinkedToProjectException extends \Exception
 {
-    public function __construct(string $group_name)
+    public function __construct(int $gitlab_group_id)
     {
-        parent::__construct(sprintf("A group named '%s' already exists .", $group_name));
+        parent::__construct(sprintf('GitLab group #%d is already linked to a Tuleap project', $gitlab_group_id));
     }
 }
