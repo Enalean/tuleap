@@ -57,6 +57,7 @@ final class IndexAllPendingItemsCommand extends Command
                 }
             )
         );
+        $output->writeln('<info>All pending items have been added to the index queue</info>');
 
         return 0;
     }

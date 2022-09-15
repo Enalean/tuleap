@@ -29,27 +29,33 @@ use Tuleap\Search\ProgressQueueIndexItemCategory;
 
 final class ProgressQueueIndexItemCategorySymfonyOutput implements ProgressQueueIndexItemCategory
 {
-    private ProgressBar $progress_bar;
-
     public function __construct(private OutputInterface $output, private string $item_category)
     {
-        $this->progress_bar = new ProgressBar($this->output);
     }
 
-    public function start(int $total_items): void
+    public function iterate(iterable $iterable): iterable
     {
+        $nb_items = null;
+        if (is_countable($iterable)) {
+            $nb_items = count($iterable);
+
+            if ($nb_items === 0) {
+                return $iterable;
+            }
+        }
+
         $this->output->writeln(sprintf('Adding %s to the index queue', OutputFormatter::escape($this->item_category)));
-        $this->progress_bar->start($total_items);
-    }
 
-    public function advance(): void
-    {
-        $this->progress_bar->advance();
-    }
+        $progress_bar = new ProgressBar($this->output);
+        $progress_bar->start($nb_items ?? 0);
 
-    public function done(): void
-    {
-        $this->progress_bar->finish();
+        foreach ($iterable as $key => $value) {
+            yield $key => $value;
+
+            $progress_bar->advance();
+        }
+
+        $progress_bar->finish();
         $this->output->write(PHP_EOL);
     }
 }
