@@ -52,9 +52,9 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIndexItems(): void
     {
         $this->dao->indexItems(
-            new ItemToIndex('type', 'content A', ['A' => 'A', 'B' => 'B']),
-            new ItemToIndex('type', 'content B', ['A' => 'A', 'B' => 'B2']),
-            new ItemToIndex('type', 'AA', ['A' => 'A', 'B' => 'B3']), // Small content, not indexed
+            new ItemToIndex('type', 102, 'content A', ['A' => 'A', 'B' => 'B']),
+            new ItemToIndex('type', 102, 'content B', ['A' => 'A', 'B' => 'B2']),
+            new ItemToIndex('type', 102, 'AA', ['A' => 'A', 'B' => 'B3']), // Small content, not indexed
         );
 
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
@@ -64,15 +64,15 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUpdatesAlreadyIndexedItem(): void
     {
-        $this->dao->indexItems(new ItemToIndex('type', 'content', ['A' => 'A', 'B' => 'B']));
-        $this->dao->indexItems(new ItemToIndex('type', 'content updated', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItems(new ItemToIndex('type', 102, 'content', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItems(new ItemToIndex('type', 102, 'content updated', ['A' => 'A', 'B' => 'B']));
 
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
 
         self::assertEqualsCanonicalizing([['content' => 'content updated']], $result);
 
         // Drop the entry if content becomes empty
-        $this->dao->indexItems(new ItemToIndex('type', '   ', ['A' => 'A', 'B' => 'B']));
+        $this->dao->indexItems(new ItemToIndex('type', 102, '   ', ['A' => 'A', 'B' => 'B']));
 
         $result = $this->getDB()->run('SELECT content FROM plugin_fts_db_search');
 
@@ -82,8 +82,8 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSearchIndexedItems(): void
     {
         $this->dao->indexItems(
-            new ItemToIndex('type A', 'content content A value', ['A' => 'A', 'B' => 'B']),
-            new ItemToIndex('type B', 'content B value', ['A' => 'A', 'B' => 'B2']),
+            new ItemToIndex('type A', 102, 'content content A value', ['A' => 'A', 'B' => 'B']),
+            new ItemToIndex('type B', 102, 'content B value', ['A' => 'A', 'B' => 'B2']),
         );
 
         $this->searchMostRelevantItem();
@@ -117,7 +117,7 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItemsRemoval(): void
     {
-        $this->dao->indexItems(new ItemToIndex('type', 'content', ['A' => 'A']));
+        $this->dao->indexItems(new ItemToIndex('type', 102, 'content', ['A' => 'A']));
 
         // Type does not match, nothing should be deleted
         $this->dao->deleteIndexedItems(new IndexedItemsToRemove('anothertype', ['A' => 'A', 'B' => 'B']));
@@ -136,6 +136,20 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 
         // Type and metadata match, entry should be deleted
         $this->dao->deleteIndexedItems(new IndexedItemsToRemove('type', ['A' => 'A']));
+        self::assertEquals(0, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
+        self::assertEquals(0, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
+    }
+
+    public function testItemsRemoveWithProject(): void
+    {
+        $this->dao->indexItems(new ItemToIndex('type', 102, 'content', ['A' => 'A']));
+        $this->dao->indexItems(new ItemToIndex('type', 103, 'content', ['A' => 'A1']));
+
+        $this->dao->deleteIndexedItemsPerProjectID(102);
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
+        self::assertEquals(1, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
+
+        $this->dao->deleteIndexedItemsPerProjectID(103);
         self::assertEquals(0, $this->getDB()->single('SELECT COUNT(id) FROM plugin_fts_db_search'));
         self::assertEquals(0, $this->getDB()->single('SELECT COUNT(search_id) FROM plugin_fts_db_metadata'));
     }

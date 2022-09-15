@@ -49,8 +49,11 @@ final class IndexItemTask implements \Tuleap\Queue\QueueTask
 
         $payload = $worker_event->getPayload();
         if (
+            ! is_array($payload) ||
             ! isset($payload['type'], $payload['content'], $payload['metadata']) ||
+            ! array_key_exists('project_id', $payload) ||
             ! is_string($payload['type']) ||
+            ! ($payload['project_id'] === null || is_int($payload['project_id'])) ||
             ! is_string($payload['content']) ||
             ! is_array($payload['metadata']) ||
             count($payload['metadata']) === 0
@@ -61,7 +64,7 @@ final class IndexItemTask implements \Tuleap\Queue\QueueTask
             return null;
         }
 
-        return new ItemToIndex($payload['type'], $payload['content'], $payload['metadata']);
+        return new ItemToIndex($payload['type'], $payload['project_id'], $payload['content'], $payload['metadata']);
     }
 
     public function getTopic(): string

@@ -36,6 +36,7 @@ final class ItemToIndex implements Dispatchable
      */
     public function __construct(
         public string $type,
+        public ?int $project_id,
         public string $content,
         public array $metadata,
     ) {

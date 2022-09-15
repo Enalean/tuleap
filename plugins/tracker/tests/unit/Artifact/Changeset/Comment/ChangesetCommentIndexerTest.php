@@ -28,7 +28,6 @@ use Tracker_Artifact_Changeset_Comment;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueueEventBased;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stub\EventDispatcherStub;
@@ -46,12 +45,12 @@ final class ChangesetCommentIndexerTest extends TestCase
                 self::assertEquals(
                     new ItemToIndex(
                         'plugin_artifact_changeset_comment',
+                        (int) $artifact->getTracker()->getGroupId(),
                         'Some comment',
                         [
                             'changeset_id' => '888',
                             'artifact_id'  => (string) $artifact->getId(),
                             'tracker_id'  => (string) $artifact->getTracker()->getId(),
-                            'project_id'  => (string) $artifact->getTracker()->getGroupId(),
                         ]
                     ),
                     $item_to_index
@@ -83,12 +82,12 @@ final class ChangesetCommentIndexerTest extends TestCase
                 self::assertEquals(
                     new ItemToIndex(
                         'plugin_artifact_changeset_comment',
+                        (int) $artifact->getTracker()->getGroupId(),
                         '',
                         [
                             'changeset_id' => '889',
                             'artifact_id'  => (string) $artifact->getId(),
                             'tracker_id'  => (string) $artifact->getTracker()->getId(),
-                            'project_id'  => (string) $artifact->getTracker()->getGroupId(),
                         ]
                     ),
                     $item_to_index
@@ -123,28 +122,6 @@ final class ChangesetCommentIndexerTest extends TestCase
         $changeset_comment_indexer->indexChangesetCommentFromChangeset($changeset);
 
         self::assertEquals(0, $event_dispatcher->getCallCount());
-    }
-
-    public function testAskForDeletionFromAProject(): void
-    {
-        $event_dispatcher = EventDispatcherStub::withCallback(
-            static function (IndexedItemsToRemove $items_to_remove): IndexedItemsToRemove {
-                self::assertEquals(
-                    new IndexedItemsToRemove(
-                        'plugin_artifact_changeset_comment',
-                        [
-                            'project_id'  => '998',
-                        ]
-                    ),
-                    $items_to_remove
-                );
-                return $items_to_remove;
-            }
-        );
-
-        $indexer = self::buildChangesetCommentIndexer($event_dispatcher);
-
-        $indexer->askForDeletionOfIndexedCommentsFromProject(ProjectTestBuilder::aProject()->withId(998)->build());
     }
 
     public function testAskForDeletionFromAnArtifact(): void

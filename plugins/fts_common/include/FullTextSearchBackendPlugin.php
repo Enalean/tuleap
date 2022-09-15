@@ -26,6 +26,7 @@ use Collection;
 use Event;
 use EventManager;
 use Plugin;
+use Tuleap\admin\ProjectEdit\ProjectStatusUpdate;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\FullTextSearchCommon\Index\FindIndexSearcher;
 use Tuleap\FullTextSearchCommon\Index\SearchIndexedItem;
@@ -51,6 +52,7 @@ abstract class FullTextSearchBackendPlugin extends Plugin
         $this->addHook(IndexedItemsToRemove::NAME);
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(CLICommandsCollector::NAME);
+        $this->addHook(ProjectStatusUpdate::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -116,6 +118,15 @@ abstract class FullTextSearchBackendPlugin extends Plugin
                 return new IdentifyAllItemsToIndexCommand(EventManager::instance());
             }
         );
+    }
+
+    public function projectStatusUpdate(ProjectStatusUpdate $event): void
+    {
+        if ($event->status !== \Project::STATUS_DELETED) {
+            return;
+        }
+
+        $this->getItemRemover()->deleteIndexedItemsPerProjectID((int) $event->project->getID());
     }
 
     abstract protected function getIndexSearcher(): SearchIndexedItem;

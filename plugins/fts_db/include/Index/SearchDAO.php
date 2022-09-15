@@ -63,7 +63,12 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
                 }
 
                 foreach ($existing_entries as $existing_entry_id) {
-                    $db->run('UPDATE plugin_fts_db_search SET content = ? WHERE id = ?', $item->content, $existing_entry_id);
+                    $db->run(
+                        'UPDATE plugin_fts_db_search SET content = ?, project_id = ? WHERE id = ?',
+                        $item->content,
+                        $item->project_id,
+                        $existing_entry_id
+                    );
                 }
             }
         );
@@ -84,7 +89,10 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
 
     private function createNewEntry(ItemToIndex $item): void
     {
-        $id                 = $this->getDB()->insertReturnId('plugin_fts_db_search', ['type' => $item->type, 'content' => $item->content]);
+        $id                 = $this->getDB()->insertReturnId(
+            'plugin_fts_db_search',
+            ['type' => $item->type, 'project_id' => $item->project_id, 'content' => $item->content]
+        );
         $metadata_to_insert = [];
         foreach ($item->metadata as $name => $value) {
             $metadata_to_insert[] = ['search_id' => $id, 'name' => $name, 'value' => $value];
@@ -177,6 +185,16 @@ final class SearchDAO extends DataAccessObject implements InsertItemsIntoIndex, 
         $this->deleteIndexedItemsFromIDs($this->searchMatchingEntries($items_to_remove));
     }
 
+    public function deleteIndexedItemsPerProjectID(int $project_id): void
+    {
+        $this->deleteIndexedItemsFromIDs(
+            $this->getDB()->column('SELECT id FROM plugin_fts_db_search WHERE project_id = ?', [$project_id])
+        );
+    }
+
+    /**
+     * @param int[] $ids_to_remove
+     */
     private function deleteIndexedItemsFromIDs(array $ids_to_remove): void
     {
         if (count($ids_to_remove) === 0) {
