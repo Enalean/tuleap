@@ -46,3 +46,9 @@ CREATE TABLE plugin_hudson_git_project_server_job_branch_source (
     job_id  int(11) UNSIGNED NOT NULL PRIMARY KEY,
     status_code INT(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_hudson_git_trigger_hook_token(
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    verifier VARCHAR(255) NOT NULL,
+    expiration_date INT(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
-
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-
-final class JenkinsTuleapPluginHookTokenGeneratorCryptoBased implements JenkinsTuleapPluginHookTokenGenerator
+final class b202209160945_create_table_trigger_hook_token extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public const PREFIX = 'tuleap-jenkins-plugin-trigger-';
-
-    public function __construct(private EncryptionKey $key)
+    public function description(): string
     {
+        return 'Create table plugin_hudson_git_trigger_hook_token';
     }
 
-    public function generateTriggerToken(\DateTimeImmutable $now): ConcealedString
+    public function up(): void
     {
-        return new ConcealedString(sodium_bin2hex(SymmetricCrypto::encrypt(new ConcealedString(self::PREFIX . $now->getTimestamp()), $this->key)));
+        $this->api->createTable(
+            'plugin_hudson_git_trigger_hook_token',
+            'CREATE TABLE plugin_hudson_git_trigger_hook_token(
+                    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                    verifier VARCHAR(255) NOT NULL,
+                    expiration_date INT(11) UNSIGNED NOT NULL
+                ) ENGINE=InnoDB;'
+        );
     }
 }

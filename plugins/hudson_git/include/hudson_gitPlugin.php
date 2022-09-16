@@ -26,6 +26,8 @@ require_once __DIR__ . '/constants.php';
 use FastRoute\RouteCollector;
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
+use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
@@ -56,9 +58,9 @@ use Tuleap\HudsonGit\Git\Administration\XML\XMLImporter;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
-use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenGeneratorCryptoBased;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPrefixToken;
+use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenGeneratorDBStore;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierController;
-use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierCryptoBased;
 use Tuleap\HudsonGit\HudsonGitPluginDefaultController;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
@@ -258,7 +260,13 @@ class hudson_gitPlugin extends Plugin
     {
         return new JenkinsTuleapPluginHookTokenVerifierController(
             HTTPFactoryBuilder::responseFactory(),
-            new JenkinsTuleapPluginHookTokenVerifierCryptoBased((new \Tuleap\Cryptography\KeyFactory())->getEncryptionKey()),
+            new Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenVerifierDBStore(
+                new Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new PrefixedSplitTokenSerializer(new JenkinsTuleapPluginHookPrefixToken()),
+                new SplitTokenVerificationStringHasher(),
+                self::getHudsonGitLogger(),
+            ),
             new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
             new DisableCacheMiddleware()
         );
@@ -313,7 +321,12 @@ class hudson_gitPlugin extends Plugin
                     new JenkinsTuleapPluginHookPayload(
                         $repository,
                         $event->getRefname(),
-                        new JenkinsTuleapPluginHookTokenGeneratorCryptoBased($encryption_key),
+                        new JenkinsTuleapPluginHookTokenGeneratorDBStore(
+                            new Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookTokenDAO(),
+                            new SplitTokenVerificationStringHasher(),
+                            new PrefixedSplitTokenSerializer(new JenkinsTuleapPluginHookPrefixToken()),
+                            new DateInterval('PT30S'),
+                        ),
                         fn (): DateTimeImmutable => new DateTimeImmutable(),
                     ),
                     $stream_factory,

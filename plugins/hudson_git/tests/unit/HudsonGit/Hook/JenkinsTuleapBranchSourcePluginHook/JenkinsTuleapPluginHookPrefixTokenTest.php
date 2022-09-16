@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook;
 
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class JenkinsTuleapPluginHookTokenGeneratorCryptoBasedTest extends TestCase
+final class JenkinsTuleapPluginHookPrefixTokenTest extends TestCase
 {
-    public function testGeneratesToken(): void
+    public function testHasSpecificPrefix(): void
     {
-        $key       = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
-        $generator = new JenkinsTuleapPluginHookTokenGeneratorCryptoBased($key);
-
-        $token = $generator->generateTriggerToken(new \DateTimeImmutable('@10'));
-        self::assertEquals('tuleap-jenkins-plugin-trigger-10', SymmetricCrypto::decrypt(hex2bin($token->getString()), $key));
+        $prefix = new JenkinsTuleapPluginHookPrefixToken();
+        $this->assertStringContainsString('jk-hook1', $prefix->getString());
     }
 }
