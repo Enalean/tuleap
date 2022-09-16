@@ -36,6 +36,7 @@ import type { UserGroupRepresentation } from "./artifacts";
 import type { OpenListFieldStructure } from "./open-list-field";
 
 export * from "./open-list-field";
+export * from "./list-field";
 
 export interface BaseFieldStructure {
     readonly field_id: number;

@@ -19,8 +19,6 @@
 
 const path = require("path");
 // eslint-disable-next-line import/no-extraneous-dependencies
-const webpack = require("webpack");
-// eslint-disable-next-line import/no-extraneous-dependencies
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 // eslint-disable-next-line import/no-extraneous-dependencies
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -53,7 +51,6 @@ const webpack_config = {
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_angular_gettext_loader,
             webpack_configurator.rule_ng_cache_loader,
@@ -68,11 +65,6 @@ const webpack_config = {
         webpack_configurator.getMomentLocalePlugin(),
         new RemoveEmptyScriptsPlugin({ extensions: ["scss", "css"] }),
         new MiniCssExtractPlugin({ filename: "[name].css" }),
-        webpack_configurator.getVueLoaderPlugin(),
-        new webpack.ProvidePlugin({
-            Buffer: ["buffer", "Buffer"],
-            process: "process/browser",
-        }),
     ],
 };
 

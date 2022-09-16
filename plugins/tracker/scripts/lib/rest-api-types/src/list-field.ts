@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    FieldTypeIdentifier,
-    FileFieldIdentifier,
-    Permission,
-} from "@tuleap/plugin-tracker-constants";
-
-export type DisconnectFunction = () => void;
-
-export interface Field {
-    field_id: number;
-    type: FieldTypeIdentifier;
-    disabled: boolean;
-    permissions: Permission[];
-}
-
-export interface FileField extends Field {
-    type: FileFieldIdentifier;
-    file_creation_uri: string;
-    max_size_upload: number;
+export interface PostFileResponse {
+    readonly id: number;
+    readonly download_href: string;
+    readonly upload_href: string | null;
 }

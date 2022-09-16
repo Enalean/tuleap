@@ -38,7 +38,6 @@ import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,
 } from "../fields/file-field/is-uploading-in-ckeditor-state";
-import type { FileField } from "../types";
 import {
     getNoPasteMessage,
     getRTEHelpMessage,
@@ -46,6 +45,7 @@ import {
     getUploadSizeExceeded,
 } from "../gettext-catalog";
 import { getTextFieldDefaultFormat } from "../model/UserPreferencesStore";
+import type { FirstFileField } from "../model/FirstFileFieldStore";
 import { getFirstFileField } from "../model/FirstFileFieldStore";
 
 export interface RichTextEditor {
@@ -58,7 +58,7 @@ export interface RichTextEditor {
     textarea: HTMLTextAreaElement | null;
     editor: TextEditorInterface | undefined;
     is_help_shown: boolean;
-    first_file_field: FileField | null;
+    first_file_field: FirstFileField | null;
     content: () => HTMLElement;
 }
 export type HostElement = RichTextEditor & HTMLElement;
@@ -108,7 +108,7 @@ function onChange(host: HostElement, ckeditor: CKEDITOR.editor): void {
     dispatch(host, "content-change", { detail: { content: new_content } });
 }
 
-const isUploadPossible = (field: FileField | null): field is FileField => field !== null;
+const isUploadPossible = (field: FirstFileField | null): field is FirstFileField => field !== null;
 
 export function setupImageUpload(host: HostElement, ckeditor: CKEDITOR.editor): void {
     if (!isUploadPossible(host.first_file_field)) {

@@ -178,57 +178,6 @@ describe("rest-service", () => {
         });
     });
 
-    describe("uploadTemporaryFile() -", () => {
-        it("Given a file name, a file type and a first chunk and given a description, when I upload a new temporary file, then a promise will be resolved with the new temporary file's id", async () => {
-            const tlpPostSpy = jest.spyOn(tlp_fetch, "post");
-            mockFetchSuccess(tlpPostSpy, { return_json: { id: 4 } });
-
-            const file_name = "bitterheartedness";
-            const file_type = "image/png";
-            const first_chunk = "FwnCeTwZcgBOiH";
-            const description = "bullboat metrosteresis classicality";
-
-            const file_upload = await RestService.uploadTemporaryFile(
-                file_name,
-                file_type,
-                first_chunk,
-                description
-            );
-
-            expect(file_upload).toBe(4);
-            expect(tlpPostSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files", {
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: "bitterheartedness",
-                    mimetype: "image/png",
-                    content: "FwnCeTwZcgBOiH",
-                    description: "bullboat metrosteresis classicality",
-                }),
-            });
-        });
-    });
-
-    describe("uploadAdditionalChunk() -", () => {
-        it("Given a temporary file id, a chunk and a chunk offset, when I upload an additional chunk to be appended to a temporary file, then a promise will be resolved", async () => {
-            const tlpPutSpy = jest.spyOn(tlp_fetch, "put");
-            mockFetchSuccess(tlpPutSpy);
-
-            await RestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
-
-            expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files/9", {
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    content: "rmNcNnltd",
-                    offset: 4,
-                }),
-            });
-        });
-    });
-
     describe("getUserPreference() -", () => {
         it("Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {

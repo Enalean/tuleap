@@ -23,7 +23,7 @@ import {
     getFirstFileField,
 } from "./file-field-detector";
 import * as disabled_field_detector from "../disabled-field-detector";
-import type { Field } from "../../types";
+import type { Field } from "../../domain/fields/Field";
 
 describe("file-field-detector", () => {
     let isDisabled: jest.SpyInstance;
@@ -70,7 +70,7 @@ describe("file-field-detector", () => {
 
             const result = getAllFileFields(tracker_fields);
 
-            expect(result).toEqual([
+            expect(result).toStrictEqual([
                 { field_id: 62, type: "file" },
                 { field_id: 38, type: "file" },
             ]);
@@ -86,7 +86,7 @@ describe("file-field-detector", () => {
 
             const result = getAllFileFields(tracker_fields);
 
-            expect(result).toEqual([enabled_field]);
+            expect(result).toStrictEqual([enabled_field]);
         });
     });
 
@@ -114,7 +114,7 @@ describe("file-field-detector", () => {
 
             const result = getFirstFileField(tracker_fields);
 
-            expect(result).toEqual(enabled_field);
+            expect(result).toStrictEqual(enabled_field);
         });
 
         it(`Given a tracker with no enabled file field,

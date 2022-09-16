@@ -24,18 +24,14 @@
     "@tuleap/tooltip": "link:../../../../../lib/frontend/tooltip",
     "angular-custom-elements": "^2.1.0",
     "angular-gettext": "^2.4.2",
-    "buffer": "^6.0.3",
     "dompurify": "^2.3.6",
-    "events": "^3.3.0",
     "hybrids": "^8.0.2",
     "lodash": "2.4.0",
     "moment": "^2.29.3",
     "neverthrow": "^5.0.0",
     "pretty-kibibytes": "^4.0.4",
-    "process": "^0.11.10",
-    "pump": "^3.0.0",
-    "readable-stream": "^2.3.6",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "tus-js-client": "^3.0.1"
   },
   "peerDependencies": {
     "angular": "^1.8.0"
