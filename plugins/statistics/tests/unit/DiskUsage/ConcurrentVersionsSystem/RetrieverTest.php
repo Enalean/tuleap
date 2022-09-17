@@ -22,16 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Statistics_DiskUsageDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
 final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Statistics_DiskUsageDao
+     * @var Statistics_DiskUsageDao&\PHPUnit\Framework\MockObject\MockObject
      */
     private $dao;
     /**
@@ -41,20 +38,20 @@ final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->dao       = \Mockery::mock(Statistics_DiskUsageDao::class);
+        $this->dao       = $this->createMock(Statistics_DiskUsageDao::class);
         $this->retriever = new Retriever($this->dao);
     }
 
     public function testReturnsValueGivenByTheDB(): void
     {
-        $this->dao->shouldReceive('getLastSizeForService')->andReturn(['size' => '10']);
+        $this->dao->method('getLastSizeForService')->willReturn(['size' => '10']);
 
         self::assertEquals(10, $this->retriever->getLastSizeForProject(ProjectTestBuilder::aProject()->build()));
     }
 
     public function testReturns0WhenNoValueExistsInDB(): void
     {
-        $this->dao->shouldReceive('getLastSizeForService')->andReturn(false);
+        $this->dao->method('getLastSizeForService')->willReturn(false);
 
         self::assertEquals(0, $this->retriever->getLastSizeForProject(ProjectTestBuilder::aProject()->build()));
     }

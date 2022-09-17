@@ -28,8 +28,6 @@ use Docman_File;
 use DocmanPlugin;
 use EventManager;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Sabre\DAV\Exception\Forbidden;
@@ -42,39 +40,42 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 
-class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
+final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DocumentDownloader
+     * @var DocumentDownloader&\PHPUnit\Framework\MockObject\MockObject
      */
     private $document_download;
-
     /**
      * @var PFUser
      */
     private $user;
-
     /**
      * @var Project
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVUtils
+     * @var \WebDAVUtils&\PHPUnit\Framework\MockObject\MockObject
      */
     private $utils;
+    /**
+     * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $event_manager;
 
     protected function setUp(): void
     {
-        $this->document_download = Mockery::mock(DocumentDownloader::class);
+        $this->document_download = $this->createMock(DocumentDownloader::class);
         $this->user              = UserTestBuilder::aUser()->build();
         $this->project           = ProjectTestBuilder::aProject()->build();
-        $this->utils             = Mockery::mock(\WebDAVUtils::class);
+        $this->utils             = $this->createMock(\WebDAVUtils::class);
 
-        EventManager::setInstance(Mockery::spy(EventManager::class));
+        $this->event_manager = $this->createMock(EventManager::class);
+
+        EventManager::setInstance($this->event_manager);
     }
 
     protected function tearDown(): void
@@ -127,16 +128,18 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 1);
 
-        $this->document_download->shouldReceive('downloadDocument')->once();
+        $this->event_manager->method('addListener');
+        $this->event_manager->method('processEvent');
+        $this->document_download->expects(self::once())->method('downloadDocument');
 
         $webDAVDocmanFile->get();
     }
 
     public function testPutNoWriteEnabled(): void
     {
-        $item = \Mockery::spy(\Docman_File::class);
+        $item = $this->createMock(\Docman_File::class);
 
-        $this->utils->shouldReceive('isWriteEnabled')->andReturns(false);
+        $this->utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
 
@@ -150,8 +153,8 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $item = new \Docman_EmbeddedFile(['title' => 'foo']);
 
-        $this->utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $this->utils->shouldReceive('processDocmanRequest')->never();
+        $this->utils->method('isWriteEnabled')->willReturn(true);
+        $this->utils->expects(self::never())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
 
@@ -166,8 +169,8 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $item = new \Docman_EmbeddedFile(['title' => 'foo']);
 
-        $this->utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $this->utils->shouldReceive('processDocmanRequest')->once();
+        $this->utils->method('isWriteEnabled')->willReturn(true);
+        $this->utils->expects(self::once())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, $item, $this->document_download, $this->utils);
 
@@ -179,7 +182,7 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSetNameNoWriteEnabled(): void
     {
-        $this->utils->shouldReceive('isWriteEnabled')->andReturnFalse();
+        $this->utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 
@@ -199,8 +202,8 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSetNameEmbeddedFile(): void
     {
-        $this->utils->shouldReceive('isWriteEnabled')->andReturns(true);
-        $this->utils->shouldReceive('processDocmanRequest')->once();
+        $this->utils->method('isWriteEnabled')->willReturn(true);
+        $this->utils->expects(self::once())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_EmbeddedFile(), $this->document_download, $this->utils);
 
@@ -209,7 +212,7 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeleteNoWriteEnabled(): void
     {
-        $this->utils->shouldReceive('isWriteEnabled')->andReturnFalse();
+        $this->utils->method('isWriteEnabled')->willReturn(false);
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 
@@ -220,8 +223,8 @@ class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDeleteSuccess(): void
     {
-        $this->utils->shouldReceive('isWriteEnabled')->andReturnTrue();
-        $this->utils->shouldReceive('processDocmanRequest')->once();
+        $this->utils->method('isWriteEnabled')->willReturn(true);
+        $this->utils->expects(self::once())->method('processDocmanRequest');
 
         $webDAVDocmanFile = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download, $this->utils);
 
