@@ -84,6 +84,7 @@ export function uploadFile(
                 fake_item.upload_error = FILE_UPLOAD_UNKNOWN_ERROR;
                 fake_item.is_uploading = false;
                 context.commit("removeItemFromFolderContent", fake_item);
+                throw exception;
             } finally {
                 context.commit("toggleCollapsedFolderHasUploadingContent", {
                     collapsed_folder: parent,
