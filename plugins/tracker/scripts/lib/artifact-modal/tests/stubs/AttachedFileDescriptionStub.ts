@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AttachedFileDescription } from "../../src/adapters/UI/fields/file-field/AttachedFileDescription";
+import type { AttachedFileDescription } from "../../src/domain/fields/file-field/AttachedFileDescription";
 
 export const AttachedFileDescriptionStub = {
     withImage: (data?: Partial<AttachedFileDescription>): AttachedFileDescription => {
