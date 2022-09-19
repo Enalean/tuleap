@@ -119,6 +119,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /** @var IProvideFromAndWhereSQLFragments */
     private $additional_from_where;
 
+    private string $expert_query_from_db;
+
     /**
      * Constructor
      * @param int|string     $id The id of the report
@@ -144,19 +146,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $updated_by,
         $updated_at,
     ) {
-        $this->id                  = $id;
-        $this->name                = $name;
-        $this->description         = $description;
-        $this->current_renderer_id = $current_renderer_id;
-        $this->parent_report_id    = $parent_report_id;
-        $this->user_id             = $user_id;
-        $this->is_default          = $is_default;
-        $this->tracker_id          = $tracker_id;
-        $this->is_query_displayed  = $is_query_displayed;
-        $this->is_in_expert_mode   = $is_in_expert_mode;
-        $this->expert_query        = $expert_query;
-        $this->updated_by          = $updated_by;
-        $this->updated_at          = $updated_at;
+        $this->id                   = $id;
+        $this->name                 = $name;
+        $this->description          = $description;
+        $this->current_renderer_id  = $current_renderer_id;
+        $this->parent_report_id     = $parent_report_id;
+        $this->user_id              = $user_id;
+        $this->is_default           = $is_default;
+        $this->tracker_id           = $tracker_id;
+        $this->is_query_displayed   = $is_query_displayed;
+        $this->is_in_expert_mode    = $is_in_expert_mode;
+        $this->expert_query         = $expert_query;
+        $this->expert_query_from_db = $expert_query;
+        $this->updated_by           = $updated_by;
+        $this->updated_at           = $updated_at;
 
         $this->parser = new ParserCacheProxy(new Parser());
     }
@@ -339,7 +342,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function getMatchingIds($request = null, $use_data_from_db = false)
     {
         if ($this->is_in_expert_mode) {
-            return $this->getMatchingIdsFromExpertQuery();
+            return $this->getMatchingIdsFromExpertQuery($use_data_from_db);
         } else {
             return $this->getMatchingIdsFromCriteria($request, $use_data_from_db);
         }
@@ -1950,20 +1953,26 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         return $this->matching_ids;
     }
 
-    private function getMatchingIdsFromExpertQuery()
+    private function getMatchingIdsFromExpertQuery(bool $use_data_from_db)
     {
         if ($this->matching_ids) {
             return $this->matching_ids;
         }
 
-        if (empty($this->expert_query)) {
+        if ($use_data_from_db) {
+            $expert_query = $this->expert_query_from_db;
+        } else {
+            $expert_query = $this->expert_query;
+        }
+
+        if (empty($expert_query)) {
             $this->matching_ids = $this->getUnfilteredMatchingIds();
 
             return $this->matching_ids;
         }
 
         try {
-            $expression = $this->parser->parse($this->expert_query);
+            $expression = $this->parser->parse($expert_query);
 
             if ($this->canExecuteExpertQuery($expression)) {
                 $from_where = $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker());
