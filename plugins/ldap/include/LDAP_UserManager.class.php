@@ -269,7 +269,7 @@ class LDAP_UserManager
         $user->setRegisterPurpose('LDAP');
         $user->setUnixStatus('S');
         $user->setTimezone('GMT');
-        $user->setLanguageID($GLOBALS['Language']->getText('conf', 'language_id'));
+        $user->setLanguageID(ForgeConfig::get(BaseLanguage::CONFIG_KEY, BaseLanguage::DEFAULT_LANG));
 
         $um   = $this->getUserManager();
         $user = $um->createAccount($user);

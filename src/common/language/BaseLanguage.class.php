@@ -28,6 +28,7 @@ use Webimpress\SafeWriter\FileWriter;
 class BaseLanguage
 {
     public const DEFAULT_LANG = 'en_US';
+    public const CONFIG_KEY   = 'sys_lang';
 
     //array to hold the string values
     public $text_array;
