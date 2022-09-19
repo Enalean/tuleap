@@ -28,6 +28,8 @@ use Test\Rest\TuleapConfig;
  */
 class ProjectTest extends ProjectBase
 {
+    use ForgeAccessSandbox;
+
     /**
      * @after
      */
@@ -1269,6 +1271,8 @@ class ProjectTest extends ProjectBase
 
     public function testGETUserGroupsWithSystemUserGroupsReturnsAnonymousAndRegisteredWhenAnonymousUsersCanAccessThePlatform()
     {
+        $this->setForgeToAnonymous();
+
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_public_member_id . '/user_groups?query=' . urlencode('{"with_system_user_groups":true}'))

@@ -23,19 +23,24 @@ declare(strict_types=1);
 namespace rest\tests;
 
 use Test\Rest\TuleapConfig;
+use Tuleap\REST\ForgeAccessSandbox;
 
 class InvitationsTest extends \RestBase
 {
-    /**
-     * @var TuleapConfig
-     */
-    private $tuleap_config;
+    use ForgeAccessSandbox;
+
+    private TuleapConfig $tuleap_config;
 
     public function __construct()
     {
         parent::__construct();
         $this->tuleap_config = TuleapConfig::instance();
-        $this->tuleap_config->setForgeToAnonymous();
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->setForgeToAnonymous();
     }
 
     public function testOptions(): void
