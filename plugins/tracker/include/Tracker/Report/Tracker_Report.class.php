@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -67,9 +66,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
  */
 class Tracker_Report implements Tracker_Dispatchable_Interface
 {
-    #[FeatureFlagConfigKey("Feature flag to allow tracker's report widgets with session data")]
-    public const FEATURE_FLAG_KEY = 'get_session_data_for_reports_widget';
-
     public const ACTION_SAVE            = 'report-save';
     public const ACTION_SAVEAS          = 'report-saveas';
     public const ACTION_REPLACE         = 'report-replace';
