@@ -68,7 +68,8 @@ seed_data() {
         oauth2_server \
         program_management \
         onlyoffice \
-        fts_db
+        fts_db \
+        hudson_git
 }
 
 setup_tuleap
